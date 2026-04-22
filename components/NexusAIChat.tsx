@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Bot, User, Sparkles, Zap } from "lucide-react";
+import { Send, Bot, User, Sparkles, Zap, FilePlus, ArrowRight } from "lucide-react";
 import { cn, whatsappLink } from "@/lib/utils";
 
 interface Message {
@@ -11,6 +11,8 @@ interface Message {
   text: string;
   time: Date;
   suggestions?: string[];
+  serviceDetected?: string;
+  serviceLabel?: string;
 }
 
 const INITIAL_SUGGESTIONS = [
@@ -22,12 +24,42 @@ const INITIAL_SUGGESTIONS = [
   "Combien coûte un visa touriste ?",
 ];
 
-function generateResponse(input: string): { text: string; suggestions?: string[] } {
+const SERVICE_LABELS: Record<string, string> = {
+  visa: "Visa et e-Visa",
+  tcf: "Préparation TCF Canada",
+  bourses: "Bourses d'études Canada",
+  financement: "Financement business",
+  billets: "Billets d'avion et hôtels",
+  change: "Change de devises",
+  transfert: "Transfert d'argent",
+  administratif: "Services administratifs",
+};
+
+function detectServiceFromText(text: string): string | null {
+  const q = text.toLowerCase();
+  if (/(visa|e-visa|evisa|passeport|consulat)/.test(q)) return "visa";
+  if (/(tcf)/.test(q)) return "tcf";
+  if (/(bourse|université|universite|etudes|études|licence|master|admission|caq)/.test(q)) return "bourses";
+  if (/(financement|business|entreprise|projet|partenariat|investisseur)/.test(q)) return "financement";
+  if (/(billet|avion|vol|hôtel|hotel|voyage|skyscanner|google flights)/.test(q)) return "billets";
+  if (/(transfert|western union|moneygram|ria|envoyer.*argent)/.test(q)) return "transfert";
+  if (/(change|devise|fcfa|euro|dollar|cad|gbp)/.test(q)) return "change";
+  if (/(cv|traduction|formulaire|lettre de motivation|administratif|document)/.test(q)) return "administratif";
+  return null;
+}
+
+function generateResponse(input: string): {
+  text: string;
+  suggestions?: string[];
+  serviceDetected?: string;
+} {
   const q = input.toLowerCase();
+  const service = detectServiceFromText(input);
 
   if (/(visa|e-visa|evisa)/.test(q)) {
     if (/canada/.test(q)) {
       return {
+        serviceDetected: "visa",
         text:
           "Pour un visa Canada, voici les étapes clés :\n\n" +
           "1. Déterminer le type (études, visite, travail, résidence permanente)\n" +
@@ -44,6 +76,7 @@ function generateResponse(input: string): { text: string; suggestions?: string[]
       };
     }
     return {
+      serviceDetected: "visa",
       text:
         "Nous traitons tous types de visas : tourisme, études, affaires, travail, et pour plusieurs destinations (Canada, France, Belgique, USA, Schengen).\n\nPour quelle destination et quel motif souhaitez-vous un visa ?",
       suggestions: ["Canada", "France", "USA", "Schengen"],
@@ -52,6 +85,7 @@ function generateResponse(input: string): { text: string; suggestions?: string[]
 
   if (/(tcf|français|francais)/.test(q)) {
     return {
+      serviceDetected: "tcf",
       text:
         "Le TCF Canada est reconnu par IRCC pour les demandes d'immigration. Nexus propose :\n\n" +
         "• Cours intensifs en petits groupes\n" +
@@ -65,6 +99,7 @@ function generateResponse(input: string): { text: string; suggestions?: string[]
 
   if (/(bourse|étude|etude|université|universite|admission)/.test(q)) {
     return {
+      serviceDetected: "bourses",
       text:
         "Pour étudier au Canada :\n\n" +
         "1. Choisir les universités (nous identifions celles adaptées à votre profil)\n" +
@@ -79,6 +114,7 @@ function generateResponse(input: string): { text: string; suggestions?: string[]
 
   if (/(financement|business|entreprise|investisseur|projet)/.test(q)) {
     return {
+      serviceDetected: "financement",
       text:
         "Nexus accompagne les entrepreneurs centrafricains sur :\n\n" +
         "• Montage de dossiers bancaires solides (business plan, prévisionnels)\n" +
@@ -92,6 +128,7 @@ function generateResponse(input: string): { text: string; suggestions?: string[]
 
   if (/(transfert|envoyer.*argent|western|moneygram|ria)/.test(q)) {
     return {
+      serviceDetected: "transfert",
       text:
         "Nexus est agent pour Western Union, MoneyGram et Ria. Vous pouvez :\n\n" +
         "• Envoyer de l'argent dans le monde entier\n" +
@@ -104,6 +141,7 @@ function generateResponse(input: string): { text: string; suggestions?: string[]
 
   if (/(change|devise|fcfa|euro|dollar|cad)/.test(q)) {
     return {
+      serviceDetected: "change",
       text:
         "Nous opérons le change de devises aux meilleurs taux :\n\n" +
         "• FCFA ↔ EUR / USD / CAD / GBP\n" +
@@ -116,6 +154,7 @@ function generateResponse(input: string): { text: string; suggestions?: string[]
 
   if (/(vol|avion|billet|hôtel|hotel|voyage|skyscanner|google flights)/.test(q)) {
     return {
+      serviceDetected: "billets",
       text:
         "Pour les vols et hôtels, Nexus donne accès direct aux meilleures plateformes :\n\n" +
         "• Google Flights pour comparer les vols\n" +
@@ -127,6 +166,7 @@ function generateResponse(input: string): { text: string; suggestions?: string[]
 
   if (/(cv|lettre|motivation|document|traduction|formulaire|administratif)/.test(q)) {
     return {
+      serviceDetected: "administratif",
       text:
         "Nexus gère tous vos documents administratifs :\n\n" +
         "• CV au format canadien\n" +
@@ -165,8 +205,8 @@ function generateResponse(input: string): { text: string; suggestions?: string[]
     };
   }
 
-  // Default
   return {
+    serviceDetected: service || undefined,
     text:
       "Je peux vous orienter sur plusieurs sujets : visa, études Canada, TCF, financement business, transferts d'argent, voyages, change de devises, et documents administratifs.\n\nPouvez-vous préciser votre question ? Ou choisissez un sujet ci-dessous.",
     suggestions: INITIAL_SUGGESTIONS,
@@ -206,40 +246,40 @@ export function NexusAIChat() {
     setIsTyping(true);
 
     setTimeout(() => {
-      const { text: response, suggestions } = generateResponse(clean);
+      const { text: response, suggestions, serviceDetected } = generateResponse(clean);
       const botMsg: Message = {
         id: `b-${Date.now()}`,
         role: "bot",
         text: response,
         time: new Date(),
         suggestions,
+        serviceDetected,
+        serviceLabel: serviceDetected ? SERVICE_LABELS[serviceDetected] : undefined,
       };
       setMessages((m) => [...m, botMsg]);
       setIsTyping(false);
     }, 700 + Math.random() * 600);
   };
 
-  // Détecte le slug de service depuis l'historique de conversation pour préremplir
-  const detectServiceSlug = (): string | null => {
-    const recentUserText = messages
-      .filter((m) => m.role === "user")
-      .slice(-5)
-      .map((m) => m.text.toLowerCase())
-      .join(" ");
-    if (/(visa|e-visa|evisa|passeport|consulat)/.test(recentUserText)) return "visa";
-    if (/(tcf|français|francais)/.test(recentUserText)) return "tcf";
-    if (/(bourse|université|etudes|études|licence|master)/.test(recentUserText)) return "bourses";
-    if (/(financement|business|entreprise|projet|partenariat|investisseur)/.test(recentUserText)) return "financement";
-    if (/(billet|avion|vol|hôtel|hotel|voyage)/.test(recentUserText)) return "billets";
-    if (/(transfert|western union|moneygram|ria|change|devise)/.test(recentUserText)) return "change";
-    if (/(cv|traduction|formulaire|lettre de motivation)/.test(recentUserText)) return "administratif";
+  const lastDetectedService = (): string | null => {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const m = messages[i];
+      if (m.role === "bot" && m.serviceDetected) {
+        return m.serviceDetected;
+      }
+      if (m.role === "user") {
+        const detected = detectServiceFromText(m.text);
+        if (detected) return detected;
+      }
+    }
     return null;
   };
 
-  // Construit l'URL vers le formulaire complet avec contexte IA
-  const buildCompleteFormUrl = (): string => {
+  const currentService = lastDetectedService();
+
+  const buildCompleteFormUrl = (overrideService?: string): string => {
     const params = new URLSearchParams();
-    const slug = detectServiceSlug();
+    const slug = overrideService || currentService;
     if (slug) params.set("service", slug);
     const lastUserMsg = [...messages].reverse().find((m) => m.role === "user");
     if (lastUserMsg) {
@@ -259,7 +299,6 @@ export function NexusAIChat() {
       window.open(whatsappLink("Bonjour Nexus, j'aimerais parler à un conseiller."), "_blank");
       return;
     }
-    // Routage vers formulaire complet avec contexte
     if (
       s === "Ouvrir le formulaire complet" ||
       s === "Lancer le traitement de mon dossier" ||
@@ -272,7 +311,6 @@ export function NexusAIChat() {
       window.location.href = buildCompleteFormUrl();
       return;
     }
-    // Routage vers formulaire simple
     if (s === "Demande rapide") {
       window.location.href = "/demande";
       return;
@@ -311,24 +349,6 @@ export function NexusAIChat() {
         </div>
       </div>
 
-      {/* Nudge CTA vers le formulaire complet (après 3 échanges utilisateur) */}
-      {messages.filter((m) => m.role === "user").length >= 3 && (
-        <div className="flex items-center justify-between gap-3 border-b border-nexus-orange-200 bg-gradient-to-r from-nexus-orange-50 to-nexus-blue-50 px-4 py-2.5">
-          <div className="flex items-center gap-2 min-w-0">
-            <Sparkles className="h-4 w-4 shrink-0 text-nexus-orange-600" />
-            <p className="truncate text-xs text-nexus-blue-900 sm:text-sm">
-              Prêt·e ? Ouvrez votre dossier complet, je récupère notre échange.
-            </p>
-          </div>
-          <button
-            onClick={() => (window.location.href = buildCompleteFormUrl())}
-            className="shrink-0 rounded-full bg-nexus-orange-500 px-3 py-1.5 text-xs font-semibold text-white shadow transition hover:bg-nexus-orange-600"
-          >
-            Ouvrir le dossier →
-          </button>
-        </div>
-      )}
-
       {/* Messages */}
       <div
         ref={scrollRef}
@@ -359,6 +379,30 @@ export function NexusAIChat() {
                 >
                   {m.text}
                 </div>
+
+                {/* CTA intégré dans le message du bot si service détecté */}
+                {m.role === "bot" && m.serviceDetected && m.serviceLabel && (
+                  <button
+                    onClick={() => (window.location.href = buildCompleteFormUrl(m.serviceDetected))}
+                    className="group flex w-full items-center justify-between gap-3 rounded-2xl border-2 border-nexus-orange-300 bg-gradient-to-r from-nexus-orange-50 to-white p-3 text-left shadow-sm transition-all hover:border-nexus-orange-500 hover:shadow-md"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-nexus-orange-500 text-white">
+                        <FilePlus className="h-4 w-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+                          Ouvrir un dossier
+                        </p>
+                        <p className="text-sm font-semibold text-nexus-blue-950 truncate">
+                          {m.serviceLabel}
+                        </p>
+                      </div>
+                    </div>
+                    <ArrowRight className="h-4 w-4 shrink-0 text-nexus-orange-600 transition-transform group-hover:translate-x-1" />
+                  </button>
+                )}
+
                 {m.suggestions && m.suggestions.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {m.suggestions.map((s, i) => (
@@ -425,6 +469,37 @@ export function NexusAIChat() {
           Nexus IA est un assistant virtuel. Pour les dossiers complexes, un conseiller humain prend le relais.
         </p>
       </form>
+
+      {/* CTA en bas — apparaît dès qu'un service est détecté */}
+      {currentService && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="border-t border-nexus-orange-200 bg-gradient-to-r from-nexus-orange-50 via-white to-nexus-blue-50 p-3"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 min-w-0">
+              <Sparkles className="h-4 w-4 shrink-0 text-nexus-orange-600" />
+              <p className="truncate text-xs text-nexus-blue-900 sm:text-sm">
+                <strong>Prêt·e ?</strong> Ouvrez votre dossier{" "}
+                <strong className="text-nexus-orange-700">
+                  {SERVICE_LABELS[currentService]}
+                </strong>
+                , je récupère notre échange.
+              </p>
+            </div>
+            <button
+              onClick={() => (window.location.href = buildCompleteFormUrl())}
+              className="flex shrink-0 items-center gap-1.5 rounded-full bg-nexus-orange-500 px-4 py-2 text-xs font-semibold text-white shadow transition hover:bg-nexus-orange-600 sm:text-sm"
+            >
+              <FilePlus className="h-3.5 w-3.5" />
+              Ouvrir le dossier
+              <ArrowRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown, MessageCircle } from "lucide-react";
+import { Menu, X, ChevronDown, MessageCircle, FolderOpen, FilePlus } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { Button } from "@/components/ui/Button";
 import { SERVICES } from "@/lib/services";
@@ -13,7 +13,6 @@ const NAV_LINKS = [
   { href: "/", label: "Accueil" },
   { href: "/services", label: "Services", hasDropdown: true },
   { href: "/services/nexus-ia", label: "Nexus IA 🤖" },
-  { href: "/demande", label: "Demande" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -110,11 +109,24 @@ export function Navbar() {
           ))}
         </ul>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-2 lg:flex">
+          <Link
+            href="/dashboard"
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold transition-colors",
+              scrolled
+                ? "text-nexus-blue-900 hover:bg-nexus-blue-50"
+                : "text-white hover:bg-white/10"
+            )}
+          >
+            <FolderOpen className="h-4 w-4" />
+            Mes dossiers
+          </Link>
+
           <Link
             href="/login"
             className={cn(
-              "text-sm font-semibold transition-colors",
+              "px-3 py-2 text-sm font-semibold transition-colors",
               scrolled
                 ? "text-nexus-blue-900 hover:text-nexus-orange-600"
                 : "text-white hover:text-nexus-orange-300"
@@ -122,7 +134,16 @@ export function Navbar() {
           >
             Connexion
           </Link>
-          <Button href={whatsappLink("Bonjour Nexus, j'aimerais un renseignement.")} external size="sm">
+
+          <Link
+            href="/demande/complet"
+            className="inline-flex items-center gap-1.5 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
+          >
+            <FilePlus className="h-4 w-4" />
+            Ouvrir un dossier
+          </Link>
+
+          <Button href={whatsappLink("Bonjour Nexus, j'aimerais un renseignement.")} external size="sm" variant="secondary">
             <MessageCircle className="h-4 w-4" />
             WhatsApp
           </Button>
@@ -154,7 +175,17 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
+
+            <Link
+              href="/dashboard"
+              className="flex items-center gap-2 rounded-lg px-4 py-3 text-base font-semibold text-nexus-blue-900 hover:bg-nexus-blue-50"
+            >
+              <FolderOpen className="h-5 w-5 text-nexus-orange-600" />
+              Mes dossiers
+            </Link>
+
             <div className="my-2 border-t border-slate-200" />
+
             <details className="rounded-lg">
               <summary className="cursor-pointer px-4 py-3 text-sm font-semibold text-nexus-blue-700">
                 Tous les services
@@ -171,14 +202,25 @@ export function Navbar() {
                 ))}
               </div>
             </details>
-            <div className="flex flex-col gap-2 pt-2">
+
+            <div className="flex flex-col gap-2 pt-3">
+              <Link
+                href="/demande/complet"
+                className="inline-flex items-center justify-center gap-1.5 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-nexus-orange-600"
+              >
+                <FilePlus className="h-4 w-4" />
+                Ouvrir un dossier
+              </Link>
+
               <Button href="/login" variant="ghost" size="sm">
                 Connexion
               </Button>
+
               <Button
                 href={whatsappLink("Bonjour Nexus, j'aimerais un renseignement.")}
                 external
                 size="sm"
+                variant="secondary"
               >
                 <MessageCircle className="h-4 w-4" /> WhatsApp
               </Button>
