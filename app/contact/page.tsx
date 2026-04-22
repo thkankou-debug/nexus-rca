@@ -117,7 +117,7 @@ export default function ContactPage() {
                           WhatsApp / Téléphone
                         </p>
                         <a
-                          href={whatsappLink()}
+                          href={whatsappLink("Bonjour Nexus, je souhaite parler à un conseiller")}
                           target="_blank"
                           rel="noreferrer"
                           className="mt-0.5 text-white hover:text-nexus-orange-400"

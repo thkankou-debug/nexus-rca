@@ -101,8 +101,7 @@ export default function AdministratifPage() {
           subtitle="CV canadien, traductions, lettres, formulaires officiels, impression : Nexus RCA vous sort du bricolage et vous donne des documents prets a deposer."
           image="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80"
           imageAlt="Documents officiels et stylo sur un bureau"
-          ctaLabel="Confier mon document"
-          whatsappMessage="Bonjour Nexus, j ai un document a preparer ou a traduire."
+                    whatsappMessage="Bonjour Nexus, j ai un document a preparer ou a traduire."
         />
 
         <ServiceSection
