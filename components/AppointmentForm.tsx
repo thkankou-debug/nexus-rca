@@ -17,6 +17,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { cn, whatsappLink } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/client";
 
 // ============================================================================
 // TYPES
@@ -142,10 +143,12 @@ export function AppointmentForm() {
   const [data, setData] = useState<AppointmentData>(DEFAULT_DATA);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [success, setSuccess] = useState<{ referenceId: string } | null>(null);
 
   const hydratedRef = useRef(false);
   const topRef = useRef<HTMLDivElement>(null);
+  const supabase = createClient();
 
   useEffect(() => {
     if (hydratedRef.current) return;
@@ -258,6 +261,9 @@ export function AppointmentForm() {
     }
   };
 
+  // ============================================================================
+  // SOUMISSION — CONNECTE A SUPABASE
+  // ============================================================================
   const handleSubmit = async () => {
     const allErrors: ValidationErrors = {};
     [1, 2, 3].forEach((s) => {
@@ -291,22 +297,78 @@ export function AppointmentForm() {
     }
 
     setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1200));
+    setSubmitError(null);
 
-    const referenceId = `RDV-${new Date().getFullYear()}-${Math.floor(
-      Math.random() * 900000 + 100000
-    )}`;
+    // Mapping frontend -> colonnes DB
+    const payload = {
+      // Etape 1
+      service: data.service,
+      appointment_object: data.appointmentObject,
+      meeting_type: data.meetingType,
+      duration: data.duration,
+      urgency: data.urgency,
 
+      // Etape 2
+      preferred_date: data.preferredDate,
+      preferred_time: data.preferredTime,
+      alternative_availability: data.alternativeAvailability || null,
+      timezone: data.timezone,
+
+      // Etape 3
+      full_name: data.fullName.trim(),
+      email: data.email.trim().toLowerCase(),
+      phone: data.phone.trim(),
+      country: data.country.trim(),
+      city: data.city.trim(),
+      language: data.language,
+      specific_subject: data.specificSubject.trim(),
+      situation: data.situation.trim(),
+      has_existing_file: data.hasExistingFile || null,
+      file_number: data.hasExistingFile === "oui" ? data.fileNumber.trim() : null,
+      has_documents_ready: data.hasDocumentsReady || null,
+
+      // Consentements
+      consent_accuracy: data.consentAccuracy,
+      consent_contact: data.consentContact,
+      consent_validation: data.consentValidation,
+    };
+
+    const { data: inserted, error } = await supabase
+      .from("appointment_requests")
+      .insert(payload)
+      .select("reference")
+      .single();
+
+    setLoading(false);
+
+    if (error) {
+      console.error("Erreur Supabase :", error);
+      setSubmitError(
+        "Une erreur est survenue lors de l'envoi. Verifiez votre connexion et reessayez, ou contactez-nous sur WhatsApp."
+      );
+      return;
+    }
+
+    if (!inserted?.reference) {
+      setSubmitError(
+        "Demande envoyee mais reference non recuperee. Contactez-nous sur WhatsApp pour confirmation."
+      );
+      return;
+    }
+
+    // Nettoyage du brouillon
     try {
       localStorage.removeItem(STORAGE_KEY);
     } catch {
       /* ignore */
     }
 
-    setLoading(false);
-    setSuccess({ referenceId });
+    setSuccess({ referenceId: inserted.reference });
   };
 
+  // ============================================================================
+  // ECRAN DE SUCCES
+  // ============================================================================
   if (success) {
     return (
       <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-xl sm:p-12">
@@ -768,6 +830,18 @@ export function AppointmentForm() {
               label="Je comprends que le rendez-vous n'est confirme qu'apres validation par Nexus RCA."
             />
           </div>
+
+          {submitError && (
+            <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4">
+              <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-600" />
+              <div>
+                <p className="font-semibold text-red-900">
+                  Erreur lors de l'envoi
+                </p>
+                <p className="mt-0.5 text-sm text-red-700">{submitError}</p>
+              </div>
+            </div>
+          )}
 
           <button
             type="button"
