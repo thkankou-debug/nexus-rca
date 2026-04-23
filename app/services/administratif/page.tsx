@@ -216,8 +216,7 @@ export default function AdministratifPage() {
         <ServiceCTA
           title="Envoyez-nous votre besoin. Devis et delai sous quelques heures."
           subtitle="Un conseiller Nexus RCA revient vers vous rapidement avec un plan clair et un prix transparent."
-          ctaLabel="Confier mon document"
-          whatsappMessage="Bonjour Nexus, j ai un document administratif a preparer."
+                    whatsappMessage="Bonjour Nexus, j ai un document administratif a preparer."
         />
       </main>
       <Footer />
