@@ -5,7 +5,13 @@ import { whatsappLink } from "@/lib/utils";
 interface ServiceCTAProps {
   title?: string;
   subtitle?: string;
+  /** Nouvelle prop (utilisee dans les pages services) */
+  ctaLabel?: string;
+  /** Ancienne prop - conservee pour compatibilite */
   buttonLabel?: string;
+  /** Nouvelle prop (alternative) */
+  ctaHref?: string;
+  /** Ancienne prop - conservee pour compatibilite */
   buttonHref?: string;
   whatsappMessage?: string;
 }
@@ -13,10 +19,15 @@ interface ServiceCTAProps {
 export function ServiceCTA({
   title = "Prêt à démarrer votre dossier ?",
   subtitle = "Parlez à notre équipe et lancez votre demande complète dès aujourd’hui.",
-  buttonLabel = "Démarrer mon dossier",
-  buttonHref = "/demande/complet",
+  ctaLabel,
+  buttonLabel,
+  ctaHref,
+  buttonHref,
   whatsappMessage = "Bonjour Nexus RCA, je veux démarrer mon dossier.",
 }: ServiceCTAProps) {
+  const label = ctaLabel ?? buttonLabel ?? "Démarrer mon dossier";
+  const href = ctaHref ?? buttonHref ?? "/demande/complet";
+
   return (
     <section className="bg-nexus-blue-950 py-16 text-white">
       <div className="mx-auto max-w-6xl px-4 lg:px-8">
@@ -31,10 +42,10 @@ export function ServiceCTA({
 
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link
-                href={buttonHref}
+                href={href}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-nexus-orange-600"
               >
-                {buttonLabel}
+                {label}
                 <ArrowRight className="h-4 w-4" />
               </Link>
 
