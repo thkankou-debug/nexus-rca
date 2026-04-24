@@ -124,7 +124,7 @@ export function Footer() {
               <li className="flex items-center gap-3">
                 <MessageCircle className="h-4 w-4 shrink-0 text-nexus-orange-400" />
                 <a
-                  href={whatsappLink()}
+                  href={whatsappLink("Bonjour Nexus, j'aimerais obtenir plus d'informations.")}
                   target="_blank"
                   rel="noreferrer"
                   className="text-slate-400 hover:text-nexus-orange-400"
