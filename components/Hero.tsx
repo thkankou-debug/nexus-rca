@@ -27,7 +27,7 @@ export function Hero() {
       {/* Grain overlay */}
       <div className="absolute inset-0 grain opacity-30" />
 
-      {/* Floating badge GLOBAL — visible sur desktop */}
+      {/* Floating badge SIGNATURE NEXUS — visible sur desktop */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -40,7 +40,7 @@ export function Hero() {
           </div>
           <div>
             <div className="text-xs uppercase tracking-wider text-nexus-orange-300">
-              Global
+              Signature Nexus
             </div>
             <div className="font-semibold">Solutions globales. Impact réel.</div>
           </div>
@@ -88,13 +88,18 @@ export function Hero() {
             </span>
           </motion.div>
 
-          {/* Headline — leading genereux + pb pour les descendantes (g, j, p, q) */}
-          <h1 className="font-display text-5xl font-bold leading-[1.25] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
+          {/* ============================================================ */}
+          {/* HEADLINE — corrections definitives pour descendantes (g, j, p) */}
+          {/* - leading-[1.3] sur le h1 (espace vertical large)             */}
+          {/* - overflow-visible explicite pour annuler tout clipping       */}
+          {/* - pb-6 sm:pb-8 sur chaque span qui contient une descendante   */}
+          {/* ============================================================ */}
+          <h1 className="font-display text-5xl font-bold leading-[1.3] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl overflow-visible">
             <motion.span
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              className="block pb-4 sm:pb-5 md:pb-6"
+              className="block overflow-visible pb-6 sm:pb-8 md:pb-10"
             >
               De Bangui
             </motion.span>
@@ -102,7 +107,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.8 }}
-              className="block pb-2"
+              className="block overflow-visible pb-3 sm:pb-4"
             >
               <span className="text-gradient-orange">au monde</span> :
             </motion.span>
@@ -110,13 +115,13 @@ export function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7, duration: 0.8 }}
-              className="mt-4 block text-2xl font-medium leading-[1.4] text-slate-200 sm:text-3xl md:text-4xl lg:text-5xl"
+              className="mt-4 block overflow-visible text-2xl font-medium leading-[1.4] text-slate-200 sm:text-3xl md:text-4xl lg:text-5xl"
             >
               nous transformons vos projets en réalité.
             </motion.span>
           </h1>
 
-          {/* Badge GLOBAL — version mobile (affichée uniquement sur mobile/tablette) */}
+          {/* Badge SIGNATURE NEXUS — version mobile (visible uniquement sur mobile/tablette) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -128,7 +133,7 @@ export function Hero() {
             </div>
             <div className="min-w-0">
               <div className="text-[10px] font-bold uppercase tracking-wider text-nexus-orange-300">
-                Global
+                Signature Nexus
               </div>
               <div className="text-sm font-semibold text-white">
                 Solutions globales. Impact réel.
