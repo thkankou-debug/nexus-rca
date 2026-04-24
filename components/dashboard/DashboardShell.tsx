@@ -109,14 +109,15 @@ export function DashboardShell({
         )}
       >
         <div className="flex h-full flex-col">
-          <div className="border-b border-slate-200 p-6">
+          {/* Logo — ne rétrécit pas */}
+          <div className="shrink-0 border-b border-slate-200 p-6">
             <Link href="/" className="inline-block">
               <Logo />
             </Link>
           </div>
 
-          {/* User card */}
-          <div className="border-b border-slate-200 p-6">
+          {/* User card — ne rétrécit pas */}
+          <div className="shrink-0 border-b border-slate-200 p-6">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-800 to-nexus-orange-500 text-sm font-bold text-white">
                 {initials.toUpperCase() || "U"}
@@ -138,8 +139,8 @@ export function DashboardShell({
             </span>
           </div>
 
-          {/* Nav */}
-          <nav className="flex-1 space-y-1 px-4 py-6">
+          {/* Nav — scroll si besoin */}
+          <nav className="flex-1 space-y-1 overflow-y-auto px-4 py-6">
             {navItems.map((item) => {
               const active = pathname === item.href;
               const Icon = item.icon;
@@ -162,8 +163,8 @@ export function DashboardShell({
             })}
           </nav>
 
-          {/* Footer */}
-          <div className="border-t border-slate-200 p-4">
+          {/* Footer — ne rétrécit pas, toujours visible */}
+          <div className="shrink-0 border-t border-slate-200 p-4">
             <Link
               href="/"
               className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100"

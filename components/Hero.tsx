@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Bot, Plane, Globe, Sparkles } from "lucide-react";
+import { ArrowRight, Bot, Globe, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 export function Hero() {
@@ -36,13 +36,13 @@ export function Hero() {
       >
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-orange-500">
-            <Plane className="h-5 w-5 text-white" />
+            <Globe className="h-5 w-5 text-white" />
           </div>
           <div>
             <div className="text-xs uppercase tracking-wider text-nexus-orange-300">
-              Destination
+              Global
             </div>
-            <div className="font-semibold">Canada · Europe · USA</div>
+            <div className="font-semibold">Solutions globales. Impact réel.</div>
           </div>
         </div>
       </motion.div>
@@ -88,12 +88,12 @@ export function Hero() {
           </motion.div>
 
           {/* Headline */}
-          <h1 className="font-display text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
+          <h1 className="font-display text-5xl font-bold leading-[1.2] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
             <motion.span
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              className="block"
+              className="block pb-3"
             >
               De Bangui
             </motion.span>
@@ -101,7 +101,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.8 }}
-              className="block"
+              className="block pb-2"
             >
               <span className="text-gradient-orange">au monde</span> :
             </motion.span>
@@ -109,7 +109,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7, duration: 0.8 }}
-              className="block text-3xl font-medium leading-tight text-slate-200 sm:text-4xl md:text-5xl mt-3"
+              className="block text-3xl font-medium leading-[1.3] text-slate-200 sm:text-4xl md:text-5xl mt-3"
             >
               nous transformons vos projets en réalité.
             </motion.span>
@@ -133,7 +133,7 @@ export function Hero() {
             transition={{ delay: 1.1, duration: 0.8 }}
             className="mt-10 flex flex-col gap-3 sm:flex-row sm:gap-4"
           >
-            <Button href="/demande" size="lg">
+            <Button href="/rendez-vous" size="lg">
               Prendre rendez-vous <ArrowRight className="h-5 w-5" />
             </Button>
             <Button href="/services/nexus-ia" variant="outline" size="lg">
