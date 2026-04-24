@@ -13,7 +13,6 @@ import {
   Menu,
   X,
   ShieldCheck,
-  CalendarCheck,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -45,7 +44,6 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
   super_admin: [
     { href: "/dashboard/super-admin", label: "Tableau de bord", icon: LayoutDashboard },
     { href: "/dashboard/super-admin/demandes", label: "Toutes les demandes", icon: FileText },
-    { href: "/dashboard/super-admin/rendez-vous", label: "Rendez-vous", icon: CalendarCheck },
     { href: "/dashboard/super-admin/utilisateurs", label: "Utilisateurs", icon: Users },
     { href: "/dashboard/super-admin/roles", label: "Rôles", icon: ShieldCheck },
   ],
