@@ -27,7 +27,7 @@ export function Hero() {
       {/* Grain overlay */}
       <div className="absolute inset-0 grain opacity-30" />
 
-      {/* Floating badges */}
+      {/* Floating badge GLOBAL — visible sur desktop */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -47,6 +47,7 @@ export function Hero() {
         </div>
       </motion.div>
 
+      {/* Floating badge Bangui — visible sur desktop */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -87,13 +88,13 @@ export function Hero() {
             </span>
           </motion.div>
 
-          {/* Headline */}
-          <h1 className="font-display text-5xl font-bold leading-[1.2] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
+          {/* Headline — leading genereux + pb pour les descendantes (g, j, p, q) */}
+          <h1 className="font-display text-5xl font-bold leading-[1.25] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
             <motion.span
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              className="block pb-3"
+              className="block pb-4 sm:pb-5 md:pb-6"
             >
               De Bangui
             </motion.span>
@@ -109,18 +110,38 @@ export function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7, duration: 0.8 }}
-              className="block text-3xl font-medium leading-[1.3] text-slate-200 sm:text-4xl md:text-5xl mt-3"
+              className="mt-4 block text-2xl font-medium leading-[1.4] text-slate-200 sm:text-3xl md:text-4xl lg:text-5xl"
             >
               nous transformons vos projets en réalité.
             </motion.span>
           </h1>
+
+          {/* Badge GLOBAL — version mobile (affichée uniquement sur mobile/tablette) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
+            className="mt-8 inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur-xl lg:hidden"
+          >
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-nexus-orange-500">
+              <Globe className="h-4 w-4 text-white" />
+            </div>
+            <div className="min-w-0">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-nexus-orange-300">
+                Global
+              </div>
+              <div className="text-sm font-semibold text-white">
+                Solutions globales. Impact réel.
+              </div>
+            </div>
+          </motion.div>
 
           {/* Sub */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9, duration: 0.8 }}
-            className="mt-8 max-w-2xl text-lg text-slate-300 sm:text-xl"
+            className="mt-8 max-w-2xl text-lg leading-relaxed text-slate-300 sm:text-xl"
           >
             Visa, études, business, voyages — NEXUS vous accompagne de A à Z.
             Une expertise locale, des solutions internationales.

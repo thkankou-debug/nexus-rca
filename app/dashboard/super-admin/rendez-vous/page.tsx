@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { BackButton } from "@/components/ui/BackButton";
 import {
   AppointmentRequestsManager,
   type AppointmentRequest,
@@ -46,6 +47,8 @@ export default async function AdminAppointmentsPage() {
 
   return (
     <div className="space-y-6">
+      <BackButton fallbackHref="/dashboard/super-admin" label="Retour au tableau de bord" />
+
       <div>
         <h1 className="font-display text-3xl font-bold text-nexus-blue-950">
           Demandes de rendez-vous
