@@ -36,6 +36,14 @@ import { whatsappLink, cn } from "@/lib/utils";
 import type { ServiceType, UrgenceLevel } from "@/types";
 
 // ============================================================================
+// TYPE LOCAL - etend DemandeCompleteForm avec source optionnel
+// (pour tracer l'origine : nexus_ia, formulaire_complet, etc.)
+// ============================================================================
+type DemandeCompleteFormWithSource = DemandeCompleteForm & {
+  source?: string;
+};
+
+// ============================================================================
 // CONFIG DES ETAPES
 // ============================================================================
 type StepId = 1 | 2 | 3 | 4 | 5;
@@ -129,7 +137,7 @@ export function DemandeFormComplete() {
   const supabase = createClient();
 
   const [currentStep, setCurrentStep] = useState<StepId>(1);
-  const [form, setForm] = useState<DemandeCompleteForm>(DEFAULT_FORM_VALUES);
+  const [form, setForm] = useState<DemandeCompleteFormWithSource>(DEFAULT_FORM_VALUES);
   const [files, setFiles] = useState<File[]>([]);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [loading, setLoading] = useState(false);
@@ -154,7 +162,7 @@ export function DemandeFormComplete() {
     try {
       const draft = localStorage.getItem(STORAGE_KEY);
       if (draft) {
-        const parsed = JSON.parse(draft) as Partial<DemandeCompleteForm>;
+        const parsed = JSON.parse(draft) as Partial<DemandeCompleteFormWithSource>;
         setForm((f) => ({ ...f, ...parsed }));
       }
     } catch {
@@ -177,7 +185,7 @@ export function DemandeFormComplete() {
           ...f,
           description: f.description || decoded,
           source: "nexus_ia",
-        } as DemandeCompleteForm));
+        }));
       } catch {
         /* ignore */
       }
@@ -228,9 +236,9 @@ export function DemandeFormComplete() {
     ? getServiceTypeConfig(form.service_type)
     : undefined;
 
-  const updateField = <K extends keyof DemandeCompleteForm>(
+  const updateField = <K extends keyof DemandeCompleteFormWithSource>(
     key: K,
-    value: DemandeCompleteForm[K]
+    value: DemandeCompleteFormWithSource[K]
   ) => {
     setForm((f) => ({ ...f, [key]: value }));
     if (errors[key as string]) {
@@ -365,7 +373,7 @@ export function DemandeFormComplete() {
         destination: form.destination || null,
         budget_estimatif: form.budget_estimatif || null,
         traitement_prioritaire: prioritaire,
-        source: "formulaire_complet",
+        source: form.source || "formulaire_complet",
         details_service: form.details,
         consentement_examen: form.consentement_examen,
         consentement_documents: form.consentement_documents,
@@ -491,7 +499,7 @@ export function DemandeFormComplete() {
       )}
 
       <div className="space-y-6">
-        {/* ====== ETAPE 1 — IDENTITE ====== */}
+        {/* ====== ETAPE 1 - IDENTITE ====== */}
         {currentStep === 1 && (
           <StepCard title="Vos informations" subtitle="Commencons par vous connaitre. Tous les champs marques d un asterisque sont obligatoires.">
             <div className="grid gap-5 sm:grid-cols-2">
@@ -554,7 +562,7 @@ export function DemandeFormComplete() {
           </StepCard>
         )}
 
-        {/* ====== ETAPE 2 — SERVICE ====== */}
+        {/* ====== ETAPE 2 - SERVICE ====== */}
         {currentStep === 2 && (
           <StepCard title="Service demande" subtitle="Quel service Nexus RCA vous interesse ? Choisissez la categorie la plus proche de votre besoin.">
             <div data-field="service_type">
@@ -598,7 +606,7 @@ export function DemandeFormComplete() {
           </StepCard>
         )}
 
-        {/* ====== ETAPE 3 — DETAILS ====== */}
+        {/* ====== ETAPE 3 - DETAILS ====== */}
         {currentStep === 3 && (
           <StepCard title="Details de votre demande" subtitle="Precisez ce dont vous avez besoin. Plus c est clair, plus vite nous repondons.">
             <div className="space-y-5">
@@ -678,7 +686,7 @@ export function DemandeFormComplete() {
           </StepCard>
         )}
 
-        {/* ====== ETAPE 4 — DOCUMENTS ====== */}
+        {/* ====== ETAPE 4 - DOCUMENTS ====== */}
         {currentStep === 4 && (
           <StepCard title="Documents a joindre" subtitle="Joignez les documents utiles a votre dossier. Cette etape est optionnelle mais accelere le traitement." optional>
             {form.service_type && DOCUMENTS_CHECKLIST[form.service_type] && (
@@ -710,7 +718,7 @@ export function DemandeFormComplete() {
           </StepCard>
         )}
 
-        {/* ====== ETAPE 5 — RECAPITULATIF ====== */}
+        {/* ====== ETAPE 5 - RECAPITULATIF ====== */}
         {currentStep === 5 && (
           <StepCard title="Recapitulatif" subtitle="Verifiez vos informations avant envoi. Vous pouvez encore modifier en cliquant sur une etape.">
             <div className="space-y-6">
