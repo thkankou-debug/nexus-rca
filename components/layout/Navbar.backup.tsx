@@ -14,7 +14,6 @@ const NAV_LINKS = [
   { href: "/services", label: "Services", hasDropdown: true },
   { href: "/services/nexus-ia", label: "Nexus IA 🤖" },
   { href: "/contact", label: "Contact" },
-  { href: "/rendez-vous", label: "Rendez-vous" },
 ];
 
 export function Navbar() {
