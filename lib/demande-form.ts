@@ -75,6 +75,16 @@ export const SERVICE_TYPES: ServiceTypeConfig[] = [
     icon: "💱",
     hasDynamicFields: false,
   },
+  // ============================================================
+  // NOUVEAU SERVICE — DIGITAL & DEVELOPPEMENT D'ACTIVITE
+  // ============================================================
+  {
+    value: "digitalisation" as ServiceType,
+    label: "Digital & développement d'activité",
+    description: "Création de sites web, outils numériques et visibilité en ligne",
+    icon: "🌐",
+    hasDynamicFields: false,
+  },
   {
     value: "assistance",
     label: "Assistance générale",
@@ -108,6 +118,10 @@ export const SERVICE_SLUG_TO_TYPE: Record<string, ServiceType> = {
   change: "change_transfert",
   transfert: "change_transfert",
   "nexus-ia": "assistance",
+  // ============================================================
+  // NOUVEAU MAPPING — pre-selection automatique depuis /services/digitalisation
+  // ============================================================
+  digitalisation: "digitalisation" as ServiceType,
 };
 
 // ============================================================================
