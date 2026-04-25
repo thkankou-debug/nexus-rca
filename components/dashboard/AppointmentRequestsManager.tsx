@@ -77,10 +77,10 @@ const STATUSES: AppointmentStatus[] = [
 
 const STATUS_LABELS: Record<AppointmentStatus, string> = {
   nouveau: "Nouveau",
-  confirme: "Confirme",
+  confirme: "Confirmé",
   en_attente: "En attente",
-  annule: "Annule",
-  termine: "Termine",
+  annule: "Annulé",
+  termine: "Terminé",
 };
 
 const STATUS_COLORS: Record<AppointmentStatus, string> = {
@@ -94,7 +94,7 @@ const STATUS_COLORS: Record<AppointmentStatus, string> = {
 const URGENCY_LABELS: Record<string, string> = {
   normal: "Normal",
   prioritaire: "Prioritaire",
-  tres_urgent: "Tres urgent",
+  tres_urgent: "Très urgent",
 };
 
 const URGENCY_COLORS: Record<string, string> = {
@@ -105,7 +105,7 @@ const URGENCY_COLORS: Record<string, string> = {
 
 const MEETING_TYPE_LABELS: Record<string, string> = {
   whatsapp: "WhatsApp",
-  phone: "Telephone",
+  phone: "Téléphone",
   video: "Visio",
   onsite: "Sur place",
 };
@@ -175,17 +175,17 @@ export function AppointmentRequestsManager({
     setSavingId(null);
     if (error) {
       console.error("Erreur update :", error);
-      toast.error("Erreur de mise a jour");
+      toast.error("Erreur de mise à jour");
       return;
     }
     setRequests((list) =>
       list.map((r) => (r.id === id ? { ...r, status } : r))
     );
-    toast.success("Statut mis a jour");
+    toast.success("Statut mis à jour");
   };
 
   const deleteRequest = async (id: string) => {
-    if (!confirm("Supprimer definitivement cette demande ?")) return;
+    if (!confirm("Supprimer définitivement cette demande ?")) return;
     const { error } = await supabase
       .from("appointment_requests")
       .delete()
@@ -195,7 +195,7 @@ export function AppointmentRequestsManager({
       return;
     }
     setRequests((list) => list.filter((r) => r.id !== id));
-    toast.success("Demande supprimee");
+    toast.success("Demande supprimée");
   };
 
   return (
@@ -243,7 +243,7 @@ export function AppointmentRequestsManager({
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-mono text-xs font-bold text-nexus-blue-700">
-                      {req.reference || "sans-ref"}
+                      {req.reference || "sans-réf"}
                     </span>
                     <span
                       className={cn(
@@ -274,7 +274,7 @@ export function AppointmentRequestsManager({
                   <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
                     <span className="inline-flex items-center gap-1">
                       <Calendar className="h-3.5 w-3.5" />
-                      {formatDate(req.preferred_date)} a {req.preferred_time}
+                      {formatDate(req.preferred_date)} à {req.preferred_time}
                     </span>
                     <span className="inline-flex items-center gap-1">
                       <Clock className="h-3.5 w-3.5" />
@@ -285,7 +285,7 @@ export function AppointmentRequestsManager({
                       {MEETING_TYPE_LABELS[req.meeting_type]}
                     </span>
                     <span className="text-slate-400">
-                      Recu le {formatDateTime(req.created_at)}
+                      Reçu le {formatDateTime(req.created_at)}
                     </span>
                   </div>
                 </div>
@@ -303,7 +303,7 @@ export function AppointmentRequestsManager({
                   {/* Coordonnees */}
                   <div>
                     <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">
-                      Coordonnees
+                      Coordonnées
                     </h4>
                     <div className="grid gap-2 sm:grid-cols-2">
                       <InfoRow
@@ -314,7 +314,7 @@ export function AppointmentRequestsManager({
                       />
                       <InfoRow
                         icon={Phone}
-                        label="Telephone"
+                        label="Téléphone"
                         value={req.phone}
                         href={`tel:${req.phone}`}
                       />
@@ -345,7 +345,7 @@ export function AppointmentRequestsManager({
                       </p>
                       {req.alternative_availability && (
                         <p className="mt-3 text-xs text-slate-500">
-                          <strong>Autres dispo :</strong>{" "}
+                          <strong>Autres disponibilités :</strong>{" "}
                           {req.alternative_availability}
                         </p>
                       )}
@@ -362,14 +362,14 @@ export function AppointmentRequestsManager({
                             Dossier existant
                           </p>
                           <p className="mt-0.5 font-mono text-nexus-blue-800">
-                            {req.file_number || "non precise"}
+                            {req.file_number || "non précisé"}
                           </p>
                         </div>
                       )}
                       {req.has_documents_ready === "oui" && (
                         <div className="rounded-xl border border-green-200 bg-green-50 p-3">
                           <p className="font-semibold text-green-900">
-                            Documents prets
+                            Documents prêts
                           </p>
                         </div>
                       )}
@@ -409,7 +409,7 @@ export function AppointmentRequestsManager({
                         onClick={() => deleteRequest(req.id)}
                         className="text-xs font-semibold text-red-600 hover:text-red-800"
                       >
-                        Supprimer definitivement
+                        Supprimer définitivement
                       </button>
                     </div>
                   )}

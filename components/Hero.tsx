@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 
 export function Hero() {
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden bg-nexus-blue-950 text-white">
+    <section className="relative flex min-h-screen items-center overflow-hidden bg-nexus-blue-950 pb-20 text-white">
       {/* Background image */}
       <div className="absolute inset-0">
         <img
@@ -67,8 +67,8 @@ export function Hero() {
         </div>
       </motion.div>
 
-      {/* Main content */}
-      <div className="relative mx-auto w-full max-w-7xl px-4 py-32 lg:px-8">
+      {/* Main content — pb genereux pour eviter toute coupure */}
+      <div className="relative mx-auto w-full max-w-7xl px-4 pt-32 pb-12 lg:px-8 lg:pb-20">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -80,7 +80,7 @@ export function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm backdrop-blur-md"
+            className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm backdrop-blur-md"
           >
             <Sparkles className="h-4 w-4 text-nexus-orange-400" />
             <span className="font-medium">
@@ -89,44 +89,27 @@ export function Hero() {
           </motion.div>
 
           {/* ============================================================ */}
-          {/* HEADLINE — corrections definitives pour descendantes (g, j, p) */}
-          {/* - leading-[1.3] sur le h1 (espace vertical large)             */}
-          {/* - overflow-visible explicite pour annuler tout clipping       */}
-          {/* - pb-6 sm:pb-8 sur chaque span qui contient une descendante   */}
+          {/* TITRE — nouveau wording, max 2 lignes mobile, fix descendantes */}
+          {/* leading-[1.15] + paddingBottom inline pour garantir la zone   */}
+          {/* descendante (g, p, y, j) sur toutes les tailles d'ecran      */}
           {/* ============================================================ */}
-          <h1 className="font-display text-5xl font-bold leading-[1.3] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl overflow-visible">
-            <motion.span
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="block overflow-visible pb-6 sm:pb-8 md:pb-10"
-            >
-              De Bangui
-            </motion.span>
-            <motion.span
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="block overflow-visible pb-3 sm:pb-4"
-            >
-              <span className="text-gradient-orange">au monde</span> :
-            </motion.span>
-            <motion.span
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.8 }}
-              className="mt-4 block overflow-visible text-2xl font-medium leading-[1.4] text-slate-200 sm:text-3xl md:text-4xl lg:text-5xl"
-            >
-              nous transformons vos projets en réalité.
-            </motion.span>
-          </h1>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="font-display text-3xl font-bold leading-[1.15] tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl"
+            style={{ paddingBottom: "0.3em" }}
+          >
+            L&apos;accompagnement qui transforme{" "}
+            <span className="text-gradient-orange">vos projets</span> en réalité
+          </motion.h1>
 
           {/* Badge SIGNATURE NEXUS — version mobile (visible uniquement sur mobile/tablette) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.8 }}
-            className="mt-8 inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur-xl lg:hidden"
+            className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur-xl lg:hidden"
           >
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-nexus-orange-500">
               <Globe className="h-4 w-4 text-white" />
@@ -141,23 +124,24 @@ export function Hero() {
             </div>
           </motion.div>
 
-          {/* Sub */}
+          {/* Sous-titre — espacement ameliore */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9, duration: 0.8 }}
-            className="mt-8 max-w-2xl text-lg leading-relaxed text-slate-300 sm:text-xl"
+            className="mt-10 max-w-2xl text-base leading-relaxed text-slate-300 sm:mt-10 sm:text-lg md:text-xl"
           >
-            Visa, études, business, voyages — NEXUS vous accompagne de A à Z.
-            Une expertise locale, des solutions internationales.
+            Démarches administratives, projets internationaux, partenariats et
+            financement. Un accompagnement structuré, fiable et axé sur des
+            résultats concrets.
           </motion.p>
 
-          {/* CTAs */}
+          {/* CTAs — espacement ameliore */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.1, duration: 0.8 }}
-            className="mt-10 flex flex-col gap-3 sm:flex-row sm:gap-4"
+            className="mt-12 flex flex-col gap-3 sm:flex-row sm:gap-4"
           >
             <Button href="/rendez-vous" size="lg">
               Prendre rendez-vous <ArrowRight className="h-5 w-5" />
@@ -167,12 +151,12 @@ export function Hero() {
             </Button>
           </motion.div>
 
-          {/* Stats */}
+          {/* Stats — espacement ameliore */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.3, duration: 0.8 }}
-            className="mt-16 grid max-w-2xl grid-cols-3 gap-6 border-t border-white/10 pt-8"
+            className="mt-20 grid max-w-2xl grid-cols-3 gap-6 border-t border-white/10 pt-10"
           >
             <div>
               <div className="font-display text-3xl font-bold text-nexus-orange-400">
