@@ -8,6 +8,7 @@ import {
   Coins,
   Send,
   Bot,
+  Globe,
   type LucideIcon,
 } from "lucide-react";
 
@@ -203,6 +204,26 @@ export const SERVICES: Service[] = [
     accent: "blue",
     image:
       "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "10",
+    slug: "digitalisation",
+    title: "Digital & développement d'activité",
+    shortDesc:
+      "Sites web, WhatsApp Business, visibilité — donnez à votre activité la présence digitale qu'elle mérite.",
+    longDesc:
+      "Nexus RCA aide les particuliers et les entreprises à se digitaliser, renforcer leur crédibilité et attirer des clients grâce à des outils modernes et efficaces. Sites web professionnels, WhatsApp Business, formulaires clients, structuration de la présence digitale et accompagnement stratégique.",
+    icon: Globe,
+    features: [
+      "Sites web professionnels (vitrine, e-commerce, sur-mesure)",
+      "WhatsApp Business (catalogue, réponses automatiques)",
+      "Formulaires clients optimisés pour générer des leads",
+      "Structuration complète de la présence digitale",
+      "3 packs adaptés : Essentiel, Pro, Premium",
+    ],
+    accent: "orange",
+    image:
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
   },
 ];
 
