@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { MapPin, Phone, Mail, MessageCircle, Facebook, Instagram, Linkedin } from "lucide-react";
+import { MapPin, Phone, Mail, MessageCircle, Facebook, Instagram, Linkedin, Globe } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { SERVICES } from "@/lib/services";
 import { whatsappLink } from "@/lib/utils";
+import { NEXUS_CONTACT } from "@/lib/contact";
 
 export function Footer() {
   return (
@@ -83,8 +84,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/demande" className="text-slate-400 hover:text-nexus-orange-400">
-                  Faire une demande
+                <Link href="/rendez-vous" className="text-slate-400 hover:text-nexus-orange-400">
+                  Prendre rendez-vous
                 </Link>
               </li>
               <li>
@@ -104,25 +105,55 @@ export function Footer() {
           <div>
             <h3 className="mb-4 font-display text-base font-bold text-white">Contact</h3>
             <ul className="space-y-3 text-sm">
+              {/* Adresse */}
               <li className="flex items-start gap-3">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-400" />
                 <span className="text-slate-400">
-                  Relais Sica, vers Hôpital Général
+                  {NEXUS_CONTACT.addressLine1}
                   <br />
-                  Bangui, République Centrafricaine
+                  {NEXUS_CONTACT.addressLine2}
+                  <br />
+                  <span className="text-slate-500 italic text-xs">
+                    {NEXUS_CONTACT.appointmentOnly}
+                  </span>
                 </span>
               </li>
-              <li className="flex items-center gap-3">
-                <Phone className="h-4 w-4 shrink-0 text-nexus-orange-400" />
-                <a
-                  href="tel:+15873276344"
-                  className="text-slate-400 hover:text-nexus-orange-400"
-                >
-                  +1 587 327 6344
-                </a>
+
+              {/* Telephone RCA principal */}
+              <li className="flex items-start gap-3">
+                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-400" />
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    RCA (principale)
+                  </p>
+                  <a
+                    href={`tel:+${NEXUS_CONTACT.phoneRcaRaw}`}
+                    className="text-slate-400 hover:text-nexus-orange-400"
+                  >
+                    {NEXUS_CONTACT.phoneRca}
+                  </a>
+                </div>
               </li>
-              <li className="flex items-center gap-3">
-                <MessageCircle className="h-4 w-4 shrink-0 text-nexus-orange-400" />
+
+              {/* Telephone international Canada */}
+              <li className="flex items-start gap-3">
+                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-nexus-blue-400" />
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    International (Canada)
+                  </p>
+                  <a
+                    href={`tel:+${NEXUS_CONTACT.phoneCanadaRaw}`}
+                    className="text-slate-400 hover:text-nexus-orange-400"
+                  >
+                    {NEXUS_CONTACT.phoneCanada}
+                  </a>
+                </div>
+              </li>
+
+              {/* WhatsApp */}
+              <li className="flex items-start gap-3">
+                <MessageCircle className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-400" />
                 <a
                   href={whatsappLink("Bonjour Nexus, j'aimerais obtenir plus d'informations.")}
                   target="_blank"
@@ -132,13 +163,28 @@ export function Footer() {
                   WhatsApp direct
                 </a>
               </li>
-              <li className="flex items-center gap-3">
-                <Mail className="h-4 w-4 shrink-0 text-nexus-orange-400" />
+
+              {/* Email */}
+              <li className="flex items-start gap-3">
+                <Mail className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-400" />
                 <a
-                  href="mailto:contact@nexus-rca.com"
+                  href={`mailto:${NEXUS_CONTACT.email}`}
                   className="text-slate-400 hover:text-nexus-orange-400"
                 >
-                  contact@nexus-rca.com
+                  {NEXUS_CONTACT.email}
+                </a>
+              </li>
+
+              {/* Site web */}
+              <li className="flex items-start gap-3">
+                <Globe className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-400" />
+                <a
+                  href={NEXUS_CONTACT.websiteUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-slate-400 hover:text-nexus-orange-400"
+                >
+                  {NEXUS_CONTACT.website}
                 </a>
               </li>
             </ul>

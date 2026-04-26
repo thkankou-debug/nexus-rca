@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { MessageCircle, X } from "lucide-react";
+import { NEXUS_CONTACT } from "@/lib/contact";
 
-const WHATSAPP_NUMBER = "15873276344";
 const WHATSAPP_MESSAGE = "Bonjour Nexus, j'aimerais obtenir plus d'informations.";
 
 export function WhatsAppFloat() {
@@ -38,7 +38,8 @@ export function WhatsAppFloat() {
 
   if (!visible) return null;
 
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+  // Utilise le numero RCA centralise dans lib/contact.ts
+  const whatsappUrl = `https://wa.me/${NEXUS_CONTACT.phoneRcaRaw}?text=${encodeURIComponent(
     WHATSAPP_MESSAGE
   )}`;
 

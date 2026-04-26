@@ -10,6 +10,7 @@ import {
   MessageCircle,
   Send,
   CheckCircle2,
+  Globe,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -17,7 +18,8 @@ import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { Button } from "@/components/ui/Button";
 import { Input, Textarea } from "@/components/ui/Input";
 import { createClient } from "@/lib/supabase/client";
-import { whatsappLink, WHATSAPP_NUMBER } from "@/lib/utils";
+import { whatsappLink } from "@/lib/utils";
+import { NEXUS_CONTACT } from "@/lib/contact";
 
 export default function ContactPage() {
   const supabase = createClient();
@@ -48,11 +50,6 @@ export default function ContactPage() {
     }
   };
 
-  const formattedWhatsapp = `+${WHATSAPP_NUMBER.replace(
-    /(\d{1})(\d{3})(\d{3})(\d{4})/,
-    "$1 $2 $3 $4"
-  )}`;
-
   return (
     <>
       <Navbar />
@@ -71,7 +68,7 @@ export default function ContactPage() {
                 Contactez <span className="text-gradient-orange">Nexus RCA</span>
               </h1>
               <p className="mt-4 max-w-2xl text-lg text-white/75">
-                Agence basée à Bangui, au service des projets qui traversent les frontières. WhatsApp, email, ou directement en agence — choisissez ce qui vous convient.
+                Agence basée à Bangui, au service des projets qui traversent les frontières. Choisissez le canal qui vous convient — nous vous répondons vite.
               </p>
             </div>
           </div>
@@ -92,6 +89,7 @@ export default function ContactPage() {
                   </p>
 
                   <div className="mt-6 space-y-5">
+                    {/* Adresse */}
                     <div className="flex gap-4">
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-nexus-orange-500/20">
                         <MapPin className="h-5 w-5 text-nexus-orange-400" />
@@ -101,32 +99,53 @@ export default function ContactPage() {
                           Adresse
                         </p>
                         <p className="mt-0.5 text-white">
-                          Relais Sica, vers Hôpital Général
+                          {NEXUS_CONTACT.addressLine1}
                           <br />
-                          Bangui, République Centrafricaine
+                          {NEXUS_CONTACT.addressLine2}
+                        </p>
+                        <p className="mt-1 text-xs italic text-white/60">
+                          {NEXUS_CONTACT.appointmentOnly}
                         </p>
                       </div>
                     </div>
 
+                    {/* Telephone RCA principal */}
                     <div className="flex gap-4">
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-nexus-orange-500/20">
                         <Phone className="h-5 w-5 text-nexus-orange-400" />
                       </div>
                       <div>
                         <p className="text-xs font-semibold uppercase tracking-wide text-white/60">
-                          WhatsApp / Téléphone
+                          RCA (principale)
                         </p>
                         <a
-                          href={whatsappLink("Bonjour Nexus, je souhaite parler à un conseiller")}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="mt-0.5 text-white hover:text-nexus-orange-400"
+                          href={`tel:+${NEXUS_CONTACT.phoneRcaRaw}`}
+                          className="mt-0.5 block text-white hover:text-nexus-orange-400"
                         >
-                          {formattedWhatsapp}
+                          {NEXUS_CONTACT.phoneRca}
                         </a>
                       </div>
                     </div>
 
+                    {/* Telephone international Canada */}
+                    <div className="flex gap-4">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-nexus-blue-500/20">
+                        <Phone className="h-5 w-5 text-nexus-blue-300" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-white/60">
+                          International (Canada)
+                        </p>
+                        <a
+                          href={`tel:+${NEXUS_CONTACT.phoneCanadaRaw}`}
+                          className="mt-0.5 block text-white hover:text-nexus-orange-400"
+                        >
+                          {NEXUS_CONTACT.phoneCanada}
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* Email */}
                     <div className="flex gap-4">
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-nexus-orange-500/20">
                         <Mail className="h-5 w-5 text-nexus-orange-400" />
@@ -136,14 +155,35 @@ export default function ContactPage() {
                           Email
                         </p>
                         <a
-                          href="mailto:contact@nexus-rca.com"
-                          className="mt-0.5 text-white hover:text-nexus-orange-400"
+                          href={`mailto:${NEXUS_CONTACT.email}`}
+                          className="mt-0.5 block text-white hover:text-nexus-orange-400"
                         >
-                          contact@nexus-rca.com
+                          {NEXUS_CONTACT.email}
                         </a>
                       </div>
                     </div>
 
+                    {/* Site web */}
+                    <div className="flex gap-4">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-nexus-orange-500/20">
+                        <Globe className="h-5 w-5 text-nexus-orange-400" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-white/60">
+                          Site web
+                        </p>
+                        <a
+                          href={NEXUS_CONTACT.websiteUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="mt-0.5 block text-white hover:text-nexus-orange-400"
+                        >
+                          {NEXUS_CONTACT.website}
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* Horaires */}
                     <div className="flex gap-4">
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-nexus-orange-500/20">
                         <Clock className="h-5 w-5 text-nexus-orange-400" />
@@ -161,9 +201,10 @@ export default function ContactPage() {
                     </div>
                   </div>
 
+                  {/* Bouton WhatsApp discret */}
                   <div className="mt-8 rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
                     <p className="text-sm text-white/80">
-                      Réponse la plus rapide : <strong>WhatsApp</strong>. Nos conseillers répondent en moyenne sous 15 minutes.
+                      Pour une réponse rapide, écrivez-nous sur WhatsApp.
                     </p>
                     <a
                       href={whatsappLink(
@@ -171,7 +212,7 @@ export default function ContactPage() {
                       )}
                       target="_blank"
                       rel="noreferrer"
-                      className="mt-3 inline-flex items-center gap-2 rounded-full bg-green-500 px-4 py-2 text-sm font-semibold text-white hover:bg-green-600"
+                      className="mt-3 inline-flex items-center gap-2 rounded-full bg-green-500/90 px-4 py-2 text-sm font-semibold text-white transition hover:bg-green-500"
                     >
                       <MessageCircle className="h-4 w-4" />
                       Écrire sur WhatsApp
