@@ -4,94 +4,121 @@ import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { ServiceHero } from "@/components/services/ServiceHero";
 import { ServiceSection } from "@/components/services/ServiceSection";
-import { ServiceChecklist } from "@/components/services/ServiceChecklist";
-import { ServiceSteps } from "@/components/services/ServiceSteps";
-import { ServiceFAQ } from "@/components/services/ServiceFAQ";
 import { ServiceCTA } from "@/components/services/ServiceCTA";
-import { FileText, Clock, TrendingUp } from "lucide-react";
+import {
+  Handshake,
+  TrendingUp,
+  Briefcase,
+  Globe2,
+  Sparkles,
+  ShieldCheck,
+  Target,
+  Layers,
+  CheckCircle2,
+  ArrowRight,
+} from "lucide-react";
 
 export const metadata = {
-  title: "Financement business & partenariat | Nexus RCA Bangui",
+  title: "Incubateur et financement en partenariat | Nexus RCA",
   description:
-    "Nexus RCA accompagne entrepreneurs et PME en Centrafrique pour structurer leur projet, monter des dossiers bancaires et rencontrer les bons investisseurs.",
+    "Nexus RCA accompagne et finance des projets selectionnes. Approche basee sur le partenariat, le developpement a long terme et le partage des resultats.",
 };
 
-const PRISES_EN_CHARGE = [
-  "Diagnostic du projet et evaluation de sa maturite (idee, prototype, lancement, croissance)",
-  "Etude de faisabilite technique, commerciale et financiere",
-  "Redaction du business plan complet avec previsionnel 3 a 5 ans",
-  "Modelisation financiere (compte de resultat, plan de tresorerie, seuil de rentabilite)",
-  "Structuration juridique de l entreprise ou de la levee",
-  "Montage du dossier bancaire pour pret professionnel ou ligne de credit",
-  "Preparation du pitch investisseurs (deck, executive summary, video si pertinent)",
-  "Mise en relation ciblee avec investisseurs, banques partenaires, fonds et bailleurs",
-  "Accompagnement dans les negociations et la signature",
-  "Suivi post-financement : reporting, gouvernance, structuration des premieres etapes",
+const POSITIONNEMENT_POINTS = [
+  {
+    icon: Handshake,
+    text: "Accompagner votre projet de A a Z",
+  },
+  {
+    icon: TrendingUp,
+    text: "Participer activement a son developpement",
+  },
+  {
+    icon: Briefcase,
+    text: "Investir en partenariat dans les projets selectionnes",
+  },
 ];
 
 const ETAPES = [
   {
-    title: "Premier rendez-vous gratuit de 30 minutes",
+    num: "01",
+    title: "Soumission du projet",
     description:
-      "Nous ecoutons votre projet, votre ambition et votre besoin reel de financement.",
+      "Vous nous presentez votre projet via notre formulaire dedie. Idee, vision, equipe, besoins.",
   },
   {
-    title: "Audit du projet",
+    num: "02",
+    title: "Analyse",
     description:
-      "Analyse des forces, faiblesses, opportunites, risques, et evaluation du besoin en financement.",
+      "Etude approfondie de la viabilite, du potentiel et de la structuration du projet.",
   },
   {
-    title: "Construction du dossier",
+    num: "03",
+    title: "Selection",
     description:
-      "Business plan, previsionnel, deck, documents juridiques : tout est travaille pour etre bancable.",
+      "Decision basee sur des criteres clairs. Retour transparent quel que soit le resultat.",
   },
   {
-    title: "Ciblage des interlocuteurs",
+    num: "04",
+    title: "Mise en place du partenariat",
     description:
-      "Nous identifions les banques, fonds et bailleurs les plus pertinents pour votre secteur et votre montant.",
+      "Cadre formel, role de chacun, modalites du partenariat etablies dans la transparence.",
   },
   {
-    title: "Coaching avant chaque rendez-vous",
+    num: "05",
+    title: "Suivi et developpement",
     description:
-      "Simulation de pitch, questions types, objections, gestion des chiffres : vous arrivez prepare.",
-  },
-  {
-    title: "Suivi jusqu au decaissement",
-    description:
-      "Nous vous accompagnons jusqu a la signature, puis mettons en place le reporting et la gouvernance post-financement.",
+      "Accompagnement continu, suivi de la croissance, ajustements strategiques en partenariat.",
   },
 ];
 
-const FAQ = [
+const TYPES_PROJETS = [
   {
-    question: "Est-ce que Nexus garantit d obtenir un financement ?",
-    answer:
-      "Non, aucun cabinet serieux ne peut garantir une decision d investisseur ou de banque. En revanche, nous maximisons vos chances en structurant un dossier solide, en ciblant les bons interlocuteurs et en vous preparant aux entretiens.",
+    icon: Briefcase,
+    title: "Projets entrepreneuriaux",
+    description: "Creation ou developpement d entreprise avec un projet structure.",
   },
   {
-    question: "Combien coute l accompagnement ?",
-    answer:
-      "Les tarifs dependent de la complexite du projet et du montant recherche. Un devis personnalise vous est remis apres le premier rendez-vous. Nous proposons aussi, sur certains dossiers, une partie de remuneration au succes.",
+    icon: TrendingUp,
+    title: "Activites commerciales",
+    description: "Commerces, services, activites generant des revenus reguliers.",
   },
   {
-    question: "Je n ai que l idee, pas de business plan. Vous pouvez quand meme m aider ?",
-    answer:
-      "Oui. C est meme la que notre accompagnement a le plus d impact. Nous partons de votre intuition et la transformons en un dossier structure.",
+    icon: Globe2,
+    title: "Projets internationaux",
+    description: "Initiatives transfrontalieres, import-export, expansion regionale.",
   },
   {
-    question: "Est-ce que vous travaillez avec la diaspora ?",
-    answer:
-      "Oui. Nous accompagnons regulierement des porteurs de projet bases au Canada, en France, aux Etats-Unis ou ailleurs, qui veulent investir en RCA sans y etre physiquement.",
+    icon: Sparkles,
+    title: "Initiatives a fort potentiel",
+    description: "Projets innovants, secteurs porteurs, opportunites de marche.",
+  },
+];
+
+const CRITERES = [
+  {
+    icon: ShieldCheck,
+    title: "Viabilite",
+    description:
+      "Le projet repose sur des bases economiques solides et un modele realiste.",
   },
   {
-    question: "Quels secteurs sont les plus finances en ce moment ?",
-    answer:
-      "L agro-alimentaire, les services numeriques, l energie decentralisee, la sante et la logistique attirent particulierement les investisseurs panafricains et les bailleurs internationaux.",
+    icon: TrendingUp,
+    title: "Potentiel de croissance",
+    description:
+      "Le marche est porteur, le projet peut prendre de l ampleur dans le temps.",
   },
   {
-    question: "Vous prenez tous les projets ?",
-    answer:
-      "Non. Apres le premier rendez-vous, nous vous disons honnetement si votre projet est pret, s il faut le retravailler, ou s il vaut mieux attendre. Notre credibilite depend de la qualite des dossiers que nous presentons.",
+    icon: Layers,
+    title: "Structuration",
+    description:
+      "Le porteur a pris le temps de poser les bases : plan, equipe, organisation.",
+  },
+  {
+    icon: Target,
+    title: "Engagement du porteur",
+    description:
+      "Vision claire, determination, capacite a porter le projet sur le long terme.",
   },
 ];
 
@@ -100,130 +127,199 @@ export default function FinancementPage() {
     <>
       <Navbar />
       <main>
+        {/* HERO */}
         <ServiceHero
-          badge="Financement et partenariat"
-          title="Financez votre projet, trouvez les bons partenaires."
-          subtitle="De l idee au decaissement : Nexus RCA structure votre dossier, ouvre les bonnes portes et vous tient la main jusqu au financement."
+          badge="Incubateur et financement en partenariat"
+          title="Développez votre projet avec un partenaire engagé"
+          subtitle="Nous accompagnons et finançons des projets sélectionnés, avec une approche basée sur le partenariat et le développement à long terme."
           image="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80"
-          imageAlt="Analyse de donnees financieres sur un ordinateur portable"
-          ctaLabel="Ouvrir mon dossier de financement"
-          whatsappMessage="Bonjour Nexus, je souhaite preparer un dossier de financement."
+          imageAlt="Incubateur et partenariat Nexus RCA"
+          ctaLabel="Soumettre mon projet"
+          ctaHref="/demande/complet?service=financement"
+          whatsappMessage="Bonjour Nexus, j aimerais soumettre un projet pour un partenariat."
         />
 
-        <ServiceSection
-          eyebrow="Introduction"
-          title="Monter un projet solide demande plus qu une bonne idee. Il faut un dossier bancable."
-          description="Nexus RCA accompagne entrepreneurs, PME et porteurs de projet dans la structuration financiere, la recherche de capitaux et la mise en relation avec des partenaires serieux, locaux comme internationaux."
-        >
-          <div />
-        </ServiceSection>
-
-        <ServiceSection
-          variant="muted"
-          eyebrow="Notre accompagnement"
-          title="Ce que Nexus RCA prend en charge"
-          description="Dix interventions concretes pour passer de l intuition au dossier structure, puis au decaissement."
-        >
-          <ServiceChecklist items={PRISES_EN_CHARGE} />
-        </ServiceSection>
-
-        <ServiceSection
-          eyebrow="Profils accompagnes"
-          title="Pour qui ce service est concu"
-        >
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              { title: "Entrepreneurs centrafricains", text: "Qui veulent lancer ou developper leur activite avec un cadre solide." },
-              { title: "PME locales", text: "Qui cherchent a se moderniser, se structurer ou a exporter." },
-              { title: "Porteurs de projet", text: "Agriculture, tech, commerce, services, energie, sante, education." },
-              { title: "Diaspora investisseuse", text: "Qui veut investir en RCA avec un partenaire de confiance sur le terrain." },
-              { title: "Associations et ONG", text: "A la recherche de subventions ou de bailleurs internationaux." },
-              { title: "Structures a impact", text: "Dont le projet a besoin d etre chiffre et presente dans les regles." },
-            ].map((p) => (
-              <div key={p.title} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                <h3 className="font-display text-lg font-bold text-nexus-blue-950">{p.title}</h3>
-                <p className="mt-2 text-sm text-slate-600">{p.text}</p>
-              </div>
-            ))}
-          </div>
-        </ServiceSection>
-
-        <ServiceSection
-          variant="muted"
-          eyebrow="Methode"
-          title="Comment ca se passe"
-          description="Un parcours balise en six etapes, du premier rendez-vous au decaissement."
-        >
-          <ServiceSteps steps={ETAPES} />
-        </ServiceSection>
-
-        <ServiceSection eyebrow="Preparation" title="A prevoir des le depart">
-          <div className="grid gap-6 lg:grid-cols-2">
-            <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-              <div className="mb-4 flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-blue-50 text-nexus-blue-700">
-                  <FileText className="h-5 w-5" />
-                </span>
-                <h3 className="font-display text-xl font-bold text-nexus-blue-950">A preparer</h3>
-              </div>
-              <p className="text-sm leading-relaxed text-slate-600">
-                Presentation du projet meme brouillonne, piece d identite, registre de commerce si la societe existe, etats financiers des deux dernieres annees si disponibles, CV du porteur et de l equipe, devis fournisseurs, lettres d intention clients, et tout document prouvant la traction (ventes, contrats, partenariats).
+        {/* POSITIONNEMENT — section cle */}
+        <section className="bg-white py-20">
+          <div className="mx-auto max-w-5xl px-4 lg:px-8">
+            <div className="text-center">
+              <p className="text-sm font-bold uppercase tracking-wider text-nexus-orange-600">
+                Notre positionnement
+              </p>
+              <h2 className="mt-3 font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl md:text-5xl">
+                Bien plus qu un simple conseiller
+              </h2>
+              <p className="mt-6 text-lg leading-relaxed text-slate-700 sm:text-xl">
+                Contrairement aux solutions classiques, NEXUS RCA ne se limite
+                pas a conseiller.
               </p>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-              <div className="mb-4 flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-orange-50 text-nexus-orange-600">
-                  <Clock className="h-5 w-5" />
-                </span>
-                <h3 className="font-display text-xl font-bold text-nexus-blue-950">Delais indicatifs</h3>
-              </div>
-              <ul className="space-y-2 text-sm text-slate-600">
-                <li><strong className="text-nexus-blue-950">Business plan complet :</strong> 2 a 4 semaines</li>
-                <li><strong className="text-nexus-blue-950">Dossier bancaire :</strong> 3 a 6 semaines</li>
-                <li><strong className="text-nexus-blue-950">Recherche d investisseurs :</strong> 2 a 6 mois</li>
-                <li><strong className="text-nexus-blue-950">Subventions internationales :</strong> 4 a 9 mois</li>
-                <li className="pt-2 italic">Plus le dossier est solide en amont, plus la recherche avance vite.</li>
-              </ul>
+            {/* 3 points */}
+            <div className="mt-12 grid gap-5 sm:grid-cols-3">
+              {POSITIONNEMENT_POINTS.map((point) => {
+                const Icon = point.icon;
+                return (
+                  <div
+                    key={point.text}
+                    className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-6 text-center shadow-sm"
+                  >
+                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-lg">
+                      <Icon className="h-7 w-7" />
+                    </div>
+                    <p className="mt-4 font-semibold text-nexus-blue-950">
+                      {point.text}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="mt-10 rounded-3xl border border-nexus-blue-200 bg-gradient-to-br from-nexus-blue-50 to-white p-8 text-center sm:p-10">
+              <p className="text-lg italic text-nexus-blue-950 sm:text-xl">
+                Notre approche repose sur une{" "}
+                <strong className="text-nexus-orange-600">
+                  collaboration directe
+                </strong>{" "}
+                et un{" "}
+                <strong className="text-nexus-orange-600">
+                  partage des resultats
+                </strong>
+                .
+              </p>
             </div>
           </div>
-        </ServiceSection>
+        </section>
 
+        {/* COMMENT CA FONCTIONNE */}
         <ServiceSection
-          variant="dark"
-          eyebrow="Pourquoi Nexus RCA"
-          title="Nous structurons des dossiers qui passent, pas des dossiers qui dorment."
+          variant="muted"
+          eyebrow="Comment ca fonctionne"
+          title="Un processus clair en 5 etapes"
+          description="De la soumission a l accompagnement long terme, chaque etape est transparente."
         >
-          <div className="grid gap-6 lg:grid-cols-2">
-            {[
-              { title: "Connaissance des financeurs", text: "Nous connaissons les attentes reelles des banques et investisseurs qui financent l Afrique centrale." },
-              { title: "Reseau actif", text: "Institutions financieres locales, fonds panafricains, diaspora investisseuse, bailleurs internationaux." },
-              { title: "Preparation serieuse", text: "Vous ne partez jamais seul en rendez-vous. Coaching, simulation, gestion des questions difficiles." },
-              { title: "Suivi post-signature", text: "Nous restons a vos cotes apres la signature, pour que les premiers mois ne coulent pas le projet." },
-            ].map((item) => (
-              <div key={item.title} className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-orange-500/20 text-nexus-orange-300">
-                  <TrendingUp className="h-5 w-5" />
+          <div className="space-y-4">
+            {ETAPES.map((etape, idx) => (
+              <div
+                key={etape.num}
+                className="group flex gap-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-nexus-orange-300 hover:shadow-md"
+              >
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-100 to-nexus-blue-50 font-display text-xl font-bold text-nexus-blue-700 transition group-hover:from-nexus-orange-100 group-hover:to-nexus-orange-50 group-hover:text-nexus-orange-600">
+                  {etape.num}
                 </div>
-                <h3 className="font-display text-lg font-bold">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-300">{item.text}</p>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-display text-lg font-bold text-nexus-blue-950">
+                    {etape.title}
+                  </h3>
+                  <p className="mt-1 text-sm leading-relaxed text-slate-600">
+                    {etape.description}
+                  </p>
+                </div>
+                {idx < ETAPES.length - 1 && (
+                  <ArrowRight className="hidden h-5 w-5 shrink-0 self-center text-slate-300 sm:block" />
+                )}
               </div>
             ))}
           </div>
         </ServiceSection>
 
+        {/* TYPES DE PROJETS */}
         <ServiceSection
-          eyebrow="Questions frequentes"
-          title="Les reponses aux questions qu on nous pose souvent"
+          eyebrow="Types de projets"
+          title="Les projets que nous accompagnons"
+          description="Nous etudions des projets varies, des qu ils sont serieux et structures."
         >
-          <ServiceFAQ items={FAQ} />
+          <div className="grid gap-5 sm:grid-cols-2">
+            {TYPES_PROJETS.map((type) => {
+              const Icon = type.icon;
+              return (
+                <div
+                  key={type.title}
+                  className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-nexus-orange-300 hover:shadow-md"
+                >
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-blue-100 to-nexus-blue-50 text-nexus-blue-700 transition group-hover:from-nexus-orange-100 group-hover:to-nexus-orange-50 group-hover:text-nexus-orange-600">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <h3 className="font-display text-lg font-bold text-nexus-blue-950">
+                    {type.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                    {type.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
         </ServiceSection>
 
+        {/* CRITERES DE SELECTION */}
+        <ServiceSection
+          variant="muted"
+          eyebrow="Criteres de selection"
+          title="Comment nous evaluons un projet"
+          description="Chaque projet recu fait l objet d une etude rigoureuse selon ces criteres."
+        >
+          <div className="grid gap-5 sm:grid-cols-2">
+            {CRITERES.map((critere) => {
+              const Icon = critere.icon;
+              return (
+                <div
+                  key={critere.title}
+                  className="flex gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+                >
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-md">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-display text-lg font-bold text-nexus-blue-950">
+                      {critere.title}
+                    </h3>
+                    <p className="mt-1 text-sm leading-relaxed text-slate-600">
+                      {critere.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </ServiceSection>
+
+        {/* MESSAGE DIFFERENCIANT */}
+        <section className="bg-white py-16">
+          <div className="mx-auto max-w-4xl px-4 lg:px-8">
+            <div className="relative overflow-hidden rounded-3xl border border-nexus-blue-200 bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-8 shadow-2xl sm:p-12">
+              {/* Effets de fond */}
+              <div className="absolute -right-12 -top-12 h-48 w-48 rounded-full bg-nexus-orange-500/20 blur-3xl" />
+              <div className="absolute -bottom-12 -left-12 h-48 w-48 rounded-full bg-nexus-orange-500/10 blur-3xl" />
+
+              <div className="relative text-center">
+                <div className="mx-auto mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-xl">
+                  <Handshake className="h-7 w-7" />
+                </div>
+
+                <p className="font-display text-2xl font-bold leading-snug text-white sm:text-3xl md:text-4xl">
+                  Nous ne sommes pas un simple intermediaire.
+                </p>
+                <p className="mt-4 text-lg leading-relaxed text-slate-200 sm:text-xl">
+                  Nous nous engageons aux cotes des porteurs de projets dans une
+                  logique de{" "}
+                  <span className="font-semibold text-nexus-orange-300">
+                    partenariat
+                  </span>
+                  .
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA FINAL */}
         <ServiceCTA
-          title="Ouvrez votre dossier de financement maintenant."
-          subtitle="Premier rendez-vous gratuit. Devis sous 48h. Un conseiller Nexus RCA revient vers vous avec un plan clair."
-          ctaLabel="Ouvrir mon dossier de financement"
-          whatsappMessage="Bonjour Nexus, je souhaite discuter d un projet a financer."
+          title="Vous avez un projet ?"
+          subtitle="Soumettez-le. Nous l etudions avec serieux et revenons vers vous avec une reponse claire."
+          ctaLabel="Soumettre mon projet"
+          ctaHref="/demande/complet?service=financement"
+          whatsappMessage="Bonjour Nexus, j aimerais soumettre un projet pour un partenariat."
         />
       </main>
       <Footer />

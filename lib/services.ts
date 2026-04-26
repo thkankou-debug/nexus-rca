@@ -9,6 +9,7 @@ import {
   Send,
   Bot,
   Globe,
+  Handshake,
   type LucideIcon,
 } from "lucide-react";
 
@@ -28,18 +29,18 @@ export const SERVICES: Service[] = [
   {
     id: "1",
     slug: "financement",
-    title: "Financement business & partenariat",
+    title: "Incubateur & financement en partenariat",
     shortDesc:
-      "Transformez vos idées en entreprises qui tiennent la route — dossiers, capital, stratégie.",
+      "Partenariat direct, accompagnement et investissement dans des projets sélectionnés.",
     longDesc:
-      "Nexus accompagne entrepreneurs et porteurs de projets de Centrafrique dans la recherche de financement et la construction de partenariats internationaux. Montage complet de dossiers bancaires, mise en relation avec investisseurs, étude de faisabilité et suivi stratégique.",
-    icon: Briefcase,
+      "NEXUS RCA ne se limite pas à conseiller. Nous accompagnons, participons au développement et investissons en partenariat dans des projets sélectionnés. Notre approche repose sur une collaboration directe, un suivi long terme et un partage des résultats. Soumettez votre projet : nous l'étudions selon des critères clairs (viabilité, potentiel, structuration, engagement du porteur) et revenons avec une réponse transparente.",
+    icon: Handshake,
     features: [
-      "Montage de dossiers financiers complets",
-      "Recherche d'investisseurs locaux & internationaux",
-      "Accompagnement stratégique sur-mesure",
-      "Étude de marché et prévisionnels",
-      "Structuration juridique",
+      "Accompagnement complet du projet de A à Z",
+      "Investissement direct en partenariat",
+      "Suivi long terme et développement stratégique",
+      "Sélection rigoureuse selon critères transparents",
+      "Partage des résultats avec les porteurs",
     ],
     accent: "blue",
     image:
