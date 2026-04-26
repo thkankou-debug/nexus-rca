@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { href: "/", label: "Accueil" },
   { href: "/services", label: "Services", hasDropdown: true },
   { href: "/services/nexus-ia", label: "Nexus IA 🤖" },
+  { href: "/a-propos", label: "À propos" },
   { href: "/contact", label: "Contact" },
   { href: "/rendez-vous", label: "Rendez-vous" },
 ];
