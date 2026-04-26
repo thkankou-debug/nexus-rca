@@ -45,11 +45,11 @@ export function Navbar() {
           : "bg-transparent"
       )}
     >
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-8">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 lg:px-8">
         <Logo variant={scrolled ? "dark" : "light"} />
 
-        {/* Desktop nav */}
-        <ul className="hidden items-center gap-1 lg:flex">
+        {/* Desktop nav — liens principaux */}
+        <ul className="hidden items-center gap-0.5 lg:flex xl:gap-1">
           {NAV_LINKS.map((link) => (
             <li
               key={link.href}
@@ -60,7 +60,7 @@ export function Navbar() {
               <Link
                 href={link.href}
                 className={cn(
-                  "inline-flex items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold transition-colors",
+                  "inline-flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold transition-colors xl:px-4",
                   scrolled
                     ? "text-nexus-blue-900 hover:bg-nexus-blue-50"
                     : "text-white hover:bg-white/10"
@@ -111,11 +111,12 @@ export function Navbar() {
           ))}
         </ul>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        {/* Desktop nav — actions a droite (sans WhatsApp) */}
+        <div className="hidden items-center gap-1 lg:flex xl:gap-2">
           <Link
             href="/dashboard"
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold transition-colors",
+              "inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold transition-colors",
               scrolled
                 ? "text-nexus-blue-900 hover:bg-nexus-blue-50"
                 : "text-white hover:bg-white/10"
@@ -128,7 +129,7 @@ export function Navbar() {
           <Link
             href="/login"
             className={cn(
-              "px-3 py-2 text-sm font-semibold transition-colors",
+              "whitespace-nowrap px-3 py-2 text-sm font-semibold transition-colors",
               scrolled
                 ? "text-nexus-blue-900 hover:text-nexus-orange-600"
                 : "text-white hover:text-nexus-orange-300"
@@ -139,16 +140,11 @@ export function Navbar() {
 
           <Link
             href="/demande/complet"
-            className="inline-flex items-center gap-1.5 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
+            className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
           >
             <FilePlus className="h-4 w-4" />
             Ouvrir un dossier
           </Link>
-
-          <Button href={whatsappLink("Bonjour Nexus, j'aimerais un renseignement.")} external size="sm" variant="secondary">
-            <MessageCircle className="h-4 w-4" />
-            WhatsApp
-          </Button>
         </div>
 
         {/* Mobile toggle */}

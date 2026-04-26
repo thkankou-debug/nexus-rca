@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import {
   Building2,
   Target,
@@ -30,7 +29,7 @@ interface Founder {
   name: string;
   role: string;
   bio: string;
-  /** Chemin vers l image dans /public — laisse vide pour afficher les initiales */
+  /** Chemin vers l image dans /public — laisse undefined pour afficher les initiales */
   photo?: string;
   email?: string;
   linkedin?: string;
@@ -38,6 +37,8 @@ interface Founder {
   location: string;
 }
 
+// IMPORTANT : pour utiliser une vraie photo, place le fichier dans /public/team/
+// puis decommente la ligne photo de chaque fondateur ci-dessous.
 const FOUNDERS: Founder[] = [
   {
     name: "Thierry F. Kankou",
@@ -45,7 +46,7 @@ const FOUNDERS: Founder[] = [
     bio: "Spécialiste de la logistique, du service client et de la gestion de projets. Thierry structure les opérations de Nexus RCA et accompagne les clients dans leurs démarches internationales avec rigueur et méthode. Sa vision : transformer chaque projet en résultat concret grâce à une approche structurée et un suivi sans faille.",
     initials: "TK",
     location: "Bangui · Canada",
-    photo: "/team/thierry-kankou.jpg", // À remplacer par la vraie photo
+    // photo: "/team/thierry-kankou.jpg", // ← decommente quand tu auras place la photo
   },
   {
     name: "Orson Dibert L.",
@@ -53,7 +54,7 @@ const FOUNDERS: Founder[] = [
     bio: "Pilier de la stratégie internationale de Nexus RCA, Orson développe les ponts entre l'Europe et la Centrafrique. Son expertise en gestion et en coordination transfrontalière permet à l'agence d'accompagner des projets ambitieux à l'échelle internationale.",
     initials: "OD",
     location: "Europe · RCA",
-    photo: "/team/orson-dibert.jpg", // À remplacer par la vraie photo
+    // photo: "/team/orson-dibert.jpg", // ← decommente quand tu auras place la photo
   },
 ];
 
@@ -259,7 +260,7 @@ export default function AProposPage() {
         </section>
 
         {/* ==================== NOTRE DIFFÉRENCE ==================== */}
-        <section className="bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white">
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white">
           <div className="absolute inset-0 bg-mesh-gradient opacity-30" />
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
@@ -404,7 +405,7 @@ export default function AProposPage() {
 }
 
 // ============================================================================
-// SOUS-COMPOSANTS
+// SOUS-COMPOSANTS (tous en server components — pas de onClick/onError)
 // ============================================================================
 
 function Stat({ number, label }: { number: string; label: string }) {
@@ -471,36 +472,24 @@ function ApproachCard({
 function FounderCard({ founder }: { founder: Founder }) {
   return (
     <div className="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-card transition hover:shadow-card-hover">
-      {/* Photo / placeholder */}
+      {/* Photo si fournie, sinon initiales */}
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-br from-nexus-blue-100 via-slate-100 to-nexus-orange-100">
         {founder.photo ? (
-          // Si une photo est fournie, on l affiche
-          // Note : Image de Next nécessite que le fichier existe dans /public
-          // Le srcset Next gère automatiquement le responsive
+          // Vraie photo : on l affiche en couvrant tout
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={founder.photo}
             alt={`Portrait de ${founder.name}`}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-            onError={(e) => {
-              // Fallback aux initiales si l image n existe pas
-              e.currentTarget.style.display = "none";
-            }}
           />
-        ) : null}
-
-        {/* Initiales fallback (visible si pas de photo) */}
-        <div
-          className={
-            founder.photo
-              ? "absolute inset-0 flex items-center justify-center -z-10"
-              : "absolute inset-0 flex items-center justify-center"
-          }
-        >
-          <div className="flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-700 to-nexus-orange-500 font-display text-5xl font-bold text-white shadow-2xl">
-            {founder.initials}
+        ) : (
+          // Pas de photo : on affiche les initiales dans un cercle
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-700 to-nexus-orange-500 font-display text-5xl font-bold text-white shadow-2xl">
+              {founder.initials}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Badge localisation */}
         <div className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-nexus-blue-950 shadow-md backdrop-blur">
