@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 import type { DemandeStatus, UrgenceLevel } from "@/types";
@@ -7,11 +8,14 @@ export function StatCard({
   value,
   icon: Icon,
   accent = "blue",
+  href,
 }: {
   label: string;
   value: string | number;
   icon: LucideIcon;
   accent?: "blue" | "orange" | "green" | "red";
+  /** Si fourni, la carte devient cliquable et redirige vers ce chemin */
+  href?: string;
 }) {
   const accentClasses = {
     blue: "from-nexus-blue-600 to-nexus-blue-800",
@@ -20,8 +24,8 @@ export function StatCard({
     red: "from-rose-400 to-rose-600",
   };
 
-  return (
-    <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-card transition-all hover:shadow-card-hover">
+  const content = (
+    <>
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm font-medium text-slate-500">{label}</p>
@@ -38,6 +42,26 @@ export function StatCard({
           <Icon className="h-6 w-6" />
         </div>
       </div>
+    </>
+  );
+
+  // Si href fourni : carte cliquable
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className="group relative block overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-card transition-all hover:-translate-y-0.5 hover:border-nexus-orange-300 hover:shadow-card-hover focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/40"
+        aria-label={`${label} : ${value}. Cliquez pour voir les détails`}
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  // Sinon : div statique (comportement original)
+  return (
+    <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-card transition-all hover:shadow-card-hover">
+      {content}
     </div>
   );
 }

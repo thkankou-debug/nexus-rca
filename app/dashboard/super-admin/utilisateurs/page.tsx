@@ -1,12 +1,16 @@
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
-import { UsersManager } from "@/components/dashboard/UsersManager";
+import { UsersManager, type UsersFilter } from "@/components/dashboard/UsersManager";
 import type { Profile } from "@/types";
 
 export const dynamic = "force-dynamic";
 
-export default async function SuperAdminUsersPage() {
+interface PageProps {
+  searchParams?: { filter?: string };
+}
+
+export default async function SuperAdminUsersPage({ searchParams }: PageProps) {
   const profile = await requireProfile(["super_admin"]);
   const supabase = createClient();
 
@@ -16,6 +20,11 @@ export default async function SuperAdminUsersPage() {
     .order("created_at", { ascending: false });
 
   const users = (data || []) as Profile[];
+
+  // Lecture du filtre depuis l URL (?filter=clients ou ?filter=staff)
+  const rawFilter = searchParams?.filter;
+  const initialFilter: UsersFilter =
+    rawFilter === "clients" || rawFilter === "staff" ? rawFilter : "all";
 
   return (
     <DashboardShell profile={profile}>
@@ -32,6 +41,7 @@ export default async function SuperAdminUsersPage() {
         canChangeRoles
         currentUserId={profile.id}
         canDeleteUsers
+        initialFilter={initialFilter}
       />
     </DashboardShell>
   );

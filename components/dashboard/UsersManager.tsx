@@ -17,35 +17,55 @@ const ROLE_OPTIONS: { value: UserRole; label: string; color: string }[] = [
   { value: "super_admin", label: "Super admin", color: "bg-rose-100 text-rose-700" },
 ];
 
+const STAFF_ROLES: UserRole[] = ["agent", "admin", "super_admin"];
+
+export type UsersFilter = "all" | "clients" | "staff";
+
 export function UsersManager({
   initialUsers,
   canChangeRoles,
   currentUserId,
   canDeleteUsers = false,
+  initialFilter = "all",
 }: {
   initialUsers: Profile[];
   canChangeRoles: boolean;
   currentUserId: string;
   canDeleteUsers?: boolean;
+  initialFilter?: UsersFilter;
 }) {
   const supabase = createClient();
   const [users, setUsers] = useState<ProfileWithActif[]>(
     initialUsers as ProfileWithActif[]
   );
   const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState<UsersFilter>(initialFilter);
   const [savingId, setSavingId] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<ProfileWithActif | null>(null);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
+  // Filtre par role + recherche texte
   const filtered = users.filter((u) => {
+    // Filtre role
+    if (filter === "clients" && u.role !== "client") return false;
+    if (filter === "staff" && !STAFF_ROLES.includes(u.role)) return false;
+
+    // Filtre texte
     const q = search.toLowerCase();
+    if (!q) return true;
     return (
-      !q ||
       u.email.toLowerCase().includes(q) ||
       u.nom.toLowerCase().includes(q) ||
       (u.prenom || "").toLowerCase().includes(q)
     );
   });
+
+  // Compteurs pour les chips
+  const counts = {
+    all: users.length,
+    clients: users.filter((u) => u.role === "client").length,
+    staff: users.filter((u) => STAFF_ROLES.includes(u.role)).length,
+  };
 
   const updateRole = async (id: string, role: UserRole) => {
     setSavingId(id);
@@ -107,6 +127,26 @@ export function UsersManager({
 
   return (
     <div>
+      {/* Chips de filtre */}
+      <div className="mb-4 flex flex-wrap gap-2">
+        <FilterChip active={filter === "all"} onClick={() => setFilter("all")}>
+          Tous ({counts.all})
+        </FilterChip>
+        <FilterChip
+          active={filter === "clients"}
+          onClick={() => setFilter("clients")}
+        >
+          Clients ({counts.clients})
+        </FilterChip>
+        <FilterChip
+          active={filter === "staff"}
+          onClick={() => setFilter("staff")}
+        >
+          Staff ({counts.staff})
+        </FilterChip>
+      </div>
+
+      {/* Recherche */}
       <div className="mb-4">
         <input
           type="search"
@@ -227,12 +267,10 @@ export function UsersManager({
 
                             {openMenuId === u.id && (
                               <>
-                                {/* Backdrop pour fermer au clic exterieur */}
                                 <div
                                   className="fixed inset-0 z-10"
                                   onClick={() => setOpenMenuId(null)}
                                 />
-                                {/* Menu */}
                                 <div className="absolute right-0 top-full z-20 mt-1 w-48 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg">
                                   <button
                                     type="button"
@@ -283,7 +321,6 @@ export function UsersManager({
         )}
       </div>
 
-      {/* Modal de confirmation de suppression */}
       {confirmDelete && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
@@ -342,6 +379,31 @@ export function UsersManager({
         </div>
       )}
     </div>
+  );
+}
+
+function FilterChip({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "rounded-full border px-4 py-1.5 text-sm font-semibold transition",
+        active
+          ? "border-nexus-blue-950 bg-nexus-blue-950 text-white"
+          : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
+      )}
+    >
+      {children}
+    </button>
   );
 }
 

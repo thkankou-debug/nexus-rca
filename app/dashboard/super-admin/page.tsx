@@ -134,17 +134,42 @@ export default async function SuperAdminPage() {
         </div>
       </div>
 
-      {/* Statistiques */}
+      {/* Statistiques cliquables */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <StatCard label="Utilisateurs" value={usersCount ?? 0} icon={Users} accent="blue" />
-        <StatCard label="Clients" value={clientsCount ?? 0} icon={Users} accent="orange" />
-        <StatCard label="Staff" value={staffCount ?? 0} icon={ShieldCheck} accent="red" />
-        <StatCard label="Demandes" value={demandesCount ?? 0} icon={FileText} accent="green" />
+        <StatCard
+          label="Utilisateurs"
+          value={usersCount ?? 0}
+          icon={Users}
+          accent="blue"
+          href="/dashboard/super-admin/utilisateurs"
+        />
+        <StatCard
+          label="Clients"
+          value={clientsCount ?? 0}
+          icon={Users}
+          accent="orange"
+          href="/dashboard/super-admin/utilisateurs?filter=clients"
+        />
+        <StatCard
+          label="Staff"
+          value={staffCount ?? 0}
+          icon={ShieldCheck}
+          accent="red"
+          href="/dashboard/super-admin/utilisateurs?filter=staff"
+        />
+        <StatCard
+          label="Demandes"
+          value={demandesCount ?? 0}
+          icon={FileText}
+          accent="green"
+          href="/dashboard/super-admin/demandes"
+        />
         <StatCard
           label="Rendez-vous"
           value={rdvCount ?? 0}
           icon={CalendarCheck}
           accent="blue"
+          href="/dashboard/super-admin/rendez-vous"
         />
       </div>
 
