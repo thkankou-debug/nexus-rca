@@ -2,9 +2,23 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { Mail, Phone, MapPin, ChevronDown, Save, Paperclip, Zap, Globe } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  ChevronDown,
+  Save,
+  Zap,
+  Globe,
+  Trash2,
+  AlertTriangle,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { StatusBadge, UrgenceBadge, STATUS_LABELS } from "@/components/dashboard/StatCard";
+import {
+  StatusBadge,
+  UrgenceBadge,
+  STATUS_LABELS,
+} from "@/components/dashboard/StatCard";
 import { DemandeDocumentsList } from "@/components/dashboard/DemandeDocumentsList";
 import { formatDate, cn } from "@/lib/utils";
 import type { Demande, DemandeStatus } from "@/types";
@@ -31,6 +45,7 @@ export function DemandesManager({
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [filter, setFilter] = useState<DemandeStatus | "all">("all");
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<Demande | null>(null);
 
   const filtered =
     filter === "all" ? demandes : demandes.filter((d) => d.statut === filter);
@@ -43,13 +58,13 @@ export function DemandesManager({
       .eq("id", id);
     setSavingId(null);
     if (error) {
-      toast.error("Erreur de mise à jour");
+      toast.error("Erreur de mise a jour");
       return;
     }
     setDemandes((list) =>
       list.map((d) => (d.id === id ? { ...d, statut } : d))
     );
-    toast.success("Statut mis à jour");
+    toast.success("Statut mis a jour");
   };
 
   const saveNotes = async (id: string, notes: string) => {
@@ -66,18 +81,24 @@ export function DemandesManager({
     setDemandes((list) =>
       list.map((d) => (d.id === id ? { ...d, notes_internes: notes } : d))
     );
-    toast.success("Note enregistrée");
+    toast.success("Note enregistree");
   };
 
-  const deleteDemande = async (id: string) => {
-    if (!confirm("Supprimer définitivement cette demande ?")) return;
-    const { error } = await supabase.from("demandes").delete().eq("id", id);
+  const deleteDemande = async (demande: Demande) => {
+    setSavingId(demande.id);
+    const { error } = await supabase
+      .from("demandes")
+      .delete()
+      .eq("id", demande.id);
+    setSavingId(null);
+    setConfirmDelete(null);
+
     if (error) {
-      toast.error("Suppression refusée");
+      toast.error(`Suppression refusee : ${error.message}`);
       return;
     }
-    setDemandes((list) => list.filter((d) => d.id !== id));
-    toast.success("Demande supprimée");
+    setDemandes((list) => list.filter((d) => d.id !== demande.id));
+    toast.success("Demande supprimee");
   };
 
   return (
@@ -104,7 +125,7 @@ export function DemandesManager({
       {/* List */}
       {filtered.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center text-slate-500">
-          Aucune demande dans cette catégorie.
+          Aucune demande dans cette categorie.
         </div>
       ) : (
         <div className="space-y-3">
@@ -115,54 +136,74 @@ export function DemandesManager({
                 key={d.id}
                 className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card"
               >
-                <button
-                  onClick={() => setExpandedId(expanded ? null : d.id)}
-                  className="flex w-full items-start justify-between gap-4 p-5 text-left hover:bg-slate-50"
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="font-semibold text-nexus-blue-950">
-                        {d.service}
-                      </h3>
-                      <StatusBadge status={d.statut} />
-                      <UrgenceBadge level={d.urgence} />
-                      {d.traitement_prioritaire && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600 px-2 py-0.5 text-xs font-semibold text-white">
-                          <Zap className="h-3 w-3" />
-                          Prioritaire
-                        </span>
+                <div className="flex items-start justify-between gap-2 p-5">
+                  <button
+                    onClick={() => setExpandedId(expanded ? null : d.id)}
+                    className="flex flex-1 items-start justify-between gap-4 text-left"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="font-semibold text-nexus-blue-950">
+                          {d.service}
+                        </h3>
+                        <StatusBadge status={d.statut} />
+                        <UrgenceBadge level={d.urgence} />
+                        {d.traitement_prioritaire && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600 px-2 py-0.5 text-xs font-semibold text-white">
+                            <Zap className="h-3 w-3" />
+                            Prioritaire
+                          </span>
+                        )}
+                        {d.source === "nexus_ia" && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-semibold text-indigo-700">
+                            🤖 Nexus IA
+                          </span>
+                        )}
+                      </div>
+                      {d.objet && (
+                        <p className="mt-1 truncate text-sm font-medium text-nexus-blue-900">
+                          {d.objet}
+                        </p>
                       )}
-                      {d.source === "nexus_ia" && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-semibold text-indigo-700">
-                          🤖 Nexus IA
-                        </span>
-                      )}
-                    </div>
-                    {d.objet && (
-                      <p className="mt-1 truncate text-sm font-medium text-nexus-blue-900">
-                        {d.objet}
+                      <p className="mt-0.5 text-sm text-slate-600">
+                        {d.nom_complet} · {d.email}
                       </p>
-                    )}
-                    <p className="mt-0.5 text-sm text-slate-600">
-                      {d.nom_complet} · {d.email}
-                    </p>
-                    <p className="mt-0.5 text-xs text-slate-500">
-                      Reçue le {formatDate(d.created_at)}
-                    </p>
-                  </div>
-                  <ChevronDown
-                    className={cn(
-                      "h-5 w-5 shrink-0 text-slate-400 transition",
-                      expanded && "rotate-180"
-                    )}
-                  />
-                </button>
+                      <p className="mt-0.5 text-xs text-slate-500">
+                        Recue le {formatDate(d.created_at)}
+                      </p>
+                    </div>
+                    <ChevronDown
+                      className={cn(
+                        "h-5 w-5 shrink-0 text-slate-400 transition",
+                        expanded && "rotate-180"
+                      )}
+                    />
+                  </button>
+
+                  {/* Bouton supprimer toujours visible si canDelete */}
+                  {canDelete && (
+                    <button
+                      type="button"
+                      onClick={() => setConfirmDelete(d)}
+                      disabled={savingId === d.id}
+                      className="rounded-full p-2 text-slate-400 hover:bg-red-50 hover:text-red-600 disabled:opacity-40"
+                      aria-label="Supprimer cette demande"
+                      title="Supprimer cette demande"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
 
                 {expanded && (
                   <div className="border-t border-slate-200 bg-slate-50 p-5">
                     <div className="grid gap-3 text-sm sm:grid-cols-3">
                       <InfoRow icon={Mail} label="Email" value={d.email} />
-                      <InfoRow icon={Phone} label="Téléphone" value={d.telephone} />
+                      <InfoRow
+                        icon={Phone}
+                        label="Telephone"
+                        value={d.telephone}
+                      />
                       <InfoRow
                         icon={MapPin}
                         label="Localisation"
@@ -170,7 +211,7 @@ export function DemandesManager({
                       />
                     </div>
 
-                    {/* Champs étendus */}
+                    {/* Champs etendus */}
                     {(d.objet ||
                       d.date_souhaitee ||
                       d.pays_concerne ||
@@ -184,14 +225,14 @@ export function DemandesManager({
                         {d.date_souhaitee && (
                           <InfoRow
                             icon={Mail}
-                            label="Date souhaitée"
+                            label="Date souhaitee"
                             value={d.date_souhaitee}
                           />
                         )}
                         {d.pays_concerne && (
                           <InfoRow
                             icon={Globe}
-                            label="Pays concerné"
+                            label="Pays concerne"
                             value={d.pays_concerne}
                           />
                         )}
@@ -228,12 +269,12 @@ export function DemandesManager({
                       </p>
                     </div>
 
-                    {/* Détails dynamiques (JSONB) */}
+                    {/* Details dynamiques (JSONB) */}
                     {d.details_service &&
                       Object.keys(d.details_service).length > 0 && (
                         <div className="mt-4">
                           <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                            Détails spécifiques au service
+                            Details specifiques au service
                           </p>
                           <div className="rounded-xl border border-slate-200 bg-white p-3">
                             <dl className="grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
@@ -306,9 +347,10 @@ export function DemandesManager({
                     {canDelete && (
                       <div className="mt-4 flex justify-end">
                         <button
-                          onClick={() => deleteDemande(d.id)}
-                          className="text-sm font-semibold text-red-600 hover:text-red-700"
+                          onClick={() => setConfirmDelete(d)}
+                          className="inline-flex items-center gap-2 rounded-full border border-red-200 bg-white px-4 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50"
                         >
+                          <Trash2 className="h-3.5 w-3.5" />
                           Supprimer la demande
                         </button>
                       </div>
@@ -318,6 +360,65 @@ export function DemandesManager({
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Modal de confirmation */}
+      {confirmDelete && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          onClick={() => setConfirmDelete(null)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100">
+                <AlertTriangle className="h-5 w-5 text-red-600" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-display text-lg font-bold text-nexus-blue-950">
+                  Supprimer cette demande ?
+                </h3>
+                <p className="mt-2 text-sm text-slate-600">
+                  Demande de{" "}
+                  <strong className="text-nexus-blue-950">
+                    {confirmDelete.nom_complet}
+                  </strong>{" "}
+                  pour le service{" "}
+                  <strong className="text-nexus-blue-950">
+                    {confirmDelete.service}
+                  </strong>
+                  .
+                </p>
+                <p className="mt-2 text-xs text-red-600">
+                  Cette action est irreversible. Tous les details et documents
+                  seront perdus.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={() => setConfirmDelete(null)}
+                className="rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+              >
+                Annuler
+              </button>
+              <button
+                type="button"
+                onClick={() => deleteDemande(confirmDelete)}
+                disabled={savingId === confirmDelete.id}
+                className="rounded-full bg-red-600 px-5 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50"
+              >
+                {savingId === confirmDelete.id
+                  ? "Suppression..."
+                  : "Oui, supprimer"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -388,7 +489,7 @@ function NotesEditor({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         rows={3}
-        placeholder="Notes pour l'équipe (non visibles par le client)"
+        placeholder="Notes pour l equipe (non visibles par le client)"
         className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
       />
       <div className="mt-2 flex justify-end">

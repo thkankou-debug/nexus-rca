@@ -24,13 +24,14 @@ export default async function SuperAdminUsersPage() {
           Gestion des utilisateurs
         </h1>
         <p className="mt-1 text-slate-600">
-          Modifiez les rôles en un clic. Les changements sont instantanés.
+          Modifiez les rôles, désactivez ou supprimez des comptes. Les changements sont instantanés.
         </p>
       </div>
       <UsersManager
         initialUsers={users}
         canChangeRoles
         currentUserId={profile.id}
+        canDeleteUsers
       />
     </DashboardShell>
   );
