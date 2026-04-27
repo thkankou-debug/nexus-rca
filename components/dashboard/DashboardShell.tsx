@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   FileText,
   Users,
+  UserCircle,
   Calendar,
   Settings,
   LogOut,
@@ -49,6 +50,7 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
   super_admin: [
     { href: "/dashboard/super-admin", label: "Tableau de bord", icon: LayoutDashboard },
     { href: "/dashboard/super-admin/finances", label: "Finances", icon: PieChart },
+    { href: "/dashboard/super-admin/clients", label: "Clients", icon: UserCircle },
     { href: "/dashboard/super-admin/demandes", label: "Toutes les demandes", icon: FileText },
     { href: "/dashboard/super-admin/rendez-vous", label: "Rendez-vous", icon: CalendarCheck },
     { href: "/dashboard/super-admin/paiements", label: "Paiements", icon: Wallet },
