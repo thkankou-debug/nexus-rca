@@ -14,6 +14,7 @@ import {
   MapPin,
   Briefcase,
   Users,
+  Heart,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -22,7 +23,7 @@ import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 export const metadata = {
   title: "À propos | Nexus RCA",
   description:
-    "Nexus RCA est une agence internationale basée à Bangui, spécialisée dans l'accompagnement administratif, les projets internationaux et le développement d'activités. Découvrez notre équipe et notre approche.",
+    "Nexus RCA est une agence internationale basée à Bangui, spécialisée dans l'accompagnement administratif, les projets internationaux et le développement d'activités. Découvrez notre vision, notre équipe et notre approche.",
 };
 
 interface Founder {
@@ -46,15 +47,15 @@ const FOUNDERS: Founder[] = [
     bio: "Spécialiste de la logistique, du service client et de la gestion de projets. Thierry structure les opérations de Nexus RCA et accompagne les clients dans leurs démarches internationales avec rigueur et méthode. Sa vision : transformer chaque projet en résultat concret grâce à une approche structurée et un suivi sans faille.",
     initials: "TK",
     location: "Bangui · Canada",
-    photo: "/team/thierry-kankou.jpg", // ← decommente quand tu auras place la photo
+    // photo: "/team/thierry-kankou.jpg", // ← decommente quand tu auras place la photo
   },
   {
-    name: "Orson Dibert.K ",
+    name: "Orson Dibert L.",
     role: "Cofondateur & Responsable International (Europe–RCA)",
     bio: "Pilier de la stratégie internationale de Nexus RCA, Orson développe les ponts entre l'Europe et la Centrafrique. Son expertise en gestion et en coordination transfrontalière permet à l'agence d'accompagner des projets ambitieux à l'échelle internationale.",
     initials: "OD",
     location: "Europe · RCA",
-    photo: "/team/orson-dibert.jpg", // ← decommente quand tu auras place la photo
+    // photo: "/team/orson-dibert.jpg", // ← decommente quand tu auras place la photo
   },
 ];
 
@@ -191,6 +192,81 @@ export default function AProposPage() {
           </div>
         </section>
 
+        {/* ==================== VISION (NOUVELLE SECTION) ==================== */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-50 via-white to-nexus-orange-50 py-20">
+          <div className="absolute -top-32 -right-32 h-64 w-64 rounded-full bg-nexus-orange-500/10 blur-3xl" />
+          <div className="absolute -bottom-32 -left-32 h-64 w-64 rounded-full bg-nexus-blue-500/10 blur-3xl" />
+
+          <div className="relative mx-auto max-w-4xl px-4 lg:px-8">
+            <div className="text-center">
+              <div className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-lg">
+                <Heart className="h-6 w-6" />
+              </div>
+              <p className="text-sm font-bold uppercase tracking-wider text-nexus-orange-600">
+                Notre vision
+              </p>
+              <h2 className="mt-3 font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl md:text-5xl">
+                Une mission profondément humaine
+              </h2>
+            </div>
+
+            <div className="mt-12 space-y-6 text-base leading-relaxed text-slate-700 sm:text-lg">
+              <p>
+                Nexus RCA est né d'une réalité simple :{" "}
+                <strong className="text-nexus-blue-950">
+                  trop de talents en République Centrafricaine restent bloqués
+                </strong>{" "}
+                faute d'accompagnement, d'information et d'opportunités.
+              </p>
+
+              <p>
+                Nous avons créé Nexus pour aider concrètement — pas seulement
+                informer, mais{" "}
+                <strong className="text-nexus-blue-950">
+                  accompagner, guider et ouvrir des portes
+                </strong>
+                .
+              </p>
+
+              <p>
+                Notre mission est profondément humaine : soutenir les jeunes,
+                les entrepreneurs, les commerçants et les familles
+                centrafricaines dans leurs projets de vie et leurs ambitions.
+              </p>
+
+              {/* Citation mise en avant */}
+              <div className="my-10 rounded-3xl border-l-4 border-nexus-orange-500 bg-white px-6 py-6 shadow-md sm:px-8 sm:py-8">
+                <p className="font-display text-xl font-bold leading-snug text-nexus-blue-950 sm:text-2xl">
+                  Nous croyons que le développement d'un pays commence par ses
+                  personnes.
+                </p>
+                <p className="mt-3 text-base leading-relaxed text-slate-700 sm:text-lg">
+                  Chaque dossier traité, chaque projet lancé représente une vie
+                  qui avance et une communauté qui progresse.
+                </p>
+              </div>
+
+              <p>
+                Nexus RCA agit comme un{" "}
+                <strong className="text-nexus-blue-950">
+                  outil de transformation sociale
+                </strong>
+                , en rendant accessibles des services souvent complexes avec un
+                accompagnement sérieux, honnête et engagé.
+              </p>
+
+              <p>
+                Au-delà du business, nous avons une responsabilité :{" "}
+                <strong className="text-nexus-blue-950">
+                  contribuer au développement de la République Centrafricaine
+                </strong>{" "}
+                en aidant sa population à se connecter au monde et à construire
+                un avenir meilleur.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* ==================== MISSION ==================== */}
         <section className="bg-slate-50 py-20">
           <div className="mx-auto max-w-5xl px-4 lg:px-8">
@@ -322,7 +398,7 @@ export default function AProposPage() {
               </p>
             </div>
 
-            <div className="mt-12 grid gap-8 md:grid-cols-2">
+            <div className="mt-12 grid gap-8 md:grid-cols-2 lg:gap-12">
               {FOUNDERS.map((founder) => (
                 <FounderCard key={founder.name} founder={founder} />
               ))}
@@ -405,7 +481,7 @@ export default function AProposPage() {
 }
 
 // ============================================================================
-// SOUS-COMPOSANTS (tous en server components — pas de onClick/onError)
+// SOUS-COMPOSANTS
 // ============================================================================
 
 function Stat({ number, label }: { number: string; label: string }) {
@@ -469,72 +545,78 @@ function ApproachCard({
   );
 }
 
+// ============================================================================
+// CARTE FONDATEUR — design horizontal avec photo plus petite et equilibree
+// ============================================================================
 function FounderCard({ founder }: { founder: Founder }) {
   return (
-    <div className="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-card transition hover:shadow-card-hover">
-      {/* Photo si fournie, sinon initiales */}
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-br from-nexus-blue-100 via-slate-100 to-nexus-orange-100">
-        {founder.photo ? (
-          // Vraie photo : on l affiche en couvrant tout
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={founder.photo}
-            alt={`Portrait de ${founder.name}`}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        ) : (
-          // Pas de photo : on affiche les initiales dans un cercle
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-700 to-nexus-orange-500 font-display text-5xl font-bold text-white shadow-2xl">
-              {founder.initials}
-            </div>
+    <div className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-card transition hover:shadow-card-hover sm:p-8">
+      <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
+        {/* Photo / initiales — taille reduite et equilibree */}
+        <div className="relative shrink-0">
+          <div className="relative h-32 w-32 overflow-hidden rounded-2xl bg-gradient-to-br from-nexus-blue-100 via-slate-100 to-nexus-orange-100 shadow-lg ring-4 ring-white sm:h-36 sm:w-36">
+            {founder.photo ? (
+              // Vraie photo : portrait carre arrondi
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={founder.photo}
+                alt={`Portrait de ${founder.name}`}
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            ) : (
+              // Pas de photo : initiales centrees
+              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-nexus-blue-700 to-nexus-orange-500 font-display text-4xl font-bold text-white sm:text-5xl">
+                {founder.initials}
+              </div>
+            )}
           </div>
-        )}
-
-        {/* Badge localisation */}
-        <div className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-nexus-blue-950 shadow-md backdrop-blur">
-          <MapPin className="h-3.5 w-3.5 text-nexus-orange-500" />
-          {founder.location}
         </div>
-      </div>
 
-      {/* Texte */}
-      <div className="p-6 sm:p-8">
-        <h3 className="font-display text-2xl font-bold text-nexus-blue-950">
-          {founder.name}
-        </h3>
-        <p className="mt-1 text-sm font-semibold text-nexus-orange-600">
-          {founder.role}
-        </p>
-        <p className="mt-4 text-sm leading-relaxed text-slate-700">
-          {founder.bio}
-        </p>
+        {/* Texte du fondateur */}
+        <div className="flex-1 min-w-0 text-center sm:text-left">
+          <h3 className="font-display text-xl font-bold text-nexus-blue-950 sm:text-2xl">
+            {founder.name}
+          </h3>
+          <p className="mt-1 text-sm font-semibold text-nexus-orange-600">
+            {founder.role}
+          </p>
 
-        {/* Liens contact */}
-        {(founder.email || founder.linkedin) && (
-          <div className="mt-5 flex gap-2 border-t border-slate-200 pt-5">
-            {founder.email && (
-              <a
-                href={`mailto:${founder.email}`}
-                aria-label={`Envoyer un email à ${founder.name}`}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-nexus-orange-100 hover:text-nexus-orange-600"
-              >
-                <Mail className="h-4 w-4" />
-              </a>
-            )}
-            {founder.linkedin && (
-              <a
-                href={founder.linkedin}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={`LinkedIn de ${founder.name}`}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-nexus-blue-100 hover:text-nexus-blue-700"
-              >
-                <Linkedin className="h-4 w-4" />
-              </a>
-            )}
+          {/* Localisation */}
+          <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+            <MapPin className="h-3.5 w-3.5 text-nexus-orange-500" />
+            {founder.location}
           </div>
-        )}
+
+          <p className="mt-4 text-sm leading-relaxed text-slate-700">
+            {founder.bio}
+          </p>
+
+          {/* Liens contact */}
+          {(founder.email || founder.linkedin) && (
+            <div className="mt-5 flex justify-center gap-2 border-t border-slate-200 pt-5 sm:justify-start">
+              {founder.email && (
+                <a
+                  href={`mailto:${founder.email}`}
+                  aria-label={`Envoyer un email à ${founder.name}`}
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-nexus-orange-100 hover:text-nexus-orange-600"
+                >
+                  <Mail className="h-4 w-4" />
+                </a>
+              )}
+              {founder.linkedin && (
+                <a
+                  href={founder.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`LinkedIn de ${founder.name}`}
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-nexus-blue-100 hover:text-nexus-blue-700"
+                >
+                  <Linkedin className="h-4 w-4" />
+                </a>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
