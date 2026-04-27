@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   CalendarCheck,
   Wallet,
+  Receipt,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -37,6 +38,7 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
   agent: [
     { href: "/dashboard/agent", label: "Tableau de bord", icon: LayoutDashboard },
     { href: "/dashboard/agent/demandes", label: "Demandes clients", icon: FileText },
+    { href: "/dashboard/agent/depenses", label: "Mes dépenses", icon: Receipt },
   ],
   admin: [
     { href: "/dashboard/admin", label: "Tableau de bord", icon: LayoutDashboard },
@@ -48,6 +50,7 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { href: "/dashboard/super-admin/demandes", label: "Toutes les demandes", icon: FileText },
     { href: "/dashboard/super-admin/rendez-vous", label: "Rendez-vous", icon: CalendarCheck },
     { href: "/dashboard/super-admin/paiements", label: "Paiements", icon: Wallet },
+    { href: "/dashboard/super-admin/depenses", label: "Dépenses", icon: Receipt },
     { href: "/dashboard/super-admin/utilisateurs", label: "Utilisateurs", icon: Users },
     { href: "/dashboard/super-admin/roles", label: "Rôles", icon: ShieldCheck },
   ],
