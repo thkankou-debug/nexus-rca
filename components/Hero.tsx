@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Bot, Globe, Sparkles } from "lucide-react";
+import { ArrowRight, Calendar, Globe, Sparkles, FilePlus } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 export function Hero() {
@@ -67,7 +67,7 @@ export function Hero() {
         </div>
       </motion.div>
 
-      {/* Main content — pb genereux pour eviter toute coupure */}
+      {/* Main content */}
       <div className="relative mx-auto w-full max-w-7xl px-4 pt-32 pb-12 lg:px-8 lg:pb-20">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -88,11 +88,7 @@ export function Hero() {
             </span>
           </motion.div>
 
-          {/* ============================================================ */}
-          {/* TITRE — nouveau wording, max 2 lignes mobile, fix descendantes */}
-          {/* leading-[1.15] + paddingBottom inline pour garantir la zone   */}
-          {/* descendante (g, p, y, j) sur toutes les tailles d'ecran      */}
-          {/* ============================================================ */}
+          {/* TITRE */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -104,7 +100,7 @@ export function Hero() {
             <span className="text-gradient-orange">vos projets</span> en réalité
           </motion.h1>
 
-          {/* Badge SIGNATURE NEXUS — version mobile (visible uniquement sur mobile/tablette) */}
+          {/* Badge SIGNATURE NEXUS — version mobile */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -124,7 +120,7 @@ export function Hero() {
             </div>
           </motion.div>
 
-          {/* Sous-titre — espacement ameliore */}
+          {/* Sous-titre */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -136,31 +132,49 @@ export function Hero() {
             résultats concrets.
           </motion.p>
 
-          {/* CTAs — espacement ameliore */}
+          {/* ============================================================ */}
+          {/* CTAs — Ouvrir un dossier (principal) + Prendre RDV (secondaire) */}
+          {/* ============================================================ */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.1, duration: 0.8 }}
             className="mt-12 flex flex-col gap-3 sm:flex-row sm:gap-4"
           >
-            <Button href="/rendez-vous" size="lg">
-              Prendre rendez-vous <ArrowRight className="h-5 w-5" />
+            {/* PRINCIPAL — Ouvrir un dossier (orange, attire l oeil) */}
+            <Button href="/demande/complet" size="lg">
+              <FilePlus className="h-5 w-5" />
+              Ouvrir un dossier
+              <ArrowRight className="h-5 w-5" />
             </Button>
-            <Button href="/services/nexus-ia" variant="outline" size="lg">
-              <Bot className="h-5 w-5" /> Parler avec Nexus IA 🤖
+
+            {/* SECONDAIRE — Prendre rendez-vous */}
+            <Button href="/rendez-vous" variant="outline" size="lg">
+              <Calendar className="h-5 w-5" />
+              Prendre rendez-vous
             </Button>
           </motion.div>
 
-          {/* Stats — espacement ameliore */}
-          <motion.div
+          {/* Réassurance discrète sous les CTAs */}
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.3, duration: 0.8 }}
-            className="mt-20 grid max-w-2xl grid-cols-3 gap-6 border-t border-white/10 pt-10"
+            className="mt-4 text-sm text-slate-400"
+          >
+            Premier contact gratuit · Réponse sous 24h · 100% confidentiel
+          </motion.p>
+
+          {/* Stats */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.4, duration: 0.8 }}
+            className="mt-16 grid max-w-2xl grid-cols-3 gap-6 border-t border-white/10 pt-10"
           >
             <div>
               <div className="font-display text-3xl font-bold text-nexus-orange-400">
-                9+
+                10+
               </div>
               <div className="text-xs uppercase tracking-wider text-slate-400">
                 Services experts
@@ -168,18 +182,18 @@ export function Hero() {
             </div>
             <div>
               <div className="font-display text-3xl font-bold text-nexus-orange-400">
-                24/7
+                24h
               </div>
               <div className="text-xs uppercase tracking-wider text-slate-400">
-                Assistance IA
+                Délai de réponse
               </div>
             </div>
             <div>
               <div className="font-display text-3xl font-bold text-nexus-orange-400">
-                100%
+                2
               </div>
               <div className="text-xs uppercase tracking-wider text-slate-400">
-                Dossiers suivis
+                Pôles internationaux
               </div>
             </div>
           </motion.div>
