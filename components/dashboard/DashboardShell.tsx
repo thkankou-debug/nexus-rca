@@ -14,6 +14,7 @@ import {
   X,
   ShieldCheck,
   CalendarCheck,
+  Wallet,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -46,6 +47,7 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { href: "/dashboard/super-admin", label: "Tableau de bord", icon: LayoutDashboard },
     { href: "/dashboard/super-admin/demandes", label: "Toutes les demandes", icon: FileText },
     { href: "/dashboard/super-admin/rendez-vous", label: "Rendez-vous", icon: CalendarCheck },
+    { href: "/dashboard/super-admin/paiements", label: "Paiements", icon: Wallet },
     { href: "/dashboard/super-admin/utilisateurs", label: "Utilisateurs", icon: Users },
     { href: "/dashboard/super-admin/roles", label: "Rôles", icon: ShieldCheck },
   ],
@@ -109,14 +111,14 @@ export function DashboardShell({
         )}
       >
         <div className="flex h-full flex-col">
-          {/* Logo — ne rétrécit pas */}
+          {/* Logo */}
           <div className="shrink-0 border-b border-slate-200 p-6">
             <Link href="/" className="inline-block">
               <Logo />
             </Link>
           </div>
 
-          {/* User card — ne rétrécit pas */}
+          {/* User card */}
           <div className="shrink-0 border-b border-slate-200 p-6">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-800 to-nexus-orange-500 text-sm font-bold text-white">
@@ -139,7 +141,7 @@ export function DashboardShell({
             </span>
           </div>
 
-          {/* Nav — scroll si besoin */}
+          {/* Nav */}
           <nav className="flex-1 space-y-1 overflow-y-auto px-4 py-6">
             {navItems.map((item) => {
               const active = pathname === item.href;
@@ -163,7 +165,7 @@ export function DashboardShell({
             })}
           </nav>
 
-          {/* Footer — ne rétrécit pas, toujours visible */}
+          {/* Footer */}
           <div className="shrink-0 border-t border-slate-200 p-4">
             <Link
               href="/"
