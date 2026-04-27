@@ -4,7 +4,7 @@ import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { ClientsManager } from "@/components/dashboard/ClientsManager";
-import type { Client } from "@/components/dashboard/ClientForm";
+import type { Client } from "@/types/client-types";
 
 export const metadata = {
   title: "Clients | Super Admin",

@@ -21,7 +21,12 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import { ClientForm, type Client, type ClientType, CLIENT_TYPE_LABELS } from "./ClientForm";
+import { ClientForm } from "./ClientForm";
+import {
+  type Client,
+  type ClientType,
+  CLIENT_TYPE_LABELS,
+} from "@/types/client-types";
 
 const TYPE_ICONS: Record<ClientType, typeof User> = {
   particulier: User,
@@ -77,7 +82,6 @@ export function ClientsManager({
   const filtered = useMemo(() => {
     let list = clients;
 
-    // Par défaut on cache les inactifs sauf si filtre actif sélectionné
     if (filter === "inactif") {
       list = list.filter((c) => !c.actif);
     } else if (filter !== "all") {
@@ -381,7 +385,6 @@ function ClientCard({
                 </p>
               )}
 
-              {/* Coordonnées rapides */}
               <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-600">
                 {client.email && (
                   <span className="inline-flex items-center gap-1">
@@ -407,7 +410,6 @@ function ClientCard({
           </div>
         </div>
 
-        {/* Actions */}
         <div className="mt-4 flex flex-wrap gap-2 border-t border-slate-100 pt-4">
           <Link
             href={`/dashboard/super-admin/clients/${client.id}`}

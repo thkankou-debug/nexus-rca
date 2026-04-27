@@ -4,39 +4,11 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { X, Loader2, User, Building2, Landmark } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-
-// ============================================================================
-// TYPES
-// ============================================================================
-export type ClientType = "particulier" | "entreprise" | "institution";
-
-export interface Client {
-  id: string;
-  reference: string | null;
-  type: ClientType;
-  nom: string;
-  prenom: string | null;
-  raison_sociale: string | null;
-  numero_identification: string | null;
-  email: string | null;
-  telephone: string | null;
-  telephone_2: string | null;
-  adresse: string | null;
-  ville: string | null;
-  pays: string | null;
-  profile_id: string | null;
-  notes: string | null;
-  actif: boolean;
-  created_at: string;
-  updated_at: string;
-  created_by: string | null;
-}
-
-export const CLIENT_TYPE_LABELS: Record<ClientType, string> = {
-  particulier: "Particulier",
-  entreprise: "Entreprise",
-  institution: "Institution",
-};
+import {
+  type Client,
+  type ClientType,
+  CLIENT_TYPE_LABELS,
+} from "@/types/client-types";
 
 // ============================================================================
 // COMPOSANT

@@ -13,7 +13,6 @@ import {
   ArrowRight,
   CheckCircle2,
   Clock,
-  AlertCircle,
   Info,
   Edit3,
 } from "lucide-react";
@@ -21,44 +20,103 @@ import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
-import {
-  type Client,
-  type ClientType,
-  CLIENT_TYPE_LABELS,
-} from "@/components/dashboard/ClientForm";
-import type { Payment, PaymentStatus } from "@/components/dashboard/PaymentForm";
 import type { Demande } from "@/types";
 
-const TYPE_ICONS: Record<ClientType, typeof User> = {
-  particulier: User,
-  entreprise: Building2,
-  institution: Landmark,
-};
+// ============================================================================
+// TYPES (autonome - pas d'import externe)
+// ============================================================================
+type ClientType = "particulier" | "entreprise" | "institution";
 
-const TYPE_COLORS: Record<ClientType, string> = {
-  particulier: "from-blue-500 to-indigo-700",
-  entreprise: "from-purple-500 to-purple-700",
-  institution: "from-emerald-500 to-emerald-700",
-};
+interface Client {
+  id: string;
+  reference: string | null;
+  type: ClientType;
+  nom: string;
+  prenom: string | null;
+  raison_sociale: string | null;
+  numero_identification: string | null;
+  email: string | null;
+  telephone: string | null;
+  telephone_2: string | null;
+  adresse: string | null;
+  ville: string | null;
+  pays: string | null;
+  profile_id: string | null;
+  notes: string | null;
+  actif: boolean;
+  created_at: string;
+  updated_at: string;
+  created_by: string | null;
+}
 
-const PAYMENT_STATUS_LABELS: Record<PaymentStatus, string> = {
-  non_paye: "Non payé",
-  partiel: "Partiel",
-  paye: "Payé",
-  rembourse: "Remboursé",
-  annule: "Annulé",
-};
+type PaymentStatus =
+  | "non_paye"
+  | "partiel"
+  | "paye"
+  | "rembourse"
+  | "annule";
 
-const PAYMENT_STATUS_COLORS: Record<PaymentStatus, string> = {
-  non_paye: "bg-red-100 text-red-700",
-  partiel: "bg-amber-100 text-amber-700",
-  paye: "bg-green-100 text-green-700",
-  rembourse: "bg-slate-100 text-slate-700",
-  annule: "bg-slate-100 text-slate-500",
-};
+interface Payment {
+  id: string;
+  reference: string | null;
+  client_email: string | null;
+  client_telephone: string | null;
+  service: string;
+  montant_total: number;
+  montant_recu: number;
+  devise: string;
+  date_paiement: string;
+  statut: PaymentStatus;
+}
+
+// ============================================================================
+// CONSTANTES (defensives - pas de undefined possible)
+// ============================================================================
+function getTypeLabel(type: ClientType | string): string {
+  const labels: Record<string, string> = {
+    particulier: "Particulier",
+    entreprise: "Entreprise",
+    institution: "Institution",
+  };
+  return labels[type] || "Client";
+}
+
+function getTypeIcon(type: ClientType | string) {
+  if (type === "entreprise") return Building2;
+  if (type === "institution") return Landmark;
+  return User;
+}
+
+function getTypeColor(type: ClientType | string): string {
+  if (type === "entreprise") return "from-purple-500 to-purple-700";
+  if (type === "institution") return "from-emerald-500 to-emerald-700";
+  return "from-blue-500 to-indigo-700";
+}
+
+function getPaymentStatusLabel(status: PaymentStatus | string): string {
+  const labels: Record<string, string> = {
+    non_paye: "Non payé",
+    partiel: "Partiel",
+    paye: "Payé",
+    rembourse: "Remboursé",
+    annule: "Annulé",
+  };
+  return labels[status] || status;
+}
+
+function getPaymentStatusColor(status: PaymentStatus | string): string {
+  const colors: Record<string, string> = {
+    non_paye: "bg-red-100 text-red-700",
+    partiel: "bg-amber-100 text-amber-700",
+    paye: "bg-green-100 text-green-700",
+    rembourse: "bg-slate-100 text-slate-700",
+    annule: "bg-slate-100 text-slate-500",
+  };
+  return colors[status] || "bg-slate-100 text-slate-700";
+}
 
 function formatMoney(amount: number, currency = "XAF"): string {
-  return `${amount.toLocaleString("fr-FR")} ${currency}`;
+  return `${Number(amount).toLocaleString("fr-FR")} ${currency}`;
 }
 
 function formatDate(dateStr: string): string {
@@ -86,6 +144,9 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
+// ============================================================================
+// PAGE
+// ============================================================================
 export default async function ClientDetailPage({
   params,
 }: {
@@ -94,7 +155,6 @@ export default async function ClientDetailPage({
   const profile = await requireProfile(["super_admin", "admin"]);
   const supabase = createClient();
 
-  // 1. Récupérer le client
   const { data: clientData } = await supabase
     .from("clients")
     .select("*")
@@ -104,8 +164,7 @@ export default async function ClientDetailPage({
   if (!clientData) notFound();
   const client = clientData as Client;
 
-  // 2. Récupérer les paiements liés (par email ou téléphone)
-  // En attendant la SESSION 5 (liaison directe), on matche par email/téléphone
+  // Récupérer les paiements liés (par email ou téléphone)
   let paymentsData: Payment[] = [];
   const orFilters: string[] = [];
   if (client.email) orFilters.push(`client_email.eq.${client.email}`);
@@ -120,7 +179,7 @@ export default async function ClientDetailPage({
     paymentsData = (data || []) as Payment[];
   }
 
-  // 3. Récupérer les demandes liées (par email)
+  // Récupérer les demandes liées (par email)
   let demandesData: Demande[] = [];
   if (client.email) {
     const { data } = await supabase
@@ -131,20 +190,19 @@ export default async function ClientDetailPage({
     demandesData = (data || []) as Demande[];
   }
 
-  // 4. Calculer les stats
   const totalFacture = paymentsData.reduce(
-    (sum, p) => sum + Number(p.montant_total),
+    (sum, p) => sum + Number(p.montant_total || 0),
     0
   );
   const totalEncaisse = paymentsData.reduce(
-    (sum, p) => sum + Number(p.montant_recu),
+    (sum, p) => sum + Number(p.montant_recu || 0),
     0
   );
   const totalRestant = totalFacture - totalEncaisse;
   const nbDossiers = demandesData.length;
   const nbPaiements = paymentsData.length;
 
-  const Icon = TYPE_ICONS[client.type];
+  const Icon = getTypeIcon(client.type);
   const displayName = getDisplayName(client);
 
   return (
@@ -154,27 +212,23 @@ export default async function ClientDetailPage({
         label="Retour aux clients"
       />
 
-      {/* ============================================================ */}
-      {/* HEADER FICHE CLIENT */}
-      {/* ============================================================ */}
+      {/* HEADER */}
       <div className="mb-8">
         <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-            {/* Avatar */}
             <div
-              className={`flex h-20 w-20 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br ${TYPE_COLORS[client.type]} text-white shadow-lg`}
+              className={`flex h-20 w-20 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br ${getTypeColor(client.type)} text-white shadow-lg`}
             >
               <Icon className="h-10 w-10" />
             </div>
 
-            {/* Identité */}
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-mono text-xs font-bold text-nexus-blue-700">
                   {client.reference}
                 </span>
                 <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-700">
-                  {CLIENT_TYPE_LABELS[client.type]}
+                  {getTypeLabel(client.type)}
                 </span>
                 {!client.actif && (
                   <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-500">
@@ -196,7 +250,6 @@ export default async function ClientDetailPage({
                 </p>
               )}
 
-              {/* Coordonnées */}
               <div className="mt-4 grid gap-2 sm:grid-cols-2">
                 {client.email && (
                   <ContactRow
@@ -238,7 +291,6 @@ export default async function ClientDetailPage({
               </p>
             </div>
 
-            {/* Bouton retour à la liste pour modifier */}
             <Link
               href="/dashboard/super-admin/clients"
               className="inline-flex shrink-0 items-center gap-2 rounded-full border border-nexus-blue-200 bg-nexus-blue-50 px-4 py-2 text-sm font-semibold text-nexus-blue-700 hover:bg-nexus-blue-100"
@@ -248,7 +300,6 @@ export default async function ClientDetailPage({
             </Link>
           </div>
 
-          {/* Notes internes */}
           {client.notes && (
             <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4">
               <p className="mb-1 text-xs font-bold uppercase tracking-wider text-amber-700">
@@ -262,9 +313,7 @@ export default async function ClientDetailPage({
         </div>
       </div>
 
-      {/* ============================================================ */}
-      {/* INFO LIAISON (en attendant la SESSION 5) */}
-      {/* ============================================================ */}
+      {/* INFO LIAISON */}
       {(client.email || client.telephone) && (
         <div className="mb-6 flex items-start gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4">
           <Info className="h-5 w-5 shrink-0 text-blue-600" />
@@ -277,9 +326,7 @@ export default async function ClientDetailPage({
         </div>
       )}
 
-      {/* ============================================================ */}
-      {/* STATS RAPIDES */}
-      {/* ============================================================ */}
+      {/* STATS */}
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatBlock
           icon={FileText}
@@ -307,9 +354,7 @@ export default async function ClientDetailPage({
         />
       </div>
 
-      {/* ============================================================ */}
       {/* HISTORIQUE PAIEMENTS */}
-      {/* ============================================================ */}
       <div className="mb-8 rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="flex items-center justify-between border-b border-slate-200 p-5">
           <div className="flex items-center gap-2">
@@ -357,9 +402,9 @@ export default async function ClientDetailPage({
                       {payment.reference}
                     </span>
                     <span
-                      className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${PAYMENT_STATUS_COLORS[payment.statut]}`}
+                      className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${getPaymentStatusColor(payment.statut)}`}
                     >
-                      {PAYMENT_STATUS_LABELS[payment.statut]}
+                      {getPaymentStatusLabel(payment.statut)}
                     </span>
                   </div>
                   <p className="mt-1 text-sm font-semibold text-nexus-blue-950">
@@ -394,9 +439,7 @@ export default async function ClientDetailPage({
         )}
       </div>
 
-      {/* ============================================================ */}
-      {/* HISTORIQUE DOSSIERS / DEMANDES */}
-      {/* ============================================================ */}
+      {/* HISTORIQUE DOSSIERS */}
       <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="flex items-center justify-between border-b border-slate-200 p-5">
           <div className="flex items-center gap-2">
