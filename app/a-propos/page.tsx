@@ -46,15 +46,15 @@ const FOUNDERS: Founder[] = [
     bio: "Spécialiste de la logistique, du service client et de la gestion de projets. Thierry structure les opérations de Nexus RCA et accompagne les clients dans leurs démarches internationales avec rigueur et méthode. Sa vision : transformer chaque projet en résultat concret grâce à une approche structurée et un suivi sans faille.",
     initials: "TK",
     location: "Bangui · Canada",
-    // photo: "/team/thierry-kankou.jpg", // ← decommente quand tu auras place la photo
+    photo: "/team/thierry-kankou.jpg", // ← decommente quand tu auras place la photo
   },
   {
-    name: "Orson Dibert L.",
+    name: "Orson Dibert.K ",
     role: "Cofondateur & Responsable International (Europe–RCA)",
     bio: "Pilier de la stratégie internationale de Nexus RCA, Orson développe les ponts entre l'Europe et la Centrafrique. Son expertise en gestion et en coordination transfrontalière permet à l'agence d'accompagner des projets ambitieux à l'échelle internationale.",
     initials: "OD",
     location: "Europe · RCA",
-    // photo: "/team/orson-dibert.jpg", // ← decommente quand tu auras place la photo
+    photo: "/team/orson-dibert.jpg", // ← decommente quand tu auras place la photo
   },
 ];
 
