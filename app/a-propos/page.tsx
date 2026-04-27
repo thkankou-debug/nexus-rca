@@ -42,7 +42,7 @@ interface Founder {
 // puis decommente la ligne photo de chaque fondateur ci-dessous.
 const FOUNDERS: Founder[] = [
   {
-    name: "Thierry F. Kankou",
+    name: "Thierry F. KANKOU",
     role: "Cofondateur & Responsable International",
     bio: "Spécialiste de la logistique, du service client et de la gestion de projets. Thierry structure les opérations de Nexus RCA et accompagne les clients dans leurs démarches internationales avec rigueur et méthode. Sa vision : transformer chaque projet en résultat concret grâce à une approche structurée et un suivi sans faille.",
     initials: "TK",
@@ -50,7 +50,7 @@ const FOUNDERS: Founder[] = [
     // photo: "/team/thierry-kankou.jpg", // ← decommente quand tu auras place la photo
   },
   {
-    name: "Orson Dibert L.",
+    name: "Orson DIBERT.K",
     role: "Cofondateur & Responsable International (Europe–RCA)",
     bio: "Pilier de la stratégie internationale de Nexus RCA, Orson développe les ponts entre l'Europe et la Centrafrique. Son expertise en gestion et en coordination transfrontalière permet à l'agence d'accompagner des projets ambitieux à l'échelle internationale.",
     initials: "OD",
