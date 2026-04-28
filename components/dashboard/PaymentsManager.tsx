@@ -94,11 +94,13 @@ export function PaymentsManager({
   initialPayments,
   agents,
   currentUserId,
+  canEdit = true,
   canDelete = false,
 }: {
   initialPayments: Payment[];
   agents: AgentOption[];
   currentUserId: string;
+  canEdit?: boolean;
   canDelete?: boolean;
 }) {
   const supabase = createClient();
@@ -273,6 +275,7 @@ export function PaymentsManager({
               key={p.id}
               payment={p}
               agents={agents}
+              canEdit={canEdit}
               canDelete={canDelete}
               onEdit={() => {
                 setEditingPayment(p);
@@ -356,6 +359,7 @@ export function PaymentsManager({
 function PaymentCard({
   payment,
   agents,
+  canEdit,
   canDelete,
   onEdit,
   onDelete,
@@ -363,6 +367,7 @@ function PaymentCard({
 }: {
   payment: Payment;
   agents: AgentOption[];
+  canEdit: boolean;
   canDelete: boolean;
   onEdit: () => void;
   onDelete: () => void;
@@ -393,7 +398,6 @@ function PaymentCard({
               >
                 {STATUS_LABELS[payment.statut]}
               </span>
-              {/* NOUVEAU : badge "Lié à fiche client" */}
               {payment.client_record_id && (
                 <Link
                   href={`/dashboard/super-admin/clients/${payment.client_record_id}`}
@@ -463,14 +467,16 @@ function PaymentCard({
             <Eye className="h-3.5 w-3.5" />
             {expanded ? "Masquer" : "Détails"}
           </button>
-          <button
-            type="button"
-            onClick={onEdit}
-            className="inline-flex items-center gap-1.5 rounded-full border border-nexus-blue-200 bg-nexus-blue-50 px-3 py-1.5 text-xs font-semibold text-nexus-blue-700 hover:bg-nexus-blue-100"
-          >
-            <Edit3 className="h-3.5 w-3.5" />
-            Modifier
-          </button>
+          {canEdit && (
+            <button
+              type="button"
+              onClick={onEdit}
+              className="inline-flex items-center gap-1.5 rounded-full border border-nexus-blue-200 bg-nexus-blue-50 px-3 py-1.5 text-xs font-semibold text-nexus-blue-700 hover:bg-nexus-blue-100"
+            >
+              <Edit3 className="h-3.5 w-3.5" />
+              Modifier
+            </button>
+          )}
           {payment.preuve_path && (
             <button
               type="button"
