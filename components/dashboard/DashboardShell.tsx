@@ -40,6 +40,8 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
   agent: [
     { href: "/dashboard/agent", label: "Tableau de bord", icon: LayoutDashboard },
     { href: "/dashboard/agent/demandes", label: "Demandes clients", icon: FileText },
+    { href: "/dashboard/agent/clients", label: "Clients", icon: UserCircle },
+    { href: "/dashboard/agent/paiements", label: "Paiements", icon: Wallet },
     { href: "/dashboard/agent/depenses", label: "Mes dépenses", icon: Receipt },
   ],
   admin: [

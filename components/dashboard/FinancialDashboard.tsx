@@ -4,19 +4,15 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Wallet,
-  TrendingUp,
   TrendingDown,
   Clock,
   AlertCircle,
   CheckCircle2,
   Receipt,
   ArrowRight,
-  Activity,
   Calendar,
-  User,
   XCircle,
   AlertTriangle,
-  Building2,
   ArrowUpRight,
   ArrowDownRight,
   PieChart,
@@ -70,18 +66,6 @@ function formatMoney(amount: number, currency = "XAF"): string {
   return `${amount.toLocaleString("fr-FR")} ${currency}`;
 }
 
-function formatDate(dateStr: string): string {
-  try {
-    return new Date(dateStr).toLocaleDateString("fr-FR", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-  } catch {
-    return dateStr;
-  }
-}
-
 function formatDateShort(dateStr: string): string {
   try {
     return new Date(dateStr).toLocaleDateString("fr-FR", {
@@ -105,7 +89,6 @@ export function FinancialDashboard({
 }) {
   const [period, setPeriod] = useState<"all" | "month" | "year">("all");
 
-  // Filtrer selon la période
   const filteredData = useMemo(() => {
     if (period === "all") return { payments, expenses };
 
@@ -127,13 +110,9 @@ export function FinancialDashboard({
     };
   }, [payments, expenses, period]);
 
-  // ==========================================================================
-  // CALCULS FINANCIERS
-  // ==========================================================================
   const stats = useMemo(() => {
     const { payments: p, expenses: e } = filteredData;
 
-    // Encaissements
     const totalFacture = p.reduce(
       (sum, x) => sum + Number(x.montant_total),
       0
@@ -144,7 +123,6 @@ export function FinancialDashboard({
     );
     const totalRestant = totalFacture - totalEncaisse;
 
-    // Dépenses
     const totalDepenses = e.reduce(
       (sum, x) => sum + Number(x.montant),
       0
@@ -156,10 +134,8 @@ export function FinancialDashboard({
       .filter((x) => x.statut === "en_attente")
       .reduce((sum, x) => sum + Number(x.montant), 0);
 
-    // Solde net (encaissé - dépenses validées)
     const soldeNet = totalEncaisse - totalDepensesValidees;
 
-    // Compteurs
     const nbPaiementsPartiels = p.filter(
       (x) => x.statut === "partiel"
     ).length;
@@ -184,9 +160,6 @@ export function FinancialDashboard({
     };
   }, [filteredData]);
 
-  // ==========================================================================
-  // ACTIVITE RECENTE (5 derniers de chaque)
-  // ==========================================================================
   const recentPayments = useMemo(
     () =>
       [...filteredData.payments]
@@ -211,9 +184,6 @@ export function FinancialDashboard({
     [filteredData.expenses]
   );
 
-  // ==========================================================================
-  // ALERTES (problèmes nécessitant attention)
-  // ==========================================================================
   const alerts = useMemo(() => {
     const list: Array<{
       type: "warning" | "info" | "danger";
@@ -232,7 +202,7 @@ export function FinancialDashboard({
         description: `${formatMoney(
           stats.totalDepensesEnAttente
         )} à valider ou rejeter`,
-        href: "/dashboard/super-admin/depenses",
+        href: "/dashboard/super-admin/depenses?filter=en_attente",
         count: stats.nbDepensesEnAttente,
       });
     }
@@ -244,7 +214,7 @@ export function FinancialDashboard({
           stats.nbPaiementsPartiels > 1 ? "s" : ""
         } partiel${stats.nbPaiementsPartiels > 1 ? "s" : ""}`,
         description: `Solde restant à encaisser`,
-        href: "/dashboard/super-admin/paiements",
+        href: "/dashboard/super-admin/paiements?filter=partiel",
         count: stats.nbPaiementsPartiels,
       });
     }
@@ -256,7 +226,7 @@ export function FinancialDashboard({
           stats.nbPaiementsImpayes > 1 ? "s" : ""
         } non payé${stats.nbPaiementsImpayes > 1 ? "s" : ""}`,
         description: `Aucun encaissement effectué`,
-        href: "/dashboard/super-admin/paiements",
+        href: "/dashboard/super-admin/paiements?filter=non_paye",
         count: stats.nbPaiementsImpayes,
       });
     }
@@ -278,9 +248,7 @@ export function FinancialDashboard({
 
   return (
     <div className="space-y-6">
-      {/* ============================================================ */}
       {/* SELECTEUR DE PERIODE */}
-      {/* ============================================================ */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-slate-600">
@@ -311,7 +279,7 @@ export function FinancialDashboard({
       </div>
 
       {/* ============================================================ */}
-      {/* STATS PRINCIPALES — 4 GROSSES CARTES */}
+      {/* STATS PRINCIPALES — 4 GROSSES CARTES (CLIQUABLES) */}
       {/* ============================================================ */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <BigStatCard
@@ -326,6 +294,7 @@ export function FinancialDashboard({
                 )}% de ${formatMoney(stats.totalFacture)}`
               : undefined
           }
+          href="/dashboard/super-admin/paiements?filter=paye"
         />
         <BigStatCard
           icon={Clock}
@@ -335,6 +304,7 @@ export function FinancialDashboard({
           trend={
             stats.totalRestant > 0 ? "Solde dû par les clients" : "Tout encaissé"
           }
+          href="/dashboard/super-admin/paiements?filter=partiel"
         />
         <BigStatCard
           icon={TrendingDown}
@@ -348,6 +318,7 @@ export function FinancialDashboard({
                 )} en attente`
               : "Toutes validées"
           }
+          href="/dashboard/super-admin/depenses?filter=valide"
         />
         <BigStatCard
           icon={Wallet}
@@ -356,12 +327,11 @@ export function FinancialDashboard({
           accent={stats.soldeNet >= 0 ? "purple" : "red"}
           trend="Encaissé − Dépenses validées"
           highlighted={true}
+          href="/dashboard/super-admin/paiements"
         />
       </div>
 
-      {/* ============================================================ */}
       {/* ALERTES */}
-      {/* ============================================================ */}
       {alerts.length > 0 && (
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="mb-4 flex items-center gap-2">
@@ -381,11 +351,8 @@ export function FinancialDashboard({
         </div>
       )}
 
-      {/* ============================================================ */}
       {/* RESUME RAPIDE — RATIO ENTRÉES / SORTIES */}
-      {/* ============================================================ */}
       <div className="grid gap-4 lg:grid-cols-3">
-        {/* Entrées */}
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-100 text-green-700">
@@ -416,7 +383,6 @@ export function FinancialDashboard({
           </div>
         </div>
 
-        {/* Sorties */}
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-100 text-red-700">
@@ -447,7 +413,6 @@ export function FinancialDashboard({
           </div>
         </div>
 
-        {/* Solde net (illustré) */}
         <div
           className={cn(
             "rounded-2xl border p-5 shadow-sm",
@@ -487,11 +452,8 @@ export function FinancialDashboard({
         </div>
       </div>
 
-      {/* ============================================================ */}
-      {/* ACTIVITE RECENTE (2 colonnes : paiements + dépenses) */}
-      {/* ============================================================ */}
+      {/* ACTIVITE RECENTE */}
       <div className="grid gap-4 lg:grid-cols-2">
-        {/* Paiements récents */}
         <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="flex items-center justify-between border-b border-slate-200 p-5">
             <div className="flex items-center gap-2">
@@ -521,7 +483,6 @@ export function FinancialDashboard({
           </div>
         </div>
 
-        {/* Dépenses récentes */}
         <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="flex items-center justify-between border-b border-slate-200 p-5">
             <div className="flex items-center gap-2">
@@ -552,9 +513,7 @@ export function FinancialDashboard({
         </div>
       </div>
 
-      {/* ============================================================ */}
       {/* ACCES RAPIDE */}
-      {/* ============================================================ */}
       <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-nexus-blue-50 to-nexus-orange-50 p-5 shadow-sm">
         <h3 className="font-display text-base font-bold text-nexus-blue-950">
           Actions rapides
@@ -613,6 +572,7 @@ function BigStatCard({
   accent,
   trend,
   highlighted = false,
+  href,
 }: {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
@@ -620,6 +580,7 @@ function BigStatCard({
   accent: "green" | "orange" | "blue" | "purple" | "red";
   trend?: string;
   highlighted?: boolean;
+  href?: string;
 }) {
   const colorMap = {
     green: "from-emerald-400 to-emerald-600",
@@ -629,15 +590,16 @@ function BigStatCard({
     red: "from-red-500 to-red-700",
   };
 
-  return (
-    <div
-      className={cn(
-        "rounded-2xl border bg-white p-5 shadow-sm transition hover:shadow-md",
-        highlighted
-          ? "border-2 border-nexus-orange-300 ring-2 ring-nexus-orange-100"
-          : "border-slate-200"
-      )}
-    >
+  const cardClasses = cn(
+    "block rounded-2xl border bg-white p-5 shadow-sm transition hover:shadow-md",
+    highlighted
+      ? "border-2 border-nexus-orange-300 ring-2 ring-nexus-orange-100"
+      : "border-slate-200",
+    href && "cursor-pointer hover:-translate-y-0.5"
+  );
+
+  const content = (
+    <>
       <div className="flex items-start justify-between">
         <div className="min-w-0 flex-1">
           <p className="text-sm font-medium text-slate-500">{label}</p>
@@ -657,8 +619,24 @@ function BigStatCard({
       {trend && (
         <p className="mt-3 text-xs text-slate-500">{trend}</p>
       )}
-    </div>
+      {href && (
+        <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-nexus-blue-700 opacity-0 transition group-hover:opacity-100">
+          <span>Voir le détail</span>
+          <ArrowRight className="h-3 w-3" />
+        </div>
+      )}
+    </>
   );
+
+  if (href) {
+    return (
+      <Link href={href} className={cn(cardClasses, "group")}>
+        {content}
+      </Link>
+    );
+  }
+
+  return <div className={cardClasses}>{content}</div>;
 }
 
 function PeriodChip({
