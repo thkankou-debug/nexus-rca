@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import toast from "react-hot-toast";
 import {
   Plus,
@@ -10,20 +11,24 @@ import {
   Eye,
   AlertTriangle,
   Wallet,
-  TrendingUp,
   Clock,
   CheckCircle2,
-  XCircle,
-  FileText,
   Calendar,
   User,
   Phone,
   Mail,
   Download,
+  UserCircle,
+  ExternalLink,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import { PaymentForm, type Payment, type PaymentStatus, type PaymentMethod } from "./PaymentForm";
+import {
+  PaymentForm,
+  type Payment,
+  type PaymentStatus,
+  type PaymentMethod,
+} from "./PaymentForm";
 
 interface AgentOption {
   id: string;
@@ -104,7 +109,6 @@ export function PaymentsManager({
   const [editingPayment, setEditingPayment] = useState<Payment | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<Payment | null>(null);
 
-  // Statistiques
   const stats = useMemo(() => {
     const total = payments.reduce((sum, p) => sum + Number(p.montant_total), 0);
     const recu = payments.reduce((sum, p) => sum + Number(p.montant_recu), 0);
@@ -112,7 +116,6 @@ export function PaymentsManager({
     return { total, recu, restant };
   }, [payments]);
 
-  // Filtrage
   const filtered = useMemo(() => {
     let list = payments;
     if (filter !== "all") list = list.filter((p) => p.statut === filter);
@@ -140,7 +143,6 @@ export function PaymentsManager({
     };
   }, [payments]);
 
-  // Actions
   const handleSaved = (saved: Payment) => {
     setPayments((list) => {
       const idx = list.findIndex((p) => p.id === saved.id);
@@ -184,7 +186,6 @@ export function PaymentsManager({
 
   return (
     <div className="space-y-6">
-      {/* Statistiques rapides */}
       <div className="grid gap-4 sm:grid-cols-3">
         <StatBlock
           icon={Wallet}
@@ -206,7 +207,6 @@ export function PaymentsManager({
         />
       </div>
 
-      {/* Barre d action */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative flex-1 sm:max-w-md">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -231,7 +231,6 @@ export function PaymentsManager({
         </button>
       </div>
 
-      {/* Filtres */}
       <div className="flex flex-wrap gap-2">
         <FilterChip
           label={`Tous (${counts.all})`}
@@ -248,7 +247,6 @@ export function PaymentsManager({
         ))}
       </div>
 
-      {/* Liste */}
       {filtered.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-12 text-center">
           <Wallet className="mx-auto h-12 w-12 text-slate-400" />
@@ -287,7 +285,6 @@ export function PaymentsManager({
         </div>
       )}
 
-      {/* Modal formulaire */}
       {showForm && (
         <PaymentForm
           initialData={editingPayment}
@@ -301,7 +298,6 @@ export function PaymentsManager({
         />
       )}
 
-      {/* Modal confirmation suppression */}
       {confirmDelete && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
@@ -320,8 +316,7 @@ export function PaymentsManager({
                   Supprimer ce paiement ?
                 </h3>
                 <p className="mt-2 text-sm text-slate-600">
-                  Paiement de{" "}
-                  <strong>{confirmDelete.client_nom}</strong> ·{" "}
+                  Paiement de <strong>{confirmDelete.client_nom}</strong> ·{" "}
                   {formatMoney(
                     Number(confirmDelete.montant_total),
                     confirmDelete.devise
@@ -356,7 +351,7 @@ export function PaymentsManager({
 }
 
 // ============================================================================
-// SOUS-COMPOSANTS
+// CARTE PAIEMENT
 // ============================================================================
 function PaymentCard({
   payment,
@@ -398,6 +393,17 @@ function PaymentCard({
               >
                 {STATUS_LABELS[payment.statut]}
               </span>
+              {/* NOUVEAU : badge "Lié à fiche client" */}
+              {payment.client_record_id && (
+                <Link
+                  href={`/dashboard/super-admin/clients/${payment.client_record_id}`}
+                  className="inline-flex items-center gap-1 rounded-full bg-nexus-blue-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-nexus-blue-700 transition hover:bg-nexus-blue-200"
+                >
+                  <UserCircle className="h-3 w-3" />
+                  Fiche client
+                  <ExternalLink className="h-3 w-3" />
+                </Link>
+              )}
             </div>
             <h3 className="mt-2 font-display text-lg font-bold text-nexus-blue-950">
               {payment.client_nom}
@@ -415,7 +421,6 @@ function PaymentCard({
           </div>
         </div>
 
-        {/* Barre de progression */}
         <div className="mt-3">
           <div className="h-2 overflow-hidden rounded-full bg-slate-200">
             <div
@@ -435,7 +440,6 @@ function PaymentCard({
           )}
         </div>
 
-        {/* Méta */}
         <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
           <span className="inline-flex items-center gap-1">
             <Calendar className="h-3.5 w-3.5" />
@@ -450,7 +454,6 @@ function PaymentCard({
           )}
         </div>
 
-        {/* Actions */}
         <div className="mt-4 flex flex-wrap gap-2 border-t border-slate-100 pt-4">
           <button
             type="button"
@@ -490,7 +493,6 @@ function PaymentCard({
           )}
         </div>
 
-        {/* Détails dépliés */}
         {expanded && (
           <div className="mt-4 grid gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm sm:grid-cols-2">
             {payment.client_email && (

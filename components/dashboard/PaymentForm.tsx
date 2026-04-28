@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { X, Upload, FileText, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import type { Profile } from "@/types";
+import { ClientSelector } from "./ClientSelector";
 
 // ============================================================================
 // TYPES
@@ -30,6 +30,7 @@ export interface Payment {
   id: string;
   reference: string | null;
   client_id: string | null;
+  client_record_id: string | null; // NOUVEAU - lien vers la table clients
   demande_id: string | null;
   agent_id: string | null;
   client_nom: string;
@@ -110,6 +111,7 @@ export function PaymentForm({
   const [proofFile, setProofFile] = useState<File | null>(null);
 
   const [form, setForm] = useState({
+    client_record_id: initialData?.client_record_id || null, // NOUVEAU
     client_nom: initialData?.client_nom || "",
     client_email: initialData?.client_email || "",
     client_telephone: initialData?.client_telephone || "",
@@ -126,16 +128,36 @@ export function PaymentForm({
     notes_internes: initialData?.notes_internes || "",
   });
 
-  // Calcul affiché du montant restant
   const montantTotal = parseFloat(form.montant_total) || 0;
   const montantRecu = parseFloat(form.montant_recu) || 0;
   const montantRestant = Math.max(0, montantTotal - montantRecu);
 
-  const handleChange = (
-    field: keyof typeof form,
-    value: string
-  ) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
+  const handleChange = (field: keyof typeof form, value: string | null) => {
+    setForm((prev) => ({ ...prev, [field]: value as never }));
+  };
+
+  // Quand un client est sélectionné, on pré-remplit les champs
+  const handleClientPicked = (client: {
+    id: string;
+    type: string;
+    nom: string;
+    prenom: string | null;
+    raison_sociale: string | null;
+    email: string | null;
+    telephone: string | null;
+  }) => {
+    const fullName =
+      client.type === "particulier"
+        ? [client.prenom, client.nom].filter(Boolean).join(" ")
+        : client.nom;
+
+    setForm((prev) => ({
+      ...prev,
+      client_record_id: client.id,
+      client_nom: fullName || prev.client_nom,
+      client_email: client.email || prev.client_email,
+      client_telephone: client.telephone || prev.client_telephone,
+    }));
   };
 
   const handleProofUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,7 +196,6 @@ export function PaymentForm({
     e.preventDefault();
     setSaving(true);
 
-    // Validation basique
     if (!form.client_nom.trim()) {
       toast.error("Nom du client requis");
       setSaving(false);
@@ -197,6 +218,7 @@ export function PaymentForm({
     }
 
     const payload = {
+      client_record_id: form.client_record_id, // NOUVEAU
       client_nom: form.client_nom.trim(),
       client_email: form.client_email.trim() || null,
       client_telephone: form.client_telephone.trim() || null,
@@ -215,7 +237,6 @@ export function PaymentForm({
     let savedPayment: Payment | null = null;
 
     if (isEditing && initialData) {
-      // UPDATE
       const { data, error } = await supabase
         .from("payments")
         .update(payload)
@@ -230,7 +251,6 @@ export function PaymentForm({
       }
       savedPayment = data as Payment;
     } else {
-      // INSERT
       const { data, error } = await supabase
         .from("payments")
         .insert(payload)
@@ -245,7 +265,6 @@ export function PaymentForm({
       savedPayment = data as Payment;
     }
 
-    // Upload preuve si fichier sélectionné
     if (proofFile && savedPayment) {
       const proofData = await uploadProofToStorage(savedPayment.id);
       if (proofData) {
@@ -301,41 +320,66 @@ export function PaymentForm({
           </button>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5 p-6">
-          {/* SECTION : Client */}
+          {/* SECTION : Client (avec selecteur) */}
           <Section title="Client">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Nom complet *">
-                <input
-                  type="text"
-                  required
-                  value={form.client_nom}
-                  onChange={(e) => handleChange("client_nom", e.target.value)}
-                  className={inputClass}
-                  placeholder="Nom et prénom du client"
+            <div className="space-y-4">
+              {/* NOUVEAU : sélecteur de client existant */}
+              <div>
+                <label className="mb-1 block text-sm font-semibold text-slate-700">
+                  Lier à un client existant
+                </label>
+                <ClientSelector
+                  selectedClientId={form.client_record_id}
+                  onSelect={(id) => handleChange("client_record_id", id)}
+                  onClientPicked={handleClientPicked}
                 />
-              </Field>
-              <Field label="Téléphone">
-                <input
-                  type="tel"
-                  value={form.client_telephone}
-                  onChange={(e) =>
-                    handleChange("client_telephone", e.target.value)
-                  }
-                  className={inputClass}
-                  placeholder="+236 ..."
-                />
-              </Field>
-              <Field label="Email" className="sm:col-span-2">
-                <input
-                  type="email"
-                  value={form.client_email}
-                  onChange={(e) => handleChange("client_email", e.target.value)}
-                  className={inputClass}
-                  placeholder="email@exemple.com"
-                />
-              </Field>
+              </div>
+
+              {/* Champs nom / email / tel — toujours présents pour rétrocompat */}
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <p className="mb-3 text-xs text-slate-600">
+                  {form.client_record_id
+                    ? "Infos pré-remplies depuis le client lié — modifiables si besoin"
+                    : "Ou saisis manuellement les coordonnées du client"}
+                </p>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field label="Nom complet *">
+                    <input
+                      type="text"
+                      required
+                      value={form.client_nom}
+                      onChange={(e) =>
+                        handleChange("client_nom", e.target.value)
+                      }
+                      className={inputClass}
+                      placeholder="Nom et prénom du client"
+                    />
+                  </Field>
+                  <Field label="Téléphone">
+                    <input
+                      type="tel"
+                      value={form.client_telephone}
+                      onChange={(e) =>
+                        handleChange("client_telephone", e.target.value)
+                      }
+                      className={inputClass}
+                      placeholder="+236 ..."
+                    />
+                  </Field>
+                  <Field label="Email" className="sm:col-span-2">
+                    <input
+                      type="email"
+                      value={form.client_email}
+                      onChange={(e) =>
+                        handleChange("client_email", e.target.value)
+                      }
+                      className={inputClass}
+                      placeholder="email@exemple.com"
+                    />
+                  </Field>
+                </div>
+              </div>
             </div>
           </Section>
 
@@ -379,7 +423,9 @@ export function PaymentForm({
                   min="0"
                   step="0.01"
                   value={form.montant_total}
-                  onChange={(e) => handleChange("montant_total", e.target.value)}
+                  onChange={(e) =>
+                    handleChange("montant_total", e.target.value)
+                  }
                   className={inputClass}
                   placeholder="0"
                 />
@@ -410,7 +456,6 @@ export function PaymentForm({
               </Field>
             </div>
 
-            {/* Récap montant restant */}
             {montantTotal > 0 && (
               <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3 text-sm">
@@ -474,7 +519,9 @@ export function PaymentForm({
                 <input
                   type="datetime-local"
                   value={form.date_paiement}
-                  onChange={(e) => handleChange("date_paiement", e.target.value)}
+                  onChange={(e) =>
+                    handleChange("date_paiement", e.target.value)
+                  }
                   className={inputClass}
                 />
               </Field>
@@ -497,24 +544,22 @@ export function PaymentForm({
 
           {/* SECTION : Preuve */}
           <Section title="Preuve / reçu (optionnel)">
-            <div>
-              <label className="flex cursor-pointer items-center justify-center gap-3 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-4 hover:border-nexus-orange-300 hover:bg-nexus-orange-50">
-                <Upload className="h-5 w-5 text-slate-400" />
-                <span className="text-sm font-semibold text-slate-700">
-                  {proofFile
-                    ? proofFile.name
-                    : initialData?.preuve_nom
-                    ? `Actuel : ${initialData.preuve_nom}`
-                    : "Choisir un fichier (JPG, PNG, PDF · max 10 Mo)"}
-                </span>
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/jpg,application/pdf"
-                  onChange={handleProofUpload}
-                  className="hidden"
-                />
-              </label>
-            </div>
+            <label className="flex cursor-pointer items-center justify-center gap-3 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-4 hover:border-nexus-orange-300 hover:bg-nexus-orange-50">
+              <Upload className="h-5 w-5 text-slate-400" />
+              <span className="text-sm font-semibold text-slate-700">
+                {proofFile
+                  ? proofFile.name
+                  : initialData?.preuve_nom
+                  ? `Actuel : ${initialData.preuve_nom}`
+                  : "Choisir un fichier (JPG, PNG, PDF · max 10 Mo)"}
+              </span>
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/jpg,application/pdf"
+                onChange={handleProofUpload}
+                className="hidden"
+              />
+            </label>
           </Section>
 
           {/* SECTION : Notes */}
@@ -555,7 +600,9 @@ export function PaymentForm({
               ) : (
                 <>
                   <FileText className="h-4 w-4" />
-                  {isEditing ? "Enregistrer les modifications" : "Enregistrer le paiement"}
+                  {isEditing
+                    ? "Enregistrer les modifications"
+                    : "Enregistrer le paiement"}
                 </>
               )}
             </button>
@@ -566,9 +613,6 @@ export function PaymentForm({
   );
 }
 
-// ============================================================================
-// SOUS-COMPOSANTS
-// ============================================================================
 const inputClass =
   "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30";
 
