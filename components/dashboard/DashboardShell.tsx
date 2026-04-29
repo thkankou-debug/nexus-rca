@@ -21,6 +21,7 @@ import {
   Send,
   Trophy,
   ShoppingCart,
+  Briefcase,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -57,16 +58,17 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
   super_admin: [
     { href: "/dashboard/super-admin", label: "Tableau de bord", icon: LayoutDashboard },
     { href: "/dashboard/super-admin/finances", label: "Finances", icon: PieChart },
-    { href: "/dashboard/super-admin/stats-agents", label: "Stats agents", icon: Trophy },
-    { href: "/dashboard/super-admin/clients", label: "Clients", icon: UserCircle },
+    { href: "/dashboard/super-admin/stats-agents", label: "Performances équipe", icon: Trophy },
+    { href: "/dashboard/super-admin/clients", label: "Clients (CRM)", icon: UserCircle },
     { href: "/dashboard/super-admin/demandes", label: "Toutes les demandes", icon: FileText },
     { href: "/dashboard/super-admin/rendez-vous", label: "Rendez-vous", icon: CalendarCheck },
     { href: "/dashboard/super-admin/paiements", label: "Paiements", icon: Wallet },
     { href: "/dashboard/super-admin/caisse", label: "Caisse rapide", icon: ShoppingCart },
     { href: "/dashboard/super-admin/transferts", label: "Transferts", icon: Send },
     { href: "/dashboard/super-admin/depenses", label: "Dépenses", icon: Receipt },
-    { href: "/dashboard/super-admin/utilisateurs", label: "Utilisateurs", icon: Users },
-    { href: "/dashboard/super-admin/roles", label: "Rôles", icon: ShieldCheck },
+    { href: "/dashboard/super-admin/equipe", label: "Équipe Nexus", icon: Briefcase },
+    { href: "/dashboard/super-admin/comptes-clients", label: "Comptes clients", icon: Users },
+    { href: "/dashboard/super-admin/roles", label: "Rôles & permissions", icon: ShieldCheck },
   ],
 };
 
