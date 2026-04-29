@@ -15,7 +15,7 @@ export default async function StatsAgentsPage() {
   const profile = await requireProfile(["super_admin", "admin"]);
   const supabase = createClient();
 
-  // 1. Recuperer tous les agents/admins/super_admins actifs
+  // 1. Agents
   const { data: agentsData } = await supabase
     .from("profiles")
     .select("id, nom, prenom, role")
@@ -24,54 +24,80 @@ export default async function StatsAgentsPage() {
 
   const agents = agentsData || [];
 
-  // 2. Pour chaque agent, calculer ses stats en parallele
+  // 2. Pour chaque agent, calculer ses stats (avec donnees brutes pour filtrage)
   const stats: AgentStatsRow[] = await Promise.all(
     agents.map(async (agent) => {
-      // Paiements encaisses (en tant qu agent_id ou created_by)
+      // Paiements
       const { data: paymentsData } = await supabase
         .from("payments")
-        .select("montant_recu")
+        .select("montant_recu, date_paiement, created_at")
         .or(`agent_id.eq.${agent.id},created_by.eq.${agent.id}`);
 
-      const paiements_encaisses = (paymentsData || []).reduce(
-        (sum, p) => sum + Number(p.montant_recu || 0),
-        0
-      );
-      const nb_paiements = (paymentsData || []).length;
+      const paiements_dates = (paymentsData || []).map((p) => ({
+        date: p.date_paiement || p.created_at,
+        montant: Number(p.montant_recu || 0),
+      }));
 
-      // Clients crees
-      const { count: clientsCount } = await supabase
+      // Clients
+      const { data: clientsData } = await supabase
         .from("clients")
-        .select("*", { count: "exact", head: true })
+        .select("created_at")
         .eq("created_by", agent.id);
 
-      // Demandes traitees (approximation : demandes ou cet agent a fait un paiement
-      // ou cree le client - facile a affiner plus tard)
-      // Pour l instant on compte les demandes ou il est marque comme created_by ou agent
-      const { count: demandesCount } = await supabase
-        .from("demandes")
-        .select("*", { count: "exact", head: true })
-        .or(
-          `created_by.eq.${agent.id},assigne_a.eq.${agent.id}`
-        );
+      const clients_dates = (clientsData || []).map((c) => c.created_at);
 
-      // Depenses validees (montant total) creees par cet agent
+      // Demandes
+      const { data: demandesData } = await supabase
+        .from("demandes")
+        .select("created_at")
+        .or(`created_by.eq.${agent.id},assigne_a.eq.${agent.id}`);
+
+      const demandes_dates = (demandesData || []).map((d) => d.created_at);
+
+      // Depenses
       const { data: depensesData } = await supabase
         .from("expenses")
-        .select("montant, statut")
+        .select("date_depense, created_at, montant, statut")
         .eq("created_by", agent.id);
 
-      const depenses_validees = (depensesData || [])
-        .filter((d) => d.statut === "valide")
-        .reduce((sum, d) => sum + Number(d.montant || 0), 0);
+      const depenses_data = (depensesData || []).map((d) => ({
+        date: d.date_depense || d.created_at,
+        montant: Number(d.montant || 0),
+        statut: d.statut || "",
+      }));
 
-      const nb_depenses = (depensesData || []).length;
-
-      // Transferts inities
-      const { count: transfertsCount } = await supabase
+      // Transferts
+      const { data: transfertsData } = await supabase
         .from("transferts")
-        .select("*", { count: "exact", head: true })
+        .select("created_at")
         .or(`agent_id.eq.${agent.id},created_by.eq.${agent.id}`);
+
+      const transferts_dates = (transfertsData || []).map((t) => t.created_at);
+
+      // Stats globales (depuis le debut)
+      const paiements_encaisses = paiements_dates.reduce(
+        (s, p) => s + p.montant,
+        0
+      );
+      const depenses_validees = depenses_data
+        .filter((d) => d.statut === "valide")
+        .reduce((s, d) => s + d.montant, 0);
+
+      // Derniere activite = max de toutes les dates
+      const allDates = [
+        ...paiements_dates.map((p) => p.date),
+        ...clients_dates,
+        ...demandes_dates,
+        ...depenses_data.map((d) => d.date),
+        ...transferts_dates,
+      ].filter(Boolean);
+
+      const derniere_activite =
+        allDates.length > 0
+          ? allDates.reduce((max, d) =>
+              new Date(d) > new Date(max) ? d : max
+            )
+          : null;
 
       return {
         id: agent.id,
@@ -79,17 +105,23 @@ export default async function StatsAgentsPage() {
         prenom: agent.prenom,
         role: agent.role,
         paiements_encaisses,
-        nb_paiements,
-        clients_crees: clientsCount ?? 0,
-        demandes_traitees: demandesCount ?? 0,
+        nb_paiements: paiements_dates.length,
+        clients_crees: clients_dates.length,
+        demandes_traitees: demandes_dates.length,
         depenses_validees,
-        nb_depenses,
-        transferts_inities: transfertsCount ?? 0,
+        nb_depenses: depenses_data.length,
+        transferts_inities: transferts_dates.length,
+        paiements_dates,
+        clients_dates,
+        demandes_dates,
+        depenses_data,
+        transferts_dates,
+        derniere_activite,
       };
     })
   );
 
-  // 3. Filtrer ceux qui n ont aucune activite (optionnel - tu peux retirer si tu veux tout voir)
+  // 3. Filtrer ceux avec activite (ou rôle privilégié pour les voir tous)
   const statsActifs = stats.filter(
     (s) =>
       s.paiements_encaisses > 0 ||
@@ -106,7 +138,7 @@ export default async function StatsAgentsPage() {
         label="Retour au tableau de bord"
       />
 
-      <div className="mb-8 flex items-center gap-3">
+      <div className="mb-6 flex items-center gap-3">
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-400 to-amber-600 text-white shadow-lg">
           <Trophy className="h-6 w-6" />
         </div>
@@ -115,7 +147,7 @@ export default async function StatsAgentsPage() {
             Performances des agents
           </h1>
           <p className="mt-1 text-slate-600">
-            Classement et statistiques individuelles depuis le début.
+            Suivi opérationnel et classement de l'équipe.
           </p>
         </div>
       </div>
