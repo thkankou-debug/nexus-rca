@@ -29,6 +29,7 @@ import {
   type PaymentStatus,
   type PaymentMethod,
 } from "./PaymentForm";
+import { ReceiptButtons } from "./PaymentReceipt";
 
 interface AgentOption {
   id: string;
@@ -374,7 +375,7 @@ function PaymentCard({
   onDownloadProof: () => void;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const agentName = agents.find((a) => a.id === payment.agent_id);
+  const agentInfo = agents.find((a) => a.id === payment.agent_id);
   const restant = Number(payment.montant_total) - Number(payment.montant_recu);
   const pct =
     Number(payment.montant_total) > 0
@@ -450,10 +451,10 @@ function PaymentCard({
             {formatDate(payment.date_paiement)}
           </span>
           <span>{METHOD_LABELS[payment.mode_paiement]}</span>
-          {agentName && (
+          {agentInfo && (
             <span className="inline-flex items-center gap-1">
               <User className="h-3.5 w-3.5" />
-              {agentName.prenom} {agentName.nom}
+              {agentInfo.prenom} {agentInfo.nom}
             </span>
           )}
         </div>
@@ -467,6 +468,10 @@ function PaymentCard({
             <Eye className="h-3.5 w-3.5" />
             {expanded ? "Masquer" : "Détails"}
           </button>
+
+          {/* NOUVEAUX BOUTONS RECU PDF */}
+          <ReceiptButtons payment={payment} agent={agentInfo} />
+
           {canEdit && (
             <button
               type="button"
@@ -484,7 +489,7 @@ function PaymentCard({
               className="inline-flex items-center gap-1.5 rounded-full border border-green-200 bg-green-50 px-3 py-1.5 text-xs font-semibold text-green-700 hover:bg-green-100"
             >
               <Download className="h-3.5 w-3.5" />
-              Voir reçu
+              Voir preuve
             </button>
           )}
           {canDelete && (
