@@ -13,18 +13,22 @@ interface CreateTeamMemberBody {
   role: "agent" | "admin" | "super_admin";
   poste?: string;
   notes_internes?: string;
-  send_invitation: boolean; // true = email invitation, false = mot de passe temporaire
-  temporary_password?: string; // requis si send_invitation = false
+  send_invitation: boolean;
+  temporary_password?: string;
 }
 
 const ALLOWED_ROLES = ["agent", "admin", "super_admin"] as const;
+
+// URL de base de production - utilisee pour les redirections d invitation
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.nexusrca.com";
 
 export async function POST(request: Request) {
   try {
     const supabase = createClient();
 
     // ========================================================================
-    // 1. VERIFIER L AUTHENTIFICATION
+    // 1. AUTHENTIFICATION
     // ========================================================================
     const {
       data: { user },
@@ -38,7 +42,7 @@ export async function POST(request: Request) {
     }
 
     // ========================================================================
-    // 2. VERIFIER QUE L UTILISATEUR EST SUPER_ADMIN (SECURITE CRITIQUE)
+    // 2. VERIFIER QUE C EST UN SUPER_ADMIN
     // ========================================================================
     const { data: callerProfile, error: profileError } = await supabase
       .from("profiles")
@@ -67,7 +71,7 @@ export async function POST(request: Request) {
     }
 
     // ========================================================================
-    // 3. VALIDER LE BODY
+    // 3. VALIDATION
     // ========================================================================
     const body = (await request.json()) as CreateTeamMemberBody;
 
@@ -80,7 +84,7 @@ export async function POST(request: Request) {
 
     if (!ALLOWED_ROLES.includes(body.role)) {
       return NextResponse.json(
-        { error: "Rôle invalide. Doit être agent, admin ou super_admin" },
+        { error: "Rôle invalide" },
         { status: 400 }
       );
     }
@@ -93,13 +97,11 @@ export async function POST(request: Request) {
       );
     }
 
-    // Si pas d invitation, mot de passe temporaire requis et fort
     if (!body.send_invitation) {
       if (!body.temporary_password || body.temporary_password.length < 8) {
         return NextResponse.json(
           {
-            error:
-              "Mot de passe temporaire requis (minimum 8 caractères)",
+            error: "Mot de passe temporaire requis (minimum 8 caractères)",
           },
           { status: 400 }
         );
@@ -107,7 +109,7 @@ export async function POST(request: Request) {
     }
 
     // ========================================================================
-    // 4. CLIENT ADMIN AVEC SERVICE ROLE KEY
+    // 4. CLIENT ADMIN
     // ========================================================================
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -131,7 +133,7 @@ export async function POST(request: Request) {
     });
 
     // ========================================================================
-    // 5. VERIFIER QUE L EMAIL N EXISTE PAS DEJA
+    // 5. VERIFIER UNICITE EMAIL
     // ========================================================================
     const { data: existingProfiles } = await supabaseAdmin
       .from("profiles")
@@ -149,17 +151,17 @@ export async function POST(request: Request) {
     }
 
     // ========================================================================
-    // 6. CREER L UTILISATEUR DANS AUTH
+    // 6. CREATION COMPTE AUTH
     // ========================================================================
     let userId: string;
-    let invitationLink: string | null = null;
 
     if (body.send_invitation) {
-      // Mode invitation : envoyer un magic link
+      // ⭐ CORRECTION : ajout de redirectTo pour pointer vers la page accept-invite
       const { data: inviteData, error: inviteError } =
         await supabaseAdmin.auth.admin.inviteUserByEmail(
           body.email.trim().toLowerCase(),
           {
+            redirectTo: `${SITE_URL}/auth/accept-invite`,
             data: {
               prenom: body.prenom.trim(),
               nom: body.nom.trim(),
@@ -182,12 +184,11 @@ export async function POST(request: Request) {
 
       userId = inviteData.user.id;
     } else {
-      // Mode mot de passe temporaire
       const { data: createData, error: createError } =
         await supabaseAdmin.auth.admin.createUser({
           email: body.email.trim().toLowerCase(),
           password: body.temporary_password!,
-          email_confirm: true, // pas besoin de confirmation
+          email_confirm: true,
           user_metadata: {
             prenom: body.prenom.trim(),
             nom: body.nom.trim(),
@@ -211,7 +212,7 @@ export async function POST(request: Request) {
     }
 
     // ========================================================================
-    // 7. CREER/METTRE A JOUR LE PROFIL
+    // 7. CREATION DU PROFIL
     // ========================================================================
     const profilePayload = {
       id: userId,
@@ -231,7 +232,6 @@ export async function POST(request: Request) {
 
     if (profileUpsertError) {
       console.error("Erreur creation profil :", profileUpsertError);
-      // Tentative de rollback : supprimer l utilisateur auth cree
       await supabaseAdmin.auth.admin.deleteUser(userId);
       return NextResponse.json(
         {
@@ -243,7 +243,7 @@ export async function POST(request: Request) {
     }
 
     // ========================================================================
-    // 8. ENVOI EMAIL DE BIENVENUE (si mot de passe temporaire)
+    // 8. EMAIL DE BIENVENUE (mode mot de passe temporaire)
     // ========================================================================
     if (!body.send_invitation && process.env.RESEND_API_KEY) {
       try {
@@ -280,7 +280,7 @@ export async function POST(request: Request) {
                   ⚠️ <strong>Important :</strong> changez votre mot de passe lors de votre première connexion.
                 </p>
                 <p style="text-align: center; margin: 30px 0;">
-                  <a href="https://www.nexusrca.com/connexion" style="background: #FF6600; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">Se connecter</a>
+                  <a href="${SITE_URL}/connexion" style="background: #FF6600; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">Se connecter</a>
                 </p>
                 <hr style="border: none; border-top: 1px solid #E2E8F0; margin: 30px 0;">
                 <p style="color: #94A3B8; font-size: 12px; text-align: center;">
@@ -291,7 +291,6 @@ export async function POST(request: Request) {
           `,
         });
       } catch (emailError) {
-        // L'envoi de mail a echoue mais le compte est cree, on continue
         console.error("Erreur envoi email bienvenue :", emailError);
       }
     }
