@@ -18,6 +18,7 @@ import {
   Wallet,
   Receipt,
   PieChart,
+  Send,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -42,6 +43,7 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { href: "/dashboard/agent/demandes", label: "Demandes clients", icon: FileText },
     { href: "/dashboard/agent/clients", label: "Clients", icon: UserCircle },
     { href: "/dashboard/agent/paiements", label: "Paiements", icon: Wallet },
+    { href: "/dashboard/agent/transferts", label: "Transferts", icon: Send },
     { href: "/dashboard/agent/depenses", label: "Mes dépenses", icon: Receipt },
   ],
   admin: [
@@ -56,6 +58,7 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { href: "/dashboard/super-admin/demandes", label: "Toutes les demandes", icon: FileText },
     { href: "/dashboard/super-admin/rendez-vous", label: "Rendez-vous", icon: CalendarCheck },
     { href: "/dashboard/super-admin/paiements", label: "Paiements", icon: Wallet },
+    { href: "/dashboard/super-admin/transferts", label: "Transferts", icon: Send },
     { href: "/dashboard/super-admin/depenses", label: "Dépenses", icon: Receipt },
     { href: "/dashboard/super-admin/utilisateurs", label: "Utilisateurs", icon: Users },
     { href: "/dashboard/super-admin/roles", label: "Rôles", icon: ShieldCheck },
@@ -100,7 +103,6 @@ export function DashboardShell({
 
   return (
     <div className="flex min-h-screen bg-slate-50">
-      {/* Mobile topbar */}
       <div className="fixed inset-x-0 top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 lg:hidden">
         <Logo />
         <button
@@ -112,7 +114,6 @@ export function DashboardShell({
         </button>
       </div>
 
-      {/* Sidebar */}
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-30 w-72 transform border-r border-slate-200 bg-white transition-transform duration-300 lg:translate-x-0",
@@ -120,14 +121,12 @@ export function DashboardShell({
         )}
       >
         <div className="flex h-full flex-col">
-          {/* Logo */}
           <div className="shrink-0 border-b border-slate-200 p-6">
             <Link href="/" className="inline-block">
               <Logo />
             </Link>
           </div>
 
-          {/* User card */}
           <div className="shrink-0 border-b border-slate-200 p-6">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-800 to-nexus-orange-500 text-sm font-bold text-white">
@@ -150,7 +149,6 @@ export function DashboardShell({
             </span>
           </div>
 
-          {/* Nav */}
           <nav className="flex-1 space-y-1 overflow-y-auto px-4 py-6">
             {navItems.map((item) => {
               const active = pathname === item.href;
@@ -174,7 +172,6 @@ export function DashboardShell({
             })}
           </nav>
 
-          {/* Footer */}
           <div className="shrink-0 border-t border-slate-200 p-4">
             <Link
               href="/"
@@ -194,7 +191,6 @@ export function DashboardShell({
         </div>
       </aside>
 
-      {/* Overlay mobile */}
       {open && (
         <div
           className="fixed inset-0 z-20 bg-black/40 lg:hidden"
@@ -202,7 +198,6 @@ export function DashboardShell({
         />
       )}
 
-      {/* Main */}
       <main className="flex-1 lg:ml-72">
         <div className="px-4 pt-20 pb-10 sm:px-6 lg:px-10 lg:pt-10">
           {children}

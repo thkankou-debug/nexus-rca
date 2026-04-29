@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { FileDown, Loader2, Printer } from "lucide-react";
+import { FileDown, Loader2, Printer, Mail, X } from "lucide-react";
 import jsPDF from "jspdf";
 import type { Payment, PaymentMethod, PaymentStatus } from "./PaymentForm";
 
@@ -61,9 +61,6 @@ function formatDateTime(dateStr: string): string {
   }
 }
 
-// ============================================================================
-// GENERATEUR PDF
-// ============================================================================
 function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
   const doc = new jsPDF({
     orientation: "portrait",
@@ -76,22 +73,15 @@ function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
   const margin = 20;
   let y = margin;
 
-  // Couleurs Nexus
-  const NEXUS_BLUE: [number, number, number] = [12, 28, 64]; // nexus-blue-950
-  const NEXUS_ORANGE: [number, number, number] = [255, 102, 0]; // nexus-orange-500
+  const NEXUS_BLUE: [number, number, number] = [12, 28, 64];
+  const NEXUS_ORANGE: [number, number, number] = [255, 102, 0];
   const SLATE_DARK: [number, number, number] = [30, 41, 59];
   const SLATE_MID: [number, number, number] = [100, 116, 139];
   const SLATE_LIGHT: [number, number, number] = [226, 232, 240];
 
-  // ============================================================
-  // BANDEAU HEADER (orange)
-  // ============================================================
   doc.setFillColor(...NEXUS_ORANGE);
   doc.rect(0, 0, pageWidth, 8, "F");
 
-  // ============================================================
-  // LOGO + NOM AGENCE
-  // ============================================================
   y = 25;
   doc.setFontSize(24);
   doc.setFont("helvetica", "bold");
@@ -103,7 +93,6 @@ function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
   doc.setTextColor(...NEXUS_ORANGE);
   doc.text("Agence Internationale", margin, y + 6);
 
-  // Coordonnées agence (à droite)
   doc.setFontSize(8);
   doc.setTextColor(...SLATE_MID);
   const rightX = pageWidth - margin;
@@ -113,22 +102,17 @@ function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
   doc.text("contact@nexusrca.com", rightX, y + 10, { align: "right" });
   doc.text("www.nexusrca.com", rightX, y + 14, { align: "right" });
 
-  // Trait séparateur
   y += 22;
   doc.setDrawColor(...SLATE_LIGHT);
   doc.setLineWidth(0.5);
   doc.line(margin, y, pageWidth - margin, y);
 
-  // ============================================================
-  // TITRE REÇU
-  // ============================================================
   y += 12;
   doc.setFontSize(20);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(...NEXUS_BLUE);
   doc.text("REÇU DE PAIEMENT", pageWidth / 2, y, { align: "center" });
 
-  // Référence sous le titre
   y += 7;
   doc.setFontSize(10);
   doc.setFont("courier", "normal");
@@ -137,13 +121,8 @@ function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
     align: "center",
   });
 
-  // ============================================================
-  // BLOC DATE + STATUT
-  // ============================================================
   y += 10;
-
-  // Encadré gris léger
-  doc.setFillColor(248, 250, 252); // slate-50
+  doc.setFillColor(248, 250, 252);
   doc.roundedRect(margin, y, pageWidth - 2 * margin, 18, 2, 2, "F");
 
   doc.setFontSize(9);
@@ -156,7 +135,6 @@ function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
   doc.setTextColor(...SLATE_DARK);
   doc.text(formatDate(payment.date_paiement), margin + 5, y + 13);
 
-  // Statut à droite
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(...SLATE_MID);
@@ -165,9 +143,9 @@ function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
   if (payment.statut === "paye") {
-    doc.setTextColor(34, 197, 94); // green-500
+    doc.setTextColor(34, 197, 94);
   } else if (payment.statut === "partiel") {
-    doc.setTextColor(245, 158, 11); // amber-500
+    doc.setTextColor(245, 158, 11);
   } else {
     doc.setTextColor(...SLATE_DARK);
   }
@@ -175,9 +153,6 @@ function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
     align: "right",
   });
 
-  // ============================================================
-  // SECTION CLIENT
-  // ============================================================
   y += 25;
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
@@ -203,9 +178,6 @@ function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
     y += 5;
   }
 
-  // ============================================================
-  // SECTION SERVICE
-  // ============================================================
   y += 5;
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
@@ -231,18 +203,14 @@ function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
     y += descLines.length * 5;
   }
 
-  // ============================================================
-  // BLOC MONTANTS (encadre orange)
-  // ============================================================
   y += 10;
   const blockHeight = 45;
 
-  doc.setFillColor(255, 247, 237); // orange-50
+  doc.setFillColor(255, 247, 237);
   doc.setDrawColor(...NEXUS_ORANGE);
   doc.setLineWidth(0.5);
   doc.roundedRect(margin, y, pageWidth - 2 * margin, blockHeight, 3, 3, "FD");
 
-  // Montant total
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(...SLATE_MID);
@@ -257,7 +225,6 @@ function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
     y + 16
   );
 
-  // Montant reçu
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(...SLATE_MID);
@@ -265,14 +232,13 @@ function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
 
   doc.setFontSize(15);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(34, 197, 94); // green-500
+  doc.setTextColor(34, 197, 94);
   doc.text(
     formatMoney(Number(payment.montant_recu), payment.devise),
     margin + 8,
     y + 33
   );
 
-  // Restant (à droite)
   const restant = Number(payment.montant_total) - Number(payment.montant_recu);
 
   doc.setFontSize(9);
@@ -294,7 +260,6 @@ function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
     { align: "right" }
   );
 
-  // Mode de paiement
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(...SLATE_MID);
@@ -312,9 +277,6 @@ function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
 
   y += blockHeight + 12;
 
-  // ============================================================
-  // SECTION AGENT
-  // ============================================================
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(...NEXUS_ORANGE);
@@ -337,10 +299,6 @@ function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
   doc.setTextColor(...SLATE_MID);
   doc.text(`Le ${formatDateTime(payment.created_at)}`, margin, y);
 
-  // ============================================================
-  // FOOTER
-  // ============================================================
-  // Trait séparateur en bas
   const footerY = pageHeight - 30;
   doc.setDrawColor(...SLATE_LIGHT);
   doc.setLineWidth(0.5);
@@ -362,7 +320,6 @@ function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
     { align: "center" }
   );
 
-  // Mention "merci"
   doc.setFontSize(9);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(...NEXUS_BLUE);
@@ -370,7 +327,6 @@ function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
     align: "center",
   });
 
-  // Bandeau footer (orange)
   doc.setFillColor(...NEXUS_ORANGE);
   doc.rect(0, pageHeight - 5, pageWidth, 5, "F");
 
@@ -388,6 +344,11 @@ export function ReceiptButtons({
   agent?: AgentInfo;
 }) {
   const [generating, setGenerating] = useState(false);
+  const [emailModal, setEmailModal] = useState(false);
+  const [emailDestinataire, setEmailDestinataire] = useState(
+    payment.client_email || ""
+  );
+  const [sending, setSending] = useState(false);
 
   const handleDownload = () => {
     setGenerating(true);
@@ -410,7 +371,6 @@ export function ReceiptButtons({
     setGenerating(true);
     try {
       const doc = generateReceiptPDF(payment, agent);
-      // Ouvrir le PDF dans un nouvel onglet pour impression
       const blob = doc.output("blob");
       const url = URL.createObjectURL(blob);
       const printWindow = window.open(url, "_blank");
@@ -428,6 +388,47 @@ export function ReceiptButtons({
       toast.error("Erreur impression");
     } finally {
       setGenerating(false);
+    }
+  };
+
+  const handleSendEmail = async () => {
+    if (!emailDestinataire.trim()) {
+      toast.error("Email destinataire requis");
+      return;
+    }
+
+    setSending(true);
+    try {
+      const doc = generateReceiptPDF(payment, agent);
+      // Convertir en base64 (sans le prefixe data:application/pdf;base64,)
+      const base64 = doc
+        .output("datauristring")
+        .split(",")[1];
+
+      const response = await fetch("/api/payments/send-receipt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          payment_id: payment.id,
+          recipient_email: emailDestinataire.trim(),
+          pdf_base64: base64,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Erreur d'envoi");
+      }
+
+      toast.success("Reçu envoyé par email !");
+      setEmailModal(false);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Erreur inconnue";
+      toast.error("Erreur : " + message);
+    } finally {
+      setSending(false);
     }
   };
 
@@ -455,6 +456,96 @@ export function ReceiptButtons({
         <Printer className="h-3.5 w-3.5" />
         Imprimer
       </button>
+      <button
+        type="button"
+        onClick={() => setEmailModal(true)}
+        className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 hover:bg-blue-100"
+      >
+        <Mail className="h-3.5 w-3.5" />
+        Envoyer par email
+      </button>
+
+      {/* Modal envoi email */}
+      {emailModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          onClick={() => setEmailModal(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between">
+              <div className="flex items-start gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100">
+                  <Mail className="h-5 w-5 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="font-display text-lg font-bold text-nexus-blue-950">
+                    Envoyer le reçu par email
+                  </h3>
+                  <p className="mt-1 text-sm text-slate-600">
+                    Référence : {payment.reference}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEmailModal(false)}
+                className="rounded-full p-2 text-slate-400 hover:bg-slate-100"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="mt-4">
+              <label className="mb-1 block text-sm font-semibold text-slate-700">
+                Email du destinataire *
+              </label>
+              <input
+                type="email"
+                value={emailDestinataire}
+                onChange={(e) => setEmailDestinataire(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                placeholder="email@exemple.com"
+              />
+              <p className="mt-2 text-xs text-slate-500">
+                Le PDF du reçu sera joint à un email professionnel envoyé depuis
+                noreply@nexusrca.com.
+              </p>
+            </div>
+
+            <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={() => setEmailModal(false)}
+                disabled={sending}
+                className="rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+              >
+                Annuler
+              </button>
+              <button
+                type="button"
+                onClick={handleSendEmail}
+                disabled={sending}
+                className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+              >
+                {sending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Envoi...
+                  </>
+                ) : (
+                  <>
+                    <Mail className="h-4 w-4" />
+                    Envoyer
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
