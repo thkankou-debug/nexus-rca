@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useMemo, useRef } from "react";
+import Link from "next/link";
+import toast from "react-hot-toast";
 import {
   Trophy,
   Users,
@@ -15,8 +17,15 @@ import {
   CircleOff,
   TrendingUp,
   ArrowUpDown,
+  FileDown,
+  FileSpreadsheet,
+  Printer,
+  ChevronRight,
+  Filter,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import jsPDF from "jspdf";
 
 // ============================================================================
 // TYPES
@@ -26,7 +35,6 @@ export interface AgentStatsRow {
   nom: string;
   prenom: string | null;
   role: string;
-  // Stats globales (depuis le debut)
   paiements_encaisses: number;
   nb_paiements: number;
   clients_crees: number;
@@ -34,17 +42,15 @@ export interface AgentStatsRow {
   depenses_validees: number;
   nb_depenses: number;
   transferts_inities: number;
-  // Donnees brutes pour filtrage par periode
-  paiements_dates: { date: string; montant: number }[];
-  clients_dates: string[]; // dates ISO de creation
+  paiements_dates: { date: string; montant: number; service?: string }[];
+  clients_dates: string[];
   demandes_dates: string[];
   depenses_data: { date: string; montant: number; statut: string }[];
   transferts_dates: string[];
-  // Pour indicateur actif/inactif
   derniere_activite: string | null;
 }
 
-type Period = "today" | "week" | "month" | "all";
+type Period = "today" | "week" | "month" | "custom" | "all";
 
 // ============================================================================
 // HELPERS
@@ -53,8 +59,9 @@ function formatMoney(amount: number, currency = "XAF"): string {
   return `${Math.round(amount).toLocaleString("fr-FR")} ${currency}`;
 }
 
-function getPeriodStartDate(period: Period): Date | null {
+function getPeriodStartDate(period: Period, customStart?: string): Date | null {
   if (period === "all") return null;
+  if (period === "custom" && customStart) return new Date(customStart);
   const now = new Date();
   const start = new Date(now);
   start.setHours(0, 0, 0, 0);
@@ -70,10 +77,22 @@ function getPeriodStartDate(period: Period): Date | null {
   return null;
 }
 
-function isAfter(dateStr: string, ref: Date | null): boolean {
-  if (!ref) return true;
+function getPeriodEndDate(period: Period, customEnd?: string): Date | null {
+  if (period === "custom" && customEnd) {
+    const d = new Date(customEnd);
+    d.setHours(23, 59, 59, 999);
+    return d;
+  }
+  return null;
+}
+
+function isInPeriod(dateStr: string, start: Date | null, end: Date | null): boolean {
+  if (!start && !end) return true;
   try {
-    return new Date(dateStr) >= ref;
+    const d = new Date(dateStr);
+    if (start && d < start) return false;
+    if (end && d > end) return false;
+    return true;
   } catch {
     return false;
   }
@@ -122,24 +141,26 @@ function formatRelativeDate(dateStr: string | null): string {
     if (days === 0) return "Aujourd'hui";
     if (days === 1) return "Hier";
     if (days < 7) return `Il y a ${days} jours`;
-    if (days < 30) return `Il y a ${Math.floor(days / 7)} semaine${Math.floor(days / 7) > 1 ? "s" : ""}`;
+    if (days < 30) return `Il y a ${Math.floor(days / 7)} sem.`;
     return `Il y a ${Math.floor(days / 30)} mois`;
   } catch {
     return "—";
   }
 }
 
-// Calcul du score de performance (0-100) pondere
-function calculateScore(row: AgentStatsRow, maxValues: {
-  paiements: number;
-  clients: number;
-  demandes: number;
-  transferts: number;
-}): number {
-  const w_paiements = 0.4; // 40% du score
-  const w_clients = 0.25; // 25%
-  const w_demandes = 0.2; // 20%
-  const w_transferts = 0.15; // 15%
+function calculateScore(
+  row: AgentStatsRow,
+  maxValues: {
+    paiements: number;
+    clients: number;
+    demandes: number;
+    transferts: number;
+  }
+): number {
+  const w_paiements = 0.4;
+  const w_clients = 0.25;
+  const w_demandes = 0.2;
+  const w_transferts = 0.15;
 
   const score_paiements = maxValues.paiements > 0
     ? (row.paiements_encaisses / maxValues.paiements) * 100
@@ -163,62 +184,282 @@ function calculateScore(row: AgentStatsRow, maxValues: {
 }
 
 // ============================================================================
+// EXPORTS
+// ============================================================================
+function exportCSV(rows: (AgentStatsRow & { score: number })[], periodLabel: string) {
+  const headers = [
+    "Rang",
+    "Nom",
+    "Prenom",
+    "Role",
+    "Score",
+    "Montant encaisse",
+    "Nb paiements",
+    "Clients crees",
+    "Demandes traitees",
+    "Transferts",
+    "Depenses validees",
+    "Nb depenses",
+    "Statut",
+    "Derniere activite",
+  ];
+
+  const csvRows = rows.map((r, i) => [
+    String(i + 1),
+    r.nom || "",
+    r.prenom || "",
+    r.role,
+    String(r.score),
+    String(Math.round(r.paiements_encaisses)),
+    String(r.nb_paiements),
+    String(r.clients_crees),
+    String(r.demandes_traitees),
+    String(r.transferts_inities),
+    String(Math.round(r.depenses_validees)),
+    String(r.nb_depenses),
+    isActive(r.derniere_activite) ? "Actif" : "Inactif",
+    r.derniere_activite ? new Date(r.derniere_activite).toLocaleDateString("fr-FR") : "Jamais",
+  ]);
+
+  const csvContent = [
+    `"Rapport Performances Agents - ${periodLabel}"`,
+    `"Genere le ${new Date().toLocaleString("fr-FR")}"`,
+    "",
+    headers.map((h) => `"${h}"`).join(","),
+    ...csvRows.map((row) => row.map((c) => `"${c}"`).join(",")),
+  ].join("\n");
+
+  const BOM = "\uFEFF"; // pour Excel reconnaisse l UTF-8
+  const blob = new Blob([BOM + csvContent], {
+    type: "text/csv;charset=utf-8;",
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `Stats_Agents_${new Date().toISOString().split("T")[0]}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+function exportPDF(rows: (AgentStatsRow & { score: number })[], periodLabel: string) {
+  const doc = new jsPDF({
+    orientation: "landscape",
+    unit: "mm",
+    format: "a4",
+  });
+
+  const pageWidth = 297;
+  const margin = 15;
+  let y = margin;
+
+  const NEXUS_BLUE: [number, number, number] = [12, 28, 64];
+  const NEXUS_ORANGE: [number, number, number] = [255, 102, 0];
+  const SLATE_DARK: [number, number, number] = [30, 41, 59];
+  const SLATE_MID: [number, number, number] = [100, 116, 139];
+
+  // Bandeau header
+  doc.setFillColor(...NEXUS_ORANGE);
+  doc.rect(0, 0, pageWidth, 6, "F");
+
+  y = 18;
+  doc.setFontSize(18);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...NEXUS_BLUE);
+  doc.text("NEXUS RCA", margin, y);
+
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(...SLATE_MID);
+  doc.text("Rapport Performances Agents", margin, y + 5);
+
+  doc.setFontSize(8);
+  doc.text(
+    `Genere le ${new Date().toLocaleString("fr-FR")}`,
+    pageWidth - margin,
+    y - 2,
+    { align: "right" }
+  );
+  doc.text(`Periode : ${periodLabel}`, pageWidth - margin, y + 3, {
+    align: "right",
+  });
+  doc.text(`${rows.length} agent${rows.length > 1 ? "s" : ""}`, pageWidth - margin, y + 8, {
+    align: "right",
+  });
+
+  y += 18;
+
+  // Tableau header
+  const colWidths = [10, 50, 25, 18, 35, 22, 22, 22, 32, 22];
+  const headers = [
+    "#",
+    "Agent",
+    "Role",
+    "Score",
+    "Encaisse",
+    "Clients",
+    "Demandes",
+    "Transferts",
+    "Depenses",
+    "Statut",
+  ];
+
+  doc.setFillColor(248, 250, 252);
+  doc.rect(margin, y, pageWidth - 2 * margin, 8, "F");
+
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...SLATE_DARK);
+  let x = margin + 2;
+  headers.forEach((h, i) => {
+    doc.text(h, x, y + 5);
+    x += colWidths[i];
+  });
+  y += 8;
+
+  // Tableau lignes
+  doc.setFont("helvetica", "normal");
+  rows.forEach((r, i) => {
+    if (y > 190) {
+      doc.addPage();
+      y = margin;
+    }
+
+    if (i % 2 === 1) {
+      doc.setFillColor(252, 252, 253);
+      doc.rect(margin, y, pageWidth - 2 * margin, 7, "F");
+    }
+
+    const role = getRoleBadge(r.role);
+    const displayName = [r.prenom, r.nom].filter(Boolean).join(" ") || "-";
+    const active = isActive(r.derniere_activite);
+
+    x = margin + 2;
+    doc.setTextColor(...SLATE_DARK);
+    doc.text(String(i + 1), x, y + 5);
+    x += colWidths[0];
+
+    doc.setFont("helvetica", "bold");
+    doc.text(displayName.substring(0, 28), x, y + 5);
+    x += colWidths[1];
+
+    doc.setFont("helvetica", "normal");
+    doc.text(role.label, x, y + 5);
+    x += colWidths[2];
+
+    doc.setFont("helvetica", "bold");
+    doc.text(String(r.score), x, y + 5);
+    x += colWidths[3];
+
+    doc.setFont("helvetica", "normal");
+    doc.text(formatMoney(r.paiements_encaisses), x, y + 5);
+    x += colWidths[4];
+
+    doc.text(String(r.clients_crees), x, y + 5);
+    x += colWidths[5];
+
+    doc.text(String(r.demandes_traitees), x, y + 5);
+    x += colWidths[6];
+
+    doc.text(String(r.transferts_inities), x, y + 5);
+    x += colWidths[7];
+
+    doc.text(formatMoney(r.depenses_validees), x, y + 5);
+    x += colWidths[8];
+
+    if (active) doc.setTextColor(34, 197, 94);
+    else doc.setTextColor(...SLATE_MID);
+    doc.text(active ? "Actif" : "Inactif", x, y + 5);
+
+    y += 7;
+  });
+
+  // Footer sur derniere page
+  doc.setFontSize(7);
+  doc.setTextColor(...SLATE_MID);
+  doc.text(
+    "Score = encaissements (40%) + clients (25%) + demandes (20%) + transferts (15%)",
+    margin,
+    200
+  );
+  doc.text(
+    "Nexus RCA - Bangui, RCA - contact@nexusrca.com",
+    pageWidth - margin,
+    200,
+    { align: "right" }
+  );
+
+  doc.save(`Stats_Agents_${new Date().toISOString().split("T")[0]}.pdf`);
+}
+
+// ============================================================================
 // COMPOSANT PRINCIPAL
 // ============================================================================
 export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
   const [period, setPeriod] = useState<Period>("all");
+  const [customStart, setCustomStart] = useState("");
+  const [customEnd, setCustomEnd] = useState("");
+  const [agentFilter, setAgentFilter] = useState<string>("all");
   const [sortBy, setSortBy] = useState<
     "score" | "paiements" | "clients" | "demandes" | "transferts" | "depenses"
   >("score");
   const [sortDir, setSortDir] = useState<"desc" | "asc">("desc");
+  const [showFilters, setShowFilters] = useState(false);
 
   const tableRef = useRef<HTMLDivElement>(null);
 
-  // ============================================================
-  // FILTRAGE PAR PERIODE
-  // ============================================================
+  const periodLabel = useMemo(() => {
+    if (period === "today") return "Aujourd'hui";
+    if (period === "week") return "Sur les 7 derniers jours";
+    if (period === "month") return "Sur les 30 derniers jours";
+    if (period === "custom" && customStart && customEnd)
+      return `Du ${new Date(customStart).toLocaleDateString("fr-FR")} au ${new Date(customEnd).toLocaleDateString("fr-FR")}`;
+    return "Depuis le début";
+  }, [period, customStart, customEnd]);
+
+  // Filtrage par periode
   const filteredRows = useMemo<AgentStatsRow[]>(() => {
-    const refDate = getPeriodStartDate(period);
-    if (!refDate) return rows;
+    const refStart = getPeriodStartDate(period, customStart);
+    const refEnd = getPeriodEndDate(period, customEnd);
 
-    return rows.map((r) => {
-      const paiements_filtres = r.paiements_dates.filter((p) =>
-        isAfter(p.date, refDate)
-      );
-      const clients_filtres = r.clients_dates.filter((d) =>
-        isAfter(d, refDate)
-      );
-      const demandes_filtres = r.demandes_dates.filter((d) =>
-        isAfter(d, refDate)
-      );
-      const depenses_filtres = r.depenses_data.filter((d) =>
-        isAfter(d.date, refDate)
-      );
-      const transferts_filtres = r.transferts_dates.filter((d) =>
-        isAfter(d, refDate)
-      );
+    return rows
+      .filter((r) => agentFilter === "all" || r.id === agentFilter)
+      .map((r) => {
+        const paiements_filtres = r.paiements_dates.filter((p) =>
+          isInPeriod(p.date, refStart, refEnd)
+        );
+        const clients_filtres = r.clients_dates.filter((d) =>
+          isInPeriod(d, refStart, refEnd)
+        );
+        const demandes_filtres = r.demandes_dates.filter((d) =>
+          isInPeriod(d, refStart, refEnd)
+        );
+        const depenses_filtres = r.depenses_data.filter((d) =>
+          isInPeriod(d.date, refStart, refEnd)
+        );
+        const transferts_filtres = r.transferts_dates.filter((d) =>
+          isInPeriod(d, refStart, refEnd)
+        );
 
-      return {
-        ...r,
-        paiements_encaisses: paiements_filtres.reduce(
-          (s, p) => s + p.montant,
-          0
-        ),
-        nb_paiements: paiements_filtres.length,
-        clients_crees: clients_filtres.length,
-        demandes_traitees: demandes_filtres.length,
-        depenses_validees: depenses_filtres
-          .filter((d) => d.statut === "valide")
-          .reduce((s, d) => s + d.montant, 0),
-        nb_depenses: depenses_filtres.length,
-        transferts_inities: transferts_filtres.length,
-      };
-    });
-  }, [rows, period]);
+        return {
+          ...r,
+          paiements_encaisses: paiements_filtres.reduce(
+            (s, p) => s + p.montant,
+            0
+          ),
+          nb_paiements: paiements_filtres.length,
+          clients_crees: clients_filtres.length,
+          demandes_traitees: demandes_filtres.length,
+          depenses_validees: depenses_filtres
+            .filter((d) => d.statut === "valide")
+            .reduce((s, d) => s + d.montant, 0),
+          nb_depenses: depenses_filtres.length,
+          transferts_inities: transferts_filtres.length,
+        };
+      });
+  }, [rows, period, customStart, customEnd, agentFilter]);
 
-  // ============================================================
-  // CALCUL SCORES
-  // ============================================================
   const maxValues = useMemo(() => {
     return {
       paiements: Math.max(...filteredRows.map((r) => r.paiements_encaisses), 1),
@@ -235,9 +476,6 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
     }));
   }, [filteredRows, maxValues]);
 
-  // ============================================================
-  // TRI
-  // ============================================================
   const sorted = useMemo(() => {
     const fieldMap: Record<typeof sortBy, keyof typeof rowsWithScore[0]> = {
       score: "score",
@@ -259,9 +497,6 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
     return [...rowsWithScore].sort((a, b) => b.score - a.score).slice(0, 3);
   }, [rowsWithScore]);
 
-  // ============================================================
-  // GLOBAUX
-  // ============================================================
   const globaux = useMemo(() => {
     return rowsWithScore.reduce(
       (acc, r) => ({
@@ -285,9 +520,6 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
     );
   }, [rowsWithScore]);
 
-  // ============================================================
-  // HELPERS UI
-  // ============================================================
   const handleSort = (col: typeof sortBy) => {
     if (sortBy === col) {
       setSortDir(sortDir === "desc" ? "asc" : "desc");
@@ -299,6 +531,10 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
 
   const scrollToTable = () => {
     tableRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handlePrint = () => {
+    window.print();
   };
 
   if (rows.length === 0) {
@@ -315,50 +551,162 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
   return (
     <div className="space-y-5">
       {/* ============================================================ */}
-      {/* FILTRES PERIODE */}
+      {/* FILTRES + EXPORTS */}
       {/* ============================================================ */}
-      <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
-            Période
-          </p>
-          <p className="mt-1 text-sm text-slate-700">
-            {period === "today"
-              ? "Données d'aujourd'hui"
-              : period === "week"
-              ? "Sur les 7 derniers jours"
-              : period === "month"
-              ? "Sur les 30 derniers jours"
-              : "Depuis le début"}
-          </p>
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm print:hidden">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap items-center gap-2">
+            <PeriodChip
+              label="Aujourd'hui"
+              active={period === "today"}
+              onClick={() => setPeriod("today")}
+            />
+            <PeriodChip
+              label="Cette semaine"
+              active={period === "week"}
+              onClick={() => setPeriod("week")}
+            />
+            <PeriodChip
+              label="Ce mois"
+              active={period === "month"}
+              onClick={() => setPeriod("month")}
+            />
+            <PeriodChip
+              label="Tout"
+              active={period === "all"}
+              onClick={() => setPeriod("all")}
+            />
+            <button
+              type="button"
+              onClick={() => setShowFilters(!showFilters)}
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition",
+                showFilters || period === "custom" || agentFilter !== "all"
+                  ? "border-nexus-orange-500 bg-nexus-orange-50 text-nexus-orange-700"
+                  : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
+              )}
+            >
+              <Filter className="h-3.5 w-3.5" />
+              Filtres avancés
+              {(period === "custom" || agentFilter !== "all") && (
+                <span className="rounded-full bg-nexus-orange-500 px-1.5 text-[10px] font-bold text-white">
+                  {(period === "custom" ? 1 : 0) +
+                    (agentFilter !== "all" ? 1 : 0)}
+                </span>
+              )}
+            </button>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => exportCSV(sorted, periodLabel)}
+              className="inline-flex items-center gap-1.5 rounded-full border border-green-200 bg-green-50 px-3 py-1.5 text-xs font-semibold text-green-700 hover:bg-green-100"
+            >
+              <FileSpreadsheet className="h-3.5 w-3.5" />
+              CSV / Excel
+            </button>
+            <button
+              type="button"
+              onClick={() => exportPDF(sorted, periodLabel)}
+              className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 bg-purple-50 px-3 py-1.5 text-xs font-semibold text-purple-700 hover:bg-purple-100"
+            >
+              <FileDown className="h-3.5 w-3.5" />
+              PDF
+            </button>
+            <button
+              type="button"
+              onClick={handlePrint}
+              className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+            >
+              <Printer className="h-3.5 w-3.5" />
+              Imprimer
+            </button>
+          </div>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <PeriodChip
-            label="Aujourd'hui"
-            active={period === "today"}
-            onClick={() => setPeriod("today")}
-          />
-          <PeriodChip
-            label="Cette semaine"
-            active={period === "week"}
-            onClick={() => setPeriod("week")}
-          />
-          <PeriodChip
-            label="Ce mois"
-            active={period === "month"}
-            onClick={() => setPeriod("month")}
-          />
-          <PeriodChip
-            label="Tout"
-            active={period === "all"}
-            onClick={() => setPeriod("all")}
-          />
-        </div>
+
+        {/* Filtres avances (collapsable) */}
+        {showFilters && (
+          <div className="mt-4 grid gap-4 border-t border-slate-200 pt-4 sm:grid-cols-3">
+            <div>
+              <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                Période personnalisée
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="date"
+                  value={customStart}
+                  onChange={(e) => {
+                    setCustomStart(e.target.value);
+                    if (e.target.value) setPeriod("custom");
+                  }}
+                  className="flex-1 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs"
+                />
+                <span className="text-xs text-slate-400">→</span>
+                <input
+                  type="date"
+                  value={customEnd}
+                  onChange={(e) => {
+                    setCustomEnd(e.target.value);
+                    if (e.target.value) setPeriod("custom");
+                  }}
+                  className="flex-1 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                Agent spécifique
+              </label>
+              <select
+                value={agentFilter}
+                onChange={(e) => setAgentFilter(e.target.value)}
+                className="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs"
+              >
+                <option value="all">Tous les agents</option>
+                {rows.map((r) => (
+                  <option key={r.id} value={r.id}>
+                    {[r.prenom, r.nom].filter(Boolean).join(" ") || r.nom}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex items-end">
+              {(period === "custom" || agentFilter !== "all") && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPeriod("all");
+                    setCustomStart("");
+                    setCustomEnd("");
+                    setAgentFilter("all");
+                  }}
+                  className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
+                >
+                  <X className="h-3.5 w-3.5" />
+                  Réinitialiser
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        <p className="mt-3 text-xs text-slate-500">
+          {periodLabel}
+          {agentFilter !== "all" && (
+            <>
+              {" · "}
+              <span className="font-semibold text-nexus-orange-600">
+                Filtré sur 1 agent
+              </span>
+            </>
+          )}
+        </p>
       </div>
 
-      {/* ============================================================ */}
-      {/* CARTES GLOBALES (CLIQUABLES) */}
-      {/* ============================================================ */}
+      {/* CARTES GLOBALES */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <GlobalCard
           icon={Wallet}
@@ -409,9 +757,7 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
         />
       </div>
 
-      {/* ============================================================ */}
       {/* TOP 3 PODIUM */}
-      {/* ============================================================ */}
       {top3.length > 0 && (
         <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-yellow-50 via-white to-orange-50 p-5 shadow-sm">
           <div className="mb-4 flex items-center gap-2">
@@ -426,10 +772,11 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
               const role = getRoleBadge(agent.role);
               const active = isActive(agent.derniere_activite);
               return (
-                <div
+                <Link
                   key={agent.id}
+                  href={`/dashboard/super-admin/stats-agents/${agent.id}`}
                   className={cn(
-                    "rounded-xl border-2 p-4 shadow-sm",
+                    "rounded-xl border-2 p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md",
                     getRankColor(rank)
                   )}
                 >
@@ -446,7 +793,6 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
                         "rounded-full px-2 py-0.5 text-[10px] font-bold uppercase",
                         active ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"
                       )}
-                      title={active ? "Actif (7 derniers jours)" : "Inactif"}
                     >
                       {active ? "Actif" : "Inactif"}
                     </span>
@@ -457,23 +803,24 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
                   <span className={cn("mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase", role.color)}>
                     {role.label}
                   </span>
-                  <div className="mt-2 text-xs text-slate-600">
-                    <span className="font-semibold">{formatMoney(agent.paiements_encaisses)}</span>
-                    <span className="text-slate-400"> · </span>
-                    <span>{agent.clients_crees} clients</span>
+                  <div className="mt-2 flex items-center justify-between text-xs text-slate-600">
+                    <div>
+                      <span className="font-semibold">{formatMoney(agent.paiements_encaisses)}</span>
+                      <span className="text-slate-400"> · </span>
+                      <span>{agent.clients_crees} clients</span>
+                    </div>
+                    <ChevronRight className="h-3.5 w-3.5 text-slate-400" />
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
         </div>
       )}
 
-      {/* ============================================================ */}
-      {/* TABLEAU COMPARATIF */}
-      {/* ============================================================ */}
+      {/* TABLEAU */}
       <div ref={tableRef} className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="flex items-center justify-between border-b border-slate-200 p-4">
+        <div className="flex items-center justify-between border-b border-slate-200 p-4 print:border-b-2 print:border-black">
           <div className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5 text-nexus-orange-600" />
             <h2 className="font-display text-lg font-bold text-nexus-blue-950">
@@ -483,8 +830,8 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
               {sorted.length}
             </span>
           </div>
-          <p className="text-xs text-slate-500">
-            Clic sur une colonne pour trier
+          <p className="text-xs text-slate-500 print:hidden">
+            Clic sur une ligne pour voir le détail
           </p>
         </div>
 
@@ -534,6 +881,7 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
                 <th className="px-3 py-2.5 text-left font-bold text-slate-600">
                   Dernière activité
                 </th>
+                <th className="px-3 py-2.5 text-right font-bold text-slate-600 print:hidden"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -545,9 +893,12 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
                   <tr
                     key={agent.id}
                     className={cn(
-                      "transition hover:bg-slate-50",
+                      "cursor-pointer transition hover:bg-slate-50",
                       rank === 0 && sortBy === "score" && sortDir === "desc" && "bg-yellow-50/50"
                     )}
+                    onClick={() => {
+                      window.location.href = `/dashboard/super-admin/stats-agents/${agent.id}`;
+                    }}
                   >
                     <td className="px-3 py-3">
                       <div className="flex items-center gap-1">
@@ -626,6 +977,9 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
                     <td className="px-3 py-3 text-xs text-slate-500">
                       {formatRelativeDate(agent.derniere_activite)}
                     </td>
+                    <td className="px-3 py-3 text-right print:hidden">
+                      <ChevronRight className="inline h-4 w-4 text-slate-400" />
+                    </td>
                   </tr>
                 );
               })}
@@ -633,12 +987,11 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
           </table>
         </div>
 
-        {/* Note score */}
         <div className="border-t border-slate-200 bg-slate-50 px-4 py-3 text-xs text-slate-500">
-          <strong>Score de performance</strong> = pondération de 4 critères :
-          encaissements (40%) · clients créés (25%) · demandes traitées (20%) · transferts (15%).
+          <strong>Score</strong> = encaissements (40%) · clients (25%) ·
+          demandes (20%) · transferts (15%).
           <span className="text-slate-400"> · </span>
-          Statut <strong>actif</strong> = activité dans les 7 derniers jours.
+          <strong>Actif</strong> = activité dans les 7 derniers jours.
         </div>
       </div>
     </div>
@@ -738,7 +1091,10 @@ function SortableHeader({
     <th className="px-3 py-2.5 text-left font-bold text-slate-600">
       <button
         type="button"
-        onClick={onClick}
+        onClick={(e) => {
+          e.stopPropagation();
+          onClick();
+        }}
         className={cn(
           "inline-flex items-center gap-1 transition",
           active ? "text-nexus-blue-950" : "hover:text-nexus-blue-950"
