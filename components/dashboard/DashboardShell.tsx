@@ -19,6 +19,7 @@ import {
   Receipt,
   PieChart,
   Send,
+  Trophy,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -54,6 +55,7 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
   super_admin: [
     { href: "/dashboard/super-admin", label: "Tableau de bord", icon: LayoutDashboard },
     { href: "/dashboard/super-admin/finances", label: "Finances", icon: PieChart },
+    { href: "/dashboard/super-admin/stats-agents", label: "Stats agents", icon: Trophy },
     { href: "/dashboard/super-admin/clients", label: "Clients", icon: UserCircle },
     { href: "/dashboard/super-admin/demandes", label: "Toutes les demandes", icon: FileText },
     { href: "/dashboard/super-admin/rendez-vous", label: "Rendez-vous", icon: CalendarCheck },
