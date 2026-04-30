@@ -11,7 +11,6 @@ import {
   AlertCircle,
   Calendar,
   Download,
-  TrendingUp,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
@@ -47,7 +46,7 @@ function getStatusInfo(statut: string): {
   icon: React.ComponentType<{ className?: string }>;
 } {
   const lower = statut?.toLowerCase() || "";
-  if (lower.includes("nouvelle"))
+  if (lower.includes("nouveau") || lower.includes("nouvelle"))
     return {
       label: "Nouvelle",
       color: "bg-blue-100 text-blue-700 border-blue-200",
@@ -83,31 +82,38 @@ export default async function ClientDashboard() {
   const supabase = createClient();
 
   // ============================================================
-  // CHARGEMENT DES DONNEES
+  // CHARGEMENT DES DONNEES - Query robuste par client_id OU email
+  // (couvre les cas ou le client_id n'a pas ete lie au moment de la creation)
   // ============================================================
+  const userEmail = profile.email?.toLowerCase().trim() || "";
+
   const [demandesRes, paiementsRes, rdvRes] = await Promise.all([
-    // Demandes du client
+    // Demandes : client_id OU email correspondant
     supabase
       .from("demandes")
-      .select("id, objet, service, statut, created_at, assigne_a")
-      .eq("client_id", profile.id)
+      .select(
+        "id, objet, service, statut, created_at, assigne_a, nom_complet, email"
+      )
+      .or(`client_id.eq.${profile.id},email.eq.${userEmail}`)
       .order("created_at", { ascending: false })
       .limit(20),
-    // Paiements liés au client
+
+    // Paiements : par email du client uniquement (ta table a client_email)
     supabase
       .from("payments")
       .select(
-        "id, reference, service, montant_total, montant_recu, devise, statut, date_paiement, mode_paiement"
+        "id, reference, service, montant_total, montant_recu, devise, statut, date_paiement, mode_paiement, client_email"
       )
-      .or(`client_email.eq.${profile.email},client_record_id.in.(${profile.id})`)
+      .eq("client_email", userEmail)
       .order("date_paiement", { ascending: false })
       .limit(20),
-    // RDV
+
+    // RDV : par email
     supabase
-      .from("appointments")
-      .select("id, service, date_heure, statut")
-      .or(`email.eq.${profile.email},user_id.eq.${profile.id}`)
-      .order("date_heure", { ascending: false })
+      .from("appointment_requests")
+      .select("id, service, date_souhaitee, heure_souhaitee, statut, email")
+      .eq("email", userEmail)
+      .order("date_souhaitee", { ascending: false })
       .limit(5),
   ]);
 
@@ -115,7 +121,9 @@ export default async function ClientDashboard() {
   const paiements = paiementsRes.data || [];
   const rdvs = rdvRes.data || [];
 
-  // Trouver l agent du dossier le plus recent qui a un agent assigne
+  // ============================================================
+  // RECUPERATION DE L AGENT DEDIE
+  // ============================================================
   const dossierAvecAgent = demandes.find((d) => d.assigne_a);
   let agentInfo = null;
   if (dossierAvecAgent?.assigne_a) {
@@ -141,15 +149,26 @@ export default async function ClientDashboard() {
   const totalRestant = Math.max(0, totalDu - totalPaye);
 
   const partiels = paiements.filter((p) => p.statut === "partiel");
-  const dossiersEnCours = demandes.filter(
-    (d) =>
-      !d.statut?.toLowerCase().includes("traite") &&
-      !d.statut?.toLowerCase().includes("complet") &&
-      !d.statut?.toLowerCase().includes("annul")
-  ).length;
 
-  const clientName = [profile.prenom, profile.nom].filter(Boolean).join(" ");
-  const firstName = profile.prenom || profile.nom?.split(" ")[0] || "";
+  const dossiersEnCours = demandes.filter((d) => {
+    const s = (d.statut || "").toLowerCase();
+    return (
+      !s.includes("traite") &&
+      !s.includes("complet") &&
+      !s.includes("annul") &&
+      !s.includes("termin")
+    );
+  }).length;
+
+  const clientName =
+    [profile.prenom, profile.nom].filter(Boolean).join(" ") ||
+    profile.email ||
+    "";
+  const firstName =
+    profile.prenom ||
+    profile.nom?.split(" ")[0] ||
+    profile.email?.split("@")[0] ||
+    "";
 
   return (
     <DashboardShell profile={profile}>
@@ -176,7 +195,7 @@ export default async function ClientDashboard() {
       </div>
 
       {/* ======================================================== */}
-      {/* APERÇU RAPIDE - 3 CARTES */}
+      {/* APERÇU RAPIDE */}
       {/* ======================================================== */}
       <div className="mb-6 grid gap-3 sm:grid-cols-3">
         <QuickStat
@@ -209,10 +228,10 @@ export default async function ClientDashboard() {
       </div>
 
       {/* ======================================================== */}
-      {/* GRILLE PRINCIPALE - 2 colonnes */}
+      {/* GRILLE PRINCIPALE */}
       {/* ======================================================== */}
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* COLONNE GAUCHE (2/3) - Dossiers + Paiements + Documents */}
+        {/* COLONNE GAUCHE */}
         <div className="space-y-6 lg:col-span-2">
           {/* MES DOSSIERS */}
           <Section
@@ -228,7 +247,7 @@ export default async function ClientDashboard() {
                 description="Lancez votre première demande de service avec Nexus."
                 action={{
                   label: "Faire une demande",
-                  href: "/services",
+                  href: "/demande/complet",
                 }}
               />
             ) : (
@@ -403,7 +422,7 @@ export default async function ClientDashboard() {
           </Section>
         </div>
 
-        {/* COLONNE DROITE (1/3) - Agent + RDV */}
+        {/* COLONNE DROITE */}
         <div className="space-y-6">
           {/* MON AGENT DEDIE */}
           <AgentContactCard agent={agentInfo} clientName={clientName} />
@@ -421,16 +440,13 @@ export default async function ClientDashboard() {
                 {rdvs.slice(0, 3).map((rdv) => (
                   <div key={rdv.id} className="p-3">
                     <p className="text-sm font-semibold text-nexus-blue-950">
-                      {rdv.service}
+                      {rdv.service || "Rendez-vous"}
                     </p>
                     <p className="mt-1 text-xs text-slate-500">
-                      {new Date(rdv.date_heure).toLocaleString("fr-FR", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {rdv.date_souhaitee
+                        ? formatDate(rdv.date_souhaitee)
+                        : ""}
+                      {rdv.heure_souhaitee && ` · ${rdv.heure_souhaitee}`}
                     </p>
                   </div>
                 ))}
@@ -449,7 +465,7 @@ export default async function ClientDashboard() {
 
           {/* CTA Nouvelle demande */}
           <Link
-            href="/services"
+            href="/demande/complet"
             className="block rounded-2xl border-2 border-dashed border-nexus-orange-300 bg-nexus-orange-50 p-5 text-center transition hover:-translate-y-0.5 hover:bg-nexus-orange-100 hover:shadow-md"
           >
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-nexus-orange-500 text-white shadow-lg">
@@ -459,7 +475,7 @@ export default async function ClientDashboard() {
               Nouvelle demande
             </p>
             <p className="mt-1 text-xs text-slate-600">
-              Découvrez nos services et lancez une nouvelle démarche.
+              Lancez une nouvelle démarche avec Nexus.
             </p>
           </Link>
         </div>
