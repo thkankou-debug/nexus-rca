@@ -22,6 +22,7 @@ import {
   Trophy,
   ShoppingCart,
   Briefcase,
+  FileBarChart,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -58,6 +59,7 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
   super_admin: [
     { href: "/dashboard/super-admin", label: "Tableau de bord", icon: LayoutDashboard },
     { href: "/dashboard/super-admin/finances", label: "Finances", icon: PieChart },
+    { href: "/dashboard/super-admin/rapports", label: "Rapports financiers", icon: FileBarChart },
     { href: "/dashboard/super-admin/stats-agents", label: "Performances équipe", icon: Trophy },
     { href: "/dashboard/super-admin/clients", label: "Clients (CRM)", icon: UserCircle },
     { href: "/dashboard/super-admin/demandes", label: "Toutes les demandes", icon: FileText },
