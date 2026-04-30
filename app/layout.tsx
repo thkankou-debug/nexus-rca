@@ -1,229 +1,108 @@
-import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Syne } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Syne, Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "react-hot-toast";
+import { PWAInstaller } from "@/components/PWAInstaller";
 import "./globals.css";
-
-const jakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-plus-jakarta",
-  display: "swap",
-});
 
 const syne = Syne({
   subsets: ["latin"],
   variable: "--font-syne",
   display: "swap",
-  weight: ["500", "600", "700", "800"],
 });
 
-// ============================================================================
-// SEO — METADATA COMPLETE
-// ============================================================================
-const SITE_URL = "https://www.nexusrca.com";
-const SITE_NAME = "NEXUS RCA";
-const SITE_TITLE = "NEXUS RCA — Agence Internationale | Visa, Études, Financement à Bangui";
-const SITE_DESCRIPTION =
-  "Agence internationale basée à Bangui (RCA). Visa Canada/Europe, études, TCF, financement business, partenariats, digitalisation. Accompagnement structuré de A à Z, premier contact gratuit, réponse sous 24h.";
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-plus-jakarta",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
+  metadataBase: new URL("https://www.nexusrca.com"),
   title: {
-    default: SITE_TITLE,
-    template: "%s | NEXUS RCA",
+    default: "Nexus RCA - Agence Internationale | Bangui",
+    template: "%s | Nexus RCA",
   },
-  description: SITE_DESCRIPTION,
+  description:
+    "Agence internationale spécialisée en visa, bourses, TCF Canada, billets d'avion, transferts d'argent et services aux particuliers. Bangui, République Centrafricaine.",
   keywords: [
-    // Marque
-    "Nexus RCA",
-    "Nexus Centrafrique",
-    "agence Bangui",
-    "agence internationale Bangui",
-    "agence Centrafrique",
-    // Visa
-    "visa Canada Bangui",
-    "visa Centrafrique",
-    "visa étudiant Canada",
-    "visa Schengen RCA",
-    "e-visa Bangui",
-    // Études
-    "études Canada depuis Bangui",
-    "bourse études Canada",
-    "TCF Canada Bangui",
-    "préparation TCF",
-    "université Canada Centrafrique",
-    // Business
-    "financement projet RCA",
-    "incubateur Centrafrique",
-    "partenariat business Bangui",
-    "investissement projet RCA",
-    // Autres services
-    "transfert d'argent Bangui",
-    "Western Union Bangui",
-    "billets d'avion Centrafrique",
-    "digitalisation entreprise RCA",
-    "site web Bangui",
+    "visa",
+    "bourses",
+    "TCF Canada",
+    "billets avion",
+    "transfert argent",
+    "Bangui",
+    "RCA",
+    "Centrafrique",
+    "agence internationale",
   ],
   authors: [{ name: "Nexus RCA" }],
   creator: "Nexus RCA",
   publisher: "Nexus RCA",
-
-  // ==========================================================================
-  // OPEN GRAPH — pour les partages WhatsApp / Facebook / LinkedIn
-  // ==========================================================================
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Nexus RCA",
+    startupImage: ["/icons/icon-512.png"],
+  },
+  applicationName: "Nexus RCA",
   openGraph: {
     type: "website",
     locale: "fr_FR",
-    url: SITE_URL,
-    siteName: SITE_NAME,
-    title: SITE_TITLE,
-    description: SITE_DESCRIPTION,
+    url: "https://www.nexusrca.com",
+    siteName: "Nexus RCA",
+    title: "Nexus RCA - Agence Internationale | Bangui",
+    description:
+      "Visa, bourses, TCF Canada, billets, transferts. Votre partenaire international depuis Bangui.",
     images: [
       {
-        url: "/og-image.jpg", // À placer dans /public — voir notes ci-dessous
-        width: 1200,
-        height: 630,
-        alt: "NEXUS RCA — Agence Internationale à Bangui",
+        url: "/icons/icon-512.png",
+        width: 512,
+        height: 512,
+        alt: "Nexus RCA",
       },
     ],
   },
-
-  // ==========================================================================
-  // TWITTER CARD — pour les partages sur X / Twitter
-  // ==========================================================================
   twitter: {
     card: "summary_large_image",
-    title: SITE_TITLE,
-    description: SITE_DESCRIPTION,
-    images: ["/og-image.jpg"],
+    title: "Nexus RCA - Agence Internationale",
+    description:
+      "Visa, bourses, TCF Canada, billets, transferts. Bangui, RCA.",
+    images: ["/icons/icon-512.png"],
   },
-
-  // ==========================================================================
-  // ROBOTS — directives pour Google et autres moteurs
-  // ==========================================================================
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-
-  // ==========================================================================
-  // CANONICAL — éviter le contenu dupliqué
-  // ==========================================================================
-  alternates: {
-    canonical: SITE_URL,
-  },
-
-  // ==========================================================================
-  // ICONS — à placer dans /public quand tu auras les fichiers
-  // ==========================================================================
   icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    icon: [
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/icons/icon-512.png",
+        color: "#FF6600",
+      },
+    ],
   },
-
-  // ==========================================================================
-  // FORMAT DETECTION — empeche iOS de transformer les numeros en liens auto
-  // ==========================================================================
-  formatDetection: {
-    telephone: false,
-    email: false,
-    address: false,
-  },
-
-  // Verification (a remplir si tu utilises Google Search Console plus tard)
-  // verification: {
-  //   google: "ton-code-google-search-console",
-  // },
 };
 
-// ============================================================================
-// SCHEMA.ORG — LocalBusiness (Google comprend que tu es une agence a Bangui)
-// ============================================================================
-const SCHEMA_LOCAL_BUSINESS = {
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  "@id": `${SITE_URL}/#organization`,
-  name: "Nexus RCA — Agence Internationale",
-  alternateName: "Nexus RCA",
-  url: SITE_URL,
-  logo: `${SITE_URL}/logo.png`,
-  image: `${SITE_URL}/og-image.jpg`,
-  description: SITE_DESCRIPTION,
-  telephone: "+23673269692",
-  email: "contact@nexusrca.com",
-  priceRange: "$$",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "Relais Sica, vers Hôpital Général",
-    addressLocality: "Bangui",
-    addressCountry: "CF", // Code ISO Centrafrique
-  },
-  areaServed: [
-    {
-      "@type": "Country",
-      name: "République Centrafricaine",
-    },
-    {
-      "@type": "Country",
-      name: "Canada",
-    },
-    {
-      "@type": "Place",
-      name: "Europe",
-    },
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FF6600" },
+    { media: "(prefers-color-scheme: dark)", color: "#0C1C40" },
   ],
-  founders: [
-    {
-      "@type": "Person",
-      name: "Thierry F. Kankou",
-      jobTitle: "Cofondateur & Responsable International",
-    },
-    {
-      "@type": "Person",
-      name: "Orson Dibert L.",
-      jobTitle: "Cofondateur & Responsable International (Europe-RCA)",
-    },
-  ],
-  contactPoint: [
-    {
-      "@type": "ContactPoint",
-      telephone: "+23673269692",
-      contactType: "customer service",
-      areaServed: "CF",
-      availableLanguage: ["French"],
-    },
-    {
-      "@type": "ContactPoint",
-      telephone: "+15873276344",
-      contactType: "customer service",
-      areaServed: "CA",
-      availableLanguage: ["French", "English"],
-    },
-  ],
-  sameAs: [
-    // Ajoute ici tes profils sociaux quand tu en auras
-    // "https://www.facebook.com/nexusrca",
-    // "https://www.linkedin.com/company/nexusrca",
-    // "https://www.instagram.com/nexusrca",
-  ],
-  serviceType: [
-    "Visa et e-Visa",
-    "Études au Canada",
-    "Préparation TCF Canada",
-    "Bourses d'études",
-    "Financement business et partenariat",
-    "Services administratifs",
-    "Billets d'avion",
-    "Change de devises",
-    "Transfert d'argent",
-    "Digitalisation et développement d'activité",
-  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -232,27 +111,35 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr" className={`${jakarta.variable} ${syne.variable}`}>
+    <html
+      lang="fr"
+      className={`${syne.variable} ${plusJakarta.variable}`}
+    >
       <head>
-        {/* Schema.org LocalBusiness — JSON-LD */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(SCHEMA_LOCAL_BUSINESS),
-          }}
+        {/* Meta tags PWA additionnels iOS */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="default"
         />
+        <meta name="apple-mobile-web-app-title" content="Nexus RCA" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="application-name" content="Nexus RCA" />
+        <meta name="msapplication-TileColor" content="#FF6600" />
+        <meta name="msapplication-tap-highlight" content="no" />
       </head>
-      <body className="min-h-screen antialiased">
+      <body className="font-sans antialiased">
         {children}
+        <PWAInstaller />
         <Toaster
-          position="top-right"
+          position="top-center"
           toastOptions={{
+            duration: 4000,
             style: {
-              background: "#050f3d",
+              background: "#0C1C40",
               color: "#fff",
-              border: "1px solid rgba(249,115,22,0.3)",
+              borderRadius: "12px",
             },
-            success: { iconTheme: { primary: "#f97316", secondary: "#fff" } },
           }}
         />
       </body>
