@@ -17,6 +17,7 @@ import {
   Eye,
   Bell,
   MessageCircle,
+  FilePlus,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 
@@ -64,16 +65,17 @@ export default function NexusConnectPage() {
           </nav>
           <div className="flex items-center gap-2">
             <Link
-              href="/connexion"
+              href="/login"
               className="hidden rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 sm:inline-block"
             >
               Connexion
             </Link>
             <Link
-              href="/inscription"
-              className="rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 hover:bg-nexus-orange-600"
+              href="/demande/complet"
+              className="inline-flex items-center gap-1.5 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 hover:bg-nexus-orange-600"
             >
-              Créer un compte
+              <FilePlus className="h-4 w-4" />
+              Ouvrir un dossier
             </Link>
           </div>
         </div>
@@ -83,18 +85,15 @@ export default function NexusConnectPage() {
       {/* HERO */}
       {/* ======================================================== */}
       <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 px-4 pt-20 pb-32 sm:px-6 lg:px-8">
-        {/* Effet de glow orange en arriere-plan */}
         <div className="absolute right-0 top-0 h-96 w-96 rounded-full bg-nexus-orange-500/20 blur-3xl" />
         <div className="absolute bottom-0 left-1/4 h-96 w-96 rounded-full bg-nexus-orange-500/10 blur-3xl" />
 
         <div className="relative mx-auto max-w-5xl text-center">
-          {/* Badge */}
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-nexus-orange-400 backdrop-blur">
             <Sparkles className="h-3.5 w-3.5" />
             Nouveau · Espace client premium
           </div>
 
-          {/* Titre */}
           <h1 className="font-display text-5xl font-bold leading-tight text-white sm:text-6xl lg:text-7xl">
             NEXUS{" "}
             <span className="bg-gradient-to-r from-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
@@ -113,24 +112,24 @@ export default function NexusConnectPage() {
             où que vous soyez à Bangui, Yaoundé, Paris ou Montréal.
           </p>
 
-          {/* CTA */}
+          {/* CTA - URLS CORRIGEES */}
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
-              href="/inscription"
+              href="/demande/complet"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-8 py-3.5 text-sm font-bold text-white shadow-2xl shadow-nexus-orange-500/40 transition hover:-translate-y-0.5 hover:bg-nexus-orange-600"
             >
-              Créer mon espace gratuit
+              <FilePlus className="h-4 w-4" />
+              Ouvrir un dossier
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
-              href="/connexion"
+              href="/login"
               className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-3.5 text-sm font-bold text-white backdrop-blur transition hover:bg-white/10"
             >
               J'ai déjà un compte
             </Link>
           </div>
 
-          {/* Bandeau confiance */}
           <div className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs text-slate-400">
             <span className="inline-flex items-center gap-1.5">
               <ShieldCheck className="h-4 w-4 text-nexus-orange-400" />
@@ -267,18 +266,18 @@ export default function NexusConnectPage() {
           <div className="mt-16 space-y-8">
             <Step
               number={1}
-              title="Créez votre compte gratuit"
-              description="En 30 secondes, créez votre espace personnel sécurisé avec votre email."
+              title="Ouvrez un dossier en ligne"
+              description="Choisissez le service qui vous intéresse (visa, bourse, TCF, transfert, etc.) et soumettez votre demande sur notre site en quelques minutes."
             />
             <Step
               number={2}
-              title="Faites votre demande"
-              description="Choisissez le service qui vous intéresse (visa, bourse, transfert, etc.) et soumettez votre demande en ligne."
+              title="Votre compte est créé automatiquement"
+              description="Dès la soumission de votre première demande, votre espace NEXUS CONNECT est activé. Vous recevez vos identifiants par email."
             />
             <Step
               number={3}
-              title="Suivez en temps réel"
-              description="Votre agent traite votre dossier. Vous voyez chaque étape, chaque paiement, chaque document directement sur NEXUS CONNECT."
+              title="Suivez votre dossier en temps réel"
+              description="Votre agent dédié traite votre demande. Vous voyez chaque étape, chaque paiement, chaque document directement sur NEXUS CONNECT."
             />
             <Step
               number={4}
@@ -336,12 +335,11 @@ export default function NexusConnectPage() {
       </section>
 
       {/* ======================================================== */}
-      {/* CTA FINAL */}
+      {/* CTA FINAL - URLS CORRIGEES */}
       {/* ======================================================== */}
       <section className="px-4 py-24 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl">
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 p-10 text-center shadow-2xl sm:p-16">
-            {/* Effets visuels */}
             <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
             <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-nexus-blue-950/20 blur-3xl" />
 
@@ -350,15 +348,16 @@ export default function NexusConnectPage() {
                 Prêt à rejoindre NEXUS CONNECT ?
               </h2>
               <p className="mt-4 text-lg text-white/90">
-                Créez votre espace en 30 secondes. C'est gratuit, et ça change tout.
+                Ouvrez votre premier dossier en quelques minutes. C'est simple, rapide et professionnel.
               </p>
 
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link
-                  href="/inscription"
+                  href="/demande/complet"
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-blue-950 px-8 py-3.5 text-sm font-bold text-white shadow-xl transition hover:-translate-y-0.5 hover:bg-nexus-blue-800"
                 >
-                  Créer mon espace gratuit
+                  <FilePlus className="h-4 w-4" />
+                  Ouvrir un dossier
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
@@ -371,7 +370,7 @@ export default function NexusConnectPage() {
               </div>
 
               <p className="mt-6 text-xs text-white/70">
-                Aucune carte bancaire requise · Inscription en 30 secondes
+                Votre espace personnel est créé automatiquement après votre première demande
               </p>
             </div>
           </div>
@@ -395,7 +394,7 @@ export default function NexusConnectPage() {
               <Link href="/contact" className="hover:text-nexus-blue-950">
                 Contact
               </Link>
-              <Link href="/connexion" className="hover:text-nexus-blue-950">
+              <Link href="/login" className="hover:text-nexus-blue-950">
                 Connexion
               </Link>
             </div>
