@@ -3,7 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown, MessageCircle, FolderOpen, FilePlus } from "lucide-react";
+import {
+  Menu,
+  X,
+  ChevronDown,
+  MessageCircle,
+  FilePlus,
+  Sparkles,
+} from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { Button } from "@/components/ui/Button";
 import { SERVICES } from "@/lib/services";
@@ -111,19 +118,20 @@ export function Navbar() {
           ))}
         </ul>
 
-        {/* Desktop nav — actions a droite (sans WhatsApp) */}
+        {/* Desktop nav — actions a droite */}
         <div className="hidden items-center gap-1 lg:flex xl:gap-2">
+          {/* NOUVEAU : NEXUS CONNECT - lien premium avec accent orange */}
           <Link
-            href="/dashboard"
+            href="/nexus-connect"
             className={cn(
-              "inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold transition-colors",
+              "group inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-sm font-bold transition-all xl:px-4",
               scrolled
-                ? "text-nexus-blue-900 hover:bg-nexus-blue-50"
-                : "text-white hover:bg-white/10"
+                ? "bg-gradient-to-r from-nexus-blue-950 to-nexus-blue-800 text-white hover:shadow-lg hover:shadow-nexus-blue-900/30"
+                : "border border-white/30 bg-white/10 text-white backdrop-blur hover:bg-white/20"
             )}
           >
-            <FolderOpen className="h-4 w-4" />
-            Mes dossiers
+            <Sparkles className="h-4 w-4 text-nexus-orange-400" />
+            NEXUS CONNECT
           </Link>
 
           <Link
@@ -174,12 +182,16 @@ export function Navbar() {
               </Link>
             ))}
 
+            {/* NOUVEAU : NEXUS CONNECT mobile - bandeau premium */}
             <Link
-              href="/dashboard"
-              className="flex items-center gap-2 rounded-lg px-4 py-3 text-base font-semibold text-nexus-blue-900 hover:bg-nexus-blue-50"
+              href="/nexus-connect"
+              className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-nexus-blue-950 to-nexus-blue-800 px-4 py-3 text-white shadow-lg"
             >
-              <FolderOpen className="h-5 w-5 text-nexus-orange-600" />
-              Mes dossiers
+              <Sparkles className="h-5 w-5 text-nexus-orange-400" />
+              <div className="flex-1">
+                <div className="text-sm font-bold">NEXUS CONNECT</div>
+                <div className="text-xs text-slate-300">Mon espace personnel</div>
+              </div>
             </Link>
 
             <div className="my-2 border-t border-slate-200" />
