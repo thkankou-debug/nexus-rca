@@ -23,6 +23,7 @@ import {
   ShoppingCart,
   Briefcase,
   FileBarChart,
+  Sparkles,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -34,6 +35,7 @@ interface NavItem {
   href: string;
   label: string;
   icon: LucideIcon;
+  highlight?: boolean;
 }
 
 const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
@@ -48,7 +50,9 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { href: "/dashboard/agent/demandes", label: "Demandes clients", icon: FileText },
     { href: "/dashboard/agent/rdv", label: "Mes rendez-vous", icon: CalendarCheck },
     { href: "/dashboard/agent/clients", label: "Clients", icon: UserCircle },
-    { href: "/dashboard/agent/paiements", label: "Paiements", icon: Wallet },
+    { href: "/dashboard/super-admin/paiements/nouveau-lien", label: "Lien de paiement", icon: Sparkles, highlight: true },
+    { href: "/dashboard/super-admin/paiements/en-attente", label: "Paiements en attente", icon: Wallet },
+    { href: "/dashboard/agent/paiements", label: "Mes paiements", icon: Wallet },
     { href: "/dashboard/agent/transferts", label: "Transferts", icon: Send },
     { href: "/dashboard/agent/depenses", label: "Mes dépenses", icon: Receipt },
   ],
@@ -65,7 +69,9 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { href: "/dashboard/super-admin/clients", label: "Clients (CRM)", icon: UserCircle },
     { href: "/dashboard/super-admin/demandes", label: "Toutes les demandes", icon: FileText },
     { href: "/dashboard/super-admin/rdv", label: "Rendez-vous", icon: CalendarCheck },
-    { href: "/dashboard/super-admin/paiements", label: "Paiements", icon: Wallet },
+    { href: "/dashboard/super-admin/paiements/nouveau-lien", label: "Nouveau lien paiement", icon: Sparkles, highlight: true },
+    { href: "/dashboard/super-admin/paiements/en-attente", label: "Paiements en attente", icon: Wallet },
+    { href: "/dashboard/super-admin/paiements", label: "Tous les paiements", icon: Wallet },
     { href: "/dashboard/super-admin/caisse", label: "Caisse rapide", icon: ShoppingCart },
     { href: "/dashboard/super-admin/transferts", label: "Transferts", icon: Send },
     { href: "/dashboard/super-admin/depenses", label: "Dépenses", icon: Receipt },
@@ -172,7 +178,9 @@ export function DashboardShell({
                     "flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors",
                     active
                       ? "bg-nexus-blue-950 text-white shadow-md"
-                      : "text-slate-700 hover:bg-slate-100"
+                      : item.highlight
+                        ? "bg-nexus-orange-50 text-nexus-orange-700 hover:bg-nexus-orange-100"
+                        : "text-slate-700 hover:bg-slate-100"
                   )}
                 >
                   <Icon className="h-5 w-5" />
