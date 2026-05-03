@@ -1,250 +1,627 @@
 import Link from "next/link";
 import {
+  Trophy,
+  Calendar,
   FileText,
-  Clock,
-  AlertTriangle,
-  CheckCircle2,
   Wallet,
-  UserCircle,
-  Receipt,
-  Plus,
+  TrendingUp,
+  Target,
+  Sparkles,
+  Crown,
+  Medal,
+  ShoppingCart,
+  Send,
   ArrowRight,
+  Star,
+  Zap,
+  CheckCircle2,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
-import { StatCard } from "@/components/dashboard/StatCard";
-import { DemandesManager } from "@/components/dashboard/DemandesManager";
-import type { Demande } from "@/types";
+import { cn } from "@/lib/utils";
+
+export const metadata = {
+  title: "Tableau de bord - Agent",
+};
 
 export const dynamic = "force-dynamic";
 
+// ============================================================================
+// CONFIGURATION OBJECTIFS MENSUELS (modifiable selon stratégie)
+// ============================================================================
+const MONTHLY_GOALS = {
+  rdv: 20,                    // 20 RDV par mois
+  paiements_xaf: 5_000_000,   // 5M XAF de paiements encaissés
+  dossiers: 15,                // 15 dossiers traités
+};
+
 function formatMoney(amount: number, currency = "XAF"): string {
-  return `${amount.toLocaleString("fr-FR")} ${currency}`;
+  return `${Math.round(amount).toLocaleString("fr-FR")} ${currency}`;
+}
+
+function getStartOfMonth(): string {
+  const now = new Date();
+  const first = new Date(now.getFullYear(), now.getMonth(), 1);
+  return first.toISOString();
+}
+
+function getStartOfYear(): string {
+  const now = new Date();
+  const first = new Date(now.getFullYear(), 0, 1);
+  return first.toISOString();
+}
+
+function getRankBadge(rank: number) {
+  if (rank === 1) return { icon: Crown, color: "from-yellow-400 to-yellow-600", label: "🥇" };
+  if (rank === 2) return { icon: Medal, color: "from-slate-300 to-slate-500", label: "🥈" };
+  if (rank === 3) return { icon: Medal, color: "from-orange-400 to-orange-600", label: "🥉" };
+  return null;
 }
 
 export default async function AgentDashboardPage() {
-  const profile = await requireProfile(["agent", "admin", "super_admin"]);
+  const profile = await requireProfile(["agent"]);
   const supabase = createClient();
 
-  // ============================================================
-  // Demandes
-  // ============================================================
-  const { data: demandesData } = await supabase
-    .from("demandes")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(10);
-  const list = (demandesData || []) as Demande[];
+  const startOfMonth = getStartOfMonth();
+  const startOfYear = getStartOfYear();
 
-  const { count: totalCount } = await supabase
-    .from("demandes")
-    .select("*", { count: "exact", head: true });
-  const { count: enCoursCount } = await supabase
-    .from("demandes")
+  // ============================================================================
+  // 1. STATS PERSONNELLES DE L'AGENT (mois en cours)
+  // ============================================================================
+
+  // RDV ce mois
+  const { count: rdvThisMonth } = await supabase
+    .from("appointments")
     .select("*", { count: "exact", head: true })
-    .eq("statut", "en_cours");
-  const { count: urgentCount } = await supabase
-    .from("demandes")
+    .eq("agent_id", profile.id)
+    .gte("created_at", startOfMonth);
+
+  // RDV terminés ce mois
+  const { count: rdvCompleted } = await supabase
+    .from("appointments")
     .select("*", { count: "exact", head: true })
-    .in("urgence", ["elevee", "critique"])
-    .neq("statut", "complete");
+    .eq("agent_id", profile.id)
+    .eq("statut", "termine")
+    .gte("created_at", startOfMonth);
 
-  // ============================================================
-  // Paiements encaisses ce mois (par cet agent)
-  // ============================================================
-  const startOfMonth = new Date();
-  startOfMonth.setDate(1);
-  startOfMonth.setHours(0, 0, 0, 0);
-
+  // Paiements créés par l'agent ce mois (XAF uniquement pour le total)
   const { data: paymentsThisMonth } = await supabase
     .from("payments")
-    .select("montant_recu")
-    .eq("agent_id", profile.id)
-    .gte("date_paiement", startOfMonth.toISOString());
+    .select("montant, devise")
+    .eq("created_by", profile.id)
+    .gte("created_at", startOfMonth);
 
-  const totalPaiementsMois = (paymentsThisMonth || []).reduce(
-    (sum, p) => sum + Number(p.montant_recu || 0),
-    0
+  const totalPaiementsXAF = (paymentsThisMonth || [])
+    .filter((p) => p.devise === "XAF")
+    .reduce((sum, p) => sum + Number(p.montant || 0), 0);
+
+  const totalPaiementsCount = paymentsThisMonth?.length || 0;
+
+  // Demandes traitées par l'agent ce mois
+  const { count: demandesThisMonth } = await supabase
+    .from("demandes")
+    .select("*", { count: "exact", head: true })
+    .eq("agent_id", profile.id)
+    .gte("created_at", startOfMonth);
+
+  // Stats annuelles (pour vue globale)
+  const { count: rdvThisYear } = await supabase
+    .from("appointments")
+    .select("*", { count: "exact", head: true })
+    .eq("agent_id", profile.id)
+    .gte("created_at", startOfYear);
+
+  const { data: paymentsThisYear } = await supabase
+    .from("payments")
+    .select("montant, devise")
+    .eq("created_by", profile.id)
+    .gte("created_at", startOfYear);
+
+  const totalPaiementsYearXAF = (paymentsThisYear || [])
+    .filter((p) => p.devise === "XAF")
+    .reduce((sum, p) => sum + Number(p.montant || 0), 0);
+
+  // ============================================================================
+  // 2. LEADERBOARD ÉQUIPE (tous les agents - top 5 ce mois)
+  // ============================================================================
+
+  // Récupère tous les agents
+  const { data: allAgents } = await supabase
+    .from("profiles")
+    .select("id, prenom, nom, poste, role")
+    .in("role", ["agent", "admin", "super_admin"]);
+
+  const agents = allAgents || [];
+
+  // Pour chaque agent, calcul score = RDV terminés + paiements encaissés (en milliers XAF)
+  const leaderboardData = await Promise.all(
+    agents.map(async (agent) => {
+      const { count: agentRdvCount } = await supabase
+        .from("appointments")
+        .select("*", { count: "exact", head: true })
+        .eq("agent_id", agent.id)
+        .eq("statut", "termine")
+        .gte("created_at", startOfMonth);
+
+      const { data: agentPayments } = await supabase
+        .from("payments")
+        .select("montant, devise")
+        .eq("created_by", agent.id)
+        .gte("created_at", startOfMonth);
+
+      const agentPaiementsXAF = (agentPayments || [])
+        .filter((p) => p.devise === "XAF")
+        .reduce((sum, p) => sum + Number(p.montant || 0), 0);
+
+      // Score = (RDV terminés × 100) + (paiements en milliers XAF)
+      const score =
+        (agentRdvCount || 0) * 100 + Math.floor(agentPaiementsXAF / 1000);
+
+      return {
+        id: agent.id,
+        name: [agent.prenom, agent.nom].filter(Boolean).join(" ") || "Agent",
+        poste: agent.poste || (agent.role === "agent" ? "Agent" : agent.role),
+        rdvCount: agentRdvCount || 0,
+        paiementsXAF: agentPaiementsXAF,
+        score,
+        isCurrent: agent.id === profile.id,
+      };
+    })
   );
 
-  // ============================================================
-  // Clients crees par cet agent (total)
-  // ============================================================
-  const { count: clientsCount } = await supabase
-    .from("clients")
-    .select("*", { count: "exact", head: true })
-    .eq("created_by", profile.id);
+  // Tri par score décroissant
+  const leaderboard = leaderboardData
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 10);
 
-  // ============================================================
-  // Depenses en attente (de cet agent)
-  // ============================================================
-  const { count: depensesEnAttenteCount } = await supabase
-    .from("expenses")
-    .select("*", { count: "exact", head: true })
-    .eq("created_by", profile.id)
-    .eq("statut", "en_attente");
+  const myRank = leaderboard.findIndex((a) => a.isCurrent) + 1;
+
+  // ============================================================================
+  // 3. PROGRESSION VERS OBJECTIFS
+  // ============================================================================
+  const progressRdv = Math.min(((rdvCompleted || 0) / MONTHLY_GOALS.rdv) * 100, 100);
+  const progressPaiements = Math.min(
+    (totalPaiementsXAF / MONTHLY_GOALS.paiements_xaf) * 100,
+    100
+  );
+  const progressDossiers = Math.min(
+    ((demandesThisMonth || 0) / MONTHLY_GOALS.dossiers) * 100,
+    100
+  );
+
+  const overallProgress = Math.round(
+    (progressRdv + progressPaiements + progressDossiers) / 3
+  );
+
+  // ============================================================================
+  // RENDU
+  // ============================================================================
+  const fullName =
+    [profile.prenom, profile.nom].filter(Boolean).join(" ") || "Agent";
+  const initials = (profile.prenom?.[0] ?? "") + (profile.nom?.[0] ?? "");
 
   return (
     <DashboardShell profile={profile}>
-      <div className="mb-8">
-        <h1 className="font-display text-3xl font-bold text-nexus-blue-950">
-          Espace agent
-        </h1>
-        <p className="mt-1 text-slate-600">
-          Traitez les demandes clients, encaissez les paiements et suivez votre activité.
-        </p>
+      {/* ====================================================================
+          HERO CARD
+      ==================================================================== */}
+      <div className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-6 shadow-xl sm:p-8">
+        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-nexus-orange-500/20 blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-nexus-orange-500/10 blur-3xl" />
+
+        <div className="relative flex flex-wrap items-center gap-6">
+          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-2xl font-bold text-white shadow-2xl">
+            {initials.toUpperCase() || "A"}
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <span className="inline-block rounded-full bg-nexus-orange-500/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-nexus-orange-300">
+              ⚡ Espace Agent Premium
+            </span>
+            <h1 className="mt-2 font-display text-3xl font-bold text-white sm:text-4xl">
+              Bonjour, {profile.prenom || fullName} 👋
+            </h1>
+            <p className="mt-1 text-sm text-slate-300">
+              {profile.poste || "Agent Nexus"} ·{" "}
+              <span className="text-nexus-orange-300">
+                {myRank > 0 ? `${myRank}ème dans le classement` : "Pas classé"}
+              </span>
+            </p>
+          </div>
+
+          {myRank <= 3 && myRank > 0 && (
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-yellow-500/20 backdrop-blur">
+              <span className="text-3xl">
+                {myRank === 1 ? "🥇" : myRank === 2 ? "🥈" : "🥉"}
+              </span>
+            </div>
+          )}
+        </div>
+
+        <div className="relative mt-6 grid gap-3 sm:grid-cols-3">
+          <div className="rounded-xl bg-white/10 p-3 backdrop-blur">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              Performance ce mois
+            </p>
+            <p className="mt-1 font-display text-2xl font-bold text-white">
+              {overallProgress}%
+            </p>
+          </div>
+          <div className="rounded-xl bg-white/10 p-3 backdrop-blur">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              Encaissé ce mois
+            </p>
+            <p className="mt-1 font-display text-xl font-bold text-white">
+              {formatMoney(totalPaiementsXAF, "XAF")}
+            </p>
+          </div>
+          <div className="rounded-xl bg-white/10 p-3 backdrop-blur">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              Encaissé cette année
+            </p>
+            <p className="mt-1 font-display text-xl font-bold text-white">
+              {formatMoney(totalPaiementsYearXAF, "XAF")}
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* ============================================================ */}
-      {/* STATS DEMANDES */}
-      {/* ============================================================ */}
-      <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
-        Demandes
-      </h2>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          label="Demandes totales"
-          value={totalCount ?? 0}
+      {/* ====================================================================
+          ACTIONS RAPIDES
+      ==================================================================== */}
+      <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <QuickAction
+          href="/dashboard/agent/caisse"
+          icon={ShoppingCart}
+          label="Caisse rapide"
+          color="from-green-500 to-green-700"
+        />
+        <QuickAction
+          href="/dashboard/agent/rdv"
+          icon={Calendar}
+          label="Mes RDV"
+          color="from-nexus-orange-500 to-nexus-orange-700"
+        />
+        <QuickAction
+          href="/dashboard/super-admin/paiements/nouveau-lien"
+          icon={Sparkles}
+          label="Nouveau lien paiement"
+          color="from-purple-500 to-purple-700"
+        />
+        <QuickAction
+          href="/dashboard/agent/demandes"
           icon={FileText}
-          accent="blue"
-          href="/dashboard/agent/demandes"
-        />
-        <StatCard
-          label="En cours"
-          value={enCoursCount ?? 0}
-          icon={Clock}
-          accent="orange"
-          href="/dashboard/agent/demandes"
-        />
-        <StatCard
-          label="Urgentes"
-          value={urgentCount ?? 0}
-          icon={AlertTriangle}
-          accent="red"
-          href="/dashboard/agent/demandes"
-        />
-        <StatCard
-          label="Récentes"
-          value={list.length}
-          icon={CheckCircle2}
-          accent="green"
+          label="Demandes clients"
+          color="from-blue-500 to-blue-700"
         />
       </div>
 
-      {/* ============================================================ */}
-      {/* STATS ACTIVITE PERSO */}
-      {/* ============================================================ */}
-      <h2 className="mb-3 mt-8 text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
-        Mon activité
-      </h2>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <StatCard
-          label="Encaissé ce mois"
-          value={formatMoney(totalPaiementsMois)}
-          icon={Wallet}
-          accent="green"
-          href="/dashboard/agent/paiements"
-        />
-        <StatCard
-          label="Clients créés"
-          value={clientsCount ?? 0}
-          icon={UserCircle}
-          accent="blue"
-          href="/dashboard/agent/clients"
-        />
-        <StatCard
-          label="Dépenses en attente"
-          value={depensesEnAttenteCount ?? 0}
-          icon={Receipt}
-          accent="orange"
-          href="/dashboard/agent/depenses"
-        />
-      </div>
-
-      {/* ============================================================ */}
-      {/* ACTIONS RAPIDES */}
-      {/* ============================================================ */}
-      <div className="mt-8 rounded-2xl border border-slate-200 bg-gradient-to-br from-nexus-blue-50 to-nexus-orange-50 p-5 shadow-sm">
-        <h2 className="font-display text-base font-bold text-nexus-blue-950">
-          Actions rapides
+      {/* ====================================================================
+          STATS PERSONNELLES (mois)
+      ==================================================================== */}
+      <div className="mb-6">
+        <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold text-nexus-blue-950">
+          <Zap className="h-5 w-5 text-nexus-orange-600" />
+          Mes performances ce mois
         </h2>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <QuickAction
-            href="/dashboard/agent/clients"
-            label="Nouveau client"
-            icon={UserCircle}
-            color="blue"
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard
+            icon={Calendar}
+            label="RDV ce mois"
+            value={String(rdvThisMonth || 0)}
+            sublabel={`${rdvCompleted || 0} terminés`}
+            accent="orange"
           />
-          <QuickAction
-            href="/dashboard/agent/paiements"
-            label="Enregistrer paiement"
+          <StatCard
             icon={Wallet}
-            color="orange"
+            label="Paiements encaissés"
+            value={String(totalPaiementsCount)}
+            sublabel={formatMoney(totalPaiementsXAF, "XAF")}
+            accent="green"
           />
-          <QuickAction
-            href="/dashboard/agent/depenses"
-            label="Déclarer dépense"
-            icon={Receipt}
-            color="purple"
-          />
-          <QuickAction
-            href="/dashboard/agent/demandes"
-            label="Voir demandes"
+          <StatCard
             icon={FileText}
-            color="green"
+            label="Dossiers traités"
+            value={String(demandesThisMonth || 0)}
+            sublabel="ce mois"
+            accent="blue"
+          />
+          <StatCard
+            icon={TrendingUp}
+            label="RDV cette année"
+            value={String(rdvThisYear || 0)}
+            sublabel="cumul annuel"
+            accent="purple"
           />
         </div>
       </div>
 
-      {/* ============================================================ */}
-      {/* DEMANDES RECENTES */}
-      {/* ============================================================ */}
-      <div className="mt-10">
-        <h2 className="mb-4 font-display text-xl font-bold text-nexus-blue-950">
-          Demandes récentes
-        </h2>
-        <DemandesManager initialDemandes={list} />
+      {/* ====================================================================
+          OBJECTIFS MENSUELS
+      ==================================================================== */}
+      <div className="mb-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="mb-5 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow">
+              <Target className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="font-display text-lg font-bold text-nexus-blue-950">
+                Objectifs du mois
+              </h2>
+              <p className="text-xs text-slate-500">
+                Progression globale : <strong>{overallProgress}%</strong>
+              </p>
+            </div>
+          </div>
+          {overallProgress >= 100 && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
+              <CheckCircle2 className="h-3 w-3" />
+              Objectifs atteints !
+            </span>
+          )}
+        </div>
+
+        <div className="space-y-4">
+          <ProgressBar
+            label="RDV terminés"
+            current={rdvCompleted || 0}
+            target={MONTHLY_GOALS.rdv}
+            unit="RDV"
+            progress={progressRdv}
+            accent="orange"
+          />
+          <ProgressBar
+            label="Paiements encaissés"
+            current={totalPaiementsXAF}
+            target={MONTHLY_GOALS.paiements_xaf}
+            unit="XAF"
+            progress={progressPaiements}
+            accent="green"
+            isMoney
+          />
+          <ProgressBar
+            label="Dossiers traités"
+            current={demandesThisMonth || 0}
+            target={MONTHLY_GOALS.dossiers}
+            unit="dossiers"
+            progress={progressDossiers}
+            accent="blue"
+          />
+        </div>
+      </div>
+
+      {/* ====================================================================
+          LEADERBOARD ÉQUIPE
+      ==================================================================== */}
+      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="mb-5 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-500 to-yellow-700 text-white shadow">
+              <Trophy className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="font-display text-lg font-bold text-nexus-blue-950">
+                Classement équipe
+              </h2>
+              <p className="text-xs text-slate-500">
+                Score = RDV terminés × 100 + paiements (milliers XAF)
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {leaderboard.length === 0 ? (
+          <div className="rounded-xl bg-slate-50 p-6 text-center">
+            <p className="text-sm text-slate-500">Aucune activité ce mois</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {leaderboard.map((agent, index) => {
+              const rank = index + 1;
+              const badge = getRankBadge(rank);
+              return (
+                <div
+                  key={agent.id}
+                  className={cn(
+                    "flex items-center gap-4 rounded-2xl border p-4 transition",
+                    agent.isCurrent
+                      ? "border-nexus-orange-300 bg-gradient-to-r from-nexus-orange-50 to-white shadow"
+                      : "border-slate-100 bg-white hover:bg-slate-50"
+                  )}
+                >
+                  <div
+                    className={cn(
+                      "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl font-bold text-white shadow",
+                      badge
+                        ? `bg-gradient-to-br ${badge.color}`
+                        : "bg-slate-300"
+                    )}
+                  >
+                    {badge ? (
+                      <span className="text-2xl">{badge.label}</span>
+                    ) : (
+                      <span className="text-lg">{rank}</span>
+                    )}
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p
+                        className={cn(
+                          "font-semibold",
+                          agent.isCurrent
+                            ? "text-nexus-orange-700"
+                            : "text-nexus-blue-950"
+                        )}
+                      >
+                        {agent.name}
+                      </p>
+                      {agent.isCurrent && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-nexus-orange-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
+                          <Star className="h-2.5 w-2.5" />
+                          Vous
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-500">{agent.poste}</p>
+                    <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-600">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3 text-nexus-orange-600" />
+                        {agent.rdvCount} RDV
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Wallet className="h-3 w-3 text-green-600" />
+                        {formatMoney(agent.paiementsXAF, "XAF")}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="text-right">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      Score
+                    </p>
+                    <p className="font-display text-xl font-bold text-nexus-blue-950">
+                      {agent.score.toLocaleString("fr-FR")}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </DashboardShell>
   );
 }
 
 // ============================================================================
-// SOUS-COMPOSANTS
+// COMPOSANTS
 // ============================================================================
 function QuickAction({
   href,
-  label,
   icon: Icon,
+  label,
   color,
 }: {
   href: string;
-  label: string;
   icon: React.ComponentType<{ className?: string }>;
-  color: "blue" | "orange" | "purple" | "green";
+  label: string;
+  color: string;
 }) {
-  const colorMap = {
-    blue: "bg-nexus-blue-100 text-nexus-blue-700",
-    orange: "bg-nexus-orange-100 text-nexus-orange-700",
-    purple: "bg-purple-100 text-purple-700",
-    green: "bg-emerald-100 text-emerald-700",
-  };
-
   return (
     <Link
       href={href}
-      className="group flex items-center gap-3 rounded-xl bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+      className="group flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
     >
       <div
-        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${colorMap[color]}`}
+        className={cn(
+          "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow transition group-hover:scale-110",
+          color
+        )}
       >
         <Icon className="h-5 w-5" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate font-semibold text-nexus-blue-950">{label}</p>
+        <p className="text-sm font-semibold text-nexus-blue-950">{label}</p>
       </div>
-      <ArrowRight className="h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-1 group-hover:text-nexus-blue-950" />
+      <ArrowRight className="h-4 w-4 shrink-0 text-slate-300 transition group-hover:translate-x-1 group-hover:text-nexus-orange-600" />
     </Link>
+  );
+}
+
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+  sublabel,
+  accent,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: string;
+  sublabel: string;
+  accent: "orange" | "green" | "blue" | "purple";
+}) {
+  const colorMap = {
+    orange: "from-nexus-orange-500 to-nexus-orange-700",
+    green: "from-green-500 to-green-700",
+    blue: "from-blue-500 to-blue-700",
+    purple: "from-purple-500 to-purple-700",
+  };
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="flex items-start justify-between">
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-medium text-slate-500">{label}</p>
+          <p className="mt-1 font-display text-2xl font-bold text-nexus-blue-950">
+            {value}
+          </p>
+          <p className="mt-0.5 text-xs text-slate-500">{sublabel}</p>
+        </div>
+        <div
+          className={cn(
+            "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-lg",
+            colorMap[accent]
+          )}
+        >
+          <Icon className="h-5 w-5" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProgressBar({
+  label,
+  current,
+  target,
+  unit,
+  progress,
+  accent,
+  isMoney = false,
+}: {
+  label: string;
+  current: number;
+  target: number;
+  unit: string;
+  progress: number;
+  accent: "orange" | "green" | "blue";
+  isMoney?: boolean;
+}) {
+  const colorMap = {
+    orange: "bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600",
+    green: "bg-gradient-to-r from-green-500 to-green-600",
+    blue: "bg-gradient-to-r from-blue-500 to-blue-600",
+  };
+
+  const isAchieved = progress >= 100;
+
+  return (
+    <div>
+      <div className="mb-1.5 flex items-center justify-between">
+        <p className="text-sm font-semibold text-nexus-blue-950">{label}</p>
+        <p className="text-xs text-slate-600">
+          <strong className={isAchieved ? "text-green-600" : "text-nexus-blue-950"}>
+            {isMoney ? formatMoney(current, "XAF") : current.toLocaleString("fr-FR")}
+          </strong>
+          {" / "}
+          {isMoney ? formatMoney(target, "XAF") : `${target.toLocaleString("fr-FR")} ${unit}`}
+        </p>
+      </div>
+      <div className="h-3 w-full overflow-hidden rounded-full bg-slate-100">
+        <div
+          className={cn(
+            "h-full rounded-full transition-all duration-500",
+            isAchieved ? "bg-gradient-to-r from-green-500 to-green-600" : colorMap[accent]
+          )}
+          style={{ width: `${Math.min(progress, 100)}%` }}
+        />
+      </div>
+      <p className="mt-1 text-right text-[10px] font-bold uppercase tracking-wider text-slate-500">
+        {Math.round(progress)}% {isAchieved && "✓"}
+      </p>
+    </div>
   );
 }
