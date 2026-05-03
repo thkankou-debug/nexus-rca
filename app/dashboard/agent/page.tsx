@@ -57,6 +57,10 @@ export default async function AgentDashboardPage() {
   const profile = await requireProfile(["agent"]);
   const supabase = createClient();
 
+  // CAST pour accéder à la colonne 'poste' qui existe en DB mais pas dans le type Profile
+  const profileAny = profile as unknown as Record<string, unknown>;
+  const profilePoste = (profileAny.poste as string) || "Agent Nexus";
+
   const startOfMonth = getStartOfMonth();
   const startOfYear = getStartOfYear();
 
@@ -114,7 +118,13 @@ export default async function AgentDashboardPage() {
     .select("id, prenom, nom, poste, role")
     .in("role", ["agent", "admin", "super_admin"]);
 
-  const agents = allAgents || [];
+  const agents = (allAgents || []) as Array<{
+    id: string;
+    prenom: string | null;
+    nom: string | null;
+    poste: string | null;
+    role: string;
+  }>;
 
   const leaderboardData: AgentScore[] = await Promise.all(
     agents.map(async (agent) => {
@@ -195,7 +205,7 @@ export default async function AgentDashboardPage() {
               Bonjour, {profile.prenom || fullName}
             </h1>
             <p className="mt-1 text-sm text-slate-300">
-              {profile.poste || "Agent Nexus"}
+              {profilePoste}
               {myRank > 0 && (
                 <>
                   {" - "}
