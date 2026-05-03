@@ -7,10 +7,7 @@ import {
   TrendingUp,
   Target,
   Sparkles,
-  Crown,
-  Medal,
   ShoppingCart,
-  Send,
   ArrowRight,
   Star,
   Zap,
@@ -27,13 +24,10 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-// ============================================================================
-// CONFIGURATION OBJECTIFS MENSUELS (modifiable selon stratégie)
-// ============================================================================
 const MONTHLY_GOALS = {
-  rdv: 20,                    // 20 RDV par mois
-  paiements_xaf: 5_000_000,   // 5M XAF de paiements encaissés
-  dossiers: 15,                // 15 dossiers traités
+  rdv: 20,
+  paiements_xaf: 5_000_000,
+  dossiers: 15,
 };
 
 function formatMoney(amount: number, currency = "XAF"): string {
@@ -42,21 +36,21 @@ function formatMoney(amount: number, currency = "XAF"): string {
 
 function getStartOfMonth(): string {
   const now = new Date();
-  const first = new Date(now.getFullYear(), now.getMonth(), 1);
-  return first.toISOString();
+  return new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
 }
 
 function getStartOfYear(): string {
-  const now = new Date();
-  const first = new Date(now.getFullYear(), 0, 1);
-  return first.toISOString();
+  return new Date(new Date().getFullYear(), 0, 1).toISOString();
 }
 
-function getRankBadge(rank: number) {
-  if (rank === 1) return { icon: Crown, color: "from-yellow-400 to-yellow-600", label: "🥇" };
-  if (rank === 2) return { icon: Medal, color: "from-slate-300 to-slate-500", label: "🥈" };
-  if (rank === 3) return { icon: Medal, color: "from-orange-400 to-orange-600", label: "🥉" };
-  return null;
+interface AgentScore {
+  id: string;
+  name: string;
+  poste: string;
+  rdvCount: number;
+  paiementsXAF: number;
+  score: number;
+  isCurrent: boolean;
 }
 
 export default async function AgentDashboardPage() {
@@ -66,18 +60,13 @@ export default async function AgentDashboardPage() {
   const startOfMonth = getStartOfMonth();
   const startOfYear = getStartOfYear();
 
-  // ============================================================================
-  // 1. STATS PERSONNELLES DE L'AGENT (mois en cours)
-  // ============================================================================
-
-  // RDV ce mois
+  // Stats personnelles
   const { count: rdvThisMonth } = await supabase
     .from("appointments")
     .select("*", { count: "exact", head: true })
     .eq("agent_id", profile.id)
     .gte("created_at", startOfMonth);
 
-  // RDV terminés ce mois
   const { count: rdvCompleted } = await supabase
     .from("appointments")
     .select("*", { count: "exact", head: true })
@@ -85,7 +74,6 @@ export default async function AgentDashboardPage() {
     .eq("statut", "termine")
     .gte("created_at", startOfMonth);
 
-  // Paiements créés par l'agent ce mois (XAF uniquement pour le total)
   const { data: paymentsThisMonth } = await supabase
     .from("payments")
     .select("montant, devise")
@@ -98,14 +86,12 @@ export default async function AgentDashboardPage() {
 
   const totalPaiementsCount = paymentsThisMonth?.length || 0;
 
-  // Demandes traitées par l'agent ce mois
   const { count: demandesThisMonth } = await supabase
     .from("demandes")
     .select("*", { count: "exact", head: true })
     .eq("agent_id", profile.id)
     .gte("created_at", startOfMonth);
 
-  // Stats annuelles (pour vue globale)
   const { count: rdvThisYear } = await supabase
     .from("appointments")
     .select("*", { count: "exact", head: true })
@@ -122,11 +108,7 @@ export default async function AgentDashboardPage() {
     .filter((p) => p.devise === "XAF")
     .reduce((sum, p) => sum + Number(p.montant || 0), 0);
 
-  // ============================================================================
-  // 2. LEADERBOARD ÉQUIPE (tous les agents - top 5 ce mois)
-  // ============================================================================
-
-  // Récupère tous les agents
+  // Leaderboard
   const { data: allAgents } = await supabase
     .from("profiles")
     .select("id, prenom, nom, poste, role")
@@ -134,8 +116,7 @@ export default async function AgentDashboardPage() {
 
   const agents = allAgents || [];
 
-  // Pour chaque agent, calcul score = RDV terminés + paiements encaissés (en milliers XAF)
-  const leaderboardData = await Promise.all(
+  const leaderboardData: AgentScore[] = await Promise.all(
     agents.map(async (agent) => {
       const { count: agentRdvCount } = await supabase
         .from("appointments")
@@ -154,7 +135,6 @@ export default async function AgentDashboardPage() {
         .filter((p) => p.devise === "XAF")
         .reduce((sum, p) => sum + Number(p.montant || 0), 0);
 
-      // Score = (RDV terminés × 100) + (paiements en milliers XAF)
       const score =
         (agentRdvCount || 0) * 100 + Math.floor(agentPaiementsXAF / 1000);
 
@@ -170,16 +150,13 @@ export default async function AgentDashboardPage() {
     })
   );
 
-  // Tri par score décroissant
   const leaderboard = leaderboardData
     .sort((a, b) => b.score - a.score)
     .slice(0, 10);
 
   const myRank = leaderboard.findIndex((a) => a.isCurrent) + 1;
 
-  // ============================================================================
-  // 3. PROGRESSION VERS OBJECTIFS
-  // ============================================================================
+  // Progression
   const progressRdv = Math.min(((rdvCompleted || 0) / MONTHLY_GOALS.rdv) * 100, 100);
   const progressPaiements = Math.min(
     (totalPaiementsXAF / MONTHLY_GOALS.paiements_xaf) * 100,
@@ -194,18 +171,13 @@ export default async function AgentDashboardPage() {
     (progressRdv + progressPaiements + progressDossiers) / 3
   );
 
-  // ============================================================================
-  // RENDU
-  // ============================================================================
   const fullName =
     [profile.prenom, profile.nom].filter(Boolean).join(" ") || "Agent";
   const initials = (profile.prenom?.[0] ?? "") + (profile.nom?.[0] ?? "");
 
   return (
     <DashboardShell profile={profile}>
-      {/* ====================================================================
-          HERO CARD
-      ==================================================================== */}
+      {/* HERO */}
       <div className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-6 shadow-xl sm:p-8">
         <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-nexus-orange-500/20 blur-3xl" />
         <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-nexus-orange-500/10 blur-3xl" />
@@ -217,20 +189,25 @@ export default async function AgentDashboardPage() {
 
           <div className="min-w-0 flex-1">
             <span className="inline-block rounded-full bg-nexus-orange-500/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-nexus-orange-300">
-              ⚡ Espace Agent Premium
+              Espace Agent Premium
             </span>
             <h1 className="mt-2 font-display text-3xl font-bold text-white sm:text-4xl">
-              Bonjour, {profile.prenom || fullName} 👋
+              Bonjour, {profile.prenom || fullName}
             </h1>
             <p className="mt-1 text-sm text-slate-300">
-              {profile.poste || "Agent Nexus"} ·{" "}
-              <span className="text-nexus-orange-300">
-                {myRank > 0 ? `${myRank}ème dans le classement` : "Pas classé"}
-              </span>
+              {profile.poste || "Agent Nexus"}
+              {myRank > 0 && (
+                <>
+                  {" - "}
+                  <span className="text-nexus-orange-300">
+                    {myRank}eme dans le classement
+                  </span>
+                </>
+              )}
             </p>
           </div>
 
-          {myRank <= 3 && myRank > 0 && (
+          {myRank > 0 && myRank <= 3 && (
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-yellow-500/20 backdrop-blur">
               <span className="text-3xl">
                 {myRank === 1 ? "🥇" : myRank === 2 ? "🥈" : "🥉"}
@@ -250,7 +227,7 @@ export default async function AgentDashboardPage() {
           </div>
           <div className="rounded-xl bg-white/10 p-3 backdrop-blur">
             <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              Encaissé ce mois
+              Encaisse ce mois
             </p>
             <p className="mt-1 font-display text-xl font-bold text-white">
               {formatMoney(totalPaiementsXAF, "XAF")}
@@ -258,7 +235,7 @@ export default async function AgentDashboardPage() {
           </div>
           <div className="rounded-xl bg-white/10 p-3 backdrop-blur">
             <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              Encaissé cette année
+              Encaisse cette annee
             </p>
             <p className="mt-1 font-display text-xl font-bold text-white">
               {formatMoney(totalPaiementsYearXAF, "XAF")}
@@ -267,9 +244,7 @@ export default async function AgentDashboardPage() {
         </div>
       </div>
 
-      {/* ====================================================================
-          ACTIONS RAPIDES
-      ==================================================================== */}
+      {/* ACTIONS RAPIDES */}
       <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <QuickAction
           href="/dashboard/agent/caisse"
@@ -297,9 +272,7 @@ export default async function AgentDashboardPage() {
         />
       </div>
 
-      {/* ====================================================================
-          STATS PERSONNELLES (mois)
-      ==================================================================== */}
+      {/* STATS */}
       <div className="mb-6">
         <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold text-nexus-blue-950">
           <Zap className="h-5 w-5 text-nexus-orange-600" />
@@ -310,26 +283,26 @@ export default async function AgentDashboardPage() {
             icon={Calendar}
             label="RDV ce mois"
             value={String(rdvThisMonth || 0)}
-            sublabel={`${rdvCompleted || 0} terminés`}
+            sublabel={`${rdvCompleted || 0} termines`}
             accent="orange"
           />
           <StatCard
             icon={Wallet}
-            label="Paiements encaissés"
+            label="Paiements encaisses"
             value={String(totalPaiementsCount)}
             sublabel={formatMoney(totalPaiementsXAF, "XAF")}
             accent="green"
           />
           <StatCard
             icon={FileText}
-            label="Dossiers traités"
+            label="Dossiers traites"
             value={String(demandesThisMonth || 0)}
             sublabel="ce mois"
             accent="blue"
           />
           <StatCard
             icon={TrendingUp}
-            label="RDV cette année"
+            label="RDV cette annee"
             value={String(rdvThisYear || 0)}
             sublabel="cumul annuel"
             accent="purple"
@@ -337,9 +310,7 @@ export default async function AgentDashboardPage() {
         </div>
       </div>
 
-      {/* ====================================================================
-          OBJECTIFS MENSUELS
-      ==================================================================== */}
+      {/* OBJECTIFS */}
       <div className="mb-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="mb-5 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -358,14 +329,14 @@ export default async function AgentDashboardPage() {
           {overallProgress >= 100 && (
             <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
               <CheckCircle2 className="h-3 w-3" />
-              Objectifs atteints !
+              Objectifs atteints
             </span>
           )}
         </div>
 
         <div className="space-y-4">
           <ProgressBar
-            label="RDV terminés"
+            label="RDV termines"
             current={rdvCompleted || 0}
             target={MONTHLY_GOALS.rdv}
             unit="RDV"
@@ -373,7 +344,7 @@ export default async function AgentDashboardPage() {
             accent="orange"
           />
           <ProgressBar
-            label="Paiements encaissés"
+            label="Paiements encaisses"
             current={totalPaiementsXAF}
             target={MONTHLY_GOALS.paiements_xaf}
             unit="XAF"
@@ -382,7 +353,7 @@ export default async function AgentDashboardPage() {
             isMoney
           />
           <ProgressBar
-            label="Dossiers traités"
+            label="Dossiers traites"
             current={demandesThisMonth || 0}
             target={MONTHLY_GOALS.dossiers}
             unit="dossiers"
@@ -392,35 +363,44 @@ export default async function AgentDashboardPage() {
         </div>
       </div>
 
-      {/* ====================================================================
-          LEADERBOARD ÉQUIPE
-      ==================================================================== */}
+      {/* LEADERBOARD */}
       <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="mb-5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-500 to-yellow-700 text-white shadow">
-              <Trophy className="h-5 w-5" />
-            </div>
-            <div>
-              <h2 className="font-display text-lg font-bold text-nexus-blue-950">
-                Classement équipe
-              </h2>
-              <p className="text-xs text-slate-500">
-                Score = RDV terminés × 100 + paiements (milliers XAF)
-              </p>
-            </div>
+        <div className="mb-5 flex items-center gap-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-500 to-yellow-700 text-white shadow">
+            <Trophy className="h-5 w-5" />
+          </div>
+          <div>
+            <h2 className="font-display text-lg font-bold text-nexus-blue-950">
+              Classement equipe
+            </h2>
+            <p className="text-xs text-slate-500">
+              Score = RDV termines x 100 + paiements (milliers XAF)
+            </p>
           </div>
         </div>
 
         {leaderboard.length === 0 ? (
           <div className="rounded-xl bg-slate-50 p-6 text-center">
-            <p className="text-sm text-slate-500">Aucune activité ce mois</p>
+            <p className="text-sm text-slate-500">Aucune activite ce mois</p>
           </div>
         ) : (
           <div className="space-y-2">
             {leaderboard.map((agent, index) => {
               const rank = index + 1;
-              const badge = getRankBadge(rank);
+              let rankBadge = "";
+              let rankColor = "bg-slate-300";
+
+              if (rank === 1) {
+                rankBadge = "🥇";
+                rankColor = "bg-gradient-to-br from-yellow-400 to-yellow-600";
+              } else if (rank === 2) {
+                rankBadge = "🥈";
+                rankColor = "bg-gradient-to-br from-slate-300 to-slate-500";
+              } else if (rank === 3) {
+                rankBadge = "🥉";
+                rankColor = "bg-gradient-to-br from-orange-400 to-orange-600";
+              }
+
               return (
                 <div
                   key={agent.id}
@@ -434,13 +414,11 @@ export default async function AgentDashboardPage() {
                   <div
                     className={cn(
                       "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl font-bold text-white shadow",
-                      badge
-                        ? `bg-gradient-to-br ${badge.color}`
-                        : "bg-slate-300"
+                      rankColor
                     )}
                   >
-                    {badge ? (
-                      <span className="text-2xl">{badge.label}</span>
+                    {rankBadge ? (
+                      <span className="text-2xl">{rankBadge}</span>
                     ) : (
                       <span className="text-lg">{rank}</span>
                     )}
@@ -496,9 +474,6 @@ export default async function AgentDashboardPage() {
   );
 }
 
-// ============================================================================
-// COMPOSANTS
-// ============================================================================
 function QuickAction({
   href,
   icon: Icon,
@@ -544,7 +519,7 @@ function StatCard({
   sublabel: string;
   accent: "orange" | "green" | "blue" | "purple";
 }) {
-  const colorMap = {
+  const colorMap: Record<string, string> = {
     orange: "from-nexus-orange-500 to-nexus-orange-700",
     green: "from-green-500 to-green-700",
     blue: "from-blue-500 to-blue-700",
@@ -590,7 +565,7 @@ function ProgressBar({
   accent: "orange" | "green" | "blue";
   isMoney?: boolean;
 }) {
-  const colorMap = {
+  const colorMap: Record<string, string> = {
     orange: "bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600",
     green: "bg-gradient-to-r from-green-500 to-green-600",
     blue: "bg-gradient-to-r from-blue-500 to-blue-600",
@@ -607,20 +582,24 @@ function ProgressBar({
             {isMoney ? formatMoney(current, "XAF") : current.toLocaleString("fr-FR")}
           </strong>
           {" / "}
-          {isMoney ? formatMoney(target, "XAF") : `${target.toLocaleString("fr-FR")} ${unit}`}
+          {isMoney
+            ? formatMoney(target, "XAF")
+            : `${target.toLocaleString("fr-FR")} ${unit}`}
         </p>
       </div>
       <div className="h-3 w-full overflow-hidden rounded-full bg-slate-100">
         <div
           className={cn(
             "h-full rounded-full transition-all duration-500",
-            isAchieved ? "bg-gradient-to-r from-green-500 to-green-600" : colorMap[accent]
+            isAchieved
+              ? "bg-gradient-to-r from-green-500 to-green-600"
+              : colorMap[accent]
           )}
           style={{ width: `${Math.min(progress, 100)}%` }}
         />
       </div>
       <p className="mt-1 text-right text-[10px] font-bold uppercase tracking-wider text-slate-500">
-        {Math.round(progress)}% {isAchieved && "✓"}
+        {Math.round(progress)}% {isAchieved && "OK"}
       </p>
     </div>
   );
