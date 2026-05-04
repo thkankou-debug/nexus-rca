@@ -1,5 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { homeForRole, minRoleForPath, roleAtLeast } from "@/lib/rbac";
+import type { UserRole } from "@/types";
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -31,19 +33,58 @@ export async function updateSession(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
-  // Protéger les routes dashboard
-  if (pathname.startsWith("/dashboard") && !user) {
+  // 1) Pas de session sur /dashboard ou /api/{role} → /login
+  const requiresAuth =
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/api/super-admin") ||
+    pathname.startsWith("/api/admin") ||
+    pathname.startsWith("/api/agent");
+
+  if (requiresAuth && !user) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("redirectTo", pathname);
     return NextResponse.redirect(url);
   }
 
-  // Si connecté et sur login/register, rediriger vers dashboard
+  // 2) Connecté + sur /login ou /register → /dashboard (redispatch par rôle si possible)
   if (user && (pathname === "/login" || pathname === "/register")) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
+  }
+
+  // 3) Gating par rôle sur les routes RBAC-protégées
+  if (user) {
+    const minRole = minRoleForPath(pathname);
+    if (minRole) {
+      // Charger le rôle (table profiles). Léger : 1 select indexé par PK.
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+
+      const userRole = (profile?.role as UserRole | undefined) ?? null;
+
+      // Pas de profil ou rôle insuffisant → redirect vers son home dashboard
+      if (!userRole || !roleAtLeast(userRole, minRole)) {
+        // API protégée → renvoyer 403 plutôt que rediriger
+        if (pathname.startsWith("/api/")) {
+          return new NextResponse(
+            JSON.stringify({ error: "Forbidden", required: minRole }),
+            { status: 403, headers: { "content-type": "application/json" } }
+          );
+        }
+        const url = request.nextUrl.clone();
+        url.pathname = userRole ? homeForRole(userRole) : "/dashboard";
+        return NextResponse.redirect(url);
+      }
+
+      // Injecter le rôle dans un header pour les server components qui veulent l'utiliser
+      // (évite un re-fetch profiles dans la même requête)
+      response.headers.set("x-user-role", userRole);
+    }
   }
 
   return response;
