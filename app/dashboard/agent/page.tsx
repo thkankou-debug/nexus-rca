@@ -293,25 +293,25 @@ export default async function AgentDashboardPage() {
         <QuickAction
           href="/dashboard/agent/caisse"
           icon={ShoppingCart}
-          label="Caisse rapide"
+          label="Caisse"
           color="from-green-500 to-green-700"
         />
         <QuickAction
           href="/dashboard/agent/rdv"
           icon={Calendar}
-          label="Mes RDV"
+          label="Mon agenda"
           color="from-nexus-orange-500 to-nexus-orange-700"
         />
         <QuickAction
-          href="/dashboard/super-admin/paiements/nouveau-lien"
+          href="/dashboard/agent/clients"
           icon={Sparkles}
-          label="Nouveau lien paiement"
+          label="Mes clients"
           color="from-purple-500 to-purple-700"
         />
         <QuickAction
           href="/dashboard/agent/demandes"
           icon={FileText}
-          label="Demandes clients"
+          label="Mes dossiers"
           color="from-blue-500 to-blue-700"
         />
       </div>
