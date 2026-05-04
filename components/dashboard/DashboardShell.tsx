@@ -82,22 +82,31 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { href: "/dashboard/admin/messagerie", label: "Messagerie", icon: Send },
   ],
   super_admin: [
+    // Pilotage
     { href: "/dashboard/super-admin", label: "Tableau de bord", icon: LayoutDashboard },
     { href: "/dashboard/super-admin/finances", label: "Finances", icon: PieChart },
-    { href: "/dashboard/super-admin/rapports", label: "Rapports financiers", icon: FileBarChart },
     { href: "/dashboard/super-admin/stats-agents", label: "Performances équipe", icon: Trophy },
+    { href: "/dashboard/super-admin/rapports", label: "Rapports financiers", icon: FileBarChart },
+    { href: "/dashboard/super-admin/rapports-mensuels", label: "Rapports mensuels (CRON)", icon: FileBarChart },
+    // Opérations
     { href: "/dashboard/super-admin/clients", label: "Clients (CRM)", icon: UserCircle },
     { href: "/dashboard/super-admin/demandes", label: "Toutes les demandes", icon: FileText },
     { href: "/dashboard/super-admin/rdv", label: "Rendez-vous", icon: CalendarCheck },
+    { href: "/dashboard/super-admin/comptes-clients", label: "Comptes clients", icon: Users },
+    // Paiements & caisse
     { href: "/dashboard/super-admin/paiements/nouveau-lien", label: "Nouveau lien paiement", icon: Sparkles, highlight: true },
     { href: "/dashboard/super-admin/paiements/en-attente", label: "Paiements en attente", icon: Wallet },
     { href: "/dashboard/super-admin/paiements", label: "Tous les paiements", icon: Wallet },
     { href: "/dashboard/super-admin/caisse", label: "Caisse rapide", icon: ShoppingCart },
     { href: "/dashboard/super-admin/transferts", label: "Transferts", icon: Send },
     { href: "/dashboard/super-admin/depenses", label: "Dépenses", icon: Receipt },
+    // Gouvernance & configuration
     { href: "/dashboard/super-admin/equipe", label: "Équipe Nexus", icon: Briefcase },
-    { href: "/dashboard/super-admin/comptes-clients", label: "Comptes clients", icon: Users },
     { href: "/dashboard/super-admin/roles", label: "Rôles & permissions", icon: ShieldCheck },
+    { href: "/dashboard/super-admin/messagerie", label: "Messagerie", icon: Send },
+    { href: "/dashboard/super-admin/i18n", label: "Multi-langue", icon: Globe },
+    { href: "/dashboard/super-admin/audit-log", label: "Audit log", icon: ShieldCheck },
+    { href: "/dashboard/super-admin/parametres", label: "Paramètres agence", icon: Settings },
   ],
 };
 
