@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
-import { ServiceCTA } from "@/components/services/ServiceCTA";
 import {
   Handshake,
   Briefcase,
@@ -19,34 +18,67 @@ import {
   GraduationCap,
   Store,
   HandCoins,
+  Calendar,
+  FileText,
+  MessageCircle,
+  XCircle,
+  Wallet,
+  ClipboardCheck,
+  Search,
+  Eye,
+  Check,
 } from "lucide-react";
+import { whatsappLink } from "@/lib/utils";
 
 export const metadata = {
-  title: "Incubateur & financement en partenariat | Nexus RCA",
+  title: "Financement & partenariat | Nexus RCA — Bangui",
   description:
-    "Nexus RCA accompagne, incube et cofinance des projets sérieux en République Centrafricaine. Modèle gagnant-gagnant — pas un prêt, un partenariat. Étude gratuite, réponse sous 7 jours.",
+    "L'expertise centrafricaine pour structurer et cofinancer vos projets. Nous étudions chaque projet avec rigueur avant d'accepter de l'accompagner. Pas un prêt — un partenariat avec partage des résultats.",
 };
 
 // ─── Données ────────────────────────────────────────────────────────────────
 
-const APPROCHE_POINTS = [
+const POUR_QUI = {
+  oui: [
+    "Vous portez un projet structuré ou en voie de structuration sérieuse",
+    "Vous êtes prêt(e) à investir du temps dans la préparation et l'analyse",
+    "Vous acceptez un partenariat avec partage des résultats — pas une dette",
+  ],
+  non: [
+    "Vous cherchez un prêt classique à rembourser avec intérêts",
+    "Vous attendez une garantie de financement immédiate sans étude préalable",
+    "Vous ne pouvez pas justifier de votre engagement personnel dans le projet",
+  ],
+};
+
+const METHODOLOGIE = [
   {
-    icon: ShieldCheck,
-    title: "Projets sérieux",
+    num: "01",
+    icon: FileText,
+    title: "Soumission de la demande",
     description:
-      "Une vision claire, un porteur engagé, des bases que nous construisons ensemble.",
+      "Vous remplissez notre formulaire structuré ou prenez rendez-vous. Nous recueillons les éléments essentiels de votre projet : porteur, secteur, montant, calendrier.",
   },
   {
-    icon: Layers,
-    title: "Projets structurés",
+    num: "02",
+    icon: Search,
+    title: "Analyse de faisabilité",
     description:
-      "Une idée organisée, un plan d'action réaliste, un modèle économique cohérent.",
+      "Un conseiller Nexus étudie votre projet selon nos critères (viabilité, structuration, engagement du porteur, potentiel). Bilan écrit avant tout engagement.",
   },
   {
-    icon: Target,
-    title: "Personnes engagées",
+    num: "03",
+    icon: ClipboardCheck,
+    title: "Accompagnement structuré",
     description:
-      "Des porteurs déterminés, prêts à s'investir sur la durée.",
+      "Si retenu : structuration complète du projet, incubation opérationnelle, mise en place du cofinancement, formalisation du partenariat dans un accord clair.",
+  },
+  {
+    num: "04",
+    icon: Eye,
+    title: "Suivi jusqu'au résultat",
+    description:
+      "Suivi long terme du développement, conseils stratégiques continus, partage des résultats selon les termes du partenariat.",
   },
 ];
 
@@ -60,55 +92,14 @@ const ENGAGEMENTS = [
   {
     emoji: "⚖️",
     title: "Nous partageons le risque",
-    description: "Notre réussite est liée à la vôtre. Nous avançons ensemble.",
+    description:
+      "Notre réussite est liée à la vôtre. Nous avançons ensemble.",
   },
   {
     emoji: "🚀",
     title: "Nous accompagnons la réussite",
-    description: "Du démarrage à la croissance, nous restons à vos côtés.",
-  },
-];
-
-const OFFRES = [
-  {
-    icon: Compass,
-    number: "01",
-    title: "Accompagnement stratégique",
     description:
-      "Nous structurons votre projet, validons sa faisabilité et bâtissons un plan d'action concret.",
-    points: [
-      "Structuration complète du projet",
-      "Étude de faisabilité approfondie",
-      "Plan d'action étape par étape",
-      "Suivi personnalisé sur la durée",
-    ],
-  },
-  {
-    icon: Rocket,
-    number: "02",
-    title: "Incubation",
-    description:
-      "Nous accompagnons le porteur dans la mise en place opérationnelle.",
-    points: [
-      "Encadrement du porteur",
-      "Aide à l'organisation et à la gestion",
-      "Bases solides du business",
-      "Conseils stratégiques continus",
-    ],
-  },
-  {
-    icon: HandCoins,
-    number: "03",
-    title: "Financement en partenariat",
-    description:
-      "Nous investissons aux côtés du porteur, dans une logique de collaboration et de partage des résultats.",
-    points: [
-      "Cofinancement adapté au projet",
-      "Partenariat clair et transparent",
-      "Partage des résultats équitable",
-      "Pas de dette qui écrase",
-    ],
-    highlighted: true,
+      "Du démarrage à la croissance, nous restons à vos côtés.",
   },
 ];
 
@@ -147,9 +138,9 @@ const SELECTION_CRITERES = [
 ];
 
 const STATS = [
-  { value: "0 FCFA", label: "Étude initiale" },
-  { value: "7 jours", label: "Réponse" },
-  { value: "100 %", label: "Confidentiel" },
+  { value: "Étude", label: "Initiale gratuite" },
+  { value: "Partenariat", label: "Pas de dette" },
+  { value: "Bilan", label: "Honnête écrit" },
 ];
 
 // ─── Composant ──────────────────────────────────────────────────────────────
@@ -159,7 +150,7 @@ export default function FinancementPage() {
     <>
       <Navbar />
       <main>
-        {/* HERO ───────────────────────────────────────────────────── */}
+        {/* 1. HERO INSTITUTIONNEL ─────────────────────────────────── */}
         <section className="relative overflow-hidden bg-nexus-blue-950 pt-40 pb-24 text-white">
           <div className="absolute inset-0 bg-mesh-gradient opacity-50" />
           <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-nexus-orange-500/30 blur-3xl" />
@@ -170,47 +161,61 @@ export default function FinancementPage() {
             <div className="text-center">
               <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-overline text-nexus-orange-300 backdrop-blur">
                 <Handshake className="h-3.5 w-3.5" />
-                Incubateur & Financement
+                Service incubateur & financement
               </div>
 
               <h1
                 className="font-display text-display-xl text-white lg:text-display-2xl"
                 style={{ paddingBottom: "0.15em" }}
               >
-                Donnez vie à votre projet à{" "}
-                <span className="text-gradient-orange">Bangui</span>, avec un
-                vrai{" "}
-                <span className="text-gradient-orange">partenaire</span>
+                <span className="text-gradient-orange">
+                  L'expertise centrafricaine
+                </span>{" "}
+                pour structurer et cofinancer vos projets.
               </h1>
 
               <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">
-                Nous incubons, accompagnons et cofinançons des projets sérieux
-                en République Centrafricaine. Pas un prêt avec dette : un
-                partenariat avec partage des résultats.
+                Nous étudions chaque projet avec rigueur avant d'accepter de
+                l'accompagner. Si votre projet correspond à nos critères, nous
+                le structurons, l'incubons et participons au cofinancement —
+                dans une logique de partenariat avec partage des résultats,
+                pas de prêt avec dette à rembourser.
               </p>
 
               <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
                 <Link
-                  href="/demande/complet?service=financement"
+                  href="/services/financement/demarrer"
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
                 >
+                  <FileText className="h-5 w-5" />
                   Soumettre mon projet
                   <ArrowRight className="h-5 w-5" />
                 </Link>
                 <Link
-                  href="#approche"
+                  href="/rendez-vous?service=financement"
                   className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/30 bg-white/5 px-8 py-4 text-body font-semibold text-white backdrop-blur transition hover:bg-white/10"
                 >
-                  Découvrir notre approche
+                  <Calendar className="h-5 w-5" />
+                  Prendre rendez-vous
                 </Link>
               </div>
 
               <p className="mt-5 text-caption text-slate-400">
-                Étude gratuite · Réponse sous 7 jours · 100 % confidentiel
+                Étude initiale gratuite · Bilan de faisabilité honnête · Une
+                question ?{" "}
+                <a
+                  href={whatsappLink(
+                    "Bonjour Nexus, j'ai une question sur le service Incubateur & Financement avant de soumettre mon projet."
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-semibold text-nexus-orange-300 underline-offset-4 hover:underline"
+                >
+                  contactez-nous sur WhatsApp
+                </a>
               </p>
             </div>
 
-            {/* Stats strip */}
             <div className="mx-auto mt-16 grid max-w-3xl grid-cols-3 gap-6 border-t border-white/10 pt-10">
               {STATS.map((s) => (
                 <div key={s.label} className="text-center">
@@ -226,178 +231,178 @@ export default function FinancementPage() {
           </div>
         </section>
 
-        {/* LE CONSTAT ─────────────────────────────────────────────── */}
+        {/* 2. POUR QUI CE SERVICE EST CONÇU ────────────────────── */}
         <section className="bg-surface py-20">
-          <div className="mx-auto max-w-4xl px-4 lg:px-8">
+          <div className="mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
-              <p className="text-overline text-brand">Le constat</p>
+              <p className="text-overline text-brand">Sélectivité</p>
               <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Lancer un projet en RCA reste un défi
+                Pour qui ce service est conçu
               </h2>
+              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
+                Nous n'accompagnons pas tous les profils. Cette transparence
+                fait partie de notre engagement professionnel.
+              </p>
             </div>
 
-            <div className="mt-12 space-y-6 text-body text-ink-muted sm:text-body-lg">
-              <p>
-                Créer un projet en République Centrafricaine reste difficile :{" "}
-                <strong className="text-ink">manque de financement</strong>,{" "}
-                <strong className="text-ink">manque d'accompagnement</strong>,{" "}
-                <strong className="text-ink">manque de structure</strong>.
-              </p>
+            <div className="mt-12 grid gap-5 lg:grid-cols-2">
+              <div className="rounded-3xl border-2 border-emerald-200/60 bg-emerald-50/40 p-7 dark:border-emerald-500/20 dark:bg-emerald-500/5">
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+                    <CheckCircle2 className="h-5 w-5" />
+                  </div>
+                  <h3 className="font-display text-headline text-ink">
+                    Ce service s'adresse aux personnes
+                  </h3>
+                </div>
+                <ul className="space-y-3">
+                  {POUR_QUI.oui.map((item, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-3 text-body-sm text-ink"
+                    >
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-              <p>
-                Trop de talents et de projets prometteurs n'arrivent jamais à
-                voir le jour, faute d'un partenaire capable de soutenir leur
-                développement avec sérieux.
-              </p>
-
-              <div className="my-10 rounded-3xl border-l-4 border-brand bg-brand-subtle/40 px-6 py-6 shadow-elev-1 sm:px-8 sm:py-8">
-                <p className="font-display text-headline text-ink sm:text-display-sm">
-                  Nexus RCA fait le choix d'agir concrètement.
-                </p>
-                <p className="mt-3 text-body text-ink-muted">
-                  Notre programme ne se limite pas à donner des conseils. Nous{" "}
-                  <strong className="text-ink">accompagnons</strong>,{" "}
-                  <strong className="text-ink">structurons</strong> et{" "}
-                  <strong className="text-ink">cofinançons</strong> des projets
-                  à fort potentiel.
-                </p>
+              <div className="rounded-3xl border-2 border-rose-200/60 bg-rose-50/40 p-7 dark:border-rose-500/20 dark:bg-rose-500/5">
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-rose-100 text-rose-600 dark:bg-rose-500/15 dark:text-rose-300">
+                    <XCircle className="h-5 w-5" />
+                  </div>
+                  <h3 className="font-display text-headline text-ink">
+                    Ce service ne s'adresse pas aux personnes
+                  </h3>
+                </div>
+                <ul className="space-y-3">
+                  {POUR_QUI.non.map((item, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-3 text-body-sm text-ink"
+                    >
+                      <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>
         </section>
 
-        {/* NOTRE APPROCHE ─────────────────────────────────────────── */}
-        <section id="approche" className="bg-surface-sunken py-20">
+        {/* 3. NOTRE MÉTHODOLOGIE ───────────────────────────────── */}
+        <section className="bg-surface-sunken py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="text-center">
-              <p className="text-overline text-brand">Notre approche</p>
+              <p className="text-overline text-brand">Notre méthodologie</p>
               <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Nous ne finançons pas au hasard
+                Un parcours en quatre étapes documentées
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
-                Chaque projet retenu fait l'objet d'une étude approfondie. Nous
-                investissons notre temps et nos ressources uniquement dans des
-                projets capables de réussir.
+                Du diagnostic initial au partenariat formalisé, chaque étape
+                est documentée et communiquée.
               </p>
             </div>
 
-            <div className="mt-12 grid gap-5 md:grid-cols-3">
-              {APPROCHE_POINTS.map((point) => {
-                const Icon = point.icon;
+            <div className="mt-12 grid gap-5 lg:grid-cols-2">
+              {METHODOLOGIE.map((etape) => {
+                const Icon = etape.icon;
                 return (
                   <div
-                    key={point.title}
-                    className="group rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2 transition hover:border-brand/40 hover:shadow-elev-3"
+                    key={etape.num}
+                    className="group flex items-start gap-5 rounded-3xl border border-line bg-surface-elevated p-7 shadow-elev-2 transition hover:border-brand/40 hover:shadow-elev-3"
                   >
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-100 to-nexus-blue-50 text-nexus-blue-700 transition group-hover:from-brand-subtle group-hover:to-orange-50 group-hover:text-brand dark:from-blue-500/15 dark:to-blue-500/10 dark:text-blue-300">
-                      <Icon className="h-7 w-7" />
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-100 to-nexus-blue-50 font-display text-xl font-bold text-nexus-blue-700 transition group-hover:from-brand-subtle group-hover:to-orange-50 group-hover:text-brand dark:from-blue-500/15 dark:to-blue-500/10 dark:text-blue-300">
+                      {etape.num}
                     </div>
-                    <h3 className="mt-5 font-display text-headline text-ink">
-                      {point.title}
-                    </h3>
-                    <p className="mt-2 text-body-sm text-ink-muted">
-                      {point.description}
-                    </p>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <Icon className="h-5 w-5 text-brand" />
+                        <h3 className="font-display text-headline text-ink">
+                          {etape.title}
+                        </h3>
+                      </div>
+                      <p className="mt-2 text-body-sm text-ink-muted">
+                        {etape.description}
+                      </p>
+                    </div>
                   </div>
                 );
               })}
             </div>
 
-            {/* 3 piliers d'engagement */}
+            {/* CTA en sortie */}
+            <div className="mt-10 rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2 sm:p-8">
+              <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-overline text-brand">
+                    Démarrer la démarche
+                  </p>
+                  <p className="mt-2 font-display text-headline text-ink sm:text-display-sm">
+                    Soumettez votre projet dès aujourd'hui.
+                  </p>
+                  <p className="mt-1 text-body-sm text-ink-muted">
+                    Étude initiale gratuite. Bilan de faisabilité écrit.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
+                  <Link
+                    href="/services/financement/demarrer"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-body-sm font-semibold text-white shadow-elev-2 transition hover:bg-brand-hover hover:shadow-glow-orange"
+                  >
+                    Soumettre mon projet
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                  <Link
+                    href="/rendez-vous?service=financement"
+                    className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-line-strong bg-surface-elevated px-6 py-3 text-body-sm font-semibold text-ink transition hover:border-brand/40 hover:bg-surface-sunken"
+                  >
+                    <Calendar className="h-4 w-4" />
+                    Prendre rendez-vous
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 4. NOTRE APPROCHE — Ce qui nous distingue ─────────────── */}
+        <section className="bg-surface py-20">
+          <div className="mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="text-center">
+              <p className="text-overline text-brand">Notre approche</p>
+              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
+                Trois engagements qui nous distinguent
+              </h2>
+              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
+                Nous ne finançons pas au hasard. Chaque projet retenu fait
+                l'objet d'une étude approfondie et d'un partenariat formalisé.
+              </p>
+            </div>
+
             <div className="mt-12 grid gap-4 sm:grid-cols-3">
               {ENGAGEMENTS.map((e) => (
-                <EngagementCard key={e.title} {...e} />
+                <div
+                  key={e.title}
+                  className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2"
+                >
+                  <div className="text-3xl">{e.emoji}</div>
+                  <h3 className="mt-3 font-display text-headline text-ink">
+                    {e.title}
+                  </h3>
+                  <p className="mt-2 text-body-sm text-ink-muted">
+                    {e.description}
+                  </p>
+                </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* CE QUE NOUS OFFRONS ─────────────────────────────────────── */}
-        <section className="bg-surface py-20">
-          <div className="mx-auto max-w-6xl px-4 lg:px-8">
-            <div className="text-center">
-              <p className="text-overline text-brand">Ce que nous offrons</p>
-              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Trois volets, un programme complet
-              </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
-                Un accompagnement structuré qui couvre toutes les dimensions de
-                votre projet, de la stratégie au financement.
-              </p>
-            </div>
-
-            <div className="mt-12 grid gap-6 lg:grid-cols-3">
-              {OFFRES.map((offre) => {
-                const Icon = offre.icon;
-                const highlighted = offre.highlighted;
-                return (
-                  <div
-                    key={offre.number}
-                    className={
-                      highlighted
-                        ? "relative flex flex-col rounded-3xl border-2 border-brand bg-gradient-to-br from-brand-subtle/60 to-surface-elevated p-8 shadow-elev-4"
-                        : "flex flex-col rounded-3xl border border-line bg-surface-elevated p-8 shadow-elev-2 transition hover:border-brand/40 hover:shadow-elev-3"
-                    }
-                  >
-                    {highlighted && (
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand px-3 py-1 text-overline text-white shadow-elev-2">
-                        Cœur du programme
-                      </div>
-                    )}
-
-                    <div className="flex items-center gap-4">
-                      <div
-                        className={
-                          highlighted
-                            ? "flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-elev-2"
-                            : "flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-100 to-nexus-blue-50 text-nexus-blue-700 dark:from-blue-500/15 dark:to-blue-500/10 dark:text-blue-300"
-                        }
-                      >
-                        <Icon className="h-7 w-7" />
-                      </div>
-                      <div
-                        className={
-                          highlighted
-                            ? "font-display text-display-sm text-brand"
-                            : "font-display text-display-sm text-ink-subtle"
-                        }
-                      >
-                        {offre.number}
-                      </div>
-                    </div>
-
-                    <h3 className="mt-5 font-display text-headline text-ink">
-                      {offre.title}
-                    </h3>
-                    <p className="mt-3 text-body-sm text-ink-muted">
-                      {offre.description}
-                    </p>
-
-                    <ul className="mt-5 flex-1 space-y-2.5 border-t border-line pt-5">
-                      {offre.points.map((point) => (
-                        <li
-                          key={point}
-                          className="flex items-start gap-2 text-body-sm text-ink"
-                        >
-                          <CheckCircle2
-                            className={
-                              highlighted
-                                ? "mt-0.5 h-4 w-4 shrink-0 text-brand"
-                                : "mt-0.5 h-4 w-4 shrink-0 text-nexus-blue-600 dark:text-blue-400"
-                            }
-                          />
-                          <span>{point}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* MODÈLE ─ PAS UN PRÊT CLASSIQUE ──────────────────────────── */}
+        {/* 5. MODÈLE — Pas un prêt classique ─────────────────────── */}
         <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white">
           <div className="absolute inset-0 bg-mesh-gradient opacity-30" />
           <div className="absolute -right-32 top-1/4 h-96 w-96 rounded-full bg-nexus-orange-500/20 blur-3xl" />
@@ -418,7 +423,6 @@ export default function FinancementPage() {
               </p>
             </div>
 
-            {/* Comparaison ne fait PAS / fait */}
             <div className="mt-12 grid gap-6 md:grid-cols-2">
               <div className="rounded-3xl border border-rose-500/30 bg-rose-500/5 p-7 backdrop-blur-sm">
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-rose-500/20 px-3 py-1 text-overline text-rose-300">
@@ -461,7 +465,6 @@ export default function FinancementPage() {
               </div>
             </div>
 
-            {/* 3 avantages */}
             <div className="mt-12 grid gap-4 md:grid-cols-3">
               <ModelAdvantage
                 title="Pas de charge écrasante"
@@ -479,13 +482,13 @@ export default function FinancementPage() {
           </div>
         </section>
 
-        {/* QUI PEUT POSTULER ────────────────────────────────────── */}
+        {/* 6. QUI PEUT POSTULER ──────────────────────────────────── */}
         <section className="bg-surface py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="text-center">
               <p className="text-overline text-brand">Qui peut postuler</p>
               <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Ce programme est fait pour vous si…
+                Quatre profils que nous accompagnons
               </h2>
             </div>
 
@@ -515,13 +518,13 @@ export default function FinancementPage() {
           </div>
         </section>
 
-        {/* CRITÈRES DE SÉLECTION ───────────────────────────────── */}
+        {/* 7. CRITÈRES DE SÉLECTION ───────────────────────────── */}
         <section className="bg-surface-sunken py-20">
           <div className="mx-auto max-w-4xl px-4 lg:px-8">
             <div className="rounded-3xl border-2 border-brand/30 bg-gradient-to-br from-brand-subtle/40 via-surface-elevated to-nexus-blue-50/40 p-8 shadow-elev-3 dark:from-brand/10 dark:via-surface-elevated dark:to-blue-500/5 sm:p-12">
               <div className="flex items-start gap-4">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-elev-2">
-                  <AlertCircle className="h-6 w-6" />
+                  <ShieldCheck className="h-6 w-6" />
                 </div>
                 <div className="flex-1">
                   <p className="text-overline text-brand">
@@ -564,14 +567,136 @@ export default function FinancementPage() {
           </div>
         </section>
 
-        {/* CTA FINAL ─────────────────────────────────────────────── */}
-        <ServiceCTA
-          title="Vous avez un projet sérieux ?"
-          subtitle="Étude gratuite, réponse sous 7 jours, 100 % confidentiel. Un conseiller Nexus vous contacte aujourd'hui sur WhatsApp."
-          ctaLabel="Soumettre mon projet"
-          ctaHref="/demande/complet?service=financement"
-          whatsappMessage="Bonjour Nexus, je souhaite soumettre un projet pour le programme Incubateur & Financement."
-        />
+        {/* 8. CADRE TARIFAIRE ──────────────────────────────────── */}
+        <section className="bg-surface py-20">
+          <div className="mx-auto max-w-4xl px-4 lg:px-8">
+            <div className="text-center">
+              <p className="text-overline text-brand">Cadre économique</p>
+              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
+                Une transparence économique complète
+              </h2>
+              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
+                Vous savez à quoi vous engager avant tout partenariat.
+              </p>
+            </div>
+
+            <div className="mt-12 grid gap-5 sm:grid-cols-3">
+              <div className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+                  <Search className="h-5 w-5" />
+                </div>
+                <h3 className="mt-4 font-display text-headline text-ink">
+                  Étude initiale
+                </h3>
+                <p className="mt-2 text-body-sm text-ink-muted">
+                  Gratuite, sans engagement. Bilan écrit communiqué sous
+                  délai annoncé.
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-subtle text-brand">
+                  <Handshake className="h-5 w-5" />
+                </div>
+                <h3 className="mt-4 font-display text-headline text-ink">
+                  Modalités du partenariat
+                </h3>
+                <p className="mt-2 text-body-sm text-ink-muted">
+                  Apport Nexus, apport porteur, partage des résultats :
+                  formalisés dans un accord écrit avant tout démarrage.
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-blue-100 text-nexus-blue-700 dark:bg-blue-500/15 dark:text-blue-300">
+                  <Wallet className="h-5 w-5" />
+                </div>
+                <h3 className="mt-4 font-display text-headline text-ink">
+                  Frais externes
+                </h3>
+                <p className="mt-2 text-body-sm text-ink-muted">
+                  Frais juridiques (statuts, contrats) et opérationnels
+                  détaillés à l'avance, à la charge du projet selon plan
+                  établi.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 9. CTA FINAL FORMEL ──────────────────────────────────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-900 via-nexus-blue-950 to-nexus-blue-900 py-20 text-white">
+          <div className="absolute inset-0 bg-mesh-gradient opacity-30" />
+          <div className="grain pointer-events-none absolute inset-0 opacity-15" />
+
+          <div className="relative mx-auto max-w-4xl px-4 lg:px-8">
+            <div className="text-center">
+              <p className="text-overline text-nexus-orange-300">
+                Soumettre votre projet
+              </p>
+              <h2 className="mt-3 font-display text-display-md text-white sm:text-display-lg">
+                Lancez votre projet selon notre méthodologie.
+              </h2>
+              <p className="mx-auto mt-5 max-w-2xl text-body-lg text-slate-300">
+                L'étude initiale est gratuite. Si nous estimons que votre
+                projet correspond à nos critères, nous vous proposons un
+                partenariat. Sinon, nous vous le disons franchement et vous
+                orientons.
+              </p>
+
+              <div className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-3 text-overline text-white/80">
+                <div className="rounded-2xl bg-white/10 p-3 backdrop-blur">
+                  Étude
+                  <br />
+                  <span className="text-white">Gratuite</span>
+                </div>
+                <div className="rounded-2xl bg-white/10 p-3 backdrop-blur">
+                  Partenariat
+                  <br />
+                  <span className="text-white">Pas de dette</span>
+                </div>
+                <div className="rounded-2xl bg-white/10 p-3 backdrop-blur">
+                  Bilan
+                  <br />
+                  <span className="text-white">Honnête</span>
+                </div>
+              </div>
+
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
+                <Link
+                  href="/services/financement/demarrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-4 transition hover:bg-brand-hover hover:shadow-glow-orange"
+                >
+                  <FileText className="h-5 w-5" />
+                  Soumettre mon projet
+                  <ArrowRight className="h-5 w-5" />
+                </Link>
+                <Link
+                  href="/rendez-vous?service=financement"
+                  className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/40 bg-white/10 px-8 py-4 text-body font-semibold text-white backdrop-blur transition hover:bg-white/20"
+                >
+                  <Calendar className="h-5 w-5" />
+                  Prendre rendez-vous
+                </Link>
+              </div>
+
+              <p className="mt-8 text-caption text-white/70">
+                Une question avant de commencer ?{" "}
+                <a
+                  href={whatsappLink(
+                    "Bonjour Nexus, j'ai une question sur le service Incubateur & Financement avant de soumettre mon projet."
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 font-semibold text-nexus-orange-300 underline-offset-4 hover:underline"
+                >
+                  <MessageCircle className="h-3.5 w-3.5" />
+                  Contactez-nous sur WhatsApp
+                </a>
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
       <Footer />
       <WhatsAppFloat />
@@ -580,24 +705,6 @@ export default function FinancementPage() {
 }
 
 // ─── Sous-composants ────────────────────────────────────────────────────────
-
-function EngagementCard({
-  emoji,
-  title,
-  description,
-}: {
-  emoji: string;
-  title: string;
-  description: string;
-}) {
-  return (
-    <div className="rounded-2xl bg-surface-elevated p-5 shadow-elev-1">
-      <div className="text-3xl">{emoji}</div>
-      <h4 className="mt-3 font-display text-title text-ink">{title}</h4>
-      <p className="mt-1 text-body-sm text-ink-muted">{description}</p>
-    </div>
-  );
-}
 
 function ListItemCross({ children }: { children: React.ReactNode }) {
   return (
