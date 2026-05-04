@@ -20,15 +20,11 @@ import {
   Eye,
   Sparkles,
   TrendingUp,
-  Lightbulb,
-  Compass,
-  BookOpen,
-  XCircle,
-  Wallet,
   Calendar,
   MessageCircle,
-  Briefcase,
-  ShieldCheck,
+  XCircle,
+  Wallet,
+  Check,
 } from "lucide-react";
 import { whatsappLink } from "@/lib/utils";
 
@@ -40,63 +36,20 @@ export const metadata = {
 
 // ─── Données ────────────────────────────────────────────────────────────────
 
-const RISQUES = [
-  {
-    icon: XCircle,
-    title: "Refus d'admission",
-    text: "Un dossier mal positionné ou un programme inadapté à votre profil entraîne un refus sec — sans possibilité de retravailler la candidature.",
-  },
-  {
-    icon: Wallet,
-    title: "Aides financières manquées",
-    text: "Sans connaître les bonnes démarches, beaucoup d'étudiants passent à côté de bourses partielles auxquelles ils étaient pourtant éligibles.",
-  },
-  {
-    icon: TrendingUp,
-    title: "Coût total mal anticipé",
-    text: "15 000 à 30 000 $ CAD/an, soit 7 à 14 millions FCFA. Sans planification, le projet s'arrête à mi-parcours faute de ressources.",
-  },
-  {
-    icon: BookOpen,
-    title: "Visa refusé après l'admission",
-    text: "Une admission en main ne suffit pas. CAQ, permis d'études, justificatifs : un visa étudiant refusé annule tout le travail effectué.",
-  },
-];
+const POUR_QUI = {
+  oui: [
+    "Vous avez un projet d'études au Canada cohérent avec votre parcours académique",
+    "Vous disposez du temps nécessaire pour préparer votre dossier (6 à 12 mois minimum)",
+    "Vous êtes prêt(e) à structurer votre projet selon les standards des établissements canadiens",
+  ],
+  non: [
+    "Vous cherchez une rentrée dans moins de 3 mois sans préparation préalable",
+    "Vous n'avez pas terminé votre cycle d'études actuel ou vos résultats ne sont pas stabilisés",
+    "Vous attendez une garantie d'admission ou de bourse — aucune agence sérieuse ne peut le promettre",
+  ],
+};
 
-const GAINS = [
-  {
-    icon: Target,
-    title: "Choix d'établissement adapté à votre profil",
-    text: "Tous les établissements ne donnent pas les mêmes chances. Nous vous orientons vers ceux où votre dossier sera reçu et où les aides sont accessibles.",
-  },
-  {
-    icon: ClipboardCheck,
-    title: "Dossier d'admission optimisé",
-    text: "Lettre de motivation, cohérence du projet, présentation académique : chaque pièce est travaillée pour valoriser votre candidature.",
-  },
-  {
-    icon: Award,
-    title: "Aides financières identifiées",
-    text: "Bourses partielles d'établissement, programmes au mérite, aides ciblées : nous documentons les options disponibles selon votre profil.",
-  },
-  {
-    icon: Briefcase,
-    title: "Un conseiller dédié à votre projet",
-    text: "Le même interlocuteur du diagnostic à l'arrivée au Canada. Pas besoin de raconter votre situation à plusieurs personnes.",
-  },
-  {
-    icon: Plane,
-    title: "Visa étudiant pris en charge",
-    text: "Une fois l'admission obtenue : CAQ ou attestation provinciale, permis d'études IRCC, biométrie à Yaoundé. Tout est piloté par Nexus.",
-  },
-  {
-    icon: Sparkles,
-    title: "Conseil honnête sur la faisabilité",
-    text: "Si votre profil ne se prête pas au programme visé, nous vous le disons franchement et proposons une alternative réaliste.",
-  },
-];
-
-const PROCESSUS = [
+const METHODOLOGIE = [
   {
     num: "01",
     icon: FileText,
@@ -107,23 +60,23 @@ const PROCESSUS = [
   {
     num: "02",
     icon: Search,
-    title: "Analyse professionnelle",
+    title: "Analyse de faisabilité",
     description:
-      "Un conseiller Nexus étudie votre profil, identifie les programmes et établissements compatibles, et évalue vos chances réelles. Bilan de faisabilité honnête avant tout engagement.",
+      "Un conseiller Nexus étudie votre profil, identifie les programmes et établissements compatibles, et évalue vos chances réelles. Bilan de faisabilité écrit avant tout engagement.",
   },
   {
     num: "03",
     icon: ClipboardCheck,
     title: "Accompagnement structuré",
     description:
-      "Montage complet du dossier d'admission : lettre de motivation, CV académique, traductions certifiées, recherche d'aides financières, soumission aux établissements ciblés.",
+      "Montage complet du dossier d'admission selon les standards canadiens : lettre de motivation, CV académique, traductions certifiées, recherche d'aides financières documentées.",
   },
   {
     num: "04",
     icon: Plane,
     title: "Suivi jusqu'au résultat",
     description:
-      "Suivi actif des admissions, réponses aux demandes complémentaires, puis prise en charge du visa étudiant : CAQ Québec ou attestation provinciale, permis d'études IRCC, biométrie.",
+      "Suivi actif des admissions, réponses aux demandes complémentaires, prise en charge du visa étudiant : CAQ ou attestation provinciale, permis d'études IRCC, biométrie à Yaoundé.",
   },
 ];
 
@@ -180,37 +133,10 @@ const TYPES_AIDES = [
   },
 ];
 
-const PROFIL_REQUIS = [
-  {
-    icon: GraduationCap,
-    title: "Niveau académique sérieux",
-    description:
-      "Résultats scolaires solides qui démontrent votre capacité à suivre un cursus exigeant.",
-  },
-  {
-    icon: Lightbulb,
-    title: "Projet d'études clair",
-    description:
-      "Vision précise du programme visé et de la suite logique dans votre parcours.",
-  },
-  {
-    icon: Target,
-    title: "Motivation réelle",
-    description:
-      "L'engagement nécessaire pour réussir un projet d'études à l'étranger sur 2 à 5 ans.",
-  },
-  {
-    icon: TrendingUp,
-    title: "Capacité d'adaptation",
-    description:
-      "La maturité pour évoluer dans un système éducatif et un climat différents.",
-  },
-];
-
 const STATS = [
   { value: "Étude", label: "Initiale gratuite" },
   { value: "CAQ + permis", label: "Visa étudiant inclus" },
-  { value: "Yaoundé", label: "Biométrie organisée" },
+  { value: "Bilan", label: "Honnête écrit" },
 ];
 
 // ─── Composant ──────────────────────────────────────────────────────────────
@@ -220,7 +146,7 @@ export default function BoursesPage() {
     <>
       <Navbar />
       <main>
-        {/* HERO ───────────────────────────────────────────────────── */}
+        {/* 1. HERO INSTITUTIONNEL ─────────────────────────────────── */}
         <section className="relative overflow-hidden bg-nexus-blue-950 pt-40 pb-24 text-white">
           <div className="absolute inset-0 bg-mesh-gradient opacity-50" />
           <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-nexus-orange-500/30 blur-3xl" />
@@ -231,7 +157,7 @@ export default function BoursesPage() {
             <div className="text-center">
               <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-overline text-nexus-orange-300 backdrop-blur">
                 <GraduationCap className="h-3.5 w-3.5" />
-                Études au Canada
+                Service études Canada
               </div>
 
               <h1
@@ -253,7 +179,7 @@ export default function BoursesPage() {
 
               <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
                 <Link
-                  href="/demande/complet?service=bourses"
+                  href="/services/bourses/demarrer"
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
                 >
                   <FileText className="h-5 w-5" />
@@ -270,11 +196,11 @@ export default function BoursesPage() {
               </div>
 
               <p className="mt-5 text-caption text-slate-400">
-                Étude initiale gratuite · Bilan de faisabilité honnête ·
-                Une question ?{" "}
+                Étude initiale gratuite · Bilan de faisabilité honnête · Une
+                question ?{" "}
                 <a
                   href={whatsappLink(
-                    "Bonjour Nexus, j'ai une question sur le service Bourses Canada avant de soumettre ma demande."
+                    "Bonjour Nexus, j'ai une question sur le service Études Canada avant de soumettre ma demande."
                   )}
                   target="_blank"
                   rel="noreferrer"
@@ -285,7 +211,6 @@ export default function BoursesPage() {
               </p>
             </div>
 
-            {/* Stats strip */}
             <div className="mx-auto mt-16 grid max-w-3xl grid-cols-3 gap-6 border-t border-white/10 pt-10">
               {STATS.map((s) => (
                 <div key={s.label} className="text-center">
@@ -301,124 +226,84 @@ export default function BoursesPage() {
           </div>
         </section>
 
-        {/* LES ENJEUX ────────────────────────────────────────────── */}
+        {/* 2. POUR QUI CE SERVICE EST CONÇU ────────────────────── */}
         <section className="bg-surface py-20">
           <div className="mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
-              <p className="text-overline text-rose-600 dark:text-rose-400">
-                Les enjeux
-              </p>
+              <p className="text-overline text-brand">Sélectivité</p>
               <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Pourquoi un projet d'études bien préparé est essentiel
+                Pour qui ce service est conçu
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
-                Étudier au Canada est une opportunité majeure, mais l'accès
-                reste limité par quatre obstacles concrets — chacun à un coût
-                réel pour votre avenir.
-              </p>
-            </div>
-
-            <div className="mt-12 grid gap-4 sm:grid-cols-2">
-              {RISQUES.map((r) => {
-                const Icon = r.icon;
-                return (
-                  <div
-                    key={r.title}
-                    className="flex items-start gap-4 rounded-3xl border border-rose-200/60 bg-rose-50/40 p-6 dark:border-rose-500/20 dark:bg-rose-500/5"
-                  >
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-rose-100 text-rose-600 dark:bg-rose-500/15 dark:text-rose-300">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <div className="min-w-0">
-                      <h3 className="font-display text-headline text-ink">
-                        {r.title}
-                      </h3>
-                      <p className="mt-1 text-body-sm text-ink-muted">
-                        {r.text}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="mt-10 rounded-3xl border-l-4 border-brand bg-brand-subtle/40 px-6 py-6 shadow-elev-1 sm:px-8 sm:py-8">
-              <p className="font-display text-headline text-ink sm:text-display-sm">
-                Un projet bien structuré protège votre investissement.
-              </p>
-              <p className="mt-3 text-body text-ink-muted">
-                Nos clients confient leur projet à Nexus RCA pour{" "}
-                <strong className="text-ink">
-                  maximiser leurs chances d'admission
-                </strong>
-                ,{" "}
-                <strong className="text-ink">
-                  identifier les aides financières disponibles
-                </strong>{" "}
-                et{" "}
-                <strong className="text-ink">
-                  sécuriser le visa étudiant après l'admission
-                </strong>
-                .
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* CE QUE VOUS GAGNEZ ────────────────────────────────────── */}
-        <section className="bg-surface-sunken py-20">
-          <div className="mx-auto max-w-6xl px-4 lg:px-8">
-            <div className="text-center">
-              <p className="text-overline text-brand">
-                Ce que vous gagnez avec Nexus RCA
-              </p>
-              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Six bénéfices concrets pour votre projet d'études
-              </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
-                Pas de jargon. Pas de promesses creuses. Juste ce que vous
-                obtenez quand vous nous confiez votre projet d'études au Canada.
-              </p>
-            </div>
-
-            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {GAINS.map((g) => {
-                const Icon = g.icon;
-                return (
-                  <div
-                    key={g.title}
-                    className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2 transition hover:border-brand/40 hover:shadow-elev-3"
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-elev-2">
-                      <Icon className="h-6 w-6" />
-                    </div>
-                    <h3 className="mt-4 font-display text-headline text-ink">
-                      {g.title}
-                    </h3>
-                    <p className="mt-2 text-body-sm text-ink-muted">{g.text}</p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* PROCESSUS CLIENT ──────────────────────────────────────── */}
-        <section className="bg-surface py-20">
-          <div className="mx-auto max-w-6xl px-4 lg:px-8">
-            <div className="text-center">
-              <p className="text-overline text-brand">Notre processus</p>
-              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Un parcours client clair, en quatre étapes
-              </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
-                Du diagnostic initial jusqu'à votre arrivée au Canada, chaque
-                étape est documentée et communiquée.
+                Nous n'accompagnons pas tous les profils. Cette transparence
+                fait partie de notre engagement professionnel.
               </p>
             </div>
 
             <div className="mt-12 grid gap-5 lg:grid-cols-2">
-              {PROCESSUS.map((etape) => {
+              <div className="rounded-3xl border-2 border-emerald-200/60 bg-emerald-50/40 p-7 dark:border-emerald-500/20 dark:bg-emerald-500/5">
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+                    <CheckCircle2 className="h-5 w-5" />
+                  </div>
+                  <h3 className="font-display text-headline text-ink">
+                    Ce service s'adresse aux personnes
+                  </h3>
+                </div>
+                <ul className="space-y-3">
+                  {POUR_QUI.oui.map((item, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-3 text-body-sm text-ink"
+                    >
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="rounded-3xl border-2 border-rose-200/60 bg-rose-50/40 p-7 dark:border-rose-500/20 dark:bg-rose-500/5">
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-rose-100 text-rose-600 dark:bg-rose-500/15 dark:text-rose-300">
+                    <XCircle className="h-5 w-5" />
+                  </div>
+                  <h3 className="font-display text-headline text-ink">
+                    Ce service ne s'adresse pas aux personnes
+                  </h3>
+                </div>
+                <ul className="space-y-3">
+                  {POUR_QUI.non.map((item, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-3 text-body-sm text-ink"
+                    >
+                      <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 3. NOTRE MÉTHODOLOGIE ───────────────────────────────── */}
+        <section className="bg-surface-sunken py-20">
+          <div className="mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="text-center">
+              <p className="text-overline text-brand">Notre méthodologie</p>
+              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
+                Un parcours en quatre étapes documentées
+              </h2>
+              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
+                Du diagnostic académique jusqu'à votre arrivée au Canada,
+                chaque étape est documentée et communiquée.
+              </p>
+            </div>
+
+            <div className="mt-12 grid gap-5 lg:grid-cols-2">
+              {METHODOLOGIE.map((etape) => {
                 const Icon = etape.icon;
                 return (
                   <div
@@ -444,25 +329,26 @@ export default function BoursesPage() {
               })}
             </div>
 
-            {/* CTA en sortie de processus */}
+            {/* CTA en sortie de méthodologie */}
             <div className="mt-10 rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2 sm:p-8">
               <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="text-overline text-brand">Prêt à démarrer ?</p>
+                  <p className="text-overline text-brand">
+                    Démarrer la démarche
+                  </p>
                   <p className="mt-2 font-display text-headline text-ink sm:text-display-sm">
-                    Lancez votre projet d'études dès aujourd'hui.
+                    Soumettez votre projet d'études dès aujourd'hui.
                   </p>
                   <p className="mt-1 text-body-sm text-ink-muted">
-                    Étude initiale gratuite, bilan de faisabilité honnête avant
-                    tout engagement.
+                    Étude initiale gratuite. Bilan de faisabilité écrit.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
                   <Link
-                    href="/demande/complet?service=bourses"
+                    href="/services/bourses/demarrer"
                     className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-body-sm font-semibold text-white shadow-elev-2 transition hover:bg-brand-hover hover:shadow-glow-orange"
                   >
-                    Lancer mon dossier
+                    Soumettre mon dossier
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                   <Link
@@ -478,8 +364,8 @@ export default function BoursesPage() {
           </div>
         </section>
 
-        {/* SYSTÈME ÉDUCATIF ──────────────────────────────────────── */}
-        <section className="bg-surface-sunken py-20">
+        {/* 4. SYSTÈME ÉDUCATIF CANADIEN ─────────────────────────── */}
+        <section className="bg-surface py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="text-center">
               <p className="text-overline text-brand">
@@ -548,8 +434,8 @@ export default function BoursesPage() {
           </div>
         </section>
 
-        {/* AIDES FINANCIÈRES ────────────────────────────────────── */}
-        <section className="bg-surface py-20">
+        {/* 5. AIDES FINANCIÈRES ─────────────────────────────────── */}
+        <section className="bg-surface-sunken py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="text-center">
               <p className="text-overline text-brand">Aides financières</p>
@@ -570,10 +456,10 @@ export default function BoursesPage() {
                   À retenir avant de continuer
                 </p>
                 <p className="mt-1 text-body-sm text-amber-800 dark:text-amber-300">
-                  Les bourses 100 % (frais + vie courante) sont exceptionnelles
-                  et hyper-compétitives. La plupart des étudiants obtiennent
-                  des bourses partielles ou cumulent plusieurs aides pour
-                  réduire le coût total.
+                  Les bourses 100 % (frais + vie courante) sont
+                  exceptionnelles et hyper-compétitives. La plupart des
+                  étudiants obtiennent des bourses partielles ou cumulent
+                  plusieurs aides pour réduire le coût total.
                 </p>
               </div>
             </div>
@@ -607,124 +493,178 @@ export default function BoursesPage() {
           </div>
         </section>
 
-        {/* PROFIL REQUIS ────────────────────────────────────────── */}
-        <section className="bg-surface-sunken py-20">
-          <div className="mx-auto max-w-6xl px-4 lg:px-8">
-            <div className="text-center">
-              <p className="text-overline text-brand">Profil requis</p>
-              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Ce programme est fait pour vous si...
-              </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
-                Nexus RCA travaille avec des candidats sérieux, motivés et
-                conscients des exigences d'un projet d'études à l'étranger.
-              </p>
-            </div>
-
-            <div className="mt-12 grid gap-5 sm:grid-cols-2">
-              {PROFIL_REQUIS.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <div
-                    key={item.title}
-                    className="flex gap-4 rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2 transition hover:border-brand/40 hover:shadow-elev-3"
-                  >
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-elev-2">
-                      <Icon className="h-6 w-6" />
-                    </div>
-                    <div className="min-w-0">
-                      <h3 className="font-display text-headline text-ink">
-                        {item.title}
-                      </h3>
-                      <p className="mt-1 text-body-sm text-ink-muted">
-                        {item.description}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* TRANSPARENCE ──────────────────────────────────────────── */}
+        {/* 6. CAS TYPES ─────────────────────────────────────────── */}
         <section className="bg-surface py-20">
-          <div className="mx-auto max-w-4xl px-4 lg:px-8">
-            <div className="rounded-3xl border-2 border-amber-200/70 bg-gradient-to-br from-amber-50 via-surface-elevated to-orange-50 p-8 shadow-elev-3 dark:border-amber-500/20 dark:from-amber-500/5 dark:to-orange-500/5 sm:p-12">
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-elev-2">
-                  <ShieldCheck className="h-6 w-6" />
+          <div className="mx-auto max-w-5xl px-4 lg:px-8">
+            <div className="text-center">
+              <p className="text-overline text-brand">Cas types accompagnés</p>
+              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
+                Voici comment ça se passe concrètement
+              </h2>
+            </div>
+
+            <div className="mt-12 grid gap-5 lg:grid-cols-2">
+              <div className="rounded-3xl border border-line bg-surface-elevated p-7 shadow-elev-2">
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-brand-subtle px-3 py-1 text-overline text-nexus-orange-700 dark:text-brand">
+                  🎓 Université au Québec
                 </div>
-                <div className="flex-1">
-                  <p className="text-overline text-amber-700 dark:text-amber-300">
-                    Engagement de transparence
-                  </p>
-                  <h2 className="mt-2 font-display text-display-sm text-ink sm:text-display-md">
-                    Aucune agence sérieuse ne peut garantir une bourse
-                  </h2>
+                <h3 className="font-display text-headline text-ink">
+                  Bachelière, projet de licence à Montréal
+                </h3>
+                <p className="mt-3 text-body-sm text-ink-muted">
+                  Calendrier de 12 mois avant la rentrée. Nexus RCA mène le
+                  diagnostic académique, sélectionne 3 universités cibles,
+                  monte le dossier d'admission complet, identifie deux bourses
+                  partielles éligibles, puis prend en charge le CAQ et le
+                  permis d'études IRCC.
+                </p>
+                <p className="mt-3 text-body-sm font-semibold text-ink">
+                  Résultat : admission + bourse partielle, permis d'études
+                  obtenu, départ à l'heure pour la rentrée d'automne.
+                </p>
+              </div>
 
-                  <p className="mt-6 text-body text-ink-muted">
-                    <strong className="text-ink">
-                      La décision finale appartient toujours aux établissements.
-                    </strong>{" "}
-                    Toute agence qui vous promet une bourse ou une admission
-                    vous trompe. Nexus RCA ne le fera jamais.
-                  </p>
-
-                  <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                    <div className="rounded-2xl border border-rose-200 bg-rose-50 p-5 dark:border-rose-500/20 dark:bg-rose-500/5">
-                      <p className="text-overline text-rose-700 dark:text-rose-300">
-                        Ce que nous ne pouvons pas
-                      </p>
-                      <ul className="mt-3 space-y-2 text-body-sm text-rose-900 dark:text-rose-200">
-                        <li className="flex items-start gap-2">
-                          <XCircle className="mt-0.5 h-4 w-4 shrink-0" />
-                          <span>Garantir une bourse</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <XCircle className="mt-0.5 h-4 w-4 shrink-0" />
-                          <span>Influencer la décision finale</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <XCircle className="mt-0.5 h-4 w-4 shrink-0" />
-                          <span>Promettre une admission certaine</span>
-                        </li>
-                      </ul>
-                    </div>
-
-                    <div className="rounded-2xl border-2 border-brand/40 bg-brand-subtle/40 p-5">
-                      <p className="text-overline text-nexus-orange-700 dark:text-brand">
-                        Ce que nous garantissons
-                      </p>
-                      <ul className="mt-3 space-y-2 text-body-sm text-ink">
-                        <li className="flex items-start gap-2">
-                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
-                          <span>Un dossier solide et compétitif</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
-                          <span>Une stratégie d'établissement adaptée</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
-                          <span>Vos chances réellement maximisées</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  <p className="mt-6 text-body font-semibold text-ink sm:text-body-lg">
-                    Bon dossier = chances fortement augmentées.
-                    <br />
-                    Mauvaise préparation = refus quasi certain.
-                  </p>
+              <div className="rounded-3xl border border-line bg-surface-elevated p-7 shadow-elev-2">
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-brand-subtle px-3 py-1 text-overline text-nexus-orange-700 dark:text-brand">
+                  🛠️ Cégep technique en Ontario
                 </div>
+                <h3 className="font-display text-headline text-ink">
+                  Diplômé technique, formation professionnelle
+                </h3>
+                <p className="mt-3 text-body-sm text-ink-muted">
+                  Profil ciblé sur un Cégep avec orientation emploi. Nexus
+                  RCA structure la lettre de motivation autour du projet
+                  professionnel, organise la traduction des relevés et le
+                  dépôt biométrique à Yaoundé.
+                </p>
+                <p className="mt-3 text-body-sm font-semibold text-ink">
+                  Résultat : admission obtenue, permis d'études validé, projet
+                  d'employabilité construit dès l'arrivée au Canada.
+                </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* CTA FINAL — formel, agence-grade ──────────────────────── */}
+        {/* 7. ENGAGEMENT DE TRANSPARENCE ────────────────────────── */}
+        <section className="bg-surface-sunken py-20">
+          <div className="mx-auto max-w-5xl px-4 lg:px-8">
+            <div className="text-center">
+              <p className="text-overline text-brand">Engagement</p>
+              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
+                Aucune agence sérieuse ne peut garantir une bourse
+              </h2>
+              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
+                La décision finale appartient toujours aux établissements.
+                Toute structure qui vous promet une bourse ou une admission
+                vous trompe. Nexus RCA ne le fera jamais.
+              </p>
+            </div>
+
+            <div className="mt-12 grid gap-5 lg:grid-cols-2">
+              <div className="rounded-3xl border-2 border-rose-200/60 bg-rose-50/40 p-7 dark:border-rose-500/20 dark:bg-rose-500/5">
+                <p className="text-overline text-rose-700 dark:text-rose-300">
+                  Ce que nous ne pouvons pas
+                </p>
+                <ul className="mt-4 space-y-3">
+                  {[
+                    "Garantir l'obtention d'une bourse",
+                    "Influencer la décision d'admission",
+                    "Promettre une rentrée certaine",
+                  ].map((item, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-3 text-body-sm text-ink"
+                    >
+                      <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="rounded-3xl border-2 border-brand/40 bg-brand-subtle/40 p-7">
+                <p className="text-overline text-nexus-orange-700 dark:text-brand">
+                  Ce que nous garantissons
+                </p>
+                <ul className="mt-4 space-y-3">
+                  {[
+                    "Un dossier solide et compétitif, conforme aux standards canadiens",
+                    "Une stratégie d'établissement adaptée à votre profil",
+                    "L'identification documentée des aides financières éligibles",
+                    "Un conseil honnête sur vos chances réelles avant tout engagement",
+                  ].map((item, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-3 text-body-sm text-ink"
+                    >
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 8. CADRE TARIFAIRE ──────────────────────────────────── */}
+        <section className="bg-surface py-20">
+          <div className="mx-auto max-w-4xl px-4 lg:px-8">
+            <div className="text-center">
+              <p className="text-overline text-brand">Cadre tarifaire</p>
+              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
+                Une transparence économique complète
+              </h2>
+              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
+                Vous savez ce que ça coûte avant de signer. Aucun frais caché.
+              </p>
+            </div>
+
+            <div className="mt-12 grid gap-5 sm:grid-cols-3">
+              <div className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+                  <Search className="h-5 w-5" />
+                </div>
+                <h3 className="mt-4 font-display text-headline text-ink">
+                  Étude initiale
+                </h3>
+                <p className="mt-2 text-body-sm text-ink-muted">
+                  Gratuite, sans engagement. Bilan de faisabilité écrit.
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-subtle text-brand">
+                  <ClipboardCheck className="h-5 w-5" />
+                </div>
+                <h3 className="mt-4 font-display text-headline text-ink">
+                  Accompagnement Nexus
+                </h3>
+                <p className="mt-2 text-body-sm text-ink-muted">
+                  Devis fixe communiqué après le bilan de faisabilité. Aucune
+                  facturation surprise en cours de route.
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-blue-100 text-nexus-blue-700 dark:bg-blue-500/15 dark:text-blue-300">
+                  <Wallet className="h-5 w-5" />
+                </div>
+                <h3 className="mt-4 font-display text-headline text-ink">
+                  Frais d'admission & visa
+                </h3>
+                <p className="mt-2 text-body-sm text-ink-muted">
+                  À votre charge, montant détaillé à l'avance par établissement
+                  et par juridiction. Reversés directement aux organismes
+                  concernés.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 9. CTA FINAL FORMEL ──────────────────────────────────── */}
         <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-900 via-nexus-blue-950 to-nexus-blue-900 py-20 text-white">
           <div className="absolute inset-0 bg-mesh-gradient opacity-30" />
           <div className="grain pointer-events-none absolute inset-0 opacity-15" />
@@ -732,10 +672,10 @@ export default function BoursesPage() {
           <div className="relative mx-auto max-w-4xl px-4 lg:px-8">
             <div className="text-center">
               <p className="text-overline text-nexus-orange-300">
-                Démarrer votre projet
+                Soumettre votre projet
               </p>
               <h2 className="mt-3 font-display text-display-md text-white sm:text-display-lg">
-                Lancez votre projet d'études au Canada dès aujourd'hui.
+                Lancez votre projet d'études selon notre méthodologie.
               </h2>
               <p className="mx-auto mt-5 max-w-2xl text-body-lg text-slate-300">
                 Les calendriers d'admission canadiens demandent une préparation
@@ -763,7 +703,7 @@ export default function BoursesPage() {
 
               <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
                 <Link
-                  href="/demande/complet?service=bourses"
+                  href="/services/bourses/demarrer"
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-4 transition hover:bg-brand-hover hover:shadow-glow-orange"
                 >
                   <FileText className="h-5 w-5" />
@@ -783,7 +723,7 @@ export default function BoursesPage() {
                 Une question avant de commencer ?{" "}
                 <a
                   href={whatsappLink(
-                    "Bonjour Nexus, j'ai une question sur le service Bourses Canada avant de soumettre ma demande."
+                    "Bonjour Nexus, j'ai une question sur le service Études Canada avant de soumettre ma demande."
                   )}
                   target="_blank"
                   rel="noreferrer"
