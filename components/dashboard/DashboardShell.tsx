@@ -40,6 +40,7 @@ import {
   type CommandItem,
 } from "@/components/dashboard/CommandPalette";
 import { PageTransition } from "@/components/dashboard/PageTransition";
+import { RoleProvider } from "@/components/rbac/RoleGate";
 import { createClient } from "@/lib/supabase/client";
 import { setTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
@@ -73,7 +74,12 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
   admin: [
     { href: "/dashboard/admin", label: "Tableau de bord", icon: LayoutDashboard },
     { href: "/dashboard/admin/demandes", label: "Demandes", icon: FileText },
-    { href: "/dashboard/admin/utilisateurs", label: "Utilisateurs", icon: Users },
+    { href: "/dashboard/admin/clients", label: "Clients", icon: UserCircle },
+    { href: "/dashboard/admin/agents", label: "Agents", icon: Users },
+    { href: "/dashboard/admin/rdv", label: "Rendez-vous", icon: CalendarCheck },
+    { href: "/dashboard/admin/paiements", label: "Paiements", icon: Wallet },
+    { href: "/dashboard/admin/rapports", label: "Rapports mensuels", icon: FileBarChart },
+    { href: "/dashboard/admin/messagerie", label: "Messagerie", icon: Send },
   ],
   super_admin: [
     { href: "/dashboard/super-admin", label: "Tableau de bord", icon: LayoutDashboard },
@@ -256,6 +262,7 @@ export function DashboardShell({
   }, [navItems, profile.role]);
 
   return (
+    <RoleProvider role={profile.role} userId={profile.id}>
     <div className="flex min-h-screen bg-surface-sunken">
       <div className="fixed inset-x-0 top-0 z-40 flex h-16 items-center justify-between border-b border-line bg-surface-elevated px-4 lg:hidden">
         <Logo />
@@ -385,5 +392,6 @@ export function DashboardShell({
         onOpenChange={setPaletteOpen}
       />
     </div>
+    </RoleProvider>
   );
 }
