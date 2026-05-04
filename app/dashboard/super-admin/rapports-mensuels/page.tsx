@@ -1,13 +1,140 @@
-import { CalendarClock, FileBarChart, Sparkles, Mail } from "lucide-react";
+import { CalendarClock } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
+import {
+  RapportsMensuelsClient,
+  type MonthlyReport,
+  type RapportConfig,
+} from "@/components/dashboard/RapportsMensuelsClient";
 
 export const metadata = {
   title: "Rapports mensuels (CRON) | Super Admin",
 };
 
 export const dynamic = "force-dynamic";
+
+// ─── Données mockées (table monthly_reports à créer en migration ultérieure) ─
+
+const MOCK_CONFIG: RapportConfig = {
+  cron_schedule: "0 6 1 * *",
+  cron_label: "1er du mois à 06:00 (UTC)",
+  next_run: "2026-06-01T06:00:00Z",
+  recipients: [
+    "tkankou@gmail.com",
+    "patrick.mbongo@nexusrca.com",
+    "marie.ngounio@nexusrca.com",
+  ],
+  format: "pdf",
+  enabled: true,
+};
+
+const MOCK_REPORTS: MonthlyReport[] = [
+  {
+    id: "rpt_2026_04",
+    period_label: "Avril 2026",
+    period_start: "2026-04-01T00:00:00Z",
+    period_end: "2026-04-30T23:59:59Z",
+    generated_at: "2026-05-01T06:00:42Z",
+    status: "sent",
+    file_url: "#",
+    file_size_kb: 312,
+    recipients: [
+      "tkankou@gmail.com",
+      "patrick.mbongo@nexusrca.com",
+      "marie.ngounio@nexusrca.com",
+    ],
+    metrics: {
+      revenus_xaf: 8_450_000,
+      nouvelles_demandes: 23,
+      dossiers_clotures: 18,
+      nouveaux_clients: 14,
+      paiements_count: 27,
+      taux_conversion: 78,
+    },
+  },
+  {
+    id: "rpt_2026_03",
+    period_label: "Mars 2026",
+    period_start: "2026-03-01T00:00:00Z",
+    period_end: "2026-03-31T23:59:59Z",
+    generated_at: "2026-04-01T06:00:38Z",
+    status: "sent",
+    file_url: "#",
+    file_size_kb: 287,
+    recipients: [
+      "tkankou@gmail.com",
+      "patrick.mbongo@nexusrca.com",
+      "marie.ngounio@nexusrca.com",
+    ],
+    metrics: {
+      revenus_xaf: 7_820_000,
+      nouvelles_demandes: 19,
+      dossiers_clotures: 15,
+      nouveaux_clients: 11,
+      paiements_count: 22,
+      taux_conversion: 72,
+    },
+  },
+  {
+    id: "rpt_2026_02",
+    period_label: "Février 2026",
+    period_start: "2026-02-01T00:00:00Z",
+    period_end: "2026-02-28T23:59:59Z",
+    generated_at: "2026-03-01T06:00:15Z",
+    status: "sent",
+    file_url: "#",
+    file_size_kb: 271,
+    recipients: ["tkankou@gmail.com", "patrick.mbongo@nexusrca.com"],
+    metrics: {
+      revenus_xaf: 6_340_000,
+      nouvelles_demandes: 16,
+      dossiers_clotures: 12,
+      nouveaux_clients: 9,
+      paiements_count: 18,
+      taux_conversion: 69,
+    },
+  },
+  {
+    id: "rpt_2026_01",
+    period_label: "Janvier 2026",
+    period_start: "2026-01-01T00:00:00Z",
+    period_end: "2026-01-31T23:59:59Z",
+    generated_at: "2026-02-01T06:01:22Z",
+    status: "failed",
+    recipients: ["tkankou@gmail.com", "patrick.mbongo@nexusrca.com"],
+    metrics: {
+      revenus_xaf: 5_120_000,
+      nouvelles_demandes: 14,
+      dossiers_clotures: 10,
+      nouveaux_clients: 7,
+      paiements_count: 15,
+      taux_conversion: 65,
+    },
+    notes:
+      "Échec d'envoi Resend (quota dépassé en sandbox). PDF généré mais non distribué — réessayer manuellement.",
+  },
+  {
+    id: "rpt_2025_12",
+    period_label: "Décembre 2025",
+    period_start: "2025-12-01T00:00:00Z",
+    period_end: "2025-12-31T23:59:59Z",
+    generated_at: "2026-01-01T06:00:09Z",
+    status: "sent",
+    file_url: "#",
+    file_size_kb: 295,
+    recipients: ["tkankou@gmail.com"],
+    metrics: {
+      revenus_xaf: 9_780_000,
+      nouvelles_demandes: 28,
+      dossiers_clotures: 24,
+      nouveaux_clients: 17,
+      paiements_count: 32,
+      taux_conversion: 84,
+    },
+    notes: "Mois record — pic visa pèlerinage + dossiers Canada rentrée 2026.",
+  },
+];
 
 export default async function SuperAdminRapportsMensuelsPage() {
   const profile = await requireProfile(["super_admin"]);
@@ -30,40 +157,10 @@ export default async function SuperAdminRapportsMensuelsPage() {
         </div>
       </div>
 
-      <section className="rounded-3xl border-2 border-dashed border-line bg-surface-elevated p-10 text-center shadow-elev-1">
-        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-subtle text-brand">
-          <FileBarChart className="h-7 w-7" />
-        </div>
-        <h2 className="font-display text-display-sm text-ink">
-          Module en préparation
-        </h2>
-        <p className="mx-auto mt-3 max-w-2xl text-body-sm text-ink-muted">
-          Phase 8 du roadmap : <strong>CRON Vercel</strong> déclenche le 1er
-          du mois la génération d'un PDF synthèse (revenus, nombre de
-          dossiers, performance agents, activité globale), envoi via{" "}
-          <strong>Resend</strong> aux super-admins et admins, archive
-          consultable depuis cette page. Distinct de{" "}
-          <code className="rounded bg-surface-sunken px-1 py-0.5 font-mono text-caption">/rapports</code>{" "}
-          (analytique financière temps réel).
-        </p>
-        <div className="mx-auto mt-6 inline-flex flex-wrap items-center justify-center gap-2 rounded-full bg-brand-subtle px-4 py-2 text-caption font-semibold text-brand">
-          <Sparkles className="h-3.5 w-3.5" />
-          Phase 8 — CRON + Puppeteer/react-pdf + Resend
-        </div>
-
-        <div className="mx-auto mt-6 grid max-w-xl grid-cols-3 gap-3 text-overline">
-          <div className="rounded-xl bg-surface-sunken p-3 text-ink-muted">
-            CRON 1er du mois 06:00
-          </div>
-          <div className="rounded-xl bg-surface-sunken p-3 text-ink-muted">
-            PDF + Storage
-          </div>
-          <div className="rounded-xl bg-surface-sunken p-3 text-ink-muted">
-            <Mail className="mx-auto mb-1 h-3.5 w-3.5" />
-            Email destinataires
-          </div>
-        </div>
-      </section>
+      <RapportsMensuelsClient
+        initialReports={MOCK_REPORTS}
+        initialConfig={MOCK_CONFIG}
+      />
     </DashboardShell>
   );
 }
