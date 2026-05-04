@@ -23,31 +23,21 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "Billets d'avion & Hôtels | Nexus RCA",
+  title: "Billets d'avion & hôtels | Nexus RCA — Bangui",
   description:
-    "Réservation de billets d'avion et d'hôtels à travers le monde. Accompagnement personnalisé, meilleurs tarifs, hôtels fiables. Asie, Europe, Afrique, Moyen-Orient, Amérique. Demandez votre devis avec Nexus RCA.",
+    "Réservation de vols et hôtels depuis Bangui : Air France, Royal Air Maroc, Ethiopian Airlines. Asie, Europe, Afrique, Amérique. Devis gratuit, paiement en FCFA, suivi 24/7.",
 };
 
-// ============================================================================
-// DONNEES
-// ============================================================================
+// ─── Données ────────────────────────────────────────────────────────────────
+
 const PROBLEMES = [
-  {
-    icon: Clock,
-    text: "Heures perdues à comparer les sites de réservation",
-  },
+  { icon: Clock, text: "Heures perdues à comparer les sites de réservation" },
   {
     icon: AlertCircle,
-    text: "Erreurs sur les dates, les correspondances ou les paiements",
+    text: "Erreurs sur les dates, correspondances ou paiements",
   },
-  {
-    icon: Wallet,
-    text: "Difficultés à trouver les meilleurs tarifs",
-  },
-  {
-    icon: Hotel,
-    text: "Doutes sur la fiabilité des hôtels et des plateformes",
-  },
+  { icon: Wallet, text: "Paiement en ligne difficile depuis Bangui" },
+  { icon: Hotel, text: "Doutes sur la fiabilité de l'hôtel à l'arrivée" },
 ];
 
 const VOLS_SERVICES = [
@@ -55,7 +45,7 @@ const VOLS_SERVICES = [
     icon: Search,
     title: "Recherche des meilleurs vols",
     description:
-      "Comparaison sur les principales compagnies aériennes internationales et africaines.",
+      "Comparaison sur les principales compagnies internationales et régionales (Air France, Royal Air Maroc, Ethiopian, ASKY…).",
   },
   {
     icon: TrendingDown,
@@ -67,13 +57,13 @@ const VOLS_SERVICES = [
     icon: MapPin,
     title: "Itinéraires optimisés",
     description:
-      "Choix des correspondances, durées et escales les mieux adaptés à votre voyage.",
+      "Choix des correspondances, durées et escales les mieux adaptés depuis Bangui.",
   },
   {
     icon: Wallet,
     title: "Vols adaptés au budget",
     description:
-      "Solutions économiques, business ou première classe selon vos moyens et vos préférences.",
+      "Économique, business ou première — solutions pour chaque profil et budget.",
   },
   {
     icon: Headphones,
@@ -88,13 +78,13 @@ const HOTELS_SERVICES = [
     icon: ShieldCheck,
     title: "Hôtels fiables uniquement",
     description:
-      "Sélection rigoureuse parmi les établissements vérifiés et bien notés par les voyageurs.",
+      "Sélection rigoureuse parmi les établissements vérifiés et bien notés.",
   },
   {
     icon: Wallet,
     title: "Options selon votre budget",
     description:
-      "De l'hébergement abordable à l'hôtel premium, des solutions pour chaque profil.",
+      "De l'hébergement abordable à l'hôtel premium — solutions pour chaque profil.",
   },
   {
     icon: MapPin,
@@ -106,7 +96,7 @@ const HOTELS_SERVICES = [
     icon: Star,
     title: "Confort et sécurité",
     description:
-      "Vérification systématique de la qualité du service, du confort et des standards de sécurité.",
+      "Vérification systématique de la qualité du service et des standards de sécurité.",
   },
 ];
 
@@ -128,13 +118,13 @@ const REGIONS: Region[] = [
   {
     title: "Asie",
     emoji: "🌏",
-    description: "Destinations populaires pour le tourisme et les affaires.",
+    description: "Tourisme, business, voyages spirituels.",
     highlight: true,
     destinations: [
       { name: "Inde", emoji: "🇮🇳", description: "Tourisme, business, spirituel" },
       { name: "Thaïlande", emoji: "🇹🇭", description: "Bangkok, Phuket, Chiang Mai" },
       { name: "Indonésie (Bali)", emoji: "🇮🇩", description: "Bali, Jakarta" },
-      { name: "Vietnam", emoji: "🇻🇳", description: "Hanoi, Ho Chi Minh, Da Nang" },
+      { name: "Vietnam", emoji: "🇻🇳", description: "Hanoï, Hô Chi Minh, Da Nang" },
       { name: "Dubaï (EAU)", emoji: "🇦🇪", description: "Business, shopping, luxe" },
     ],
   },
@@ -162,7 +152,7 @@ const REGIONS: Region[] = [
   {
     title: "Amérique",
     emoji: "🌎",
-    description: "Destinations long-courrier et études.",
+    description: "Long-courrier, études et regroupement familial.",
     destinations: [
       { name: "Canada", emoji: "🇨🇦", description: "Montréal, Toronto, Ottawa" },
     ],
@@ -172,113 +162,134 @@ const REGIONS: Region[] = [
 const POURQUOI = [
   {
     icon: Clock,
-    title: "Gain de temps considérable",
+    title: "Gain de temps",
     description:
-      "Plus besoin de passer des heures à comparer. Vous nous donnez votre projet, nous gérons la recherche.",
+      "Plus d'heures à comparer. Vous donnez votre projet, nous gérons la recherche.",
   },
   {
     icon: Sparkles,
-    title: "Accompagnement personnalisé",
+    title: "Conseiller dédié",
     description:
-      "Un conseiller dédié comprend votre projet de voyage et propose les meilleures options.",
+      "Un seul interlocuteur, joignable sur WhatsApp, qui comprend votre projet.",
   },
   {
     icon: ShieldCheck,
     title: "Solutions fiables",
     description:
-      "Compagnies aériennes reconnues, hôtels vérifiés, plateformes de confiance uniquement.",
+      "Compagnies reconnues, hôtels vérifiés, plateformes de confiance uniquement.",
   },
   {
     icon: Wallet,
-    title: "Optimisation du budget",
+    title: "Paiement en FCFA",
     description:
-      "Nous trouvons le meilleur rapport qualité-prix selon vos contraintes et vos priorités.",
+      "Plus besoin de carte bancaire internationale. Nous gérons la transaction depuis Bangui.",
   },
   {
     icon: Headphones,
     title: "Assistance complète",
     description:
-      "Suivi avant, pendant et après votre voyage. Un contact direct en cas de besoin.",
+      "Suivi avant, pendant et après votre voyage. Contact direct en cas de besoin.",
   },
   {
     icon: Heart,
-    title: "Voyages adaptés à vos besoins",
+    title: "Voyages adaptés",
     description:
-      "Tourisme, famille, affaires, études, urgence : nous traitons chaque demande avec soin.",
+      "Tourisme, famille, affaires, études, urgence : chaque demande traitée avec soin.",
   },
 ];
 
-// ============================================================================
-// COMPOSANT PRINCIPAL
-// ============================================================================
+const STATS = [
+  { value: "13+", label: "Pays couverts" },
+  { value: "0 FCFA", label: "Devis" },
+  { value: "24/7", label: "WhatsApp" },
+];
+
+// ─── Composant ──────────────────────────────────────────────────────────────
+
 export default function BilletsPage() {
   return (
     <>
       <Navbar />
       <main>
-        {/* ==================== HERO ==================== */}
+        {/* HERO ───────────────────────────────────────────────────── */}
         <section className="relative overflow-hidden bg-nexus-blue-950 pt-40 pb-24 text-white">
           <div className="absolute inset-0 bg-mesh-gradient opacity-50" />
           <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-nexus-orange-500/30 blur-3xl" />
           <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-nexus-blue-500/30 blur-3xl" />
+          <div className="grain pointer-events-none absolute inset-0 opacity-20" />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold backdrop-blur">
-                <Plane className="h-4 w-4 text-nexus-orange-400" />
-                Billets d'avion & Hôtels
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-overline text-nexus-orange-300 backdrop-blur">
+                <Plane className="h-3.5 w-3.5" />
+                Vols & hôtels
               </div>
 
-              <h1 className="font-display text-4xl font-bold leading-[1.15] tracking-tight sm:text-5xl md:text-6xl">
+              <h1
+                className="font-display text-display-xl text-white lg:text-display-2xl"
+                style={{ paddingBottom: "0.15em" }}
+              >
                 Voyagez{" "}
-                <span className="text-gradient-orange">sans stress</span>, avec
-                un accompagnement{" "}
-                <span className="text-gradient-orange">de A à Z</span>
+                <span className="text-gradient-orange">sans stress</span>,
+                réservé depuis{" "}
+                <span className="text-gradient-orange">Bangui</span>
               </h1>
 
-              <p className="mx-auto mt-8 max-w-3xl text-lg leading-relaxed text-white/80 sm:text-xl">
-                Nexus RCA s'occupe de tout : recherche des meilleurs vols,
-                réservation d'hôtels fiables, optimisation de votre itinéraire
-                et de votre budget. Vous voyagez, nous gérons le reste.
+              <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">
+                Recherche du meilleur vol, hôtel fiable, paiement en FCFA. Vous
+                voyagez, nous gérons le reste — Air France, Royal Air Maroc,
+                Ethiopian Airlines, ASKY et autres.
               </p>
 
               <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
                 <Link
-                  href="/demande/complet?service=billets"
-                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-8 py-4 text-base font-semibold text-white shadow-xl shadow-nexus-orange-500/40 transition hover:scale-105 hover:bg-nexus-orange-600"
+                  href="/demande/complet?service=billet"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
                 >
                   Demander une réservation
-                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="h-5 w-5" />
                 </Link>
                 <Link
                   href="#destinations"
-                  className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/40 bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur transition hover:bg-white/20"
+                  className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/30 bg-white/5 px-8 py-4 text-body font-semibold text-white backdrop-blur transition hover:bg-white/10"
                 >
                   Voir les destinations
                 </Link>
               </div>
 
-              <p className="mt-5 text-sm text-white/60">
-                Devis gratuit · Réponse rapide · Tarifs transparents
+              <p className="mt-5 text-caption text-slate-400">
+                Devis gratuit · Réponse rapide · Tarifs en FCFA
               </p>
+            </div>
+
+            {/* Stats strip */}
+            <div className="mx-auto mt-16 grid max-w-3xl grid-cols-3 gap-6 border-t border-white/10 pt-10">
+              {STATS.map((s) => (
+                <div key={s.label} className="text-center">
+                  <div className="font-display text-display-sm text-nexus-orange-400">
+                    {s.value}
+                  </div>
+                  <div className="mt-1 text-overline text-slate-400">
+                    {s.label}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* ==================== INTRODUCTION (PROBLÈME) ==================== */}
-        <section className="bg-white py-20">
+        {/* LE CONSTAT ─────────────────────────────────────────────── */}
+        <section className="bg-surface py-20">
           <div className="mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
-              <p className="text-sm font-bold uppercase tracking-wider text-nexus-orange-600">
-                Le constat
-              </p>
-              <h2 className="mt-3 font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl md:text-5xl">
+              <p className="text-overline text-brand">Le constat</p>
+              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
                 Organiser un voyage prend trop de temps
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-700">
+              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
                 Comparer les sites, vérifier les correspondances, choisir un
-                hôtel fiable, gérer son budget : un voyage bien préparé demande
-                des heures de recherche.
+                hôtel fiable, gérer le paiement : un voyage bien préparé
+                demande des heures.
               </p>
             </div>
 
@@ -288,12 +299,12 @@ export default function BilletsPage() {
                 return (
                   <div
                     key={idx}
-                    className="flex items-start gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5"
+                    className="flex items-start gap-4 rounded-2xl border border-line bg-surface-sunken p-5"
                   >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-100 text-red-600">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-100 text-rose-600 dark:bg-rose-500/15 dark:text-rose-300">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <p className="text-sm font-semibold text-slate-700 sm:text-base">
+                    <p className="text-body-sm font-semibold text-ink">
                       {p.text}
                     </p>
                   </div>
@@ -301,33 +312,31 @@ export default function BilletsPage() {
               })}
             </div>
 
-            <div className="mt-10 rounded-3xl border-l-4 border-nexus-orange-500 bg-gradient-to-br from-nexus-orange-50 to-white px-6 py-6 shadow-md sm:px-8 sm:py-8">
-              <p className="font-display text-xl font-bold leading-snug text-nexus-blue-950 sm:text-2xl">
+            <div className="mt-10 rounded-3xl border-l-4 border-brand bg-brand-subtle/40 px-6 py-6 shadow-elev-1 sm:px-8 sm:py-8">
+              <p className="font-display text-headline text-ink sm:text-display-sm">
                 Avec Nexus RCA, vous économisez du temps et du stress.
               </p>
-              <p className="mt-3 text-base leading-relaxed text-slate-700 sm:text-lg">
-                Un seul interlocuteur, une recherche professionnelle, des
-                solutions claires. Vous nous donnez votre projet, nous nous
+              <p className="mt-3 text-body text-ink-muted">
+                Un seul interlocuteur, une recherche professionnelle, un
+                paiement local en FCFA. Vous donnez votre projet, nous nous
                 occupons du reste.
               </p>
             </div>
           </div>
         </section>
 
-        {/* ==================== BILLETS D'AVION ==================== */}
-        <section className="bg-slate-50 py-20">
+        {/* BILLETS D'AVION ─────────────────────────────────────── */}
+        <section className="bg-surface-sunken py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="text-center">
-              <div className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-lg">
+              <div className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-elev-3">
                 <Plane className="h-6 w-6" />
               </div>
-              <p className="text-sm font-bold uppercase tracking-wider text-nexus-orange-600">
-                Billets d'avion
-              </p>
-              <h2 className="mt-3 font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl md:text-5xl">
+              <p className="text-overline text-brand">Billets d'avion</p>
+              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
                 Le bon vol, au bon prix, au bon moment
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-700">
+              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
                 Nous comparons, conseillons et réservons à votre place.
               </p>
             </div>
@@ -338,15 +347,15 @@ export default function BilletsPage() {
                 return (
                   <div
                     key={service.title}
-                    className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-nexus-orange-300 hover:shadow-md"
+                    className="group rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2 transition hover:border-brand/40 hover:shadow-elev-3"
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-blue-100 to-nexus-blue-50 text-nexus-blue-700 transition group-hover:from-nexus-orange-100 group-hover:to-nexus-orange-50 group-hover:text-nexus-orange-600">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-100 to-nexus-blue-50 text-nexus-blue-700 transition group-hover:from-brand-subtle group-hover:to-orange-50 group-hover:text-brand dark:from-blue-500/15 dark:to-blue-500/10 dark:text-blue-300">
                       <Icon className="h-6 w-6" />
                     </div>
-                    <h3 className="mt-4 font-display text-lg font-bold text-nexus-blue-950">
+                    <h3 className="mt-4 font-display text-headline text-ink">
                       {service.title}
                     </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                    <p className="mt-2 text-body-sm text-ink-muted">
                       {service.description}
                     </p>
                   </div>
@@ -356,22 +365,20 @@ export default function BilletsPage() {
           </div>
         </section>
 
-        {/* ==================== HÔTELS ==================== */}
-        <section className="bg-white py-20">
+        {/* HÔTELS ─────────────────────────────────────────────── */}
+        <section className="bg-surface py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="text-center">
-              <div className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900 text-white shadow-lg">
+              <div className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900 text-white shadow-elev-3">
                 <Hotel className="h-6 w-6" />
               </div>
-              <p className="text-sm font-bold uppercase tracking-wider text-nexus-orange-600">
-                Réservation d'hôtels
-              </p>
-              <h2 className="mt-3 font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl md:text-5xl">
+              <p className="text-overline text-brand">Réservation d'hôtels</p>
+              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
                 Un hébergement fiable et adapté
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-700">
-                Nous sélectionnons les hôtels selon vos critères réels :
-                budget, localisation, confort et sécurité.
+              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
+                Sélection selon vos critères réels : budget, localisation,
+                confort et sécurité.
               </p>
             </div>
 
@@ -381,16 +388,16 @@ export default function BilletsPage() {
                 return (
                   <div
                     key={service.title}
-                    className="flex gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-nexus-orange-300 hover:shadow-md"
+                    className="flex gap-4 rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2 transition hover:border-brand/40 hover:shadow-elev-3"
                   >
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-md">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-elev-2">
                       <Icon className="h-6 w-6" />
                     </div>
                     <div className="min-w-0">
-                      <h3 className="font-display text-lg font-bold text-nexus-blue-950">
+                      <h3 className="font-display text-headline text-ink">
                         {service.title}
                       </h3>
-                      <p className="mt-1 text-sm leading-relaxed text-slate-600">
+                      <p className="mt-1 text-body-sm text-ink-muted">
                         {service.description}
                       </p>
                     </div>
@@ -401,25 +408,20 @@ export default function BilletsPage() {
           </div>
         </section>
 
-        {/* ==================== DESTINATIONS ==================== */}
-        <section
-          id="destinations"
-          className="bg-slate-50 py-20"
-        >
+        {/* DESTINATIONS ───────────────────────────────────────── */}
+        <section id="destinations" className="bg-surface-sunken py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="text-center">
-              <div className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900 text-white shadow-lg">
+              <div className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900 text-white shadow-elev-3">
                 <Globe className="h-6 w-6" />
               </div>
-              <p className="text-sm font-bold uppercase tracking-wider text-nexus-orange-600">
-                Destinations
-              </p>
-              <h2 className="mt-3 font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl md:text-5xl">
+              <p className="text-overline text-brand">Destinations</p>
+              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
                 Où souhaitez-vous voyager ?
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-700">
-                Nous gérons des réservations vers de nombreux pays à travers le
-                monde. Voici les principales destinations couvertes.
+              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
+                Treize pays principaux, et davantage sur demande. Pour les
+                destinations non listées, contactez-nous.
               </p>
             </div>
 
@@ -430,16 +432,16 @@ export default function BilletsPage() {
                     <span className="text-3xl">{region.emoji}</span>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="font-display text-2xl font-bold text-nexus-blue-950">
+                        <h3 className="font-display text-display-sm text-ink">
                           {region.title}
                         </h3>
                         {region.highlight && (
-                          <span className="rounded-full bg-nexus-orange-100 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-nexus-orange-700">
+                          <span className="rounded-full bg-brand-subtle px-2.5 py-0.5 text-overline text-nexus-orange-700 dark:text-brand">
                             Forte demande
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-slate-600">
+                      <p className="text-body-sm text-ink-muted">
                         {region.description}
                       </p>
                     </div>
@@ -449,14 +451,12 @@ export default function BilletsPage() {
                     {region.destinations.map((dest) => (
                       <div
                         key={dest.name}
-                        className="group flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-nexus-orange-300 hover:shadow-md"
+                        className="group flex items-center gap-3 rounded-2xl border border-line bg-surface-elevated p-4 shadow-elev-1 transition hover:border-brand/40 hover:shadow-elev-2"
                       >
                         <span className="text-2xl">{dest.emoji}</span>
                         <div className="min-w-0 flex-1">
-                          <p className="font-semibold text-nexus-blue-950">
-                            {dest.name}
-                          </p>
-                          <p className="truncate text-xs text-slate-500">
+                          <p className="text-title text-ink">{dest.name}</p>
+                          <p className="truncate text-caption text-ink-muted">
                             {dest.description}
                           </p>
                         </div>
@@ -467,22 +467,19 @@ export default function BilletsPage() {
               ))}
             </div>
 
-            <p className="mt-10 text-center text-sm italic text-slate-500">
-              Et de nombreuses autres destinations sur demande. Contactez-nous
-              pour les pays non listés.
+            <p className="mt-10 text-center text-body-sm italic text-ink-muted">
+              Pays non listé ? Contactez-nous, nous traitons à la demande.
             </p>
           </div>
         </section>
 
-        {/* ==================== POURQUOI NEXUS ==================== */}
-        <section className="bg-white py-20">
+        {/* POURQUOI NEXUS ─────────────────────────────────────── */}
+        <section className="bg-surface py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="text-center">
-              <p className="text-sm font-bold uppercase tracking-wider text-nexus-orange-600">
-                Pourquoi nous choisir
-              </p>
-              <h2 className="mt-3 font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl md:text-5xl">
-                Six bonnes raisons de nous confier votre voyage
+              <p className="text-overline text-brand">Pourquoi nous choisir</p>
+              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
+                Six raisons concrètes
               </h2>
             </div>
 
@@ -492,15 +489,15 @@ export default function BilletsPage() {
                 return (
                   <div
                     key={item.title}
-                    className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-nexus-orange-300 hover:shadow-md"
+                    className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2 transition hover:border-brand/40 hover:shadow-elev-3"
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-md">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-elev-2">
                       <Icon className="h-6 w-6" />
                     </div>
-                    <h3 className="mt-4 font-display text-lg font-bold text-nexus-blue-950">
+                    <h3 className="mt-4 font-display text-headline text-ink">
                       {item.title}
                     </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                    <p className="mt-2 text-body-sm text-ink-muted">
                       {item.description}
                     </p>
                   </div>
@@ -510,71 +507,23 @@ export default function BilletsPage() {
           </div>
         </section>
 
-        {/* ==================== ENGAGEMENT ==================== */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-50 via-white to-nexus-orange-50 py-20">
-          <div className="absolute -top-32 -right-32 h-64 w-64 rounded-full bg-nexus-orange-500/10 blur-3xl" />
-          <div className="absolute -bottom-32 -left-32 h-64 w-64 rounded-full bg-nexus-blue-500/10 blur-3xl" />
-
-          <div className="relative mx-auto max-w-4xl px-4 lg:px-8">
-            <div className="text-center">
-              <div className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-lg">
-                <Heart className="h-6 w-6" />
-              </div>
-              <p className="text-sm font-bold uppercase tracking-wider text-nexus-orange-600">
-                Notre engagement
-              </p>
-              <h2 className="mt-3 font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl md:text-5xl">
-                Voyager doit rester un plaisir
-              </h2>
-            </div>
-
-            <div className="mt-10 rounded-3xl border-l-4 border-nexus-orange-500 bg-white px-6 py-6 shadow-md sm:px-8 sm:py-8">
-              <p className="font-display text-xl font-bold leading-snug text-nexus-blue-950 sm:text-2xl">
-                Chez Nexus RCA, nous traitons chaque réservation avec sérieux.
-              </p>
-              <div className="mt-4 space-y-3 text-base leading-relaxed text-slate-700 sm:text-lg">
-                <p>
-                  Nous accompagnons des particuliers, des familles et des
-                  professionnels qui veulent{" "}
-                  <strong className="text-nexus-blue-950">
-                    voyager sereinement
-                  </strong>
-                  ,{" "}
-                  <strong className="text-nexus-blue-950">
-                    éviter les erreurs
-                  </strong>{" "}
-                  et bénéficier d'un{" "}
-                  <strong className="text-nexus-blue-950">
-                    accompagnement humain
-                  </strong>
-                  .
-                </p>
-                <p>
-                  Que ce soit un déplacement professionnel, un voyage en famille
-                  ou des études à l'étranger, nous traitons chaque demande avec
-                  la même attention.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ==================== CTA FINAL ==================== */}
+        {/* CTA FINAL avec InfoCards ────────────────────────────── */}
         <section className="relative overflow-hidden bg-gradient-to-br from-nexus-orange-500 via-nexus-orange-600 to-nexus-blue-950 py-20 text-white">
           <div className="absolute inset-0 bg-mesh-gradient opacity-20" />
+          <div className="grain pointer-events-none absolute inset-0 opacity-15" />
           <div className="relative mx-auto max-w-4xl px-4 lg:px-8">
             <div className="text-center">
-              <h2 className="font-display text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
+              <h2 className="font-display text-display-md text-white sm:text-display-lg">
                 Prêt à organiser votre voyage ?
               </h2>
-              <p className="mx-auto mt-5 max-w-2xl text-lg text-white/90 sm:text-xl">
+              <p className="mx-auto mt-5 max-w-2xl text-body-lg text-white/90">
                 Indiquez-nous votre destination, vos dates et votre budget. Un
-                conseiller Nexus revient vers vous rapidement avec les
-                meilleures options.
+                conseiller Nexus revient vers vous rapidement avec les meilleures
+                options.
               </p>
             </div>
 
-            {/* 3 infos a fournir */}
+            {/* 3 infos à fournir */}
             <div className="mx-auto mt-10 grid max-w-3xl gap-4 sm:grid-cols-3">
               <InfoCard
                 icon={MapPin}
@@ -596,21 +545,21 @@ export default function BilletsPage() {
             <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
               <Link
                 href="/demande/complet?service=billet"
-                className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-4 text-base font-semibold text-nexus-blue-950 shadow-2xl transition hover:scale-105 hover:shadow-2xl"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-4 text-body font-semibold text-nexus-blue-950 shadow-elev-4 transition hover:shadow-elev-5"
               >
-                Lancer ma demande de réservation
-                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                Lancer ma demande
+                <ArrowRight className="h-5 w-5" />
               </Link>
               <Link
                 href="/rendez-vous"
-                className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/40 bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur transition hover:bg-white/20"
+                className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/40 bg-white/10 px-8 py-4 text-body font-semibold text-white backdrop-blur transition hover:bg-white/20"
               >
                 Prendre rendez-vous
               </Link>
             </div>
 
-            <p className="mt-6 text-center text-sm text-white/80">
-              Devis gratuit · Réponse rapide · Tarifs transparents
+            <p className="mt-6 text-center text-caption text-white/80">
+              Devis gratuit · Réponse sur WhatsApp · Tarifs en FCFA
             </p>
           </div>
         </section>
@@ -621,9 +570,8 @@ export default function BilletsPage() {
   );
 }
 
-// ============================================================================
-// SOUS-COMPOSANT
-// ============================================================================
+// ─── Sous-composant ────────────────────────────────────────────────────────
+
 function InfoCard({
   icon: Icon,
   title,
@@ -638,10 +586,8 @@ function InfoCard({
       <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
         <Icon className="h-5 w-5 text-white" />
       </div>
-      <h4 className="mt-3 font-display text-base font-bold text-white">
-        {title}
-      </h4>
-      <p className="mt-1 text-sm text-white/80">{description}</p>
+      <h4 className="mt-3 font-display text-title text-white">{title}</h4>
+      <p className="mt-1 text-body-sm text-white/80">{description}</p>
     </div>
   );
 }

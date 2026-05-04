@@ -60,14 +60,17 @@ export default function ContactPage() {
           <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-nexus-orange-500/20 blur-3xl" />
           <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
             <div className="max-w-3xl">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold backdrop-blur">
-                <MessageCircle className="h-4 w-4 text-nexus-orange-400" />
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-overline text-nexus-orange-300 backdrop-blur">
+                <MessageCircle className="h-3.5 w-3.5" />
                 Parlons de votre projet
               </div>
-              <h1 className="font-display text-5xl font-bold leading-tight sm:text-6xl">
+              <h1
+                className="font-display text-display-xl text-white lg:text-display-2xl"
+                style={{ paddingBottom: "0.15em" }}
+              >
                 Contactez <span className="text-gradient-orange">Nexus RCA</span>
               </h1>
-              <p className="mt-4 max-w-2xl text-lg text-white/75">
+              <p className="mt-4 max-w-2xl text-body-lg text-white/75">
                 Agence basée à Bangui, au service des projets qui traversent les frontières. Choisissez le canal qui vous convient — nous vous répondons vite.
               </p>
             </div>
@@ -75,7 +78,7 @@ export default function ContactPage() {
         </section>
 
         {/* Content */}
-        <section className="bg-gradient-to-b from-white to-nexus-blue-50 py-20">
+        <section className="bg-gradient-to-b from-surface to-nexus-blue-50/30 py-20 dark:to-blue-500/5">
           <div className="mx-auto max-w-7xl px-4 lg:px-8">
             <div className="grid gap-12 lg:grid-cols-5">
               {/* Info sidebar */}
@@ -242,12 +245,12 @@ export default function ContactPage() {
                 ) : (
                   <form
                     onSubmit={handleSubmit}
-                    className="rounded-3xl border border-slate-200 bg-white p-8 shadow-card sm:p-10"
+                    className="rounded-3xl border border-line bg-surface-elevated p-8 shadow-elev-2 sm:p-10"
                   >
-                    <h2 className="font-display text-2xl font-bold text-nexus-blue-950">
+                    <h2 className="font-display text-display-sm text-ink">
                       Envoyez-nous un message
                     </h2>
-                    <p className="mt-1 text-slate-600">
+                    <p className="mt-1 text-body text-ink-muted">
                       Nous vous répondons dans la journée.
                     </p>
 
@@ -319,12 +322,12 @@ export default function ContactPage() {
         </section>
 
         {/* Map */}
-        <section className="bg-nexus-blue-50 pb-20">
+        <section className="bg-surface-sunken pb-20">
           <div className="mx-auto max-w-7xl px-4 lg:px-8">
-            <div className="overflow-hidden rounded-3xl shadow-xl">
+            <div className="overflow-hidden rounded-3xl shadow-elev-3">
               <iframe
                 title="Localisation Nexus RCA Bangui"
-                src="https://www.google.com/maps?q=Bangui+Centrafrique+Hopital+General&output=embed"
+                src="https://www.google.com/maps?q=Bangui+Centrafrique+Hôpital+Général&output=embed"
                 width="100%"
                 height="400"
                 style={{ border: 0 }}

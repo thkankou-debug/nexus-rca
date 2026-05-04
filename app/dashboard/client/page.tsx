@@ -18,6 +18,7 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { cn } from "@/lib/utils";
 
 export const metadata = {
@@ -236,9 +237,19 @@ export default async function ClientDashboard() {
           >
             {demandes.length === 0 ? (
               <EmptyState
+                icon={FolderOpen}
+                variant="embedded"
                 title="Aucun dossier pour le moment"
                 description="Lancez votre première demande de service avec Nexus."
-                action={{ label: "Faire une demande", href: "/demande/complet" }}
+                action={
+                  <Link
+                    href="/demande/complet"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-body-sm font-semibold text-white shadow-elev-2 hover:bg-brand-hover"
+                  >
+                    Faire une demande
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                }
               />
             ) : (
               <div className="divide-y divide-slate-100">
@@ -284,6 +295,8 @@ export default async function ClientDashboard() {
           >
             {paiements.length === 0 ? (
               <EmptyState
+                icon={Wallet}
+                variant="embedded"
                 title="Aucun paiement enregistré"
                 description="Les paiements de vos services apparaîtront ici."
               />
@@ -542,32 +555,6 @@ function Section({
         )}
       </div>
       {children}
-    </div>
-  );
-}
-
-function EmptyState({
-  title,
-  description,
-  action,
-}: {
-  title: string;
-  description: string;
-  action?: { label: string; href: string };
-}) {
-  return (
-    <div className="p-8 text-center">
-      <p className="font-semibold text-nexus-blue-950">{title}</p>
-      <p className="mt-1 text-sm text-slate-500">{description}</p>
-      {action && (
-        <Link
-          href={action.href}
-          className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-nexus-orange-600"
-        >
-          {action.label}
-          <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
-      )}
     </div>
   );
 }

@@ -13,6 +13,7 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { cn } from "@/lib/utils";
 
 export const metadata = {
@@ -152,24 +153,21 @@ export default async function ClientRdvPage() {
       </div>
 
       {appointments.length === 0 ? (
-        <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-12 text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-nexus-orange-50">
-            <Calendar className="h-8 w-8 text-nexus-orange-600" />
-          </div>
-          <h2 className="mt-4 font-display text-xl font-bold text-nexus-blue-950">
-            Aucun rendez-vous pour le moment
-          </h2>
-          <p className="mt-2 text-sm text-slate-600">
-            Réservez votre premier rendez-vous avec un membre de l'équipe Nexus.
-          </p>
-          <Link
-            href="/dashboard/client/rdv/nouveau"
-            className="mt-5 inline-flex items-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:bg-nexus-orange-600"
-          >
-            <Sparkles className="h-4 w-4" />
-            Réserver mon premier RDV
-          </Link>
-        </div>
+        <EmptyState
+          icon={Calendar}
+          tone="brand"
+          title="Aucun rendez-vous pour le moment"
+          description="Réservez votre premier rendez-vous avec un membre de l'équipe Nexus."
+          action={
+            <Link
+              href="/dashboard/client/rdv/nouveau"
+              className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-body-sm font-semibold text-white shadow-elev-2 hover:bg-brand-hover hover:shadow-glow-orange"
+            >
+              <Sparkles className="h-4 w-4" />
+              Réserver mon premier RDV
+            </Link>
+          }
+        />
       ) : (
         <>
           {/* RDV À VENIR */}

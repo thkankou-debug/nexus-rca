@@ -14,20 +14,21 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    "bg-nexus-orange-500 hover:bg-nexus-orange-600 text-white shadow-lg shadow-nexus-orange-500/30 hover:shadow-nexus-orange-500/50 hover:-translate-y-0.5",
+    "bg-brand hover:bg-brand-hover text-white shadow-elev-3 hover:shadow-glow-orange hover:-translate-y-0.5",
   secondary:
-    "bg-nexus-blue-800 hover:bg-nexus-blue-900 text-white shadow-lg shadow-nexus-blue-800/30 hover:-translate-y-0.5",
+    "bg-nexus-blue-800 hover:bg-nexus-blue-900 text-white shadow-elev-3 hover:shadow-glow-blue hover:-translate-y-0.5",
   outline:
     "border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm",
-  ghost: "text-nexus-blue-800 hover:bg-nexus-blue-50",
+  ghost:
+    "text-ink hover:bg-surface-sunken dark:hover:bg-surface-elevated",
   white:
-    "bg-white text-nexus-blue-900 hover:bg-nexus-orange-50 shadow-lg hover:-translate-y-0.5",
+    "bg-surface-elevated text-ink hover:bg-brand-subtle shadow-elev-2 hover:-translate-y-0.5",
 };
 
 const sizeClasses: Record<Size, string> = {
-  sm: "px-4 py-2 text-sm",
-  md: "px-6 py-3 text-base",
-  lg: "px-8 py-4 text-lg",
+  sm: "px-4 py-2 text-body-sm",
+  md: "px-6 py-3 text-body",
+  lg: "px-8 py-4 text-body-lg",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(

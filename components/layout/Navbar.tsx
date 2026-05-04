@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { Button } from "@/components/ui/Button";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { SERVICES } from "@/lib/services";
 import { cn, whatsappLink } from "@/lib/utils";
 
@@ -48,7 +49,7 @@ export function Navbar() {
       className={cn(
         "fixed left-0 right-0 top-0 z-50 transition-all duration-300",
         scrolled
-          ? "bg-white/90 backdrop-blur-lg shadow-sm"
+          ? "bg-surface/85 backdrop-blur-lg shadow-elev-1 border-b border-line"
           : "bg-transparent"
       )}
     >
@@ -67,9 +68,9 @@ export function Navbar() {
               <Link
                 href={link.href}
                 className={cn(
-                  "inline-flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold transition-colors xl:px-4",
+                  "inline-flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-body-sm font-semibold transition-colors xl:px-4",
                   scrolled
-                    ? "text-nexus-blue-900 hover:bg-nexus-blue-50"
+                    ? "text-ink hover:bg-surface-sunken"
                     : "text-white hover:bg-white/10"
                 )}
               >
@@ -79,8 +80,8 @@ export function Navbar() {
 
               {link.hasDropdown && servicesOpen && (
                 <div className="absolute left-1/2 top-full -translate-x-1/2 pt-2">
-                  <div className="w-[520px] rounded-2xl border border-slate-200 bg-white p-4 shadow-2xl">
-                    <div className="mb-3 border-b border-slate-100 pb-2 text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+                  <div className="w-[520px] rounded-3xl border border-line bg-surface-overlay p-4 shadow-elev-5">
+                    <div className="mb-3 border-b border-line pb-2 text-overline text-nexus-orange-600 dark:text-brand">
                       Nos services
                     </div>
                     <div className="grid grid-cols-2 gap-1">
@@ -90,20 +91,20 @@ export function Navbar() {
                           <Link
                             key={s.id}
                             href={`/services/${s.slug}`}
-                            className="group flex items-start gap-3 rounded-xl p-2.5 transition-colors hover:bg-nexus-blue-50"
+                            className="group flex items-start gap-3 rounded-2xl p-2.5 transition-colors hover:bg-surface-sunken"
                           >
                             <div
                               className={cn(
-                                "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg",
+                                "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
                                 s.accent === "orange"
-                                  ? "bg-nexus-orange-100 text-nexus-orange-600"
-                                  : "bg-nexus-blue-100 text-nexus-blue-700"
+                                  ? "bg-nexus-orange-100 text-nexus-orange-600 dark:bg-orange-500/15 dark:text-orange-300"
+                                  : "bg-nexus-blue-100 text-nexus-blue-700 dark:bg-blue-500/15 dark:text-blue-300"
                               )}
                             >
                               <Icon className="h-4 w-4" />
                             </div>
                             <div className="min-w-0">
-                              <div className="text-sm font-semibold text-nexus-blue-900 group-hover:text-nexus-orange-600">
+                              <div className="text-body-sm font-semibold text-ink group-hover:text-brand">
                                 {s.title}
                               </div>
                             </div>
@@ -120,13 +121,15 @@ export function Navbar() {
 
         {/* Desktop nav — actions a droite */}
         <div className="hidden items-center gap-1 lg:flex xl:gap-2">
+          <ThemeToggle variant={scrolled ? "ink" : "light"} />
+
           {/* NOUVEAU : NEXUS CONNECT - lien premium avec accent orange */}
           <Link
             href="/nexus-connect"
             className={cn(
-              "group inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-sm font-bold transition-all xl:px-4",
+              "group inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-body-sm font-bold transition-all xl:px-4",
               scrolled
-                ? "bg-gradient-to-r from-nexus-blue-950 to-nexus-blue-800 text-white hover:shadow-lg hover:shadow-nexus-blue-900/30"
+                ? "bg-gradient-to-r from-nexus-blue-950 to-nexus-blue-800 text-white hover:shadow-glow-blue"
                 : "border border-white/30 bg-white/10 text-white backdrop-blur hover:bg-white/20"
             )}
           >
@@ -137,9 +140,9 @@ export function Navbar() {
           <Link
             href="/login"
             className={cn(
-              "whitespace-nowrap px-3 py-2 text-sm font-semibold transition-colors",
+              "whitespace-nowrap px-3 py-2 text-body-sm font-semibold transition-colors",
               scrolled
-                ? "text-nexus-blue-900 hover:text-nexus-orange-600"
+                ? "text-ink hover:text-brand"
                 : "text-white hover:text-nexus-orange-300"
             )}
           >
@@ -148,56 +151,59 @@ export function Navbar() {
 
           <Link
             href="/demande/complet"
-            className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
+            className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-brand px-4 py-2 text-body-sm font-semibold text-white shadow-elev-2 transition hover:bg-brand-hover hover:shadow-glow-orange"
           >
             <FilePlus className="h-4 w-4" />
             Ouvrir un dossier
           </Link>
         </div>
 
-        {/* Mobile toggle */}
-        <button
-          onClick={() => setMobileOpen((v) => !v)}
-          className={cn(
-            "rounded-lg p-2 lg:hidden",
-            scrolled ? "text-nexus-blue-900" : "text-white"
-          )}
-          aria-label="Menu"
-        >
-          {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
+        {/* Mobile actions */}
+        <div className="flex items-center gap-2 lg:hidden">
+          <ThemeToggle variant={scrolled ? "ink" : "light"} />
+          <button
+            onClick={() => setMobileOpen((v) => !v)}
+            className={cn(
+              "rounded-xl p-2",
+              scrolled ? "text-ink" : "text-white"
+            )}
+            aria-label="Menu"
+          >
+            {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
       </nav>
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="border-t border-slate-200 bg-white lg:hidden">
+        <div className="border-t border-line bg-surface-elevated lg:hidden">
           <div className="mx-auto max-w-7xl space-y-1 px-4 py-4">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="block rounded-lg px-4 py-3 text-base font-semibold text-nexus-blue-900 hover:bg-nexus-blue-50"
+                className="block rounded-2xl px-4 py-3 text-body font-semibold text-ink hover:bg-surface-sunken"
               >
                 {link.label}
               </Link>
             ))}
 
-            {/* NOUVEAU : NEXUS CONNECT mobile - bandeau premium */}
+            {/* NEXUS CONNECT mobile */}
             <Link
               href="/nexus-connect"
-              className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-nexus-blue-950 to-nexus-blue-800 px-4 py-3 text-white shadow-lg"
+              className="flex items-center gap-3 rounded-2xl bg-gradient-to-r from-nexus-blue-950 to-nexus-blue-800 px-4 py-3 text-white shadow-elev-3"
             >
               <Sparkles className="h-5 w-5 text-nexus-orange-400" />
               <div className="flex-1">
-                <div className="text-sm font-bold">NEXUS CONNECT</div>
-                <div className="text-xs text-slate-300">Mon espace personnel</div>
+                <div className="text-body-sm font-bold">NEXUS CONNECT</div>
+                <div className="text-caption text-slate-300">Mon espace personnel</div>
               </div>
             </Link>
 
-            <div className="my-2 border-t border-slate-200" />
+            <div className="my-2 border-t border-line" />
 
-            <details className="rounded-lg">
-              <summary className="cursor-pointer px-4 py-3 text-sm font-semibold text-nexus-blue-700">
+            <details className="rounded-2xl">
+              <summary className="cursor-pointer px-4 py-3 text-body-sm font-semibold text-ink-muted">
                 Tous les services
               </summary>
               <div className="space-y-1 pl-3">
@@ -205,7 +211,7 @@ export function Navbar() {
                   <Link
                     key={s.id}
                     href={`/services/${s.slug}`}
-                    className="block rounded-lg px-4 py-2 text-sm text-slate-700 hover:bg-nexus-blue-50"
+                    className="block rounded-xl px-4 py-2 text-body-sm text-ink-muted hover:bg-surface-sunken hover:text-ink"
                   >
                     {s.title}
                   </Link>
@@ -216,7 +222,7 @@ export function Navbar() {
             <div className="flex flex-col gap-2 pt-3">
               <Link
                 href="/demande/complet"
-                className="inline-flex items-center justify-center gap-1.5 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-nexus-orange-600"
+                className="inline-flex items-center justify-center gap-1.5 rounded-full bg-brand px-4 py-2 text-body-sm font-semibold text-white shadow-elev-2 transition hover:bg-brand-hover"
               >
                 <FilePlus className="h-4 w-4" />
                 Ouvrir un dossier

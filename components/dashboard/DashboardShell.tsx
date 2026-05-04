@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -24,10 +24,24 @@ import {
   Briefcase,
   FileBarChart,
   Sparkles,
+  Search,
+  Globe,
+  Sun,
+  Moon,
+  Monitor,
+  Plus,
+  CalendarPlus,
+  UserPlus,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
+import {
+  CommandPalette,
+  type CommandItem,
+} from "@/components/dashboard/CommandPalette";
+import { PageTransition } from "@/components/dashboard/PageTransition";
 import { createClient } from "@/lib/supabase/client";
+import { setTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import type { Profile, UserRole } from "@/types";
 
@@ -89,10 +103,10 @@ const ROLE_LABELS: Record<UserRole, string> = {
 };
 
 const ROLE_COLORS: Record<UserRole, string> = {
-  client: "bg-blue-100 text-blue-700",
-  agent: "bg-emerald-100 text-emerald-700",
-  admin: "bg-amber-100 text-amber-700",
-  super_admin: "bg-rose-100 text-rose-700",
+  client: "bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-300",
+  agent: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300",
+  admin: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300",
+  super_admin: "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300",
 };
 
 export function DashboardShell({
@@ -103,6 +117,7 @@ export function DashboardShell({
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const [paletteOpen, setPaletteOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
@@ -117,13 +132,136 @@ export function DashboardShell({
 
   const initials = (profile.prenom?.[0] ?? "") + (profile.nom?.[0] ?? "");
 
+  // ⌘K / Ctrl+K — toggle global de la command palette
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setPaletteOpen((v) => !v);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Items dérivés de la nav du rôle + actions universelles + actions par rôle
+  const commandItems = useMemo<CommandItem[]>(() => {
+    const role = profile.role;
+
+    // Navigation : tous les liens du rôle (déjà role-aware via NAV_BY_ROLE)
+    const navCmds: CommandItem[] = navItems.map((n) => ({
+      id: `nav-${n.href}`,
+      label: n.label,
+      icon: n.icon,
+      group: "Navigation",
+      href: n.href,
+    }));
+
+    // Création rapide — role-aware
+    const create: CommandItem[] = [];
+    if (role === "super_admin") {
+      create.push({
+        id: "create-employee",
+        label: "Créer un employé",
+        icon: UserPlus,
+        group: "Création rapide",
+        keywords: "agent admin team add nouveau",
+        href: "/dashboard/super-admin/equipe/nouveau",
+      });
+    }
+    if (role === "agent" || role === "admin" || role === "super_admin") {
+      create.push({
+        id: "create-payment-link",
+        label: "Nouveau lien de paiement",
+        icon: Sparkles,
+        group: "Création rapide",
+        keywords: "stripe checkout invoice facture",
+        href: "/dashboard/super-admin/paiements/nouveau-lien",
+      });
+    }
+    if (role === "client") {
+      create.push({
+        id: "create-rdv",
+        label: "Prendre un rendez-vous",
+        icon: CalendarPlus,
+        group: "Création rapide",
+        keywords: "appointment book new",
+        href: "/dashboard/client/rdv/nouveau",
+      });
+    }
+    // Action universelle "Ouvrir un dossier" (visible côté public)
+    create.push({
+      id: "open-dossier",
+      label: "Ouvrir un dossier (formulaire complet)",
+      icon: Plus,
+      group: "Création rapide",
+      keywords: "demande complete request submit nouveau",
+      href: "/demande/complet",
+    });
+
+    // Thème — synchronisé via lib/theme (le toggle navbar suit en live).
+    // Exclu des récents : le toggle navbar est déjà là pour ça.
+    const theme: CommandItem[] = [
+      {
+        id: "theme-light",
+        label: "Thème clair",
+        icon: Sun,
+        group: "Thème",
+        keywords: "light mode jour day",
+        onSelect: () => setTheme("light"),
+        excludeFromRecent: true,
+      },
+      {
+        id: "theme-dark",
+        label: "Thème sombre",
+        icon: Moon,
+        group: "Thème",
+        keywords: "dark mode nuit night",
+        onSelect: () => setTheme("dark"),
+        excludeFromRecent: true,
+      },
+      {
+        id: "theme-system",
+        label: "Suivre le système",
+        icon: Monitor,
+        group: "Thème",
+        keywords: "auto os preference",
+        onSelect: () => setTheme("system"),
+        excludeFromRecent: true,
+      },
+    ];
+
+    // Compte
+    const account: CommandItem[] = [
+      {
+        id: "site",
+        label: "Voir le site public",
+        icon: Globe,
+        group: "Compte",
+        keywords: "home accueil public site",
+        href: "/",
+      },
+      {
+        id: "logout",
+        label: "Se déconnecter",
+        icon: LogOut,
+        group: "Compte",
+        keywords: "logout sign out exit",
+        onSelect: handleLogout,
+      },
+    ];
+
+    return [...navCmds, ...create, ...theme, ...account];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navItems, profile.role]);
+
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <div className="fixed inset-x-0 top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 lg:hidden">
+    <div className="flex min-h-screen bg-surface-sunken">
+      <div className="fixed inset-x-0 top-0 z-40 flex h-16 items-center justify-between border-b border-line bg-surface-elevated px-4 lg:hidden">
         <Logo />
         <button
           onClick={() => setOpen(!open)}
-          className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200"
+          className="flex h-10 w-10 items-center justify-center rounded-xl border border-line text-ink"
           aria-label="Menu"
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -132,32 +270,32 @@ export function DashboardShell({
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-30 w-72 transform border-r border-slate-200 bg-white transition-transform duration-300 lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-30 w-72 transform border-r border-line bg-surface-elevated transition-transform duration-300 lg:translate-x-0",
           open ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <div className="flex h-full flex-col">
-          <div className="shrink-0 border-b border-slate-200 p-6">
+          <div className="shrink-0 border-b border-line p-6">
             <Link href="/" className="inline-block">
               <Logo />
             </Link>
           </div>
 
-          <div className="shrink-0 border-b border-slate-200 p-6">
+          <div className="shrink-0 border-b border-line p-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-800 to-nexus-orange-500 text-sm font-bold text-white">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-800 to-nexus-orange-500 text-sm font-bold text-white shadow-elev-2">
                 {initials.toUpperCase() || "U"}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold text-nexus-blue-950">
+                <p className="truncate text-title text-ink">
                   {profile.prenom} {profile.nom}
                 </p>
-                <p className="truncate text-xs text-slate-500">{profile.email}</p>
+                <p className="truncate text-caption text-ink-muted">{profile.email}</p>
               </div>
             </div>
             <span
               className={cn(
-                "mt-3 inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold",
+                "mt-3 inline-block rounded-full px-2.5 py-0.5 text-caption",
                 ROLE_COLORS[profile.role]
               )}
             >
@@ -165,7 +303,23 @@ export function DashboardShell({
             </span>
           </div>
 
-          <nav className="flex-1 space-y-1 overflow-y-auto px-4 py-6">
+          {/* Command palette trigger */}
+          <div className="shrink-0 px-4 pt-4">
+            <button
+              type="button"
+              onClick={() => setPaletteOpen(true)}
+              aria-label="Ouvrir la palette de commandes"
+              className="flex w-full items-center gap-2 rounded-2xl border border-line bg-surface-sunken px-3 py-2 text-body-sm text-ink-muted transition-colors hover:border-brand/40 hover:text-ink"
+            >
+              <Search className="h-4 w-4" />
+              <span className="flex-1 text-left">Rechercher…</span>
+              <kbd className="inline-flex h-5 items-center justify-center rounded border border-line bg-surface-elevated px-1.5 font-mono text-[10px] text-ink-muted">
+                ⌘K
+              </kbd>
+            </button>
+          </div>
+
+          <nav className="flex-1 space-y-1 overflow-y-auto px-4 py-4">
             {navItems.map((item) => {
               const active = pathname === item.href;
               const Icon = item.icon;
@@ -175,14 +329,17 @@ export function DashboardShell({
                   href={item.href}
                   onClick={() => setOpen(false)}
                   className={cn(
-                    "flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors",
+                    "relative flex items-center gap-3 rounded-2xl px-4 py-2.5 text-body-sm font-semibold transition-colors",
                     active
-                      ? "bg-nexus-blue-950 text-white shadow-md"
+                      ? "bg-nexus-blue-950 text-white shadow-elev-2 dark:bg-brand dark:text-white"
                       : item.highlight
-                        ? "bg-nexus-orange-50 text-nexus-orange-700 hover:bg-nexus-orange-100"
-                        : "text-slate-700 hover:bg-slate-100"
+                        ? "bg-brand-subtle text-nexus-orange-700 hover:bg-nexus-orange-100 dark:text-brand"
+                        : "text-ink-muted hover:bg-surface-sunken hover:text-ink"
                   )}
                 >
+                  {active && (
+                    <span className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-brand" />
+                  )}
                   <Icon className="h-5 w-5" />
                   {item.label}
                 </Link>
@@ -190,17 +347,17 @@ export function DashboardShell({
             })}
           </nav>
 
-          <div className="shrink-0 border-t border-slate-200 p-4">
+          <div className="shrink-0 border-t border-line p-4">
             <Link
               href="/"
-              className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+              className="flex items-center gap-3 rounded-2xl px-4 py-2.5 text-body-sm font-semibold text-ink-muted hover:bg-surface-sunken hover:text-ink"
             >
               <Settings className="h-5 w-5" />
               Retour au site
             </Link>
             <button
               onClick={handleLogout}
-              className="mt-1 flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50"
+              className="mt-1 flex w-full items-center gap-3 rounded-2xl px-4 py-2.5 text-body-sm font-semibold text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-500/10"
             >
               <LogOut className="h-5 w-5" />
               Déconnexion
@@ -218,9 +375,15 @@ export function DashboardShell({
 
       <main className="flex-1 lg:ml-72">
         <div className="px-4 pt-20 pb-10 sm:px-6 lg:px-10 lg:pt-10">
-          {children}
+          <PageTransition>{children}</PageTransition>
         </div>
       </main>
+
+      <CommandPalette
+        items={commandItems}
+        open={paletteOpen}
+        onOpenChange={setPaletteOpen}
+      />
     </div>
   );
 }

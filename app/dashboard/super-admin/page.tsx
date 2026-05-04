@@ -26,7 +26,45 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { Sparkline } from "@/components/ui/Sparkline";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { cn } from "@/lib/utils";
+
+// ─── DEMO DATA ─────────────────────────────────────────────────────────────
+// Génère une série temporelle plausible terminant sur `current`.
+// TODO: remplacer par des queries Supabase groupées par jour
+//       (ex: payments WHERE date_paiement >= now() - interval '7 days'
+//        GROUP BY date_trunc('day', date_paiement))
+function fakeTrend(
+  current: number,
+  direction: "up" | "down" | "flat",
+  seed: number,
+  points = 7
+): number[] {
+  if (current <= 0) return Array(points).fill(0);
+  const dirFactor =
+    direction === "up" ? 0.55 : direction === "down" ? 1.4 : 1;
+  const start = current * dirFactor;
+  const out: number[] = [];
+  for (let i = 0; i < points; i++) {
+    const t = i / (points - 1);
+    const base = start + (current - start) * t;
+    const noise =
+      (Math.sin(seed + i * 1.7) + Math.sin(seed * 2.3 + i * 0.9)) *
+      (current * 0.08);
+    out.push(Math.max(0, base + noise));
+  }
+  out[points - 1] = current;
+  return out;
+}
+
+function trendDelta(series: number[]): number {
+  if (series.length < 2) return 0;
+  const first = series[0];
+  const last = series[series.length - 1];
+  if (first === 0) return last > 0 ? 100 : 0;
+  return ((last - first) / first) * 100;
+}
 
 export const metadata = {
   title: "Centre de pilotage | Super Admin",
@@ -355,39 +393,56 @@ export default async function SuperAdminDashboard() {
         color="text-emerald-600"
       >
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <FinanceCard
-            label="Encaissé aujourd'hui"
-            value={formatMoney(totalToday)}
-            sub={`${formatMoney(paiementsToday)} paie. + ${formatMoney(caisseToday)} caisse`}
-            icon={Wallet}
-            accent="green"
-            trend="up"
-            href="/dashboard/super-admin/paiements"
-          />
-          <FinanceCard
-            label="Encaissé ce mois"
-            value={formatMoney(totalMonth)}
-            sub={`Solde net : ${formatMoney(soldeNet)}`}
-            icon={TrendingUp}
-            accent="emerald"
-            href="/dashboard/super-admin/finances"
-          />
-          <FinanceCard
-            label="Restant à encaisser"
-            value={formatMoney(restantAEncaisser)}
-            sub="Paiements partiels & non payés"
-            icon={Clock}
-            accent="orange"
-            href="/dashboard/super-admin/paiements"
-          />
-          <FinanceCard
-            label="Dépenses en attente"
-            value={formatMoney(depensesEnAttente)}
-            sub={`${nbDepensesEnAttente} dépense${nbDepensesEnAttente > 1 ? "s" : ""} à valider`}
-            icon={Receipt}
-            accent="amber"
-            href="/dashboard/super-admin/depenses"
-          />
+          {(() => {
+            const t1 = fakeTrend(totalToday, "up", 1);
+            const t2 = fakeTrend(totalMonth, "up", 2);
+            const t3 = fakeTrend(restantAEncaisser, "down", 3);
+            const t4 = fakeTrend(depensesEnAttente, "flat", 4);
+            return (
+              <>
+                <FinanceCard
+                  label="Encaissé aujourd'hui"
+                  value={formatMoney(totalToday)}
+                  sub={`${formatMoney(paiementsToday)} paie. + ${formatMoney(caisseToday)} caisse`}
+                  icon={Wallet}
+                  accent="green"
+                  trend={t1}
+                  delta={trendDelta(t1)}
+                  href="/dashboard/super-admin/paiements"
+                />
+                <FinanceCard
+                  label="Encaissé ce mois"
+                  value={formatMoney(totalMonth)}
+                  sub={`Solde net : ${formatMoney(soldeNet)}`}
+                  icon={TrendingUp}
+                  accent="emerald"
+                  trend={t2}
+                  delta={trendDelta(t2)}
+                  href="/dashboard/super-admin/finances"
+                />
+                <FinanceCard
+                  label="Restant à encaisser"
+                  value={formatMoney(restantAEncaisser)}
+                  sub="Paiements partiels & non payés"
+                  icon={Clock}
+                  accent="orange"
+                  trend={t3}
+                  delta={trendDelta(t3)}
+                  href="/dashboard/super-admin/paiements"
+                />
+                <FinanceCard
+                  label="Dépenses en attente"
+                  value={formatMoney(depensesEnAttente)}
+                  sub={`${nbDepensesEnAttente} dépense${nbDepensesEnAttente > 1 ? "s" : ""} à valider`}
+                  icon={Receipt}
+                  accent="amber"
+                  trend={t4}
+                  delta={trendDelta(t4)}
+                  href="/dashboard/super-admin/depenses"
+                />
+              </>
+            );
+          })()}
         </div>
       </Section>
 
@@ -406,18 +461,21 @@ export default async function SuperAdminDashboard() {
             icon={FileText}
             href="/dashboard/super-admin/demandes"
             urgent={nbDemandesNouvelles > 5}
+            trend={fakeTrend(nbDemandesNouvelles, "up", 5)}
           />
           <OpCard
             label="Demandes en cours"
             value={nbDemandesEnCours}
             icon={FileText}
             href="/dashboard/super-admin/demandes"
+            trend={fakeTrend(nbDemandesEnCours, "up", 6)}
           />
           <OpCard
             label="RDV aujourd'hui"
             value={nbRdvToday}
             icon={CalendarCheck}
             href="/dashboard/super-admin/rendez-vous"
+            trend={fakeTrend(nbRdvToday, "flat", 7)}
           />
           <OpCard
             label="Transferts à valider"
@@ -425,6 +483,7 @@ export default async function SuperAdminDashboard() {
             icon={Send}
             href="/dashboard/super-admin/transferts"
             urgent={nbTransfertsPending > 0}
+            trend={fakeTrend(nbTransfertsPending, "down", 8)}
           />
         </div>
       </Section>
@@ -677,15 +736,13 @@ export default async function SuperAdminDashboard() {
       {/* SI RIEN A TRAITER */}
       {/* ======================================================== */}
       {totalAlertes === 0 && (
-        <div className="mb-6 rounded-2xl border-2 border-dashed border-green-300 bg-green-50 p-8 text-center">
-          <CheckCircle2 className="mx-auto h-12 w-12 text-green-600" />
-          <h3 className="mt-3 font-display text-lg font-bold text-nexus-blue-950">
-            Tout est sous contrôle 🎉
-          </h3>
-          <p className="mt-1 text-sm text-slate-600">
-            Aucune alerte. Pas de transfert à valider, pas de dépense en attente,
-            pas de demande non traitée.
-          </p>
+        <div className="mb-6">
+          <EmptyState
+            icon={CheckCircle2}
+            tone="success"
+            title="Tout est sous contrôle"
+            description="Aucune alerte. Pas de transfert à valider, pas de dépense en attente, pas de demande non traitée."
+          />
         </div>
       )}
 
@@ -788,6 +845,7 @@ function FinanceCard({
   icon: Icon,
   accent,
   trend,
+  delta,
   href,
 }: {
   label: string;
@@ -795,7 +853,8 @@ function FinanceCard({
   sub?: string;
   icon: React.ComponentType<{ className?: string }>;
   accent: "green" | "emerald" | "orange" | "amber";
-  trend?: "up" | "down";
+  trend?: number[];
+  delta?: number;
   href: string;
 }) {
   const colorMap = {
@@ -804,6 +863,18 @@ function FinanceCard({
     orange: "from-nexus-orange-400 to-nexus-orange-600",
     amber: "from-amber-400 to-amber-600",
   };
+  const sparkColorMap = {
+    green: "text-emerald-500",
+    emerald: "text-teal-500",
+    orange: "text-nexus-orange-500",
+    amber: "text-amber-500",
+  };
+
+  const showSpark = trend && trend.length >= 2;
+  const showDelta = typeof delta === "number" && Number.isFinite(delta);
+  const deltaUp = showDelta && delta! > 0;
+  const deltaDown = showDelta && delta! < 0;
+
   return (
     <Link
       href={href}
@@ -826,11 +897,32 @@ function FinanceCard({
           <Icon className="h-4 w-4" />
         </div>
       </div>
-      <div className="mt-2 flex items-center gap-1 text-[10px] font-semibold text-slate-400 transition group-hover:text-nexus-blue-950">
-        {trend === "up" && <ArrowUpRight className="h-3 w-3" />}
-        {trend === "down" && <ArrowDownRight className="h-3 w-3" />}
-        Voir détails →
-      </div>
+
+      {(showSpark || showDelta) && (
+        <div className="mt-3 flex items-center gap-2">
+          {showDelta && (
+            <span
+              className={cn(
+                "inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums",
+                deltaUp && "bg-emerald-100 text-emerald-700",
+                deltaDown && "bg-rose-100 text-rose-700",
+                !deltaUp &&
+                  !deltaDown &&
+                  "bg-slate-100 text-slate-600"
+              )}
+            >
+              {deltaUp && <ArrowUpRight className="h-3 w-3" />}
+              {deltaDown && <ArrowDownRight className="h-3 w-3" />}
+              {Math.abs(delta!).toFixed(1)}%
+            </span>
+          )}
+          {showSpark && (
+            <div className={cn("min-w-0 flex-1", sparkColorMap[accent])}>
+              <Sparkline data={trend!} height={22} />
+            </div>
+          )}
+        </div>
+      )}
     </Link>
   );
 }
@@ -841,21 +933,22 @@ function OpCard({
   icon: Icon,
   href,
   urgent,
+  trend,
 }: {
   label: string;
   value: number;
   icon: React.ComponentType<{ className?: string }>;
   href: string;
   urgent?: boolean;
+  trend?: number[];
 }) {
+  const showSpark = trend && trend.length >= 2;
   return (
     <Link
       href={href}
       className={cn(
         "group rounded-2xl border bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md",
-        urgent
-          ? "border-red-300 bg-red-50"
-          : "border-slate-200"
+        urgent ? "border-red-300 bg-red-50" : "border-slate-200"
       )}
     >
       <div className="flex items-start justify-between">
@@ -871,16 +964,27 @@ function OpCard({
       </div>
       <p
         className={cn(
-          "mt-2 font-display text-2xl font-bold",
+          "mt-2 font-display text-2xl font-bold tabular-nums",
           urgent ? "text-red-700" : "text-nexus-blue-950"
         )}
       >
         {value}
       </p>
       <p className="text-xs font-semibold text-slate-700">{label}</p>
-      <div className="mt-1 flex items-center gap-1 text-[10px] font-semibold text-slate-400 transition group-hover:text-nexus-blue-950">
-        Voir →
-      </div>
+      {showSpark ? (
+        <div
+          className={cn(
+            "mt-2 -mb-1",
+            urgent ? "text-red-500" : "text-nexus-blue-500"
+          )}
+        >
+          <Sparkline data={trend!} height={20} />
+        </div>
+      ) : (
+        <div className="mt-1 flex items-center gap-1 text-[10px] font-semibold text-slate-400 transition group-hover:text-nexus-blue-950">
+          Voir →
+        </div>
+      )}
     </Link>
   );
 }

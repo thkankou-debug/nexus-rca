@@ -14,56 +14,60 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { whatsappLink } from "@/lib/utils";
+import { NEXUS_CONTACT } from "@/lib/contact";
 
 export const metadata = {
-  title: "Prendre un rendez-vous | Nexus RCA",
+  title: "Prendre un rendez-vous | Nexus RCA — Bangui",
   description:
-    "Reservez un echange structure avec l'equipe Nexus RCA pour analyser votre besoin, clarifier votre situation et definir les prochaines etapes.",
+    "Réservez un échange structuré avec l'équipe Nexus RCA pour analyser votre besoin, clarifier votre situation et définir les prochaines étapes.",
 };
 
 const REASSURANCE_POINTS = [
-  "Reponse claire et professionnelle",
-  "Orientation adaptee a votre service",
-  "Confirmation apres verification de disponibilite",
+  "Réponse claire et professionnelle",
+  "Orientation adaptée à votre service",
+  "Confirmation après vérification de disponibilité",
 ];
 
 export default function RendezVousPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-slate-50">
-        {/* HERO */}
+      <main className="min-h-screen bg-surface-sunken">
+        {/* HERO ─────────────────────────────────────────────── */}
         <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 pt-32 pb-16 text-white">
           <div className="absolute inset-0 bg-mesh-gradient opacity-40" />
           <div className="absolute -right-32 top-1/4 h-96 w-96 rounded-full bg-nexus-orange-500/20 blur-3xl" />
+          <div className="grain pointer-events-none absolute inset-0 opacity-20" />
 
           <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
             <div className="max-w-3xl">
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm backdrop-blur-md">
-                <span className="flex h-2 w-2 rounded-full bg-green-400" />
-                <span className="font-medium">Prise de rendez-vous en ligne</span>
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-overline text-nexus-orange-300 backdrop-blur">
+                <span className="flex h-2 w-2 rounded-full bg-emerald-400" />
+                Prise de rendez-vous en ligne
               </div>
 
-              <h1 className="font-display text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
+              <h1
+                className="font-display text-display-xl text-white lg:text-display-2xl"
+                style={{ paddingBottom: "0.15em" }}
+              >
                 Prendre un rendez-vous avec{" "}
                 <span className="text-gradient-orange">Nexus RCA</span>
               </h1>
 
-              <p className="mt-5 text-lg leading-relaxed text-slate-300 sm:text-xl">
-                Reservez un echange structure avec notre equipe pour analyser
-                votre besoin, clarifier votre situation et definir les
-                prochaines etapes.
+              <p className="mt-5 text-body-lg text-slate-300">
+                Réservez un échange structuré avec notre équipe pour analyser
+                votre besoin, clarifier votre situation et définir les
+                prochaines étapes.
               </p>
 
-              {/* Reassurance points */}
               <ul className="mt-8 grid gap-3 sm:grid-cols-3">
                 {REASSURANCE_POINTS.map((point) => (
                   <li
                     key={point}
-                    className="flex items-start gap-2.5 rounded-xl border border-white/10 bg-white/5 p-3 backdrop-blur"
+                    className="flex items-start gap-2.5 rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur"
                   >
                     <CheckCircle2 className="h-5 w-5 shrink-0 text-nexus-orange-400" />
-                    <span className="text-sm font-medium text-white/90">
+                    <span className="text-body-sm font-medium text-white/90">
                       {point}
                     </span>
                   </li>
@@ -73,32 +77,32 @@ export default function RendezVousPage() {
           </div>
         </section>
 
-        {/* CONTENT */}
+        {/* CONTENT ───────────────────────────────────────────── */}
         <section className="mx-auto max-w-7xl px-4 py-12 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-3">
-            {/* LEFT - Form */}
+            {/* Form */}
             <div className="lg:col-span-2">
               <AppointmentForm />
             </div>
 
-            {/* RIGHT - Sidebar */}
+            {/* Sidebar */}
             <aside className="lg:col-span-1">
               <div className="lg:sticky lg:top-24 space-y-5">
-                {/* 1. Urgent / WhatsApp */}
-                <div className="relative overflow-hidden rounded-2xl border-2 border-nexus-orange-300 bg-gradient-to-br from-nexus-orange-50 to-white p-6 shadow-lg">
+                {/* WhatsApp urgent */}
+                <div className="relative overflow-hidden rounded-3xl border-2 border-brand/40 bg-gradient-to-br from-brand-subtle/60 to-surface-elevated p-6 shadow-elev-3">
                   <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-nexus-orange-500/10" />
                   <div className="relative">
                     <div className="mb-3 flex items-center gap-2">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-orange-500 text-white">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-white shadow-elev-2">
                         <Zap className="h-5 w-5" />
                       </div>
-                      <h3 className="font-display text-lg font-bold text-nexus-blue-950">
+                      <h3 className="font-display text-headline text-ink">
                         Besoin urgent ?
                       </h3>
                     </div>
-                    <p className="mb-4 text-sm leading-relaxed text-slate-700">
-                      Pour une reponse immediate, contactez-nous directement sur
-                      WhatsApp. Notre equipe repond rapidement.
+                    <p className="mb-4 text-body-sm text-ink-muted">
+                      Pour une réponse immédiate, contactez-nous directement
+                      sur WhatsApp. Notre équipe répond rapidement.
                     </p>
                     <a
                       href={whatsappLink(
@@ -106,7 +110,7 @@ export default function RendezVousPage() {
                       )}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-br from-green-500 to-green-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-green-500/30 transition hover:shadow-xl"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 px-5 py-3 text-body-sm font-semibold text-white shadow-elev-3 transition hover:shadow-elev-4"
                     >
                       <MessageCircle className="h-4 w-4" />
                       Ouvrir WhatsApp
@@ -114,81 +118,82 @@ export default function RendezVousPage() {
                   </div>
                 </div>
 
-                {/* 2. Dossier complet avec documents */}
-                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                {/* Dossier complet */}
+                <div className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2">
                   <div className="mb-3 flex items-center gap-2">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-blue-100 text-nexus-blue-700">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-blue-100 text-nexus-blue-700 dark:bg-blue-500/15 dark:text-blue-300">
                       <FilePlus className="h-5 w-5" />
                     </div>
-                    <h3 className="font-display text-lg font-bold text-nexus-blue-950">
+                    <h3 className="font-display text-headline text-ink">
                       Dossier complet avec documents
                     </h3>
                   </div>
-                  <p className="mb-4 text-sm leading-relaxed text-slate-600">
-                    Si vous souhaitez deposer un dossier complet avec
-                    documents et pieces justificatives, utilisez plutot notre
-                    formulaire dedie.
+                  <p className="mb-4 text-body-sm text-ink-muted">
+                    Si vous souhaitez déposer un dossier complet avec documents
+                    et pièces justificatives, utilisez plutôt notre formulaire
+                    dédié.
                   </p>
                   <Link
                     href="/demande/complet"
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-nexus-blue-900 bg-white px-5 py-2.5 text-sm font-semibold text-nexus-blue-900 transition hover:bg-nexus-blue-900 hover:text-white"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-nexus-blue-900 bg-surface-elevated px-5 py-2.5 text-body-sm font-semibold text-ink transition hover:bg-nexus-blue-900 hover:text-white dark:border-line dark:hover:bg-brand dark:hover:border-brand"
                   >
                     Ouvrir un dossier
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
 
-                {/* 3. Nous joindre */}
-                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                {/* Coordonnées */}
+                <div className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2">
                   <div className="mb-4 flex items-center gap-2">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-blue-100 text-nexus-blue-700">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-blue-100 text-nexus-blue-700 dark:bg-blue-500/15 dark:text-blue-300">
                       <Phone className="h-5 w-5" />
                     </div>
-                    <h3 className="font-display text-lg font-bold text-nexus-blue-950">
+                    <h3 className="font-display text-headline text-ink">
                       Nous joindre
                     </h3>
                   </div>
-                  <div className="space-y-3 text-sm">
+                  <div className="space-y-3 text-body-sm">
                     <div className="flex items-start gap-3">
-                      <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-500" />
+                      <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
                       <div>
-                        <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                          Agence
-                        </p>
-                        <p className="mt-0.5 text-slate-700">
-                          Relais Sica, vers Hopital General
+                        <p className="text-overline text-ink-muted">Agence</p>
+                        <p className="mt-0.5 text-ink">
+                          {NEXUS_CONTACT.addressLine1}
                           <br />
-                          Bangui, Republique Centrafricaine
+                          {NEXUS_CONTACT.addressLine2}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Phone className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-500" />
+                      <Phone className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
                       <div>
-                        <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                          WhatsApp
+                        <p className="text-overline text-ink-muted">
+                          WhatsApp (RCA)
                         </p>
-                        <p className="mt-0.5 text-slate-700">
-                          +1 587 327 6344
-                        </p>
+                        <a
+                          href={`tel:+${NEXUS_CONTACT.phoneRcaRaw}`}
+                          className="mt-0.5 block text-ink hover:text-brand"
+                        >
+                          {NEXUS_CONTACT.phoneRca}
+                        </a>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* 4. Conseil */}
-                <div className="rounded-2xl border border-nexus-blue-200 bg-gradient-to-br from-nexus-blue-50 to-white p-6">
+                {/* Conseil */}
+                <div className="rounded-3xl border border-line bg-gradient-to-br from-nexus-blue-50 to-surface-elevated p-6 dark:from-blue-500/5 dark:to-surface-elevated">
                   <div className="mb-3 flex items-center gap-2">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-blue-900 text-white">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-blue-900 text-white shadow-elev-2">
                       <Lightbulb className="h-5 w-5" />
                     </div>
-                    <h3 className="font-display text-lg font-bold text-nexus-blue-950">
+                    <h3 className="font-display text-headline text-ink">
                       Conseil
                     </h3>
                   </div>
-                  <p className="text-sm leading-relaxed text-slate-700">
-                    Plus votre demande est precise, plus notre reponse sera
-                    rapide. Decrivez clairement votre situation et vos
+                  <p className="text-body-sm text-ink-muted">
+                    Plus votre demande est précise, plus notre réponse sera
+                    rapide. Décrivez clairement votre situation et vos
                     objectifs dans le formulaire.
                   </p>
                 </div>

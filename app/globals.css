@@ -2,11 +2,74 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   Design tokens — sémantiques, light/dark via classe `.dark`
+   ============================================================ */
 :root {
+  /* Brand (constants — same in light/dark) */
   --nexus-blue: #050f3d;
   --nexus-blue-mid: #0a1a6b;
   --nexus-orange: #f97316;
   --nexus-orange-dark: #ea580c;
+
+  /* Surfaces (rgb triplets, consumed via rgb(var(--…) / α)) */
+  --surface: 255 255 255;            /* page background */
+  --surface-elevated: 255 255 255;   /* cards */
+  --surface-sunken: 248 250 252;     /* inputs, sub-blocs */
+  --surface-overlay: 255 255 255;    /* modals, popovers */
+
+  /* Ink (texte) */
+  --ink: 15 23 42;                   /* slate-900 */
+  --ink-muted: 71 85 105;            /* slate-600 */
+  --ink-subtle: 148 163 184;         /* slate-400 */
+  --ink-inverted: 255 255 255;
+
+  /* Lines / borders */
+  --line: 226 232 240;               /* slate-200 */
+  --line-strong: 203 213 225;        /* slate-300 */
+
+  /* Brand sémantique */
+  --brand: 249 115 22;               /* orange-500 */
+  --brand-hover: 234 88 12;          /* orange-600 */
+  --brand-subtle: 255 237 213;       /* orange-100 */
+
+  /* Effets */
+  --grain-opacity: 0.08;
+  --grain-blend: overlay;
+}
+
+.dark {
+  --surface: 2 7 31;                 /* nexus-blue-950 */
+  --surface-elevated: 5 15 61;       /* nexus-blue-900 */
+  --surface-sunken: 4 11 47;
+  --surface-overlay: 10 26 107;      /* nexus-blue-800 */
+
+  --ink: 241 245 249;                /* slate-100 */
+  --ink-muted: 148 163 184;          /* slate-400 */
+  --ink-subtle: 100 116 139;         /* slate-500 */
+  --ink-inverted: 15 23 42;
+
+  --line: 30 41 59;                  /* slate-800 */
+  --line-strong: 51 65 85;           /* slate-700 */
+
+  --brand: 251 146 60;               /* orange-400 — plus lumineux sur sombre */
+  --brand-hover: 249 115 22;
+  --brand-subtle: 67 20 7;
+
+  --grain-opacity: 0.05;
+  --grain-blend: soft-light;
+}
+
+/* Respect prefers-reduced-motion globalement */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 * {
@@ -19,30 +82,47 @@ html {
 }
 
 body {
-  background: #ffffff;
-  color: #0f172a;
+  background: rgb(var(--surface));
+  color: rgb(var(--ink));
   font-family: var(--font-plus-jakarta), system-ui, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Scrollbar premium */
+::selection {
+  background: rgb(var(--brand) / 0.25);
+  color: rgb(var(--ink));
+}
+
+/* Scrollbar premium — adaptée au thème */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: rgb(var(--surface-sunken));
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #0a1a6b, #f97316);
+  background: linear-gradient(180deg, var(--nexus-blue-mid), var(--nexus-orange));
   border-radius: 10px;
+  border: 2px solid rgb(var(--surface-sunken));
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #050f3d, #ea580c);
+  background: linear-gradient(180deg, var(--nexus-blue), var(--nexus-orange-dark));
 }
 
-/* Utility: text gradient */
+/* ============================================================
+   Utilities thématiques
+   ============================================================ */
+
 .text-gradient-nexus {
   background: linear-gradient(135deg, #0a1a6b 0%, #f97316 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.dark .text-gradient-nexus {
+  background: linear-gradient(135deg, #608aff 0%, #fb923c 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -55,30 +135,38 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-/* Grain overlay */
+/* Grain overlay — opacité adaptative */
 .grain::before {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.08;
-  mix-blend-mode: overlay;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: var(--grain-blend);
 }
 
-/* Glass morphism */
+/* Glass morphism — variantes light/dark cohérentes */
 .glass {
   background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .glass-dark {
   background: rgba(5, 15, 61, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Glass adaptatif (utilise les tokens) */
+.glass-adaptive {
+  background: rgb(var(--surface-elevated) / 0.65);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgb(var(--line) / 0.6);
 }
 
 /* Animated gradient background */
@@ -104,7 +192,7 @@ body {
   }
 }
 
-/* Reveal on scroll using IntersectionObserver fallback */
+/* Reveal on scroll */
 .reveal {
   opacity: 0;
   transform: translateY(30px);
@@ -115,7 +203,7 @@ body {
   transform: translateY(0);
 }
 
-/* Hide scrollbar for carousel */
+/* Hide scrollbar (carrousels) */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -124,9 +212,46 @@ body {
   scrollbar-width: none;
 }
 
-/* Focus styles */
-.focus-nexus:focus-visible {
-  outline: 2px solid #f97316;
+/* Marquee — défilement horizontal infini */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
+
+/* Skeleton shimmer — highlight qui balaie de gauche à droite */
+@keyframes skeleton-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+.animate-skeleton {
+  animation: skeleton-sweep 1.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-skeleton {
+    animation: none;
+  }
+}
+
+/* Focus ring premium — visible et accessible */
+.focus-nexus:focus-visible,
+:where(button, a, input, textarea, select, [role="button"]):focus-visible {
+  outline: 2px solid rgb(var(--brand));
   outline-offset: 2px;
   border-radius: 8px;
 }

@@ -10,12 +10,12 @@ export function ServiceChecklist({ items }: ServiceChecklistProps) {
       {items.map((item, i) => (
         <li
           key={i}
-          className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-nexus-orange-300 hover:shadow-md"
+          className="flex items-start gap-3 rounded-2xl border border-line bg-surface-elevated p-4 shadow-elev-1 transition hover:border-brand/40 hover:shadow-elev-2"
         >
-          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-nexus-orange-100 text-nexus-orange-600">
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-subtle text-brand">
             <Check className="h-3.5 w-3.5" strokeWidth={3} />
           </span>
-          <span className="text-sm leading-relaxed text-slate-700">{item}</span>
+          <span className="text-body-sm text-ink">{item}</span>
         </li>
       ))}
     </ul>

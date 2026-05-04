@@ -17,45 +17,39 @@ export function ServiceSection({
   className,
   variant = "light",
 }: ServiceSectionProps) {
+  // Tokens sémantiques — light/muted suivent le thème, dark reste forcé.
   const bgClasses = {
-    light: "bg-white",
-    muted: "bg-slate-50",
+    light: "bg-surface text-ink",
+    muted: "bg-surface-sunken text-ink",
     dark: "bg-nexus-blue-950 text-white",
   };
+
+  const eyebrowColor =
+    variant === "dark" ? "text-nexus-orange-300" : "text-brand";
+
+  const titleColor = variant === "dark" ? "text-white" : "text-ink";
+
+  const descColor = variant === "dark" ? "text-slate-300" : "text-ink-muted";
 
   return (
     <section className={cn("py-16 sm:py-24", bgClasses[variant], className)}>
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
         <div className="mx-auto max-w-3xl">
           {eyebrow && (
-            <p
-              className={cn(
-                "mb-3 text-xs font-bold uppercase tracking-widest",
-                variant === "dark"
-                  ? "text-nexus-orange-300"
-                  : "text-nexus-orange-600"
-              )}
-            >
+            <p className={cn("mb-3 text-overline", eyebrowColor)}>
               {eyebrow}
             </p>
           )}
           <h2
             className={cn(
-              "font-display text-3xl font-bold leading-tight sm:text-4xl",
-              variant === "dark" ? "text-white" : "text-nexus-blue-950"
+              "font-display text-display-md sm:text-display-lg",
+              titleColor
             )}
           >
             {title}
           </h2>
           {description && (
-            <p
-              className={cn(
-                "mt-4 text-lg leading-relaxed",
-                variant === "dark" ? "text-slate-300" : "text-slate-600"
-              )}
-            >
-              {description}
-            </p>
+            <p className={cn("mt-4 text-body-lg", descColor)}>{description}</p>
           )}
         </div>
         <div className="mt-12">{children}</div>

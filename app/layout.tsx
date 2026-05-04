@@ -114,8 +114,15 @@ export default function RootLayout({
     <html
       lang="fr"
       className={`${syne.variable} ${plusJakarta.variable}`}
+      suppressHydrationWarning
     >
       <head>
+        {/* No-flash dark mode: applique la classe avant le premier paint */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var s=localStorage.getItem('nexus-theme');var m=window.matchMedia('(prefers-color-scheme: dark)').matches;var d=s==='dark'||((s==='system'||s===null||s==='')&&m);document.documentElement.classList.toggle('dark',d);}catch(e){}})();`,
+          }}
+        />
         {/* Meta tags PWA additionnels iOS */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta
@@ -128,7 +135,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#FF6600" />
         <meta name="msapplication-tap-highlight" content="no" />
       </head>
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased bg-surface text-ink">
         {children}
         <PWAInstaller />
         <Toaster

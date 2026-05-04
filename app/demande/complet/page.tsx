@@ -16,25 +16,29 @@ export default function DemandeCompletePage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-gradient-to-b from-nexus-blue-50 via-white to-white pt-28 pb-20">
+      <main className="min-h-screen bg-gradient-to-b from-nexus-blue-50/50 via-surface to-surface pt-28 pb-20 dark:from-blue-500/5 dark:to-surface">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="mb-10 text-center">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-nexus-orange-100 px-4 py-1.5 text-sm font-semibold text-nexus-orange-700">
-              <ShieldCheck className="h-4 w-4" />
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-brand-subtle px-4 py-1.5 text-overline text-nexus-orange-700 dark:text-brand">
+              <ShieldCheck className="h-3.5 w-3.5" />
               Formulaire complet · traitement de dossier
             </div>
-            <h1 className="font-display text-4xl font-bold text-nexus-blue-950 sm:text-5xl">
+            <h1
+              className="font-display text-display-lg text-ink lg:text-display-xl"
+              style={{ paddingBottom: "0.15em" }}
+            >
               Faites traiter votre{" "}
               <span className="text-gradient-nexus">dossier</span>
             </h1>
-            <p className="mx-auto mt-4 max-w-xl text-lg text-slate-600">
-              Renseignez votre dossier de A à Z, joignez vos pièces justificatives, et un conseiller Nexus RCA prend le relais.
+            <p className="mx-auto mt-4 max-w-xl text-body-lg text-ink-muted">
+              Renseignez votre dossier de A à Z, joignez vos pièces
+              justificatives, et un conseiller Nexus RCA prend le relais.
             </p>
 
             {/* Quick benefits */}
-            <div className="mt-6 flex flex-wrap justify-center gap-3 text-xs sm:text-sm">
-              <Pill icon={Zap} label="Réponse sous 24h" />
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Pill icon={Zap} label="Réponse sous 24 h" />
               <Pill icon={ShieldCheck} label="Documents sécurisés" />
               <Pill icon={Sparkles} label="Accompagnement dédié" />
             </div>
@@ -43,8 +47,10 @@ export default function DemandeCompletePage() {
           {/* Form */}
           <Suspense
             fallback={
-              <div className="flex h-96 items-center justify-center rounded-3xl border border-slate-200 bg-white">
-                <p className="text-slate-500">Chargement du formulaire...</p>
+              <div className="flex h-96 items-center justify-center rounded-3xl border border-line bg-surface-elevated shadow-elev-2">
+                <p className="text-body-sm text-ink-muted">
+                  Chargement du formulaire…
+                </p>
               </div>
             }
           >
@@ -52,8 +58,8 @@ export default function DemandeCompletePage() {
           </Suspense>
 
           {/* Alternative contact */}
-          <div className="mt-10 rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center">
-            <p className="text-sm text-slate-600">
+          <div className="mt-10 rounded-3xl border border-dashed border-line bg-surface-elevated p-6 text-center">
+            <p className="text-body-sm text-ink-muted">
               Vous préférez d'abord parler à quelqu'un ?
             </p>
             <a
@@ -62,7 +68,7 @@ export default function DemandeCompletePage() {
               )}
               target="_blank"
               rel="noreferrer"
-              className="mt-2 inline-flex items-center gap-2 text-base font-semibold text-nexus-orange-600 hover:text-nexus-orange-700"
+              className="mt-2 inline-flex items-center gap-2 text-body font-semibold text-brand hover:text-brand-hover"
             >
               <MessageCircle className="h-5 w-5" />
               Discuter d'abord sur WhatsApp
@@ -84,8 +90,8 @@ function Pill({
   label: string;
 }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 font-semibold text-nexus-blue-900 shadow-sm ring-1 ring-slate-200">
-      <Icon className="h-4 w-4 text-nexus-orange-500" />
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-surface-elevated px-3 py-1.5 text-caption font-semibold text-ink shadow-elev-1 ring-1 ring-line">
+      <Icon className="h-4 w-4 text-brand" />
       {label}
     </span>
   );

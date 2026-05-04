@@ -24,22 +24,21 @@ export function ServiceFAQ({ items }: ServiceFAQProps) {
           <div
             key={i}
             className={cn(
-              "overflow-hidden rounded-2xl border bg-white transition-all",
+              "overflow-hidden rounded-2xl border bg-surface-elevated transition-all",
               isOpen
-                ? "border-nexus-orange-300 shadow-md"
-                : "border-slate-200 shadow-sm"
+                ? "border-brand/40 shadow-elev-3"
+                : "border-line shadow-elev-1"
             )}
           >
             <button
               onClick={() => setOpenIndex(isOpen ? null : i)}
               className="flex w-full items-center justify-between gap-4 p-5 text-left"
+              aria-expanded={isOpen}
             >
-              <span className="font-semibold text-nexus-blue-950">
-                {item.question}
-              </span>
+              <span className="text-title text-ink">{item.question}</span>
               <ChevronDown
                 className={cn(
-                  "h-5 w-5 shrink-0 text-nexus-orange-500 transition-transform duration-300",
+                  "h-5 w-5 shrink-0 text-brand transition-transform duration-300",
                   isOpen && "rotate-180"
                 )}
               />
@@ -47,11 +46,13 @@ export function ServiceFAQ({ items }: ServiceFAQProps) {
             <div
               className={cn(
                 "grid transition-all duration-300 ease-out",
-                isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                isOpen
+                  ? "grid-rows-[1fr] opacity-100"
+                  : "grid-rows-[0fr] opacity-0"
               )}
             >
               <div className="overflow-hidden">
-                <p className="px-5 pb-5 text-sm leading-relaxed text-slate-600">
+                <p className="px-5 pb-5 text-body-sm text-ink-muted">
                   {item.answer}
                 </p>
               </div>

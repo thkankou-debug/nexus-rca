@@ -38,7 +38,7 @@ export default function NexusConnectPage() {
       {/* ======================================================== */}
       {/* HEADER - Navigation simple */}
       {/* ======================================================== */}
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+      <header className="sticky top-0 z-30 border-b border-line bg-surface-elevated/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <Link href="/">
             <Logo />
@@ -46,19 +46,19 @@ export default function NexusConnectPage() {
           <nav className="hidden items-center gap-6 md:flex">
             <Link
               href="/services"
-              className="text-sm font-semibold text-slate-700 hover:text-nexus-blue-950"
+              className="text-sm font-semibold text-ink-muted hover:text-ink"
             >
               Services
             </Link>
             <Link
               href="/a-propos"
-              className="text-sm font-semibold text-slate-700 hover:text-nexus-blue-950"
+              className="text-sm font-semibold text-ink-muted hover:text-ink"
             >
               À propos
             </Link>
             <Link
               href="/contact"
-              className="text-sm font-semibold text-slate-700 hover:text-nexus-blue-950"
+              className="text-sm font-semibold text-ink-muted hover:text-ink"
             >
               Contact
             </Link>
@@ -66,13 +66,13 @@ export default function NexusConnectPage() {
           <div className="flex items-center gap-2">
             <Link
               href="/login"
-              className="hidden rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 sm:inline-block"
+              className="hidden rounded-full border border-line bg-surface-elevated px-4 py-2 text-sm font-semibold text-ink-muted hover:bg-slate-50 sm:inline-block"
             >
               Connexion
             </Link>
             <Link
               href="/demande/complet"
-              className="inline-flex items-center gap-1.5 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 hover:bg-nexus-orange-600"
+              className="inline-flex items-center gap-1.5 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-elev-3 shadow-nexus-orange-500/30 hover:bg-nexus-orange-600"
             >
               <FilePlus className="h-4 w-4" />
               Ouvrir un dossier
@@ -89,25 +89,28 @@ export default function NexusConnectPage() {
         <div className="absolute bottom-0 left-1/4 h-96 w-96 rounded-full bg-nexus-orange-500/10 blur-3xl" />
 
         <div className="relative mx-auto max-w-5xl text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-nexus-orange-400 backdrop-blur">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-4 py-1.5 text-overline text-nexus-orange-400 backdrop-blur">
             <Sparkles className="h-3.5 w-3.5" />
             Nouveau · Espace client premium
           </div>
 
-          <h1 className="font-display text-5xl font-bold leading-tight text-white sm:text-6xl lg:text-7xl">
+          <h1
+            className="font-display text-display-xl text-white lg:text-display-2xl"
+            style={{ paddingBottom: "0.15em" }}
+          >
             NEXUS{" "}
             <span className="bg-gradient-to-r from-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
               CONNECT
             </span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-3xl text-lg text-slate-300 sm:text-xl">
+          <p className="mx-auto mt-6 max-w-3xl text-body-lg text-slate-300">
             Votre espace personnel chez Nexus RCA. Suivez vos dossiers, vos
             paiements, téléchargez vos documents et restez en contact direct
             avec votre agent dédié.
           </p>
 
-          <p className="mx-auto mt-3 max-w-2xl text-sm text-slate-400">
+          <p className="mx-auto mt-3 max-w-2xl text-caption text-slate-400">
             Une expérience numérique premium pour vos démarches internationales,
             où que vous soyez à Bangui, Yaoundé, Paris ou Montréal.
           </p>
@@ -116,7 +119,7 @@ export default function NexusConnectPage() {
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
               href="/demande/complet"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-8 py-3.5 text-sm font-bold text-white shadow-2xl shadow-nexus-orange-500/40 transition hover:-translate-y-0.5 hover:bg-nexus-orange-600"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-8 py-3.5 text-sm font-bold text-white shadow-elev-4 shadow-nexus-orange-500/40 transition hover:-translate-y-0.5 hover:bg-nexus-orange-600"
             >
               <FilePlus className="h-4 w-4" />
               Ouvrir un dossier
@@ -187,13 +190,13 @@ export default function NexusConnectPage() {
       <section className="bg-slate-50 px-4 py-24 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="text-center">
-            <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+            <p className="text-overline text-nexus-orange-600">
               Tous vos services Nexus
             </p>
-            <h2 className="mt-2 font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl">
+            <h2 className="mt-2 font-display text-3xl font-bold text-ink sm:text-4xl">
               Un espace pour <span className="text-nexus-orange-600">tous vos projets</span>
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-slate-600">
+            <p className="mx-auto mt-4 max-w-2xl text-ink-muted">
               Depuis votre espace NEXUS CONNECT, accédez à l'historique complet
               de vos démarches avec Nexus RCA.
             </p>
@@ -255,10 +258,10 @@ export default function NexusConnectPage() {
       <section className="px-4 py-24 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
           <div className="text-center">
-            <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+            <p className="text-overline text-nexus-orange-600">
               Simple et rapide
             </p>
-            <h2 className="mt-2 font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl">
+            <h2 className="mt-2 font-display text-3xl font-bold text-ink sm:text-4xl">
               Comment ça marche ?
             </h2>
           </div>
@@ -295,7 +298,7 @@ export default function NexusConnectPage() {
         <div className="mx-auto max-w-5xl">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-400">
+              <p className="text-overline text-nexus-orange-400">
                 Notre engagement
               </p>
               <h2 className="mt-2 font-display text-3xl font-bold text-white sm:text-4xl">
@@ -339,7 +342,7 @@ export default function NexusConnectPage() {
       {/* ======================================================== */}
       <section className="px-4 py-24 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 p-10 text-center shadow-2xl sm:p-16">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 p-10 text-center shadow-elev-4 sm:p-16">
             <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
             <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-nexus-blue-950/20 blur-3xl" />
 
@@ -354,7 +357,7 @@ export default function NexusConnectPage() {
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link
                   href="/demande/complet"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-blue-950 px-8 py-3.5 text-sm font-bold text-white shadow-xl transition hover:-translate-y-0.5 hover:bg-nexus-blue-800"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-blue-950 px-8 py-3.5 text-sm font-bold text-white shadow-elev-3 transition hover:-translate-y-0.5 hover:bg-nexus-blue-800"
                 >
                   <FilePlus className="h-4 w-4" />
                   Ouvrir un dossier
@@ -380,21 +383,21 @@ export default function NexusConnectPage() {
       {/* ======================================================== */}
       {/* FOOTER MINIMAL */}
       {/* ======================================================== */}
-      <footer className="border-t border-slate-200 bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
+      <footer className="border-t border-line bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
             <Logo />
-            <div className="flex flex-wrap gap-6 text-sm text-slate-600">
-              <Link href="/services" className="hover:text-nexus-blue-950">
+            <div className="flex flex-wrap gap-6 text-sm text-ink-muted">
+              <Link href="/services" className="hover:text-ink">
                 Services
               </Link>
-              <Link href="/a-propos" className="hover:text-nexus-blue-950">
+              <Link href="/a-propos" className="hover:text-ink">
                 À propos
               </Link>
-              <Link href="/contact" className="hover:text-nexus-blue-950">
+              <Link href="/contact" className="hover:text-ink">
                 Contact
               </Link>
-              <Link href="/login" className="hover:text-nexus-blue-950">
+              <Link href="/login" className="hover:text-ink">
                 Connexion
               </Link>
             </div>
@@ -428,16 +431,16 @@ function PillarCard({
     blue: "from-nexus-blue-700 to-nexus-blue-900",
   };
   return (
-    <div className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-lg transition hover:-translate-y-1 hover:shadow-2xl">
+    <div className="group rounded-2xl border border-line bg-surface-elevated p-6 shadow-elev-3 transition hover:-translate-y-1 hover:shadow-elev-4">
       <div
-        className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${colorMap[accent]} text-white shadow-lg`}
+        className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${colorMap[accent]} text-white shadow-elev-3`}
       >
         <Icon className="h-6 w-6" />
       </div>
-      <h3 className="mt-4 font-display text-lg font-bold text-nexus-blue-950">
+      <h3 className="mt-4 font-display text-lg font-bold text-ink">
         {title}
       </h3>
-      <p className="mt-2 text-sm text-slate-600">{description}</p>
+      <p className="mt-2 text-sm text-ink-muted">{description}</p>
     </div>
   );
 }
@@ -452,16 +455,16 @@ function ServiceItem({
   description: string;
 }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-nexus-orange-300 hover:shadow-md">
+    <div className="rounded-xl border border-line bg-surface-elevated p-5 shadow-elev-1 transition hover:border-nexus-orange-300 hover:shadow-md">
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-nexus-orange-50 text-nexus-orange-600">
           <Icon className="h-5 w-5" />
         </div>
-        <h3 className="font-display text-base font-bold text-nexus-blue-950">
+        <h3 className="font-display text-base font-bold text-ink">
           {title}
         </h3>
       </div>
-      <p className="mt-3 text-sm text-slate-600">{description}</p>
+      <p className="mt-3 text-sm text-ink-muted">{description}</p>
     </div>
   );
 }
@@ -476,15 +479,15 @@ function Step({
   description: string;
 }) {
   return (
-    <div className="flex gap-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 font-display text-xl font-bold text-white shadow-lg">
+    <div className="flex gap-5 rounded-2xl border border-line bg-surface-elevated p-6 shadow-elev-1 transition hover:shadow-md">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 font-display text-xl font-bold text-white shadow-elev-3">
         {number}
       </div>
       <div className="flex-1">
-        <h3 className="font-display text-lg font-bold text-nexus-blue-950">
+        <h3 className="font-display text-lg font-bold text-ink">
           {title}
         </h3>
-        <p className="mt-1 text-sm text-slate-600">{description}</p>
+        <p className="mt-1 text-sm text-ink-muted">{description}</p>
       </div>
     </div>
   );

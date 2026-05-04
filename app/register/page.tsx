@@ -94,10 +94,10 @@ export default function RegisterPage() {
             className="w-full rounded-3xl border border-white/10 bg-white/95 p-8 shadow-2xl backdrop-blur sm:p-10"
           >
             <div className="mb-8 text-center">
-              <h1 className="font-display text-3xl font-bold text-nexus-blue-950">
+              <h1 className="font-display text-display-sm text-nexus-blue-950">
                 Créer un compte
               </h1>
-              <p className="mt-2 text-slate-600">
+              <p className="mt-2 text-body text-slate-600">
                 Rejoignez Nexus RCA et pilotez vos demandes.
               </p>
             </div>
@@ -176,7 +176,7 @@ export default function RegisterPage() {
               )}
             </Button>
 
-            <p className="mt-6 text-center text-sm text-slate-600">
+            <p className="mt-6 text-center text-body-sm text-slate-600">
               Déjà inscrit ?{" "}
               <Link
                 href="/login"

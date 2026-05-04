@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
+import { ServiceCTA } from "@/components/services/ServiceCTA";
 import {
   FileText,
   Globe,
@@ -16,7 +17,6 @@ import {
   Calendar,
   Eye,
   Sparkles,
-  Heart,
   AlertTriangle,
   Zap,
   Smartphone,
@@ -24,68 +24,55 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "Visa & e-Visa internationaux | Nexus RCA",
+  title: "Visa & e-Visa | Nexus RCA — Bangui",
   description:
-    "Accompagnement professionnel pour vos demandes de visa et e-Visa. Asie, Moyen-Orient, Europe, Afrique, Canada. Préparation complète du dossier, vérification, suivi. Maximisez vos chances avec Nexus RCA.",
+    "Préparation, vérification et suivi de votre dossier visa : Asie, Moyen-Orient, Europe, Canada, Afrique. Étude gratuite, conseil honnête, dossier optimisé. Depuis Bangui.",
 };
 
-// ============================================================================
-// DONNEES
-// ============================================================================
+// ─── Données ────────────────────────────────────────────────────────────────
+
 const PROBLEMES = [
-  {
-    icon: FileText,
-    text: "Documents incomplets ou mal préparés",
-  },
-  {
-    icon: AlertCircle,
-    text: "Erreurs dans les formulaires officiels",
-  },
-  {
-    icon: Eye,
-    text: "Manque d'information sur les exigences",
-  },
-  {
-    icon: Clock,
-    text: "Délais longs et démarches stressantes",
-  },
+  { icon: FileText, text: "Documents incomplets ou mal préparés" },
+  { icon: AlertCircle, text: "Erreurs dans les formulaires officiels" },
+  { icon: Eye, text: "Manque d'information sur les exigences réelles" },
+  { icon: Clock, text: "Délais qui s'allongent sans explication" },
 ];
 
 const ETAPES = [
   {
     num: "01",
     icon: Search,
-    title: "Analyse de votre situation",
+    title: "Étude gratuite de votre situation",
     description:
-      "Étude de votre profil, de votre destination et du type de visa adapté à votre projet.",
+      "Profil, destination, type de visa : nous évaluons la faisabilité avant tout engagement.",
   },
   {
     num: "02",
     icon: ClipboardCheck,
     title: "Vérification des documents",
     description:
-      "Contrôle complet de tous les documents requis selon les exigences du pays visé.",
+      "Liste précise selon le pays visé. Tout est contrôlé, rien ne manque le jour du dépôt.",
   },
   {
     num: "03",
     icon: FileText,
     title: "Constitution du dossier",
     description:
-      "Préparation rigoureuse du dossier complet, formulaires officiels remplis correctement.",
+      "Formulaires officiels remplis, pièces justificatives organisées, lettre d'accompagnement préparée.",
   },
   {
     num: "04",
     icon: Calendar,
-    title: "Prise de rendez-vous",
+    title: "Rendez-vous & dépôt",
     description:
-      "Si nécessaire, planification du rendez-vous au consulat ou centre de visas.",
+      "Prise de RDV au consulat ou centre VFS/TLS. Préparation à l'entretien si nécessaire.",
   },
   {
     num: "05",
     icon: Eye,
     title: "Suivi jusqu'à la décision",
     description:
-      "Accompagnement actif jusqu'à la décision finale des autorités consulaires.",
+      "Vous êtes informé à chaque étape. En cas de demande de pièces complémentaires, nous réagissons vite.",
   },
 ];
 
@@ -93,24 +80,22 @@ const E_VISA_AVANTAGES = [
   {
     icon: Smartphone,
     title: "100% en ligne",
-    description: "Demande effectuée entièrement par voie électronique.",
+    description: "Pas besoin de se déplacer au consulat.",
   },
   {
     icon: Zap,
-    title: "Traitement rapide",
-    description:
-      "Délais réduits, généralement de 48 heures à quelques jours selon le pays.",
+    title: "Délai court",
+    description: "48 h à 5 jours selon la destination.",
   },
   {
     icon: MapPin,
-    title: "Pas de déplacement",
-    description: "Aucun rendez-vous physique à l'ambassade ou au consulat.",
+    title: "Pas de biométrie",
+    description: "Aucun rendez-vous physique à prévoir.",
   },
   {
     icon: CheckCircle2,
-    title: "Procédure simplifiée",
-    description:
-      "Moins de documents à fournir, processus plus accessible et plus simple.",
+    title: "Moins de pièces",
+    description: "Procédure plus accessible que le visa classique.",
   },
 ];
 
@@ -132,7 +117,7 @@ const REGIONS: Region[] = [
   {
     title: "Asie",
     emoji: "🌏",
-    description: "Forte demande pour les voyages, études et affaires.",
+    description: "Voyages d'affaires, tourisme, études — forte demande RCA.",
     highlight: true,
     destinations: [
       { name: "Inde", type: "e-Visa tourisme & affaires", emoji: "🇮🇳" },
@@ -140,25 +125,34 @@ const REGIONS: Region[] = [
       { name: "Vietnam", type: "e-Visa rapide", emoji: "🇻🇳" },
       { name: "Thaïlande", type: "Visa & e-Visa", emoji: "🇹🇭" },
       { name: "Sri Lanka", type: "ETA en ligne", emoji: "🇱🇰" },
-      { name: "Chine", type: "Accompagnement spécifique", emoji: "🇨🇳" },
+      { name: "Chine", type: "Visa classique", emoji: "🇨🇳" },
     ],
   },
   {
     title: "Moyen-Orient",
     emoji: "🌍",
-    description: "Destinations business et tourisme premium.",
+    description: "Business, commerce, transit aérien.",
     destinations: [
-      { name: "Dubaï (Émirats Arabes Unis)", type: "e-Visa rapide", emoji: "🇦🇪" },
+      { name: "Émirats Arabes Unis (Dubaï)", type: "e-Visa rapide", emoji: "🇦🇪" },
       { name: "Turquie", type: "e-Visa simplifié", emoji: "🇹🇷" },
     ],
   },
   {
     title: "Europe & Amérique",
     emoji: "🌎",
-    description: "Démarches consulaires complètes et exigeantes.",
+    description:
+      "Démarches consulaires complètes — biométrie souvent à Yaoundé ou Douala.",
     destinations: [
-      { name: "Visa Schengen (Europe)", type: "Tourisme, études, travail", emoji: "🇪🇺" },
-      { name: "Canada", type: "Visa visiteur, études, travail", emoji: "🇨🇦" },
+      {
+        name: "Visa Schengen",
+        type: "Tourisme, études, travail (26 pays)",
+        emoji: "🇪🇺",
+      },
+      {
+        name: "Canada",
+        type: "Visiteur, études, travail",
+        emoji: "🇨🇦",
+      },
     ],
   },
   {
@@ -176,114 +170,132 @@ const REGIONS: Region[] = [
 const POURQUOI_NEXUS = [
   {
     icon: Sparkles,
-    title: "Accompagnement personnalisé",
+    title: "Conseiller dédié",
     description:
-      "Un conseiller dédié comprend votre situation et adapte la démarche à votre profil.",
+      "Un seul interlocuteur pour tout votre dossier, joignable sur WhatsApp.",
   },
   {
     icon: ShieldCheck,
-    title: "Expertise des procédures",
+    title: "Procédures à jour",
     description:
-      "Maîtrise des exigences de chaque consulat, mises à jour régulières des règles.",
+      "Veille active sur les exigences de chaque consulat — elles changent souvent.",
   },
   {
     icon: CheckCircle2,
-    title: "Réduction des erreurs",
+    title: "Moins de motifs de refus",
     description:
-      "Vérification rigoureuse à chaque étape pour éliminer les motifs de refus évitables.",
+      "Vérification rigoureuse avant le dépôt pour éliminer les erreurs évitables.",
   },
   {
     icon: Clock,
-    title: "Gain de temps considérable",
+    title: "Vous gagnez du temps",
     description:
-      "Vous vous concentrez sur votre voyage, nous gérons les démarches complexes.",
+      "Vous restez concentré sur votre projet, nous gérons la paperasse.",
   },
   {
     icon: Eye,
-    title: "Suivi sérieux",
+    title: "Suivi transparent",
     description:
-      "Information transparente à chaque étape, du dépôt jusqu'à la décision.",
+      "Statut clair à chaque étape, du dépôt jusqu'à la décision finale.",
   },
   {
     icon: ClipboardCheck,
     title: "Dossier optimisé",
     description:
-      "Présentation soignée qui valorise votre profil auprès des autorités consulaires.",
+      "Une présentation soignée qui valorise votre profil aux yeux du consulat.",
   },
 ];
 
-// ============================================================================
-// COMPOSANT PRINCIPAL
-// ============================================================================
+const STATS = [
+  { value: "13", label: "Pays couverts" },
+  { value: "48 h", label: "Délai e-Visa min." },
+  { value: "0 FCFA", label: "Étude initiale" },
+];
+
+// ─── Composant ──────────────────────────────────────────────────────────────
+
 export default function VisaPage() {
   return (
     <>
       <Navbar />
       <main>
-        {/* ==================== HERO ==================== */}
+        {/* HERO ───────────────────────────────────────────────────── */}
         <section className="relative overflow-hidden bg-nexus-blue-950 pt-40 pb-24 text-white">
           <div className="absolute inset-0 bg-mesh-gradient opacity-50" />
           <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-nexus-orange-500/30 blur-3xl" />
           <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-nexus-blue-500/30 blur-3xl" />
+          <div className="grain pointer-events-none absolute inset-0 opacity-20" />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold backdrop-blur">
-                <Plane className="h-4 w-4 text-nexus-orange-400" />
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-overline text-nexus-orange-300 backdrop-blur">
+                <Plane className="h-3.5 w-3.5" />
                 Visa & e-Visa internationaux
               </div>
 
-              <h1 className="font-display text-4xl font-bold leading-[1.15] tracking-tight sm:text-5xl md:text-6xl">
+              <h1
+                className="font-display text-display-xl text-white lg:text-display-2xl"
+                style={{ paddingBottom: "0.15em" }}
+              >
                 Voyagez en toute{" "}
-                <span className="text-gradient-orange">sérénité</span>, avec un
-                accompagnement{" "}
-                <span className="text-gradient-orange">professionnel</span>
+                <span className="text-gradient-orange">sérénité</span>, dossier
+                préparé à <span className="text-gradient-orange">Bangui</span>.
               </h1>
 
-              <p className="mx-auto mt-8 max-w-3xl text-lg leading-relaxed text-white/80 sm:text-xl">
-                Nexus RCA vous accompagne à chaque étape de votre demande de
-                visa : préparation du dossier, vérification des documents,
-                soumission et suivi jusqu'à la décision finale.
+              <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">
+                Étude gratuite, dossier complet, suivi jusqu'à la décision.
+                Asie, Moyen-Orient, Europe, Canada, Afrique — nous traitons
+                votre demande comme si c'était la nôtre.
               </p>
 
               <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
                 <Link
                   href="/demande/complet?service=visa"
-                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-8 py-4 text-base font-semibold text-white shadow-xl shadow-nexus-orange-500/40 transition hover:scale-105 hover:bg-nexus-orange-600"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
                 >
-                  Faire une demande de visa
-                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  Faire ma demande
+                  <ArrowRight className="h-5 w-5" />
                 </Link>
                 <Link
                   href="#destinations"
-                  className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/40 bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur transition hover:bg-white/20"
+                  className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/30 bg-white/5 px-8 py-4 text-body font-semibold text-white backdrop-blur transition hover:bg-white/10"
                 >
                   Voir les destinations
                 </Link>
               </div>
 
-              <p className="mt-5 text-sm text-white/60">
-                Étude gratuite du dossier · Conseil personnalisé · Suivi
-                jusqu'à la décision
+              <p className="mt-5 text-caption text-slate-400">
+                Étude gratuite · Conseil honnête · Suivi jusqu'à la décision
               </p>
+            </div>
+
+            {/* Stats strip */}
+            <div className="mx-auto mt-16 grid max-w-3xl grid-cols-3 gap-6 border-t border-white/10 pt-10">
+              {STATS.map((s) => (
+                <div key={s.label} className="text-center">
+                  <div className="font-display text-display-sm text-nexus-orange-400">
+                    {s.value}
+                  </div>
+                  <div className="mt-1 text-overline text-slate-400">
+                    {s.label}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* ==================== INTRODUCTION (PROBLÈME) ==================== */}
-        <section className="bg-white py-20">
+        {/* LE CONSTAT ─────────────────────────────────────────────── */}
+        <section className="bg-surface py-20">
           <div className="mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
-              <p className="text-sm font-bold uppercase tracking-wider text-nexus-orange-600">
-                Le constat
-              </p>
-              <h2 className="mt-3 font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl md:text-5xl">
+              <p className="text-overline text-brand">Le constat</p>
+              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
                 Obtenir un visa, ce n'est pas si simple
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-700">
-                Les démarches sont souvent plus complexes qu'il n'y paraît, et
-                une erreur peut coûter cher : refus, perte de temps, frais
-                inutiles.
+              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
+                Une erreur dans le dossier coûte cher : refus, perte de temps,
+                frais de visa non remboursés.
               </p>
             </div>
 
@@ -293,12 +305,12 @@ export default function VisaPage() {
                 return (
                   <div
                     key={idx}
-                    className="flex items-start gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5"
+                    className="flex items-start gap-4 rounded-2xl border border-line bg-surface-sunken p-5"
                   >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-100 text-red-600">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-100 text-rose-600 dark:bg-rose-500/15 dark:text-rose-300">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <p className="text-sm font-semibold text-slate-700 sm:text-base">
+                    <p className="text-body-sm font-semibold text-ink">
                       {p.text}
                     </p>
                   </div>
@@ -306,19 +318,15 @@ export default function VisaPage() {
               })}
             </div>
 
-            <div className="mt-10 rounded-3xl border-l-4 border-nexus-orange-500 bg-gradient-to-br from-nexus-orange-50 to-white px-6 py-6 shadow-md sm:px-8 sm:py-8">
-              <p className="font-display text-xl font-bold leading-snug text-nexus-blue-950 sm:text-2xl">
-                Chez Nexus RCA, nous simplifions tout.
+            <div className="mt-10 rounded-3xl border-l-4 border-brand bg-brand-subtle/40 px-6 py-6 shadow-elev-1 sm:px-8 sm:py-8">
+              <p className="font-display text-headline text-ink sm:text-display-sm">
+                Chez Nexus RCA, on simplifie tout.
               </p>
-              <p className="mt-3 text-base leading-relaxed text-slate-700 sm:text-lg">
-                Nous vous accompagnons de manière professionnelle pour{" "}
-                <strong className="text-nexus-blue-950">
-                  éviter les erreurs
-                </strong>
-                ,{" "}
-                <strong className="text-nexus-blue-950">gagner du temps</strong>{" "}
-                et{" "}
-                <strong className="text-nexus-blue-950">
+              <p className="mt-3 text-body text-ink-muted">
+                Nous vous accompagnons pour{" "}
+                <strong className="text-ink">éviter les erreurs</strong>,{" "}
+                <strong className="text-ink">gagner du temps</strong> et{" "}
+                <strong className="text-ink">
                   maximiser vos chances d'acceptation
                 </strong>
                 .
@@ -327,40 +335,38 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* ==================== NOS SERVICES VISA (ÉTAPES) ==================== */}
-        <section className="bg-slate-50 py-20">
+        {/* ÉTAPES ────────────────────────────────────────────────── */}
+        <section className="bg-surface-sunken py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="text-center">
-              <p className="text-sm font-bold uppercase tracking-wider text-nexus-orange-600">
-                Notre accompagnement
-              </p>
-              <h2 className="mt-3 font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl md:text-5xl">
-                Nous prenons votre dossier en charge de A à Z
+              <p className="text-overline text-brand">Notre méthode</p>
+              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
+                Votre dossier pris en charge de A à Z
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-700">
-                Vous êtes guidé à chaque étape, sans stress ni confusion.
+              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
+                Cinq étapes claires. Vous savez à tout moment où vous en êtes.
               </p>
             </div>
 
             <div className="mt-12 space-y-4">
-              {ETAPES.map((etape, idx) => {
+              {ETAPES.map((etape) => {
                 const Icon = etape.icon;
                 return (
                   <div
                     key={etape.num}
-                    className="group flex items-start gap-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-nexus-orange-300 hover:shadow-md sm:items-center"
+                    className="group flex items-start gap-5 rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2 transition hover:border-brand/40 hover:shadow-elev-3 sm:items-center"
                   >
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-100 to-nexus-blue-50 font-display text-xl font-bold text-nexus-blue-700 transition group-hover:from-nexus-orange-100 group-hover:to-nexus-orange-50 group-hover:text-nexus-orange-600">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-100 to-nexus-blue-50 font-display text-xl font-bold text-nexus-blue-700 transition group-hover:from-brand-subtle group-hover:to-orange-50 group-hover:text-brand dark:bg-blue-500/15 dark:from-blue-500/15 dark:to-blue-500/10 dark:text-blue-300">
                       {etape.num}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <Icon className="h-5 w-5 text-nexus-orange-500" />
-                        <h3 className="font-display text-lg font-bold text-nexus-blue-950">
+                        <Icon className="h-5 w-5 text-brand" />
+                        <h3 className="font-display text-headline text-ink">
                           {etape.title}
                         </h3>
                       </div>
-                      <p className="mt-1 text-sm leading-relaxed text-slate-600 sm:text-base">
+                      <p className="mt-1 text-body-sm text-ink-muted">
                         {etape.description}
                       </p>
                     </div>
@@ -371,29 +377,26 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* ==================== E-VISA ==================== */}
+        {/* E-VISA ────────────────────────────────────────────────── */}
         <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white">
           <div className="absolute inset-0 bg-mesh-gradient opacity-30" />
           <div className="absolute -right-32 top-1/4 h-96 w-96 rounded-full bg-nexus-orange-500/20 blur-3xl" />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
-              <div className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-lg">
+              <div className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-elev-3">
                 <Smartphone className="h-6 w-6" />
               </div>
-              <p className="text-sm font-bold uppercase tracking-wider text-nexus-orange-400">
+              <p className="text-overline text-nexus-orange-400">
                 Visa électronique
               </p>
-              <h2 className="mt-3 font-display text-3xl font-bold sm:text-4xl md:text-5xl">
+              <h2 className="mt-3 font-display text-display-md text-white sm:text-display-lg">
                 Le e-Visa,{" "}
-                <span className="text-nexus-orange-400">
-                  rapide et moderne
-                </span>
+                <span className="text-nexus-orange-400">rapide et moderne</span>
               </h2>
-              <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-white/80">
-                Le visa électronique (e-Visa) est une solution simplifiée pour
-                de nombreuses destinations. Nexus s'occupe de toute la procédure
-                pour vous, de la demande à la réception du document.
+              <p className="mx-auto mt-6 max-w-3xl text-body-lg text-slate-300">
+                Pour de nombreuses destinations, plus besoin de se déplacer.
+                Nexus s'occupe de toute la procédure en ligne.
               </p>
             </div>
 
@@ -405,13 +408,13 @@ export default function VisaPage() {
                     key={avantage.title}
                     className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm"
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 shadow-lg">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 shadow-elev-2">
                       <Icon className="h-6 w-6 text-white" />
                     </div>
-                    <h3 className="mt-4 font-display text-base font-bold">
+                    <h3 className="mt-4 font-display text-title text-white">
                       {avantage.title}
                     </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-white/70">
+                    <p className="mt-2 text-body-sm text-slate-300">
                       {avantage.description}
                     </p>
                   </div>
@@ -420,30 +423,26 @@ export default function VisaPage() {
             </div>
 
             <div className="mt-10 rounded-2xl border border-nexus-orange-500/30 bg-nexus-orange-500/10 p-6 text-center backdrop-blur sm:p-8">
-              <p className="text-base leading-relaxed text-white sm:text-lg">
-                <strong className="text-nexus-orange-300">
-                  Important :
-                </strong>{" "}
+              <p className="text-body text-white sm:text-body-lg">
+                <strong className="text-nexus-orange-300">À savoir : </strong>
                 tous les pays ne proposent pas le e-Visa. Nous vous indiquons la
-                meilleure procédure selon votre destination et votre situation.
+                meilleure procédure selon votre destination et votre profil.
               </p>
             </div>
           </div>
         </section>
 
-        {/* ==================== DESTINATIONS ==================== */}
-        <section id="destinations" className="bg-white py-20">
+        {/* DESTINATIONS ──────────────────────────────────────────── */}
+        <section id="destinations" className="bg-surface py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="text-center">
-              <p className="text-sm font-bold uppercase tracking-wider text-nexus-orange-600">
-                Destinations disponibles
-              </p>
-              <h2 className="mt-3 font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl md:text-5xl">
+              <p className="text-overline text-brand">Destinations couvertes</p>
+              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
                 Quelle est votre destination ?
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-700">
-                Nous accompagnons les démarches pour de nombreux pays à travers
-                le monde. Voici les principales destinations couvertes.
+              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
+                Treize pays principaux, et davantage sur demande. Si votre
+                destination n'est pas listée, contactez-nous.
               </p>
             </div>
 
@@ -454,16 +453,16 @@ export default function VisaPage() {
                     <span className="text-3xl">{region.emoji}</span>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="font-display text-2xl font-bold text-nexus-blue-950">
+                        <h3 className="font-display text-display-sm text-ink">
                           {region.title}
                         </h3>
                         {region.highlight && (
-                          <span className="rounded-full bg-nexus-orange-100 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-nexus-orange-700">
+                          <span className="rounded-full bg-brand-subtle px-2.5 py-0.5 text-overline text-nexus-orange-700 dark:text-brand">
                             Forte demande
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-slate-600">
+                      <p className="text-body-sm text-ink-muted">
                         {region.description}
                       </p>
                     </div>
@@ -473,14 +472,12 @@ export default function VisaPage() {
                     {region.destinations.map((dest) => (
                       <div
                         key={dest.name}
-                        className="group flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-nexus-orange-300 hover:shadow-md"
+                        className="group flex items-center gap-3 rounded-2xl border border-line bg-surface-elevated p-4 shadow-elev-1 transition hover:border-brand/40 hover:shadow-elev-2"
                       >
                         <span className="text-2xl">{dest.emoji}</span>
                         <div className="min-w-0 flex-1">
-                          <p className="font-semibold text-nexus-blue-950">
-                            {dest.name}
-                          </p>
-                          <p className="truncate text-xs text-slate-500">
+                          <p className="text-title text-ink">{dest.name}</p>
+                          <p className="truncate text-caption text-ink-muted">
                             {dest.type}
                           </p>
                         </div>
@@ -491,25 +488,22 @@ export default function VisaPage() {
               ))}
             </div>
 
-            <p className="mt-10 text-center text-sm italic text-slate-500">
-              Et plusieurs autres destinations selon votre projet — contactez-nous
-              pour les pays non listés.
+            <p className="mt-10 text-center text-body-sm italic text-ink-muted">
+              Pays non listé ? Contactez-nous, nous traitons à la demande.
             </p>
           </div>
         </section>
 
-        {/* ==================== POURQUOI NEXUS ==================== */}
-        <section className="bg-slate-50 py-20">
+        {/* POURQUOI NEXUS ────────────────────────────────────────── */}
+        <section className="bg-surface-sunken py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="text-center">
-              <p className="text-sm font-bold uppercase tracking-wider text-nexus-orange-600">
-                Pourquoi choisir Nexus RCA
-              </p>
-              <h2 className="mt-3 font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl md:text-5xl">
-                Une démarche compliquée devient simple
+              <p className="text-overline text-brand">Pourquoi Nexus RCA</p>
+              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
+                Une démarche complexe devient simple
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-700">
-                Six raisons concrètes de nous confier votre dossier de visa.
+              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
+                Six raisons concrètes de nous confier votre dossier.
               </p>
             </div>
 
@@ -519,15 +513,15 @@ export default function VisaPage() {
                 return (
                   <div
                     key={item.title}
-                    className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-nexus-orange-300 hover:shadow-md"
+                    className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2 transition hover:border-brand/40 hover:shadow-elev-3"
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-md">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-elev-2">
                       <Icon className="h-6 w-6" />
                     </div>
-                    <h3 className="mt-4 font-display text-lg font-bold text-nexus-blue-950">
+                    <h3 className="mt-4 font-display text-headline text-ink">
                       {item.title}
                     </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                    <p className="mt-2 text-body-sm text-ink-muted">
                       {item.description}
                     </p>
                   </div>
@@ -537,32 +531,32 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* ==================== TRANSPARENCE ==================== */}
-        <section className="bg-white py-20">
+        {/* TRANSPARENCE ──────────────────────────────────────────── */}
+        <section className="bg-surface py-20">
           <div className="mx-auto max-w-4xl px-4 lg:px-8">
-            <div className="rounded-3xl border-2 border-amber-200 bg-gradient-to-br from-amber-50 via-white to-orange-50 p-8 shadow-xl sm:p-12">
+            <div className="rounded-3xl border-2 border-amber-200/70 bg-gradient-to-br from-amber-50 via-surface-elevated to-orange-50 p-8 shadow-elev-3 dark:border-amber-500/20 dark:from-amber-500/5 dark:to-orange-500/5 sm:p-12">
               <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-elev-2">
                   <AlertTriangle className="h-6 w-6" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-bold uppercase tracking-wider text-amber-700">
+                  <p className="text-overline text-amber-700 dark:text-amber-300">
                     Transparence
                   </p>
-                  <h2 className="mt-2 font-display text-2xl font-bold text-nexus-blue-950 sm:text-3xl md:text-4xl">
-                    Une information honnête sur ce que nous pouvons garantir
+                  <h2 className="mt-2 font-display text-display-sm text-ink sm:text-display-md">
+                    Une information honnête sur ce que nous garantissons
                   </h2>
 
-                  <div className="mt-6 space-y-4 text-base leading-relaxed text-slate-700 sm:text-lg">
+                  <div className="mt-6 space-y-4 text-body text-ink-muted">
                     <p>
-                      <strong className="text-nexus-blue-950">
+                      <strong className="text-ink">
                         La décision finale appartient toujours aux autorités
                         consulaires.
                       </strong>{" "}
                       Aucune agence sérieuse ne peut garantir l'obtention d'un
                       visa, et nous ne le ferons jamais.
                     </p>
-                    <p>Cependant, ce que Nexus RCA vous garantit, c'est :</p>
+                    <p>Ce que Nexus RCA vous garantit :</p>
                   </div>
 
                   <ul className="mt-5 space-y-3">
@@ -575,12 +569,12 @@ export default function VisaPage() {
                       votre profil
                     </TransparenceItem>
                     <TransparenceItem>
-                      La <strong>réduction maximale</strong> des risques de refus
-                      pour motifs évitables
+                      La <strong>réduction maximale</strong> des risques de
+                      refus pour motifs évitables
                     </TransparenceItem>
                     <TransparenceItem>
-                      Un <strong>conseil honnête</strong> sur vos chances
-                      réelles avant tout engagement
+                      Un <strong>conseil honnête</strong> sur vos chances réelles
+                      avant tout engagement
                     </TransparenceItem>
                   </ul>
                 </div>
@@ -589,84 +583,14 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* ==================== ENGAGEMENT (VISION) ==================== */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-50 via-white to-nexus-orange-50 py-20">
-          <div className="absolute -top-32 -right-32 h-64 w-64 rounded-full bg-nexus-orange-500/10 blur-3xl" />
-          <div className="absolute -bottom-32 -left-32 h-64 w-64 rounded-full bg-nexus-blue-500/10 blur-3xl" />
-
-          <div className="relative mx-auto max-w-4xl px-4 lg:px-8">
-            <div className="text-center">
-              <div className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-lg">
-                <Heart className="h-6 w-6" />
-              </div>
-              <p className="text-sm font-bold uppercase tracking-wider text-nexus-orange-600">
-                Notre engagement
-              </p>
-              <h2 className="mt-3 font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl md:text-5xl">
-                Bien plus que des formulaires
-              </h2>
-            </div>
-
-            <div className="mt-10 rounded-3xl border-l-4 border-nexus-orange-500 bg-white px-6 py-6 shadow-md sm:px-8 sm:py-8">
-              <p className="font-display text-xl font-bold leading-snug text-nexus-blue-950 sm:text-2xl">
-                Chaque dossier représente un projet de vie.
-              </p>
-              <p className="mt-3 text-base leading-relaxed text-slate-700 sm:text-lg">
-                Nous ne nous contentons pas de remplir des formulaires. Nous
-                aidons des personnes à{" "}
-                <strong className="text-nexus-blue-950">voyager</strong>,{" "}
-                <strong className="text-nexus-blue-950">étudier</strong>,{" "}
-                <strong className="text-nexus-blue-950">
-                  développer leurs activités
-                </strong>{" "}
-                et{" "}
-                <strong className="text-nexus-blue-950">
-                  accéder à des opportunités à l'international
-                </strong>
-                .
-              </p>
-              <p className="mt-3 text-base leading-relaxed text-slate-700 sm:text-lg">
-                C'est pourquoi nous traitons chaque dossier avec le sérieux
-                qu'il mérite.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* ==================== CTA FINAL ==================== */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-orange-500 via-nexus-orange-600 to-nexus-blue-950 py-20 text-white">
-          <div className="absolute inset-0 bg-mesh-gradient opacity-20" />
-          <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
-            <h2 className="font-display text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
-              Vous souhaitez obtenir un visa sans complication ?
-            </h2>
-            <p className="mx-auto mt-5 max-w-2xl text-lg text-white/90 sm:text-xl">
-              Déposez votre demande dès maintenant. Un conseiller Nexus vous
-              accompagne immédiatement pour évaluer votre projet et préparer
-              votre dossier.
-            </p>
-
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
-              <Link
-                href="/demande/complet?service=visa"
-                className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-4 text-base font-semibold text-nexus-blue-950 shadow-2xl transition hover:scale-105 hover:shadow-2xl"
-              >
-                Lancer ma demande de visa
-                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-              </Link>
-              <Link
-                href="/rendez-vous"
-                className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/40 bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur transition hover:bg-white/20"
-              >
-                Prendre rendez-vous
-              </Link>
-            </div>
-
-            <p className="mt-6 text-sm text-white/80">
-              Étude gratuite · Conseil personnalisé · 100% confidentiel
-            </p>
-          </div>
-        </section>
+        {/* CTA FINAL ─────────────────────────────────────────────── */}
+        <ServiceCTA
+          title="Prêt à lancer votre dossier visa ?"
+          subtitle="Étude gratuite, conseil personnalisé. Un conseiller Nexus vous répond aujourd'hui sur WhatsApp."
+          ctaLabel="Lancer ma demande de visa"
+          ctaHref="/demande/complet?service=visa"
+          whatsappMessage="Bonjour Nexus, je souhaite démarrer une demande de visa."
+        />
       </main>
       <Footer />
       <WhatsAppFloat />
@@ -674,16 +598,13 @@ export default function VisaPage() {
   );
 }
 
-// ============================================================================
-// SOUS-COMPOSANTS
-// ============================================================================
+// ─── Sous-composants ────────────────────────────────────────────────────────
+
 function TransparenceItem({ children }: { children: React.ReactNode }) {
   return (
-    <li className="flex items-start gap-3 rounded-xl bg-white px-4 py-3 shadow-sm">
-      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-nexus-orange-500" />
-      <span className="text-sm leading-relaxed text-slate-700 sm:text-base">
-        {children}
-      </span>
+    <li className="flex items-start gap-3 rounded-xl bg-surface-elevated px-4 py-3 shadow-elev-1">
+      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
+      <span className="text-body-sm text-ink">{children}</span>
     </li>
   );
 }

@@ -20,12 +20,12 @@ export function FinalCTA() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="font-display text-4xl font-bold leading-tight text-white sm:text-5xl md:text-6xl">
+          <h2 className="font-display text-display-lg text-white lg:text-display-xl">
             Prêt à passer à l'étape suivante ?
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-200">
-            Un conseiller Nexus étudie votre situation et vous rappelle dans les 24 heures.
-            Premier contact gratuit, sans engagement.
+          <p className="mx-auto mt-6 max-w-2xl text-body-lg text-slate-200">
+            Un conseiller Nexus étudie votre situation et vous rappelle sous
+            24 heures. Premier contact gratuit, sans engagement.
           </p>
 
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
