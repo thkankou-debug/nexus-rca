@@ -13,10 +13,44 @@ import {
   Zap,
   CheckCircle2,
 } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { Sparkline } from "@/components/ui/Sparkline";
 import { cn } from "@/lib/utils";
+
+// ─── DEMO TREND HELPERS ────────────────────────────────────────────────────
+// TODO: remplacer par des queries Supabase groupées par jour
+function fakeTrend(
+  current: number,
+  direction: "up" | "down" | "flat",
+  seed: number,
+  points = 7
+): number[] {
+  if (current <= 0) return Array(points).fill(0);
+  const dirFactor = direction === "up" ? 0.55 : direction === "down" ? 1.4 : 1;
+  const start = current * dirFactor;
+  const out: number[] = [];
+  for (let i = 0; i < points; i++) {
+    const t = i / (points - 1);
+    const base = start + (current - start) * t;
+    const noise =
+      (Math.sin(seed + i * 1.7) + Math.sin(seed * 2.3 + i * 0.9)) *
+      (current * 0.08);
+    out.push(Math.max(0, base + noise));
+  }
+  out[points - 1] = current;
+  return out;
+}
+
+function trendDelta(series: number[]): number {
+  if (series.length < 2) return 0;
+  const first = series[0];
+  const last = series[series.length - 1];
+  if (first === 0) return last > 0 ? 100 : 0;
+  return ((last - first) / first) * 100;
+}
 
 export const metadata = {
   title: "Tableau de bord - Agent",
@@ -289,34 +323,52 @@ export default async function AgentDashboardPage() {
           Mes performances ce mois
         </h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard
-            icon={Calendar}
-            label="RDV ce mois"
-            value={String(rdvThisMonth || 0)}
-            sublabel={`${rdvCompleted || 0} termines`}
-            accent="orange"
-          />
-          <StatCard
-            icon={Wallet}
-            label="Paiements encaisses"
-            value={String(totalPaiementsCount)}
-            sublabel={formatMoney(totalPaiementsXAF, "XAF")}
-            accent="green"
-          />
-          <StatCard
-            icon={FileText}
-            label="Dossiers traites"
-            value={String(demandesThisMonth || 0)}
-            sublabel="ce mois"
-            accent="blue"
-          />
-          <StatCard
-            icon={TrendingUp}
-            label="RDV cette annee"
-            value={String(rdvThisYear || 0)}
-            sublabel="cumul annuel"
-            accent="purple"
-          />
+          {(() => {
+            const t1 = fakeTrend(rdvThisMonth || 0, "up", 11);
+            const t2 = fakeTrend(totalPaiementsCount, "up", 12);
+            const t3 = fakeTrend(demandesThisMonth || 0, "up", 13);
+            const t4 = fakeTrend(rdvThisYear || 0, "up", 14);
+            return (
+              <>
+                <StatCard
+                  icon={Calendar}
+                  label="RDV ce mois"
+                  value={String(rdvThisMonth || 0)}
+                  sublabel={`${rdvCompleted || 0} terminés`}
+                  accent="orange"
+                  trend={t1}
+                  delta={trendDelta(t1)}
+                />
+                <StatCard
+                  icon={Wallet}
+                  label="Paiements encaissés"
+                  value={String(totalPaiementsCount)}
+                  sublabel={formatMoney(totalPaiementsXAF, "XAF")}
+                  accent="green"
+                  trend={t2}
+                  delta={trendDelta(t2)}
+                />
+                <StatCard
+                  icon={FileText}
+                  label="Dossiers traités"
+                  value={String(demandesThisMonth || 0)}
+                  sublabel="ce mois"
+                  accent="blue"
+                  trend={t3}
+                  delta={trendDelta(t3)}
+                />
+                <StatCard
+                  icon={TrendingUp}
+                  label="RDV cette année"
+                  value={String(rdvThisYear || 0)}
+                  sublabel="cumul annuel"
+                  accent="purple"
+                  trend={t4}
+                  delta={trendDelta(t4)}
+                />
+              </>
+            );
+          })()}
         </div>
       </div>
 
@@ -522,38 +574,80 @@ function StatCard({
   value,
   sublabel,
   accent,
+  trend,
+  delta,
 }: {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: string;
   sublabel: string;
   accent: "orange" | "green" | "blue" | "purple";
+  trend?: number[];
+  delta?: number;
 }) {
-  const colorMap: Record<string, string> = {
+  const gradientMap: Record<string, string> = {
     orange: "from-nexus-orange-500 to-nexus-orange-700",
-    green: "from-green-500 to-green-700",
+    green: "from-emerald-500 to-emerald-700",
     blue: "from-blue-500 to-blue-700",
     purple: "from-purple-500 to-purple-700",
   };
+  const sparkColorMap: Record<string, string> = {
+    orange: "text-nexus-orange-500",
+    green: "text-emerald-500",
+    blue: "text-blue-500",
+    purple: "text-purple-500",
+  };
+
+  const showSpark = trend && trend.length >= 2;
+  const showDelta = typeof delta === "number" && Number.isFinite(delta);
+  const deltaUp = showDelta && delta! > 0;
+  const deltaDown = showDelta && delta! < 0;
+
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border border-line bg-surface-elevated p-5 shadow-elev-2">
       <div className="flex items-start justify-between">
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-medium text-slate-500">{label}</p>
-          <p className="mt-1 font-display text-2xl font-bold text-nexus-blue-950">
-            {value}
-          </p>
-          <p className="mt-0.5 text-xs text-slate-500">{sublabel}</p>
+          <p className="text-caption font-medium text-ink-muted">{label}</p>
+          <p className="mt-1 font-display text-display-sm text-ink">{value}</p>
+          <p className="mt-0.5 text-caption text-ink-muted">{sublabel}</p>
         </div>
         <div
           className={cn(
-            "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-lg",
-            colorMap[accent]
+            "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-elev-2",
+            gradientMap[accent]
           )}
         >
           <Icon className="h-5 w-5" />
         </div>
       </div>
+
+      {(showSpark || showDelta) && (
+        <div className="mt-3 flex items-center gap-2">
+          {showDelta && (
+            <span
+              className={cn(
+                "inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums",
+                deltaUp &&
+                  "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300",
+                deltaDown &&
+                  "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300",
+                !deltaUp &&
+                  !deltaDown &&
+                  "bg-slate-100 text-slate-600 dark:bg-slate-500/15 dark:text-slate-300"
+              )}
+            >
+              {deltaUp && <ArrowUpRight className="h-3 w-3" />}
+              {deltaDown && <ArrowDownRight className="h-3 w-3" />}
+              {Math.abs(delta!).toFixed(1)}%
+            </span>
+          )}
+          {showSpark && (
+            <div className={cn("min-w-0 flex-1", sparkColorMap[accent])}>
+              <Sparkline data={trend!} height={22} />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
