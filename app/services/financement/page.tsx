@@ -169,9 +169,9 @@ export default function FinancementPage() {
                 style={{ paddingBottom: "0.15em" }}
               >
                 <span className="text-gradient-orange">
-                  L'expertise centrafricaine
+                  Cofinancement structuré
                 </span>{" "}
-                pour structurer et cofinancer vos projets.
+                de projets centrafricains à fort potentiel.
               </h1>
 
               <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">

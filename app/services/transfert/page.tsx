@@ -145,9 +145,9 @@ export default function TransfertPage() {
                 style={{ paddingBottom: "0.15em" }}
               >
                 <span className="text-gradient-orange">
-                  L'expertise centrafricaine
+                  Transferts internationaux
                 </span>{" "}
-                pour vos transferts d'argent.
+                sécurisés avec exécution rapide et traçable.
               </h1>
 
               <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">

@@ -145,9 +145,9 @@ export default function AdministratifPage() {
                 style={{ paddingBottom: "0.15em" }}
               >
                 <span className="text-gradient-orange">
-                  L'expertise centrafricaine
+                  Gestion rigoureuse
                 </span>{" "}
-                pour vos documents administratifs.
+                de vos démarches administratives critiques.
               </h1>
 
               <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">

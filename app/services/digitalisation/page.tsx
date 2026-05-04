@@ -168,9 +168,9 @@ export default function DigitalisationPage() {
                 style={{ paddingBottom: "0.15em" }}
               >
                 <span className="text-gradient-orange">
-                  L'expertise centrafricaine
+                  Transformation digitale
                 </span>{" "}
-                pour digitaliser votre activité.
+                et structuration de vos processus opérationnels.
               </h1>
 
               <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">

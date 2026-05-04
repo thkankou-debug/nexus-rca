@@ -167,9 +167,9 @@ export default function TcfPage() {
                 style={{ paddingBottom: "0.15em" }}
               >
                 <span className="text-gradient-orange">
-                  L'expertise centrafricaine
+                  Préparation ciblée
                 </span>{" "}
-                pour préparer le TCF Canada.
+                au TCF Canada avec optimisation du score requis.
               </h1>
 
               <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">
