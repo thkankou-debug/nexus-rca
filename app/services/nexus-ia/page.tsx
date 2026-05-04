@@ -110,9 +110,9 @@ export default function NexusIAPage() {
                 style={{ paddingBottom: "0.15em" }}
               >
                 <span className="text-gradient-orange">
-                  L'expertise centrafricaine
+                  Intelligence opérationnelle
                 </span>{" "}
-                outillée par l'intelligence artificielle.
+                pour orienter vos décisions et accélérer vos démarches.
               </h1>
 
               <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">

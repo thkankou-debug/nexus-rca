@@ -140,10 +140,11 @@ export default function BilletsPage() {
                 className="font-display text-display-xl text-white lg:text-display-2xl"
                 style={{ paddingBottom: "0.15em" }}
               >
+                Organisation de{" "}
                 <span className="text-gradient-orange">
-                  L'expertise centrafricaine
+                  déplacements internationaux
                 </span>{" "}
-                pour vos voyages.
+                avec itinéraires optimisés.
               </h1>
 
               <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">

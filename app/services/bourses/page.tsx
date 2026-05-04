@@ -164,10 +164,11 @@ export default function BoursesPage() {
                 className="font-display text-display-xl text-white lg:text-display-2xl"
                 style={{ paddingBottom: "0.15em" }}
               >
+                Identification et{" "}
                 <span className="text-gradient-orange">
-                  L'expertise centrafricaine
+                  positionnement stratégique
                 </span>{" "}
-                pour vos études au Canada.
+                sur les financements académiques disponibles.
               </h1>
 
               <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">

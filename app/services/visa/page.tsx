@@ -193,9 +193,9 @@ export default function VisaPage() {
                 style={{ paddingBottom: "0.15em" }}
               >
                 <span className="text-gradient-orange">
-                  L'expertise centrafricaine
+                  Dossiers visa
                 </span>{" "}
-                pour vos démarches visa.
+                préparés selon les standards décisionnels consulaires.
               </h1>
 
               <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">
