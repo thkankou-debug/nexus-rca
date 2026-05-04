@@ -1,13 +1,78 @@
-import { Settings, Sparkles, Cog } from "lucide-react";
+import { Settings } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
+import {
+  ParametresAgenceClient,
+  type AgencySettings,
+} from "@/components/dashboard/ParametresAgenceClient";
 
 export const metadata = {
   title: "Paramètres agence | Super Admin",
 };
 
 export const dynamic = "force-dynamic";
+
+// ─── Données mockées (table agency_settings à créer en migration ultérieure) ─
+const MOCK_SETTINGS: AgencySettings = {
+  identite: {
+    nom: "Nexus RCA",
+    baseline: "L'expertise centrafricaine pour vos démarches internationales",
+    slogan: "Confidentialité · Rigueur · Méthode",
+    logo_url: "/logo.svg",
+    favicon_url: "/favicon.ico",
+    couleur_principale: "#FF6B00",
+    couleur_secondaire: "#0C1C40",
+  },
+  contacts: {
+    telephone_principal: "+236 73 26 96 92",
+    telephone_secondaire: "+236 75 12 34 56",
+    email_contact: "contact@nexusrca.com",
+    email_support: "support@nexusrca.com",
+    whatsapp_number: "+1 587 327 6344",
+    adresse: "Relais Sica, vers Hôpital Général",
+    ville: "Bangui",
+    pays: "République Centrafricaine",
+    code_postal: "BP 4231",
+  },
+  horaires: [
+    { jour: "Lundi", ouverture: "08:00", fermeture: "18:00", ferme: false },
+    { jour: "Mardi", ouverture: "08:00", fermeture: "18:00", ferme: false },
+    { jour: "Mercredi", ouverture: "08:00", fermeture: "18:00", ferme: false },
+    { jour: "Jeudi", ouverture: "08:00", fermeture: "18:00", ferme: false },
+    { jour: "Vendredi", ouverture: "08:00", fermeture: "17:00", ferme: false },
+    { jour: "Samedi", ouverture: "09:00", fermeture: "13:00", ferme: false },
+    { jour: "Dimanche", ouverture: "—", fermeture: "—", ferme: true },
+  ],
+  integrations: {
+    resend: {
+      enabled: true,
+      api_key_set: true,
+      from_email: "noreply@nexusrca.com",
+      last_test: "2026-05-03T16:45:00Z",
+      status: "operational",
+    },
+    stripe: {
+      enabled: false,
+      api_key_set: false,
+      mode: "test",
+      webhook_set: false,
+      status: "not_configured",
+    },
+    whatsapp_business: {
+      enabled: false,
+      phone_id_set: false,
+      access_token_set: false,
+      status: "not_configured",
+    },
+    supabase: {
+      enabled: true,
+      url: "https://yyoptsxdoekbmibkwikj.supabase.co",
+      service_key_set: true,
+      status: "operational",
+    },
+  },
+};
 
 export default async function SuperAdminParametresPage() {
   const profile = await requireProfile(["super_admin"]);
@@ -25,30 +90,12 @@ export default async function SuperAdminParametresPage() {
             Paramètres agence
           </h1>
           <p className="mt-1 text-slate-600">
-            Identité, contacts, intégrations système.
+            Identité, contacts, horaires, intégrations système.
           </p>
         </div>
       </div>
 
-      <section className="rounded-3xl border-2 border-dashed border-line bg-surface-elevated p-10 text-center shadow-elev-1">
-        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-subtle text-brand">
-          <Cog className="h-7 w-7" />
-        </div>
-        <h2 className="font-display text-display-sm text-ink">
-          Module en préparation
-        </h2>
-        <p className="mx-auto mt-3 max-w-2xl text-body-sm text-ink-muted">
-          Configuration centrale : identité agence (logo, baseline, adresse),
-          contacts publics (téléphones, e-mails, WhatsApp), horaires
-          d'ouverture, intégrations (Resend, Supabase, Stripe, WhatsApp
-          Business). Stockée dans une table <code className="rounded bg-surface-sunken px-1 py-0.5 font-mono text-caption">agency_settings</code>{" "}
-          (singleton).
-        </p>
-        <div className="mx-auto mt-6 inline-flex items-center gap-2 rounded-full bg-brand-subtle px-4 py-2 text-caption font-semibold text-brand">
-          <Sparkles className="h-3.5 w-3.5" />
-          À venir — table agency_settings (singleton) + UI édition
-        </div>
-      </section>
+      <ParametresAgenceClient initialSettings={MOCK_SETTINGS} />
     </DashboardShell>
   );
 }
