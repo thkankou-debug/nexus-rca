@@ -227,21 +227,66 @@ const MOCK_ENTRIES: AuditEntry[] = [
 export default async function SuperAdminAuditLogPage() {
   const profile = await requireProfile(["super_admin"]);
 
+  // Mini-stats pour le hero (calculés ici car le hero est un Server Component).
+  const totalEntries = MOCK_ENTRIES.length;
+  const highCount = MOCK_ENTRIES.filter((e) => e.severity === "high").length;
+  const todayStr = new Date().toDateString();
+  const todayCount = MOCK_ENTRIES.filter(
+    (e) => new Date(e.created_at).toDateString() === todayStr
+  ).length;
+
   return (
     <DashboardShell profile={profile}>
       <BackButton fallbackHref="/dashboard/super-admin" label="Retour au tableau de bord" />
 
-      <div className="mb-8 flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 to-rose-700 text-white shadow-lg">
-          <ShieldAlert className="h-6 w-6" />
+      {/* HERO PREMIUM */}
+      <div className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-6 shadow-xl sm:p-8">
+        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-nexus-orange-500/20 blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-nexus-orange-500/10 blur-3xl" />
+
+        <div className="relative flex flex-wrap items-center gap-6">
+          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-2xl">
+            <ShieldAlert className="h-10 w-10" />
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <span className="inline-block rounded-full bg-nexus-orange-500/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-nexus-orange-300">
+              🔒 Sécurité Premium
+            </span>
+            <h1 className="mt-2 font-display text-3xl font-bold text-white sm:text-4xl">
+              Audit log
+            </h1>
+            <p className="mt-1 text-sm text-slate-300">
+              Traçabilité des actions sensibles sur la plateforme.
+            </p>
+          </div>
         </div>
-        <div>
-          <h1 className="font-display text-3xl font-bold text-nexus-blue-950">
-            Audit log
-          </h1>
-          <p className="mt-1 text-slate-600">
-            Traçabilité des actions sensibles sur la plateforme.
-          </p>
+
+        <div className="relative mt-6 grid gap-3 sm:grid-cols-3">
+          <div className="rounded-xl bg-white/10 p-3 backdrop-blur">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              Total entrées
+            </p>
+            <p className="mt-1 font-display text-2xl font-bold text-white">
+              {totalEntries}
+            </p>
+          </div>
+          <div className="rounded-xl bg-white/10 p-3 backdrop-blur">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              Sévérité haute
+            </p>
+            <p className="mt-1 font-display text-2xl font-bold text-rose-300">
+              {highCount}
+            </p>
+          </div>
+          <div className="rounded-xl bg-white/10 p-3 backdrop-blur">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              Aujourd'hui
+            </p>
+            <p className="mt-1 font-display text-2xl font-bold text-nexus-orange-300">
+              {todayCount}
+            </p>
+          </div>
         </div>
       </div>
 

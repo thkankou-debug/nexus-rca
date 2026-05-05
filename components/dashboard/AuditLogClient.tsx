@@ -169,25 +169,35 @@ export function AuditLogClient({ initialEntries }: { initialEntries: AuditEntry[
 
   return (
     <div className="space-y-6">
-      {/* ─── Stats summary ───────────────────────────────────── */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total entrées" value={stats.total} icon={Activity} accent="blue" />
-        <StatCard label="Sévérité haute" value={stats.high} icon={ShieldAlert} accent="rose" />
-        <StatCard label="Aujourd'hui" value={stats.today} icon={Info} accent="emerald" />
-        <StatCard label="Événements système" value={stats.systemEvents} icon={SettingsIcon} accent="slate" />
+      {/* ─── Vue d'ensemble ──────────────────────────────────── */}
+      <div>
+        <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold text-nexus-blue-950">
+          <Activity className="h-5 w-5 text-nexus-orange-600" />
+          Vue d'ensemble
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard label="Total entrées" value={stats.total} icon={Activity} accent="blue" />
+          <StatCard label="Sévérité haute" value={stats.high} icon={ShieldAlert} accent="rose" />
+          <StatCard label="Aujourd'hui" value={stats.today} icon={Info} accent="emerald" />
+          <StatCard label="Événements système" value={stats.systemEvents} icon={SettingsIcon} accent="slate" />
+        </div>
       </div>
 
       {/* ─── Filtres + Export ────────────────────────────────── */}
-      <section className="rounded-3xl border border-line bg-surface-elevated p-5 shadow-elev-2 sm:p-6">
+      <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md sm:p-6">
         <div className="mb-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Filter className="h-5 w-5 text-brand" />
-            <h2 className="font-display text-headline text-ink">Filtres</h2>
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow">
+              <Filter className="h-5 w-5" />
+            </div>
+            <h2 className="font-display text-lg font-bold text-nexus-blue-950">
+              Filtres
+            </h2>
           </div>
           <button
             type="button"
             onClick={handleExportCsv}
-            className="inline-flex items-center gap-2 rounded-full bg-nexus-blue-950 px-4 py-2 text-body-sm font-semibold text-white shadow-elev-2 transition hover:bg-nexus-blue-900 dark:bg-brand dark:hover:bg-brand-hover"
+            className="inline-flex items-center gap-2 rounded-full bg-nexus-blue-950 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-blue-900"
           >
             <Download className="h-4 w-4" />
             Export CSV ({filtered.length})
@@ -196,20 +206,20 @@ export function AuditLogClient({ initialEntries }: { initialEntries: AuditEntry[
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Rechercher acteur, cible, description…"
-              className="w-full rounded-xl border border-line-strong bg-surface-elevated py-2.5 pl-10 pr-3 text-body-sm text-ink placeholder:text-ink-subtle focus:border-brand focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-3 text-sm text-nexus-blue-950 placeholder:text-slate-400 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-100"
             />
           </div>
 
           <select
             value={eventFilter}
             onChange={(e) => setEventFilter(e.target.value)}
-            className="rounded-xl border border-line-strong bg-surface-elevated px-3 py-2.5 text-body-sm text-ink focus:border-brand focus:outline-none"
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-100"
           >
             <option value="all">Tous les événements</option>
             {eventTypes.map((t) => (
@@ -222,7 +232,7 @@ export function AuditLogClient({ initialEntries }: { initialEntries: AuditEntry[
           <select
             value={severityFilter}
             onChange={(e) => setSeverityFilter(e.target.value)}
-            className="rounded-xl border border-line-strong bg-surface-elevated px-3 py-2.5 text-body-sm text-ink focus:border-brand focus:outline-none"
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-100"
           >
             <option value="all">Toutes sévérités</option>
             <option value="high">Haute</option>
@@ -234,7 +244,7 @@ export function AuditLogClient({ initialEntries }: { initialEntries: AuditEntry[
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="rounded-xl border border-line-strong bg-surface-elevated px-3 py-2.5 text-body-sm text-ink focus:border-brand focus:outline-none"
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-100"
           >
             <option value="all">Tous les rôles</option>
             <option value="super_admin">Super admin</option>
@@ -246,85 +256,112 @@ export function AuditLogClient({ initialEntries }: { initialEntries: AuditEntry[
         </div>
       </section>
 
-      {/* ─── Tableau ──────────────────────────────────────────── */}
-      <section className="overflow-hidden rounded-3xl border border-line bg-surface-elevated shadow-elev-2">
-        {filtered.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-surface-sunken text-ink-muted">
-              <Search className="h-6 w-6" />
+      {/* ─── Journal des événements ──────────────────────────── */}
+      <div>
+        <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold text-nexus-blue-950">
+          <FileText className="h-5 w-5 text-nexus-orange-600" />
+          Journal des événements
+        </h2>
+        <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
+          {filtered.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+                <Search className="h-6 w-6" />
+              </div>
+              <p className="font-display text-base font-semibold text-nexus-blue-950">
+                Aucune entrée
+              </p>
+              <p className="mt-1 text-xs text-slate-500">
+                Modifiez vos filtres ou la recherche.
+              </p>
             </div>
-            <p className="font-display text-headline text-ink">Aucune entrée</p>
-            <p className="mt-1 text-caption text-ink-muted">Modifiez vos filtres ou la recherche.</p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="border-b border-line bg-surface-sunken">
-                <tr className="text-left">
-                  <th className="px-5 py-3 text-overline text-ink-muted">Date/heure</th>
-                  <th className="px-5 py-3 text-overline text-ink-muted">Acteur</th>
-                  <th className="px-5 py-3 text-overline text-ink-muted">Événement</th>
-                  <th className="px-5 py-3 text-overline text-ink-muted">Cible</th>
-                  <th className="px-5 py-3 text-overline text-ink-muted">Description</th>
-                  <th className="px-5 py-3 text-overline text-ink-muted">Sév.</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-line">
-                {filtered.map((entry) => {
-                  const Icon = EVENT_ICONS[entry.event_type] ?? Activity;
-                  const eventLabel = EVENT_LABELS[entry.event_type] ?? entry.event_type;
-                  return (
-                    <tr key={entry.id} className="transition hover:bg-surface-sunken">
-                      <td className="whitespace-nowrap px-5 py-4 text-caption text-ink">
-                        {formatDateTime(entry.created_at)}
-                      </td>
-                      <td className="px-5 py-4">
-                        <div className="flex flex-col gap-1">
-                          <span className="text-body-sm font-semibold text-ink">{entry.actor}</span>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="border-b border-slate-200 bg-slate-50">
+                  <tr className="text-left">
+                    <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                      Date/heure
+                    </th>
+                    <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                      Acteur
+                    </th>
+                    <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                      Événement
+                    </th>
+                    <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                      Cible
+                    </th>
+                    <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                      Description
+                    </th>
+                    <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                      Sév.
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {filtered.map((entry) => {
+                    const Icon = EVENT_ICONS[entry.event_type] ?? Activity;
+                    const eventLabel = EVENT_LABELS[entry.event_type] ?? entry.event_type;
+                    return (
+                      <tr key={entry.id} className="transition hover:bg-slate-50">
+                        <td className="whitespace-nowrap px-5 py-4 text-xs text-nexus-blue-950">
+                          {formatDateTime(entry.created_at)}
+                        </td>
+                        <td className="px-5 py-4">
+                          <div className="flex flex-col gap-1">
+                            <span className="text-sm font-semibold text-nexus-blue-950">
+                              {entry.actor}
+                            </span>
+                            <span
+                              className={cn(
+                                "inline-flex w-fit items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
+                                ROLE_CLASS[entry.actor_role]
+                              )}
+                            >
+                              {entry.actor_role}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-5 py-4">
+                          <div className="flex items-center gap-2">
+                            <Icon className="h-4 w-4 text-nexus-orange-600" />
+                            <span className="text-sm text-nexus-blue-950">{eventLabel}</span>
+                          </div>
+                        </td>
+                        <td className="px-5 py-4">
+                          <span className="rounded-md bg-slate-100 px-2 py-1 font-mono text-xs text-nexus-blue-950">
+                            {entry.target}
+                          </span>
+                        </td>
+                        <td className="px-5 py-4 text-sm text-slate-600">
+                          {entry.description}
+                        </td>
+                        <td className="px-5 py-4">
                           <span
                             className={cn(
-                              "inline-flex w-fit items-center rounded-full px-2 py-0.5 text-overline",
-                              ROLE_CLASS[entry.actor_role]
+                              "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider",
+                              SEVERITY_CLASS[entry.severity]
                             )}
                           >
-                            {entry.actor_role}
+                            {entry.severity}
                           </span>
-                        </div>
-                      </td>
-                      <td className="px-5 py-4">
-                        <div className="flex items-center gap-2">
-                          <Icon className="h-4 w-4 text-brand" />
-                          <span className="text-body-sm text-ink">{eventLabel}</span>
-                        </div>
-                      </td>
-                      <td className="px-5 py-4">
-                        <span className="rounded-md bg-surface-sunken px-2 py-1 font-mono text-caption text-ink">
-                          {entry.target}
-                        </span>
-                      </td>
-                      <td className="px-5 py-4 text-body-sm text-ink-muted">{entry.description}</td>
-                      <td className="px-5 py-4">
-                        <span
-                          className={cn(
-                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-overline",
-                            SEVERITY_CLASS[entry.severity]
-                          )}
-                        >
-                          {entry.severity}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+      </div>
 
-      <p className="text-caption text-ink-muted">
-        ⚠️ Données mockées en attendant la création de la table <code className="rounded bg-surface-sunken px-1 font-mono">audit_log</code>{" "}
-        + writers sur les actions sensibles. Lecture super_admin uniquement (RLS strict).
+      <p className="text-xs text-slate-500">
+        ⚠️ Données mockées en attendant la création de la table{" "}
+        <code className="rounded bg-slate-100 px-1 font-mono">audit_log</code> + writers sur
+        les actions sensibles. Lecture super_admin uniquement (RLS strict).
       </p>
     </div>
   );
@@ -342,20 +379,26 @@ function StatCard({
   accent: "blue" | "rose" | "emerald" | "slate";
 }) {
   const ACCENT_BG: Record<typeof accent, string> = {
-    blue: "from-nexus-blue-100 to-nexus-blue-50 text-nexus-blue-700 dark:from-blue-500/15 dark:to-blue-500/10 dark:text-blue-300",
-    rose: "from-rose-100 to-rose-50 text-rose-700 dark:from-rose-500/15 dark:to-rose-500/10 dark:text-rose-300",
-    emerald:
-      "from-emerald-100 to-emerald-50 text-emerald-700 dark:from-emerald-500/15 dark:to-emerald-500/10 dark:text-emerald-300",
-    slate: "from-slate-100 to-slate-50 text-slate-700 dark:from-slate-500/15 dark:to-slate-500/10 dark:text-slate-300",
+    blue: "from-blue-500 to-blue-700",
+    rose: "from-rose-500 to-rose-700",
+    emerald: "from-emerald-500 to-emerald-700",
+    slate: "from-slate-500 to-slate-700",
   };
   return (
-    <div className="rounded-3xl border border-line bg-surface-elevated p-5 shadow-elev-1">
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-caption text-ink-muted">{label}</p>
-          <p className="mt-1 font-display text-display-sm text-ink">{value}</p>
+          <p className="text-xs font-medium text-slate-500">{label}</p>
+          <p className="mt-1 font-display text-2xl font-bold text-nexus-blue-950">
+            {value}
+          </p>
         </div>
-        <div className={cn("flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br", ACCENT_BG[accent])}>
+        <div
+          className={cn(
+            "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow",
+            ACCENT_BG[accent]
+          )}
+        >
           <Icon className="h-5 w-5" />
         </div>
       </div>
