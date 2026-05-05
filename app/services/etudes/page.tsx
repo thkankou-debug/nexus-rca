@@ -80,11 +80,9 @@ export default function EtudesPage() {
       <Navbar />
       <main>
         {/* 1. HERO INSTITUTIONNEL ─────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-nexus-blue-950 pt-40 pb-24 text-white">
-          <div className="absolute inset-0 bg-mesh-gradient opacity-50" />
-          <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-nexus-orange-500/30 blur-3xl" />
-          <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-nexus-blue-500/30 blur-3xl" />
-          <div className="grain pointer-events-none absolute inset-0 opacity-20" />
+        <section className="relative overflow-hidden bg-nexus-hero-institutional pt-32 pb-20 text-white lg:pt-36 lg:pb-24">
+          <div className="absolute inset-0 bg-mesh-gradient-subtle" />
+          <div className="grain pointer-events-none absolute inset-0 opacity-15" />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
@@ -131,6 +129,75 @@ export default function EtudesPage() {
               <p className="mt-5 text-caption text-slate-400">
                 Étude initiale gratuite · Bilan de faisabilité écrit avant tout engagement.
               </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 1.5 INTRO COURTE ─────────────────────────────────────── */}
+        <section className="border-b border-line bg-surface py-12 lg:py-16">
+          <div className="mx-auto max-w-4xl px-4 text-center lg:px-8">
+            <p className="font-display text-display-sm text-ink lg:text-display-md">
+              L&apos;admission au Canada n&apos;est pas un dépôt de candidature. C&apos;est{" "}
+              <span className="text-brand">une stratégie d&apos;établissement</span>{" "}
+              où chaque pièce compte.
+            </p>
+          </div>
+        </section>
+
+        {/* 1.6 CE QUE NOUS FAISONS ─────────────────────────────── */}
+        <section className="bg-surface py-20">
+          <div className="mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="mb-12 grid gap-10 lg:grid-cols-[1fr_2fr] lg:gap-16 lg:items-start">
+              <div>
+                <p className="text-overline text-brand">Périmètre</p>
+                <h2 className="mt-3 font-display text-display-md text-ink">
+                  Ce que nous faisons
+                </h2>
+                <p className="mt-4 text-body-sm text-ink-muted">
+                  Quatre étapes encadrées, du programme cible au départ.
+                </p>
+              </div>
+              <ul className="space-y-5">
+                {[
+                  { title: "Identification du programme aligné", desc: "Cartographie des établissements et programmes compatibles avec votre parcours, vos objectifs et votre calendrier de rentrée." },
+                  { title: "Constitution du dossier d'admission", desc: "Lettre de motivation, CV académique, traductions certifiées, relevés mis en conformité avec les standards canadiens." },
+                  { title: "CAQ et permis d'études IRCC", desc: "Montage complet de la procédure d'immigration une fois l'admission obtenue, biométrie à Yaoundé." },
+                  { title: "Préparation au départ", desc: "Confirmation d'inscription, logement, billet, assurance, dossier complet transmis avant décollage." },
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-4 border-l-2 border-line pl-5 py-1">
+                    <div>
+                      <h3 className="font-display text-headline text-ink">{item.title}</h3>
+                      <p className="mt-1 text-body-sm text-ink-muted">{item.desc}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* 1.7 CE QUE VOUS OBTENEZ ──────────────────────────────── */}
+        <section className="bg-surface-sunken py-20">
+          <div className="mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="mx-auto mb-12 max-w-3xl text-center">
+              <p className="text-overline text-brand">Résultat</p>
+              <h2 className="mt-3 font-display text-display-md text-ink">Ce que vous obtenez</h2>
+              <p className="mt-4 text-body-lg text-ink-muted">
+                Pas de promesse d&apos;admission ou de visa. En revanche, voici ce que nous structurons concrètement.
+              </p>
+            </div>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { title: "Programme aligné au profil", desc: "Pas d'admission de complaisance dans un programme inadapté à votre parcours." },
+                { title: "Dossier d'admission conforme", desc: "Les pièces correspondent exactement aux exigences du programme cible." },
+                { title: "Permis d'études sécurisé", desc: "Procédure IRCC encadrée, biométrie à Yaoundé planifiée, examen médical organisé." },
+                { title: "Arrivée encadrée", desc: "Logement, billet, assurance et premières démarches préparées avant départ." },
+              ].map((item, i) => (
+                <div key={i} className="rounded-2xl border border-line bg-surface-elevated p-6">
+                  <h3 className="font-display text-headline text-ink">{item.title}</h3>
+                  <p className="mt-2 text-body-sm text-ink-muted">{item.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>

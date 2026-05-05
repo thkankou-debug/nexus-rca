@@ -63,46 +63,48 @@ const config: Config = {
         sans: ["var(--font-plus-jakarta)", "system-ui", "sans-serif"],
         display: ["var(--font-syne)", "system-ui", "sans-serif"],
       },
-      // Échelle typographique stratifiée — display tight, body lisible
+      // Échelle typographique cabinet/institutionnel — réduite vs v1, sobre
+      // v2 : ~20% plus petit sur les display, letter-spacing détendu pour
+      // un rendu moins "marketing flashy", plus "publication officielle".
       fontSize: {
         "display-2xl": [
-          "clamp(3.5rem, 7vw, 6rem)",
-          { lineHeight: "0.95", letterSpacing: "-0.04em", fontWeight: "700" },
+          "clamp(2.75rem, 5.5vw, 4.5rem)",
+          { lineHeight: "1.02", letterSpacing: "-0.025em", fontWeight: "700" },
         ],
         "display-xl": [
-          "clamp(2.75rem, 5.5vw, 4.5rem)",
-          { lineHeight: "1", letterSpacing: "-0.035em", fontWeight: "700" },
+          "clamp(2.25rem, 4.5vw, 3.5rem)",
+          { lineHeight: "1.05", letterSpacing: "-0.022em", fontWeight: "700" },
         ],
         "display-lg": [
-          "clamp(2.25rem, 4vw, 3.5rem)",
-          { lineHeight: "1.05", letterSpacing: "-0.03em", fontWeight: "700" },
+          "clamp(1.875rem, 3.5vw, 2.75rem)",
+          { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "600" },
         ],
         "display-md": [
-          "clamp(1.875rem, 3vw, 2.5rem)",
-          { lineHeight: "1.1", letterSpacing: "-0.025em", fontWeight: "600" },
+          "clamp(1.5rem, 2.5vw, 2rem)",
+          { lineHeight: "1.15", letterSpacing: "-0.018em", fontWeight: "600" },
         ],
         "display-sm": [
-          "1.5rem",
-          { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "600" },
+          "1.375rem",
+          { lineHeight: "1.25", letterSpacing: "-0.015em", fontWeight: "600" },
         ],
         headline: [
-          "1.25rem",
-          { lineHeight: "1.3", letterSpacing: "-0.015em", fontWeight: "600" },
+          "1.1875rem",
+          { lineHeight: "1.35", letterSpacing: "-0.01em", fontWeight: "600" },
         ],
         title: [
           "1.0625rem",
-          { lineHeight: "1.4", letterSpacing: "-0.01em", fontWeight: "600" },
+          { lineHeight: "1.4", letterSpacing: "-0.005em", fontWeight: "600" },
         ],
-        "body-lg": ["1.125rem", { lineHeight: "1.6", fontWeight: "400" }],
-        body: ["1rem", { lineHeight: "1.6", fontWeight: "400" }],
-        "body-sm": ["0.9375rem", { lineHeight: "1.55", fontWeight: "400" }],
+        "body-lg": ["1.125rem", { lineHeight: "1.65", fontWeight: "400" }],
+        body: ["1rem", { lineHeight: "1.65", fontWeight: "400" }],
+        "body-sm": ["0.9375rem", { lineHeight: "1.6", fontWeight: "400" }],
         caption: [
           "0.8125rem",
-          { lineHeight: "1.45", letterSpacing: "0.005em", fontWeight: "500" },
+          { lineHeight: "1.5", letterSpacing: "0.005em", fontWeight: "500" },
         ],
         overline: [
           "0.75rem",
-          { lineHeight: "1.3", letterSpacing: "0.12em", fontWeight: "600" },
+          { lineHeight: "1.3", letterSpacing: "0.1em", fontWeight: "600" },
         ],
       },
       // Système de rayons cohérent
@@ -152,12 +154,19 @@ const config: Config = {
         },
       },
       backgroundImage: {
+        // v1 — preserved for homepage flagship hero only
         "nexus-gradient":
           "linear-gradient(135deg, #050f3d 0%, #0a1a6b 50%, #f97316 100%)",
         "nexus-hero":
           "linear-gradient(135deg, rgba(5,15,61,0.95) 0%, rgba(10,26,107,0.85) 50%, rgba(249,115,22,0.3) 100%)",
+        // v2 — institutional dark for service pages (no orange dominance)
+        "nexus-hero-institutional":
+          "linear-gradient(180deg, rgba(2,7,31,1) 0%, rgba(5,15,61,1) 100%)",
         "mesh-gradient":
-          "radial-gradient(at 20% 20%, rgba(249,115,22,0.15) 0px, transparent 50%), radial-gradient(at 80% 80%, rgba(31,63,245,0.15) 0px, transparent 50%)",
+          "radial-gradient(at 20% 20%, rgba(249,115,22,0.06) 0px, transparent 55%), radial-gradient(at 80% 80%, rgba(31,63,245,0.08) 0px, transparent 55%)",
+        // Subtler accent variant for institutional sections
+        "mesh-gradient-subtle":
+          "radial-gradient(at 30% 0%, rgba(249,115,22,0.04) 0px, transparent 60%), radial-gradient(at 70% 100%, rgba(31,63,245,0.05) 0px, transparent 60%)",
       },
       // Vocabulaire d'ombres élargi — layered shadows premium
       boxShadow: {
@@ -171,13 +180,14 @@ const config: Config = {
           "0 8px 16px rgb(15 23 42 / 0.05), 0 24px 48px rgb(15 23 42 / 0.12)",
         "elev-5":
           "0 12px 24px rgb(15 23 42 / 0.06), 0 32px 64px rgb(15 23 42 / 0.16)",
+        // v2 — glows atténués pour ton institutionnel (orange en accent, pas dominant)
         "glow-orange":
-          "0 0 0 1px rgb(249 115 22 / 0.1), 0 8px 24px rgb(249 115 22 / 0.25), 0 16px 48px rgb(249 115 22 / 0.15)",
+          "0 0 0 1px rgb(249 115 22 / 0.08), 0 4px 12px rgb(249 115 22 / 0.12), 0 8px 24px rgb(249 115 22 / 0.08)",
         "glow-blue":
-          "0 0 0 1px rgb(31 63 245 / 0.1), 0 8px 24px rgb(31 63 245 / 0.25), 0 16px 48px rgb(31 63 245 / 0.15)",
+          "0 0 0 1px rgb(31 63 245 / 0.08), 0 4px 12px rgb(31 63 245 / 0.12), 0 8px 24px rgb(31 63 245 / 0.08)",
         "inset-line": "inset 0 0 0 1px rgb(255 255 255 / 0.08)",
-        // Backwards-compat
-        glow: "0 0 40px rgba(249, 115, 22, 0.4)",
+        // Backwards-compat — atténués aussi
+        glow: "0 0 24px rgba(249, 115, 22, 0.18)",
         card: "0 8px 30px rgba(0, 0, 0, 0.06)",
         "card-hover": "0 20px 40px rgba(0, 0, 0, 0.12)",
       },
