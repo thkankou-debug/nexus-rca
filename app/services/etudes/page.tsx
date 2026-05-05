@@ -112,7 +112,7 @@ export default function EtudesPage() {
 
               <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
                 <Link
-                  href="/services/bourses/demarrer"
+                  href="/services/etudes/demarrer"
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
                 >
                   <FileText className="h-5 w-5" />
@@ -235,7 +235,7 @@ export default function EtudesPage() {
             </p>
             <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
               <Link
-                href="/services/bourses/demarrer"
+                href="/services/etudes/demarrer"
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
               >
                 <FileText className="h-5 w-5" />
