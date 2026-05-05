@@ -147,11 +147,9 @@ export default function BoursesPage() {
       <Navbar />
       <main>
         {/* 1. HERO INSTITUTIONNEL ─────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-nexus-blue-950 pt-40 pb-24 text-white">
-          <div className="absolute inset-0 bg-mesh-gradient opacity-50" />
-          <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-nexus-orange-500/30 blur-3xl" />
-          <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-nexus-blue-500/30 blur-3xl" />
-          <div className="grain pointer-events-none absolute inset-0 opacity-20" />
+        <section className="relative overflow-hidden bg-nexus-hero-institutional pt-32 pb-20 text-white lg:pt-36 lg:pb-24">
+          <div className="absolute inset-0 bg-mesh-gradient-subtle" />
+          <div className="grain pointer-events-none absolute inset-0 opacity-15" />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
@@ -221,6 +219,75 @@ export default function BoursesPage() {
                   <div className="mt-1 text-overline text-slate-400">
                     {s.label}
                   </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 1.5 INTRO COURTE ─────────────────────────────────────── */}
+        <section className="border-b border-line bg-surface py-12 lg:py-16">
+          <div className="mx-auto max-w-4xl px-4 text-center lg:px-8">
+            <p className="font-display text-display-sm text-ink lg:text-display-md">
+              Une bourse n&apos;est pas une chance. C&apos;est{" "}
+              <span className="text-brand">une cible</span>. Encore faut-il viser juste, au bon moment, avec le bon dossier.
+            </p>
+          </div>
+        </section>
+
+        {/* 1.6 CE QUE NOUS FAISONS ─────────────────────────────── */}
+        <section className="bg-surface py-20">
+          <div className="mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="mb-12 grid gap-10 lg:grid-cols-[1fr_2fr] lg:gap-16 lg:items-start">
+              <div>
+                <p className="text-overline text-brand">Périmètre</p>
+                <h2 className="mt-3 font-display text-display-md text-ink">
+                  Ce que nous faisons
+                </h2>
+                <p className="mt-4 text-body-sm text-ink-muted">
+                  Quatre prestations pour transformer un projet en candidature qualifiée.
+                </p>
+              </div>
+              <ul className="space-y-5">
+                {[
+                  { title: "Cartographie des financements éligibles", desc: "Inventaire des bourses gouvernementales, des programmes ciblés et des aides au mérite ouvertes à votre profil." },
+                  { title: "Positionnement stratégique du profil", desc: "Sélection des candidatures à fort potentiel selon vos résultats, votre projet et les critères d'éligibilité." },
+                  { title: "Montage des dossiers ciblés", desc: "Lettre de motivation, projet professionnel et pièces justificatives adaptés à chaque organisme bailleur." },
+                  { title: "Suivi des résultats et plan B", desc: "Réponse aux compléments demandés, gestion du calendrier, alternatives documentées si refus." },
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-4 border-l-2 border-line pl-5 py-1">
+                    <div>
+                      <h3 className="font-display text-headline text-ink">{item.title}</h3>
+                      <p className="mt-1 text-body-sm text-ink-muted">{item.desc}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* 1.7 CE QUE VOUS OBTENEZ ──────────────────────────────── */}
+        <section className="bg-surface-sunken py-20">
+          <div className="mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="mx-auto mb-12 max-w-3xl text-center">
+              <p className="text-overline text-brand">Résultat</p>
+              <h2 className="mt-3 font-display text-display-md text-ink">Ce que vous obtenez</h2>
+              <p className="mt-4 text-body-lg text-ink-muted">
+                Pas de promesse de bourse — la décision appartient au bailleur.
+                En revanche, voici ce que nous structurons concrètement.
+              </p>
+            </div>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { title: "Stratégie financière claire", desc: "Vous savez qui demande quoi, à quelle date, et avec quelle pièce." },
+                { title: "Candidatures qualifiées", desc: "Pas d'envoi de masse. Chaque dossier est ciblé sur un bailleur précis." },
+                { title: "Maximisation des chances", desc: "Votre dossier valorise les angles qui comptent pour le bailleur." },
+                { title: "Plan B documenté", desc: "Si la bourse principale échoue, des alternatives identifiées en amont." },
+              ].map((item, i) => (
+                <div key={i} className="rounded-2xl border border-line bg-surface-elevated p-6">
+                  <h3 className="font-display text-headline text-ink">{item.title}</h3>
+                  <p className="mt-2 text-body-sm text-ink-muted">{item.desc}</p>
                 </div>
               ))}
             </div>
