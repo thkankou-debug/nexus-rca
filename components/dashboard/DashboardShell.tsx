@@ -40,6 +40,7 @@ import {
   type CommandItem,
 } from "@/components/dashboard/CommandPalette";
 import { GlobalSearch } from "@/components/dashboard/GlobalSearch";
+import { NotificationBell } from "@/components/dashboard/NotificationBell";
 import { PageTransition } from "@/components/dashboard/PageTransition";
 import { RoleProvider } from "@/components/rbac/RoleGate";
 import { createClient } from "@/lib/supabase/client";
@@ -285,6 +286,7 @@ export function DashboardShell({
       <div className="fixed inset-x-0 top-0 z-40 flex h-16 items-center justify-between border-b border-line bg-surface-elevated px-4 lg:hidden">
         <Logo />
         <div className="flex items-center gap-2">
+          <NotificationBell />
           <button
             onClick={() => setSearchOpen(true)}
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-line text-ink"
@@ -326,6 +328,7 @@ export function DashboardShell({
                 </p>
                 <p className="truncate text-caption text-ink-muted">{profile.email}</p>
               </div>
+              <NotificationBell />
             </div>
             <span
               className={cn(

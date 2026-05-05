@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createNotification } from "@/lib/notifications";
 
 const VALID_ACTIONS = [
   "confirm",
@@ -204,6 +205,23 @@ export async function POST(
     console.log(
       `[NEXUS RDV] Action ${action} sur ${appointment.reference} par ${profile.id}`
     );
+
+    // ─── NOTIFICATION CLOCHE — nouvel agent affecté lors d'un assign ─────
+    // updates.agent_id n'est posé que dans le case "assign" plus haut.
+    if (
+      typeof updates.agent_id === "string" &&
+      updates.agent_id !== appointment.agent_id
+    ) {
+      await createNotification(
+        updates.agent_id,
+        "demande_assigned",
+        `RDV affecté · ${appointment.reference}`,
+        appointment.client_nom
+          ? `${appointment.client_nom} — ${appointment.service_type ?? "RDV"}`
+          : `Service ${appointment.service_type ?? "RDV"}`,
+        "/dashboard/agent/rdv"
+      );
+    }
 
     return NextResponse.json({
       success: true,

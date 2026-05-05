@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createNotification } from "@/lib/notifications";
 
 // ============================================================================
 // API : POST /api/appointments/create
@@ -220,6 +221,17 @@ export async function POST(request: NextRequest) {
     console.log(
       `[NEXUS RDV] Nouveau RDV créé : ${newAppointment.reference} - ${clientNom} - ${body.service_type} - ${body.rdv_date} ${body.rdv_heure}`
     );
+
+    // ─── NOTIFICATION CLOCHE — agent affecté ─────────────────────────────
+    if (assignedAgentId) {
+      await createNotification(
+        assignedAgentId,
+        "demande_assigned",
+        `Nouveau RDV affecté · ${newAppointment.reference}`,
+        `${clientNom} — ${body.service_type} le ${body.rdv_date} à ${body.rdv_heure}`,
+        "/dashboard/agent/rdv"
+      );
+    }
 
     return NextResponse.json(
       {

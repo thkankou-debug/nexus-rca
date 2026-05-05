@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createNotificationsForRoles } from "@/lib/notifications";
 import { Resend } from "resend";
 
 // ============================================================================
@@ -96,6 +97,16 @@ export async function POST(
     }
 
     console.log("[PAY-DECLARE] Statut → paiement_declare");
+
+    // ─── NOTIFICATION CLOCHE — tous les admin + super_admin ───────────────
+    // Non bloquant : si l'insert notif échoue, l'action continue (email + 200).
+    await createNotificationsForRoles(
+      ["admin", "super_admin"],
+      "payment_declared",
+      `Paiement déclaré · ${reference}`,
+      `${paymentLink.client_nom} a déclaré un paiement de ${formatMoney(paymentLink.montant, paymentLink.devise)} via ${METHOD_LABELS[body.methode_choisie] || body.methode_choisie}.`,
+      "/dashboard/super-admin/paiements/en-attente"
+    );
 
     // ========================================================================
     // ENVOI EMAILS
