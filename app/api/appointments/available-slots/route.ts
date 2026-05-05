@@ -3,10 +3,12 @@ import { createClient } from "@/lib/supabase/server";
 
 // ============================================================================
 // API : GET /api/appointments/available-slots?date=YYYY-MM-DD
-// 
+//
 // Retourne les créneaux disponibles pour une date donnée.
 // Utilisé par le formulaire de réservation côté client.
 // ============================================================================
+
+export const dynamic = "force-dynamic";
 
 const ALL_SLOTS = [
   "09:00", "10:00", "11:00", "12:00",
