@@ -134,15 +134,8 @@ export default function BilletsPage() {
                 Service vols & hôtels
               </div>
 
-              <h1
-                className="font-display text-display-xl text-white lg:text-display-2xl"
-                style={{ paddingBottom: "0.15em" }}
-              >
-                Organisation de{" "}
-                <span className="text-gradient-orange">
-                  déplacements internationaux
-                </span>{" "}
-                avec itinéraires optimisés.
+              <h1 className="mt-6 font-display text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
+                Billet d&apos;avion &amp; Hôtels
               </h1>
 
               <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">

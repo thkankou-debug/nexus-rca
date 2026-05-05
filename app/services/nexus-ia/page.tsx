@@ -103,14 +103,8 @@ export default function NexusIAPage() {
                 Nexus IA — Assistant virtuel
               </div>
 
-              <h1
-                className="font-display text-display-xl text-white lg:text-display-2xl"
-                style={{ paddingBottom: "0.15em" }}
-              >
-                <span className="text-gradient-orange">
-                  Intelligence opérationnelle
-                </span>{" "}
-                pour orienter vos décisions et accélérer vos démarches.
+              <h1 className="mt-6 font-display text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
+                Rencontrez NEXUS IA 🤖
               </h1>
 
               <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">

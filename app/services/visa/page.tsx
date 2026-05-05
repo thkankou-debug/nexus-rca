@@ -186,14 +186,8 @@ export default function VisaPage() {
                 Service visa
               </div>
 
-              <h1
-                className="font-display text-display-xl text-white lg:text-display-2xl"
-                style={{ paddingBottom: "0.15em" }}
-              >
-                <span className="text-gradient-orange">
-                  Dossiers visa
-                </span>{" "}
-                préparés selon les standards décisionnels consulaires.
+              <h1 className="mt-6 font-display text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
+                Visa &amp; e-Visa
               </h1>
 
               <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">

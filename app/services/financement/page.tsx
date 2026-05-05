@@ -162,14 +162,8 @@ export default function FinancementPage() {
                 Service incubateur & financement
               </div>
 
-              <h1
-                className="font-display text-display-xl text-white lg:text-display-2xl"
-                style={{ paddingBottom: "0.15em" }}
-              >
-                <span className="text-gradient-orange">
-                  Cofinancement structuré
-                </span>{" "}
-                de projets centrafricains à fort potentiel.
+              <h1 className="mt-6 font-display text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
+                Incubateur &amp; Financement en partenariat
               </h1>
 
               <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">
