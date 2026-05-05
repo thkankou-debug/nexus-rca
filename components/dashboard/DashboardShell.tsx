@@ -39,6 +39,7 @@ import {
   CommandPalette,
   type CommandItem,
 } from "@/components/dashboard/CommandPalette";
+import { GlobalSearch } from "@/components/dashboard/GlobalSearch";
 import { PageTransition } from "@/components/dashboard/PageTransition";
 import { RoleProvider } from "@/components/rbac/RoleGate";
 import { createClient } from "@/lib/supabase/client";
@@ -133,6 +134,7 @@ export function DashboardShell({
 }) {
   const [open, setOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
@@ -147,12 +149,19 @@ export function DashboardShell({
 
   const initials = (profile.prenom?.[0] ?? "") + (profile.nom?.[0] ?? "");
 
-  // ⌘K / Ctrl+K — toggle global de la command palette
+  // Raccourcis globaux :
+  //   ⌘K / Ctrl+K        → recherche globale (data : clients, demandes, RDV, paiements)
+  //   ⌘⇧K / Ctrl+Shift+K → palette de commandes (navigation + actions)
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
+      const mod = e.metaKey || e.ctrlKey;
+      if (!mod) return;
+      if (e.key.toLowerCase() !== "k") return;
+      e.preventDefault();
+      if (e.shiftKey) {
         setPaletteOpen((v) => !v);
+      } else {
+        setSearchOpen((v) => !v);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -275,13 +284,22 @@ export function DashboardShell({
     <div className="flex min-h-screen bg-surface-sunken">
       <div className="fixed inset-x-0 top-0 z-40 flex h-16 items-center justify-between border-b border-line bg-surface-elevated px-4 lg:hidden">
         <Logo />
-        <button
-          onClick={() => setOpen(!open)}
-          className="flex h-10 w-10 items-center justify-center rounded-xl border border-line text-ink"
-          aria-label="Menu"
-        >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-line text-ink"
+            aria-label="Rechercher"
+          >
+            <Search className="h-5 w-5" />
+          </button>
+          <button
+            onClick={() => setOpen(!open)}
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-line text-ink"
+            aria-label="Menu"
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
 
       <aside
@@ -319,18 +337,30 @@ export function DashboardShell({
             </span>
           </div>
 
-          {/* Command palette trigger */}
-          <div className="shrink-0 px-4 pt-4">
+          {/* Recherche globale (data) + palette de commandes (navigation/actions) */}
+          <div className="shrink-0 space-y-2 px-4 pt-4">
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              aria-label="Rechercher dans le contenu"
+              className="flex w-full items-center gap-2 rounded-2xl border border-line bg-surface-sunken px-3 py-2 text-body-sm text-ink-muted transition-colors hover:border-brand/40 hover:text-ink"
+            >
+              <Search className="h-4 w-4" />
+              <span className="flex-1 text-left">Rechercher contenu…</span>
+              <kbd className="inline-flex h-5 items-center justify-center rounded border border-line bg-surface-elevated px-1.5 font-mono text-[10px] text-ink-muted">
+                ⌘K
+              </kbd>
+            </button>
             <button
               type="button"
               onClick={() => setPaletteOpen(true)}
               aria-label="Ouvrir la palette de commandes"
               className="flex w-full items-center gap-2 rounded-2xl border border-line bg-surface-sunken px-3 py-2 text-body-sm text-ink-muted transition-colors hover:border-brand/40 hover:text-ink"
             >
-              <Search className="h-4 w-4" />
-              <span className="flex-1 text-left">Rechercher…</span>
+              <Sparkles className="h-4 w-4" />
+              <span className="flex-1 text-left">Commandes…</span>
               <kbd className="inline-flex h-5 items-center justify-center rounded border border-line bg-surface-elevated px-1.5 font-mono text-[10px] text-ink-muted">
-                ⌘K
+                ⌘⇧K
               </kbd>
             </button>
           </div>
@@ -400,6 +430,8 @@ export function DashboardShell({
         open={paletteOpen}
         onOpenChange={setPaletteOpen}
       />
+
+      <GlobalSearch open={searchOpen} onOpenChange={setSearchOpen} />
     </div>
     </RoleProvider>
   );
