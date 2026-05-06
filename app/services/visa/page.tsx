@@ -21,6 +21,9 @@ import {
   Zap,
 } from "lucide-react";
 import { whatsappLink } from "@/lib/utils";
+import { VisaRequirementChecker } from "@/components/visa/VisaRequirementChecker";
+import { EVisaEligibilityChecker } from "@/components/visa/EVisaEligibilityChecker";
+import { VisaDocumentChecklist } from "@/components/visa/VisaDocumentChecklist";
 
 export const metadata = {
   title: "Visa & e-Visa | Nexus RCA — Bangui",
@@ -547,6 +550,27 @@ export default function VisaPage() {
           </div>
         </section>
 
+        {/* 4.5 CHECKERS INTERACTIFS ─────────────────────────────── */}
+        <section className="bg-surface-sunken py-20">
+          <div className="mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="mx-auto mb-12 max-w-3xl text-center">
+              <p className="text-overline text-brand">Outils Nexus</p>
+              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
+                Vérifiez votre situation en 60 secondes
+              </h2>
+              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
+                Deux outils gratuits — sans inscription — pour comprendre vos exigences
+                visa avant de soumettre votre dossier.
+              </p>
+            </div>
+
+            <div className="grid gap-6 lg:grid-cols-2">
+              <VisaRequirementChecker />
+              <EVisaEligibilityChecker />
+            </div>
+          </div>
+        </section>
+
         {/* 5. e-VISA : PROCÉDURE SIMPLIFIÉE ─────────────────────── */}
         <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white">
           <div className="absolute inset-0 bg-mesh-gradient opacity-30" />
@@ -598,6 +622,24 @@ export default function VisaPage() {
                 à votre destination vous sera indiquée à l'étape d'analyse.
               </p>
             </div>
+          </div>
+        </section>
+
+        {/* 5.5 DOCUMENTS PAR TYPE DE VISA ────────────────────────── */}
+        <section className="bg-surface py-20">
+          <div className="mx-auto max-w-5xl px-4 lg:px-8">
+            <div className="mx-auto mb-10 max-w-3xl text-center">
+              <p className="text-overline text-brand">Documents fréquents</p>
+              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
+                Pièces requises selon votre type de visa
+              </h2>
+              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
+                Liste indicative par type. Le consulat ciblé peut exiger des pièces
+                complémentaires — c'est ce que Nexus cadre pour vous.
+              </p>
+            </div>
+
+            <VisaDocumentChecklist />
           </div>
         </section>
 
