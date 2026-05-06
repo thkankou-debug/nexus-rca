@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Syne, Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "react-hot-toast";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import { PWAInstaller } from "@/components/PWAInstaller";
 import "./globals.css";
 
@@ -105,14 +107,16 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
+  const messages = await getMessages();
   return (
     <html
-      lang="fr"
+      lang={locale}
       className={`${syne.variable} ${plusJakarta.variable}`}
       suppressHydrationWarning
     >
@@ -136,19 +140,21 @@ export default function RootLayout({
         <meta name="msapplication-tap-highlight" content="no" />
       </head>
       <body className="font-sans antialiased bg-surface text-ink">
-        {children}
-        <PWAInstaller />
-        <Toaster
-          position="top-center"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: "#0C1C40",
-              color: "#fff",
-              borderRadius: "12px",
-            },
-          }}
-        />
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          {children}
+          <PWAInstaller />
+          <Toaster
+            position="top-center"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: "#0C1C40",
+                color: "#fff",
+                borderRadius: "12px",
+              },
+            }}
+          />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

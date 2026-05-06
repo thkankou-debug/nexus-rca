@@ -1,0 +1,26 @@
+{
+  "Hero": {
+    "eyebrow": "Agence Internationale · Bangui",
+    "title_part1": "L'accompagnement qui transforme",
+    "title_highlight": "vos projets",
+    "title_part2": "en réalité.",
+    "subtitle": "Démarches administratives, projets internationaux, partenariats et financement. Un accompagnement structuré, fiable et axé sur des résultats concrets.",
+    "cta_primary": "Soumettre un dossier",
+    "cta_secondary": "Prendre rendez-vous",
+    "trust_free": "Premier contact gratuit",
+    "trust_24h": "Réponse sous 24 h",
+    "trust_confidential": "100% confidentiel",
+    "stat1_value": "10+",
+    "stat1_label": "Services experts",
+    "stat2_value": "24 h",
+    "stat2_label": "Délai de réponse",
+    "stat3_value": "2",
+    "stat3_label": "Pôles internationaux",
+    "stat3_hint": "Bangui · Canada"
+  },
+  "LocaleToggle": {
+    "switch_to_en": "EN",
+    "switch_to_fr": "FR",
+    "current_label": "Langue"
+  }
+}

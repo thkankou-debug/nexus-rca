@@ -1,0 +1,26 @@
+{
+  "Hero": {
+    "eyebrow": "International Agency · Bangui",
+    "title_part1": "Support that turns",
+    "title_highlight": "your projects",
+    "title_part2": "into reality.",
+    "subtitle": "Administrative formalities, international projects, partnerships and financing. Structured, reliable support focused on tangible results.",
+    "cta_primary": "Submit a request",
+    "cta_secondary": "Book an appointment",
+    "trust_free": "Free first contact",
+    "trust_24h": "Reply within 24 h",
+    "trust_confidential": "100% confidential",
+    "stat1_value": "10+",
+    "stat1_label": "Expert services",
+    "stat2_value": "24 h",
+    "stat2_label": "Response time",
+    "stat3_value": "2",
+    "stat3_label": "International offices",
+    "stat3_hint": "Bangui · Canada"
+  },
+  "LocaleToggle": {
+    "switch_to_en": "EN",
+    "switch_to_fr": "FR",
+    "current_label": "Language"
+  }
+}
