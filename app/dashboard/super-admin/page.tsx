@@ -27,6 +27,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { DashboardHero } from "@/components/dashboard/DashboardHero";
+import { DashboardQuickActions } from "@/components/dashboard/DashboardQuickActions";
 import { Sparkline } from "@/components/ui/Sparkline";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { cn } from "@/lib/utils";
@@ -351,51 +352,49 @@ export default async function SuperAdminDashboard() {
       {/* ======================================================== */}
       {/* ACTIONS RAPIDES */}
       {/* ======================================================== */}
-      <div className="mb-6">
-        <p className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">
-          Actions rapides
-        </p>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
-          <QuickAction
-            icon={UserCircle}
-            label="Nouveau client"
-            href="/dashboard/super-admin/clients"
-            color="blue"
-          />
-          <QuickAction
-            icon={Briefcase}
-            label="Créer employé"
-            href="/dashboard/super-admin/equipe/nouveau"
-            color="indigo"
-          />
-          <QuickAction
-            icon={Wallet}
-            label="Enregistrer paiement"
-            href="/dashboard/super-admin/paiements"
-            color="green"
-          />
-          <QuickAction
-            icon={ShoppingCart}
-            label="Caisse rapide"
-            href="/dashboard/super-admin/caisse"
-            color="orange"
-          />
-          <QuickAction
-            icon={Send}
-            label="Voir transferts"
-            href="/dashboard/super-admin/transferts"
-            color="purple"
-            badge={nbTransfertsPending > 0 ? nbTransfertsPending : undefined}
-          />
-          <QuickAction
-            icon={Receipt}
-            label="Valider dépenses"
-            href="/dashboard/super-admin/depenses"
-            color="amber"
-            badge={nbDepensesEnAttente > 0 ? nbDepensesEnAttente : undefined}
-          />
-        </div>
-      </div>
+      <DashboardQuickActions
+        title="Actions rapides"
+        actions={[
+          {
+            href: "/dashboard/super-admin/clients",
+            icon: UserCircle,
+            label: "Nouveau client",
+            color: "blue",
+          },
+          {
+            href: "/dashboard/super-admin/equipe/nouveau",
+            icon: Briefcase,
+            label: "Créer employé",
+            color: "indigo",
+          },
+          {
+            href: "/dashboard/super-admin/paiements",
+            icon: Wallet,
+            label: "Enregistrer paiement",
+            color: "emerald",
+          },
+          {
+            href: "/dashboard/super-admin/caisse",
+            icon: ShoppingCart,
+            label: "Caisse rapide",
+            color: "orange",
+          },
+          {
+            href: "/dashboard/super-admin/transferts",
+            icon: Send,
+            label: "Voir transferts",
+            color: "purple",
+            badge: nbTransfertsPending > 0 ? nbTransfertsPending : undefined,
+          },
+          {
+            href: "/dashboard/super-admin/depenses",
+            icon: Receipt,
+            label: "Valider dépenses",
+            color: "amber",
+            badge: nbDepensesEnAttente > 0 ? nbDepensesEnAttente : undefined,
+          },
+        ]}
+      />
 
       {/* ======================================================== */}
       {/* VUE FINANCIERE */}
@@ -508,7 +507,7 @@ export default async function SuperAdminDashboard() {
         <div className="grid gap-4 lg:grid-cols-3">
           <Link
             href="/dashboard/super-admin/clients"
-            className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-colors hover:bg-slate-50/60"
           >
             <div className="flex items-center justify-between">
               <UserCircle className="h-6 w-6 text-blue-600" />
@@ -527,7 +526,7 @@ export default async function SuperAdminDashboard() {
 
           <Link
             href="/dashboard/super-admin/equipe"
-            className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-colors hover:bg-slate-50/60"
           >
             <div className="flex items-center justify-between">
               <Briefcase className="h-6 w-6 text-indigo-600" />
@@ -546,7 +545,7 @@ export default async function SuperAdminDashboard() {
 
           <Link
             href="/dashboard/super-admin/stats-agents"
-            className="group rounded-2xl border-2 border-yellow-300 bg-gradient-to-br from-yellow-50 to-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            className="group rounded-2xl border-2 border-yellow-300 bg-gradient-to-br from-yellow-50 to-white p-5 shadow-sm transition-colors hover:bg-slate-50/60"
           >
             <div className="flex items-center justify-between">
               <Trophy className="h-6 w-6 text-yellow-600" />
@@ -785,69 +784,54 @@ function Section({
   title,
   icon: Icon,
   color,
+  subtitle,
   children,
 }: {
   title: string;
   icon: React.ComponentType<{ className?: string }>;
+  /** Couleur Tailwind du texte (ex: "text-emerald-600") — utilisée pour
+   *  déterminer l'accent du badge gradient. */
   color: string;
+  subtitle?: string;
   children: React.ReactNode;
 }) {
+  // Mappe la couleur de texte vers un gradient (orange = accent par défaut)
+  const accent = color.includes("emerald") || color.includes("green")
+    ? "from-emerald-500 to-emerald-700"
+    : color.includes("rose") || color.includes("red")
+      ? "from-rose-500 to-rose-700"
+      : color.includes("amber") || color.includes("yellow")
+        ? "from-amber-500 to-amber-700"
+        : color.includes("purple")
+          ? "from-purple-500 to-purple-700"
+          : color.includes("blue")
+            ? "from-blue-500 to-blue-700"
+            : color.includes("slate")
+              ? "from-slate-500 to-slate-700"
+              : "from-nexus-orange-500 to-nexus-orange-700";
+
   return (
-    <div className="mb-6">
-      <div className="mb-3 flex items-center gap-2">
-        <Icon className={cn("h-4 w-4", color)} />
-        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500">
-          {title}
-        </h2>
+    <div className="mb-8">
+      <div className="mb-4 flex items-center gap-3">
+        <div
+          className={cn(
+            "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-sm",
+            accent
+          )}
+        >
+          <Icon className="h-4 w-4" />
+        </div>
+        <div className="min-w-0">
+          <h2 className="font-display text-base font-bold text-nexus-blue-950 sm:text-lg">
+            {title}
+          </h2>
+          {subtitle && (
+            <p className="truncate text-xs text-slate-500">{subtitle}</p>
+          )}
+        </div>
       </div>
       {children}
     </div>
-  );
-}
-
-function QuickAction({
-  icon: Icon,
-  label,
-  href,
-  color,
-  badge,
-}: {
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  href: string;
-  color: "blue" | "indigo" | "green" | "orange" | "purple" | "amber";
-  badge?: number;
-}) {
-  const colorMap = {
-    blue: "from-blue-500 to-blue-700",
-    indigo: "from-indigo-500 to-indigo-700",
-    green: "from-emerald-500 to-emerald-700",
-    orange: "from-nexus-orange-500 to-nexus-orange-700",
-    purple: "from-purple-500 to-purple-700",
-    amber: "from-amber-500 to-amber-700",
-  };
-  return (
-    <Link
-      href={href}
-      className="group relative flex flex-col items-center gap-2 rounded-xl border border-slate-200 bg-white p-3 text-center shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-    >
-      {badge && badge > 0 && (
-        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
-          {badge}
-        </span>
-      )}
-      <div
-        className={cn(
-          "flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br text-white shadow",
-          colorMap[color]
-        )}
-      >
-        <Icon className="h-5 w-5" />
-      </div>
-      <span className="text-[11px] font-semibold leading-tight text-slate-700">
-        {label}
-      </span>
-    </Link>
   );
 }
 
@@ -891,7 +875,7 @@ function FinanceCard({
   return (
     <Link
       href={href}
-      className="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+      className="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-colors hover:bg-slate-50/60"
     >
       <div className="flex items-start justify-between">
         <div className="min-w-0 flex-1">
@@ -960,7 +944,7 @@ function OpCard({
     <Link
       href={href}
       className={cn(
-        "group rounded-2xl border bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md",
+        "group rounded-2xl border bg-white p-4 shadow-sm transition-colors hover:bg-slate-50/60",
         urgent ? "border-red-300 bg-red-50" : "border-slate-200"
       )}
     >
@@ -1024,7 +1008,7 @@ function AlertRow({
   return (
     <Link
       href={href}
-      className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+      className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition-colors hover:bg-slate-50/60"
     >
       <div
         className={cn(
@@ -1065,7 +1049,7 @@ function NavLink({
   return (
     <Link
       href={href}
-      className="group flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-3 transition hover:-translate-y-0.5 hover:border-nexus-blue-200 hover:shadow-md"
+      className="group flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-3 transition-colors hover:border-nexus-orange-300/60 hover:bg-slate-50/60"
     >
       <Icon className="h-4 w-4 text-slate-500 transition group-hover:text-nexus-blue-950" />
       <span className="text-xs font-semibold text-slate-700 group-hover:text-nexus-blue-950">
