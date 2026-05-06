@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 import {
   ArrowRight,
   CheckCircle2,
@@ -43,38 +44,8 @@ const INITIAL_FORM: ContactFormState = {
   website: "",
 };
 
-const CHANNELS = [
-  {
-    icon: MessageCircle,
-    eyebrow: "Réponse rapide",
-    title: "WhatsApp",
-    description: "Pour une question urgente — réponse dans la journée.",
-    cta: "Écrire sur WhatsApp",
-    href: whatsappLink("Bonjour Nexus RCA, j'aimerais poser une question."),
-    external: true,
-    accent: "orange" as const,
-  },
-  {
-    icon: Phone,
-    eyebrow: "Bangui",
-    title: "+236 73 26 96 92",
-    description: "Lundi à samedi — heures de bureau.",
-    cta: "Appeler maintenant",
-    href: `tel:+${NEXUS_CONTACT.phoneRcaRaw}`,
-    external: false,
-    accent: "navy" as const,
-  },
-  {
-    icon: Mail,
-    eyebrow: "Écrire",
-    title: NEXUS_CONTACT.email,
-    description: "Pour un dossier détaillé ou des pièces jointes.",
-    cta: "Envoyer un e-mail",
-    href: `mailto:${NEXUS_CONTACT.email}`,
-    external: false,
-    accent: "navy" as const,
-  },
-];
+// CHANNELS sont construits dynamiquement dans le composant pour utiliser les
+// traductions next-intl.
 
 // ─── Pattern dot grid subtil pour le hero (style Stripe) ────────────────────
 const DOT_GRID_STYLE: React.CSSProperties = {
@@ -84,9 +55,43 @@ const DOT_GRID_STYLE: React.CSSProperties = {
 };
 
 export default function ContactPage() {
+  const t = useTranslations("Contact");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState<{ reference: string } | null>(null);
   const [form, setForm] = useState<ContactFormState>(INITIAL_FORM);
+
+  const CHANNELS = [
+    {
+      icon: MessageCircle,
+      eyebrow: t("channel_whatsapp_eyebrow"),
+      title: t("channel_whatsapp_title"),
+      description: t("channel_whatsapp_description"),
+      cta: t("channel_whatsapp_cta"),
+      href: whatsappLink("Bonjour Nexus RCA, j'aimerais poser une question."),
+      external: true,
+      accent: "orange" as const,
+    },
+    {
+      icon: Phone,
+      eyebrow: t("channel_phone_eyebrow"),
+      title: NEXUS_CONTACT.phoneRca,
+      description: t("channel_phone_description"),
+      cta: t("channel_phone_cta"),
+      href: `tel:+${NEXUS_CONTACT.phoneRcaRaw}`,
+      external: false,
+      accent: "navy" as const,
+    },
+    {
+      icon: Mail,
+      eyebrow: t("channel_email_eyebrow"),
+      title: NEXUS_CONTACT.email,
+      description: t("channel_email_description"),
+      cta: t("channel_email_cta"),
+      href: `mailto:${NEXUS_CONTACT.email}`,
+      external: false,
+      accent: "navy" as const,
+    },
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,7 +110,7 @@ export default function ContactPage() {
       if (!res.ok || !json.success) {
         throw new Error(json.error || "Envoi impossible");
       }
-      toast.success("Message envoyé !");
+      toast.success(t("toast_success"));
       setSent({ reference: json.reference || "—" });
       setForm(INITIAL_FORM);
     } catch (err) {
@@ -113,7 +118,7 @@ export default function ContactPage() {
       toast.error(
         err instanceof Error
           ? err.message
-          : "Erreur. Réessayez ou contactez-nous sur WhatsApp."
+          : t("form_error_default")
       );
     } finally {
       setLoading(false);
@@ -154,29 +159,27 @@ export default function ContactPage() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
                 </span>
-                Contact
+                {t("eyebrow")}
               </span>
               <h1 className="mt-5 font-display text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Parlons de votre projet.
+                {t("title")}
               </h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                Une question, un visa à préparer, un voyage à coordonner ou un
-                financement à structurer — un conseiller Nexus RCA vous répond
-                sous 24 à 48 h ouvrées.
+                {t("subtitle")}
               </p>
 
               <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-400">
                 <span className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-200">
                   <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-300" />
-                  Données chiffrées
+                  {t("trust_encrypted")}
                 </span>
                 <span className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-200">
                   <Clock className="h-3.5 w-3.5 text-nexus-orange-300" />
-                  Réponse 24-48 h ouvrées
+                  {t("trust_response")}
                 </span>
                 <span className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-200">
                   <MapPin className="h-3.5 w-3.5 text-nexus-orange-300" />
-                  Bureau Bangui
+                  {t("trust_office")}
                 </span>
               </div>
             </div>
@@ -260,14 +263,14 @@ export default function ContactPage() {
 
                   <div className="relative p-7 sm:p-8">
                     <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
-                      Coordonnées
+                      {t("coords_eyebrow")}
                     </span>
                     <h2 className="mt-3 font-display text-xl font-bold leading-tight sm:text-2xl">
-                      Toutes les façons de nous joindre.
+                      {t("coords_title")}
                     </h2>
 
                     <ul className="mt-7 space-y-1.5 text-sm">
-                      <CoordRow icon={MapPin} label="Adresse">
+                      <CoordRow icon={MapPin} label={t("coords_address_label")}>
                         <p className="text-white">
                           {NEXUS_CONTACT.addressLine1}
                           <br />
@@ -278,7 +281,7 @@ export default function ContactPage() {
                         </p>
                       </CoordRow>
 
-                      <CoordRow icon={Phone} label="RCA (principale)">
+                      <CoordRow icon={Phone} label={t("coords_phone_rca_label")}>
                         <a
                           href={`tel:+${NEXUS_CONTACT.phoneRcaRaw}`}
                           className="text-white transition-colors duration-200 hover:text-nexus-orange-300"
@@ -287,7 +290,7 @@ export default function ContactPage() {
                         </a>
                       </CoordRow>
 
-                      <CoordRow icon={Phone} label="Canada (international)">
+                      <CoordRow icon={Phone} label={t("coords_phone_canada_label")}>
                         <a
                           href={`tel:+${NEXUS_CONTACT.phoneCanadaRaw}`}
                           className="text-white transition-colors duration-200 hover:text-nexus-orange-300"
@@ -296,7 +299,7 @@ export default function ContactPage() {
                         </a>
                       </CoordRow>
 
-                      <CoordRow icon={Mail} label="Email">
+                      <CoordRow icon={Mail} label={t("coords_email_label")}>
                         <a
                           href={`mailto:${NEXUS_CONTACT.email}`}
                           className="text-white transition-colors duration-200 hover:text-nexus-orange-300"
@@ -305,7 +308,7 @@ export default function ContactPage() {
                         </a>
                       </CoordRow>
 
-                      <CoordRow icon={Globe} label="Site web">
+                      <CoordRow icon={Globe} label={t("coords_website_label")}>
                         <a
                           href={NEXUS_CONTACT.websiteUrl}
                           target="_blank"
@@ -316,11 +319,9 @@ export default function ContactPage() {
                         </a>
                       </CoordRow>
 
-                      <CoordRow icon={Clock} label="Horaires">
-                        <p className="text-white">
-                          Lundi-vendredi : 8 h - 18 h
-                          <br />
-                          Samedi : 9 h - 14 h
+                      <CoordRow icon={Clock} label={t("coords_hours_label")}>
+                        <p className="whitespace-pre-line text-white">
+                          {t("coords_hours_value")}
                         </p>
                       </CoordRow>
                     </ul>
@@ -342,7 +343,7 @@ export default function ContactPage() {
                       rel="noreferrer"
                       className="group absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3.5 py-1.5 text-xs font-bold text-nexus-blue-950 shadow-[0_8px_24px_-8px_rgba(0,0,0,0.3)] backdrop-blur transition-all duration-300 hover:bg-white hover:shadow-[0_12px_32px_-8px_rgba(255,102,0,0.4)]"
                     >
-                      Itinéraire
+                      {t("map_itineraire")}
                       <ExternalLink className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-0.5" />
                     </a>
                   </div>
@@ -362,15 +363,13 @@ export default function ContactPage() {
                         <CheckCircle2 className="h-8 w-8" />
                       </div>
                       <h3 className="mt-6 font-display text-2xl font-bold text-emerald-900">
-                        Message bien reçu
+                        {t("form_success_title")}
                       </h3>
                       <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-emerald-800">
-                        Un accusé de réception vous a été envoyé par email. Un
-                        conseiller Nexus revient vers vous sous 24 à 48 h
-                        ouvrées.
+                        {t("form_success_subtitle")}
                       </p>
                       <p className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 font-mono text-xs font-bold text-emerald-700 ring-1 ring-emerald-200">
-                        Référence&nbsp;: {sent.reference}
+                        {t("form_success_reference")}&nbsp;: {sent.reference}
                       </p>
                       <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
                         <button
@@ -378,7 +377,7 @@ export default function ContactPage() {
                           onClick={() => setSent(null)}
                           className="text-sm font-bold text-emerald-700 underline-offset-4 transition-colors hover:underline"
                         >
-                          Envoyer un autre message
+                          {t("form_success_send_another")}
                         </button>
                         <span className="hidden text-emerald-300 sm:inline">·</span>
                         <a
@@ -390,7 +389,7 @@ export default function ContactPage() {
                           className="inline-flex items-center gap-1.5 text-sm font-bold text-emerald-700 underline-offset-4 transition-colors hover:underline"
                         >
                           <MessageCircle className="h-4 w-4" />
-                          Continuer sur WhatsApp
+                          {t("form_success_continue_whatsapp")}
                         </a>
                       </div>
                     </div>
@@ -410,62 +409,61 @@ export default function ContactPage() {
                       <div className="mb-7 flex items-start justify-between gap-4">
                         <div>
                           <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                            Formulaire
+                            {t("form_eyebrow")}
                           </span>
                           <h2 className="mt-3 font-display text-xl font-bold leading-tight text-nexus-blue-950 sm:text-2xl">
-                            Envoyez-nous un message.
+                            {t("form_title")}
                           </h2>
                           <p className="mt-1.5 text-sm text-slate-600">
-                            Renseignez vos coordonnées — un conseiller revient
-                            vers vous rapidement.
+                            {t("form_subtitle")}
                           </p>
                         </div>
                         {/* Indicator chip discret */}
                         <span className="hidden shrink-0 items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-700 sm:inline-flex">
                           <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                          Sécurisé
+                          {t("form_chip_secured")}
                         </span>
                       </div>
 
                       <div className="grid gap-4 sm:grid-cols-2">
                         <Input
-                          label="Nom complet *"
+                          label={t("form_label_name")}
                           name="nom"
                           required
                           autoComplete="name"
-                          placeholder="Votre nom"
+                          placeholder={t("form_placeholder_name")}
                           value={form.nom}
                           onChange={(e) =>
                             setForm({ ...form, nom: e.target.value })
                           }
                         />
                         <Input
-                          label="E-mail *"
+                          label={t("form_label_email")}
                           name="email"
                           type="email"
                           required
                           autoComplete="email"
-                          placeholder="vous@exemple.com"
+                          placeholder={t("form_placeholder_email")}
                           value={form.email}
                           onChange={(e) =>
                             setForm({ ...form, email: e.target.value })
                           }
                         />
                         <Input
-                          label="Téléphone (optionnel)"
+                          label={t("form_label_phone")}
                           name="telephone"
                           autoComplete="tel"
-                          placeholder="+236 …"
+                          placeholder={t("form_placeholder_phone")}
                           value={form.telephone}
                           onChange={(e) =>
                             setForm({ ...form, telephone: e.target.value })
                           }
                         />
                         <Input
-                          label="Sujet *"
+                          label={t("form_label_subject")}
                           name="sujet"
                           required
-                          placeholder="Objet de votre message"
+                          placeholder={t("form_placeholder_subject")}
                           value={form.sujet}
                           onChange={(e) =>
                             setForm({ ...form, sujet: e.target.value })
@@ -475,18 +473,18 @@ export default function ContactPage() {
 
                       <div className="mt-4">
                         <Textarea
-                          label="Message *"
+                          label={t("form_label_message")}
                           name="message"
                           required
                           rows={6}
-                          placeholder="Décrivez brièvement votre besoin (visa, voyage, financement, etc.)"
+                          placeholder={t("form_placeholder_message")}
                           value={form.message}
                           onChange={(e) =>
                             setForm({ ...form, message: e.target.value })
                           }
                         />
                         <div className="mt-1.5 flex items-center justify-between text-[11px] text-slate-400">
-                          <span>Restez bref et précis — un conseiller vous rappelle.</span>
+                          <span>{t("form_chars_hint")}</span>
                           <span
                             className={
                               form.message.length > 4500
@@ -521,7 +519,7 @@ export default function ContactPage() {
                       <div className="mt-7 flex flex-col-reverse items-stretch gap-4 border-t border-slate-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
                         <p className="flex items-center gap-1.5 text-[11px] text-slate-500">
                           <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-600" />
-                          Vos données restent strictement confidentielles.
+                          {t("form_confidential")}
                         </p>
                         <Button
                           type="submit"
@@ -537,11 +535,11 @@ export default function ContactPage() {
                           {loading ? (
                             <>
                               <Loader2 className="h-4 w-4 animate-spin" />
-                              Envoi en cours…
+                              {t("form_submitting")}
                             </>
                           ) : (
                             <>
-                              Envoyer le message
+                              {t("form_submit")}
                               <Send className="h-4 w-4 transition-transform duration-300 ease-out group-hover/btn:translate-x-0.5" />
                             </>
                           )}

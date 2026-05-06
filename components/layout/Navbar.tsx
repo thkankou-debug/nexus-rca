@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   Menu,
   X,
@@ -19,13 +20,19 @@ import { LocaleToggle } from "@/components/layout/LocaleToggle";
 import { SERVICES } from "@/lib/services";
 import { cn, whatsappLink } from "@/lib/utils";
 
-const NAV_LINKS = [
-  { href: "/", label: "Accueil" },
-  { href: "/services", label: "Services", hasDropdown: true },
-  { href: "/services/nexus-ia", label: "Nexus IA 🤖" },
-  { href: "/a-propos", label: "À propos" },
-  { href: "/contact", label: "Contact" },
-  { href: "/rendez-vous", label: "Rendez-vous" },
+interface NavLink {
+  href: string;
+  labelKey: string;
+  hasDropdown?: boolean;
+}
+
+const NAV_LINKS: NavLink[] = [
+  { href: "/", labelKey: "home" },
+  { href: "/services", labelKey: "services", hasDropdown: true },
+  { href: "/services/nexus-ia", labelKey: "nexus_ia" },
+  { href: "/a-propos", labelKey: "about" },
+  { href: "/contact", labelKey: "contact" },
+  { href: "/rendez-vous", labelKey: "rendezvous" },
 ];
 
 const DOT_GRID_DARK: React.CSSProperties = {
@@ -39,6 +46,7 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const pathname = usePathname();
+  const t = useTranslations("Navbar");
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -95,7 +103,7 @@ export function Navbar() {
                       : "text-white hover:bg-white/10"
                   )}
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                   {link.hasDropdown && <ChevronDown className="h-3.5 w-3.5" />}
                 </Link>
 
@@ -103,7 +111,7 @@ export function Navbar() {
                   <div className="absolute left-1/2 top-full -translate-x-1/2 pt-2">
                     <div className="w-[520px] rounded-3xl border border-slate-200 bg-white p-4 shadow-[0_24px_60px_-22px_rgba(12,28,64,0.30)]">
                       <div className="mb-3 border-b border-slate-200 pb-2 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                        Nos services
+                        {t("services_dropdown_eyebrow")}
                       </div>
                       <div className="grid grid-cols-2 gap-1">
                         {SERVICES.map((s) => {
@@ -155,7 +163,7 @@ export function Navbar() {
               )}
             >
               <Sparkles className="h-4 w-4 text-nexus-orange-400" />
-              NEXUS CONNECT
+              {t("nexus_connect")}
             </Link>
 
             <Link
@@ -167,7 +175,7 @@ export function Navbar() {
                   : "text-white hover:text-nexus-orange-300"
               )}
             >
-              Connexion
+              {t("login")}
             </Link>
 
             <Link
@@ -179,7 +187,7 @@ export function Navbar() {
                 className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
               />
               <FilePlus className="h-4 w-4" />
-              Ouvrir un dossier
+              {t("open_dossier")}
             </Link>
           </div>
 
@@ -195,7 +203,7 @@ export function Navbar() {
                   ? "border-slate-200 bg-white text-nexus-blue-950 shadow-sm hover:border-nexus-orange-300/60 hover:shadow-[0_8px_20px_-8px_rgba(255,102,0,0.3)]"
                   : "border-white/20 bg-white/10 text-white backdrop-blur-md hover:border-white/40 hover:bg-white/15"
               )}
-              aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
+              aria-label={mobileOpen ? t("close_menu") : t("open_menu")}
               aria-expanded={mobileOpen}
             >
               <span className="relative h-4 w-5">
@@ -233,7 +241,7 @@ export function Navbar() {
           {/* Backdrop */}
           <button
             type="button"
-            aria-label="Fermer le menu"
+            aria-label={t("close_menu")}
             onClick={() => setMobileOpen(false)}
             className="fixed inset-0 z-40 bg-nexus-blue-950/60 backdrop-blur-sm lg:hidden"
             style={{ animation: "fadeIn 0.25s ease-out" }}
@@ -267,7 +275,7 @@ export function Navbar() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
                 </span>
-                Menu
+                {t("menu")}
               </span>
 
               {/* NEXUS CONNECT highlight card */}
@@ -285,14 +293,14 @@ export function Navbar() {
                 <div className="relative flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <p className="font-display text-sm font-bold text-white">
-                      NEXUS CONNECT
+                      {t("nexus_connect")}
                     </p>
                     <span className="rounded-full bg-white/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white/90">
-                      Premium
+                      {t("premium_badge")}
                     </span>
                   </div>
                   <p className="mt-0.5 text-xs text-slate-300">
-                    Mon espace personnel
+                    {t("mobile_my_space")}
                   </p>
                 </div>
                 <ArrowRight className="relative h-4 w-4 shrink-0 text-nexus-orange-300 transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -313,7 +321,7 @@ export function Navbar() {
                             : "text-slate-300 hover:bg-white/5 hover:text-white"
                         )}
                       >
-                        <span>{link.label}</span>
+                        <span>{t(link.labelKey)}</span>
                         <ArrowRight
                           className={cn(
                             "h-4 w-4 shrink-0 transition-all duration-300",
@@ -333,7 +341,7 @@ export function Navbar() {
                 <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-sm font-bold text-white">
                   <span className="inline-flex items-center gap-2">
                     <span className="h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
-                    Tous les services
+                    {t("all_services")}
                   </span>
                   <ChevronDown className="h-4 w-4 text-slate-400 transition-transform duration-300 group-open/srv:rotate-180" />
                 </summary>
@@ -379,7 +387,7 @@ export function Navbar() {
                     className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
                   />
                   <FilePlus className="h-4 w-4" />
-                  Ouvrir un dossier
+                  {t("open_dossier")}
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
                 </Link>
 
@@ -388,7 +396,7 @@ export function Navbar() {
                     href="/login"
                     className="inline-flex items-center justify-center rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:border-white/40 hover:bg-white/10"
                   >
-                    Connexion
+                    {t("login")}
                   </Link>
                   <a
                     href={whatsappLink(
@@ -399,14 +407,14 @@ export function Navbar() {
                     className="inline-flex items-center justify-center gap-1.5 rounded-2xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm font-bold text-emerald-300 backdrop-blur-md transition-all duration-300 hover:border-emerald-400/50 hover:bg-emerald-500/15"
                   >
                     <MessageCircle className="h-4 w-4" />
-                    WhatsApp
+                    {t("whatsapp")}
                   </a>
                 </div>
               </div>
 
               {/* Footer info */}
               <p className="pt-4 text-center text-[10px] uppercase tracking-[0.18em] text-slate-500">
-                Bureau Nexus RCA · Bangui
+                {t("office")}
               </p>
             </div>
           </div>

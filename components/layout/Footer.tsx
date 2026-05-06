@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { MapPin, Phone, Mail, MessageCircle, Facebook, Instagram, Linkedin, Globe } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Logo } from "@/components/ui/Logo";
 import { SERVICES } from "@/lib/services";
 import { whatsappLink } from "@/lib/utils";
 import { NEXUS_CONTACT } from "@/lib/contact";
 
 export function Footer() {
+  const t = useTranslations("Footer");
   return (
     <footer className="relative overflow-hidden bg-nexus-blue-950 text-slate-300">
       {/* Mesh background */}
@@ -19,8 +21,7 @@ export function Footer() {
           <div className="lg:col-span-1">
             <Logo variant="light" />
             <p className="mt-4 text-sm leading-relaxed text-slate-400">
-              De Bangui au monde. Agence internationale spécialisée visa, études au Canada,
-              financement business et services administratifs.
+              {t("tagline")}
             </p>
             <div className="mt-5 flex gap-3">
               <a
@@ -49,7 +50,7 @@ export function Footer() {
 
           {/* Services */}
           <div>
-            <h3 className="mb-4 font-display text-base font-bold text-white">Services</h3>
+            <h3 className="mb-4 font-display text-base font-bold text-white">{t("services_heading")}</h3>
             <ul className="space-y-2 text-sm">
               {SERVICES.slice(0, 6).map((s) => (
                 <li key={s.id}>
@@ -66,36 +67,36 @@ export function Footer() {
 
           {/* Navigation */}
           <div>
-            <h3 className="mb-4 font-display text-base font-bold text-white">Navigation</h3>
+            <h3 className="mb-4 font-display text-base font-bold text-white">{t("navigation_heading")}</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/" className="text-slate-400 hover:text-nexus-orange-400">
-                  Accueil
+                  {t("nav_home")}
                 </Link>
               </li>
               <li>
                 <Link href="/services" className="text-slate-400 hover:text-nexus-orange-400">
-                  Tous les services
+                  {t("nav_all_services")}
                 </Link>
               </li>
               <li>
                 <Link href="/services/nexus-ia" className="text-slate-400 hover:text-nexus-orange-400">
-                  Nexus IA 🤖
+                  {t("nav_nexus_ia")}
                 </Link>
               </li>
               <li>
                 <Link href="/rendez-vous" className="text-slate-400 hover:text-nexus-orange-400">
-                  Prendre rendez-vous
+                  {t("nav_rendezvous")}
                 </Link>
               </li>
               <li>
                 <Link href="/contact" className="text-slate-400 hover:text-nexus-orange-400">
-                  Contact
+                  {t("nav_contact")}
                 </Link>
               </li>
               <li>
                 <Link href="/login" className="text-slate-400 hover:text-nexus-orange-400">
-                  Espace client
+                  {t("nav_client_space")}
                 </Link>
               </li>
             </ul>
@@ -103,7 +104,7 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="mb-4 font-display text-base font-bold text-white">Contact</h3>
+            <h3 className="mb-4 font-display text-base font-bold text-white">{t("contact_heading")}</h3>
             <ul className="space-y-3 text-sm">
               {/* Adresse */}
               <li className="flex items-start gap-3">
@@ -114,7 +115,7 @@ export function Footer() {
                   {NEXUS_CONTACT.addressLine2}
                   <br />
                   <span className="text-slate-500 italic text-xs">
-                    {NEXUS_CONTACT.appointmentOnly}
+                    {t("appointment_only")}
                   </span>
                 </span>
               </li>
@@ -124,7 +125,7 @@ export function Footer() {
                 <Phone className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-400" />
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                    RCA (principale)
+                    {t("label_rca")}
                   </p>
                   <a
                     href={`tel:+${NEXUS_CONTACT.phoneRcaRaw}`}
@@ -140,7 +141,7 @@ export function Footer() {
                 <Phone className="mt-0.5 h-4 w-4 shrink-0 text-nexus-blue-400" />
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                    International (Canada)
+                    {t("label_canada")}
                   </p>
                   <a
                     href={`tel:+${NEXUS_CONTACT.phoneCanadaRaw}`}
@@ -160,7 +161,7 @@ export function Footer() {
                   rel="noreferrer"
                   className="text-slate-400 hover:text-nexus-orange-400"
                 >
-                  WhatsApp direct
+                  {t("whatsapp_direct")}
                 </a>
               </li>
 
@@ -192,9 +193,9 @@ export function Footer() {
         </div>
 
         <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-slate-500 md:flex-row">
-          <p>© {new Date().getFullYear()} Nexus RCA — Agence Internationale. Tous droits réservés.</p>
+          <p>© {new Date().getFullYear()} {t("copyright")}</p>
           <p className="flex items-center gap-2">
-            Construit à <span className="font-semibold text-nexus-orange-400">Bangui</span> — déployé partout dans le monde
+            {t("built_in")} <span className="font-semibold text-nexus-orange-400">Bangui</span> {t("deployed")}
           </p>
         </div>
       </div>
