@@ -2,13 +2,39 @@
 
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
 import toast from "react-hot-toast";
-import { ArrowRight, Loader2 } from "lucide-react";
-import { Logo } from "@/components/ui/Logo";
+import {
+  ArrowRight,
+  ClipboardCheck,
+  Loader2,
+  ShieldCheck,
+  UserCheck,
+} from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { AuthLayout } from "@/components/auth/AuthLayout";
 import { createClient } from "@/lib/supabase/client";
+
+const VALUE_PROPS = [
+  {
+    icon: ClipboardCheck,
+    title: "Suivi structuré de vos dossiers",
+    description:
+      "Visa, voyages, transferts, paiements — tout est consultable depuis un espace unique.",
+  },
+  {
+    icon: UserCheck,
+    title: "Un interlocuteur Nexus dédié",
+    description:
+      "Le même conseiller suit vos demandes du premier contact à la décision finale.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Confidentialité par défaut",
+    description:
+      "Vos pièces et échanges sont chiffrés. Accès strictement limité au staff Nexus.",
+  },
+];
 
 function LoginForm() {
   const router = useRouter();
@@ -38,97 +64,75 @@ function LoginForm() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="w-full rounded-3xl border border-white/10 bg-white/95 p-8 shadow-2xl backdrop-blur sm:p-10"
-    >
-      <div className="mb-8 text-center">
-        <h1 className="font-display text-display-sm text-nexus-blue-950">
-          Bon retour 👋
-        </h1>
-        <p className="mt-2 text-body text-slate-600">
-          Connectez-vous pour accéder à votre espace.
-        </p>
-      </div>
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <Input
+        label="E-mail"
+        name="email"
+        type="email"
+        required
+        placeholder="vous@exemple.com"
+        autoComplete="email"
+        value={form.email}
+        onChange={(e) => setForm({ ...form, email: e.target.value })}
+      />
+      <Input
+        label="Mot de passe"
+        name="password"
+        type="password"
+        required
+        placeholder="••••••••"
+        autoComplete="current-password"
+        value={form.password}
+        onChange={(e) => setForm({ ...form, password: e.target.value })}
+      />
 
-      <div className="space-y-5">
-        <Input
-          label="Email"
-          name="email"
-          type="email"
-          required
-          placeholder="vous@exemple.com"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-        />
-        <Input
-          label="Mot de passe"
-          name="password"
-          type="password"
-          required
-          placeholder="••••••••"
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-        />
-      </div>
-
-      <Button type="submit" disabled={loading} className="mt-6 w-full" size="lg">
+      <Button
+        type="submit"
+        disabled={loading}
+        className="mt-2 w-full"
+        size="lg"
+      >
         {loading ? (
           <>
-            <Loader2 className="h-5 w-5 animate-spin" />
-            Connexion...
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Connexion en cours…
           </>
         ) : (
           <>
             Se connecter
-            <ArrowRight className="h-5 w-5" />
+            <ArrowRight className="h-4 w-4" />
           </>
         )}
       </Button>
-
-      <p className="mt-6 text-center text-body-sm text-slate-600">
-        Pas encore de compte ?{" "}
-        <Link
-          href="/register"
-          className="font-semibold text-nexus-orange-600 hover:text-nexus-orange-700"
-        >
-          Créer un compte
-        </Link>
-      </p>
     </form>
   );
 }
 
 export default function LoginPage() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-nexus-blue-950">
-      <div className="absolute inset-0 bg-mesh-gradient opacity-60" />
-      <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-nexus-orange-500/20 blur-3xl" />
-      <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-nexus-blue-500/20 blur-3xl" />
-
-      <div className="relative flex min-h-screen items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md">
-          <div className="mb-8 text-center">
-            <Link href="/" className="inline-block">
-              <Logo variant="light" />
-            </Link>
+    <AuthLayout
+      leftEyebrow="Espace Nexus RCA"
+      leftTitle="Reprenez la main sur vos démarches."
+      leftDescription="Accédez à vos dossiers visa, voyages et paiements depuis votre espace personnel — accompagné par votre conseiller Nexus."
+      valueProps={VALUE_PROPS}
+      formEyebrow="Connexion"
+      formTitle="Accédez à votre espace"
+      formSubtitle="Saisissez vos identifiants pour continuer."
+      footerLink={{
+        label: "Pas encore de compte ?",
+        href: "/register",
+        cta: "Créer un compte",
+      }}
+    >
+      <Suspense
+        fallback={
+          <div className="flex h-48 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50/60">
+            <Loader2 className="h-6 w-6 animate-spin text-nexus-orange-500" />
           </div>
-          <Suspense
-            fallback={
-              <div className="flex h-80 items-center justify-center rounded-3xl bg-white/90">
-                <Loader2 className="h-8 w-8 animate-spin text-nexus-orange-500" />
-              </div>
-            }
-          >
-            <LoginForm />
-          </Suspense>
-          <p className="mt-6 text-center text-sm text-white/60">
-            <Link href="/" className="hover:text-white">
-              ← Retour au site
-            </Link>
-          </p>
-        </div>
-      </div>
-    </main>
+        }
+      >
+        <LoginForm />
+      </Suspense>
+    </AuthLayout>
   );
 }

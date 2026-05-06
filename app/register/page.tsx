@@ -2,13 +2,39 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import toast from "react-hot-toast";
-import { ArrowRight, Loader2 } from "lucide-react";
-import { Logo } from "@/components/ui/Logo";
+import {
+  ArrowRight,
+  ClipboardCheck,
+  Loader2,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { AuthLayout } from "@/components/auth/AuthLayout";
 import { createClient } from "@/lib/supabase/client";
+
+const VALUE_PROPS = [
+  {
+    icon: Sparkles,
+    title: "Démarrez en quelques minutes",
+    description:
+      "Création de compte instantanée — recevez votre premier bilan de faisabilité écrit sous 72 heures ouvrées.",
+  },
+  {
+    icon: ClipboardCheck,
+    title: "Méthodologie claire et écrite",
+    description:
+      "Étude initiale gratuite, devis fixe avant tout engagement. Aucune surprise.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Confidentialité et conformité",
+    description:
+      "Données chiffrées, accès strictement contrôlé. Bureau enregistré à Bangui.",
+  },
+];
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -54,7 +80,6 @@ export default function RegisterPage() {
       return;
     }
 
-    // Mise à jour du téléphone sur le profil auto-créé par le trigger
     if (data.user && form.telephone) {
       await supabase
         .from("profiles")
@@ -63,10 +88,9 @@ export default function RegisterPage() {
     }
 
     toast.success(
-      "Compte créé ! Vérifiez votre email si la confirmation est activée."
+      "Compte créé. Vérifiez votre e-mail si la confirmation est activée."
     );
 
-    // Si email confirmation désactivé dans Supabase, l'utilisateur est déjà connecté
     if (data.session) {
       router.push("/dashboard");
       router.refresh();
@@ -76,124 +100,101 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-nexus-blue-950">
-      <div className="absolute inset-0 bg-mesh-gradient opacity-60" />
-      <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-nexus-orange-500/20 blur-3xl" />
-      <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-nexus-blue-500/20 blur-3xl" />
-
-      <div className="relative flex min-h-screen items-center justify-center px-4 py-12">
-        <div className="w-full max-w-lg">
-          <div className="mb-8 text-center">
-            <Link href="/" className="inline-block">
-              <Logo variant="light" />
-            </Link>
-          </div>
-
-          <form
-            onSubmit={handleSubmit}
-            className="w-full rounded-3xl border border-white/10 bg-white/95 p-8 shadow-2xl backdrop-blur sm:p-10"
-          >
-            <div className="mb-8 text-center">
-              <h1 className="font-display text-display-sm text-nexus-blue-950">
-                Créer un compte
-              </h1>
-              <p className="mt-2 text-body text-slate-600">
-                Rejoignez Nexus RCA et pilotez vos demandes.
-              </p>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Input
-                label="Prénom"
-                name="prenom"
-                required
-                value={form.prenom}
-                onChange={(e) => setForm({ ...form, prenom: e.target.value })}
-              />
-              <Input
-                label="Nom *"
-                name="nom"
-                required
-                value={form.nom}
-                onChange={(e) => setForm({ ...form, nom: e.target.value })}
-              />
-            </div>
-
-            <div className="mt-4 space-y-4">
-              <Input
-                label="Email *"
-                name="email"
-                type="email"
-                required
-                placeholder="vous@exemple.com"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-              />
-              <Input
-                label="Téléphone"
-                name="telephone"
-                placeholder="+236 ..."
-                value={form.telephone}
-                onChange={(e) => setForm({ ...form, telephone: e.target.value })}
-              />
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Input
-                  label="Mot de passe *"
-                  name="password"
-                  type="password"
-                  required
-                  placeholder="Min. 8 caractères"
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
-                />
-                <Input
-                  label="Confirmer *"
-                  name="confirm"
-                  type="password"
-                  required
-                  value={form.confirm}
-                  onChange={(e) => setForm({ ...form, confirm: e.target.value })}
-                />
-              </div>
-            </div>
-
-            <Button
-              type="submit"
-              disabled={loading}
-              className="mt-6 w-full"
-              size="lg"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  Création...
-                </>
-              ) : (
-                <>
-                  Créer mon compte
-                  <ArrowRight className="h-5 w-5" />
-                </>
-              )}
-            </Button>
-
-            <p className="mt-6 text-center text-body-sm text-slate-600">
-              Déjà inscrit ?{" "}
-              <Link
-                href="/login"
-                className="font-semibold text-nexus-orange-600 hover:text-nexus-orange-700"
-              >
-                Se connecter
-              </Link>
-            </p>
-          </form>
-
-          <p className="mt-6 text-center text-sm text-white/60">
-            <Link href="/" className="hover:text-white">
-              ← Retour au site
-            </Link>
-          </p>
+    <AuthLayout
+      leftEyebrow="Rejoindre Nexus RCA"
+      leftTitle="Pilotez vos démarches en toute sérénité."
+      leftDescription="Un espace unique pour suivre vos visas, voyages et paiements — accompagné par un conseiller dédié à Bangui."
+      valueProps={VALUE_PROPS}
+      formEyebrow="Inscription"
+      formTitle="Créer votre compte"
+      formSubtitle="Quelques informations suffisent. Vous serez accompagné dès la première étape."
+      footerLink={{
+        label: "Déjà inscrit ?",
+        href: "/login",
+        cta: "Se connecter",
+      }}
+    >
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Input
+            label="Prénom"
+            name="prenom"
+            required
+            autoComplete="given-name"
+            value={form.prenom}
+            onChange={(e) => setForm({ ...form, prenom: e.target.value })}
+          />
+          <Input
+            label="Nom"
+            name="nom"
+            required
+            autoComplete="family-name"
+            value={form.nom}
+            onChange={(e) => setForm({ ...form, nom: e.target.value })}
+          />
         </div>
-      </div>
-    </main>
+
+        <Input
+          label="E-mail"
+          name="email"
+          type="email"
+          required
+          placeholder="vous@exemple.com"
+          autoComplete="email"
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+        />
+
+        <Input
+          label="Téléphone"
+          name="telephone"
+          placeholder="+236 …"
+          autoComplete="tel"
+          value={form.telephone}
+          onChange={(e) => setForm({ ...form, telephone: e.target.value })}
+        />
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Input
+            label="Mot de passe"
+            name="password"
+            type="password"
+            required
+            placeholder="Min. 8 caractères"
+            autoComplete="new-password"
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+          />
+          <Input
+            label="Confirmer"
+            name="confirm"
+            type="password"
+            required
+            autoComplete="new-password"
+            value={form.confirm}
+            onChange={(e) => setForm({ ...form, confirm: e.target.value })}
+          />
+        </div>
+
+        <Button
+          type="submit"
+          disabled={loading}
+          className="mt-2 w-full"
+          size="lg"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Création en cours…
+            </>
+          ) : (
+            <>
+              Créer mon compte
+              <ArrowRight className="h-4 w-4" />
+            </>
+          )}
+        </Button>
+      </form>
+    </AuthLayout>
   );
 }
