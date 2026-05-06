@@ -1,20 +1,20 @@
 import Link from "next/link";
 import {
+  ArrowRight,
+  Briefcase,
   Building2,
-  Target,
+  CheckCircle2,
   Compass,
-  Sparkles,
   Globe2,
   Handshake,
-  ShieldCheck,
-  CheckCircle2,
-  ArrowRight,
-  Mail,
-  Linkedin,
-  MapPin,
-  Briefcase,
-  Users,
   Heart,
+  Linkedin,
+  Mail,
+  MapPin,
+  ShieldCheck,
+  Sparkles,
+  Target,
+  Users,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -30,7 +30,7 @@ interface Founder {
   name: string;
   role: string;
   bio: string;
-  /** Chemin vers l image dans /public — laisse undefined pour afficher les initiales */
+  /** Chemin vers l'image dans /public — laisse undefined pour afficher les initiales */
   photo?: string;
   email?: string;
   linkedin?: string;
@@ -38,8 +38,6 @@ interface Founder {
   location: string;
 }
 
-// IMPORTANT : pour utiliser une vraie photo, place le fichier dans /public/team/
-// puis decommente la ligne photo de chaque fondateur ci-dessous.
 const FOUNDERS: Founder[] = [
   {
     name: "Thierry F. KANKOU",
@@ -47,7 +45,7 @@ const FOUNDERS: Founder[] = [
     bio: "Spécialiste de la logistique, du service client et de la gestion de projets. Thierry structure les opérations de Nexus RCA et accompagne les clients dans leurs démarches internationales avec rigueur et méthode. Sa vision : transformer chaque projet en résultat concret grâce à une approche structurée et un suivi sans faille.",
     initials: "TK",
     location: "Bangui · Canada",
-    photo: "/team/thierry-kankou.jpg", // ← decommente quand tu auras place la photo
+    photo: "/team/thierry-kankou.jpg",
   },
   {
     name: "Orson DIBERT.K",
@@ -55,7 +53,7 @@ const FOUNDERS: Founder[] = [
     bio: "Pilier de la stratégie internationale de Nexus RCA, Orson développe les ponts entre l'Europe et la Centrafrique. Son expertise en gestion et en coordination transfrontalière permet à l'agence d'accompagner des projets ambitieux à l'échelle internationale.",
     initials: "OD",
     location: "Europe · RCA",
-    photo: "/team/orson-dibert.jpg", // ← decommente quand tu auras place la photo
+    photo: "/team/orson-dibert.jpg",
   },
 ];
 
@@ -118,61 +116,75 @@ export default function AProposPage() {
     <>
       <Navbar />
       <main>
-        {/* ==================== HERO ==================== */}
-        <section className="relative overflow-hidden bg-nexus-blue-950 pt-40 pb-24 text-white">
-          <div className="absolute inset-0 bg-mesh-gradient opacity-50" />
-          <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-nexus-orange-500/20 blur-3xl" />
-          <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-nexus-blue-500/20 blur-3xl" />
+        {/* ─── HERO Premium ──────────────────────────────────────────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 pt-36 pb-20 text-white sm:pt-40">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-nexus-orange-500/10 blur-3xl"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -bottom-40 -left-32 h-96 w-96 rounded-full bg-nexus-blue-700/15 blur-3xl"
+          />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-overline text-nexus-orange-300 backdrop-blur">
-                <Building2 className="h-3.5 w-3.5" />
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-nexus-orange-300 backdrop-blur">
+                <Building2 className="h-3 w-3" />
                 À propos de Nexus RCA
-              </div>
+              </span>
 
-              <h1
-                className="font-display text-display-xl text-white lg:text-display-2xl"
-                style={{ paddingBottom: "0.15em" }}
-              >
-                Une structure engagée pour{" "}
-                <span className="text-gradient-orange">accompagner</span> et{" "}
-                <span className="text-gradient-orange">développer</span> vos
-                projets
+              <h1 className="mx-auto mt-6 max-w-3xl font-display text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
+                Une structure engagée pour accompagner et développer vos projets.
               </h1>
 
-              <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">
+              <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
                 NEXUS RCA accompagne particuliers et entreprises dans leurs
                 démarches, projets internationaux, partenariats et
                 développement d'activités.
               </p>
+
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-slate-400">
+                <span className="inline-flex items-center gap-1.5">
+                  <MapPin className="h-3.5 w-3.5 text-nexus-orange-300" />
+                  Bureau Bangui
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <Globe2 className="h-3.5 w-3.5 text-nexus-orange-300" />
+                  Présence Europe & Canada
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-300" />
+                  Méthodologie écrite
+                </span>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* ==================== QUI SOMMES-NOUS ==================== */}
-        <section className="bg-surface py-20">
+        {/* ─── QUI SOMMES-NOUS ───────────────────────────────────────── */}
+        <section className="bg-white py-20 sm:py-24">
           <div className="mx-auto max-w-5xl px-4 lg:px-8">
             <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
               <div>
-                <p className="text-overline text-brand">
+                <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] text-nexus-orange-600">
                   Qui sommes-nous
-                </p>
-                <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                  Une agence internationale, ancrée à Bangui
+                </span>
+                <h2 className="mt-3 font-display text-3xl font-bold leading-tight text-nexus-blue-950 sm:text-4xl">
+                  Une agence internationale, ancrée à Bangui.
                 </h2>
-                <div className="mt-6 space-y-4 text-base leading-relaxed text-ink-muted sm:text-lg">
+                <div className="mt-6 space-y-4 text-base leading-relaxed text-slate-600">
                   <p>
                     NEXUS RCA est une agence internationale basée à{" "}
-                    <strong className="text-ink">
+                    <strong className="text-nexus-blue-950">
                       Bangui, en République Centrafricaine
                     </strong>
-                    , spécialisée dans l'accompagnement administratif, les projets
-                    internationaux et le développement d'activités.
+                    , spécialisée dans l'accompagnement administratif, les
+                    projets internationaux et le développement d'activités.
                   </p>
                   <p>
                     Nous travaillons avec une approche{" "}
-                    <strong className="text-ink">
+                    <strong className="text-nexus-blue-950">
                       structurée et professionnelle
                     </strong>
                     , au service de clients qui veulent transformer leurs
@@ -181,42 +193,46 @@ export default function AProposPage() {
                 </div>
               </div>
 
-              <div className="relative">
-                <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-100 to-nexus-orange-100 p-8 shadow-elev-3">
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <Stat number="10+" label="Services experts" />
-                    <Stat number="2" label="Pôles internationaux" />
-                    <Stat number="24h" label="Délai de réponse" />
-                    <Stat number="100%" label="Suivi des dossiers" />
-                  </div>
+              <div className="rounded-3xl border border-slate-200 bg-slate-50/60 p-6 shadow-sm sm:p-8">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <Stat number="10+" label="Services experts" />
+                  <Stat number="2" label="Pôles internationaux" />
+                  <Stat number="24h" label="Délai de réponse" />
+                  <Stat number="100%" label="Suivi des dossiers" />
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ==================== VISION (NOUVELLE SECTION) ==================== */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-50 via-white to-nexus-orange-50 py-20">
-          <div className="absolute -top-32 -right-32 h-64 w-64 rounded-full bg-nexus-orange-500/10 blur-3xl" />
-          <div className="absolute -bottom-32 -left-32 h-64 w-64 rounded-full bg-nexus-blue-500/10 blur-3xl" />
+        {/* ─── VISION (cœur orange préservé) ─────────────────────────── */}
+        <section className="relative overflow-hidden bg-slate-50 py-20 sm:py-24">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -top-32 -right-32 h-72 w-72 rounded-full bg-nexus-orange-500/10 blur-3xl"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -bottom-32 -left-32 h-72 w-72 rounded-full bg-nexus-blue-500/10 blur-3xl"
+          />
 
-          <div className="relative mx-auto max-w-4xl px-4 lg:px-8">
+          <div className="relative mx-auto max-w-3xl px-4 lg:px-8">
             <div className="text-center">
-              <div className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-elev-3">
+              <div className="mx-auto mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
                 <Heart className="h-6 w-6" />
               </div>
-              <p className="text-overline text-brand">
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] text-nexus-orange-600">
                 Notre vision
-              </p>
-              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Une mission profondément humaine
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight text-nexus-blue-950 sm:text-4xl">
+                Une mission profondément humaine.
               </h2>
             </div>
 
-            <div className="mt-12 space-y-6 text-base leading-relaxed text-ink-muted sm:text-lg">
+            <div className="mt-12 space-y-5 text-base leading-relaxed text-slate-600 sm:text-lg">
               <p>
                 Nexus RCA est né d'une réalité simple :{" "}
-                <strong className="text-ink">
+                <strong className="text-nexus-blue-950">
                   trop de talents en République Centrafricaine restent bloqués
                 </strong>{" "}
                 faute d'accompagnement, d'information et d'opportunités.
@@ -225,7 +241,7 @@ export default function AProposPage() {
               <p>
                 Nous avons créé Nexus pour aider concrètement — pas seulement
                 informer, mais{" "}
-                <strong className="text-ink">
+                <strong className="text-nexus-blue-950">
                   accompagner, guider et ouvrir des portes
                 </strong>
                 .
@@ -237,21 +253,21 @@ export default function AProposPage() {
                 centrafricaines dans leurs projets de vie et leurs ambitions.
               </p>
 
-              {/* Citation mise en avant */}
-              <div className="my-10 rounded-3xl border-l-4 border-nexus-orange-500 bg-white px-6 py-6 shadow-elev-2 sm:px-8 sm:py-8">
-                <p className="font-display text-xl font-bold leading-snug text-ink sm:text-2xl">
+              {/* Citation mise en avant — Premium */}
+              <blockquote className="my-10 rounded-3xl border-l-4 border-nexus-orange-500 bg-white px-7 py-7 shadow-sm sm:px-9 sm:py-8">
+                <p className="font-display text-xl font-bold leading-snug text-nexus-blue-950 sm:text-2xl">
                   Nous croyons que le développement d'un pays commence par ses
                   personnes.
                 </p>
-                <p className="mt-3 text-base leading-relaxed text-ink-muted sm:text-lg">
+                <p className="mt-3 text-base leading-relaxed text-slate-600">
                   Chaque dossier traité, chaque projet lancé représente une vie
                   qui avance et une communauté qui progresse.
                 </p>
-              </div>
+              </blockquote>
 
               <p>
                 Nexus RCA agit comme un{" "}
-                <strong className="text-ink">
+                <strong className="text-nexus-blue-950">
                   outil de transformation sociale
                 </strong>
                 , en rendant accessibles des services souvent complexes avec un
@@ -260,7 +276,7 @@ export default function AProposPage() {
 
               <p>
                 Au-delà du business, nous avons une responsabilité :{" "}
-                <strong className="text-ink">
+                <strong className="text-nexus-blue-950">
                   contribuer au développement de la République Centrafricaine
                 </strong>{" "}
                 en aidant sa population à se connecter au monde et à construire
@@ -270,19 +286,19 @@ export default function AProposPage() {
           </div>
         </section>
 
-        {/* ==================== MISSION ==================== */}
-        <section className="bg-surface-sunken py-20">
-          <div className="mx-auto max-w-5xl px-4 lg:px-8">
-            <div className="text-center">
-              <p className="text-overline text-brand">
+        {/* ─── MISSION ───────────────────────────────────────────────── */}
+        <section className="bg-white py-20 sm:py-24">
+          <div className="mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="mx-auto max-w-2xl text-center">
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] text-nexus-orange-600">
                 Notre mission
-              </p>
-              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Trois engagements clairs
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight text-nexus-blue-950 sm:text-4xl">
+                Trois engagements clairs.
               </h2>
             </div>
 
-            <div className="mt-12 grid gap-6 md:grid-cols-3">
+            <div className="mt-12 grid gap-5 md:grid-cols-3">
               <MissionCard
                 icon={Compass}
                 title="Simplifier les démarches"
@@ -302,17 +318,17 @@ export default function AProposPage() {
           </div>
         </section>
 
-        {/* ==================== NOTRE APPROCHE ==================== */}
-        <section className="bg-surface py-20">
-          <div className="mx-auto max-w-5xl px-4 lg:px-8">
-            <div className="text-center">
-              <p className="text-overline text-brand">
+        {/* ─── NOTRE APPROCHE ────────────────────────────────────────── */}
+        <section className="bg-slate-50 py-20 sm:py-24">
+          <div className="mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="mx-auto max-w-2xl text-center">
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] text-nexus-orange-600">
                 Notre approche
-              </p>
-              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Méthode, rigueur, résultats
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight text-nexus-blue-950 sm:text-4xl">
+                Méthode, rigueur, résultats.
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-ink-muted">
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
                 Nous croyons qu'un bon accompagnement repose sur trois piliers
                 indissociables.
               </p>
@@ -338,34 +354,42 @@ export default function AProposPage() {
           </div>
         </section>
 
-        {/* ==================== NOTRE DIFFÉRENCE ==================== */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white">
-          <div className="absolute inset-0 bg-mesh-gradient opacity-30" />
-          <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
-            <div className="text-center">
-              <p className="text-overline text-nexus-orange-400">
+        {/* ─── NOTRE DIFFÉRENCE ──────────────────────────────────────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -top-32 -right-32 h-96 w-96 rounded-full bg-nexus-orange-500/10 blur-3xl"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-nexus-blue-700/15 blur-3xl"
+          />
+
+          <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="mx-auto max-w-2xl text-center">
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] text-nexus-orange-300">
                 Notre différence
-              </p>
-              <h2 className="mt-3 font-display text-display-md sm:text-display-lg">
-                Une approche globale, peu commune
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
+                Une approche globale, peu commune.
               </h2>
             </div>
 
-            <div className="mt-12 grid gap-6 md:grid-cols-3">
+            <div className="mt-12 grid gap-5 md:grid-cols-3">
               {VALEURS.slice(0, 3).map((val) => {
                 const Icon = val.icon;
                 return (
                   <div
                     key={val.title}
-                    className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm"
+                    className="rounded-3xl border border-white/10 bg-white/5 p-7 backdrop-blur transition-colors hover:border-nexus-orange-300/40"
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 shadow-elev-3">
-                      <Icon className="h-6 w-6 text-white" />
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-sm">
+                      <Icon className="h-5 w-5" />
                     </div>
-                    <h3 className="mt-4 font-display text-xl font-bold">
+                    <h3 className="mt-5 font-display text-lg font-bold text-white">
                       {val.title}
                     </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-white/70">
+                    <p className="mt-2 text-sm leading-relaxed text-slate-300/90">
                       {val.description}
                     </p>
                   </div>
@@ -373,8 +397,8 @@ export default function AProposPage() {
               })}
             </div>
 
-            <div className="mt-10 rounded-2xl border border-nexus-orange-500/30 bg-nexus-orange-500/10 p-6 text-center backdrop-blur sm:p-8">
-              <p className="text-lg leading-relaxed text-white sm:text-xl">
+            <div className="mt-10 rounded-3xl border border-nexus-orange-500/30 bg-nexus-orange-500/10 p-7 text-center backdrop-blur sm:p-8">
+              <p className="text-base leading-relaxed text-white sm:text-lg">
                 <strong className="text-nexus-orange-300">
                   Approche globale, capacité à accompagner de A à Z, logique de
                   partenariat
@@ -385,23 +409,23 @@ export default function AProposPage() {
           </div>
         </section>
 
-        {/* ==================== FONDATEURS ==================== */}
-        <section className="bg-surface-sunken py-20">
+        {/* ─── FONDATEURS ────────────────────────────────────────────── */}
+        <section className="bg-white py-20 sm:py-24">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
-            <div className="text-center">
-              <p className="text-overline text-brand">
+            <div className="mx-auto max-w-2xl text-center">
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] text-nexus-orange-600">
                 Direction
-              </p>
-              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Les visages derrière Nexus RCA
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight text-nexus-blue-950 sm:text-4xl">
+                Les visages derrière Nexus RCA.
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-ink-muted">
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
                 Une équipe engagée, complémentaire, qui porte ses convictions au
                 service de ses clients.
               </p>
             </div>
 
-            <div className="mt-12 grid gap-8 md:grid-cols-2 lg:gap-12">
+            <div className="mt-12 grid gap-6 md:grid-cols-2 lg:gap-8">
               {FOUNDERS.map((founder) => (
                 <FounderCard key={founder.name} founder={founder} />
               ))}
@@ -409,34 +433,34 @@ export default function AProposPage() {
           </div>
         </section>
 
-        {/* ==================== POURQUOI NOUS FAIRE CONFIANCE ==================== */}
-        <section className="bg-surface py-20">
+        {/* ─── POURQUOI NOUS FAIRE CONFIANCE ─────────────────────────── */}
+        <section className="bg-slate-50 py-20 sm:py-24">
           <div className="mx-auto max-w-5xl px-4 lg:px-8">
-            <div className="text-center">
-              <p className="text-overline text-brand">
+            <div className="mx-auto max-w-2xl text-center">
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] text-nexus-orange-600">
                 Pourquoi nous faire confiance
-              </p>
-              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Quatre raisons concrètes
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight text-nexus-blue-950 sm:text-4xl">
+                Quatre raisons concrètes.
               </h2>
             </div>
 
-            <div className="mt-12 grid gap-5 sm:grid-cols-2">
+            <div className="mt-12 grid gap-4 sm:grid-cols-2">
               {POURQUOI.map((item) => {
                 const Icon = item.icon;
                 return (
                   <div
                     key={item.title}
-                    className="flex gap-4 rounded-2xl border border-line bg-surface-elevated p-6 shadow-elev-1 transition hover:border-nexus-orange-300 hover:shadow-elev-2"
+                    className="flex gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-colors hover:border-nexus-orange-300/70"
                   >
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-elev-2">
-                      <Icon className="h-6 w-6" />
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-sm">
+                      <Icon className="h-5 w-5" />
                     </div>
                     <div className="min-w-0">
-                      <h3 className="font-display text-lg font-bold text-ink">
+                      <h3 className="font-display text-base font-bold text-nexus-blue-950">
                         {item.title}
                       </h3>
-                      <p className="mt-1 text-sm leading-relaxed text-ink-muted">
+                      <p className="mt-1.5 text-sm leading-relaxed text-slate-600">
                         {item.description}
                       </p>
                     </div>
@@ -447,29 +471,40 @@ export default function AProposPage() {
           </div>
         </section>
 
-        {/* ==================== CTA FINAL ==================== */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-orange-500 via-nexus-orange-600 to-nexus-blue-950 py-20 text-white">
-          <div className="absolute inset-0 bg-mesh-gradient opacity-20" />
-          <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
-            <h2 className="font-display text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
+        {/* ─── CTA FINAL ─────────────────────────────────────────────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -top-32 -right-32 h-96 w-96 rounded-full bg-nexus-orange-500/15 blur-3xl"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -bottom-40 -left-32 h-96 w-96 rounded-full bg-nexus-blue-700/20 blur-3xl"
+          />
+
+          <div className="relative mx-auto max-w-3xl px-4 text-center lg:px-8">
+            <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] text-nexus-orange-300">
+              Prochaine étape
+            </span>
+            <h2 className="mt-4 font-display text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
               Vous avez un projet ou une démarche ?
             </h2>
-            <p className="mx-auto mt-5 max-w-2xl text-lg text-white/90 sm:text-xl">
+            <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
               Parlons-en. Notre équipe étudie votre situation et revient avec un
               plan clair, sans engagement.
             </p>
 
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
+            <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
               <Link
                 href="/demande/complet"
-                className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-semibold text-ink shadow-elev-3 transition hover:scale-105 hover:shadow-2xl"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-nexus-orange-600"
               >
                 Ouvrir un dossier
-                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="/rendez-vous"
-                className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/40 bg-white/10 px-7 py-3.5 text-base font-semibold text-white backdrop-blur transition hover:bg-white/20"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur transition-colors hover:border-white/40 hover:bg-white/10"
               >
                 Prendre rendez-vous
               </Link>
@@ -483,17 +518,15 @@ export default function AProposPage() {
   );
 }
 
-// ============================================================================
-// SOUS-COMPOSANTS
-// ============================================================================
+// ─── Sous-composants ──────────────────────────────────────────────────────
 
 function Stat({ number, label }: { number: string; label: string }) {
   return (
-    <div className="rounded-2xl bg-white/80 p-5 text-center backdrop-blur-sm">
-      <p className="font-display text-3xl font-bold text-ink sm:text-4xl">
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm">
+      <p className="font-display text-2xl font-bold text-nexus-blue-950 sm:text-3xl">
         {number}
       </p>
-      <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-ink-muted">
+      <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
         {label}
       </p>
     </div>
@@ -510,17 +543,17 @@ function MissionCard({
   description: string;
 }) {
   return (
-    <div className="group rounded-2xl border border-line bg-surface-elevated p-6 shadow-elev-1 transition hover:border-nexus-orange-300 hover:shadow-elev-2">
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-100 to-nexus-blue-50 text-nexus-blue-700 transition group-hover:from-nexus-orange-100 group-hover:to-nexus-orange-50 group-hover:text-nexus-orange-600">
-        <Icon className="h-7 w-7" />
+    <article className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition-colors hover:border-nexus-orange-300/70">
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-sm">
+        <Icon className="h-5 w-5" />
       </div>
-      <h3 className="mt-5 font-display text-xl font-bold text-ink">
+      <h3 className="mt-5 font-display text-lg font-bold text-nexus-blue-950">
         {title}
       </h3>
-      <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+      <p className="mt-2 text-sm leading-relaxed text-slate-600">
         {description}
       </p>
-    </div>
+    </article>
   );
 }
 
@@ -534,41 +567,37 @@ function ApproachCard({
   description: string;
 }) {
   return (
-    <div className="rounded-2xl border border-line bg-surface-elevated p-6 shadow-elev-1">
-      <div className="font-display text-4xl font-bold text-nexus-orange-500">
+    <article className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition-colors hover:border-nexus-orange-300/70">
+      <p className="font-display text-3xl font-bold text-slate-200 tabular-nums">
         {step}
-      </div>
-      <h3 className="mt-3 font-display text-lg font-bold text-ink">
+      </p>
+      <h3 className="mt-3 font-display text-lg font-bold text-nexus-blue-950">
         {title}
       </h3>
-      <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+      <p className="mt-2 text-sm leading-relaxed text-slate-600">
         {description}
       </p>
-    </div>
+    </article>
   );
 }
 
-// ============================================================================
-// CARTE FONDATEUR — design horizontal avec photo plus petite et equilibree
-// ============================================================================
+// ─── Carte fondateur — design horizontal sober Premium ────────────────────
 function FounderCard({ founder }: { founder: Founder }) {
   return (
-    <div className="group rounded-3xl border border-line bg-surface-elevated p-6 shadow-card transition hover:shadow-card-hover sm:p-8">
+    <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-colors hover:border-nexus-orange-300/70 sm:p-7">
       <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
-        {/* Photo / initiales — taille reduite et equilibree */}
+        {/* Photo / initiales */}
         <div className="relative shrink-0">
-          <div className="relative h-32 w-32 overflow-hidden rounded-2xl bg-gradient-to-br from-nexus-blue-100 via-slate-100 to-nexus-orange-100 shadow-elev-3 ring-4 ring-white sm:h-36 sm:w-36">
+          <div className="relative h-32 w-32 overflow-hidden rounded-2xl bg-slate-100 ring-1 ring-slate-200 sm:h-36 sm:w-36">
             {founder.photo ? (
-              // Vraie photo : portrait carre arrondi
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={founder.photo}
                 alt={`Portrait de ${founder.name}`}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="h-full w-full object-cover"
               />
             ) : (
-              // Pas de photo : initiales centrees
-              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-nexus-blue-700 to-nexus-orange-500 font-display text-4xl font-bold text-white sm:text-5xl">
+              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-nexus-blue-900 to-nexus-blue-950 font-display text-3xl font-bold text-white sm:text-4xl">
                 {founder.initials}
               </div>
             )}
@@ -576,32 +605,30 @@ function FounderCard({ founder }: { founder: Founder }) {
         </div>
 
         {/* Texte du fondateur */}
-        <div className="flex-1 min-w-0 text-center sm:text-left">
-          <h3 className="font-display text-xl font-bold text-ink sm:text-2xl">
+        <div className="min-w-0 flex-1 text-center sm:text-left">
+          <h3 className="font-display text-xl font-bold text-nexus-blue-950 sm:text-2xl">
             {founder.name}
           </h3>
           <p className="mt-1 text-sm font-semibold text-nexus-orange-600">
             {founder.role}
           </p>
 
-          {/* Localisation */}
-          <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-ink-muted">
-            <MapPin className="h-3.5 w-3.5 text-nexus-orange-500" />
+          <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600">
+            <MapPin className="h-3 w-3 text-nexus-orange-500" />
             {founder.location}
           </div>
 
-          <p className="mt-4 text-sm leading-relaxed text-ink-muted">
+          <p className="mt-4 text-sm leading-relaxed text-slate-600">
             {founder.bio}
           </p>
 
-          {/* Liens contact */}
           {(founder.email || founder.linkedin) && (
             <div className="mt-5 flex justify-center gap-2 border-t border-slate-200 pt-5 sm:justify-start">
               {founder.email && (
                 <a
                   href={`mailto:${founder.email}`}
                   aria-label={`Envoyer un email à ${founder.name}`}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-ink-muted transition hover:bg-nexus-orange-100 hover:text-nexus-orange-600"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-colors hover:bg-nexus-orange-100 hover:text-nexus-orange-600"
                 >
                   <Mail className="h-4 w-4" />
                 </a>
@@ -612,7 +639,7 @@ function FounderCard({ founder }: { founder: Founder }) {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={`LinkedIn de ${founder.name}`}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-ink-muted transition hover:bg-nexus-blue-100 hover:text-nexus-blue-700"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-colors hover:bg-nexus-blue-100 hover:text-nexus-blue-700"
                 >
                   <Linkedin className="h-4 w-4" />
                 </a>
@@ -621,6 +648,6 @@ function FounderCard({ founder }: { founder: Founder }) {
           )}
         </div>
       </div>
-    </div>
+    </article>
   );
 }
