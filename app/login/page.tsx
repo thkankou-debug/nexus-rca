@@ -89,9 +89,13 @@ function LoginForm() {
       <Button
         type="submit"
         disabled={loading}
-        className="mt-2 w-full"
+        className="group/btn relative mt-2 w-full overflow-hidden shadow-[0_10px_30px_-10px_rgba(255,102,0,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-10px_rgba(255,102,0,0.6)]"
         size="lg"
       >
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/btn:left-[120%] group-hover/btn:opacity-100"
+        />
         {loading ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -100,7 +104,7 @@ function LoginForm() {
         ) : (
           <>
             Se connecter
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/btn:translate-x-0.5" />
           </>
         )}
       </Button>
