@@ -115,18 +115,18 @@ const PAYMENT_METHODS = [
   {
     id: "stripe_card",
     label: "Carte bancaire (Visa/Mastercard)",
-    description: "Pour les paiements internationaux (EUR/USD/CAD)",
+    description: "Paiement instantané sécurisé · Stripe",
     icon: CreditCard,
     color: "from-indigo-600 to-purple-700",
     borderColor: "border-indigo-200",
     bgColor: "bg-indigo-50",
-    badge: "Bientôt disponible",
-    disabled: true,
+    badge: "Instantané",
+    disabled: false,
     instructions: [
-      `Ce moyen de paiement est en cours de configuration`,
-      `Pour les paiements en EUR/USD/CAD, contactez-nous directement :`,
-      `Email : **${NEXUS_EMAIL}**`,
-      `WhatsApp : **${NEXUS_PAYMENT_PHONE}**`,
+      `Vous serez redirigé vers Stripe pour le paiement sécurisé.`,
+      `Cartes acceptées : Visa, Mastercard, American Express.`,
+      `Devises : XAF, EUR, USD, CAD.`,
+      `Confirmation automatique dès validation par Stripe.`,
     ],
   },
 ];
@@ -438,11 +438,41 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
                         key={m.id}
                         type="button"
                         disabled={m.disabled}
-                        onClick={() => {
-                          if (!m.disabled) {
-                            setSelectedMethod(m.id);
-                            setStep("instructions");
+                        onClick={async () => {
+                          if (m.disabled) return;
+                          // Stripe : redirige directement vers Checkout Session
+                          if (m.id === "stripe_card") {
+                            setSubmitting(true);
+                            setError("");
+                            try {
+                              const res = await fetch(
+                                "/api/payments/stripe-checkout",
+                                {
+                                  method: "POST",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({
+                                    reference: paymentLink.reference,
+                                  }),
+                                }
+                              );
+                              const data = await res.json();
+                              if (!res.ok || !data.url) {
+                                setError(
+                                  data.error || "Erreur lors de la création de la session Stripe"
+                                );
+                                setSubmitting(false);
+                                return;
+                              }
+                              window.location.href = data.url;
+                            } catch {
+                              setError("Erreur réseau. Réessayez.");
+                              setSubmitting(false);
+                            }
+                            return;
                           }
+                          // Autres méthodes : flow classique instructions → submit
+                          setSelectedMethod(m.id);
+                          setStep("instructions");
                         }}
                         className={cn(
                           "flex w-full items-center gap-3 rounded-2xl border-2 p-4 text-left transition",
