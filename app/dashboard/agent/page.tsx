@@ -17,6 +17,7 @@ import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { DashboardHero } from "@/components/dashboard/DashboardHero";
 import { Sparkline } from "@/components/ui/Sparkline";
 import { cn } from "@/lib/utils";
 
@@ -221,72 +222,43 @@ export default async function AgentDashboardPage() {
 
   return (
     <DashboardShell profile={profile}>
-      {/* HERO */}
-      <div className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-6 shadow-xl sm:p-8">
-        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-nexus-orange-500/20 blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-nexus-orange-500/10 blur-3xl" />
-
-        <div className="relative flex flex-wrap items-center gap-6">
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-2xl font-bold text-white shadow-2xl">
-            {initials.toUpperCase() || "A"}
-          </div>
-
-          <div className="min-w-0 flex-1">
-            <span className="inline-block rounded-full bg-nexus-orange-500/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-nexus-orange-300">
-              Espace Agent Premium
-            </span>
-            <h1 className="mt-2 font-display text-3xl font-bold text-white sm:text-4xl">
-              Bonjour, {profile.prenom || fullName}
-            </h1>
-            <p className="mt-1 text-sm text-slate-300">
-              {profilePoste}
-              {myRank > 0 && (
-                <>
-                  {" - "}
-                  <span className="text-nexus-orange-300">
-                    {myRank}eme dans le classement
-                  </span>
-                </>
-              )}
-            </p>
-          </div>
-
-          {myRank > 0 && myRank <= 3 && (
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-yellow-500/20 backdrop-blur">
-              <span className="text-3xl">
+      {/* HERO PREMIUM (composant partagé) */}
+      <DashboardHero
+        initials={initials.toUpperCase() || "A"}
+        roleLabel="Espace Agent Premium"
+        title={`Bonjour, ${profile.prenom || fullName}`}
+        subtitle={
+          myRank > 0
+            ? `${profilePoste} · ${myRank}ème dans le classement`
+            : profilePoste
+        }
+        stats={[
+          {
+            label: "Performance ce mois",
+            value: `${overallProgress}%`,
+            accent: "white",
+          },
+          {
+            label: "Encaisse ce mois",
+            value: formatMoney(totalPaiementsXAF, "XAF"),
+            accent: "orange",
+          },
+          {
+            label: "Encaisse cette année",
+            value: formatMoney(totalPaiementsYearXAF, "XAF"),
+            accent: "emerald",
+          },
+        ]}
+        rightSlot={
+          myRank > 0 && myRank <= 3 ? (
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-500/20 backdrop-blur">
+              <span className="text-2xl">
                 {myRank === 1 ? "🥇" : myRank === 2 ? "🥈" : "🥉"}
               </span>
             </div>
-          )}
-        </div>
-
-        <div className="relative mt-6 grid gap-3 sm:grid-cols-3">
-          <div className="rounded-xl bg-white/10 p-3 backdrop-blur">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              Performance ce mois
-            </p>
-            <p className="mt-1 font-display text-2xl font-bold text-white">
-              {overallProgress}%
-            </p>
-          </div>
-          <div className="rounded-xl bg-white/10 p-3 backdrop-blur">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              Encaisse ce mois
-            </p>
-            <p className="mt-1 font-display text-xl font-bold text-white">
-              {formatMoney(totalPaiementsXAF, "XAF")}
-            </p>
-          </div>
-          <div className="rounded-xl bg-white/10 p-3 backdrop-blur">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              Encaisse cette annee
-            </p>
-            <p className="mt-1 font-display text-xl font-bold text-white">
-              {formatMoney(totalPaiementsYearXAF, "XAF")}
-            </p>
-          </div>
-        </div>
-      </div>
+          ) : undefined
+        }
+      />
 
       {/* ACTIONS RAPIDES */}
       <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

@@ -26,6 +26,7 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { DashboardHero } from "@/components/dashboard/DashboardHero";
 import { Sparkline } from "@/components/ui/Sparkline";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { cn } from "@/lib/utils";
@@ -293,47 +294,59 @@ export default async function SuperAdminDashboard() {
   // Derniere activite
   const derniereActivite = lastActivePaymentRes.data?.created_at;
 
+  const initials = (
+    (profile.prenom?.[0] ?? "") + (profile.nom?.[0] ?? "")
+  ).toUpperCase();
+  const todayLabel = today.toLocaleDateString("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  const heroSubtitle = derniereActivite
+    ? `${todayLabel} · Dernière activité ${formatRelativeTime(derniereActivite)}`
+    : todayLabel;
+
   return (
     <DashboardShell profile={profile}>
       {/* ======================================================== */}
-      {/* HEADER */}
+      {/* HERO PREMIUM */}
       {/* ======================================================== */}
-      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
-            Centre de pilotage
-          </p>
-          <h1 className="mt-1 font-display text-3xl font-bold text-nexus-blue-950">
-            Bonjour {profile.prenom || profile.nom} 👋
-          </h1>
-          <p className="mt-1 text-sm text-slate-600">
-            {today.toLocaleDateString("fr-FR", {
-              weekday: "long",
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })}
-            {derniereActivite && (
-              <>
-                {" · "}
-                <span className="text-xs">
-                  Dernière activité {formatRelativeTime(derniereActivite)}
-                </span>
-              </>
-            )}
-          </p>
-        </div>
+      <DashboardHero
+        initials={initials}
+        roleLabel="Centre de pilotage"
+        title={`Bonjour ${profile.prenom || profile.nom}`}
+        subtitle={heroSubtitle}
+        stats={[
+          {
+            label: "Encaissé aujourd'hui",
+            value: formatMoney(totalToday),
+            accent: "white",
+          },
+          {
+            label: "Encaissé ce mois",
+            value: formatMoney(totalMonth),
+            accent: "orange",
+          },
+          {
+            label: "Solde net du mois",
+            value: formatMoney(soldeNet),
+            accent: soldeNet >= 0 ? "emerald" : "rose",
+          },
+        ]}
+        rightSlot={
+          totalAlertes > 0 ? (
+            <Link
+              href="#alertes"
+              className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-500/15 px-4 py-2 text-sm font-semibold text-amber-200 backdrop-blur transition hover:bg-amber-500/25"
+            >
+              <AlertTriangle className="h-4 w-4" />
+              {totalAlertes} à traiter
+            </Link>
+          ) : undefined
+        }
+      />
 
-        {totalAlertes > 0 && (
-          <Link
-            href="#alertes"
-            className="inline-flex items-center gap-2 rounded-full border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-700 hover:bg-amber-100"
-          >
-            <AlertTriangle className="h-4 w-4" />
-            {totalAlertes} chose{totalAlertes > 1 ? "s" : ""} à traiter
-          </Link>
-        )}
-      </div>
 
       {/* ======================================================== */}
       {/* ACTIONS RAPIDES */}

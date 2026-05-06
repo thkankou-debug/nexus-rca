@@ -11,10 +11,14 @@ import {
   CheckCircle2,
   Clock,
   TrendingUp,
+  UserCircle,
+  Plane,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { DashboardHero } from "@/components/dashboard/DashboardHero";
+import { DashboardQuickActions } from "@/components/dashboard/DashboardQuickActions";
 import { StatCard, StatusBadge, UrgenceBadge } from "@/components/dashboard/StatCard";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { formatDate, cn } from "@/lib/utils";
@@ -150,27 +154,95 @@ export default async function AdminDashboardPage() {
 
   const recentActivity = (recentActivityRes.data || []) as Demande[];
 
+  const initials = (
+    (profile.prenom?.[0] ?? "") + (profile.nom?.[0] ?? "")
+  ).toUpperCase();
+  const todayLabel = today.toLocaleDateString("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
+
   // ─── Render ──────────────────────────────────────────────────────────────
   return (
     <DashboardShell profile={profile}>
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="text-overline text-brand">Espace administrateur</p>
-          <h1 className="mt-1 font-display text-display-md text-ink">
-            Vue opérationnelle
-          </h1>
-          <p className="mt-2 text-body-sm text-ink-muted">
-            Pilotage de l'agence : pipeline, dispatch, RDV et encaissements du jour.
-          </p>
-        </div>
-        <Link
-          href="/dashboard/admin/demandes"
-          className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-body-sm font-semibold text-white shadow-elev-2 transition hover:bg-brand-hover"
-        >
-          Voir toutes les demandes
-          <ArrowRight className="h-4 w-4" />
-        </Link>
-      </div>
+      {/* ─── Hero Premium ─────────────────────────────────────────────── */}
+      <DashboardHero
+        initials={initials}
+        roleLabel="Espace administrateur"
+        title={`Bonjour ${profile.prenom || profile.nom}`}
+        subtitle={`${todayLabel} · Vue opérationnelle de l'agence`}
+        stats={[
+          {
+            label: "À traiter",
+            value: String(aTraiter),
+            accent: aTraiter > 0 ? "orange" : "white",
+          },
+          {
+            label: "Non-assignées",
+            value: String(nonAssignees.length),
+            accent: nonAssignees.length > 0 ? "rose" : "white",
+          },
+          {
+            label: "Encaissé aujourd'hui",
+            value: formatMoney(totalToday),
+            accent: "emerald",
+          },
+        ]}
+        rightSlot={
+          <Link
+            href="/dashboard/admin/demandes"
+            className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20"
+          >
+            Toutes demandes
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        }
+      />
+
+      {/* ─── Quick Actions ─────────────────────────────────────────────── */}
+      <DashboardQuickActions
+        title="Actions rapides"
+        actions={[
+          {
+            href: "/dashboard/admin/demandes",
+            icon: FileText,
+            label: "Demandes",
+            color: "orange",
+            badge: aTraiter,
+          },
+          {
+            href: "/dashboard/admin/demandes-visa",
+            icon: Plane,
+            label: "Demandes visa",
+            color: "indigo",
+          },
+          {
+            href: "/dashboard/admin/clients",
+            icon: UserCircle,
+            label: "Clients",
+            color: "blue",
+          },
+          {
+            href: "/dashboard/admin/agents",
+            icon: Briefcase,
+            label: "Agents",
+            color: "purple",
+          },
+          {
+            href: "/dashboard/admin/rdv",
+            icon: CalendarCheck,
+            label: "Rendez-vous",
+            color: "emerald",
+          },
+          {
+            href: "/dashboard/admin/paiements",
+            icon: Wallet,
+            label: "Paiements",
+            color: "amber",
+          },
+        ]}
+      />
 
       {/* ─── Stat cards ─────────────────────────────────────────────────── */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
