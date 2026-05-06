@@ -26,11 +26,8 @@ const FR_MONTHS = [
 function defaultRecipients(): string[] {
   const env = (process.env.MONTHLY_REPORT_RECIPIENTS || "").trim();
   if (env) return env.split(",").map((s) => s.trim()).filter(Boolean);
-  return [
-    "tkankou@gmail.com",
-    "patrick.mbongo@nexusrca.com",
-    "marie.ngounio@nexusrca.com",
-  ];
+  // Destinataires officiels : super_admin + email entreprise.
+  return ["tkankou@gmail.com", "contact@nexusrca.com"];
 }
 
 function nextRunISO(): string {

@@ -24,12 +24,10 @@ function defaultRecipients(): string[] {
       .map((s) => s.trim())
       .filter((s) => s.length > 0);
   }
-  // Fallback hardcodé (issu de MOCK_CONFIG initial)
-  return [
-    "tkankou@gmail.com",
-    "patrick.mbongo@nexusrca.com",
-    "marie.ngounio@nexusrca.com",
-  ];
+  // Destinataires officiels (cf. décision 2026-05-05) :
+  //   - tkankou@gmail.com    : super_admin
+  //   - contact@nexusrca.com : email principal de l'entreprise
+  return ["tkankou@gmail.com", "contact@nexusrca.com"];
 }
 
 function buildHtmlEmail(periodLabel: string, totals: {
