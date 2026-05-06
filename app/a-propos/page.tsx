@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   ArrowRight,
   Briefcase,
@@ -28,7 +29,9 @@ export const metadata = {
 
 interface Founder {
   name: string;
-  role: string;
+  /** Clé de traduction pour le rôle (ex: "founders_thierry_role") */
+  roleKey: string;
+  /** Bio en FR (donnée métier — non traduite) */
   bio: string;
   /** Chemin vers l'image dans /public — laisse undefined pour afficher les initiales */
   photo?: string;
@@ -41,7 +44,7 @@ interface Founder {
 const FOUNDERS: Founder[] = [
   {
     name: "Thierry F. KANKOU",
-    role: "Cofondateur & Responsable International",
+    roleKey: "founders_thierry_role",
     bio: "Spécialiste de la logistique, du service client et de la gestion de projets. Thierry structure les opérations de Nexus RCA et accompagne les clients dans leurs démarches internationales avec rigueur et méthode. Sa vision : transformer chaque projet en résultat concret grâce à une approche structurée et un suivi sans faille.",
     initials: "TK",
     location: "Bangui · Canada",
@@ -49,7 +52,7 @@ const FOUNDERS: Founder[] = [
   },
   {
     name: "Orson DIBERT.K",
-    role: "Cofondateur & Responsable International (Europe–RCA)",
+    roleKey: "founders_orson_role",
     bio: "Pilier de la stratégie internationale de Nexus RCA, Orson développe les ponts entre l'Europe et la Centrafrique. Son expertise en gestion et en coordination transfrontalière permet à l'agence d'accompagner des projets ambitieux à l'échelle internationale.",
     initials: "OD",
     location: "Europe · RCA",
@@ -57,59 +60,21 @@ const FOUNDERS: Founder[] = [
   },
 ];
 
+// Valeurs : on conserve l'icône en TS, les textes sont traduits via t()
 const VALEURS = [
-  {
-    icon: ShieldCheck,
-    title: "Rigueur",
-    description:
-      "Chaque dossier est traité avec sérieux, méthode et attention aux détails.",
-  },
-  {
-    icon: Target,
-    title: "Résultats",
-    description:
-      "Notre engagement se mesure aux objectifs atteints, pas aux promesses faites.",
-  },
-  {
-    icon: Handshake,
-    title: "Partenariat",
-    description:
-      "Nous travaillons aux côtés de nos clients, pas simplement pour eux.",
-  },
-  {
-    icon: Globe2,
-    title: "Ouverture",
-    description:
-      "Une vision internationale ancrée dans une expertise locale solide.",
-  },
-];
+  { key: "rigueur", icon: ShieldCheck },
+  { key: "resultats", icon: Target },
+  { key: "partenariat", icon: Handshake },
+  { key: "ouverture", icon: Globe2 },
+] as const;
 
+// Pourquoi nous faire confiance : icône + clé de traduction
 const POURQUOI = [
-  {
-    icon: CheckCircle2,
-    title: "Accompagnement structuré",
-    description:
-      "Un processus clair, du premier contact jusqu'à l'atteinte de l'objectif.",
-  },
-  {
-    icon: Briefcase,
-    title: "Approche sérieuse",
-    description:
-      "Nous ne promettons que ce que nous savons livrer. Chaque dossier est étudié avec rigueur.",
-  },
-  {
-    icon: Sparkles,
-    title: "Solutions concrètes",
-    description:
-      "Pas de jargon, pas de fausses pistes. Des actions précises pour des résultats mesurables.",
-  },
-  {
-    icon: Users,
-    title: "Suivi des dossiers",
-    description:
-      "Un interlocuteur dédié, des points d'étape réguliers, une transparence totale.",
-  },
-];
+  { key: "card1", icon: CheckCircle2 },
+  { key: "card2", icon: Briefcase },
+  { key: "card3", icon: Sparkles },
+  { key: "card4", icon: Users },
+] as const;
 
 // ─── Pattern dot grid (Stripe-like) ─────────────────────────────────────────
 const DOT_GRID_DARK: React.CSSProperties = {
@@ -124,6 +89,8 @@ const DOT_GRID_LIGHT: React.CSSProperties = {
 };
 
 export default function AProposPage() {
+  const t = useTranslations("About");
+
   return (
     <>
       <Navbar />
@@ -152,31 +119,29 @@ export default function AProposPage() {
             <div className="text-center">
               <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md transition-all duration-300 hover:border-nexus-orange-500/40 hover:bg-white/10">
                 <Building2 className="h-3 w-3" />
-                À propos de Nexus RCA
+                {t("hero_eyebrow")}
               </span>
 
               <h1 className="mx-auto mt-5 max-w-3xl font-display text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Une structure engagée pour accompagner et développer vos projets.
+                {t("hero_title")}
               </h1>
 
               <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                NEXUS RCA accompagne particuliers et entreprises dans leurs
-                démarches, projets internationaux, partenariats et
-                développement d'activités.
+                {t("hero_subtitle")}
               </p>
 
               <div className="mt-9 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-slate-400">
                 <span className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-200">
                   <MapPin className="h-3.5 w-3.5 text-nexus-orange-300" />
-                  Bureau Bangui
+                  {t("hero_trust_bureau")}
                 </span>
                 <span className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-200">
                   <Globe2 className="h-3.5 w-3.5 text-nexus-orange-300" />
-                  Présence Europe & Canada
+                  {t("hero_trust_presence")}
                 </span>
                 <span className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-200">
                   <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-300" />
-                  Méthodologie écrite
+                  {t("hero_trust_method")}
                 </span>
               </div>
             </div>
@@ -189,27 +154,25 @@ export default function AProposPage() {
             <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
               <div>
                 <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                  Qui sommes-nous
+                  {t("qui_eyebrow")}
                 </span>
                 <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                  Une agence internationale, ancrée à Bangui.
+                  {t("qui_title")}
                 </h2>
                 <div className="mt-6 space-y-4 text-base leading-relaxed text-slate-600">
                   <p>
-                    NEXUS RCA est une agence internationale basée à{" "}
+                    {t("qui_paragraph1_before")}
                     <strong className="text-nexus-blue-950">
-                      Bangui, en République Centrafricaine
+                      {t("qui_paragraph1_strong")}
                     </strong>
-                    , spécialisée dans l'accompagnement administratif, les
-                    projets internationaux et le développement d'activités.
+                    {t("qui_paragraph1_after")}
                   </p>
                   <p>
-                    Nous travaillons avec une approche{" "}
+                    {t("qui_paragraph2_before")}
                     <strong className="text-nexus-blue-950">
-                      structurée et professionnelle
+                      {t("qui_paragraph2_strong")}
                     </strong>
-                    , au service de clients qui veulent transformer leurs
-                    démarches et projets en résultats concrets.
+                    {t("qui_paragraph2_after")}
                   </p>
                 </div>
               </div>
@@ -226,10 +189,10 @@ export default function AProposPage() {
                   className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-700 group-hover:bg-nexus-orange-500/10"
                 />
                 <div className="relative grid gap-3 sm:grid-cols-2">
-                  <Stat number="10+" label="Services experts" />
-                  <Stat number="2" label="Pôles internationaux" />
-                  <Stat number="24h" label="Délai de réponse" />
-                  <Stat number="100%" label="Suivi des dossiers" />
+                  <Stat number="10+" label={t("stat1_label")} />
+                  <Stat number="2" label={t("stat2_label")} />
+                  <Stat number="24h" label={t("stat3_label")} />
+                  <Stat number="100%" label={t("stat4_label")} />
                 </div>
               </div>
             </div>
@@ -264,36 +227,31 @@ export default function AProposPage() {
                 </div>
               </div>
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Notre vision
+                {t("vision_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Une mission profondément humaine.
+                {t("vision_title")}
               </h2>
             </div>
 
             <div className="mt-12 space-y-5 text-base leading-relaxed text-slate-600 sm:text-lg">
               <p>
-                Nexus RCA est né d'une réalité simple :{" "}
+                {t("vision_p1_before")}
                 <strong className="text-nexus-blue-950">
-                  trop de talents en République Centrafricaine restent bloqués
-                </strong>{" "}
-                faute d'accompagnement, d'information et d'opportunités.
-              </p>
-
-              <p>
-                Nous avons créé Nexus pour aider concrètement — pas seulement
-                informer, mais{" "}
-                <strong className="text-nexus-blue-950">
-                  accompagner, guider et ouvrir des portes
+                  {t("vision_p1_strong")}
                 </strong>
-                .
+                {t("vision_p1_after")}
               </p>
 
               <p>
-                Notre mission est profondément humaine : soutenir les jeunes,
-                les entrepreneurs, les commerçants et les familles
-                centrafricaines dans leurs projets de vie et leurs ambitions.
+                {t("vision_p2_before")}
+                <strong className="text-nexus-blue-950">
+                  {t("vision_p2_strong")}
+                </strong>
+                {t("vision_p2_after")}
               </p>
+
+              <p>{t("vision_p3")}</p>
 
               {/* Citation Premium tech */}
               <blockquote className="group/quote relative my-10 overflow-hidden rounded-3xl border-l-4 border-nexus-orange-500 bg-white px-6 py-6 shadow-[0_20px_50px_-25px_rgba(12,28,64,0.18)] transition-all duration-500 hover:shadow-[0_24px_60px_-25px_rgba(255,102,0,0.22)] sm:px-9 sm:py-8">
@@ -302,31 +260,27 @@ export default function AProposPage() {
                   className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-nexus-orange-500/0 blur-3xl transition-all duration-700 group-hover/quote:bg-nexus-orange-500/12"
                 />
                 <p className="relative font-display text-xl font-bold leading-snug text-nexus-blue-950 sm:text-2xl">
-                  Nous croyons que le développement d'un pays commence par ses
-                  personnes.
+                  {t("vision_quote_main")}
                 </p>
                 <p className="relative mt-3 text-base leading-relaxed text-slate-600">
-                  Chaque dossier traité, chaque projet lancé représente une vie
-                  qui avance et une communauté qui progresse.
+                  {t("vision_quote_sub")}
                 </p>
               </blockquote>
 
               <p>
-                Nexus RCA agit comme un{" "}
+                {t("vision_p4_before")}
                 <strong className="text-nexus-blue-950">
-                  outil de transformation sociale
+                  {t("vision_p4_strong")}
                 </strong>
-                , en rendant accessibles des services souvent complexes avec un
-                accompagnement sérieux, honnête et engagé.
+                {t("vision_p4_after")}
               </p>
 
               <p>
-                Au-delà du business, nous avons une responsabilité :{" "}
+                {t("vision_p5_before")}
                 <strong className="text-nexus-blue-950">
-                  contribuer au développement de la République Centrafricaine
-                </strong>{" "}
-                en aidant sa population à se connecter au monde et à construire
-                un avenir meilleur.
+                  {t("vision_p5_strong")}
+                </strong>
+                {t("vision_p5_after")}
               </p>
             </div>
           </div>
@@ -337,28 +291,28 @@ export default function AProposPage() {
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Notre mission
+                {t("mission_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Trois engagements clairs.
+                {t("mission_title")}
               </h2>
             </div>
 
             <div className="mt-12 grid gap-5 md:grid-cols-3">
               <MissionCard
                 icon={Compass}
-                title="Simplifier les démarches"
-                description="Visa, études, administratif : nous transformons les processus complexes en parcours clairs et exécutables."
+                title={t("mission_card1_title")}
+                description={t("mission_card1_description")}
               />
               <MissionCard
                 icon={Briefcase}
-                title="Accompagner les projets"
-                description="Du premier contact jusqu'à l'objectif atteint, un interlocuteur dédié pour structurer et avancer."
+                title={t("mission_card2_title")}
+                description={t("mission_card2_description")}
               />
               <MissionCard
                 icon={Sparkles}
-                title="Créer des opportunités"
-                description="Mettre en relation, ouvrir des portes, débloquer des projets : faire émerger ce qui peut grandir."
+                title={t("mission_card3_title")}
+                description={t("mission_card3_description")}
               />
             </div>
           </div>
@@ -369,32 +323,31 @@ export default function AProposPage() {
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Notre approche
+                {t("approach_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Méthode, rigueur, résultats.
+                {t("approach_title")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Nous croyons qu'un bon accompagnement repose sur trois piliers
-                indissociables.
+                {t("approach_subtitle")}
               </p>
             </div>
 
             <div className="mt-12 grid gap-5 sm:grid-cols-3">
               <ApproachCard
                 step="01"
-                title="Accompagnement personnalisé"
-                description="Chaque client est unique. Nous prenons le temps de comprendre votre situation avant de proposer un plan d'action."
+                title={t("approach_card1_title")}
+                description={t("approach_card1_description")}
               />
               <ApproachCard
                 step="02"
-                title="Structuration des projets"
-                description="Un dossier bien monté, c'est 80% du résultat. Nous structurons, organisons, anticipons."
+                title={t("approach_card2_title")}
+                description={t("approach_card2_description")}
               />
               <ApproachCard
                 step="03"
-                title="Rigueur et résultats"
-                description="Pas de promesses creuses. Des engagements tenus, des suivis transparents, des résultats mesurables."
+                title={t("approach_card3_title")}
+                description={t("approach_card3_description")}
               />
             </div>
           </div>
@@ -419,19 +372,21 @@ export default function AProposPage() {
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
-                Notre différence
+                {t("diff_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
-                Une approche globale, peu commune.
+                {t("diff_title")}
               </h2>
             </div>
 
             <div className="mt-12 grid gap-5 md:grid-cols-3">
               {VALEURS.slice(0, 3).map((val) => {
                 const Icon = val.icon;
+                const title = t(`valeur_${val.key}_title`);
+                const description = t(`valeur_${val.key}_description`);
                 return (
                   <article
-                    key={val.title}
+                    key={val.key}
                     className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-7 backdrop-blur-md transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-400/40 hover:bg-white/[0.08] hover:shadow-[0_18px_40px_-18px_rgba(255,102,0,0.30)]"
                   >
                     <div
@@ -443,10 +398,10 @@ export default function AProposPage() {
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="mt-5 font-display text-lg font-bold text-white">
-                        {val.title}
+                        {title}
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-slate-300/95">
-                        {val.description}
+                        {description}
                       </p>
                     </div>
                   </article>
@@ -457,10 +412,9 @@ export default function AProposPage() {
             <div className="mt-10 rounded-3xl border border-nexus-orange-500/30 bg-gradient-to-br from-nexus-orange-500/15 via-nexus-orange-500/10 to-nexus-orange-500/5 p-7 text-center backdrop-blur-md transition-colors duration-300 hover:border-nexus-orange-500/50 sm:p-8">
               <p className="text-base leading-relaxed text-white sm:text-lg">
                 <strong className="text-nexus-orange-300">
-                  Approche globale, capacité à accompagner de A à Z, logique de
-                  partenariat
-                </strong>{" "}
-                — c'est ce qui distingue Nexus RCA des solutions classiques.
+                  {t("diff_banner_strong")}
+                </strong>
+                {t("diff_banner_after")}
               </p>
             </div>
           </div>
@@ -471,20 +425,23 @@ export default function AProposPage() {
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Direction
+                {t("founders_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Les visages derrière Nexus RCA.
+                {t("founders_title")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Une équipe engagée, complémentaire, qui porte ses convictions au
-                service de ses clients.
+                {t("founders_subtitle")}
               </p>
             </div>
 
             <div className="mt-12 grid gap-6 md:grid-cols-2 lg:gap-8">
               {FOUNDERS.map((founder) => (
-                <FounderCard key={founder.name} founder={founder} />
+                <FounderCard
+                  key={founder.name}
+                  founder={founder}
+                  role={t(founder.roleKey)}
+                />
               ))}
             </div>
           </div>
@@ -495,19 +452,21 @@ export default function AProposPage() {
           <div className="mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Pourquoi nous faire confiance
+                {t("pourquoi_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Quatre raisons concrètes.
+                {t("pourquoi_title")}
               </h2>
             </div>
 
             <div className="mt-12 grid gap-4 sm:grid-cols-2">
               {POURQUOI.map((item) => {
                 const Icon = item.icon;
+                const title = t(`pourquoi_${item.key}_title`);
+                const description = t(`pourquoi_${item.key}_description`);
                 return (
                   <article
-                    key={item.title}
+                    key={item.key}
                     className="group relative flex gap-4 overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_18px_40px_-18px_rgba(255,102,0,0.22)]"
                   >
                     <div
@@ -519,10 +478,10 @@ export default function AProposPage() {
                     </div>
                     <div className="relative min-w-0">
                       <h3 className="font-display text-base font-bold text-nexus-blue-950">
-                        {item.title}
+                        {title}
                       </h3>
                       <p className="mt-1.5 text-sm leading-relaxed text-slate-600">
-                        {item.description}
+                        {description}
                       </p>
                     </div>
                   </article>
@@ -554,14 +513,13 @@ export default function AProposPage() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
               </span>
-              Prochaine étape
+              {t("cta_eyebrow")}
             </span>
             <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-              Vous avez un projet ou une démarche ?
+              {t("cta_title")}
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              Parlons-en. Notre équipe étudie votre situation et revient avec un
-              plan clair, sans engagement.
+              {t("cta_subtitle")}
             </p>
 
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
@@ -573,14 +531,14 @@ export default function AProposPage() {
                   aria-hidden
                   className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
                 />
-                Ouvrir un dossier
+                {t("cta_primary")}
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
               </Link>
               <Link
                 href="/rendez-vous"
                 className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
               >
-                Prendre rendez-vous
+                {t("cta_secondary")}
               </Link>
             </div>
           </div>
@@ -668,7 +626,7 @@ function ApproachCard({
 }
 
 // ─── Carte fondateur Premium tech ──────────────────────────────────────────
-function FounderCard({ founder }: { founder: Founder }) {
+function FounderCard({ founder, role }: { founder: Founder; role: string }) {
   return (
     <article className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_20px_50px_-20px_rgba(255,102,0,0.18)] sm:p-7">
       <div
@@ -701,7 +659,7 @@ function FounderCard({ founder }: { founder: Founder }) {
             {founder.name}
           </h3>
           <p className="mt-1 text-sm font-bold text-nexus-orange-600">
-            {founder.role}
+            {role}
           </p>
 
           <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-600 transition-colors duration-300 group-hover:bg-slate-200/80">
