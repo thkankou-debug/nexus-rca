@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
@@ -46,95 +47,125 @@ const DOT_GRID_LIGHT_SUBTLE: React.CSSProperties = {
   backgroundSize: "32px 32px",
 };
 
-// ─── Données ────────────────────────────────────────────────────────────────
-
-const POUR_QUI = {
-  oui: [
-    "Vous voulez confier la recherche et la réservation de vol et/ou d'hôtel à un interlocuteur unique à Bangui",
-    "Vous préférez payer en FCFA depuis Bangui plutôt que par carte internationale",
-    "Vous voulez un dossier de voyage clair (e-billets, vouchers, contacts utiles) avant le départ",
-  ],
-  non: [
-    "Vous attendez un tarif inférieur au prix officiel des compagnies — nous ne créons pas de marché parallèle",
-    "Vous voulez réserver à la dernière minute sur une période très tendue sans flexibilité — anticipez si possible",
-    "Vous comptez payer après le voyage — la réservation exige un paiement préalable comme partout",
-  ],
-};
+// ─── Données : icônes + clés de traduction ─────────────────────────────────
 
 const METHODOLOGIE = [
-  {
-    num: "01",
-    icon: FileText,
-    title: "Soumission de la demande",
-    description:
-      "Vous remplissez notre formulaire (destination, dates, voyageurs, budget) ou prenez rendez-vous. Nous comprenons votre projet de voyage.",
-  },
-  {
-    num: "02",
-    icon: Search,
-    title: "Recherche & sélection",
-    description:
-      "Comparaison sur les compagnies pertinentes (Air France, Royal Air Maroc, Ethiopian, ASKY…) et hôtels vérifiés. Devis avec 2 à 3 options proposées sous 24 heures ouvrées.",
-  },
-  {
-    num: "03",
-    icon: ClipboardCheck,
-    title: "Validation & paiement local",
-    description:
-      "Vous validez l'option retenue. Paiement en FCFA à l'agence Bangui. Émission immédiate des billets et confirmations hôtels.",
-  },
-  {
-    num: "04",
-    icon: Plane,
-    title: "Dossier de voyage & suivi",
-    description:
-      "Remise du dossier complet (e-billets, vouchers, contacts utiles) et accompagnement avant et pendant le voyage en cas d'incident.",
-  },
-];
+  { num: "01", icon: FileText, key: "metho_01" },
+  { num: "02", icon: Search, key: "metho_02" },
+  { num: "03", icon: ClipboardCheck, key: "metho_03" },
+  { num: "04", icon: Plane, key: "metho_04" },
+] as const;
 
-interface RegionType {
-  title: string;
-  emoji: string;
-  description: string;
-  destinations: string[];
-}
+const PRESTATIONS = [
+  { icon: Plane, key: "presta_1" },
+  { icon: Hotel, key: "presta_2" },
+  { icon: Receipt, key: "presta_3" },
+] as const;
 
-const REGIONS: RegionType[] = [
+const REGIONS = [
   {
-    title: "Asie",
+    key: "asia",
     emoji: "🌏",
-    description: "Tourisme, business, voyages spirituels.",
     destinations: ["Inde 🇮🇳", "Thaïlande 🇹🇭", "Bali 🇮🇩", "Vietnam 🇻🇳", "Dubaï 🇦🇪"],
   },
   {
-    title: "Europe",
+    key: "europe",
     emoji: "🌍",
-    description: "Voyages d'affaires, études, tourisme et famille.",
     destinations: ["France 🇫🇷", "Belgique 🇧🇪", "Allemagne 🇩🇪", "Espagne 🇪🇸"],
   },
   {
-    title: "Afrique",
+    key: "africa",
     emoji: "🌍",
-    description: "Vols continentaux et liaisons régionales.",
     destinations: ["Maroc 🇲🇦", "Sénégal 🇸🇳", "Kenya 🇰🇪"],
   },
   {
-    title: "Amérique",
+    key: "america",
     emoji: "🌎",
-    description: "Long-courrier, études et regroupement familial.",
     destinations: ["Canada 🇨🇦"],
   },
-];
+] as const;
 
-const STATS = [
-  { value: "13+", label: "Pays couverts" },
-  { value: "FCFA", label: "Paiement local" },
-  { value: "Dossier", label: "De voyage complet" },
-];
+const TARIFS = [
+  {
+    icon: Search,
+    iconBg: "bg-gradient-to-br from-emerald-500 to-emerald-600",
+    key: "tarif_1",
+  },
+  {
+    icon: Plane,
+    iconBg: "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700",
+    key: "tarif_2",
+  },
+  {
+    icon: Wallet,
+    iconBg: "bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900",
+    key: "tarif_3",
+  },
+] as const;
 
 // ─── Composant ──────────────────────────────────────────────────────────────
 
 export default function BilletsPage() {
+  const t = useTranslations("ServiceBillets");
+
+  const STATS = [
+    { value: t("stat1_value"), label: t("stat1_label") },
+    { value: t("stat2_value"), label: t("stat2_label") },
+    { value: t("stat3_value"), label: t("stat3_label") },
+  ];
+
+  const SCOPE_ITEMS = [
+    { title: t("scope_item1_title"), desc: t("scope_item1_desc") },
+    { title: t("scope_item2_title"), desc: t("scope_item2_desc") },
+    { title: t("scope_item3_title"), desc: t("scope_item3_desc") },
+    { title: t("scope_item4_title"), desc: t("scope_item4_desc") },
+  ];
+
+  const RESULT_ITEMS = [
+    { title: t("result_item1_title"), desc: t("result_item1_desc") },
+    { title: t("result_item2_title"), desc: t("result_item2_desc") },
+    { title: t("result_item3_title"), desc: t("result_item3_desc") },
+    { title: t("result_item4_title"), desc: t("result_item4_desc") },
+  ];
+
+  const POURQUI_OUI = [
+    t("pourqui_oui_1"),
+    t("pourqui_oui_2"),
+    t("pourqui_oui_3"),
+  ];
+  const POURQUI_NON = [
+    t("pourqui_non_1"),
+    t("pourqui_non_2"),
+    t("pourqui_non_3"),
+  ];
+
+  const ENGAGEMENT_NO = [
+    t("engagement_no_1"),
+    t("engagement_no_2"),
+    t("engagement_no_3"),
+  ];
+  const ENGAGEMENT_YES = [
+    t("engagement_yes_1"),
+    t("engagement_yes_2"),
+    t("engagement_yes_3"),
+    t("engagement_yes_4"),
+  ];
+
+  const CAS = [
+    {
+      badge: t("cas_1_badge"),
+      title: t("cas_1_title"),
+      desc: t("cas_1_desc"),
+      result: t("cas_1_result"),
+    },
+    {
+      badge: t("cas_2_badge"),
+      title: t("cas_2_title"),
+      desc: t("cas_2_desc"),
+      result: t("cas_2_result"),
+    },
+  ];
+
   return (
     <>
       <Navbar />
@@ -166,14 +197,14 @@ export default function BilletsPage() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
                 </span>
-                Service vols & hôtels
+                {t("hero_eyebrow")}
               </span>
 
               <h1 className="mx-auto mt-6 max-w-3xl font-display text-3xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Billet d&apos;avion &amp;{" "}
+                {t("hero_title_before")}{" "}
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
-                    Hôtels
+                    {t("hero_title_highlight")}
                   </span>
                   <span
                     aria-hidden
@@ -183,10 +214,7 @@ export default function BilletsPage() {
               </h1>
 
               <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                Recherche multi-compagnies, hôtels vérifiés, paiement en FCFA
-                à Bangui, dossier de voyage complet avant le départ. Vous
-                expliquez votre projet, nous gérons la suite — proprement,
-                sans approximation.
+                {t("hero_subtitle")}
               </p>
 
               <div className="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
@@ -199,7 +227,7 @@ export default function BilletsPage() {
                     className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
                   />
                   <FileText className="h-4 w-4" />
-                  Soumettre ma demande
+                  {t("hero_cta_primary")}
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
                 </Link>
                 <Link
@@ -207,21 +235,19 @@ export default function BilletsPage() {
                   className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
                 >
                   <Calendar className="h-4 w-4" />
-                  Prendre rendez-vous
+                  {t("hero_cta_secondary")}
                 </Link>
               </div>
 
               <p className="mt-6 text-xs text-slate-400">
-                Devis gratuit · Paiement en FCFA · Une question ?{" "}
+                {t("hero_trust_before")}
                 <a
-                  href={whatsappLink(
-                    "Bonjour Nexus, j'ai une question sur le service Vols & hôtels."
-                  )}
+                  href={whatsappLink(t("wa_question"))}
                   target="_blank"
                   rel="noreferrer"
                   className="font-bold text-nexus-orange-300 underline-offset-4 hover:underline"
                 >
-                  contactez-nous sur WhatsApp
+                  {t("hero_trust_link")}
                 </a>
               </p>
             </div>
@@ -266,11 +292,11 @@ export default function BilletsPage() {
           />
           <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
             <p className="font-display text-2xl font-bold leading-snug tracking-tight text-nexus-blue-950 sm:text-3xl lg:text-4xl">
-              Un billet d&apos;avion n&apos;est pas un produit isolé. C&apos;est{" "}
+              {t("intro_before")}
               <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                le maillon central d&apos;un déplacement
-              </span>{" "}
-              où chaque détail compte — itinéraire, hôtel, assistance.
+                {t("intro_highlight")}
+              </span>
+              {t("intro_after")}
             </p>
           </div>
         </section>
@@ -287,23 +313,18 @@ export default function BilletsPage() {
             <div className="mb-12 grid gap-10 lg:grid-cols-[1fr_2fr] lg:items-start lg:gap-16">
               <div>
                 <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                  Périmètre
+                  {t("scope_eyebrow")}
                 </span>
                 <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                  Ce que nous faisons.
+                  {t("scope_title")}
                 </h2>
                 <p className="mt-4 text-sm leading-relaxed text-slate-600">
-                  Quatre prestations encadrées, de la réservation à l&apos;assistance pendant le voyage.
+                  {t("scope_subtitle")}
                 </p>
               </div>
 
               <ul className="space-y-4">
-                {[
-                  { title: "Recherche multi-compagnies", desc: "Comparaison transparente des tarifs et des contraintes (escales, bagages, classes, conditions de modification)." },
-                  { title: "Réservation hôtels vérifiés", desc: "Hébergements conformes au standing demandé, à proximité des lieux clés du déplacement." },
-                  { title: "Coordination des transferts", desc: "Recommandations transport sur place, transferts aéroport-hôtel, guidance pratique." },
-                  { title: "Suivi avant et pendant", desc: "Notification des changements horaires, intervention en cas d'imprévu pendant le voyage." },
-                ].map((item, i) => (
+                {SCOPE_ITEMS.map((item, i) => (
                   <li
                     key={i}
                     className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_16px_36px_-16px_rgba(255,102,0,0.20)]"
@@ -347,23 +368,18 @@ export default function BilletsPage() {
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Résultat
+                {t("result_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Ce que vous obtenez.
+                {t("result_title")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Un voyage organisé du début à la fin, en un seul interlocuteur.
+                {t("result_subtitle")}
               </p>
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                { title: "Itinéraire optimisé", desc: "Compromis maîtrisé entre prix, durée et conditions de voyage." },
-                { title: "Paiement local en FCFA", desc: "Pas de virement international ni de carte étrangère exigés." },
-                { title: "Hôtels conformes au standing", desc: "Sélection vérifiée, retours clients consultés avant proposition." },
-                { title: "Assistance avant et pendant", desc: "Vous n'êtes pas seul si quelque chose change en route." },
-              ].map((item, i) => (
+              {RESULT_ITEMS.map((item, i) => (
                 <article
                   key={i}
                   className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
@@ -397,14 +413,13 @@ export default function BilletsPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Cadre du service
+                {t("pourqui_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Pour qui ce service est conçu.
+                {t("pourqui_title")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Nous travaillons avec des compagnies et plateformes officielles.
-                Cette transparence fait partie de notre engagement professionnel.
+                {t("pourqui_subtitle")}
               </p>
             </div>
 
@@ -420,11 +435,11 @@ export default function BilletsPage() {
                       <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                      Ce service s&apos;adresse aux personnes
+                      {t("pourqui_oui_title")}
                     </h3>
                   </div>
                   <ul className="space-y-3">
-                    {POUR_QUI.oui.map((item, i) => (
+                    {POURQUI_OUI.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -448,11 +463,11 @@ export default function BilletsPage() {
                       <XCircle className="h-5 w-5" />
                     </div>
                     <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                      Ce service ne s&apos;adresse pas aux personnes
+                      {t("pourqui_non_title")}
                     </h3>
                   </div>
                   <ul className="space-y-3">
-                    {POUR_QUI.non.map((item, i) => (
+                    {POURQUI_NON.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -483,18 +498,17 @@ export default function BilletsPage() {
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Notre méthodologie
+                {t("metho_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Un parcours en{" "}
+                {t("metho_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  quatre étapes documentées
+                  {t("metho_title_highlight")}
                 </span>
-                .
+                {t("metho_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Du brief initial jusqu&apos;au dossier de voyage final, chaque
-                étape est claire et tracée.
+                {t("metho_subtitle")}
               </p>
             </div>
 
@@ -523,11 +537,11 @@ export default function BilletsPage() {
                       <div className="flex items-center gap-2">
                         <Icon className="h-4 w-4 shrink-0 text-nexus-orange-600" />
                         <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                          {etape.title}
+                          {t(`${etape.key}_title`)}
                         </h3>
                       </div>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {etape.description}
+                        {t(`${etape.key}_desc`)}
                       </p>
                     </div>
                   </article>
@@ -540,13 +554,13 @@ export default function BilletsPage() {
               <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                    Démarrer la démarche
+                    {t("metho_cta_eyebrow")}
                   </span>
                   <p className="mt-3 font-display text-xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-2xl">
-                    Soumettez votre projet de voyage.
+                    {t("metho_cta_title")}
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                    Devis gratuit. 2 à 3 options proposées sous 24 h ouvrées.
+                    {t("metho_cta_subtitle")}
                   </p>
                 </div>
                 <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:gap-3">
@@ -558,7 +572,7 @@ export default function BilletsPage() {
                       aria-hidden
                       className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/btn:left-[120%] group-hover/btn:opacity-100"
                     />
-                    Soumettre ma demande
+                    {t("metho_cta_primary")}
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                   <Link
@@ -566,7 +580,7 @@ export default function BilletsPage() {
                     className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-nexus-blue-950 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-nexus-orange-300/70 hover:bg-slate-50"
                   >
                     <Calendar className="h-4 w-4" />
-                    Prendre rendez-vous
+                    {t("metho_cta_secondary")}
                   </Link>
                 </div>
               </div>
@@ -585,43 +599,26 @@ export default function BilletsPage() {
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Périmètre du service
+                {t("presta_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Vols, hôtels,{" "}
+                {t("presta_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  dossier de voyage
+                  {t("presta_title_highlight")}
                 </span>
-                .
+                {t("presta_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Trois prestations qui peuvent être commandées séparément ou en
-                combinaison.
+                {t("presta_subtitle")}
               </p>
             </div>
 
             <div className="grid gap-5 md:grid-cols-3">
-              {[
-                {
-                  icon: Plane,
-                  title: "Billets d'avion",
-                  desc: "Vol simple, aller-retour ou multi-destinations. Comparaison Air France, Royal Air Maroc, Ethiopian, ASKY et autres compagnies pertinentes selon la destination.",
-                },
-                {
-                  icon: Hotel,
-                  title: "Hôtels vérifiés",
-                  desc: "Sélection sur plateformes reconnues, choix selon budget, localisation et type de séjour. Vérification des notes, proximité points d'intérêt, sécurité du quartier.",
-                },
-                {
-                  icon: Receipt,
-                  title: "Dossier de voyage",
-                  desc: "Remise d'un dossier complet : e-billets, vouchers hôtels, contacts utiles, indications transferts aéroport. Le voyageur part avec tout en main.",
-                },
-              ].map((item) => {
+              {PRESTATIONS.map((item) => {
                 const Icon = item.icon;
                 return (
                   <article
-                    key={item.title}
+                    key={item.key}
                     className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
                   >
                     <div
@@ -633,10 +630,10 @@ export default function BilletsPage() {
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="mt-5 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                        {item.title}
+                        {t(`${item.key}_title`)}
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {item.desc}
+                        {t(`${item.key}_desc`)}
                       </p>
                     </div>
                   </article>
@@ -677,26 +674,24 @@ export default function BilletsPage() {
                 </div>
               </div>
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Destinations
+                {t("regions_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Treize pays principaux,{" "}
+                {t("regions_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  davantage à la demande
+                  {t("regions_title_highlight")}
                 </span>
-                .
+                {t("regions_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Pour les destinations non listées, contactez-nous. Nous
-                traitons les demandes au cas par cas selon faisabilité de la
-                liaison depuis Bangui.
+                {t("regions_subtitle")}
               </p>
             </div>
 
             <div className="grid gap-5 md:grid-cols-2">
               {REGIONS.map((region) => (
                 <article
-                  key={region.title}
+                  key={region.key}
                   className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
                 >
                   <div
@@ -710,10 +705,10 @@ export default function BilletsPage() {
                       </span>
                       <div>
                         <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                          {region.title}
+                          {t(`region_${region.key}_title`)}
                         </h3>
                         <p className="text-xs text-slate-500">
-                          {region.description}
+                          {t(`region_${region.key}_desc`)}
                         </p>
                       </div>
                     </div>
@@ -745,30 +740,15 @@ export default function BilletsPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Cas types accompagnés
+                {t("cas_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Voici comment ça se passe concrètement.
+                {t("cas_title")}
               </h2>
             </div>
 
             <div className="grid gap-5 lg:grid-cols-2">
-              {[
-                {
-                  badge: "✈️ Mission professionnelle",
-                  title: "Bangui → Paris, A-R + 4 nuits hôtel centre",
-                  desc: "Brief reçu lundi, 3 options vol (compagnie, escales, prix) envoyées mercredi avec 2 propositions hôtel quartier affaires. Validation jeudi, paiement en FCFA, dossier complet remis avant le départ samedi.",
-                  result:
-                    "Résultat : voyage réservé en 3 jours, dossier carré, aucun stress côté entreprise.",
-                },
-                {
-                  badge: "👨‍👩‍👧 Voyage familial",
-                  title: "Bangui → Marrakech, 2 adultes + 2 enfants, 8 nuits",
-                  desc: "Recherche de la meilleure combinaison vol + hôtel familial avec budget cadré. Comparaison sur 3 plateformes, vérif notes hôtels, sélection riad central avec piscine. Paiement local, conseils transferts aéroport joints.",
-                  result:
-                    "Résultat : famille partie sereine, hôtel conforme aux attentes, budget tenu.",
-                },
-              ].map((cas) => (
+              {CAS.map((cas) => (
                 <article
                   key={cas.title}
                   className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-7 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
@@ -812,19 +792,17 @@ export default function BilletsPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Engagement
+                {t("engagement_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Compagnies officielles uniquement,{" "}
+                {t("engagement_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  marge annoncée
+                  {t("engagement_title_highlight")}
                 </span>
-                .
+                {t("engagement_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Les billets que nous émettons proviennent des compagnies
-                aériennes ou de plateformes officielles. Notre commission de
-                service est annoncée à l&apos;avance dans le devis.
+                {t("engagement_subtitle")}
               </p>
             </div>
 
@@ -836,14 +814,10 @@ export default function BilletsPage() {
                 />
                 <div className="relative">
                   <span className="inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-rose-700">
-                    Ce que nous ne pouvons pas
+                    {t("engagement_no_title")}
                   </span>
                   <ul className="mt-4 space-y-3">
-                    {[
-                      "Émettre des billets hors circuit officiel des compagnies",
-                      "Garantir la disponibilité d'un tarif si vous tardez à valider",
-                      "Modifier les conditions de remboursement imposées par la compagnie",
-                    ].map((item, i) => (
+                    {ENGAGEMENT_NO.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -863,15 +837,10 @@ export default function BilletsPage() {
                 />
                 <div className="relative">
                   <span className="inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-700">
-                    Ce que nous garantissons
+                    {t("engagement_yes_title")}
                   </span>
                   <ul className="mt-4 space-y-3">
-                    {[
-                      "Un devis détaillé avec compagnies, escales, durée et prix",
-                      "2 à 3 options réelles à comparer, pas une seule poussée",
-                      "Le paiement local en FCFA et l'émission immédiate après validation",
-                      "Un suivi avant et pendant le voyage en cas d'incident",
-                    ].map((item, i) => (
+                    {ENGAGEMENT_YES.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -898,45 +867,22 @@ export default function BilletsPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Cadre tarifaire
+                {t("tarif_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Une transparence économique complète.
+                {t("tarif_title")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Tarif compagnie + commission Nexus, le tout en FCFA, sans
-                surprise.
+                {t("tarif_subtitle")}
               </p>
             </div>
 
             <div className="grid gap-5 sm:grid-cols-3">
-              {[
-                {
-                  icon: Search,
-                  iconBg:
-                    "bg-gradient-to-br from-emerald-500 to-emerald-600",
-                  title: "Devis & recherche",
-                  desc: "Gratuit. 2 à 3 options proposées avec compagnies, durée, escales et prix exacts.",
-                },
-                {
-                  icon: Plane,
-                  iconBg:
-                    "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700",
-                  title: "Tarif compagnie",
-                  desc: "Prix officiel facturé par la compagnie, converti en FCFA au taux du jour, sans majoration cachée.",
-                },
-                {
-                  icon: Wallet,
-                  iconBg:
-                    "bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900",
-                  title: "Commission Nexus",
-                  desc: "Service, recherche, gestion paiement, dossier de voyage et suivi. Annoncée à l'avance, jamais ajustée a posteriori.",
-                },
-              ].map((tarif) => {
+              {TARIFS.map((tarif) => {
                 const Icon = tarif.icon;
                 return (
                   <article
-                    key={tarif.title}
+                    key={tarif.key}
                     className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
                   >
                     <div
@@ -950,10 +896,10 @@ export default function BilletsPage() {
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="mt-4 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                        {tarif.title}
+                        {t(`${tarif.key}_title`)}
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {tarif.desc}
+                        {t(`${tarif.key}_desc`)}
                       </p>
                     </div>
                   </article>
@@ -989,38 +935,35 @@ export default function BilletsPage() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
               </span>
-              Lancer votre voyage
+              {t("cta_final_eyebrow")}
             </span>
 
             <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-              Trois informations suffisent pour démarrer.
+              {t("cta_final_title")}
             </h2>
 
             <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              Destination, dates, voyageurs. Le reste se construit avec
-              vous au fil de l&apos;échange.
+              {t("cta_final_subtitle")}
             </p>
 
             <div className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-3">
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
                 <MapPin className="mx-auto mb-1 h-4 w-4 text-nexus-orange-300" />
-                Destination
+                {t("cta_final_chip1")}
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
                 <Calendar className="mx-auto mb-1 h-4 w-4 text-nexus-orange-300" />
-                Dates
+                {t("cta_final_chip2")}
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
                 <Wallet className="mx-auto mb-1 h-4 w-4 text-nexus-orange-300" />
-                Budget
+                {t("cta_final_chip3")}
               </div>
             </div>
 
             <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
               <a
-                href={whatsappLink(
-                  "Bonjour Nexus, j'ai une question sur un projet de voyage."
-                )}
+                href={whatsappLink(t("cta_final_wa_msg"))}
                 target="_blank"
                 rel="noreferrer"
                 className="group/wa relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
@@ -1030,28 +973,28 @@ export default function BilletsPage() {
                   className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/wa:left-[120%] group-hover/wa:opacity-100"
                 />
                 <MessageCircle className="h-4 w-4" />
-                Discuter sur WhatsApp
+                {t("cta_final_wa")}
               </a>
               <Link
                 href="/rendez-vous?service=billets"
                 className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
               >
                 <Calendar className="h-4 w-4" />
-                Prendre rendez-vous
+                {t("cta_final_rdv")}
               </Link>
             </div>
 
             <div className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[11px] uppercase tracking-[0.18em] text-white/50">
               <span className="flex items-center gap-1.5">
                 <Headphones className="h-3.5 w-3.5 text-nexus-orange-300" />
-                Suivi avant et pendant
+                {t("cta_final_foot1")}
               </span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
-              <span>Compagnies officielles</span>
+              <span>{t("cta_final_foot2")}</span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
               <span className="flex items-center gap-1.5">
                 <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-300" />
-                Hôtels vérifiés
+                {t("cta_final_foot3")}
               </span>
             </div>
           </div>

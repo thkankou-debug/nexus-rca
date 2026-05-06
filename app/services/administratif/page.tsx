@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
@@ -46,99 +47,112 @@ const DOT_GRID_LIGHT_SUBTLE: React.CSSProperties = {
   backgroundSize: "32px 32px",
 };
 
-// ─── Données ────────────────────────────────────────────────────────────────
-
-const POUR_QUI = {
-  oui: [
-    "Vous voulez un document propre, conforme au format attendu (CV canadien, lettre formelle, formulaire IRCC) sans approximation",
-    "Vous acceptez de fournir vos informations exactes et de répondre à nos questions de cadrage",
-    "Vous êtes prêt(e) à valider une relecture finale avant la livraison",
-  ],
-  non: [
-    "Vous cherchez un modèle générique recopié sans adaptation à votre profil — ce n'est pas notre méthode",
-    "Vous voulez signer un dossier officiel à votre place — pour des raisons légales, la signature reste celle du demandeur",
-    "Vous attendez un document écrit en quelques minutes sans cadrage — chaque livrable passe par une relecture",
-  ],
-};
+// ─── Données : icônes + clés de traduction ─────────────────────────────────
 
 const METHODOLOGIE = [
+  { num: "01", icon: FileText, key: "metho_01" },
+  { num: "02", icon: Search, key: "metho_02" },
+  { num: "03", icon: Edit3, key: "metho_03" },
+  { num: "04", icon: ShieldCheck, key: "metho_04" },
+] as const;
+
+const PRESTATIONS = [
+  { icon: FileSignature, key: "presta_cv" },
+  { icon: Languages, key: "presta_trad" },
+  { icon: ClipboardCheck, key: "presta_form" },
+  { icon: Printer, key: "presta_print" },
+] as const;
+
+const QUALITE = [
+  { icon: FileSignature, key: "qualite_1" },
+  { icon: Edit3, key: "qualite_2" },
+  { icon: Eye, key: "qualite_3" },
+  { icon: Languages, key: "qualite_4" },
+  { icon: Lock, key: "qualite_5" },
+  { icon: ShieldCheck, key: "qualite_6" },
+] as const;
+
+const TARIFS = [
   {
-    num: "01",
-    icon: FileText,
-    title: "Soumission de la demande",
-    description:
-      "Vous remplissez notre formulaire (type de prestation, format cible, langue, urgence) ou prenez rendez-vous. Nous récupérons les pièces nécessaires.",
-  },
-  {
-    num: "02",
     icon: Search,
-    title: "Cadrage & devis",
-    description:
-      "Un conseiller Nexus précise le périmètre exact, propose un devis fixe et un délai de livraison. Aucune action engagée avant validation.",
-  },
-  {
-    num: "03",
-    icon: Edit3,
-    title: "Production rigoureuse",
-    description:
-      "Rédaction, traduction ou remplissage assuré par un membre qualifié de l'équipe. Codes du document cible (CV canadien, IRCC…) maîtrisés.",
-  },
-  {
-    num: "04",
-    icon: ShieldCheck,
-    title: "Relecture & livraison",
-    description:
-      "Relecture systématique avant envoi. Livraison numérique (PDF + modifiable) et/ou impression à l'agence Bangui selon votre choix.",
-  },
-];
-
-interface PrestationType {
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
-  description: string;
-  delai: string;
-}
-
-const PRESTATIONS: PrestationType[] = [
-  {
-    icon: FileSignature,
-    title: "CV & lettres de motivation",
-    description:
-      "CV format canadien, européen ou africain. Lettre de motivation sur-mesure (études, emploi, visa, bourse). Cadrage par entretien si besoin.",
-    delai: "24 à 48 h",
-  },
-  {
-    icon: Languages,
-    title: "Traductions FR ↔ EN",
-    description:
-      "Traduction professionnelle de documents courts et officiels. Pour traductions assermentées (tribunaux, certains consulats), orientation vers traducteur agréé.",
-    delai: "24 à 72 h",
+    iconBg: "bg-gradient-to-br from-emerald-500 to-emerald-600",
+    key: "tarif_1",
   },
   {
     icon: ClipboardCheck,
-    title: "Formulaires officiels",
-    description:
-      "Remplissage IRCC, France-Visas, consulats, dossiers universitaires. Préparation complète, accompagnement ligne par ligne. Signature : vous.",
-    delai: "48 h à 5 jours",
+    iconBg: "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700",
+    key: "tarif_2",
   },
   {
-    icon: Printer,
-    title: "Impression, scan, reliure",
-    description:
-      "Impression couleur ou N/B, reliure, plastification, scan haute qualité, numérisation et envoi électronique de dossiers complets.",
-    delai: "Dans la journée",
+    icon: Wallet,
+    iconBg: "bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900",
+    key: "tarif_3",
   },
-];
-
-const STATS = [
-  { value: "Devis", label: "Fixe avant production" },
-  { value: "Relecture", label: "Systématique avant livraison" },
-  { value: "Confidentialité", label: "Documents non rediffusés" },
-];
+] as const;
 
 // ─── Composant ──────────────────────────────────────────────────────────────
 
 export default function AdministratifPage() {
+  const t = useTranslations("ServiceAdministratif");
+
+  const STATS = [
+    { value: t("stat1_value"), label: t("stat1_label") },
+    { value: t("stat2_value"), label: t("stat2_label") },
+    { value: t("stat3_value"), label: t("stat3_label") },
+  ];
+
+  const SCOPE_ITEMS = [
+    { title: t("scope_item1_title"), desc: t("scope_item1_desc") },
+    { title: t("scope_item2_title"), desc: t("scope_item2_desc") },
+    { title: t("scope_item3_title"), desc: t("scope_item3_desc") },
+    { title: t("scope_item4_title"), desc: t("scope_item4_desc") },
+  ];
+
+  const RESULT_ITEMS = [
+    { title: t("result_item1_title"), desc: t("result_item1_desc") },
+    { title: t("result_item2_title"), desc: t("result_item2_desc") },
+    { title: t("result_item3_title"), desc: t("result_item3_desc") },
+    { title: t("result_item4_title"), desc: t("result_item4_desc") },
+  ];
+
+  const POURQUI_OUI = [
+    t("pourqui_oui_1"),
+    t("pourqui_oui_2"),
+    t("pourqui_oui_3"),
+  ];
+  const POURQUI_NON = [
+    t("pourqui_non_1"),
+    t("pourqui_non_2"),
+    t("pourqui_non_3"),
+  ];
+
+  const ENGAGEMENT_NO = [
+    t("engagement_no_1"),
+    t("engagement_no_2"),
+    t("engagement_no_3"),
+  ];
+  const ENGAGEMENT_YES = [
+    t("engagement_yes_1"),
+    t("engagement_yes_2"),
+    t("engagement_yes_3"),
+    t("engagement_yes_4"),
+  ];
+
+  const CAS = [
+    {
+      badge: t("cas_1_badge"),
+      title: t("cas_1_title"),
+      desc: t("cas_1_desc"),
+      result: t("cas_1_result"),
+    },
+    {
+      badge: t("cas_2_badge"),
+      title: t("cas_2_title"),
+      desc: t("cas_2_desc"),
+      result: t("cas_2_result"),
+    },
+  ];
+
   return (
     <>
       <Navbar />
@@ -170,27 +184,24 @@ export default function AdministratifPage() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
                 </span>
-                Services administratifs
+                {t("hero_eyebrow")}
               </span>
 
               <h1 className="mx-auto mt-6 max-w-3xl font-display text-3xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
-                    Gestion rigoureuse
+                    {t("hero_title_highlight")}
                   </span>
                   <span
                     aria-hidden
                     className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
                   />
                 </span>{" "}
-                de vos démarches administratives critiques.
+                {t("hero_title_after")}
               </h1>
 
               <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                CV au format attendu, lettres adaptées, traductions
-                professionnelles, formulaires IRCC remplis avec rigueur,
-                impression à Bangui. Vos documents sortent prêts à être
-                déposés — pas réécrits par le destinataire.
+                {t("hero_subtitle")}
               </p>
 
               <div className="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
@@ -203,7 +214,7 @@ export default function AdministratifPage() {
                     className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
                   />
                   <FileText className="h-4 w-4" />
-                  Soumettre ma demande
+                  {t("hero_cta_primary")}
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
                 </Link>
                 <Link
@@ -211,21 +222,19 @@ export default function AdministratifPage() {
                   className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
                 >
                   <Calendar className="h-4 w-4" />
-                  Prendre rendez-vous
+                  {t("hero_cta_secondary")}
                 </Link>
               </div>
 
               <p className="mt-6 text-xs text-slate-400">
-                Devis gratuit · Confidentialité totale · Une question ?{" "}
+                {t("hero_trust_before")}
                 <a
-                  href={whatsappLink(
-                    "Bonjour Nexus, j'ai une question sur le service Administratif."
-                  )}
+                  href={whatsappLink(t("wa_question"))}
                   target="_blank"
                   rel="noreferrer"
                   className="font-bold text-nexus-orange-300 underline-offset-4 hover:underline"
                 >
-                  contactez-nous sur WhatsApp
+                  {t("hero_trust_link")}
                 </a>
               </p>
             </div>
@@ -270,12 +279,11 @@ export default function AdministratifPage() {
           />
           <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
             <p className="font-display text-2xl font-bold leading-snug tracking-tight text-nexus-blue-950 sm:text-3xl lg:text-4xl">
-              Un document officiel ne supporte pas l&apos;à-peu-près. Une virgule, un format,
-              une omission peuvent faire la différence entre{" "}
+              {t("intro_before")}
               <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                une décision favorable et un refus
+                {t("intro_highlight")}
               </span>
-              .
+              {t("intro_after")}
             </p>
           </div>
         </section>
@@ -292,23 +300,18 @@ export default function AdministratifPage() {
             <div className="mb-12 grid gap-10 lg:grid-cols-[1fr_2fr] lg:items-start lg:gap-16">
               <div>
                 <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                  Périmètre
+                  {t("scope_eyebrow")}
                 </span>
                 <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                  Ce que nous faisons.
+                  {t("scope_title")}
                 </h2>
                 <p className="mt-4 text-sm leading-relaxed text-slate-600">
-                  Quatre étapes structurées, du cadrage du livrable à la relecture finale.
+                  {t("scope_subtitle")}
                 </p>
               </div>
 
               <ul className="space-y-4">
-                {[
-                  { title: "Cadrage du livrable attendu", desc: "Identification du format, de la langue et des conventions exactes attendues par le destinataire." },
-                  { title: "Rédaction structurée", desc: "CV, lettre, attestation : produits selon les standards de la juridiction ou de l'institution cible." },
-                  { title: "Traduction conforme", desc: "Français-anglais, français-arabe : traductions certifiées le cas échéant." },
-                  { title: "Relecture finale", desc: "Double passage qualité avant remise. Aucune coquille, aucune incohérence." },
-                ].map((item, i) => (
+                {SCOPE_ITEMS.map((item, i) => (
                   <li
                     key={i}
                     className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_16px_36px_-16px_rgba(255,102,0,0.20)]"
@@ -352,23 +355,18 @@ export default function AdministratifPage() {
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Résultat
+                {t("result_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Ce que vous obtenez.
+                {t("result_title")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Des documents prêts à déposer, sans correction de dernière minute.
+                {t("result_subtitle")}
               </p>
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                { title: "Format attendu respecté", desc: "CV canadien si Canada, Europass si UE, format consulaire si visa, etc." },
-                { title: "Cohérence éditoriale", desc: "Ton, style et terminologie ajustés au destinataire et au contexte." },
-                { title: "Conformité aux normes", desc: "Traductions reconnues, signatures et tampons selon procédure officielle." },
-                { title: "Document prêt à déposer", desc: "Aucune correction à faire vous-même au dernier moment." },
-              ].map((item, i) => (
+              {RESULT_ITEMS.map((item, i) => (
                 <article
                   key={i}
                   className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
@@ -402,14 +400,13 @@ export default function AdministratifPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Cadre du service
+                {t("pourqui_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Pour qui ce service est conçu.
+                {t("pourqui_title")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Nous travaillons avec rigueur sur chaque document. Cette
-                exigence fait partie de notre engagement professionnel.
+                {t("pourqui_subtitle")}
               </p>
             </div>
 
@@ -425,11 +422,11 @@ export default function AdministratifPage() {
                       <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                      Ce service s&apos;adresse aux personnes
+                      {t("pourqui_oui_title")}
                     </h3>
                   </div>
                   <ul className="space-y-3">
-                    {POUR_QUI.oui.map((item, i) => (
+                    {POURQUI_OUI.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -453,11 +450,11 @@ export default function AdministratifPage() {
                       <XCircle className="h-5 w-5" />
                     </div>
                     <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                      Ce service ne s&apos;adresse pas aux personnes
+                      {t("pourqui_non_title")}
                     </h3>
                   </div>
                   <ul className="space-y-3">
-                    {POUR_QUI.non.map((item, i) => (
+                    {POURQUI_NON.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -488,18 +485,17 @@ export default function AdministratifPage() {
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Notre méthodologie
+                {t("metho_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Un parcours en{" "}
+                {t("metho_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  quatre étapes documentées
+                  {t("metho_title_highlight")}
                 </span>
-                .
+                {t("metho_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Du brief initial jusqu&apos;à la livraison du document, chaque
-                étape est cadrée et tracée.
+                {t("metho_subtitle")}
               </p>
             </div>
 
@@ -528,11 +524,11 @@ export default function AdministratifPage() {
                       <div className="flex items-center gap-2">
                         <Icon className="h-4 w-4 shrink-0 text-nexus-orange-600" />
                         <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                          {etape.title}
+                          {t(`${etape.key}_title`)}
                         </h3>
                       </div>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {etape.description}
+                        {t(`${etape.key}_desc`)}
                       </p>
                     </div>
                   </article>
@@ -545,13 +541,13 @@ export default function AdministratifPage() {
               <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                    Démarrer la démarche
+                    {t("metho_cta_eyebrow")}
                   </span>
                   <p className="mt-3 font-display text-xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-2xl">
-                    Soumettez votre besoin documentaire.
+                    {t("metho_cta_title")}
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                    Devis sous quelques heures. Délai annoncé avant production.
+                    {t("metho_cta_subtitle")}
                   </p>
                 </div>
                 <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:gap-3">
@@ -563,7 +559,7 @@ export default function AdministratifPage() {
                       aria-hidden
                       className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/btn:left-[120%] group-hover/btn:opacity-100"
                     />
-                    Soumettre ma demande
+                    {t("metho_cta_primary")}
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                   <Link
@@ -571,7 +567,7 @@ export default function AdministratifPage() {
                     className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-nexus-blue-950 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-nexus-orange-300/70 hover:bg-slate-50"
                   >
                     <Calendar className="h-4 w-4" />
-                    Prendre rendez-vous
+                    {t("metho_cta_secondary")}
                   </Link>
                 </div>
               </div>
@@ -590,18 +586,17 @@ export default function AdministratifPage() {
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Périmètre du service
+                {t("presta_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Quatre familles de{" "}
+                {t("presta_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  prestations
+                  {t("presta_title_highlight")}
                 </span>
-                .
+                {t("presta_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Chaque famille a ses codes et ses livrables. Le devis précise
-                le périmètre exact selon votre besoin.
+                {t("presta_subtitle")}
               </p>
             </div>
 
@@ -610,7 +605,7 @@ export default function AdministratifPage() {
                 const Icon = p.icon;
                 return (
                   <article
-                    key={p.title}
+                    key={p.key}
                     className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
                   >
                     <div
@@ -622,13 +617,13 @@ export default function AdministratifPage() {
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="mt-5 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                        {p.title}
+                        {t(`${p.key}_title`)}
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {p.description}
+                        {t(`${p.key}_desc`)}
                       </p>
                       <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-nexus-orange-200/70 bg-nexus-orange-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-700">
-                        Délai indicatif : {p.delai}
+                        {t("presta_delai_label")} {t(`${p.key}_delai`)}
                       </div>
                     </div>
                   </article>
@@ -657,58 +652,26 @@ export default function AdministratifPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Exigences qualité
+                {t("qualite_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Pas de modèles copiés.{" "}
+                {t("qualite_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  Chaque document est cadré
+                  {t("qualite_title_highlight")}
                 </span>
-                .
+                {t("qualite_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                La qualité ne tient pas à un beau gabarit, mais à la
-                pertinence du contenu pour le destinataire réel.
+                {t("qualite_subtitle")}
               </p>
             </div>
 
             <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  icon: FileSignature,
-                  title: "Codes du format cible",
-                  text: "CV canadien ≠ CV français. IRCC ≠ France-Visas. Nous adaptons systématiquement.",
-                },
-                {
-                  icon: Edit3,
-                  title: "Cadrage par entretien",
-                  text: "Si vos infos sont incomplètes, un échange court suffit à reconstituer un parcours propre.",
-                },
-                {
-                  icon: Eye,
-                  title: "Relecture systématique",
-                  text: "Aucun document n'est livré sans relecture. Pas de fautes évitables, pas d'incohérences.",
-                },
-                {
-                  icon: Languages,
-                  title: "Langues maîtrisées",
-                  text: "Français, anglais. Pour traductions assermentées, orientation vers traducteur agréé.",
-                },
-                {
-                  icon: Lock,
-                  title: "Confidentialité totale",
-                  text: "Documents et informations strictement confidentiels. Aucune rediffusion ni réutilisation.",
-                },
-                {
-                  icon: ShieldCheck,
-                  title: "Délais tenus",
-                  text: "Délai annoncé = délai livré. En cas de risque, prévenu à l'avance, pas après.",
-                },
-              ].map((it) => {
+              {QUALITE.map((it) => {
                 const Icon = it.icon;
                 return (
                   <article
-                    key={it.title}
+                    key={it.key}
                     className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
                   >
                     <div
@@ -720,10 +683,10 @@ export default function AdministratifPage() {
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="mt-5 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                        {it.title}
+                        {t(`${it.key}_title`)}
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {it.text}
+                        {t(`${it.key}_desc`)}
                       </p>
                     </div>
                   </article>
@@ -744,30 +707,15 @@ export default function AdministratifPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Cas types accompagnés
+                {t("cas_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Voici comment ça se passe concrètement.
+                {t("cas_title")}
               </h2>
             </div>
 
             <div className="grid gap-5 lg:grid-cols-2">
-              {[
-                {
-                  badge: "📄 CV format canadien",
-                  title: "Reconstruction CV pour candidature étudiante",
-                  desc: "Entretien d'une trentaine de minutes pour reconstituer le parcours, identification des expériences à valoriser, mise au format canadien strict (longueur, vocabulaire, organisation), relecture et livraison PDF + version modifiable.",
-                  result:
-                    "Résultat : CV propre déposé dans 3 universités, dossier pris au sérieux dès le tri initial.",
-                },
-                {
-                  badge: "📋 Formulaire IRCC complet",
-                  title: "Préparation dossier permis d'études Canada",
-                  desc: "Liste précise des pièces, remplissage ligne par ligne avec le demandeur, traduction de 3 documents, vérification des cohérences entre formulaires, accompagnement jusqu'à la signature et soumission par le demandeur.",
-                  result:
-                    "Résultat : dossier propre, soumis sans aller-retour avec l'agent de visas.",
-                },
-              ].map((cas) => (
+              {CAS.map((cas) => (
                 <article
                   key={cas.title}
                   className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-7 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
@@ -811,18 +759,17 @@ export default function AdministratifPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Engagement
+                {t("engagement_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Ce que nous faisons,{" "}
+                {t("engagement_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  ce que nous ne faisons pas
+                  {t("engagement_title_highlight")}
                 </span>
-                .
+                {t("engagement_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Une délimitation claire évite les malentendus et protège la
-                qualité du livrable comme la conformité légale.
+                {t("engagement_subtitle")}
               </p>
             </div>
 
@@ -834,14 +781,10 @@ export default function AdministratifPage() {
                 />
                 <div className="relative">
                   <span className="inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-rose-700">
-                    Ce que nous ne pouvons pas
+                    {t("engagement_no_title")}
                   </span>
                   <ul className="mt-4 space-y-3">
-                    {[
-                      "Signer ou soumettre un dossier officiel à votre place",
-                      "Garantir l'acceptation d'un visa, d'une admission ou d'une candidature",
-                      "Délivrer une traduction assermentée — orientation vers traducteur agréé",
-                    ].map((item, i) => (
+                    {ENGAGEMENT_NO.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -861,15 +804,10 @@ export default function AdministratifPage() {
                 />
                 <div className="relative">
                   <span className="inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-700">
-                    Ce que nous garantissons
+                    {t("engagement_yes_title")}
                   </span>
                   <ul className="mt-4 space-y-3">
-                    {[
-                      "Un document conforme au format attendu par le destinataire",
-                      "Une relecture systématique avant chaque livraison",
-                      "Un délai annoncé à l'avance et respecté",
-                      "Une confidentialité totale sur les documents transmis",
-                    ].map((item, i) => (
+                    {ENGAGEMENT_YES.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -896,44 +834,22 @@ export default function AdministratifPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Cadre tarifaire
+                {t("tarif_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Une transparence économique complète.
+                {t("tarif_title")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Devis fixe selon la prestation, communiqué avant production.
+                {t("tarif_subtitle")}
               </p>
             </div>
 
             <div className="grid gap-5 sm:grid-cols-3">
-              {[
-                {
-                  icon: Search,
-                  iconBg:
-                    "bg-gradient-to-br from-emerald-500 to-emerald-600",
-                  title: "Cadrage initial",
-                  desc: "Gratuit. Périmètre, format cible et délai validés avant toute production.",
-                },
-                {
-                  icon: ClipboardCheck,
-                  iconBg:
-                    "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700",
-                  title: "Devis fixe",
-                  desc: "Tarif annoncé avant production selon le type de document. Aucune facturation surprise en cours de route.",
-                },
-                {
-                  icon: Wallet,
-                  iconBg:
-                    "bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900",
-                  title: "Frais externes",
-                  desc: "Si frais externes nécessaires (traducteur assermenté, frais postaux, impression volumineuse), détaillés à part.",
-                },
-              ].map((tarif) => {
+              {TARIFS.map((tarif) => {
                 const Icon = tarif.icon;
                 return (
                   <article
-                    key={tarif.title}
+                    key={tarif.key}
                     className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
                   >
                     <div
@@ -947,10 +863,10 @@ export default function AdministratifPage() {
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="mt-4 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                        {tarif.title}
+                        {t(`${tarif.key}_title`)}
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {tarif.desc}
+                        {t(`${tarif.key}_desc`)}
                       </p>
                     </div>
                   </article>
@@ -986,42 +902,38 @@ export default function AdministratifPage() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
               </span>
-              Démarrer la démarche
+              {t("cta_final_eyebrow")}
             </span>
 
             <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-              Précisez votre besoin, recevez un devis sous quelques heures.
+              {t("cta_final_title")}
             </h2>
 
             <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              CV, lettre, traduction, formulaire ou impression — un
-              conseiller revient avec un périmètre clair, un délai et un
-              prix fixe.
+              {t("cta_final_subtitle")}
             </p>
 
             <div className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-3">
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
-                Devis
+                {t("cta_final_chip1_top")}
                 <br />
-                <span className="text-white">Fixe</span>
+                <span className="text-white">{t("cta_final_chip1_bot")}</span>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
-                Délai
+                {t("cta_final_chip2_top")}
                 <br />
-                <span className="text-white">Tenu</span>
+                <span className="text-white">{t("cta_final_chip2_bot")}</span>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
-                Confidentialité
+                {t("cta_final_chip3_top")}
                 <br />
-                <span className="text-white">Totale</span>
+                <span className="text-white">{t("cta_final_chip3_bot")}</span>
               </div>
             </div>
 
             <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
               <a
-                href={whatsappLink(
-                  "Bonjour Nexus, j'ai un document administratif à préparer."
-                )}
+                href={whatsappLink(t("cta_final_wa_msg"))}
                 target="_blank"
                 rel="noreferrer"
                 className="group/wa relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
@@ -1031,28 +943,28 @@ export default function AdministratifPage() {
                   className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/wa:left-[120%] group-hover/wa:opacity-100"
                 />
                 <MessageCircle className="h-4 w-4" />
-                Discuter sur WhatsApp
+                {t("cta_final_wa")}
               </a>
               <Link
                 href="/rendez-vous?service=administratif"
                 className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
               >
                 <Calendar className="h-4 w-4" />
-                Prendre rendez-vous
+                {t("cta_final_rdv")}
               </Link>
             </div>
 
             <div className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[11px] uppercase tracking-[0.18em] text-white/50">
               <span className="flex items-center gap-1.5">
                 <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-300" />
-                Devis fixe
+                {t("cta_final_foot1")}
               </span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
-              <span>Délai tenu</span>
+              <span>{t("cta_final_foot2")}</span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
-              <span>Relecture systématique</span>
+              <span>{t("cta_final_foot3")}</span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
-              <span>Confidentialité totale</span>
+              <span>{t("cta_final_foot4")}</span>
             </div>
           </div>
         </section>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
@@ -45,90 +46,112 @@ const DOT_GRID_LIGHT_SUBTLE: React.CSSProperties = {
   backgroundSize: "32px 32px",
 };
 
-// ─── Données ────────────────────────────────────────────────────────────────
-
-const POUR_QUI = {
-  oui: [
-    "Vous avez besoin de changer entre FCFA et devises étrangères (EUR, USD, CAD, GBP) à Bangui",
-    "Vous acceptez de présenter une pièce d'identité pour les opérations au-delà du seuil réglementaire",
-    "Vous voulez un taux annoncé clairement avant la transaction, sans surprise",
-  ],
-  non: [
-    "Vous cherchez à changer hors traçabilité — Nexus opère uniquement dans le cadre légal",
-    "Vous attendez un taux supérieur au marché — la transparence n'a pas de magie",
-    "Vous voulez changer des fonds dont l'origine ne peut être justifiée si demandée",
-  ],
-};
+// ─── Données : icônes + clés de traduction ─────────────────────────────────
 
 const METHODOLOGIE = [
+  { num: "01", icon: FileText, key: "metho_01" },
+  { num: "02", icon: Search, key: "metho_02" },
+  { num: "03", icon: ClipboardCheck, key: "metho_03" },
+  { num: "04", icon: Receipt, key: "metho_04" },
+] as const;
+
+const DEVISES = [
+  { code: "EUR", key: "eur" },
+  { code: "USD", key: "usd" },
+  { code: "CAD", key: "cad" },
+  { code: "GBP", key: "gbp" },
+] as const;
+
+const CADRE = [
+  { icon: Eye, key: "cadre_1" },
+  { icon: TrendingUp, key: "cadre_2" },
+  { icon: ShieldCheck, key: "cadre_3" },
+  { icon: Receipt, key: "cadre_4" },
+  { icon: ShieldCheck, key: "cadre_5" },
+  { icon: Clock, key: "cadre_6" },
+] as const;
+
+const TARIFS = [
   {
-    num: "01",
-    icon: FileText,
-    title: "Soumission de la demande",
-    description:
-      "Vous remplissez notre formulaire (devises, sens, montant) ou venez en agence. Nous établissons un devis avec le taux du jour.",
-  },
-  {
-    num: "02",
     icon: Search,
-    title: "Devis & confirmation taux",
-    description:
-      "Le taux annoncé est le taux appliqué. Vous recevez le montant exact à recevoir avant tout déplacement, sans marge cachée.",
+    iconBg: "bg-gradient-to-br from-emerald-500 to-emerald-600",
+    key: "tarif_1",
   },
   {
-    num: "03",
-    icon: ClipboardCheck,
-    title: "Rendez-vous en agence",
-    description:
-      "Vous passez à l'agence Relais Sica à Bangui. Pour les gros montants, un rendez-vous est conseillé pour préparer le cash.",
+    icon: Wallet,
+    iconBg: "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700",
+    key: "tarif_2",
   },
   {
-    num: "04",
     icon: Receipt,
-    title: "Transaction sécurisée & reçu",
-    description:
-      "Comptage vérifié des deux côtés, échange en espèces, remise d'un reçu détaillé. Aucune commission cachée.",
+    iconBg: "bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900",
+    key: "tarif_3",
   },
-];
-
-interface DeviseType {
-  code: string;
-  nom: string;
-  usages: string;
-}
-
-const DEVISES: DeviseType[] = [
-  {
-    code: "EUR",
-    nom: "Euro",
-    usages: "Voyages zone Schengen, frais d'études France, paiements fournisseurs UE.",
-  },
-  {
-    code: "USD",
-    nom: "Dollar US",
-    usages: "Paiements internationaux, voyages USA, transactions B2B en devise référence.",
-  },
-  {
-    code: "CAD",
-    nom: "Dollar canadien",
-    usages: "Frais d'études Canada, voyages, transferts vers la diaspora canadienne.",
-  },
-  {
-    code: "GBP",
-    nom: "Livre sterling",
-    usages: "Voyages Royaume-Uni, opérations avec partenaires britanniques.",
-  },
-];
-
-const STATS = [
-  { value: "Taux", label: "Annoncé avant transaction" },
-  { value: "Reçu", label: "Détaillé systématique" },
-  { value: "Devis", label: "WhatsApp sous 30 min" },
-];
+] as const;
 
 // ─── Composant ──────────────────────────────────────────────────────────────
 
 export default function ChangePage() {
+  const t = useTranslations("ServiceChange");
+
+  const STATS = [
+    { value: t("stat1_value"), label: t("stat1_label") },
+    { value: t("stat2_value"), label: t("stat2_label") },
+    { value: t("stat3_value"), label: t("stat3_label") },
+  ];
+
+  const SCOPE_ITEMS = [
+    { title: t("scope_item1_title"), desc: t("scope_item1_desc") },
+    { title: t("scope_item2_title"), desc: t("scope_item2_desc") },
+    { title: t("scope_item3_title"), desc: t("scope_item3_desc") },
+    { title: t("scope_item4_title"), desc: t("scope_item4_desc") },
+  ];
+
+  const RESULT_ITEMS = [
+    { title: t("result_item1_title"), desc: t("result_item1_desc") },
+    { title: t("result_item2_title"), desc: t("result_item2_desc") },
+    { title: t("result_item3_title"), desc: t("result_item3_desc") },
+    { title: t("result_item4_title"), desc: t("result_item4_desc") },
+  ];
+
+  const POURQUI_OUI = [
+    t("pourqui_oui_1"),
+    t("pourqui_oui_2"),
+    t("pourqui_oui_3"),
+  ];
+  const POURQUI_NON = [
+    t("pourqui_non_1"),
+    t("pourqui_non_2"),
+    t("pourqui_non_3"),
+  ];
+
+  const ENGAGEMENT_NO = [
+    t("engagement_no_1"),
+    t("engagement_no_2"),
+    t("engagement_no_3"),
+  ];
+  const ENGAGEMENT_YES = [
+    t("engagement_yes_1"),
+    t("engagement_yes_2"),
+    t("engagement_yes_3"),
+    t("engagement_yes_4"),
+  ];
+
+  const CAS = [
+    {
+      badge: t("cas_1_badge"),
+      title: t("cas_1_title"),
+      desc: t("cas_1_desc"),
+      result: t("cas_1_result"),
+    },
+    {
+      badge: t("cas_2_badge"),
+      title: t("cas_2_title"),
+      desc: t("cas_2_desc"),
+      result: t("cas_2_result"),
+    },
+  ];
+
   return (
     <>
       <Navbar />
@@ -160,27 +183,24 @@ export default function ChangePage() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
                 </span>
-                Service change de devises
+                {t("hero_eyebrow")}
               </span>
 
               <h1 className="mx-auto mt-6 max-w-3xl font-display text-3xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
-                    Opérations de change
+                    {t("hero_title_highlight")}
                   </span>
                   <span
                     aria-hidden
                     className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
                   />
                 </span>{" "}
-                fiables avec taux maîtrisés et transparence totale.
+                {t("hero_title_after")}
               </h1>
 
               <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                À Bangui, nous opérons un change manuel rigoureux, transparent
-                et sécurisé. Taux du jour annoncé avant la transaction,
-                comptage vérifié, reçu systématique. Aucune marge dissimulée
-                dans le taux affiché.
+                {t("hero_subtitle")}
               </p>
 
               <div className="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
@@ -193,7 +213,7 @@ export default function ChangePage() {
                     className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
                   />
                   <FileText className="h-4 w-4" />
-                  Demander mon devis
+                  {t("hero_cta_primary")}
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
                 </Link>
                 <Link
@@ -201,22 +221,19 @@ export default function ChangePage() {
                   className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
                 >
                   <Calendar className="h-4 w-4" />
-                  Prendre rendez-vous
+                  {t("hero_cta_secondary")}
                 </Link>
               </div>
 
               <p className="mt-6 text-xs text-slate-400">
-                Devis gratuit · Taux du jour annoncé avant déplacement · Une
-                question ?{" "}
+                {t("hero_trust_before")}
                 <a
-                  href={whatsappLink(
-                    "Bonjour Nexus, j'ai une question sur le service Change de devises."
-                  )}
+                  href={whatsappLink(t("wa_question"))}
                   target="_blank"
                   rel="noreferrer"
                   className="font-bold text-nexus-orange-300 underline-offset-4 hover:underline"
                 >
-                  contactez-nous sur WhatsApp
+                  {t("hero_trust_link")}
                 </a>
               </p>
             </div>
@@ -261,11 +278,11 @@ export default function ChangePage() {
           />
           <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
             <p className="font-display text-2xl font-bold leading-snug tracking-tight text-nexus-blue-950 sm:text-3xl lg:text-4xl">
-              Un taux de change n&apos;est pas un prix. C&apos;est{" "}
+              {t("intro_before")}
               <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                une mesure de transparence
+                {t("intro_highlight")}
               </span>
-              . Le bon taux annoncé, c&apos;est déjà la moitié de la confiance.
+              {t("intro_after")}
             </p>
           </div>
         </section>
@@ -282,23 +299,18 @@ export default function ChangePage() {
             <div className="mb-12 grid gap-10 lg:grid-cols-[1fr_2fr] lg:items-start lg:gap-16">
               <div>
                 <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                  Périmètre
+                  {t("scope_eyebrow")}
                 </span>
                 <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                  Ce que nous faisons.
+                  {t("scope_title")}
                 </h2>
                 <p className="mt-4 text-sm leading-relaxed text-slate-600">
-                  Quatre étapes du devis à la remise des fonds, en bureau Bangui.
+                  {t("scope_subtitle")}
                 </p>
               </div>
 
               <ul className="space-y-4">
-                {[
-                  { title: "Devis WhatsApp en 30 minutes", desc: "Annonce du taux applicable avant tout déplacement, valable pour la session." },
-                  { title: "Vérification d'authenticité", desc: "Contrôle des billets reçus selon les standards bancaires (UV, motifs, sécurité)." },
-                  { title: "Opération en bureau Bangui", desc: "Transaction réalisée sur place, dans nos locaux sécurisés, en présence du client." },
-                  { title: "Reçu détaillé", desc: "Justificatif officiel daté avec montant initial, taux appliqué et montant remis." },
-                ].map((item, i) => (
+                {SCOPE_ITEMS.map((item, i) => (
                   <li
                     key={i}
                     className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_16px_36px_-16px_rgba(255,102,0,0.20)]"
@@ -342,23 +354,18 @@ export default function ChangePage() {
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Résultat
+                {t("result_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Ce que vous obtenez.
+                {t("result_title")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Quatre engagements de transparence. Pas de surprise au moment du paiement.
+                {t("result_subtitle")}
               </p>
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                { title: "Taux fixe avant opération", desc: "Le taux annoncé sur WhatsApp est celui appliqué en bureau." },
-                { title: "Aucun frais caché", desc: "Le taux annoncé inclut tout. Aucune commission ajoutée au moment du change." },
-                { title: "Sécurité d'un bureau professionnel", desc: "Pas de transaction informelle. Environnement contrôlé, vérifications systématiques." },
-                { title: "Reçu officiel daté", desc: "Pour vos comptes, votre comptabilité ou vos justificatifs administratifs." },
-              ].map((item, i) => (
+              {RESULT_ITEMS.map((item, i) => (
                 <article
                   key={i}
                   className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
@@ -392,14 +399,13 @@ export default function ChangePage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Cadre du service
+                {t("pourqui_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Pour qui ce service est conçu.
+                {t("pourqui_title")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Nous opérons strictement dans le cadre légal et réglementaire.
-                Cette transparence fait partie de notre engagement.
+                {t("pourqui_subtitle")}
               </p>
             </div>
 
@@ -415,11 +421,11 @@ export default function ChangePage() {
                       <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                      Ce service s&apos;adresse aux personnes
+                      {t("pourqui_oui_title")}
                     </h3>
                   </div>
                   <ul className="space-y-3">
-                    {POUR_QUI.oui.map((item, i) => (
+                    {POURQUI_OUI.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -443,11 +449,11 @@ export default function ChangePage() {
                       <XCircle className="h-5 w-5" />
                     </div>
                     <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                      Ce service ne s&apos;adresse pas aux personnes
+                      {t("pourqui_non_title")}
                     </h3>
                   </div>
                   <ul className="space-y-3">
-                    {POUR_QUI.non.map((item, i) => (
+                    {POURQUI_NON.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -478,18 +484,17 @@ export default function ChangePage() {
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Notre méthodologie
+                {t("metho_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Un parcours en{" "}
+                {t("metho_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  quatre étapes documentées
+                  {t("metho_title_highlight")}
                 </span>
-                .
+                {t("metho_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Du devis initial jusqu&apos;à la remise du reçu, chaque étape est
-                claire et tracée.
+                {t("metho_subtitle")}
               </p>
             </div>
 
@@ -518,11 +523,11 @@ export default function ChangePage() {
                       <div className="flex items-center gap-2">
                         <Icon className="h-4 w-4 shrink-0 text-nexus-orange-600" />
                         <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                          {etape.title}
+                          {t(`${etape.key}_title`)}
                         </h3>
                       </div>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {etape.description}
+                        {t(`${etape.key}_desc`)}
                       </p>
                     </div>
                   </article>
@@ -535,13 +540,13 @@ export default function ChangePage() {
               <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                    Démarrer la démarche
+                    {t("metho_cta_eyebrow")}
                   </span>
                   <p className="mt-3 font-display text-xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-2xl">
-                    Demandez votre devis de change.
+                    {t("metho_cta_title")}
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                    Devis gratuit. Taux annoncé avant déplacement.
+                    {t("metho_cta_subtitle")}
                   </p>
                 </div>
                 <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:gap-3">
@@ -553,7 +558,7 @@ export default function ChangePage() {
                       aria-hidden
                       className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/btn:left-[120%] group-hover/btn:opacity-100"
                     />
-                    Soumettre ma demande
+                    {t("metho_cta_primary")}
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                   <Link
@@ -561,7 +566,7 @@ export default function ChangePage() {
                     className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-nexus-blue-950 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-nexus-orange-300/70 hover:bg-slate-50"
                   >
                     <Calendar className="h-4 w-4" />
-                    Prendre rendez-vous
+                    {t("metho_cta_secondary")}
                   </Link>
                 </div>
               </div>
@@ -580,18 +585,17 @@ export default function ChangePage() {
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Devises traitées
+                {t("devises_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Quatre devises principales,{" "}
+                {t("devises_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  dans les deux sens
+                  {t("devises_title_highlight")}
                 </span>
-                .
+                {t("devises_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Pour les autres devises, contactez-nous : selon disponibilité
-                et délai d&apos;approvisionnement.
+                {t("devises_subtitle")}
               </p>
             </div>
 
@@ -613,11 +617,11 @@ export default function ChangePage() {
                         </span>
                       </span>
                       <span className="text-sm text-slate-600">
-                        {d.nom}
+                        {t(`devise_${d.key}_nom`)}
                       </span>
                     </div>
                     <p className="mt-3 text-xs leading-relaxed text-slate-500">
-                      {d.usages}
+                      {t(`devise_${d.key}_usages`)}
                     </p>
                   </div>
                 </article>
@@ -645,58 +649,26 @@ export default function ChangePage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Cadre & sécurité
+                {t("cadre_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Cinq exigences que nous tenons{" "}
+                {t("cadre_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  systématiquement
+                  {t("cadre_title_highlight")}
                 </span>
-                .
+                {t("cadre_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Le change manuel est une opération encadrée. Notre rigueur
-                protège l&apos;agence comme le client.
+                {t("cadre_subtitle")}
               </p>
             </div>
 
             <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  icon: Eye,
-                  title: "Taux annoncé avant",
-                  text: "Le taux du jour vous est communiqué avant tout déplacement à l'agence.",
-                },
-                {
-                  icon: TrendingUp,
-                  title: "Pas de marge cachée",
-                  text: "Le taux affiché est le taux appliqué. Aucune commission ajoutée hors devis.",
-                },
-                {
-                  icon: ShieldCheck,
-                  title: "Comptage vérifié",
-                  text: "Comptage des billets effectué des deux côtés, en présence du client.",
-                },
-                {
-                  icon: Receipt,
-                  title: "Reçu systématique",
-                  text: "Reçu détaillé remis à chaque transaction, quel que soit le montant.",
-                },
-                {
-                  icon: ShieldCheck,
-                  title: "Pièce pour gros montants",
-                  text: "Pièce d'identité requise au-delà du seuil réglementaire applicable.",
-                },
-                {
-                  icon: Clock,
-                  title: "Rendez-vous gros volumes",
-                  text: "Pour les très gros montants, un rendez-vous permet de préparer le cash.",
-                },
-              ].map((it) => {
+              {CADRE.map((it) => {
                 const Icon = it.icon;
                 return (
                   <article
-                    key={it.title}
+                    key={it.key}
                     className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
                   >
                     <div
@@ -708,10 +680,10 @@ export default function ChangePage() {
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="mt-5 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                        {it.title}
+                        {t(`${it.key}_title`)}
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {it.text}
+                        {t(`${it.key}_desc`)}
                       </p>
                     </div>
                   </article>
@@ -732,30 +704,15 @@ export default function ChangePage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Cas types accompagnés
+                {t("cas_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Voici comment ça se passe concrètement.
+                {t("cas_title")}
               </h2>
             </div>
 
             <div className="grid gap-5 lg:grid-cols-2">
-              {[
-                {
-                  badge: "✈️ Voyageur en partance",
-                  title: "FCFA vers euros pour départ Schengen",
-                  desc: "Demande WhatsApp en matinée, devis communiqué en moins de 30 minutes au taux du jour. Passage à l'agence l'après-midi, comptage devant le client, reçu remis pour les douanes.",
-                  result:
-                    "Résultat : voyage cash sécurisé, taux respecté, douanes rassurées par le reçu.",
-                },
-                {
-                  badge: "💼 Diaspora en visite",
-                  title: "Euros vers FCFA à l'arrivée à Bangui",
-                  desc: "Pré-devis envoyé pendant le voyage. Rendez-vous calé en agence dès l'arrivée, gros montant préparé à l'avance, pièce d'identité présentée, transaction effectuée rapidement.",
-                  result:
-                    "Résultat : famille soutenue avec le bon montant, séjour organisé sans tracas de change.",
-                },
-              ].map((cas) => (
+              {CAS.map((cas) => (
                 <article
                   key={cas.title}
                   className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-7 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
@@ -799,19 +756,17 @@ export default function ChangePage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Engagement
+                {t("engagement_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Le taux annoncé est{" "}
+                {t("engagement_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  le taux appliqué
+                  {t("engagement_title_highlight")}
                 </span>
-                .
+                {t("engagement_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Aucune commission cachée, aucune marge ajoutée à la dernière
-                minute. Si le taux du marché bouge significativement entre le
-                devis et la transaction, nous vous le disons franchement.
+                {t("engagement_subtitle")}
               </p>
             </div>
 
@@ -823,14 +778,10 @@ export default function ChangePage() {
                 />
                 <div className="relative">
                   <span className="inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-rose-700">
-                    Ce que nous ne pouvons pas
+                    {t("engagement_no_title")}
                   </span>
                   <ul className="mt-4 space-y-3">
-                    {[
-                      "Garantir un taux supérieur au marché interbancaire réel",
-                      "Effectuer des opérations hors traçabilité",
-                      "Bloquer un taux à long terme contre les fluctuations du marché",
-                    ].map((item, i) => (
+                    {ENGAGEMENT_NO.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -850,15 +801,10 @@ export default function ChangePage() {
                 />
                 <div className="relative">
                   <span className="inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-700">
-                    Ce que nous garantissons
+                    {t("engagement_yes_title")}
                   </span>
                   <ul className="mt-4 space-y-3">
-                    {[
-                      "Un taux du jour annoncé clairement avant transaction",
-                      "Aucune commission cachée dans le taux affiché",
-                      "Un comptage vérifié contradictoirement et un reçu détaillé",
-                      "La discrétion et la sécurité pour les gros montants sur rendez-vous",
-                    ].map((item, i) => (
+                    {ENGAGEMENT_YES.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -885,49 +831,26 @@ export default function ChangePage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Cadre tarifaire
+                {t("tarif_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Le taux EST{" "}
+                {t("tarif_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  le tarif
+                  {t("tarif_title_highlight")}
                 </span>
-                .
+                {t("tarif_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Pas de frais d&apos;agence, pas de commission ajoutée. Tout est
-                inclus dans le taux annoncé.
+                {t("tarif_subtitle")}
               </p>
             </div>
 
             <div className="grid gap-5 sm:grid-cols-3">
-              {[
-                {
-                  icon: Search,
-                  iconBg:
-                    "bg-gradient-to-br from-emerald-500 to-emerald-600",
-                  title: "Devis",
-                  desc: "Gratuit. Taux et montant exact à recevoir communiqués avant toute opération.",
-                },
-                {
-                  icon: Wallet,
-                  iconBg:
-                    "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700",
-                  title: "Taux du jour",
-                  desc: "Réévalué plusieurs fois par jour selon le marché. Compétitif sur les volumes moyens et élevés.",
-                },
-                {
-                  icon: Receipt,
-                  iconBg:
-                    "bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900",
-                  title: "Reçu",
-                  desc: "Remis systématiquement. Utile pour les douanes, la comptabilité et la traçabilité.",
-                },
-              ].map((tarif) => {
+              {TARIFS.map((tarif) => {
                 const Icon = tarif.icon;
                 return (
                   <article
-                    key={tarif.title}
+                    key={tarif.key}
                     className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
                   >
                     <div
@@ -941,10 +864,10 @@ export default function ChangePage() {
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="mt-4 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                        {tarif.title}
+                        {t(`${tarif.key}_title`)}
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {tarif.desc}
+                        {t(`${tarif.key}_desc`)}
                       </p>
                     </div>
                   </article>
@@ -980,41 +903,38 @@ export default function ChangePage() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
               </span>
-              Lancer le change
+              {t("cta_final_eyebrow")}
             </span>
 
             <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-              Demandez votre devis avec le taux du jour.
+              {t("cta_final_title")}
             </h2>
 
             <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              Devis sous 30 minutes en heures ouvrées. Taux et montant exact
-              communiqués avant tout déplacement.
+              {t("cta_final_subtitle")}
             </p>
 
             <div className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-3">
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
-                Taux
+                {t("cta_final_chip1_top")}
                 <br />
-                <span className="text-white">Annoncé</span>
+                <span className="text-white">{t("cta_final_chip1_bot")}</span>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
-                Marge
+                {t("cta_final_chip2_top")}
                 <br />
-                <span className="text-white">Zéro caché</span>
+                <span className="text-white">{t("cta_final_chip2_bot")}</span>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
-                Reçu
+                {t("cta_final_chip3_top")}
                 <br />
-                <span className="text-white">Systématique</span>
+                <span className="text-white">{t("cta_final_chip3_bot")}</span>
               </div>
             </div>
 
             <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
               <a
-                href={whatsappLink(
-                  "Bonjour Nexus, j'ai une question sur une opération de change."
-                )}
+                href={whatsappLink(t("cta_final_wa_msg"))}
                 target="_blank"
                 rel="noreferrer"
                 className="group/wa relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
@@ -1024,30 +944,30 @@ export default function ChangePage() {
                   className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/wa:left-[120%] group-hover/wa:opacity-100"
                 />
                 <MessageCircle className="h-4 w-4" />
-                Discuter sur WhatsApp
+                {t("cta_final_wa")}
               </a>
               <Link
                 href="/rendez-vous?service=change"
                 className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
               >
                 <Calendar className="h-4 w-4" />
-                Prendre rendez-vous
+                {t("cta_final_rdv")}
               </Link>
             </div>
 
             <div className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[11px] uppercase tracking-[0.18em] text-white/50">
               <span className="flex items-center gap-1.5">
                 <Coins className="h-3.5 w-3.5 text-nexus-orange-300" />
-                Taux annoncé
+                {t("cta_final_foot1")}
               </span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
-              <span>Zéro marge cachée</span>
+              <span>{t("cta_final_foot2")}</span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
-              <span>Reçu systématique</span>
+              <span>{t("cta_final_foot3")}</span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
               <span className="flex items-center gap-1.5">
                 <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-300" />
-                Cadre légal
+                {t("cta_final_foot4")}
               </span>
             </div>
           </div>

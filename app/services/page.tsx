@@ -1,4 +1,4 @@
-import { Sparkles } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
@@ -12,12 +12,6 @@ export const metadata = {
     "Dix services Nexus RCA depuis Bangui : visa, TCF Canada, bourses, financement business, billets d'avion, change, transferts, démarches administratives, IA et digitalisation.",
 };
 
-const STATS = [
-  { value: `${SERVICES.length}`, label: "Services Nexus" },
-  { value: "Bangui", label: "Siège & accueil" },
-  { value: "0 FCFA", label: "Étude initiale" },
-];
-
 const DOT_GRID_DARK: React.CSSProperties = {
   backgroundImage:
     "radial-gradient(circle at center, rgba(255,255,255,0.06) 1px, transparent 1px)",
@@ -25,6 +19,14 @@ const DOT_GRID_DARK: React.CSSProperties = {
 };
 
 export default function ServicesPage() {
+  const t = useTranslations("ServicesIndex");
+
+  const STATS = [
+    { value: `${SERVICES.length}`, label: t("stat1_label") },
+    { value: t("stat2_value"), label: t("stat2_label") },
+    { value: t("stat3_value"), label: t("stat3_label") },
+  ];
+
   return (
     <>
       <Navbar />
@@ -55,14 +57,14 @@ export default function ServicesPage() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
               </span>
-              Nos services
+              {t("hero_eyebrow")}
             </span>
 
             <h1 className="mt-6 max-w-3xl font-display text-3xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Une agence,{" "}
+              {t("hero_title_part1")}{" "}
               <span className="relative inline-block">
                 <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
-                  toutes les portes.
+                  {t("hero_title_highlight")}
                 </span>
                 <span
                   aria-hidden
@@ -72,10 +74,7 @@ export default function ServicesPage() {
             </h1>
 
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              Dix expertises Nexus RCA — du dossier visa au financement
-              d&apos;entreprise, en passant par les études au Canada, les
-              transferts et la digitalisation. Préparé à Bangui, opérationnel
-              partout.
+              {t("hero_subtitle")}
             </p>
 
             {/* Stats Premium tech */}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
@@ -46,99 +47,109 @@ const DOT_GRID_LIGHT_SUBTLE: React.CSSProperties = {
   backgroundSize: "32px 32px",
 };
 
-// ─── Données ────────────────────────────────────────────────────────────────
-
-const POUR_QUI = {
-  oui: [
-    "Vous avez besoin d'envoyer ou de recevoir de l'argent entre la RCA et l'étranger, en toute traçabilité",
-    "Vous acceptez de fournir une pièce d'identité valide pour respecter la réglementation",
-    "Vous êtes prêt(e) à confirmer le bénéficiaire avec ses coordonnées exactes (nom, pièce, ville)",
-  ],
-  non: [
-    "Vous cherchez un canal anonyme ou hors traçabilité — Nexus opère uniquement dans le cadre légal",
-    "Vous voulez transférer des fonds dont l'origine ne peut être justifiée",
-    "Vous attendez un taux ou des frais inférieurs à ce que la réglementation autorise — la transparence n'a pas de magie",
-  ],
-};
+// ─── Données : icônes + clés de traduction ─────────────────────────────────
 
 const METHODOLOGIE = [
+  { num: "01", icon: FileText, key: "metho_01" },
+  { num: "02", icon: Search, key: "metho_02" },
+  { num: "03", icon: ClipboardCheck, key: "metho_03" },
+  { num: "04", icon: Send, key: "metho_04" },
+] as const;
+
+const CANAUX = [
+  { icon: Send, key: "canal_wu" },
+  { icon: Smartphone, key: "canal_mobile" },
+  { icon: Building2, key: "canal_bank" },
+  { icon: Globe, key: "canal_partner" },
+] as const;
+
+const CADRE = [
+  { icon: ShieldCheck, key: "cadre_1" },
+  { icon: Receipt, key: "cadre_2" },
+  { icon: Wallet, key: "cadre_3" },
+] as const;
+
+const TARIFS = [
   {
-    num: "01",
-    icon: FileText,
-    title: "Soumission de la demande",
-    description:
-      "Vous remplissez notre formulaire (montant, devise, destination, bénéficiaire) ou venez en agence. Nous vérifions la faisabilité réglementaire.",
-  },
-  {
-    num: "02",
     icon: Search,
-    title: "Analyse & devis canal",
-    description:
-      "Un conseiller Nexus identifie le meilleur canal selon destination, montant et urgence. Devis écrit avec frais et taux annoncés avant tout engagement.",
+    iconBg: "bg-gradient-to-br from-emerald-500 to-emerald-600",
+    key: "tarif_1",
   },
   {
-    num: "03",
     icon: ClipboardCheck,
-    title: "Exécution structurée",
-    description:
-      "Vérification des coordonnées du bénéficiaire, exécution du transfert en agence ou par voie sécurisée. Remise du reçu et des références de traçabilité.",
+    iconBg: "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700",
+    key: "tarif_2",
   },
   {
-    num: "04",
-    icon: Send,
-    title: "Suivi jusqu'à réception",
-    description:
-      "Nous ne clôturons pas avant la confirmation de réception par le bénéficiaire. En cas de blocage, intervention immédiate auprès de l'opérateur.",
+    icon: Wallet,
+    iconBg: "bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900",
+    key: "tarif_3",
   },
-];
-
-interface CanalType {
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
-  description: string;
-  delai: string;
-}
-
-const CANAUX: CanalType[] = [
-  {
-    icon: Send,
-    title: "Western Union & MoneyGram",
-    description:
-      "Transfert rapide international, retrait en espèces auprès d'un agent agréé.",
-    delai: "Quelques minutes à 1 heure",
-  },
-  {
-    icon: Smartphone,
-    title: "Mobile money",
-    description:
-      "Versement direct sur portefeuille mobile (Orange Money, MTN, Airtel Money).",
-    delai: "Instantané à 30 min",
-  },
-  {
-    icon: Building2,
-    title: "Virement bancaire",
-    description:
-      "Transfert IBAN/SWIFT vers compte bancaire international ou domestique.",
-    delai: "1 à 3 jours ouvrés",
-  },
-  {
-    icon: Globe,
-    title: "Réseau partenaire",
-    description:
-      "Solutions ad hoc pour gros transferts ou destinations difficiles, validées par le conseiller.",
-    delai: "Variable selon dossier",
-  },
-];
-
-const STATS = [
-  { value: "Devis", label: "Frais annoncés avant" },
-  { value: "Suivi", label: "Jusqu'à réception" },
-  { value: "Reçu", label: "Traçabilité complète" },
-];
+] as const;
 
 // ─── Composant ──────────────────────────────────────────────────────────────
 
 export default function TransfertPage() {
+  const t = useTranslations("ServiceTransfert");
+
+  const STATS = [
+    { value: t("stat1_value"), label: t("stat1_label") },
+    { value: t("stat2_value"), label: t("stat2_label") },
+    { value: t("stat3_value"), label: t("stat3_label") },
+  ];
+
+  const SCOPE_ITEMS = [
+    { title: t("scope_item1_title"), desc: t("scope_item1_desc") },
+    { title: t("scope_item2_title"), desc: t("scope_item2_desc") },
+    { title: t("scope_item3_title"), desc: t("scope_item3_desc") },
+    { title: t("scope_item4_title"), desc: t("scope_item4_desc") },
+  ];
+
+  const RESULT_ITEMS = [
+    { title: t("result_item1_title"), desc: t("result_item1_desc") },
+    { title: t("result_item2_title"), desc: t("result_item2_desc") },
+    { title: t("result_item3_title"), desc: t("result_item3_desc") },
+    { title: t("result_item4_title"), desc: t("result_item4_desc") },
+  ];
+
+  const POURQUI_OUI = [
+    t("pourqui_oui_1"),
+    t("pourqui_oui_2"),
+    t("pourqui_oui_3"),
+  ];
+  const POURQUI_NON = [
+    t("pourqui_non_1"),
+    t("pourqui_non_2"),
+    t("pourqui_non_3"),
+  ];
+
+  const ENGAGEMENT_NO = [
+    t("engagement_no_1"),
+    t("engagement_no_2"),
+    t("engagement_no_3"),
+  ];
+  const ENGAGEMENT_YES = [
+    t("engagement_yes_1"),
+    t("engagement_yes_2"),
+    t("engagement_yes_3"),
+    t("engagement_yes_4"),
+  ];
+
+  const CAS = [
+    {
+      badge: t("cas_1_badge"),
+      title: t("cas_1_title"),
+      desc: t("cas_1_desc"),
+      result: t("cas_1_result"),
+    },
+    {
+      badge: t("cas_2_badge"),
+      title: t("cas_2_title"),
+      desc: t("cas_2_desc"),
+      result: t("cas_2_result"),
+    },
+  ];
+
   return (
     <>
       <Navbar />
@@ -170,28 +181,24 @@ export default function TransfertPage() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
                 </span>
-                Service transfert d&apos;argent
+                {t("hero_eyebrow")}
               </span>
 
               <h1 className="mx-auto mt-6 max-w-4xl font-display text-3xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
-                    Transferts internationaux
+                    {t("hero_title_highlight")}
                   </span>
                   <span
                     aria-hidden
                     className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
                   />
                 </span>{" "}
-                sécurisés avec exécution rapide et traçable.
+                {t("hero_title_after")}
               </h1>
 
               <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                Entre la RCA et le reste du monde, nous gérons vos transferts
-                avec rigueur, transparence et un suivi jusqu&apos;à la
-                réception confirmée. Frais annoncés avant opération,
-                traçabilité complète, intervention immédiate en cas
-                d&apos;incident.
+                {t("hero_subtitle")}
               </p>
 
               <div className="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
@@ -204,7 +211,7 @@ export default function TransfertPage() {
                     className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
                   />
                   <FileText className="h-4 w-4" />
-                  Soumettre ma demande
+                  {t("hero_cta_primary")}
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
                 </Link>
                 <Link
@@ -212,22 +219,19 @@ export default function TransfertPage() {
                   className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
                 >
                   <Calendar className="h-4 w-4" />
-                  Prendre rendez-vous
+                  {t("hero_cta_secondary")}
                 </Link>
               </div>
 
               <p className="mt-6 text-xs text-slate-400">
-                Devis gratuit · Frais annoncés avant opération · Une question
-                ?{" "}
+                {t("hero_trust_before")}
                 <a
-                  href={whatsappLink(
-                    "Bonjour Nexus, j'ai une question sur le service Transfert d'argent."
-                  )}
+                  href={whatsappLink(t("wa_question"))}
                   target="_blank"
                   rel="noreferrer"
                   className="font-bold text-nexus-orange-300 underline-offset-4 hover:underline"
                 >
-                  contactez-nous sur WhatsApp
+                  {t("hero_trust_link")}
                 </a>
               </p>
             </div>
@@ -272,12 +276,11 @@ export default function TransfertPage() {
           />
           <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
             <p className="font-display text-2xl font-bold leading-snug tracking-tight text-nexus-blue-950 sm:text-3xl lg:text-4xl">
-              Un transfert international n&apos;est pas une opération
-              technique. C&apos;est{" "}
+              {t("intro_before")}
               <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                une chaîne de confiance
-              </span>{" "}
-              entre l&apos;expéditeur, l&apos;opérateur et le destinataire.
+                {t("intro_highlight")}
+              </span>
+              {t("intro_after")}
             </p>
           </div>
         </section>
@@ -294,36 +297,18 @@ export default function TransfertPage() {
             <div className="mb-12 grid gap-10 lg:grid-cols-[1fr_2fr] lg:items-start lg:gap-16">
               <div>
                 <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                  Périmètre
+                  {t("scope_eyebrow")}
                 </span>
                 <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                  Ce que nous faisons.
+                  {t("scope_title")}
                 </h2>
                 <p className="mt-4 text-sm leading-relaxed text-slate-600">
-                  Quatre étapes encadrées, du cadrage initial à la confirmation
-                  de réception.
+                  {t("scope_subtitle")}
                 </p>
               </div>
 
               <ul className="space-y-4">
-                {[
-                  {
-                    title: "Cadrage origine, destination et montant",
-                    desc: "Vérification réglementaire, validation des pièces et confirmation de la procédure applicable selon le couloir.",
-                  },
-                  {
-                    title: "Choix du corridor optimal",
-                    desc: "Sélection du couple opérateur-méthode le mieux adapté en frais, délais et sécurité pour votre cas.",
-                  },
-                  {
-                    title: "Exécution sécurisée",
-                    desc: "Opération réalisée depuis nos bureaux, frais annoncés avant exécution, justificatifs remis.",
-                  },
-                  {
-                    title: "Confirmation de réception",
-                    desc: "Suivi jusqu'à la réception confirmée par le destinataire, alerte en cas d'anomalie.",
-                  },
-                ].map((item, i) => (
+                {SCOPE_ITEMS.map((item, i) => (
                   <li
                     key={i}
                     className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_16px_36px_-16px_rgba(255,102,0,0.20)]"
@@ -367,36 +352,18 @@ export default function TransfertPage() {
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Résultat
+                {t("result_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Ce que vous obtenez.
+                {t("result_title")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Quatre engagements concrets sur chaque opération. Pas de marge
-                cachée, pas de délai approximatif.
+                {t("result_subtitle")}
               </p>
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                {
-                  title: "Frais annoncés avant opération",
-                  desc: "Aucun frais ajouté en cours de route. Le devis fait foi.",
-                },
-                {
-                  title: "Traçabilité complète",
-                  desc: "Justificatifs et numéro de transaction transmis pour vos comptes.",
-                },
-                {
-                  title: "Délai annoncé respecté",
-                  desc: "Opérateur sélectionné selon votre contrainte temporelle.",
-                },
-                {
-                  title: "Réception confirmée",
-                  desc: "Vous savez que la somme est arrivée, pas une supposition.",
-                },
-              ].map((item, i) => (
+              {RESULT_ITEMS.map((item, i) => (
                 <article
                   key={i}
                   className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
@@ -430,15 +397,13 @@ export default function TransfertPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Cadre du service
+                {t("pourqui_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Pour qui ce service est conçu.
+                {t("pourqui_title")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Nous opérons strictement dans le cadre légal et réglementaire.
-                Cette transparence fait partie de notre engagement
-                professionnel.
+                {t("pourqui_subtitle")}
               </p>
             </div>
 
@@ -454,11 +419,11 @@ export default function TransfertPage() {
                       <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                      Ce service s&apos;adresse aux personnes
+                      {t("pourqui_oui_title")}
                     </h3>
                   </div>
                   <ul className="space-y-3">
-                    {POUR_QUI.oui.map((item, i) => (
+                    {POURQUI_OUI.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -482,11 +447,11 @@ export default function TransfertPage() {
                       <XCircle className="h-5 w-5" />
                     </div>
                     <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                      Ce service ne s&apos;adresse pas aux personnes
+                      {t("pourqui_non_title")}
                     </h3>
                   </div>
                   <ul className="space-y-3">
-                    {POUR_QUI.non.map((item, i) => (
+                    {POURQUI_NON.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -517,18 +482,17 @@ export default function TransfertPage() {
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Notre méthodologie
+                {t("metho_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Un parcours en{" "}
+                {t("metho_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  quatre étapes documentées
+                  {t("metho_title_highlight")}
                 </span>
-                .
+                {t("metho_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Du devis initial jusqu&apos;à la confirmation de réception par
-                le bénéficiaire, chaque étape est tracée et communiquée.
+                {t("metho_subtitle")}
               </p>
             </div>
 
@@ -557,11 +521,11 @@ export default function TransfertPage() {
                       <div className="flex items-center gap-2">
                         <Icon className="h-4 w-4 shrink-0 text-nexus-orange-600" />
                         <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                          {etape.title}
+                          {t(`${etape.key}_title`)}
                         </h3>
                       </div>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {etape.description}
+                        {t(`${etape.key}_desc`)}
                       </p>
                     </div>
                   </article>
@@ -574,13 +538,13 @@ export default function TransfertPage() {
               <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                    Démarrer la démarche
+                    {t("metho_cta_eyebrow")}
                   </span>
                   <p className="mt-3 font-display text-xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-2xl">
-                    Soumettez votre demande de transfert.
+                    {t("metho_cta_title")}
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                    Devis gratuit. Frais annoncés avant opération.
+                    {t("metho_cta_subtitle")}
                   </p>
                 </div>
                 <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:gap-3">
@@ -592,7 +556,7 @@ export default function TransfertPage() {
                       aria-hidden
                       className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/btn:left-[120%] group-hover/btn:opacity-100"
                     />
-                    Soumettre ma demande
+                    {t("metho_cta_primary")}
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                   <Link
@@ -600,7 +564,7 @@ export default function TransfertPage() {
                     className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-nexus-blue-950 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-nexus-orange-300/70 hover:bg-slate-50"
                   >
                     <Calendar className="h-4 w-4" />
-                    Prendre rendez-vous
+                    {t("metho_cta_secondary")}
                   </Link>
                 </div>
               </div>
@@ -619,19 +583,17 @@ export default function TransfertPage() {
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Canaux disponibles
+                {t("canaux_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Le bon canal{" "}
+                {t("canaux_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  selon le besoin
+                  {t("canaux_title_highlight")}
                 </span>
-                .
+                {t("canaux_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Chaque canal a sa logique : rapidité, coût, plafond,
-                destination. Notre conseiller propose le plus adapté à votre
-                situation, pas celui qui rapporte le plus à l&apos;agence.
+                {t("canaux_subtitle")}
               </p>
             </div>
 
@@ -640,7 +602,7 @@ export default function TransfertPage() {
                 const Icon = c.icon;
                 return (
                   <article
-                    key={c.title}
+                    key={c.key}
                     className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
                   >
                     <div
@@ -652,13 +614,13 @@ export default function TransfertPage() {
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="mt-5 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                        {c.title}
+                        {t(`${c.key}_title`)}
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {c.description}
+                        {t(`${c.key}_desc`)}
                       </p>
                       <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-nexus-orange-200/70 bg-nexus-orange-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-700">
-                        {c.delai}
+                        {t(`${c.key}_delai`)}
                       </div>
                     </div>
                   </article>
@@ -683,20 +645,17 @@ export default function TransfertPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-10 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Cadre légal &amp; réglementaire
+                {t("cadre_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Tout transfert est{" "}
+                {t("cadre_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  tracé, et c&apos;est volontaire
+                  {t("cadre_title_highlight")}
                 </span>
-                .
+                {t("cadre_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Nous opérons dans le respect strict de la BEAC, de la COBAC et
-                des règles internationales de lutte contre le blanchiment.
-                Cette rigueur protège l&apos;expéditeur, le bénéficiaire et le
-                pays.
+                {t("cadre_subtitle")}
               </p>
             </div>
 
@@ -704,38 +663,20 @@ export default function TransfertPage() {
               <AlertTriangle className="h-6 w-6 shrink-0 text-amber-600" />
               <div>
                 <p className="font-display text-base font-bold leading-tight text-amber-900">
-                  À retenir avant de commencer
+                  {t("cadre_alert_title")}
                 </p>
                 <p className="mt-1.5 text-sm leading-relaxed text-amber-800">
-                  Pour les transferts au-delà de certains seuils, les
-                  opérateurs exigent des justificatifs supplémentaires (origine
-                  des fonds, motif). Anticipez avec votre conseiller.
+                  {t("cadre_alert_desc")}
                 </p>
               </div>
             </div>
 
             <div className="mt-10 grid gap-5 md:grid-cols-3">
-              {[
-                {
-                  icon: ShieldCheck,
-                  title: "Pièce d'identité valide",
-                  text: "Pour l'expéditeur et conformité avec les coordonnées du bénéficiaire.",
-                },
-                {
-                  icon: Receipt,
-                  title: "Origine des fonds",
-                  text: "Justificatif requis au-delà de certains seuils selon les canaux.",
-                },
-                {
-                  icon: Wallet,
-                  title: "Plafonds réglementaires",
-                  text: "Variables selon canal et juridiction. Nexus fractionne ou combine si nécessaire.",
-                },
-              ].map((it) => {
+              {CADRE.map((it) => {
                 const Icon = it.icon;
                 return (
                   <article
-                    key={it.title}
+                    key={it.key}
                     className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
                   >
                     <div
@@ -747,10 +688,10 @@ export default function TransfertPage() {
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="mt-5 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                        {it.title}
+                        {t(`${it.key}_title`)}
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {it.text}
+                        {t(`${it.key}_desc`)}
                       </p>
                     </div>
                   </article>
@@ -771,30 +712,15 @@ export default function TransfertPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Cas types accompagnés
+                {t("cas_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Voici comment ça se passe concrètement.
+                {t("cas_title")}
               </h2>
             </div>
 
             <div className="grid gap-5 lg:grid-cols-2">
-              {[
-                {
-                  badge: "💸 Soutien familial mensuel",
-                  title: "Diaspora vers RCA, montant régulier",
-                  desc: "Envoi mensuel structuré depuis la France ou le Canada vers un proche à Bangui. Choix du canal optimisé selon la régularité (mobile money, Western Union), suivi de réception, archivage des reçus pour traçabilité.",
-                  result:
-                    "Résultat : régularité respectée, frais minimisés, confiance renforcée des deux côtés.",
-                },
-                {
-                  badge: "🏢 Paiement fournisseur international",
-                  title: "Entrepreneur RCA, fournisseur asiatique ou européen",
-                  desc: "Virement bancaire SWIFT vers fournisseur, montage du dossier de justification des fonds, traçabilité complète pour les obligations fiscales et bancaires de l'entreprise.",
-                  result:
-                    "Résultat : fournisseur payé dans les délais, dossier carré côté banque RCA et fiscalité.",
-                },
-              ].map((cas) => (
+              {CAS.map((cas) => (
                 <article
                   key={cas.title}
                   className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-7 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
@@ -838,19 +764,17 @@ export default function TransfertPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Engagement
+                {t("engagement_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Aucune marge cachée,{" "}
+                {t("engagement_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  aucune promesse impossible
+                  {t("engagement_title_highlight")}
                 </span>
-                .
+                {t("engagement_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Les frais que nous appliquons correspondent aux tarifs
-                opérateurs plus une commission de service annoncée à
-                l&apos;avance. Aucune marge dissimulée dans les taux de change.
+                {t("engagement_subtitle")}
               </p>
             </div>
 
@@ -862,14 +786,10 @@ export default function TransfertPage() {
                 />
                 <div className="relative">
                   <span className="inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-rose-700">
-                    Ce que nous ne pouvons pas
+                    {t("engagement_no_title")}
                   </span>
                   <ul className="mt-4 space-y-3">
-                    {[
-                      "Effectuer un transfert hors traçabilité ou anonyme",
-                      "Garantir un délai inférieur à celui de l'opérateur",
-                      "Contourner un plafond ou un blocage réglementaire",
-                    ].map((item, i) => (
+                    {ENGAGEMENT_NO.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -889,15 +809,10 @@ export default function TransfertPage() {
                 />
                 <div className="relative">
                   <span className="inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-700">
-                    Ce que nous garantissons
+                    {t("engagement_yes_title")}
                   </span>
                   <ul className="mt-4 space-y-3">
-                    {[
-                      "Un devis clair avec frais et taux annoncés avant opération",
-                      "Le canal le plus adapté à votre cas, pas le plus rentable pour nous",
-                      "Un suivi actif jusqu'à la confirmation de réception",
-                      "Une intervention immédiate auprès de l'opérateur en cas d'incident",
-                    ].map((item, i) => (
+                    {ENGAGEMENT_YES.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -924,45 +839,22 @@ export default function TransfertPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Cadre tarifaire
+                {t("tarif_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Une transparence économique complète.
+                {t("tarif_title")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Vous savez ce que ça coûte avant que l&apos;opération soit
-                exécutée.
+                {t("tarif_subtitle")}
               </p>
             </div>
 
             <div className="grid gap-5 sm:grid-cols-3">
-              {[
-                {
-                  icon: Search,
-                  iconBg:
-                    "bg-gradient-to-br from-emerald-500 to-emerald-600",
-                  title: "Devis initial",
-                  desc: "Gratuit. Frais opérateur, commission Nexus et taux de change clairement détaillés.",
-                },
-                {
-                  icon: ClipboardCheck,
-                  iconBg:
-                    "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700",
-                  title: "Frais opérateurs",
-                  desc: "Western Union, MoneyGram, banques, mobile money — tarifs réels, sans majoration cachée.",
-                },
-                {
-                  icon: Wallet,
-                  iconBg:
-                    "bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900",
-                  title: "Commission Nexus",
-                  desc: "Service, conseil et suivi. Montant fixe communiqué dès le devis. Aucune surprise.",
-                },
-              ].map((tarif) => {
+              {TARIFS.map((tarif) => {
                 const Icon = tarif.icon;
                 return (
                   <article
-                    key={tarif.title}
+                    key={tarif.key}
                     className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
                   >
                     <div
@@ -976,10 +868,10 @@ export default function TransfertPage() {
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="mt-4 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                        {tarif.title}
+                        {t(`${tarif.key}_title`)}
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {tarif.desc}
+                        {t(`${tarif.key}_desc`)}
                       </p>
                     </div>
                   </article>
@@ -1015,17 +907,15 @@ export default function TransfertPage() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
               </span>
-              Lancer le transfert
+              {t("cta_final_eyebrow")}
             </span>
 
             <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-              Demandez votre devis avec frais et délai garantis.
+              {t("cta_final_title")}
             </h2>
 
             <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              Réponse rapide d&apos;un conseiller avec le canal recommandé, les
-              frais exacts et le délai annoncé. Soumettez votre demande pour
-              recevoir un devis sous 24 heures ouvrées.
+              {t("cta_final_subtitle")}
             </p>
 
             <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
@@ -1038,7 +928,7 @@ export default function TransfertPage() {
                   className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
                 />
                 <FileText className="h-4 w-4" />
-                Soumettre ma demande
+                {t("cta_final_primary")}
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
               </Link>
               <Link
@@ -1046,36 +936,34 @@ export default function TransfertPage() {
                 className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
               >
                 <Calendar className="h-4 w-4" />
-                Prendre rendez-vous
+                {t("cta_final_secondary")}
               </Link>
             </div>
 
             <p className="mt-8 text-xs text-white/70">
-              Une question avant de commencer ?{" "}
+              {t("cta_final_question_before")}
               <a
-                href={whatsappLink(
-                  "Bonjour Nexus, j'ai une question sur un transfert d'argent."
-                )}
+                href={whatsappLink(t("cta_final_wa_msg"))}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1.5 font-bold text-nexus-orange-300 underline-offset-4 hover:underline"
               >
                 <MessageCircle className="h-3.5 w-3.5" />
-                Contactez-nous sur WhatsApp
+                {t("cta_final_question_link")}
               </a>
             </p>
 
             <div className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[11px] uppercase tracking-[0.18em] text-white/50">
               <span className="flex items-center gap-1.5">
                 <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-300" />
-                Devis gratuit
+                {t("cta_final_foot1")}
               </span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
-              <span>Frais annoncés</span>
+              <span>{t("cta_final_foot2")}</span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
-              <span>Suivi réception</span>
+              <span>{t("cta_final_foot3")}</span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
-              <span>Traçabilité complète</span>
+              <span>{t("cta_final_foot4")}</span>
             </div>
           </div>
         </section>
