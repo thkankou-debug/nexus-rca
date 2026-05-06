@@ -18,49 +18,92 @@ const STATS = [
   { value: "0 FCFA", label: "Étude initiale" },
 ];
 
+const DOT_GRID_DARK: React.CSSProperties = {
+  backgroundImage:
+    "radial-gradient(circle at center, rgba(255,255,255,0.06) 1px, transparent 1px)",
+  backgroundSize: "28px 28px",
+};
+
 export default function ServicesPage() {
   return (
     <>
       <Navbar />
       <main>
-        {/* HERO ─────────────────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-nexus-blue-950 pt-40 pb-24 text-white">
-          <div className="absolute inset-0 bg-mesh-gradient opacity-50" />
-          <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-nexus-orange-500/30 blur-3xl" />
-          <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-nexus-blue-500/30 blur-3xl" />
-          <div className="grain pointer-events-none absolute inset-0 opacity-20" />
+        {/* HERO Premium tech ─────────────────────────────────────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 pt-28 pb-20 text-white sm:pt-32 sm:pb-24 lg:pt-40 lg:pb-28">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
+            style={DOT_GRID_DARK}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-24 -top-24 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -bottom-32 -left-24 h-[36rem] w-[36rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+          />
 
-          <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-overline text-nexus-orange-300 backdrop-blur">
-              <Sparkles className="h-3.5 w-3.5" />
+          <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md transition-all duration-300 hover:border-nexus-orange-500/40 hover:bg-white/10">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+              </span>
               Nos services
-            </div>
+            </span>
 
-            <h1
-              className="font-display text-display-xl text-white lg:text-display-2xl"
-              style={{ paddingBottom: "0.15em" }}
-            >
+            <h1 className="mt-6 max-w-3xl font-display text-3xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
               Une agence,{" "}
-              <span className="text-gradient-orange">toutes les portes.</span>
+              <span className="relative inline-block">
+                <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  toutes les portes.
+                </span>
+                <span
+                  aria-hidden
+                  className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                />
+              </span>
             </h1>
 
-            <p className="mt-6 max-w-2xl text-body-lg text-slate-300">
+            <p className="mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
               Dix expertises Nexus RCA — du dossier visa au financement
-              d'entreprise, en passant par les études au Canada, les transferts
-              et la digitalisation. Préparé à Bangui, opérationnel partout.
+              d&apos;entreprise, en passant par les études au Canada, les
+              transferts et la digitalisation. Préparé à Bangui, opérationnel
+              partout.
             </p>
 
-            {/* Stats strip */}
-            <div className="mt-16 grid max-w-3xl grid-cols-3 gap-6 border-t border-white/10 pt-10">
-              {STATS.map((s) => (
-                <div key={s.label}>
-                  <div className="font-display text-display-sm text-nexus-orange-400">
-                    {s.value}
+            {/* Stats Premium tech */}
+            <div className="mt-10 grid max-w-2xl grid-cols-1 gap-3 sm:mt-12 sm:grid-cols-3">
+              {STATS.map((s, i) => (
+                <article
+                  key={s.label}
+                  className={`group/stat relative overflow-hidden rounded-2xl border bg-white/[0.04] px-5 py-4 backdrop-blur-md transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/[0.07] ${
+                    i === 0
+                      ? "border-nexus-orange-400/30 hover:border-nexus-orange-400/60"
+                      : "border-white/10 hover:border-white/25"
+                  }`}
+                >
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover/stat:bg-nexus-orange-500/20"
+                  />
+                  <div className="relative">
+                    <p className="font-display text-2xl font-bold leading-none text-white sm:text-3xl">
+                      <span className="bg-gradient-to-r from-nexus-orange-300 to-nexus-orange-500 bg-clip-text text-transparent">
+                        {s.value}
+                      </span>
+                    </p>
+                    <p className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                      {s.label}
+                    </p>
                   </div>
-                  <div className="mt-1 text-overline text-slate-400">
-                    {s.label}
-                  </div>
-                </div>
+                </article>
               ))}
             </div>
           </div>
