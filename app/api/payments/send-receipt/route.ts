@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { Resend } from "resend";
+import { sendWhatsApp } from "@/lib/whatsapp";
+import { tplPaymentReceived } from "@/lib/whatsapp-templates";
 
 export const dynamic = "force-dynamic";
 
@@ -126,6 +128,20 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: "Erreur d'envoi : " + error.message },
         { status: 500 }
+      );
+    }
+
+    // ─── WHATSAPP — confirmation paiement au client (best-effort) ────────
+    if (payment.client_telephone) {
+      void sendWhatsApp(
+        payment.client_telephone,
+        tplPaymentReceived({
+          nom: payment.client_nom,
+          montant: montantRecu,
+          devise: payment.devise,
+          reference,
+        }),
+        "payment-received"
       );
     }
 

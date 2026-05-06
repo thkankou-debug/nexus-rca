@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createNotification } from "@/lib/notifications";
+import { sendWhatsApp } from "@/lib/whatsapp";
+import { tplRdvConfirmation } from "@/lib/whatsapp-templates";
 
 // ============================================================================
 // API : POST /api/appointments/create
@@ -230,6 +232,21 @@ export async function POST(request: NextRequest) {
         `Nouveau RDV affecté · ${newAppointment.reference}`,
         `${clientNom} — ${body.service_type} le ${body.rdv_date} à ${body.rdv_heure}`,
         "/dashboard/agent/rdv"
+      );
+    }
+
+    // ─── WHATSAPP — confirmation RDV au client (best-effort silencieux) ──
+    if (clientTelephone) {
+      void sendWhatsApp(
+        clientTelephone,
+        tplRdvConfirmation({
+          nom: clientNom,
+          service: body.service_type,
+          date: body.rdv_date,
+          heure: body.rdv_heure,
+          reference: newAppointment.reference,
+        }),
+        "rdv-confirmation"
       );
     }
 

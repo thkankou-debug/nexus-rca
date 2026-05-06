@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient as createSsrClient } from "@/lib/supabase/server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { sendWhatsApp } from "@/lib/whatsapp";
+import { tplVisaStatusUpdate } from "@/lib/whatsapp-templates";
 
 export const dynamic = "force-dynamic";
 
@@ -115,14 +117,30 @@ export async function PATCH(
       return NextResponse.json({ error: "Statut invalide" }, { status: 400 });
     }
 
-    const { error } = await supabase
+    const { data: updated, error } = await supabase
       .from("visa_express_requests")
       .update({ status })
-      .eq("id", params.id);
+      .eq("id", params.id)
+      .select("nom_complet, whatsapp, pays_destination, reference")
+      .single();
 
     if (error) {
       console.error("[VISA_EXPRESS PATCH] error:", error.message);
       return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    // ─── WHATSAPP — notification client changement statut (best-effort) ──
+    if (updated?.whatsapp) {
+      void sendWhatsApp(
+        updated.whatsapp,
+        tplVisaStatusUpdate({
+          nom: updated.nom_complet,
+          pays: updated.pays_destination,
+          reference: updated.reference,
+          status,
+        }),
+        "visa-status-update"
+      );
     }
 
     return NextResponse.json({ success: true, status });

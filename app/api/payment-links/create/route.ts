@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { sendWhatsApp } from "@/lib/whatsapp";
+import { tplPaymentLinkCreated } from "@/lib/whatsapp-templates";
 
 // ============================================================================
 // API : POST /api/payment-links/create
@@ -154,6 +156,22 @@ export async function POST(request: NextRequest) {
     console.log(
       `[NEXUS PAY-LINK] Nouveau lien créé : ${newLink.reference} - ${body.client_nom} - ${body.montant} ${devise}`
     );
+
+    // ─── WHATSAPP — lien paiement au client (best-effort silencieux) ─────
+    if (body.client_telephone?.trim()) {
+      void sendWhatsApp(
+        body.client_telephone.trim(),
+        tplPaymentLinkCreated({
+          nom: body.client_nom.trim(),
+          montant: Number(body.montant).toLocaleString("fr-FR"),
+          devise,
+          service: body.service.trim(),
+          reference: newLink.reference,
+          url: publicUrl,
+        }),
+        "payment-link-created"
+      );
+    }
 
     return NextResponse.json(
       {

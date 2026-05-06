@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { sendWhatsAppMulti } from "@/lib/whatsapp";
+import { tplVisaExpressStaff } from "@/lib/whatsapp-templates";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
@@ -285,6 +287,27 @@ export async function POST(request: NextRequest): Promise<NextResponse<SubmitRes
     }
 
     console.log(`[VISA_EXPRESS] ✅ ${reference}`);
+
+    // ─── WHATSAPP — alerte staff (best-effort silencieux) ────────────────
+    const staffWhatsApp = (
+      process.env.WHATSAPP_STAFF_RECIPIENTS || "+23673269692"
+    )
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    void sendWhatsAppMulti(
+      staffWhatsApp,
+      tplVisaExpressStaff({
+        nomClient: nom,
+        pays,
+        typeVisa: type_visa,
+        urgence,
+        reference,
+        whatsappClient: whatsapp,
+      }),
+      "visa-express-staff"
+    );
+
     return NextResponse.json({ success: true, reference });
   } catch (err) {
     console.error("[VISA_EXPRESS] EXCEPTION:", err);
