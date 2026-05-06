@@ -1,7 +1,4 @@
-"use client";
-
-import { motion } from "framer-motion";
-import { MessageSquare, FileCheck, Rocket, CheckCircle2 } from "lucide-react";
+import { CheckCircle2, FileCheck, MessageSquare, Rocket } from "lucide-react";
 
 const STEPS = [
   {
@@ -26,53 +23,74 @@ const STEPS = [
   },
 ];
 
+const DOT_GRID_LIGHT_SUBTLE: React.CSSProperties = {
+  backgroundImage:
+    "radial-gradient(circle at center, rgba(12,28,64,0.04) 1px, transparent 1px)",
+  backgroundSize: "32px 32px",
+};
+
 export function HowItWorks() {
   return (
-    <section className="relative overflow-hidden bg-white py-24 lg:py-32">
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mx-auto mb-16 max-w-3xl text-center"
-        >
-          <div className="mb-4 inline-block rounded-full bg-nexus-blue-100 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-nexus-blue-800">
-            Comment ça marche
-          </div>
-          <h2 className="font-display text-4xl font-bold text-nexus-blue-950 sm:text-5xl">
-            Un processus <span className="text-gradient-nexus">clair</span>, des résultats concrets.
-          </h2>
-        </motion.div>
+    <section className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/40 to-white py-20 sm:py-24 lg:py-28">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-30"
+        style={DOT_GRID_LIGHT_SUBTLE}
+      />
 
-        <div className="relative grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {/* connector line */}
-          <div className="absolute left-0 right-0 top-10 hidden h-px bg-gradient-to-r from-transparent via-nexus-orange-300 to-transparent lg:block" />
+      <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
+        <div className="mx-auto mb-14 max-w-2xl text-center">
+          <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+            Comment ça marche
+          </span>
+          <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
+            Un processus clair, des résultats concrets.
+          </h2>
+        </div>
+
+        <div className="relative grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          {/* Connector line desktop */}
+          <div
+            aria-hidden
+            className="absolute inset-x-0 top-6 hidden h-px bg-gradient-to-r from-transparent via-nexus-orange-300/60 to-transparent lg:block"
+          />
 
           {STEPS.map((step, i) => {
             const Icon = step.icon;
             return (
-              <motion.div
+              <article
                 key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.15 }}
-                className="relative"
+                className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
               >
-                <div className="relative z-10 mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-800 to-nexus-orange-500 shadow-xl">
-                  <Icon className="h-9 w-9 text-white" />
-                  <span className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white text-sm font-bold text-nexus-blue-900 shadow">
-                    {i + 1}
-                  </span>
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
+                />
+
+                <div className="relative">
+                  {/* Numéro + Icône */}
+                  <div className="flex items-center gap-3">
+                    <div className="relative">
+                      <div
+                        aria-hidden
+                        className="absolute inset-0 rounded-2xl bg-nexus-orange-500/30 opacity-50 blur-md transition-all duration-500 group-hover:opacity-90"
+                      />
+                      <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_24px_-8px_rgba(255,102,0,0.5)] transition-transform duration-300 ease-out group-hover:scale-105">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                    </div>
+                    <span className="font-display text-3xl font-bold tabular-nums text-slate-200 transition-colors duration-300 group-hover:text-nexus-orange-300">
+                      0{i + 1}
+                    </span>
+                  </div>
+                  <h3 className="mt-5 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
+                    {step.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                    {step.desc}
+                  </p>
                 </div>
-                <h3 className="mb-2 text-center font-display text-lg font-bold text-nexus-blue-950">
-                  {step.title}
-                </h3>
-                <p className="text-center text-sm leading-relaxed text-slate-600">
-                  {step.desc}
-                </p>
-              </motion.div>
+              </article>
             );
           })}
         </div>

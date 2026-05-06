@@ -1,16 +1,13 @@
-"use client";
-
-import { motion } from "framer-motion";
-import { Quote, Star, CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Quote, Star } from "lucide-react";
 
 interface Testimonial {
   name: string;
   role: string;
   text: string;
   rating: number;
-  /** Initiales affichees dans le cercle d avatar (ex: "AM", "JN") */
+  /** Initiales affichees dans le cercle d'avatar (ex: "AM", "JN") */
   initials: string;
-  /** Couleurs du dégradé de l avatar */
+  /** Couleurs du dégradé de l'avatar */
   gradient: "orange" | "blue" | "purple";
 }
 
@@ -53,102 +50,106 @@ const RING_CLASSES: Record<Testimonial["gradient"], string> = {
   purple: "ring-purple-500/40",
 };
 
+const DOT_GRID_DARK: React.CSSProperties = {
+  backgroundImage:
+    "radial-gradient(circle at center, rgba(255,255,255,0.06) 1px, transparent 1px)",
+  backgroundSize: "28px 28px",
+};
+
 export function Testimonials() {
   return (
-    <section className="relative overflow-hidden bg-nexus-blue-950 py-24 lg:py-32 text-white">
-      <div className="absolute inset-0 bg-mesh-gradient opacity-30" />
-      <div className="absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-nexus-orange-500/10 blur-3xl" />
-      <div className="absolute -right-32 bottom-1/4 h-96 w-96 rounded-full bg-nexus-blue-500/10 blur-3xl" />
+    <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24 lg:py-28">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.5]"
+        style={DOT_GRID_DARK}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-32 top-1/4 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/12 blur-[120px]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-32 bottom-1/4 h-[28rem] w-[28rem] rounded-full bg-nexus-blue-500/15 blur-[120px]"
+      />
 
-      <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mx-auto mb-16 max-w-3xl text-center"
-        >
-          <div className="mb-4 inline-block rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-nexus-orange-300">
+      <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
+        <div className="mx-auto mb-14 max-w-2xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+            <Star className="h-3 w-3 fill-nexus-orange-400 text-nexus-orange-400" />
             Ils nous font confiance
-          </div>
-          <h2 className="font-display text-4xl font-bold sm:text-5xl">
-            Des histoires vraies,{" "}
-            <span className="text-gradient-orange">des résultats concrets.</span>
+          </span>
+          <h2 className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
+            Des histoires vraies, des résultats concrets.
           </h2>
-          <p className="mt-5 text-base leading-relaxed text-white/70 sm:text-lg">
+          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
             Des particuliers et entrepreneurs accompagnés sur leurs projets les
             plus importants.
           </p>
-        </motion.div>
+        </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-5 md:grid-cols-3">
           {TESTIMONIALS.map((t, i) => (
-            <motion.div
+            <article
               key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.15 }}
-              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.07] to-white/[0.02] p-8 backdrop-blur-sm transition-all hover:border-nexus-orange-400/30 hover:bg-white/[0.08]"
+              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.07] to-white/[0.02] p-7 backdrop-blur-md transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-400/40 hover:bg-white/[0.08] sm:p-8"
             >
-              {/* Quote decoratif */}
+              {/* Glow corner au hover */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/20"
+              />
+              {/* Quote décoratif */}
               <Quote className="absolute right-5 top-5 h-10 w-10 text-nexus-orange-400/20" />
 
-              {/* Etoiles */}
-              <div className="mb-5 flex gap-0.5">
-                {Array.from({ length: t.rating }).map((_, idx) => (
-                  <Star
-                    key={idx}
-                    className="h-4 w-4 fill-nexus-orange-400 text-nexus-orange-400"
-                  />
-                ))}
-              </div>
-
-              {/* Texte du temoignage */}
-              <p className="mb-7 text-base leading-relaxed text-slate-200">
-                « {t.text} »
-              </p>
-
-              {/* Auteur avec avatar a initiales */}
-              <div className="flex items-center gap-3 border-t border-white/10 pt-5">
-                {/* Avatar avec initiales — cercle degrade premium */}
-                <div
-                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${GRADIENT_CLASSES[t.gradient]} font-display text-base font-bold text-white shadow-lg ring-2 ${RING_CLASSES[t.gradient]}`}
-                >
-                  {t.initials}
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-1.5">
-                    <span className="truncate font-semibold text-white">
-                      {t.name}
-                    </span>
-                    {/* Badge verifie discret */}
-                    <CheckCircle2
-                      className="h-3.5 w-3.5 shrink-0 text-nexus-orange-400"
-                      aria-label="Témoignage authentique"
+              <div className="relative">
+                {/* Étoiles */}
+                <div className="mb-5 flex gap-0.5">
+                  {Array.from({ length: t.rating }).map((_, idx) => (
+                    <Star
+                      key={idx}
+                      className="h-4 w-4 fill-nexus-orange-400 text-nexus-orange-400"
                     />
+                  ))}
+                </div>
+
+                {/* Texte du témoignage */}
+                <p className="mb-7 text-sm leading-relaxed text-slate-200 sm:text-base">
+                  « {t.text} »
+                </p>
+
+                {/* Auteur avec avatar à initiales */}
+                <div className="flex items-center gap-3 border-t border-white/10 pt-5">
+                  <div
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${GRADIENT_CLASSES[t.gradient]} font-display text-sm font-bold text-white shadow-lg ring-2 ${RING_CLASSES[t.gradient]} transition-transform duration-300 ease-out group-hover:scale-105`}
+                  >
+                    {t.initials}
                   </div>
-                  <div className="truncate text-xs text-slate-400">
-                    {t.role}
+
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="truncate font-bold text-white">
+                        {t.name}
+                      </span>
+                      <CheckCircle2
+                        className="h-3.5 w-3.5 shrink-0 text-nexus-orange-400"
+                        aria-label="Témoignage authentique"
+                      />
+                    </div>
+                    <div className="truncate text-xs text-slate-400">
+                      {t.role}
+                    </div>
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </article>
           ))}
         </div>
 
-        {/* Note discrete sur l authenticite */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.6, duration: 0.6 }}
-          className="mt-10 text-center text-xs text-slate-500"
-        >
+        <p className="mt-10 text-center text-xs text-slate-500">
           Témoignages authentiques. Noms anonymisés pour préserver la
           confidentialité de nos clients.
-        </motion.p>
+        </p>
       </div>
     </section>
   );
