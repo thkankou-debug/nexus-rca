@@ -9,7 +9,6 @@ import {
   Wrench,
   DollarSign,
   Award,
-  Target,
   CheckCircle2,
   ArrowRight,
   AlertTriangle,
@@ -17,7 +16,6 @@ import {
   ClipboardCheck,
   FileText,
   Plane,
-  Eye,
   Sparkles,
   TrendingUp,
   Calendar,
@@ -25,6 +23,7 @@ import {
   XCircle,
   Wallet,
   Check,
+  ShieldCheck,
 } from "lucide-react";
 import { whatsappLink } from "@/lib/utils";
 
@@ -32,6 +31,23 @@ export const metadata = {
   title: "Études au Canada | Nexus RCA — Bangui",
   description:
     "L'expertise centrafricaine pour vos études au Canada. Nous étudions chaque dossier avec rigueur avant d'accepter de l'accompagner. Méthode en quatre étapes du diagnostic au permis d'études.",
+};
+
+// ─── Patterns dot grid ──────────────────────────────────────────────────────
+const DOT_GRID_DARK: React.CSSProperties = {
+  backgroundImage:
+    "radial-gradient(circle at center, rgba(255,255,255,0.06) 1px, transparent 1px)",
+  backgroundSize: "28px 28px",
+};
+const DOT_GRID_LIGHT: React.CSSProperties = {
+  backgroundImage:
+    "radial-gradient(circle at center, rgba(12,28,64,0.05) 1px, transparent 1px)",
+  backgroundSize: "28px 28px",
+};
+const DOT_GRID_LIGHT_SUBTLE: React.CSSProperties = {
+  backgroundImage:
+    "radial-gradient(circle at center, rgba(12,28,64,0.04) 1px, transparent 1px)",
+  backgroundSize: "32px 32px",
 };
 
 // ─── Données ────────────────────────────────────────────────────────────────
@@ -146,55 +162,82 @@ export default function BoursesPage() {
     <>
       <Navbar />
       <main>
-        {/* 1. HERO INSTITUTIONNEL ─────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-nexus-hero-institutional pt-32 pb-20 text-white lg:pt-36 lg:pb-24">
-          <div className="absolute inset-0 bg-mesh-gradient-subtle" />
-          <div className="grain pointer-events-none absolute inset-0 opacity-15" />
+        {/* 1. HERO Premium tech ────────────────────────────────────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 pt-28 pb-20 text-white sm:pt-32 lg:pt-40 lg:pb-24">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
+            style={DOT_GRID_DARK}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -bottom-32 -left-32 h-[36rem] w-[36rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+          />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-overline text-nexus-orange-300 backdrop-blur">
-                <GraduationCap className="h-3.5 w-3.5" />
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md transition-all duration-300 hover:border-nexus-orange-500/40 hover:bg-white/10">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                </span>
+                <GraduationCap className="h-3 w-3" />
                 Service études Canada
-              </div>
+              </span>
 
-              <h1
-                className="font-display text-display-xl text-white lg:text-display-2xl"
-                style={{ paddingBottom: "0.15em" }}
-              >
+              <h1 className="mx-auto mt-6 max-w-3xl font-display text-3xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Identification et{" "}
-                <span className="text-gradient-orange">
-                  positionnement stratégique
+                <span className="relative inline-block">
+                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    positionnement stratégique
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  />
                 </span>{" "}
                 sur les financements académiques disponibles.
               </h1>
 
-              <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">
-                Nous étudions chaque dossier avec rigueur avant d'accepter de
-                l'accompagner. Si votre profil correspond, nous le construisons
-                selon les standards exigés par les établissements canadiens et
-                menons votre projet jusqu'à l'obtention du permis d'études.
+              <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
+                Nous étudions chaque dossier avec rigueur avant d&apos;accepter
+                de l&apos;accompagner. Si votre profil correspond, nous le
+                construisons selon les standards exigés par les établissements
+                canadiens et menons votre projet jusqu&apos;à l&apos;obtention
+                du permis d&apos;études.
               </p>
 
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
+              <div className="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
                 <Link
                   href="/services/bourses/demarrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
+                  className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
                 >
-                  <FileText className="h-5 w-5" />
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
+                  />
+                  <FileText className="h-4 w-4" />
                   Soumettre ma demande
-                  <ArrowRight className="h-5 w-5" />
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
                 </Link>
                 <Link
                   href="/rendez-vous?service=bourses"
-                  className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/30 bg-white/5 px-8 py-4 text-body font-semibold text-white backdrop-blur transition hover:bg-white/10"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
                 >
-                  <Calendar className="h-5 w-5" />
+                  <Calendar className="h-4 w-4" />
                   Prendre rendez-vous
                 </Link>
               </div>
 
-              <p className="mt-5 text-caption text-slate-400">
+              <p className="mt-6 text-xs text-slate-400">
                 Étude initiale gratuite · Bilan de faisabilité honnête · Une
                 question ?{" "}
                 <a
@@ -203,62 +246,124 @@ export default function BoursesPage() {
                   )}
                   target="_blank"
                   rel="noreferrer"
-                  className="font-semibold text-nexus-orange-300 underline-offset-4 hover:underline"
+                  className="font-bold text-nexus-orange-300 underline-offset-4 hover:underline"
                 >
                   contactez-nous sur WhatsApp
                 </a>
               </p>
             </div>
 
-            <div className="mx-auto mt-16 grid max-w-3xl grid-cols-3 gap-6 border-t border-white/10 pt-10">
-              {STATS.map((s) => (
-                <div key={s.label} className="text-center">
-                  <div className="font-display text-display-sm text-nexus-orange-400">
-                    {s.value}
+            {/* Stats Premium tech */}
+            <div className="mx-auto mt-12 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3">
+              {STATS.map((s, i) => (
+                <article
+                  key={s.label}
+                  className={`group/stat relative overflow-hidden rounded-2xl border bg-white/[0.04] px-5 py-4 backdrop-blur-md transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/[0.07] ${
+                    i === 0
+                      ? "border-nexus-orange-400/30 hover:border-nexus-orange-400/60"
+                      : "border-white/10 hover:border-white/25"
+                  }`}
+                >
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover/stat:bg-nexus-orange-500/20"
+                  />
+                  <div className="relative">
+                    <p className="font-display text-xl font-bold leading-none text-white sm:text-2xl">
+                      <span className="bg-gradient-to-r from-nexus-orange-300 to-nexus-orange-500 bg-clip-text text-transparent">
+                        {s.value}
+                      </span>
+                    </p>
+                    <p className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                      {s.label}
+                    </p>
                   </div>
-                  <div className="mt-1 text-overline text-slate-400">
-                    {s.label}
-                  </div>
-                </div>
+                </article>
               ))}
             </div>
           </div>
         </section>
 
         {/* 1.5 INTRO COURTE ─────────────────────────────────────── */}
-        <section className="border-b border-line bg-surface py-12 lg:py-16">
-          <div className="mx-auto max-w-4xl px-4 text-center lg:px-8">
-            <p className="font-display text-display-sm text-ink lg:text-display-md">
+        <section className="relative overflow-hidden bg-white py-16 lg:py-20">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-25"
+            style={DOT_GRID_LIGHT_SUBTLE}
+          />
+          <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
+            <p className="font-display text-2xl font-bold leading-snug tracking-tight text-nexus-blue-950 sm:text-3xl lg:text-4xl">
               Une bourse n&apos;est pas une chance. C&apos;est{" "}
-              <span className="text-brand">une cible</span>. Encore faut-il viser juste, au bon moment, avec le bon dossier.
+              <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
+                une cible
+              </span>
+              . Encore faut-il viser juste, au bon moment, avec le bon dossier.
             </p>
           </div>
         </section>
 
         {/* 1.6 CE QUE NOUS FAISONS ─────────────────────────────── */}
-        <section className="bg-surface py-20">
-          <div className="mx-auto max-w-6xl px-4 lg:px-8">
-            <div className="mb-12 grid gap-10 lg:grid-cols-[1fr_2fr] lg:gap-16 lg:items-start">
+        <section className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/40 to-white py-20 sm:py-24">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-30"
+            style={DOT_GRID_LIGHT_SUBTLE}
+          />
+
+          <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="mb-12 grid gap-10 lg:grid-cols-[1fr_2fr] lg:items-start lg:gap-16">
               <div>
-                <p className="text-overline text-brand">Périmètre</p>
-                <h2 className="mt-3 font-display text-display-md text-ink">
-                  Ce que nous faisons
+                <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+                  Périmètre
+                </span>
+                <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
+                  Ce que nous faisons.
                 </h2>
-                <p className="mt-4 text-body-sm text-ink-muted">
-                  Quatre prestations pour transformer un projet en candidature qualifiée.
+                <p className="mt-4 text-sm leading-relaxed text-slate-600">
+                  Quatre prestations pour transformer un projet en candidature
+                  qualifiée.
                 </p>
               </div>
-              <ul className="space-y-5">
+
+              <ul className="space-y-4">
                 {[
-                  { title: "Cartographie des financements éligibles", desc: "Inventaire des bourses gouvernementales, des programmes ciblés et des aides au mérite ouvertes à votre profil." },
-                  { title: "Positionnement stratégique du profil", desc: "Sélection des candidatures à fort potentiel selon vos résultats, votre projet et les critères d'éligibilité." },
-                  { title: "Montage des dossiers ciblés", desc: "Lettre de motivation, projet professionnel et pièces justificatives adaptés à chaque organisme bailleur." },
-                  { title: "Suivi des résultats et plan B", desc: "Réponse aux compléments demandés, gestion du calendrier, alternatives documentées si refus." },
+                  {
+                    title: "Cartographie des financements éligibles",
+                    desc: "Inventaire des bourses gouvernementales, des programmes ciblés et des aides au mérite ouvertes à votre profil.",
+                  },
+                  {
+                    title: "Positionnement stratégique du profil",
+                    desc: "Sélection des candidatures à fort potentiel selon vos résultats, votre projet et les critères d'éligibilité.",
+                  },
+                  {
+                    title: "Montage des dossiers ciblés",
+                    desc: "Lettre de motivation, projet professionnel et pièces justificatives adaptés à chaque organisme bailleur.",
+                  },
+                  {
+                    title: "Suivi des résultats et plan B",
+                    desc: "Réponse aux compléments demandés, gestion du calendrier, alternatives documentées si refus.",
+                  },
                 ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-4 border-l-2 border-line pl-5 py-1">
-                    <div>
-                      <h3 className="font-display text-headline text-ink">{item.title}</h3>
-                      <p className="mt-1 text-body-sm text-ink-muted">{item.desc}</p>
+                  <li
+                    key={i}
+                    className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_16px_36px_-16px_rgba(255,102,0,0.20)]"
+                  >
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/12"
+                    />
+                    <div className="relative flex items-start gap-3">
+                      <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-sm transition-transform duration-300 ease-out group-hover:scale-110">
+                        <Check className="h-3.5 w-3.5" strokeWidth={3} />
+                      </div>
+                      <div>
+                        <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950">
+                          {item.title}
+                        </h3>
+                        <p className="mt-1.5 text-sm leading-relaxed text-slate-600">
+                          {item.desc}
+                        </p>
+                      </div>
                     </div>
                   </li>
                 ))}
@@ -268,160 +373,250 @@ export default function BoursesPage() {
         </section>
 
         {/* 1.7 CE QUE VOUS OBTENEZ ──────────────────────────────── */}
-        <section className="bg-surface-sunken py-20">
-          <div className="mx-auto max-w-6xl px-4 lg:px-8">
-            <div className="mx-auto mb-12 max-w-3xl text-center">
-              <p className="text-overline text-brand">Résultat</p>
-              <h2 className="mt-3 font-display text-display-md text-ink">Ce que vous obtenez</h2>
-              <p className="mt-4 text-body-lg text-ink-muted">
+        <section className="relative overflow-hidden bg-slate-50 py-20 sm:py-24">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-50"
+            style={DOT_GRID_LIGHT}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-32 top-32 h-96 w-96 rounded-full bg-nexus-orange-500/8 blur-[100px]"
+          />
+
+          <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="mx-auto mb-12 max-w-2xl text-center">
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+                Résultat
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
+                Ce que vous obtenez.
+              </h2>
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
                 Pas de promesse de bourse — la décision appartient au bailleur.
                 En revanche, voici ce que nous structurons concrètement.
               </p>
             </div>
+
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {[
-                { title: "Stratégie financière claire", desc: "Vous savez qui demande quoi, à quelle date, et avec quelle pièce." },
-                { title: "Candidatures qualifiées", desc: "Pas d'envoi de masse. Chaque dossier est ciblé sur un bailleur précis." },
-                { title: "Maximisation des chances", desc: "Votre dossier valorise les angles qui comptent pour le bailleur." },
-                { title: "Plan B documenté", desc: "Si la bourse principale échoue, des alternatives identifiées en amont." },
+                {
+                  title: "Stratégie financière claire",
+                  desc: "Vous savez qui demande quoi, à quelle date, et avec quelle pièce.",
+                },
+                {
+                  title: "Candidatures qualifiées",
+                  desc: "Pas d'envoi de masse. Chaque dossier est ciblé sur un bailleur précis.",
+                },
+                {
+                  title: "Maximisation des chances",
+                  desc: "Votre dossier valorise les angles qui comptent pour le bailleur.",
+                },
+                {
+                  title: "Plan B documenté",
+                  desc: "Si la bourse principale échoue, des alternatives identifiées en amont.",
+                },
               ].map((item, i) => (
-                <div key={i} className="rounded-2xl border border-line bg-surface-elevated p-6">
-                  <h3 className="font-display text-headline text-ink">{item.title}</h3>
-                  <p className="mt-2 text-body-sm text-ink-muted">{item.desc}</p>
-                </div>
+                <article
+                  key={i}
+                  className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
+                >
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
+                  />
+                  <div className="relative">
+                    <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                      {item.desc}
+                    </p>
+                  </div>
+                </article>
               ))}
             </div>
           </div>
         </section>
 
         {/* 2. POUR QUI CE SERVICE EST CONÇU ────────────────────── */}
-        <section className="bg-surface py-20">
-          <div className="mx-auto max-w-5xl px-4 lg:px-8">
+        <section className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/40 to-white py-20 sm:py-24">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-30"
+            style={DOT_GRID_LIGHT_SUBTLE}
+          />
+
+          <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
-              <p className="text-overline text-brand">Sélectivité</p>
-              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Pour qui ce service est conçu
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+                Sélectivité
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
+                Pour qui ce service est conçu.
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
-                Nous n'accompagnons pas tous les profils. Cette transparence
-                fait partie de notre engagement professionnel.
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
+                Nous n&apos;accompagnons pas tous les profils. Cette
+                transparence fait partie de notre engagement professionnel.
               </p>
             </div>
 
             <div className="mt-12 grid gap-5 lg:grid-cols-2">
-              <div className="rounded-3xl border-2 border-emerald-200/60 bg-emerald-50/40 p-7 dark:border-emerald-500/20 dark:bg-emerald-500/5">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
-                    <CheckCircle2 className="h-5 w-5" />
+              <article className="group relative overflow-hidden rounded-3xl border-2 border-emerald-200/70 bg-gradient-to-br from-emerald-50/60 via-white to-emerald-50/30 p-7 shadow-[0_16px_36px_-16px_rgba(16,185,129,0.18)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-emerald-300/80 hover:shadow-[0_24px_48px_-18px_rgba(16,185,129,0.30)]">
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-emerald-400/0 blur-2xl transition-all duration-500 group-hover:bg-emerald-400/20"
+                />
+                <div className="relative">
+                  <div className="mb-4 flex items-center gap-3">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-sm transition-transform duration-300 ease-out group-hover:scale-105">
+                      <CheckCircle2 className="h-5 w-5" />
+                    </div>
+                    <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
+                      Ce service s&apos;adresse aux personnes
+                    </h3>
                   </div>
-                  <h3 className="font-display text-headline text-ink">
-                    Ce service s'adresse aux personnes
-                  </h3>
+                  <ul className="space-y-3">
+                    {POUR_QUI.oui.map((item, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
+                      >
+                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="space-y-3">
-                  {POUR_QUI.oui.map((item, i) => (
-                    <li
-                      key={i}
-                      className="flex items-start gap-3 text-body-sm text-ink"
-                    >
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              </article>
 
-              <div className="rounded-3xl border-2 border-rose-200/60 bg-rose-50/40 p-7 dark:border-rose-500/20 dark:bg-rose-500/5">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-rose-100 text-rose-600 dark:bg-rose-500/15 dark:text-rose-300">
-                    <XCircle className="h-5 w-5" />
+              <article className="group relative overflow-hidden rounded-3xl border-2 border-rose-200/70 bg-gradient-to-br from-rose-50/60 via-white to-rose-50/30 p-7 shadow-[0_16px_36px_-16px_rgba(244,63,94,0.16)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-rose-300/80 hover:shadow-[0_24px_48px_-18px_rgba(244,63,94,0.28)]">
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-rose-400/0 blur-2xl transition-all duration-500 group-hover:bg-rose-400/18"
+                />
+                <div className="relative">
+                  <div className="mb-4 flex items-center gap-3">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 to-rose-600 text-white shadow-sm transition-transform duration-300 ease-out group-hover:scale-105">
+                      <XCircle className="h-5 w-5" />
+                    </div>
+                    <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
+                      Ce service ne s&apos;adresse pas aux personnes
+                    </h3>
                   </div>
-                  <h3 className="font-display text-headline text-ink">
-                    Ce service ne s'adresse pas aux personnes
-                  </h3>
+                  <ul className="space-y-3">
+                    {POUR_QUI.non.map((item, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
+                      >
+                        <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="space-y-3">
-                  {POUR_QUI.non.map((item, i) => (
-                    <li
-                      key={i}
-                      className="flex items-start gap-3 text-body-sm text-ink"
-                    >
-                      <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              </article>
             </div>
           </div>
         </section>
 
         {/* 3. NOTRE MÉTHODOLOGIE ───────────────────────────────── */}
-        <section className="bg-surface-sunken py-20">
-          <div className="mx-auto max-w-6xl px-4 lg:px-8">
-            <div className="text-center">
-              <p className="text-overline text-brand">Notre méthodologie</p>
-              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Un parcours en quatre étapes documentées
+        <section className="relative overflow-hidden bg-slate-50 py-20 sm:py-24">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-50"
+            style={DOT_GRID_LIGHT}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -left-32 top-32 h-96 w-96 rounded-full bg-nexus-blue-500/8 blur-[100px]"
+          />
+
+          <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="mx-auto mb-12 max-w-2xl text-center">
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+                Notre méthodologie
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
+                Un parcours en{" "}
+                <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
+                  quatre étapes documentées
+                </span>
+                .
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
-                Du diagnostic académique jusqu'à votre arrivée au Canada,
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
+                Du diagnostic académique jusqu&apos;à votre arrivée au Canada,
                 chaque étape est documentée et communiquée.
               </p>
             </div>
 
-            <div className="mt-12 grid gap-5 lg:grid-cols-2">
+            <div className="grid gap-5 lg:grid-cols-2">
               {METHODOLOGIE.map((etape) => {
                 const Icon = etape.icon;
                 return (
-                  <div
+                  <article
                     key={etape.num}
-                    className="group flex items-start gap-5 rounded-3xl border border-line bg-surface-elevated p-7 shadow-elev-2 transition hover:border-brand/40 hover:shadow-elev-3"
+                    className="group relative flex items-start gap-4 overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)] sm:p-7"
                   >
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-100 to-nexus-blue-50 font-display text-xl font-bold text-nexus-blue-700 transition group-hover:from-brand-subtle group-hover:to-orange-50 group-hover:text-brand dark:from-blue-500/15 dark:to-blue-500/10 dark:text-blue-300">
-                      {etape.num}
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
+                    />
+                    <div className="relative shrink-0">
+                      <div
+                        aria-hidden
+                        className="absolute inset-0 rounded-2xl bg-nexus-orange-500/30 opacity-50 blur-md transition-all duration-500 group-hover:opacity-100"
+                      />
+                      <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 font-display text-base font-bold text-white shadow-[0_8px_24px_-8px_rgba(255,102,0,0.5)] transition-transform duration-300 ease-out group-hover:scale-105">
+                        {etape.num}
+                      </div>
                     </div>
-                    <div className="min-w-0 flex-1">
+                    <div className="relative min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <Icon className="h-5 w-5 text-brand" />
-                        <h3 className="font-display text-headline text-ink">
+                        <Icon className="h-4 w-4 shrink-0 text-nexus-orange-600" />
+                        <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
                           {etape.title}
                         </h3>
                       </div>
-                      <p className="mt-2 text-body-sm text-ink-muted">
+                      <p className="mt-2 text-sm leading-relaxed text-slate-600">
                         {etape.description}
                       </p>
                     </div>
-                  </div>
+                  </article>
                 );
               })}
             </div>
 
             {/* CTA en sortie de méthodologie */}
-            <div className="mt-10 rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2 sm:p-8">
+            <div className="mt-10 overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-nexus-orange-50/30 p-7 shadow-[0_20px_50px_-20px_rgba(255,102,0,0.20)] ring-1 ring-slate-100/80 sm:p-8">
               <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="text-overline text-brand">
+                  <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
                     Démarrer la démarche
+                  </span>
+                  <p className="mt-3 font-display text-xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-2xl">
+                    Soumettez votre projet d&apos;études dès aujourd&apos;hui.
                   </p>
-                  <p className="mt-2 font-display text-headline text-ink sm:text-display-sm">
-                    Soumettez votre projet d'études dès aujourd'hui.
-                  </p>
-                  <p className="mt-1 text-body-sm text-ink-muted">
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
                     Étude initiale gratuite. Bilan de faisabilité écrit.
                   </p>
                 </div>
-                <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
+                <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:gap-3">
                   <Link
                     href="/services/bourses/demarrer"
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-body-sm font-semibold text-white shadow-elev-2 transition hover:bg-brand-hover hover:shadow-glow-orange"
+                    className="group/btn relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-6 py-3 text-sm font-bold text-white shadow-[0_10px_30px_-10px_rgba(255,102,0,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_16px_40px_-10px_rgba(255,102,0,0.6)]"
                   >
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/btn:left-[120%] group-hover/btn:opacity-100"
+                    />
                     Soumettre mon dossier
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                   <Link
                     href="/rendez-vous?service=bourses"
-                    className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-line-strong bg-surface-elevated px-6 py-3 text-body-sm font-semibold text-ink transition hover:border-brand/40 hover:bg-surface-sunken"
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-nexus-blue-950 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-nexus-orange-300/70 hover:bg-slate-50"
                   >
                     <Calendar className="h-4 w-4" />
                     Prendre rendez-vous
@@ -433,68 +628,85 @@ export default function BoursesPage() {
         </section>
 
         {/* 4. SYSTÈME ÉDUCATIF CANADIEN ─────────────────────────── */}
-        <section className="bg-surface py-20">
-          <div className="mx-auto max-w-6xl px-4 lg:px-8">
-            <div className="text-center">
-              <p className="text-overline text-brand">
+        <section className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/40 to-white py-20 sm:py-24">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-30"
+            style={DOT_GRID_LIGHT_SUBTLE}
+          />
+
+          <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="mx-auto mb-12 max-w-2xl text-center">
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
                 Le système éducatif canadien
-              </p>
-              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Trois types d'établissements, trois logiques différentes
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
+                Trois types d&apos;établissements,{" "}
+                <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
+                  trois logiques différentes
+                </span>
+                .
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
-                Chaque type a ses critères d'admission et ses possibilités
-                d'aides financières. Nexus RCA vous oriente selon votre profil.
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
+                Chaque type a ses critères d&apos;admission et ses possibilités
+                d&apos;aides financières. Nexus RCA vous oriente selon votre
+                profil.
               </p>
             </div>
 
-            <div className="mt-12 grid gap-5 md:grid-cols-3">
+            <div className="grid gap-5 md:grid-cols-3">
               {ETABLISSEMENTS.map((etab) => {
                 const Icon = etab.icon;
                 return (
-                  <div
+                  <article
                     key={etab.title}
-                    className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2 transition hover:border-brand/40 hover:shadow-elev-3"
+                    className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
                   >
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-100 to-nexus-blue-50 text-nexus-blue-700 dark:from-blue-500/15 dark:to-blue-500/10 dark:text-blue-300">
-                      <Icon className="h-7 w-7" />
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
+                    />
+                    <div className="relative">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-sm transition-transform duration-300 ease-out group-hover:scale-105">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <h3 className="mt-5 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
+                        {etab.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                        {etab.description}
+                      </p>
+                      <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-nexus-orange-200/70 bg-nexus-orange-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-700">
+                        <Building2 className="h-3 w-3" />
+                        {etab.duree}
+                      </div>
                     </div>
-                    <h3 className="mt-5 font-display text-headline text-ink">
-                      {etab.title}
-                    </h3>
-                    <p className="mt-2 text-body-sm text-ink-muted">
-                      {etab.description}
-                    </p>
-                    <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-brand-subtle px-3 py-1 text-overline text-nexus-orange-700 dark:text-brand">
-                      <Building2 className="h-3.5 w-3.5" />
-                      {etab.duree}
-                    </div>
-                  </div>
+                  </article>
                 );
               })}
             </div>
 
             {/* Coût moyen */}
-            <div className="mt-10 rounded-3xl border-2 border-amber-200/70 bg-gradient-to-br from-amber-50 via-surface-elevated to-orange-50 p-8 shadow-elev-3 dark:border-amber-500/20 dark:from-amber-500/5 dark:to-orange-500/5 sm:p-10">
+            <div className="mt-10 overflow-hidden rounded-3xl border-2 border-amber-200/70 bg-gradient-to-br from-amber-50/60 via-white to-orange-50/30 p-8 shadow-[0_18px_44px_-18px_rgba(245,158,11,0.25)] ring-1 ring-amber-100/60 sm:p-10">
               <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
-                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-elev-2">
-                  <DollarSign className="h-8 w-8" />
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_24px_-8px_rgba(255,102,0,0.5)]">
+                  <DollarSign className="h-7 w-7" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-overline text-amber-700 dark:text-amber-300">
+                  <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-amber-700">
                     Coût moyen des études
-                  </p>
-                  <p className="mt-2 font-display text-display-sm text-ink sm:text-display-md">
+                  </span>
+                  <p className="mt-2 font-display text-2xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-3xl">
                     15 000 à 30 000 $ CAD par an
                   </p>
-                  <p className="mt-2 text-body text-ink-muted">
+                  <p className="mt-2 text-base leading-relaxed text-slate-600">
                     Soit environ{" "}
-                    <strong className="text-ink">
+                    <strong className="text-nexus-blue-950">
                       7 à 14 millions FCFA/an
                     </strong>{" "}
                     selon le programme et la province. Les bourses et aides
-                    financières sont essentielles dans tout projet d'études au
-                    Canada.
+                    financières sont essentielles dans tout projet
+                    d&apos;études au Canada.
                   </p>
                 </div>
               </div>
@@ -503,32 +715,46 @@ export default function BoursesPage() {
         </section>
 
         {/* 5. AIDES FINANCIÈRES ─────────────────────────────────── */}
-        <section className="bg-surface-sunken py-20">
-          <div className="mx-auto max-w-6xl px-4 lg:px-8">
-            <div className="text-center">
-              <p className="text-overline text-brand">Aides financières</p>
-              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Ce qu'il faut savoir, sans illusions
+        <section className="relative overflow-hidden bg-slate-50 py-20 sm:py-24">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-50"
+            style={DOT_GRID_LIGHT}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-32 top-32 h-96 w-96 rounded-full bg-nexus-orange-500/8 blur-[100px]"
+          />
+
+          <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="mx-auto mb-10 max-w-2xl text-center">
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+                Aides financières
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
+                Ce qu&apos;il faut savoir, sans illusions.
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
                 Les bourses 100 % sont rares. La majorité des étudiants
                 accèdent à des aides partielles ou cumulent plusieurs
                 financements.
               </p>
             </div>
 
-            <div className="mt-10 flex items-start gap-4 rounded-2xl border-l-4 border-amber-500 bg-amber-50 p-5 dark:bg-amber-500/10 sm:p-6">
-              <AlertTriangle className="h-6 w-6 shrink-0 text-amber-600 dark:text-amber-400" />
-              <div>
-                <p className="text-title text-amber-900 dark:text-amber-200">
-                  À retenir avant de continuer
-                </p>
-                <p className="mt-1 text-body-sm text-amber-800 dark:text-amber-300">
-                  Les bourses 100 % (frais + vie courante) sont
-                  exceptionnelles et hyper-compétitives. La plupart des
-                  étudiants obtiennent des bourses partielles ou cumulent
-                  plusieurs aides pour réduire le coût total.
-                </p>
+            <div className="overflow-hidden rounded-2xl border-l-4 border-amber-500 bg-amber-50/80 p-5 shadow-[0_12px_30px_-14px_rgba(245,158,11,0.30)] ring-1 ring-amber-100/60 sm:p-6">
+              <div className="flex items-start gap-4">
+                <AlertTriangle className="h-6 w-6 shrink-0 text-amber-600" />
+                <div>
+                  <p className="font-display text-base font-bold leading-tight text-amber-900 sm:text-lg">
+                    À retenir avant de continuer
+                  </p>
+                  <p className="mt-1 text-sm leading-relaxed text-amber-800">
+                    Les bourses 100 % (frais + vie courante) sont
+                    exceptionnelles et hyper-compétitives. La plupart des
+                    étudiants obtiennent des bourses partielles ou cumulent
+                    plusieurs aides pour réduire le coût total.
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -536,25 +762,31 @@ export default function BoursesPage() {
               {TYPES_AIDES.map((aide) => {
                 const Icon = aide.icon;
                 return (
-                  <div
+                  <article
                     key={aide.title}
-                    className="flex flex-col rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2 transition hover:border-brand/40 hover:shadow-elev-3"
+                    className="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-elev-2">
-                        <Icon className="h-6 w-6" />
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
+                    />
+                    <div className="relative">
+                      <div className="flex items-center justify-between">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-sm transition-transform duration-300 ease-out group-hover:scale-105">
+                          <Icon className="h-5 w-5" />
+                        </div>
+                        <span className="rounded-full border border-nexus-blue-200/70 bg-nexus-blue-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-blue-700">
+                          {aide.pct}
+                        </span>
                       </div>
-                      <span className="rounded-full bg-nexus-blue-100 px-3 py-1 text-overline text-nexus-blue-700 dark:bg-blue-500/15 dark:text-blue-300">
-                        {aide.pct}
-                      </span>
+                      <h3 className="mt-5 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
+                        {aide.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                        {aide.description}
+                      </p>
                     </div>
-                    <h3 className="mt-5 font-display text-headline text-ink">
-                      {aide.title}
-                    </h3>
-                    <p className="mt-2 text-body-sm text-ink-muted">
-                      {aide.description}
-                    </p>
-                  </div>
+                  </article>
                 );
               })}
             </div>
@@ -562,245 +794,338 @@ export default function BoursesPage() {
         </section>
 
         {/* 6. CAS TYPES ─────────────────────────────────────────── */}
-        <section className="bg-surface py-20">
-          <div className="mx-auto max-w-5xl px-4 lg:px-8">
-            <div className="text-center">
-              <p className="text-overline text-brand">Cas types accompagnés</p>
-              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Voici comment ça se passe concrètement
+        <section className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/40 to-white py-20 sm:py-24">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-30"
+            style={DOT_GRID_LIGHT_SUBTLE}
+          />
+
+          <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
+            <div className="mx-auto mb-12 max-w-2xl text-center">
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+                Cas types accompagnés
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
+                Voici comment ça se passe concrètement.
               </h2>
             </div>
 
-            <div className="mt-12 grid gap-5 lg:grid-cols-2">
-              <div className="rounded-3xl border border-line bg-surface-elevated p-7 shadow-elev-2">
-                <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-brand-subtle px-3 py-1 text-overline text-nexus-orange-700 dark:text-brand">
-                  🎓 Université au Québec
-                </div>
-                <h3 className="font-display text-headline text-ink">
-                  Bachelière, projet de licence à Montréal
-                </h3>
-                <p className="mt-3 text-body-sm text-ink-muted">
-                  Calendrier de 12 mois avant la rentrée. Nexus RCA mène le
-                  diagnostic académique, sélectionne 3 universités cibles,
-                  monte le dossier d'admission complet, identifie deux bourses
-                  partielles éligibles, puis prend en charge le CAQ et le
-                  permis d'études IRCC.
-                </p>
-                <p className="mt-3 text-body-sm font-semibold text-ink">
-                  Résultat : admission + bourse partielle, permis d'études
-                  obtenu, départ à l'heure pour la rentrée d'automne.
-                </p>
-              </div>
-
-              <div className="rounded-3xl border border-line bg-surface-elevated p-7 shadow-elev-2">
-                <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-brand-subtle px-3 py-1 text-overline text-nexus-orange-700 dark:text-brand">
-                  🛠️ Cégep technique en Ontario
-                </div>
-                <h3 className="font-display text-headline text-ink">
-                  Diplômé technique, formation professionnelle
-                </h3>
-                <p className="mt-3 text-body-sm text-ink-muted">
-                  Profil ciblé sur un Cégep avec orientation emploi. Nexus
-                  RCA structure la lettre de motivation autour du projet
-                  professionnel, organise la traduction des relevés et le
-                  dépôt biométrique à Yaoundé.
-                </p>
-                <p className="mt-3 text-body-sm font-semibold text-ink">
-                  Résultat : admission obtenue, permis d'études validé, projet
-                  d'employabilité construit dès l'arrivée au Canada.
-                </p>
-              </div>
+            <div className="grid gap-5 lg:grid-cols-2">
+              {[
+                {
+                  badge: "🎓 Université au Québec",
+                  title: "Bachelière, projet de licence à Montréal",
+                  desc: "Calendrier de 12 mois avant la rentrée. Nexus RCA mène le diagnostic académique, sélectionne 3 universités cibles, monte le dossier d'admission complet, identifie deux bourses partielles éligibles, puis prend en charge le CAQ et le permis d'études IRCC.",
+                  result:
+                    "Résultat : admission + bourse partielle, permis d'études obtenu, départ à l'heure pour la rentrée d'automne.",
+                },
+                {
+                  badge: "🛠️ Cégep technique en Ontario",
+                  title: "Diplômé technique, formation professionnelle",
+                  desc: "Profil ciblé sur un Cégep avec orientation emploi. Nexus RCA structure la lettre de motivation autour du projet professionnel, organise la traduction des relevés et le dépôt biométrique à Yaoundé.",
+                  result:
+                    "Résultat : admission obtenue, permis d'études validé, projet d'employabilité construit dès l'arrivée au Canada.",
+                },
+              ].map((cas) => (
+                <article
+                  key={cas.title}
+                  className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-7 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
+                >
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
+                  />
+                  <div className="relative">
+                    <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-nexus-orange-200/70 bg-nexus-orange-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-700">
+                      {cas.badge}
+                    </div>
+                    <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
+                      {cas.title}
+                    </h3>
+                    <p className="mt-3 text-sm leading-relaxed text-slate-600">
+                      {cas.desc}
+                    </p>
+                    <p className="mt-3 text-sm font-bold leading-relaxed text-nexus-blue-950">
+                      {cas.result}
+                    </p>
+                  </div>
+                </article>
+              ))}
             </div>
           </div>
         </section>
 
         {/* 7. ENGAGEMENT DE TRANSPARENCE ────────────────────────── */}
-        <section className="bg-surface-sunken py-20">
-          <div className="mx-auto max-w-5xl px-4 lg:px-8">
-            <div className="text-center">
-              <p className="text-overline text-brand">Engagement</p>
-              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Aucune agence sérieuse ne peut garantir une bourse
+        <section className="relative overflow-hidden bg-slate-50 py-20 sm:py-24">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-50"
+            style={DOT_GRID_LIGHT}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -left-32 bottom-32 h-96 w-96 rounded-full bg-nexus-orange-500/8 blur-[100px]"
+          />
+
+          <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
+            <div className="mx-auto mb-12 max-w-2xl text-center">
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+                Engagement
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
+                Aucune agence sérieuse ne peut{" "}
+                <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
+                  garantir une bourse
+                </span>
+                .
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
                 La décision finale appartient toujours aux établissements.
                 Toute structure qui vous promet une bourse ou une admission
                 vous trompe. Nexus RCA ne le fera jamais.
               </p>
             </div>
 
-            <div className="mt-12 grid gap-5 lg:grid-cols-2">
-              <div className="rounded-3xl border-2 border-rose-200/60 bg-rose-50/40 p-7 dark:border-rose-500/20 dark:bg-rose-500/5">
-                <p className="text-overline text-rose-700 dark:text-rose-300">
-                  Ce que nous ne pouvons pas
-                </p>
-                <ul className="mt-4 space-y-3">
-                  {[
-                    "Garantir l'obtention d'une bourse",
-                    "Influencer la décision d'admission",
-                    "Promettre une rentrée certaine",
-                  ].map((item, i) => (
-                    <li
-                      key={i}
-                      className="flex items-start gap-3 text-body-sm text-ink"
-                    >
-                      <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            <div className="grid gap-5 lg:grid-cols-2">
+              <article className="group relative overflow-hidden rounded-3xl border-2 border-rose-200/70 bg-gradient-to-br from-rose-50/60 via-white to-rose-50/30 p-7 shadow-[0_16px_36px_-16px_rgba(244,63,94,0.16)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-rose-300/80">
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-rose-400/0 blur-2xl transition-all duration-500 group-hover:bg-rose-400/18"
+                />
+                <div className="relative">
+                  <span className="inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-rose-700">
+                    Ce que nous ne pouvons pas
+                  </span>
+                  <ul className="mt-4 space-y-3">
+                    {[
+                      "Garantir l'obtention d'une bourse",
+                      "Influencer la décision d'admission",
+                      "Promettre une rentrée certaine",
+                    ].map((item, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
+                      >
+                        <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
 
-              <div className="rounded-3xl border-2 border-brand/40 bg-brand-subtle/40 p-7">
-                <p className="text-overline text-nexus-orange-700 dark:text-brand">
-                  Ce que nous garantissons
-                </p>
-                <ul className="mt-4 space-y-3">
-                  {[
-                    "Un dossier solide et compétitif, conforme aux standards canadiens",
-                    "Une stratégie d'établissement adaptée à votre profil",
-                    "L'identification documentée des aides financières éligibles",
-                    "Un conseil honnête sur vos chances réelles avant tout engagement",
-                  ].map((item, i) => (
-                    <li
-                      key={i}
-                      className="flex items-start gap-3 text-body-sm text-ink"
-                    >
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <article className="group relative overflow-hidden rounded-3xl border-2 border-nexus-orange-300/70 bg-gradient-to-br from-nexus-orange-50/60 via-white to-nexus-orange-50/30 p-7 shadow-[0_16px_36px_-16px_rgba(255,102,0,0.20)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-400/80">
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/18"
+                />
+                <div className="relative">
+                  <span className="inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-700">
+                    Ce que nous garantissons
+                  </span>
+                  <ul className="mt-4 space-y-3">
+                    {[
+                      "Un dossier solide et compétitif, conforme aux standards canadiens",
+                      "Une stratégie d'établissement adaptée à votre profil",
+                      "L'identification documentée des aides financières éligibles",
+                      "Un conseil honnête sur vos chances réelles avant tout engagement",
+                    ].map((item, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
+                      >
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-600" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
             </div>
           </div>
         </section>
 
         {/* 8. CADRE TARIFAIRE ──────────────────────────────────── */}
-        <section className="bg-surface py-20">
-          <div className="mx-auto max-w-4xl px-4 lg:px-8">
-            <div className="text-center">
-              <p className="text-overline text-brand">Cadre tarifaire</p>
-              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Une transparence économique complète
+        <section className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/40 to-white py-20 sm:py-24">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-30"
+            style={DOT_GRID_LIGHT_SUBTLE}
+          />
+
+          <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
+            <div className="mx-auto mb-12 max-w-2xl text-center">
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+                Cadre tarifaire
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
+                Une transparence économique complète.
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
                 Vous savez ce que ça coûte avant de signer. Aucun frais caché.
               </p>
             </div>
 
-            <div className="mt-12 grid gap-5 sm:grid-cols-3">
-              <div className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
-                  <Search className="h-5 w-5" />
-                </div>
-                <h3 className="mt-4 font-display text-headline text-ink">
-                  Étude initiale
-                </h3>
-                <p className="mt-2 text-body-sm text-ink-muted">
-                  Gratuite, sans engagement. Bilan de faisabilité écrit.
-                </p>
-              </div>
-
-              <div className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-subtle text-brand">
-                  <ClipboardCheck className="h-5 w-5" />
-                </div>
-                <h3 className="mt-4 font-display text-headline text-ink">
-                  Accompagnement Nexus
-                </h3>
-                <p className="mt-2 text-body-sm text-ink-muted">
-                  Devis fixe communiqué après le bilan de faisabilité. Aucune
-                  facturation surprise en cours de route.
-                </p>
-              </div>
-
-              <div className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-blue-100 text-nexus-blue-700 dark:bg-blue-500/15 dark:text-blue-300">
-                  <Wallet className="h-5 w-5" />
-                </div>
-                <h3 className="mt-4 font-display text-headline text-ink">
-                  Frais d'admission & visa
-                </h3>
-                <p className="mt-2 text-body-sm text-ink-muted">
-                  À votre charge, montant détaillé à l'avance par établissement
-                  et par juridiction. Reversés directement aux organismes
-                  concernés.
-                </p>
-              </div>
+            <div className="grid gap-5 sm:grid-cols-3">
+              {[
+                {
+                  icon: Search,
+                  iconBg:
+                    "bg-gradient-to-br from-emerald-500 to-emerald-600",
+                  title: "Étude initiale",
+                  desc: "Gratuite, sans engagement. Bilan de faisabilité écrit.",
+                },
+                {
+                  icon: ClipboardCheck,
+                  iconBg:
+                    "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700",
+                  title: "Accompagnement Nexus",
+                  desc: "Devis fixe communiqué après le bilan de faisabilité. Aucune facturation surprise en cours de route.",
+                },
+                {
+                  icon: Wallet,
+                  iconBg:
+                    "bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900",
+                  title: "Frais d'admission & visa",
+                  desc: "À votre charge, montant détaillé à l'avance par établissement et par juridiction. Reversés directement aux organismes concernés.",
+                },
+              ].map((tarif) => {
+                const Icon = tarif.icon;
+                return (
+                  <article
+                    key={tarif.title}
+                    className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
+                  >
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
+                    />
+                    <div className="relative">
+                      <div
+                        className={`flex h-11 w-11 items-center justify-center rounded-2xl text-white shadow-sm transition-transform duration-300 ease-out group-hover:scale-105 ${tarif.iconBg}`}
+                      >
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <h3 className="mt-4 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
+                        {tarif.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                        {tarif.desc}
+                      </p>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </div>
         </section>
 
-        {/* 9. CTA FINAL FORMEL ──────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-900 via-nexus-blue-950 to-nexus-blue-900 py-20 text-white">
-          <div className="absolute inset-0 bg-mesh-gradient opacity-30" />
-          <div className="grain pointer-events-none absolute inset-0 opacity-15" />
+        {/* 9. CTA FINAL Premium tech ─────────────────────────────────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24 lg:py-28">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-[0.5]"
+            style={DOT_GRID_DARK}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -top-32 -right-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -bottom-40 -left-32 h-[36rem] w-[36rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+          />
 
-          <div className="relative mx-auto max-w-4xl px-4 lg:px-8">
-            <div className="text-center">
-              <p className="text-overline text-nexus-orange-300">
-                Soumettre votre projet
-              </p>
-              <h2 className="mt-3 font-display text-display-md text-white sm:text-display-lg">
-                Lancez votre projet d'études selon notre méthodologie.
-              </h2>
-              <p className="mx-auto mt-5 max-w-2xl text-body-lg text-slate-300">
-                Les calendriers d'admission canadiens demandent une préparation
-                anticipée — souvent 6 à 12 mois avant la rentrée. Soumettez
-                votre demande maintenant pour sécuriser votre rentrée.
-              </p>
+          <div className="relative mx-auto max-w-3xl px-4 text-center lg:px-8">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+              </span>
+              Soumettre votre projet
+            </span>
 
-              <div className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-3 text-overline text-white/80">
-                <div className="rounded-2xl bg-white/10 p-3 backdrop-blur">
-                  Étude
-                  <br />
-                  <span className="text-white">Gratuite</span>
-                </div>
-                <div className="rounded-2xl bg-white/10 p-3 backdrop-blur">
-                  Bilan
-                  <br />
-                  <span className="text-white">Honnête</span>
-                </div>
-                <div className="rounded-2xl bg-white/10 p-3 backdrop-blur">
-                  Visa
-                  <br />
-                  <span className="text-white">Inclus</span>
-                </div>
+            <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+              Lancez votre projet d&apos;études selon notre méthodologie.
+            </h2>
+
+            <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+              Les calendriers d&apos;admission canadiens demandent une
+              préparation anticipée — souvent 6 à 12 mois avant la rentrée.
+              Soumettez votre demande maintenant pour sécuriser votre rentrée.
+            </p>
+
+            <div className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 backdrop-blur-md">
+                Étude
+                <br />
+                <span className="text-white">Gratuite</span>
               </div>
-
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
-                <Link
-                  href="/services/bourses/demarrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-4 transition hover:bg-brand-hover hover:shadow-glow-orange"
-                >
-                  <FileText className="h-5 w-5" />
-                  Soumettre ma demande
-                  <ArrowRight className="h-5 w-5" />
-                </Link>
-                <Link
-                  href="/rendez-vous?service=bourses"
-                  className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/40 bg-white/10 px-8 py-4 text-body font-semibold text-white backdrop-blur transition hover:bg-white/20"
-                >
-                  <Calendar className="h-5 w-5" />
-                  Prendre rendez-vous
-                </Link>
+              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 backdrop-blur-md">
+                Bilan
+                <br />
+                <span className="text-white">Honnête</span>
               </div>
+              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 backdrop-blur-md">
+                Visa
+                <br />
+                <span className="text-white">Inclus</span>
+              </div>
+            </div>
 
-              <p className="mt-8 text-caption text-white/70">
-                Une question avant de commencer ?{" "}
-                <a
-                  href={whatsappLink(
-                    "Bonjour Nexus, j'ai une question sur le service Études Canada avant de soumettre ma demande."
-                  )}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 font-semibold text-nexus-orange-300 underline-offset-4 hover:underline"
-                >
-                  <MessageCircle className="h-3.5 w-3.5" />
-                  Contactez-nous sur WhatsApp
-                </a>
-              </p>
+            <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
+              <Link
+                href="/services/bourses/demarrer"
+                className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+              >
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
+                />
+                <FileText className="h-4 w-4" />
+                Soumettre ma demande
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
+              </Link>
+              <Link
+                href="/rendez-vous?service=bourses"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
+              >
+                <Calendar className="h-4 w-4" />
+                Prendre rendez-vous
+              </Link>
+            </div>
+
+            <p className="mt-8 text-xs text-white/70">
+              Une question avant de commencer ?{" "}
+              <a
+                href={whatsappLink(
+                  "Bonjour Nexus, j'ai une question sur le service Études Canada avant de soumettre ma demande."
+                )}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 font-bold text-nexus-orange-300 underline-offset-4 hover:underline"
+              >
+                <MessageCircle className="h-3.5 w-3.5" />
+                Contactez-nous sur WhatsApp
+              </a>
+            </p>
+
+            <div className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[11px] uppercase tracking-[0.18em] text-white/50">
+              <span className="flex items-center gap-1.5">
+                <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-300" />
+                Étude gratuite
+              </span>
+              <span className="h-1 w-1 rounded-full bg-white/20" />
+              <span>Bilan honnête</span>
+              <span className="h-1 w-1 rounded-full bg-white/20" />
+              <span>Visa inclus</span>
+              <span className="h-1 w-1 rounded-full bg-white/20" />
+              <span>Confidentialité absolue</span>
             </div>
           </div>
         </section>
