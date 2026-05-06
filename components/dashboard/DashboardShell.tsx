@@ -32,6 +32,7 @@ import {
   Plus,
   CalendarPlus,
   UserPlus,
+  Inbox,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -82,6 +83,7 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { href: "/dashboard/admin/rdv", label: "Rendez-vous", icon: CalendarCheck },
     { href: "/dashboard/admin/paiements", label: "Paiements", icon: Wallet },
     { href: "/dashboard/admin/rapports", label: "Rapports mensuels", icon: FileBarChart },
+    { href: "/dashboard/super-admin/contacts", label: "Messages contact", icon: Inbox },
   ],
   super_admin: [
     // Pilotage
@@ -96,6 +98,7 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { href: "/dashboard/super-admin/demandes-visa", label: "Demandes visa express", icon: FileText, highlight: true },
     { href: "/dashboard/super-admin/rdv", label: "Rendez-vous", icon: CalendarCheck },
     { href: "/dashboard/super-admin/comptes-clients", label: "Comptes clients", icon: Users },
+    { href: "/dashboard/super-admin/contacts", label: "Messages contact", icon: Inbox, highlight: true },
     // Paiements & caisse
     { href: "/dashboard/super-admin/paiements/nouveau-lien", label: "Nouveau lien paiement", icon: Sparkles, highlight: true },
     { href: "/dashboard/super-admin/paiements/en-attente", label: "Paiements en attente", icon: Wallet },
