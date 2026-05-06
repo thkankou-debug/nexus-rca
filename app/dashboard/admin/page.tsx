@@ -19,6 +19,7 @@ import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { DashboardHero } from "@/components/dashboard/DashboardHero";
 import { DashboardQuickActions } from "@/components/dashboard/DashboardQuickActions";
+import { AgentAvatar } from "@/components/dashboard/AgentAvatar";
 import { StatCard, StatusBadge, UrgenceBadge } from "@/components/dashboard/StatCard";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { formatDate, cn } from "@/lib/utils";
@@ -277,65 +278,43 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* ─── Pipeline demandes ──────────────────────────────────────────── */}
-      <section className="mt-10 rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2 sm:p-8">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-subtle text-brand">
-              <Activity className="h-5 w-5" />
-            </div>
-            <div>
-              <h2 className="font-display text-headline text-ink">Pipeline demandes</h2>
-              <p className="text-caption text-ink-muted">
-                Répartition par statut sur l'ensemble des dossiers ({totalDemandes})
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <SectionPanel
+        title="Pipeline demandes"
+        subtitle={`Répartition par statut sur l'ensemble des dossiers (${totalDemandes})`}
+        icon={Activity}
+        className="mt-10"
+      >
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {STATUSES_PIPELINE.map((s) => {
             const count = pipelineCounts[s.key] ?? 0;
             const pct = totalDemandes > 0 ? Math.round((count / totalDemandes) * 100) : 0;
             return (
               <div
                 key={s.key}
-                className="rounded-2xl border border-line bg-surface-sunken p-4"
+                className="rounded-2xl border border-slate-200 bg-slate-50/60 p-4"
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className={cn("rounded-full px-2 py-0.5 text-overline", s.tone)}>
+                  <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider", s.tone)}>
                     {s.label}
                   </span>
-                  <span className="text-caption text-ink-muted">{pct}%</span>
+                  <span className="text-xs text-slate-500">{pct}%</span>
                 </div>
-                <p className="mt-3 font-display text-display-sm text-ink">{count}</p>
+                <p className="mt-3 font-display text-2xl font-bold text-nexus-blue-950 tabular-nums">{count}</p>
               </div>
             );
           })}
         </div>
-      </section>
+      </SectionPanel>
 
       {/* ─── 2 colonnes : non-assignées + RDV jour ──────────────────────── */}
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
-        {/* Non-assignées */}
-        <section className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2">
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300">
-                <AlertTriangle className="h-5 w-5" />
-              </div>
-              <div>
-                <h2 className="font-display text-headline text-ink">À dispatcher</h2>
-                <p className="text-caption text-ink-muted">
-                  Demandes sans agent assigné
-                </p>
-              </div>
-            </div>
-            <Link
-              href="/dashboard/admin/demandes"
-              className="text-caption font-semibold text-brand hover:underline"
-            >
-              Tout voir
-            </Link>
-          </div>
+        <SectionPanel
+          title="À dispatcher"
+          subtitle="Demandes sans agent assigné"
+          icon={AlertTriangle}
+          iconAccent="rose"
+          link={{ href: "/dashboard/admin/demandes", label: "Tout voir" }}
+        >
           {nonAssignees.length === 0 ? (
             <EmptyState
               icon={CheckCircle2}
@@ -347,13 +326,13 @@ export default async function AdminDashboardPage() {
               {nonAssignees.map((d) => (
                 <li
                   key={d.id}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface-sunken px-4 py-3"
+                  className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50/60 px-4 py-3"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-body-sm font-semibold text-ink">
+                    <p className="truncate text-sm font-semibold text-nexus-blue-950">
                       {d.nom_complet}
                     </p>
-                    <p className="truncate text-caption text-ink-muted">
+                    <p className="truncate text-xs text-slate-500">
                       {d.service} · {formatDate(d.created_at)}
                     </p>
                   </div>
@@ -365,29 +344,15 @@ export default async function AdminDashboardPage() {
               ))}
             </ul>
           )}
-        </section>
+        </SectionPanel>
 
-        {/* RDV aujourd'hui */}
-        <section className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2">
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-blue-100 text-nexus-blue-700 dark:bg-blue-500/15 dark:text-blue-300">
-                <CalendarCheck className="h-5 w-5" />
-              </div>
-              <div>
-                <h2 className="font-display text-headline text-ink">RDV aujourd'hui</h2>
-                <p className="text-caption text-ink-muted">
-                  {rdvToday.length} rendez-vous prévus
-                </p>
-              </div>
-            </div>
-            <Link
-              href="/dashboard/admin/rdv"
-              className="text-caption font-semibold text-brand hover:underline"
-            >
-              Calendrier complet
-            </Link>
-          </div>
+        <SectionPanel
+          title="RDV aujourd'hui"
+          subtitle={`${rdvToday.length} rendez-vous prévus`}
+          icon={CalendarCheck}
+          iconAccent="blue"
+          link={{ href: "/dashboard/admin/rdv", label: "Calendrier complet" }}
+        >
           {rdvToday.length === 0 ? (
             <EmptyState
               icon={Clock}
@@ -405,17 +370,17 @@ export default async function AdminDashboardPage() {
                 return (
                   <li
                     key={r.id}
-                    className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface-sunken px-4 py-3"
+                    className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50/60 px-4 py-3"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <span className="rounded-lg bg-brand-subtle px-2 py-1 text-overline text-brand">
+                      <span className="rounded-lg bg-nexus-orange-100 px-2 py-1 text-[10px] font-bold text-nexus-orange-700 tabular-nums">
                         {heure}
                       </span>
-                      <p className="truncate text-body-sm font-semibold text-ink">
+                      <p className="truncate text-sm font-semibold text-nexus-blue-950">
                         {r.sujet || "RDV"}
                       </p>
                     </div>
-                    <span className="rounded-full bg-surface-elevated px-2 py-0.5 text-overline text-ink-muted">
+                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
                       {r.statut}
                     </span>
                   </li>
@@ -423,30 +388,17 @@ export default async function AdminDashboardPage() {
               })}
             </ul>
           )}
-        </section>
+        </SectionPanel>
       </div>
 
       {/* ─── Top agents semaine ─────────────────────────────────────────── */}
-      <section className="mt-8 rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2 sm:p-8">
-        <div className="mb-5 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-subtle text-brand">
-              <TrendingUp className="h-5 w-5" />
-            </div>
-            <div>
-              <h2 className="font-display text-headline text-ink">Top agents — 7 derniers jours</h2>
-              <p className="text-caption text-ink-muted">
-                Performance par encaissements
-              </p>
-            </div>
-          </div>
-          <Link
-            href="/dashboard/admin/agents"
-            className="text-caption font-semibold text-brand hover:underline"
-          >
-            Voir tous les agents
-          </Link>
-        </div>
+      <SectionPanel
+        title="Top agents — 7 derniers jours"
+        subtitle="Performance par encaissements"
+        icon={TrendingUp}
+        link={{ href: "/dashboard/admin/agents", label: "Voir tous les agents" }}
+        className="mt-8"
+      >
         {topAgents.length === 0 ? (
           <EmptyState
             icon={Briefcase}
@@ -455,43 +407,45 @@ export default async function AdminDashboardPage() {
           />
         ) : (
           <ol className="space-y-2">
-            {topAgents.map((a, i) => (
-              <li
-                key={a.id}
-                className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface-sunken px-4 py-3"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-700 to-nexus-orange-500 text-caption font-bold text-white">
-                    {i + 1}
-                  </span>
-                  <p className="truncate text-body-sm font-semibold text-ink">
-                    {a.nom}
+            {topAgents.map((a, i) => {
+              const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : null;
+              return (
+                <li
+                  key={a.id}
+                  className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50/60 px-4 py-3"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <AgentAvatar
+                      name={a.nom}
+                      size="md"
+                      badge={medal ? <span className="text-xs">{medal}</span> : undefined}
+                    />
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-nexus-blue-950">
+                        {a.nom}
+                      </p>
+                      <p className="truncate text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                        Rang #{i + 1}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="font-display text-sm font-bold text-nexus-orange-600 tabular-nums">
+                    {formatMoney(a.total)}
                   </p>
-                </div>
-                <p className="font-display text-body-sm text-brand">
-                  {formatMoney(a.total)}
-                </p>
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ol>
         )}
-      </section>
+      </SectionPanel>
 
       {/* ─── Activité récente ───────────────────────────────────────────── */}
-      <section className="mt-8 rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2 sm:p-8">
-        <div className="mb-5 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-subtle text-brand">
-              <Users className="h-5 w-5" />
-            </div>
-            <div>
-              <h2 className="font-display text-headline text-ink">Activité récente</h2>
-              <p className="text-caption text-ink-muted">
-                8 dernières demandes reçues
-              </p>
-            </div>
-          </div>
-        </div>
+      <SectionPanel
+        title="Activité récente"
+        subtitle="8 dernières demandes reçues"
+        icon={Users}
+        className="mt-8"
+      >
         {recentActivity.length === 0 ? (
           <EmptyState
             icon={FileText}
@@ -503,13 +457,13 @@ export default async function AdminDashboardPage() {
             {recentActivity.map((d) => (
               <li
                 key={d.id}
-                className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface-sunken px-4 py-3"
+                className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50/60 px-4 py-3"
               >
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-body-sm font-semibold text-ink">
+                  <p className="truncate text-sm font-semibold text-nexus-blue-950">
                     {d.nom_complet}
                   </p>
-                  <p className="truncate text-caption text-ink-muted">
+                  <p className="truncate text-xs text-slate-500">
                     {d.service} · {formatDate(d.created_at)}
                   </p>
                 </div>
@@ -521,7 +475,74 @@ export default async function AdminDashboardPage() {
             ))}
           </ul>
         )}
-      </section>
+      </SectionPanel>
     </DashboardShell>
+  );
+}
+
+// ─── Section partagée locale (header harmonisé + card uniforme) ─────────────
+function SectionPanel({
+  title,
+  subtitle,
+  icon: Icon,
+  iconAccent = "orange",
+  link,
+  className,
+  children,
+}: {
+  title: string;
+  subtitle?: string;
+  icon: typeof Activity;
+  iconAccent?: "orange" | "rose" | "blue" | "emerald";
+  link?: { href: string; label: string };
+  className?: string;
+  children: React.ReactNode;
+}) {
+  const accentClass = {
+    orange:
+      "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white",
+    rose: "bg-gradient-to-br from-rose-500 to-rose-700 text-white",
+    blue: "bg-gradient-to-br from-blue-500 to-blue-700 text-white",
+    emerald:
+      "bg-gradient-to-br from-emerald-500 to-emerald-700 text-white",
+  }[iconAccent];
+
+  return (
+    <section
+      className={cn(
+        "rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-7",
+        className
+      )}
+    >
+      <div className="mb-5 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <div
+            className={cn(
+              "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl shadow-sm",
+              accentClass
+            )}
+          >
+            <Icon className="h-5 w-5" />
+          </div>
+          <div className="min-w-0">
+            <h2 className="font-display text-base font-bold text-nexus-blue-950 sm:text-lg">
+              {title}
+            </h2>
+            {subtitle && (
+              <p className="truncate text-xs text-slate-500">{subtitle}</p>
+            )}
+          </div>
+        </div>
+        {link && (
+          <Link
+            href={link.href}
+            className="shrink-0 text-xs font-semibold text-nexus-orange-600 hover:underline"
+          >
+            {link.label}
+          </Link>
+        )}
+      </div>
+      {children}
+    </section>
   );
 }

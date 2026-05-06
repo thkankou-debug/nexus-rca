@@ -18,6 +18,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { DashboardHero } from "@/components/dashboard/DashboardHero";
+import { AgentAvatar } from "@/components/dashboard/AgentAvatar";
 import { Sparkline } from "@/components/ui/Sparkline";
 import { cn } from "@/lib/utils";
 
@@ -439,23 +440,23 @@ export default async function AgentDashboardPage() {
                 <div
                   key={agent.id}
                   className={cn(
-                    "flex items-center gap-4 rounded-2xl border p-4 transition",
+                    "flex items-center gap-4 rounded-2xl border p-4 transition-colors",
                     agent.isCurrent
-                      ? "border-nexus-orange-300 bg-gradient-to-r from-nexus-orange-50 to-white shadow"
-                      : "border-slate-100 bg-white hover:bg-slate-50"
+                      ? "border-nexus-orange-300 bg-nexus-orange-50/40"
+                      : "border-slate-200 bg-white hover:bg-slate-50/60"
                   )}
                 >
-                  <div
-                    className={cn(
-                      "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl font-bold text-white shadow",
-                      rankColor
-                    )}
-                  >
-                    {rankBadge ? (
-                      <span className="text-2xl">{rankBadge}</span>
-                    ) : (
-                      <span className="text-lg">{rank}</span>
-                    )}
+                  <div className="flex shrink-0 items-center gap-3">
+                    <span
+                      className={cn(
+                        "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white shadow-sm",
+                        rankColor
+                      )}
+                      aria-label={`Rang ${rank}`}
+                    >
+                      {rankBadge || rank}
+                    </span>
+                    <AgentAvatar name={agent.name} size="md" highlight={agent.isCurrent} />
                   </div>
 
                   <div className="min-w-0 flex-1">
