@@ -65,6 +65,7 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { href: "/dashboard/agent", label: "Tableau de bord", icon: LayoutDashboard },
     { href: "/dashboard/agent/clients", label: "Mes clients", icon: UserCircle },
     { href: "/dashboard/agent/demandes", label: "Mes dossiers", icon: FileText },
+    { href: "/dashboard/agent/demandes-visa", label: "Demandes visa", icon: FileText },
     { href: "/dashboard/agent/rdv", label: "Mon agenda", icon: CalendarCheck },
     { href: "/dashboard/agent/caisse", label: "Caisse", icon: ShoppingCart },
     { href: "/dashboard/agent/paiements", label: "Mes paiements", icon: Wallet },
@@ -75,6 +76,7 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
   admin: [
     { href: "/dashboard/admin", label: "Tableau de bord", icon: LayoutDashboard },
     { href: "/dashboard/admin/demandes", label: "Demandes", icon: FileText },
+    { href: "/dashboard/admin/demandes-visa", label: "Demandes visa", icon: FileText },
     { href: "/dashboard/admin/clients", label: "Clients", icon: UserCircle },
     { href: "/dashboard/admin/agents", label: "Agents", icon: Users },
     { href: "/dashboard/admin/rdv", label: "Rendez-vous", icon: CalendarCheck },
@@ -91,6 +93,7 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     // Opérations
     { href: "/dashboard/super-admin/clients", label: "Clients (CRM)", icon: UserCircle },
     { href: "/dashboard/super-admin/demandes", label: "Toutes les demandes", icon: FileText },
+    { href: "/dashboard/super-admin/demandes-visa", label: "Demandes visa express", icon: FileText, highlight: true },
     { href: "/dashboard/super-admin/rdv", label: "Rendez-vous", icon: CalendarCheck },
     { href: "/dashboard/super-admin/comptes-clients", label: "Comptes clients", icon: Users },
     // Paiements & caisse
