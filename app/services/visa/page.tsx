@@ -24,6 +24,7 @@ import { whatsappLink } from "@/lib/utils";
 import { VisaRequirementChecker } from "@/components/visa/VisaRequirementChecker";
 import { EVisaEligibilityChecker } from "@/components/visa/EVisaEligibilityChecker";
 import { VisaDocumentChecklist } from "@/components/visa/VisaDocumentChecklist";
+import { VisaExpressForm } from "@/components/visa/VisaExpressForm";
 
 export const metadata = {
   title: "Visa & e-Visa | Nexus RCA — Bangui",
@@ -245,6 +246,33 @@ export default function VisaPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 1.0 DIAGNOSTIC VISA — fonctionnalité centrale ──────────── */}
+        <section
+          id="diagnostic"
+          className="relative bg-gradient-to-b from-surface-sunken via-surface to-surface py-20 sm:py-24 lg:py-28"
+        >
+          <div className="mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="mx-auto mb-14 max-w-2xl text-center">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-brand/20 bg-brand-subtle/40 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-brand" />
+                Diagnostic gratuit
+              </span>
+              <h2 className="mt-5 font-display text-display-md text-ink sm:text-display-lg">
+                Évaluez votre dossier en 60 secondes
+              </h2>
+              <p className="mx-auto mt-5 max-w-xl text-body-lg leading-relaxed text-ink-muted">
+                Deux outils Nexus pour identifier votre type de visa et vos exigences
+                avant même de nous contacter — sans inscription.
+              </p>
+            </div>
+
+            <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
+              <VisaRequirementChecker />
+              <EVisaEligibilityChecker />
             </div>
           </div>
         </section>
@@ -550,27 +578,6 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 4.5 CHECKERS INTERACTIFS ─────────────────────────────── */}
-        <section className="bg-surface-sunken py-20">
-          <div className="mx-auto max-w-6xl px-4 lg:px-8">
-            <div className="mx-auto mb-12 max-w-3xl text-center">
-              <p className="text-overline text-brand">Outils Nexus</p>
-              <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Vérifiez votre situation en 60 secondes
-              </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
-                Deux outils gratuits — sans inscription — pour comprendre vos exigences
-                visa avant de soumettre votre dossier.
-              </p>
-            </div>
-
-            <div className="grid gap-6 lg:grid-cols-2">
-              <VisaRequirementChecker />
-              <EVisaEligibilityChecker />
-            </div>
-          </div>
-        </section>
-
         {/* 5. e-VISA : PROCÉDURE SIMPLIFIÉE ─────────────────────── */}
         <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white">
           <div className="absolute inset-0 bg-mesh-gradient opacity-30" />
@@ -813,75 +820,80 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 9. CTA FINAL FORMEL ──────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-900 via-nexus-blue-950 to-nexus-blue-900 py-20 text-white">
-          <div className="absolute inset-0 bg-mesh-gradient opacity-30" />
-          <div className="grain pointer-events-none absolute inset-0 opacity-15" />
-
-          <div className="relative mx-auto max-w-4xl px-4 lg:px-8">
-            <div className="text-center">
-              <p className="text-overline text-nexus-orange-300">
-                Soumettre votre dossier
-              </p>
-              <h2 className="mt-3 font-display text-display-md text-white sm:text-display-lg">
-                Lancez votre demande visa selon notre méthodologie.
+        {/* 8.5 FORMULAIRE EXPRESS ─────────────────────────────────── */}
+        <section
+          id="demarrer"
+          className="relative bg-gradient-to-b from-surface to-surface-sunken py-24 sm:py-28 lg:py-32"
+        >
+          <div className="mx-auto max-w-4xl px-4 lg:px-8">
+            <div className="mx-auto mb-12 max-w-2xl text-center">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-brand/20 bg-brand-subtle/40 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
+                Démarche express
+              </span>
+              <h2 className="mt-5 font-display text-display-md text-ink sm:text-display-lg">
+                Soumettez votre dossier
               </h2>
-              <p className="mx-auto mt-5 max-w-2xl text-body-lg text-slate-300">
-                L'étude de faisabilité est gratuite. Si nous estimons que votre
-                dossier a des chances réelles, nous vous accompagnons. Sinon,
-                nous vous le disons franchement.
+              <p className="mx-auto mt-5 max-w-xl text-body-lg leading-relaxed text-ink-muted">
+                Un conseiller Nexus revient vers vous sous 24 h à 3 jours selon urgence.
+                Étude initiale gratuite, bilan écrit avant tout engagement.
               </p>
+            </div>
 
-              <div className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-3 text-overline text-white/80">
-                <div className="rounded-2xl bg-white/10 p-3 backdrop-blur">
-                  Étude
-                  <br />
-                  <span className="text-white">Gratuite</span>
-                </div>
-                <div className="rounded-2xl bg-white/10 p-3 backdrop-blur">
-                  Bilan
-                  <br />
-                  <span className="text-white">Honnête</span>
-                </div>
-                <div className="rounded-2xl bg-white/10 p-3 backdrop-blur">
-                  Devis
-                  <br />
-                  <span className="text-white">Fixe</span>
-                </div>
-              </div>
+            <VisaExpressForm />
+          </div>
+        </section>
 
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
-                <Link
-                  href="/services/visa/demarrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-4 transition hover:bg-brand-hover hover:shadow-glow-orange"
-                >
-                  <FileText className="h-5 w-5" />
-                  Soumettre ma demande
-                  <ArrowRight className="h-5 w-5" />
-                </Link>
-                <Link
-                  href="/rendez-vous?service=visa"
-                  className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/40 bg-white/10 px-8 py-4 text-body font-semibold text-white backdrop-blur transition hover:bg-white/20"
-                >
-                  <Calendar className="h-5 w-5" />
-                  Prendre rendez-vous
-                </Link>
-              </div>
+        {/* 9. CTA FINAL PREMIUM ─────────────────────────────────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-24 text-white sm:py-28 lg:py-32">
+          <div className="absolute -right-32 top-0 h-96 w-96 rounded-full bg-nexus-orange-500/15 blur-3xl" />
+          <div className="absolute -bottom-32 -left-20 h-96 w-96 rounded-full bg-nexus-orange-500/10 blur-3xl" />
 
-              <p className="mt-8 text-caption text-white/70">
-                Une question avant de commencer ?{" "}
-                <a
-                  href={whatsappLink(
-                    "Bonjour Nexus, j'ai une question sur le service visa avant de soumettre ma demande."
-                  )}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 font-semibold text-nexus-orange-300 underline-offset-4 hover:underline"
-                >
-                  <MessageCircle className="h-3.5 w-3.5" />
-                  Contactez-nous sur WhatsApp
-                </a>
-              </p>
+          <div className="relative mx-auto max-w-3xl px-4 text-center lg:px-8">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur">
+              Une question avant de démarrer
+            </span>
+
+            <h2 className="mt-7 font-display text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
+              Parlons de votre projet.
+            </h2>
+
+            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+              Vous hésitez sur la procédure, le timing ou les pièces&nbsp;? Notre équipe
+              à Bangui vous répond personnellement.
+            </p>
+
+            <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <a
+                href={whatsappLink(
+                  "Bonjour Nexus, j'ai une question sur le service visa avant de soumettre ma demande."
+                )}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-nexus-orange-500 px-8 py-4 text-base font-semibold text-white shadow-lg transition hover:bg-nexus-orange-600 hover:shadow-xl"
+              >
+                <MessageCircle className="h-5 w-5" />
+                Discuter sur WhatsApp
+              </a>
+              <Link
+                href="/rendez-vous?service=visa"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-8 py-4 text-base font-semibold text-white backdrop-blur transition hover:bg-white/10"
+              >
+                <Calendar className="h-5 w-5" />
+                Prendre rendez-vous
+              </Link>
+            </div>
+
+            <div className="mt-16 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[11px] uppercase tracking-[0.18em] text-white/50">
+              <span className="flex items-center gap-1.5">
+                <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-300" />
+                Étude gratuite
+              </span>
+              <span className="h-1 w-1 rounded-full bg-white/20" />
+              <span>Bilan écrit</span>
+              <span className="h-1 w-1 rounded-full bg-white/20" />
+              <span>Devis fixe</span>
+              <span className="h-1 w-1 rounded-full bg-white/20" />
+              <span>Confidentialité absolue</span>
             </div>
           </div>
         </section>
