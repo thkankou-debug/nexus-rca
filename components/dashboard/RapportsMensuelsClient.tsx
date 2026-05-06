@@ -116,45 +116,62 @@ export function RapportsMensuelsClient({ initialReports, initialConfig }: Props)
     return { total, sent, failed, lastRevenue };
   }, [reports]);
 
-  function handleGenerateNow() {
+  async function refreshReports() {
+    try {
+      const res = await fetch("/api/monthly-reports", { cache: "no-store" });
+      if (!res.ok) return;
+      const data = (await res.json()) as { reports: Array<MonthlyReport & { download_url?: string | null }> };
+      const mapped: MonthlyReport[] = (data.reports || []).map((r) => ({
+        ...r,
+        file_url: r.download_url || r.file_url,
+      }));
+      setReports(mapped);
+    } catch (err) {
+      console.error("[RAPPORTS] refresh error:", err);
+    }
+  }
+
+  async function handleGenerateNow() {
     setGenerating(true);
     toast.loading("Génération du rapport en cours…", { id: "gen-report" });
-
-    setTimeout(() => {
-      const now = new Date();
-      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-      const periodLabel = monthStart.toLocaleDateString("fr-FR", {
-        month: "long",
-        year: "numeric",
+    try {
+      const res = await fetch("/api/cron/monthly-report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: "{}", // body vide → mois précédent par défaut
       });
-
-      const newReport: MonthlyReport = {
-        id: `rpt_${Date.now()}`,
-        period_label: periodLabel.charAt(0).toUpperCase() + periodLabel.slice(1),
-        period_start: monthStart.toISOString(),
-        period_end: now.toISOString(),
-        generated_at: now.toISOString(),
-        status: "sent",
-        file_url: "#",
-        file_size_kb: 248,
-        recipients: config.recipients,
-        metrics: {
-          revenus_xaf: 4_250_000,
-          nouvelles_demandes: 12,
-          dossiers_clotures: 8,
-          nouveaux_clients: 6,
-          paiements_count: 14,
-          taux_conversion: 67,
-        },
-        notes: "Génération manuelle depuis la console super-admin.",
+      const data = (await res.json().catch(() => ({}))) as {
+        success?: boolean;
+        status?: "sent" | "generated" | "failed";
+        error?: string;
+        period_label?: string;
       };
-
-      setReports((prev) => [newReport, ...prev]);
+      if (!res.ok || !data.success) {
+        toast.error(
+          data.error
+            ? `Échec : ${data.error}`
+            : "Échec de la génération du rapport",
+          { id: "gen-report" }
+        );
+        return;
+      }
+      const label = data.period_label || "rapport";
+      if (data.status === "sent") {
+        toast.success(`Rapport ${label} généré et envoyé`, { id: "gen-report" });
+      } else if (data.status === "generated") {
+        toast.success(`Rapport ${label} généré (email non envoyé)`, {
+          id: "gen-report",
+        });
+      } else {
+        toast.error(`Rapport ${label} en échec`, { id: "gen-report" });
+      }
+      await refreshReports();
+    } catch (err) {
+      console.error("[RAPPORTS] generate error:", err);
+      toast.error("Erreur réseau lors de la génération", { id: "gen-report" });
+    } finally {
       setGenerating(false);
-      toast.success("Rapport généré et envoyé aux destinataires", {
-        id: "gen-report",
-      });
-    }, 1400);
+    }
   }
 
   function handleDownload(r: MonthlyReport) {
@@ -162,19 +179,50 @@ export function RapportsMensuelsClient({ initialReports, initialConfig }: Props)
       toast.error("Aucun fichier disponible pour ce rapport");
       return;
     }
-    toast.success(`Téléchargement : ${r.period_label} (mock)`);
+    // Ouvre le PDF dans un nouvel onglet (signed URL Supabase Storage)
+    window.open(r.file_url, "_blank", "noopener,noreferrer");
   }
 
-  function handleResend(r: MonthlyReport) {
-    toast.success(`Renvoi à ${r.recipients.length} destinataire(s) (mock)`);
+  async function handleResend(r: MonthlyReport) {
+    // V1 : on relance la génération du même mois (UPSERT). Le PDF est régénéré
+    // et renvoyé aux destinataires courants.
+    const [yearStr, monthName] = r.period_label.split(" ");
+    const FR = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+    const monthIdx = FR.findIndex((m) => m.toLowerCase() === (monthName || "").toLowerCase());
+    if (monthIdx < 0) {
+      toast.error("Période illisible, renvoi impossible");
+      return;
+    }
+    const year = Number(yearStr);
+    const month = monthIdx + 1;
+    toast.loading("Renvoi en cours…", { id: "resend-report" });
+    try {
+      const res = await fetch("/api/cron/monthly-report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ year, month }),
+      });
+      if (!res.ok) {
+        toast.error("Échec du renvoi", { id: "resend-report" });
+        return;
+      }
+      toast.success(`Rapport ${r.period_label} renvoyé`, { id: "resend-report" });
+      await refreshReports();
+    } catch (err) {
+      console.error("[RAPPORTS] resend error:", err);
+      toast.error("Erreur réseau lors du renvoi", { id: "resend-report" });
+    }
   }
 
   function handleToggleEnabled() {
+    // Le cron est piloté par vercel.json, pas par un toggle UI. Ce switch
+    // est purement informatif pour l'instant.
     setConfig((c) => ({ ...c, enabled: !c.enabled }));
-    toast.success(
+    toast(
       !config.enabled
-        ? "Génération automatique activée"
-        : "Génération automatique désactivée"
+        ? "Affiché comme actif (le cron Vercel reste configuré dans vercel.json)"
+        : "Affiché comme désactivé (le cron Vercel n'est PAS coupé — modifier vercel.json)",
+      { icon: "ℹ️" }
     );
   }
 
