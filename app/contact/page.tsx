@@ -125,7 +125,7 @@ export default function ContactPage() {
       <Navbar />
       <main>
         {/* ─── Hero Premium tech ────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 pt-36 pb-24 text-white sm:pt-40">
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 pt-28 pb-16 text-white sm:pt-40 sm:pb-24">
           {/* Dot grid subtil (Stripe-like) */}
           <div
             aria-hidden
@@ -156,7 +156,7 @@ export default function ContactPage() {
                 </span>
                 Contact
               </span>
-              <h1 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+              <h1 className="mt-5 font-display text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Parlons de votre projet.
               </h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
@@ -242,7 +242,7 @@ export default function ContactPage() {
             <div className="grid gap-8 lg:grid-cols-12">
               {/* Coordonnées (5/12) — glassmorphism navy */}
               <aside className="lg:col-span-5">
-                <div className="sticky top-24 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 text-white shadow-[0_20px_60px_-25px_rgba(12,28,64,0.45)]">
+                <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 text-white shadow-[0_20px_60px_-25px_rgba(12,28,64,0.45)] lg:sticky lg:top-24">
                   {/* Dot grid + glows */}
                   <div
                     aria-hidden

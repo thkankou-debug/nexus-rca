@@ -120,7 +120,7 @@ export default function NexusConnectPage() {
       </header>
 
       {/* ─── HERO immersif Premium tech v2 ──────────────────────────── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 px-4 pt-20 pb-32 text-white sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 px-4 pt-16 pb-24 text-white sm:px-6 sm:pt-20 sm:pb-32 lg:px-8">
         {/* Dot grid pattern */}
         <div
           aria-hidden
@@ -163,21 +163,6 @@ export default function NexusConnectPage() {
             </span>
           ))}
         </div>
-        {/* Mobile : 4 chips alignés en bas du hero */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-32 flex flex-wrap items-center justify-center gap-1.5 px-6 opacity-30 lg:hidden"
-        >
-          {FLOATING_CHIPS.slice(0, 4).map((chip, i) => (
-            <span
-              key={i}
-              className="rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em] text-white/50 backdrop-blur-md"
-            >
-              {chip.label}
-            </span>
-          ))}
-        </div>
-
         {/* Bordure inférieure éclairée */}
         <div
           aria-hidden
@@ -193,7 +178,7 @@ export default function NexusConnectPage() {
             Nouveau · Espace client premium
           </span>
 
-          <h1 className="mt-6 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+          <h1 className="mt-6 font-display text-3xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
             NEXUS{" "}
             <span className="relative inline-block">
               <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
@@ -217,8 +202,8 @@ export default function NexusConnectPage() {
             où que vous soyez à Bangui, Yaoundé, Paris ou Montréal.
           </p>
 
-          {/* CTA */}
-          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          {/* CTA — full width sur mobile pour impact immédiat */}
+          <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:mt-10 sm:flex-row sm:items-center">
             <Link
               href="/demande/complet"
               className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_10px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
@@ -264,9 +249,9 @@ export default function NexusConnectPage() {
       </section>
 
       {/* ─── BENTO Showcase navy (NOUVEAU) ─────────────────────────── */}
-      <section className="relative -mt-20 px-4 pb-12 sm:px-6 lg:px-8">
+      <section className="relative -mt-12 px-4 pb-12 sm:-mt-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
-          <div className="group/bento relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-nexus-blue-900/95 via-nexus-blue-950/95 to-nexus-blue-900/95 p-6 shadow-[0_30px_80px_-30px_rgba(12,28,64,0.55)] backdrop-blur-xl sm:p-8 lg:p-10">
+          <div className="group/bento relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-nexus-blue-900/95 via-nexus-blue-950/95 to-nexus-blue-900/95 p-5 shadow-[0_30px_80px_-30px_rgba(12,28,64,0.55)] backdrop-blur-xl sm:p-8 lg:p-10">
             {/* Dot grid intérieur */}
             <div
               aria-hidden
@@ -572,7 +557,7 @@ export default function NexusConnectPage() {
       {/* ─── CTA FINAL Premium tech ──────────────────────────────────── */}
       <section className="relative bg-gradient-to-b from-white to-slate-50/40 px-4 py-24 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl">
-          <div className="group/cta relative overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-orange-500 via-nexus-orange-600 to-nexus-orange-700 p-10 text-center shadow-[0_30px_80px_-30px_rgba(255,102,0,0.45)] sm:p-16">
+          <div className="group/cta relative overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-orange-500 via-nexus-orange-600 to-nexus-orange-700 p-7 text-center shadow-[0_30px_80px_-30px_rgba(255,102,0,0.45)] sm:p-10 lg:p-16">
             <div
               aria-hidden
               className="pointer-events-none absolute inset-0 opacity-30"
@@ -914,7 +899,7 @@ function PillarCard({
   const glowRgba = isOrange ? "255,102,0" : "30,64,175";
 
   return (
-    <article className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_20px_50px_-20px_rgba(12,28,64,0.18)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/50">
+    <article className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-5 shadow-[0_20px_50px_-20px_rgba(12,28,64,0.18)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/50 active:-translate-y-0 sm:rounded-3xl sm:p-6">
       <div
         aria-hidden
         className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
@@ -922,12 +907,12 @@ function PillarCard({
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100 sm:rounded-3xl"
         style={{ boxShadow: `0 24px 60px -22px rgba(${glowRgba}, 0.28)` }}
       />
 
       <div className="relative">
-        <div className="flex items-start justify-between">
+        <div className="flex items-start justify-between gap-2">
           <div className="relative">
             <div
               aria-hidden
@@ -935,9 +920,9 @@ function PillarCard({
               style={{ backgroundColor: `rgba(${glowRgba}, 0.30)` }}
             />
             <div
-              className={`relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${gradient} text-white shadow-sm transition-transform duration-300 ease-out group-hover:scale-105`}
+              className={`relative flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br ${gradient} text-white shadow-sm transition-transform duration-300 ease-out group-hover:scale-105 sm:h-12 sm:w-12`}
             >
-              <Icon className="h-5 w-5" />
+              <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
           </div>
           {indicator && (
@@ -946,7 +931,7 @@ function PillarCard({
             </span>
           )}
         </div>
-        <h3 className="mt-5 font-display text-lg font-bold leading-tight text-nexus-blue-950">
+        <h3 className="mt-4 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:mt-5 sm:text-lg">
           {title}
         </h3>
         <p className="mt-2 text-sm leading-relaxed text-slate-600">
@@ -1003,7 +988,7 @@ function Step({
   description: string;
 }) {
   return (
-    <article className="group relative flex gap-5 overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]">
+    <article className="group relative flex gap-4 overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-5 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)] active:-translate-y-0 sm:gap-5 sm:rounded-3xl sm:p-6">
       <div
         aria-hidden
         className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
@@ -1014,13 +999,13 @@ function Step({
           aria-hidden
           className="absolute inset-0 rounded-2xl bg-nexus-orange-500/30 opacity-50 blur-md transition-all duration-500 group-hover:opacity-100"
         />
-        <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 font-display text-lg font-bold text-white shadow-[0_8px_24px_-8px_rgba(255,102,0,0.5)] transition-transform duration-300 ease-out group-hover:scale-105">
+        <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 font-display text-base font-bold text-white shadow-[0_8px_24px_-8px_rgba(255,102,0,0.5)] transition-transform duration-300 ease-out group-hover:scale-105 sm:h-12 sm:w-12 sm:text-lg">
           {number}
         </div>
       </div>
 
       <div className="relative flex-1 min-w-0">
-        <h3 className="font-display text-lg font-bold leading-tight text-nexus-blue-950">
+        <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
           {title}
         </h3>
         <p className="mt-1.5 text-sm leading-relaxed text-slate-600">

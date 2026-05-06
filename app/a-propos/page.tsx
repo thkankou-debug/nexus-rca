@@ -129,7 +129,7 @@ export default function AProposPage() {
       <Navbar />
       <main>
         {/* ─── HERO Premium tech ──────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 pt-36 pb-24 text-white sm:pt-40">
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 pt-28 pb-16 text-white sm:pt-40 sm:pb-24">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-[0.55]"
@@ -155,7 +155,7 @@ export default function AProposPage() {
                 À propos de Nexus RCA
               </span>
 
-              <h1 className="mx-auto mt-6 max-w-3xl font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+              <h1 className="mx-auto mt-5 max-w-3xl font-display text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Une structure engagée pour accompagner et développer vos projets.
               </h1>
 
@@ -296,7 +296,7 @@ export default function AProposPage() {
               </p>
 
               {/* Citation Premium tech */}
-              <blockquote className="group/quote relative my-10 overflow-hidden rounded-3xl border-l-4 border-nexus-orange-500 bg-white px-7 py-7 shadow-[0_20px_50px_-25px_rgba(12,28,64,0.18)] transition-all duration-500 hover:shadow-[0_24px_60px_-25px_rgba(255,102,0,0.22)] sm:px-9 sm:py-8">
+              <blockquote className="group/quote relative my-10 overflow-hidden rounded-3xl border-l-4 border-nexus-orange-500 bg-white px-6 py-6 shadow-[0_20px_50px_-25px_rgba(12,28,64,0.18)] transition-all duration-500 hover:shadow-[0_24px_60px_-25px_rgba(255,102,0,0.22)] sm:px-9 sm:py-8">
                 <div
                   aria-hidden
                   className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-nexus-orange-500/0 blur-3xl transition-all duration-700 group-hover/quote:bg-nexus-orange-500/12"
