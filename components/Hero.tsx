@@ -1,310 +1,181 @@
-"use client";
-
-import { useEffect, useRef } from "react";
+import Link from "next/link";
 import {
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
-import { ArrowRight, Calendar, Globe, Sparkles, FilePlus } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+  ArrowRight,
+  Calendar,
+  FilePlus,
+  Globe2,
+  ShieldCheck,
+  Clock,
+  Sparkles,
+} from "lucide-react";
 
+// ─── Pattern dot grid (Stripe-like) ─────────────────────────────────────────
+const DOT_GRID_DARK: React.CSSProperties = {
+  backgroundImage:
+    "radial-gradient(circle at center, rgba(255,255,255,0.06) 1px, transparent 1px)",
+  backgroundSize: "28px 28px",
+};
+
+// ─── Hero Premium tech — direction Stripe + Arc + fintech ────────────────────
+// Server component, zero framer-motion, animations CSS pures.
+// Cohérent avec /contact, /a-propos, /nexus-connect.
+// ────────────────────────────────────────────────────────────────────────────
 export function Hero() {
-  const ref = useRef<HTMLElement>(null);
-  const reduceMotion = useReducedMotion();
-
-  // ─── Scroll-linked parallax ────────────────────────────────────────────
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-
-  const bgY = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : [0, 150]);
-  const orbsY = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : [0, 250]);
-  const badgesY = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : [0, -80]);
-  const contentY = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : [0, 60]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, 1, 0]);
-  const indicatorOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
-
-  // ─── Mouse-linked parallax (springs for smoothness) ────────────────────
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const sx = useSpring(mouseX, { stiffness: 60, damping: 20, mass: 0.5 });
-  const sy = useSpring(mouseY, { stiffness: 60, damping: 20, mass: 0.5 });
-
-  useEffect(() => {
-    if (reduceMotion) return;
-    const node = ref.current;
-    if (!node) return;
-    const onMove = (e: MouseEvent) => {
-      const rect = node.getBoundingClientRect();
-      mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
-      mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
-    };
-    node.addEventListener("mousemove", onMove);
-    return () => node.removeEventListener("mousemove", onMove);
-  }, [mouseX, mouseY, reduceMotion]);
-
-  // Orbes : multiplicateurs différents pour effet de profondeur
-  const orb1X = useTransform(sx, (v) => v * 30);
-  const orb1Y = useTransform(sy, (v) => v * 30);
-  const orb2X = useTransform(sx, (v) => v * -50);
-  const orb2Y = useTransform(sy, (v) => v * -50);
-  const orb3X = useTransform(sx, (v) => v * 20);
-  const orb3Y = useTransform(sy, (v) => v * 20);
-
-  // Spotlight radial qui suit le curseur
-  const spotBg = useTransform([sx, sy] as const, ([x, y]: number[]) => {
-    const px = 50 + x * 25;
-    const py = 50 + y * 25;
-    return `radial-gradient(700px circle at ${px}% ${py}%, rgba(249,115,22,0.20), transparent 65%)`;
-  });
-
   return (
-    <section
-      ref={ref}
-      className="relative flex min-h-screen items-center overflow-hidden bg-nexus-blue-950 pb-20 text-white"
-    >
-      {/* L1 — Image de fond (parallax lent, scale pour cacher les bords) */}
-      <motion.div className="absolute inset-0" style={{ y: bgY }}>
-        <img
-          src="https://images.unsplash.com/photo-1569154941061-e231b4725ef1?auto=format&fit=crop&w=2000&q=80"
-          alt=""
-          className="h-full w-full scale-110 object-cover opacity-40"
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900/85 to-nexus-orange-900/40" />
-      </motion.div>
-
-      {/* L2 — Trois orbes colorés (parallax rapide + mouse-reactive) */}
-      <motion.div
-        className="pointer-events-none absolute inset-0"
-        style={{ y: orbsY }}
-      >
-        <motion.div
-          style={{ x: orb1X, y: orb1Y }}
-          className="absolute -left-20 top-1/4 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/30 blur-3xl animate-float"
-        />
-        <motion.div
-          style={{ x: orb2X, y: orb2Y, animationDelay: "2s" }}
-          className="absolute -right-32 bottom-1/4 h-[32rem] w-[32rem] rounded-full bg-nexus-blue-500/30 blur-3xl animate-float"
-        />
-        <motion.div
-          style={{ x: orb3X, y: orb3Y, animationDelay: "4s" }}
-          className="absolute left-1/3 top-1/2 h-72 w-72 rounded-full bg-fuchsia-500/20 blur-3xl animate-float"
-        />
-      </motion.div>
-
-      {/* L3 — Spotlight qui suit le curseur */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{ background: spotBg }}
-      />
-
-      {/* L4 — Grain (statique) */}
-      <div className="absolute inset-0 grain opacity-30" />
-
-      {/* L5 — Vignette pour assombrir les bords (focalise l'attention) */}
+    <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 pt-28 pb-20 text-white sm:pt-32 sm:pb-24 lg:pt-40 lg:pb-32">
+      {/* Dot grid pattern subtil */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, transparent 45%, rgba(2,7,31,0.55) 100%)",
-        }}
+        className="pointer-events-none absolute inset-0 opacity-[0.55]"
+        style={DOT_GRID_DARK}
       />
 
-      {/* L6 — Badges flottants (parallax foreground = vitesse opposée) */}
-      <motion.div
-        style={{ y: badgesY }}
-        className="pointer-events-none absolute right-6 top-32 hidden lg:block"
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.4, duration: 0.8 }}
-          className="pointer-events-auto rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-xl shadow-elev-3"
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-orange-500 shadow-glow-orange">
-              <Globe className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <div className="text-overline text-nexus-orange-300">
-                Signature Nexus
-              </div>
-              <div className="text-title text-white">
-                Solutions globales. Impact réel.
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
+      {/* Orb central rayonnant + 2 blobs latéraux */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-1/3 h-[40rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/12 blur-[140px]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/10 blur-[120px]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-32 -left-32 h-[36rem] w-[36rem] rounded-full bg-nexus-blue-500/15 blur-[120px]"
+      />
 
-      <motion.div
-        style={{ y: badgesY }}
-        className="pointer-events-none absolute bottom-32 right-20 hidden lg:block"
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.6, duration: 0.8 }}
-          className="pointer-events-auto rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-xl shadow-elev-3"
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-blue-700 shadow-glow-blue">
-              <Globe className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <div className="text-overline text-nexus-blue-300">Basés à</div>
-              <div className="text-title text-white">Bangui, RCA</div>
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
+      {/* Bordure inférieure éclairée gradient */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+      />
 
-      {/* Contenu principal (fade + push up au scroll) */}
-      <motion.div
-        style={{ y: contentY, opacity: contentOpacity }}
-        className="relative mx-auto w-full max-w-7xl px-4 pt-32 pb-12 lg:px-8 lg:pb-20"
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="max-w-4xl"
-        >
-          {/* Eyebrow */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-body-sm backdrop-blur-md"
-          >
-            <Sparkles className="h-4 w-4 text-nexus-orange-400" />
-            <span className="font-medium">
-              Agence Internationale · Bangui, République Centrafricaine
+      <div className="relative mx-auto w-full max-w-6xl px-4 lg:px-8">
+        <div className="max-w-3xl">
+          {/* Eyebrow Premium tech */}
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md transition-all duration-300 hover:border-nexus-orange-500/40 hover:bg-white/10">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
             </span>
-          </motion.div>
+            Agence Internationale · Bangui
+          </span>
 
-          {/* TITRE */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="font-display text-display-xl text-white lg:text-display-2xl"
-            style={{ paddingBottom: "0.3em" }}
-          >
+          {/* TITRE — h1 contenu, leading tight, tracking tight */}
+          <h1 className="mt-6 font-display text-3xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
             L&apos;accompagnement qui transforme{" "}
-            <span className="text-gradient-orange">vos projets</span> en réalité
-          </motion.h1>
-
-          {/* Badge SIGNATURE NEXUS — version mobile */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.8 }}
-            className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur-xl lg:hidden"
-          >
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-nexus-orange-500">
-              <Globe className="h-4 w-4 text-white" />
-            </div>
-            <div className="min-w-0">
-              <div className="text-overline text-nexus-orange-300">
-                Signature Nexus
-              </div>
-              <div className="text-body-sm font-semibold text-white">
-                Solutions globales. Impact réel.
-              </div>
-            </div>
-          </motion.div>
+            <span className="relative inline-block">
+              <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                vos projets
+              </span>
+              <span
+                aria-hidden
+                className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+              />
+            </span>{" "}
+            en réalité.
+          </h1>
 
           {/* Sous-titre */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9, duration: 0.8 }}
-            className="mt-10 max-w-2xl text-body-lg text-slate-300"
-          >
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
             Démarches administratives, projets internationaux, partenariats et
             financement. Un accompagnement structuré, fiable et axé sur des
             résultats concrets.
-          </motion.p>
+          </p>
 
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.1, duration: 0.8 }}
-            className="mt-12 flex flex-col gap-3 sm:flex-row sm:gap-4"
-          >
-            <Button href="/demande/complet" size="lg">
-              <FilePlus className="h-5 w-5" />
-              Ouvrir un dossier
-              <ArrowRight className="h-5 w-5" />
-            </Button>
-            <Button href="/rendez-vous" variant="outline" size="lg">
-              <Calendar className="h-5 w-5" />
+          {/* CTAs Premium tech */}
+          <div className="mt-9 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <Link
+              href="/demande/complet"
+              className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+            >
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
+              />
+              <FilePlus className="h-4 w-4" />
+              Soumettre un dossier
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
+            </Link>
+            <Link
+              href="/rendez-vous"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
+            >
+              <Calendar className="h-4 w-4" />
               Prendre rendez-vous
-            </Button>
-          </motion.div>
+            </Link>
+          </div>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.3, duration: 0.8 }}
-            className="mt-4 text-caption text-slate-400"
-          >
-            Premier contact gratuit · Réponse sous 24h · 100% confidentiel
-          </motion.p>
+          {/* Trust signals inline */}
+          <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-slate-400">
+            <span className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-200">
+              <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-300" />
+              Premier contact gratuit
+            </span>
+            <span className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-200">
+              <Clock className="h-3.5 w-3.5 text-nexus-orange-300" />
+              Réponse sous 24 h
+            </span>
+            <span className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-200">
+              <Sparkles className="h-3.5 w-3.5 text-nexus-orange-300" />
+              100% confidentiel
+            </span>
+          </div>
 
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.4, duration: 0.8 }}
-            className="mt-16 grid max-w-2xl grid-cols-3 gap-6 border-t border-white/10 pt-10"
-          >
-            <div>
-              <div className="font-display text-display-sm text-nexus-orange-400">
-                10+
-              </div>
-              <div className="text-overline text-slate-400">
-                Services experts
-              </div>
-            </div>
-            <div>
-              <div className="font-display text-display-sm text-nexus-orange-400">
-                24h
-              </div>
-              <div className="text-overline text-slate-400">
-                Délai de réponse
-              </div>
-            </div>
-            <div>
-              <div className="font-display text-display-sm text-nexus-orange-400">
-                2
-              </div>
-              <div className="text-overline text-slate-400">
-                Pôles internationaux
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
-      </motion.div>
-
-      {/* Indicateur de scroll (fade-out au scroll) */}
-      <motion.div
-        style={{ opacity: indicatorOpacity }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
-        <div className="flex h-10 w-6 items-start justify-center rounded-full border-2 border-white/30 p-1.5">
-          <div className="h-2 w-1 animate-bounce rounded-full bg-white/70" />
+          {/* Stats premium — 3 cards glassmorphism (mobile : 1 col stack, desktop : 3 col) */}
+          <div className="mt-12 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3">
+            <StatCard number="10+" label="Services experts" highlight />
+            <StatCard number="24 h" label="Délai de réponse" />
+            <StatCard
+              number="2"
+              label="Pôles internationaux"
+              hint="Bangui · Canada"
+            />
+          </div>
         </div>
-      </motion.div>
+      </div>
     </section>
+  );
+}
+
+// ─── Sous-composant Stat premium ───────────────────────────────────────────
+function StatCard({
+  number,
+  label,
+  hint,
+  highlight = false,
+}: {
+  number: string;
+  label: string;
+  hint?: string;
+  highlight?: boolean;
+}) {
+  return (
+    <div
+      className={`group/stat relative overflow-hidden rounded-2xl border bg-white/[0.04] px-5 py-4 backdrop-blur-md transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/[0.07] ${
+        highlight
+          ? "border-nexus-orange-400/30 hover:border-nexus-orange-400/60"
+          : "border-white/10 hover:border-white/25"
+      }`}
+    >
+      {/* Glow corner */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover/stat:bg-nexus-orange-500/20"
+      />
+      <div className="relative">
+        <p className="font-display text-2xl font-bold leading-none text-white sm:text-3xl">
+          <span className="bg-gradient-to-r from-nexus-orange-300 to-nexus-orange-500 bg-clip-text text-transparent">
+            {number}
+          </span>
+        </p>
+        <p className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+          {label}
+        </p>
+        {hint && (
+          <p className="mt-0.5 text-[10px] text-slate-500">{hint}</p>
+        )}
+      </div>
+    </div>
   );
 }
