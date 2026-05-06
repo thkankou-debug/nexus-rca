@@ -8,6 +8,9 @@ import { HowItWorks } from "@/components/HowItWorks";
 import { TravelCTA } from "@/components/TravelCTA";
 import { Testimonials } from "@/components/Testimonials";
 import { FinalCTA } from "@/components/FinalCTA";
+import { ProblemsSolved } from "@/components/home/ProblemsSolved";
+import { WhyTrust } from "@/components/home/WhyTrust";
+import { NextSteps } from "@/components/home/NextSteps";
 
 export default function HomePage() {
   return (
@@ -16,10 +19,13 @@ export default function HomePage() {
       <main>
         <Hero />
         <TrustMarquee />
+        <ProblemsSolved />
         <ServicesGrid />
         <HowItWorks />
+        <WhyTrust />
         <TravelCTA />
         <Testimonials />
+        <NextSteps />
         <FinalCTA />
       </main>
       <Footer />
