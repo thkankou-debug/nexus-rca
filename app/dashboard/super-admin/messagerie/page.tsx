@@ -1,12 +1,7 @@
-import { Send } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft, MessageCircle, Wrench } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
-import { BackButton } from "@/components/ui/BackButton";
-import {
-  MessagerieClient,
-  type Thread,
-  type Message,
-} from "@/components/dashboard/MessagerieClient";
 
 export const metadata = {
   title: "Messagerie | Super Admin",
@@ -14,188 +9,60 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-// ─── Données mockées (table messages à créer en migration ultérieure) ──
-
-const MOCK_MESSAGES_BY_THREAD: Record<string, Message[]> = {
-  thread_1: [
-    {
-      id: "m1",
-      thread_id: "thread_1",
-      author: "Marc Ouattara",
-      author_role: "client",
-      body: "Bonjour, j'ai bien reçu mon e-Visa. Merci pour votre suivi rapide. Quelle est la prochaine étape ?",
-      created_at: "2026-05-04T13:02:00Z",
-    },
-    {
-      id: "m2",
-      thread_id: "thread_1",
-      author: "Marie Ngounio",
-      author_role: "agent",
-      body: "Bonjour Marc ! Félicitations 🎉 Pour la suite : je vous envoie d'ici demain le récapitulatif des documents à présenter à l'embarquement et les contacts utiles à Bangui pour la biométrie.",
-      created_at: "2026-05-04T13:18:00Z",
-    },
-    {
-      id: "m3",
-      thread_id: "thread_1",
-      author: "Marc Ouattara",
-      author_role: "client",
-      body: "Parfait, merci. Je dois aussi régler la 2ème tranche de paiement, comment je procède ?",
-      created_at: "2026-05-04T14:31:00Z",
-    },
-  ],
-  thread_2: [
-    {
-      id: "m4",
-      thread_id: "thread_2",
-      author: "Aïssatou Bamba",
-      author_role: "client",
-      body: "Bonjour, je voudrais savoir où en est mon dossier d'études Canada. La rentrée approche.",
-      created_at: "2026-05-03T09:45:00Z",
-    },
-    {
-      id: "m5",
-      thread_id: "thread_2",
-      author: "Patrick Mbongo",
-      author_role: "admin",
-      body: "Bonjour Aïssatou. Votre lettre d'admission est arrivée, nous montons le dossier de visa cette semaine. Je reviens vers vous vendredi avec le détail.",
-      created_at: "2026-05-03T10:12:00Z",
-    },
-  ],
-  thread_3: [
-    {
-      id: "m6",
-      thread_id: "thread_3",
-      author: "Joseph Dabi",
-      author_role: "agent",
-      body: "Salut équipe, j'ai un client qui demande un transfert urgent de 5M XAF vers le Maroc. Best practice ?",
-      created_at: "2026-05-04T11:22:00Z",
-    },
-    {
-      id: "m7",
-      thread_id: "thread_3",
-      author: "Patrick Mbongo",
-      author_role: "admin",
-      body: "Pour ce montant, on passe par Western Union avec un fractionnement en 2 envois. Demande au client une pièce d'ID + justificatif d'origine des fonds.",
-      created_at: "2026-05-04T11:35:00Z",
-    },
-    {
-      id: "m8",
-      thread_id: "thread_3",
-      author: "Joseph Dabi",
-      author_role: "agent",
-      body: "OK reçu, je le contacte 👍",
-      created_at: "2026-05-04T11:36:00Z",
-    },
-  ],
-  thread_4: [
-    {
-      id: "m9",
-      thread_id: "thread_4",
-      author: "Bernard Akouhou",
-      author_role: "client",
-      body: "Bonjour, mon paiement Stripe n'apparaît pas comme reçu. Pourtant ma carte a été débitée hier.",
-      created_at: "2026-05-04T08:14:00Z",
-    },
-    {
-      id: "m10",
-      thread_id: "thread_4",
-      author: "Marie Ngounio",
-      author_role: "agent",
-      body: "Bonjour Bernard, je vérifie immédiatement avec la comptabilité, je reviens vers vous dans la matinée.",
-      created_at: "2026-05-04T08:22:00Z",
-    },
-  ],
-  thread_5: [
-    {
-      id: "m11",
-      thread_id: "thread_5",
-      author: "Sandrine Kotto",
-      author_role: "client",
-      body: "Pouvez-vous m'envoyer les pièces justificatives du dossier visa ? J'en ai besoin pour mon dossier de bourse.",
-      created_at: "2026-05-02T16:30:00Z",
-    },
-  ],
-};
-
-const MOCK_THREADS: Thread[] = [
-  {
-    id: "thread_1",
-    title: "Marc Ouattara",
-    subtitle: "Visa Schengen — France",
-    participants: ["Marc Ouattara", "Marie Ngounio"],
-    last_message: MOCK_MESSAGES_BY_THREAD["thread_1"][2].body,
-    last_message_at: "2026-05-04T14:31:00Z",
-    unread_count: 1,
-    is_team_thread: false,
-  },
-  {
-    id: "thread_2",
-    title: "Aïssatou Bamba",
-    subtitle: "Études Canada — Master Informatique",
-    participants: ["Aïssatou Bamba", "Patrick Mbongo"],
-    last_message: MOCK_MESSAGES_BY_THREAD["thread_2"][1].body,
-    last_message_at: "2026-05-03T10:12:00Z",
-    unread_count: 0,
-    is_team_thread: false,
-  },
-  {
-    id: "thread_3",
-    title: "Équipe Nexus — Transferts",
-    subtitle: "Discussion équipe",
-    participants: ["Joseph Dabi", "Patrick Mbongo", "Marie Ngounio"],
-    last_message: MOCK_MESSAGES_BY_THREAD["thread_3"][2].body,
-    last_message_at: "2026-05-04T11:36:00Z",
-    unread_count: 2,
-    is_team_thread: true,
-  },
-  {
-    id: "thread_4",
-    title: "Bernard Akouhou",
-    subtitle: "Paiement TCF Canada",
-    participants: ["Bernard Akouhou", "Marie Ngounio"],
-    last_message: MOCK_MESSAGES_BY_THREAD["thread_4"][1].body,
-    last_message_at: "2026-05-04T08:22:00Z",
-    unread_count: 0,
-    is_team_thread: false,
-  },
-  {
-    id: "thread_5",
-    title: "Sandrine Kotto",
-    subtitle: "Bourses — Demande de pièces",
-    participants: ["Sandrine Kotto"],
-    last_message: MOCK_MESSAGES_BY_THREAD["thread_5"][0].body,
-    last_message_at: "2026-05-02T16:30:00Z",
-    unread_count: 1,
-    is_team_thread: false,
-  },
-];
+// ─── PLACEHOLDER ──────────────────────────────────────────────────────────────
+// Le module de messagerie a été désactivé volontairement pour éviter que des
+// utilisateurs envoient des messages dans le mock client-side qui disparaissent
+// après refresh. Implémentation backend prévue en Feature 6 (table messages +
+// API /api/messages + Realtime Supabase).
+//
+// Le mock historique (MOCK_MESSAGES_BY_THREAD + MOCK_THREADS) est conservé en
+// référence dans l'historique git (commit d9ac779 "feat(governance): ...").
+// ──────────────────────────────────────────────────────────────────────────────
 
 export default async function SuperAdminMessageriePage() {
   const profile = await requireProfile(["super_admin"]);
 
   return (
     <DashboardShell profile={profile}>
-      <BackButton fallbackHref="/dashboard/super-admin" label="Retour au tableau de bord" />
+      {/* HERO */}
+      <div className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-6 shadow-xl sm:p-8">
+        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-nexus-orange-500/20 blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-nexus-orange-500/10 blur-3xl" />
 
-      <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white shadow-lg">
-          <Send className="h-6 w-6" />
-        </div>
-        <div>
-          <h1 className="font-display text-3xl font-bold text-nexus-blue-950">
-            Messagerie
-          </h1>
-          <p className="mt-1 text-slate-600">
-            Conversations équipe et clients — supervision complète.
-          </p>
+        <div className="relative flex flex-wrap items-center gap-6">
+          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-2xl">
+            <MessageCircle className="h-10 w-10" />
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <span className="inline-flex items-center gap-1 rounded-full bg-nexus-orange-500/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-nexus-orange-300">
+              <Wrench className="h-3 w-3" />
+              En développement
+            </span>
+            <h1 className="mt-2 font-display text-3xl font-bold text-white sm:text-4xl">
+              Messagerie — bientôt disponible
+            </h1>
+            <p className="mt-1 text-sm text-slate-300">
+              Le module de messagerie interne est en cours de développement. Disponible prochainement.
+            </p>
+          </div>
         </div>
       </div>
 
-      <MessagerieClient
-        initialThreads={MOCK_THREADS}
-        initialMessagesByThread={MOCK_MESSAGES_BY_THREAD}
-        currentUser={`${profile.prenom ?? ""} ${profile.nom ?? ""}`.trim() || "Vous"}
-      />
+      {/* CTA RETOUR */}
+      <div className="rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+        <p className="mx-auto max-w-md text-sm text-slate-600">
+          Vous serez notifié dès que la messagerie sera prête. En attendant, contactez votre équipe
+          via WhatsApp ou e-mail.
+        </p>
+        <Link
+          href="/dashboard/super-admin"
+          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Retour au tableau de bord
+        </Link>
+      </div>
     </DashboardShell>
   );
 }

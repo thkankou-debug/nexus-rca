@@ -71,7 +71,6 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { href: "/dashboard/agent/transferts", label: "Transferts", icon: Send },
     { href: "/dashboard/agent/depenses", label: "Mes dépenses", icon: Receipt },
     { href: "/dashboard/agent/notes", label: "Mes notes", icon: FileBarChart },
-    { href: "/dashboard/agent/messagerie", label: "Messagerie", icon: Send },
   ],
   admin: [
     { href: "/dashboard/admin", label: "Tableau de bord", icon: LayoutDashboard },
@@ -81,7 +80,6 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { href: "/dashboard/admin/rdv", label: "Rendez-vous", icon: CalendarCheck },
     { href: "/dashboard/admin/paiements", label: "Paiements", icon: Wallet },
     { href: "/dashboard/admin/rapports", label: "Rapports mensuels", icon: FileBarChart },
-    { href: "/dashboard/admin/messagerie", label: "Messagerie", icon: Send },
   ],
   super_admin: [
     // Pilotage
@@ -105,7 +103,6 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     // Gouvernance & configuration
     { href: "/dashboard/super-admin/equipe", label: "Équipe Nexus", icon: Briefcase },
     { href: "/dashboard/super-admin/roles", label: "Rôles & permissions", icon: ShieldCheck },
-    { href: "/dashboard/super-admin/messagerie", label: "Messagerie", icon: Send },
     { href: "/dashboard/super-admin/i18n", label: "Multi-langue", icon: Globe },
     { href: "/dashboard/super-admin/audit-log", label: "Audit log", icon: ShieldCheck },
     { href: "/dashboard/super-admin/parametres", label: "Paramètres agence", icon: Settings },
