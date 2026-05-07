@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "mcp__claude_ai_Vercel__list_teams",
+      "mcp__claude_ai_Vercel__list_deployments",
+      "Bash(git commit *)",
+      "mcp__claude_ai_Vercel__get_deployment",
+      "mcp__claude_ai_Vercel__deploy_to_vercel",
+      "Bash(curl -s -o /tmp/r1.txt -w \"HTTP %{http_code}\\\\n\" \"https://www.nexusrca.com/api/cron/monthly-report\")",
+      "Read(//tmp/**)",
+      "Bash(curl -s -o /tmp/r2.txt -w \"HTTP %{http_code}\\\\n\" -H \"Authorization: Bearer DEFINITELY-WRONG-TOKEN\" \"https://www.nexusrca.com/api/cron/monthly-report\")",
+      "Bash(curl -s -o /tmp/r.txt -w \"HTTP %{http_code}\\\\n\" \"https://www.nexusrca.com/api/cron/monthly-report\")",
+      "mcp__claude_ai_Supabase__list_tables",
+      "mcp__claude_ai_Supabase__execute_sql",
+      "mcp__claude_ai_Supabase__apply_migration",
+      "Bash(curl -s -o /tmp/cron.txt -w 'HTTP %{http_code}\\\\n' -H 'Authorization: Bearer nexus-cron-2026-a3f7e9b2c8d4f1e6a9b3c7e5d2f8a1b4' https://www.nexusrca.com/api/cron/monthly-report)",
+      "Bash(cat)",
+      "Bash(curl -s -o /tmp/visa-resp.json -w 'HTTP %{http_code}\\\\n' -X POST https://www.nexusrca.com/api/visa/express -F 'nom_complet=Test Claude \\(automated\\)' -F email=tkankou@gmail.com -F whatsapp=+33600000000 -F pays_destination=Inde -F type_visa=Tourisme -F urgence=normal -F 'notes=Test automatisé du formulaire visa express via curl. Vous pouvez ignorer cette demande.' -F 'documents=@/tmp/test-passport.pdf;type=application/pdf')",
+      "Bash(curl -v -o /tmp/visa-resp.json -X POST https://www.nexusrca.com/api/visa/express -F 'nom_complet=Test Claude \\(automated\\)' -F email=tkankou@gmail.com -F whatsapp=+33600000000 -F pays_destination=Inde -F type_visa=Tourisme -F urgence=normal -F 'notes=Test automatise du formulaire visa express.' -F 'documents=@/tmp/test-passport.pdf;type=application/pdf')",
+      "Bash(npm install *)",
+      "Bash(node *)",
+      "mcp__claude_ai_Supabase__list_projects",
+      "mcp__claude_ai_Supabase__list_migrations",
+      "mcp__claude_ai_Supabase__get_advisors",
+      "Bash(npx tsc *)",
+      "PowerShell(npm run *)",
+      "Bash(awk '/\"ServiceFinancement\"/,/^  \\\\},?$/' \"C:/Users/user/Desktop/nexus-test-nouveau/nexus-rca-claude-test/messages/fr.json\")",
+      "Bash(awk *)",
+      "Bash(rm -rf .next)",
+      "Bash(wait %1)",
+      "PowerShell($bytes = [System.IO.File]::ReadAllBytes\\('C:\\\\Users\\\\user\\\\Desktop\\\\nexus-test-nouveau\\\\nexus-rca-claude-test\\\\app\\\\services\\\\visa\\\\page.tsx'\\); $text = [System.Text.Encoding]::UTF8.GetString\\($bytes\\); $idx = $text.IndexOf\\('tout prix'\\); $sub = $text.Substring\\([Math]::Max\\(0,$idx-30\\), 60\\); $sub.ToCharArray\\(\\) | ForEach-Object { '{0} U+{1:X4}' -f $_, [int]$_ })",
+      "PowerShell($bytes = [System.IO.File]::ReadAllBytes\\('C:\\\\Users\\\\user\\\\Desktop\\\\nexus-test-nouveau\\\\nexus-rca-claude-test\\\\app\\\\services\\\\visa\\\\page.tsx'\\); $text = [System.Text.Encoding]::UTF8.GetString\\($bytes\\); $idx = $text.IndexOf\\('100'\\); $sub = $text.Substring\\([Math]::Max\\(0,$idx-5\\), 30\\); $sub.ToCharArray\\(\\) | ForEach-Object { '{0} U+{1:X4}' -f $_, [int]$_ })",
+      "PowerShell($bytes = [System.IO.File]::ReadAllBytes\\('C:\\\\Users\\\\user\\\\Desktop\\\\nexus-test-nouveau\\\\nexus-rca-claude-test\\\\app\\\\services\\\\visa\\\\page.tsx'\\); $text = [System.Text.Encoding]::UTF8.GetString\\($bytes\\); $idx1 = $text.IndexOf\\('100'\\); $idx2 = $text.IndexOf\\('100', $idx1+1\\); foreach \\($i in @\\($idx1, $idx2\\)\\) { $sub = $text.Substring\\([Math]::Max\\(0,$i-3\\), 12\\); 'Idx '+$i+': '; $sub.ToCharArray\\(\\) | ForEach-Object { '  {0} U+{1:X4}' -f $_, [int]$_ } })",
+      "PowerShell($path = 'C:\\\\Users\\\\user\\\\Desktop\\\\nexus-test-nouveau\\\\nexus-rca-claude-test\\\\app\\\\services\\\\visa\\\\page.tsx'; $bytes = [System.IO.File]::ReadAllBytes\\($path\\); $text = [System.Text.Encoding]::UTF8.GetString\\($bytes\\); $nbsp = [char]0x00A0; $oldStr = '\"48 à 72 h\"'; $newStr = '\"48 à 72' + $nbsp + 'h\"'; $newText = $text.Replace\\($oldStr, $newStr\\); [System.IO.File]::WriteAllBytes\\($path, [System.Text.UTF8Encoding]::new\\($false\\).GetBytes\\($newText\\)\\); 'Replaced ' + \\(\\([regex]::Matches\\($text, [regex]::Escape\\($oldStr\\)\\)\\).Count\\) + ' occurrences of \"48 à 72 h\"')"
+    ]
+  }
+}

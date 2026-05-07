@@ -33,6 +33,7 @@ import { VisaRequirementChecker } from "@/components/visa/VisaRequirementChecker
 import { EVisaEligibilityChecker } from "@/components/visa/EVisaEligibilityChecker";
 import { VisaDocumentChecklist } from "@/components/visa/VisaDocumentChecklist";
 import { VisaExpressForm } from "@/components/visa/VisaExpressForm";
+import { AssuranceCompanionPanel } from "@/components/services/AssuranceCompanionPanel";
 
 export const metadata = {
   title: "Visa & e-Visa | Nexus RCA — Bangui",
@@ -392,101 +393,109 @@ export default function VisaPage() {
             className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
           />
 
-          <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
-            <div className="text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md transition-all duration-300 hover:border-nexus-orange-500/50">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
-                </span>
-                Service visa
-              </span>
-
-              <h1 className="mx-auto mt-6 max-w-3xl font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Visa &{" "}
-                <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
-                    e-Visa
+          <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
+            <div className="grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-10 xl:gap-14">
+              {/* ─── Colonne principale (gauche) ─── */}
+              <div className="text-center lg:col-span-7 lg:text-left">
+                <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md transition-all duration-300 hover:border-nexus-orange-500/50">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
                   </span>
-                  <span
-                    aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
-                  />
+                  Service visa
                 </span>
-              </h1>
 
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-300 sm:text-xl">
-                Nous étudions chaque dossier avec rigueur avant d&apos;accepter
-                de l&apos;accompagner. Si votre projet correspond à nos
-                critères, nous structurons votre dossier selon les exigences
-                exactes du consulat ciblé et menons votre demande jusqu&apos;à
-                la décision.
-              </p>
+                <h1 className="mt-6 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-[3.6rem] xl:text-6xl">
+                  Visa &{" "}
+                  <span className="relative inline-block">
+                    <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                      e-Visa
+                    </span>
+                    <span
+                      aria-hidden
+                      className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    />
+                  </span>
+                </h1>
 
-              <div className="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
-                <Link
-                  href="/services/visa/demarrer"
-                  className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
-                >
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
-                  />
-                  <FileText className="h-4 w-4" />
-                  Soumettre ma demande
-                  <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
-                </Link>
-                <Link
-                  href="/rendez-vous?service=visa"
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
-                >
-                  <Calendar className="h-4 w-4" />
-                  Prendre rendez-vous
-                </Link>
+                <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg lg:mx-0 lg:text-xl">
+                  Nous étudions chaque dossier avec rigueur avant
+                  d&apos;accepter de l&apos;accompagner. Si votre projet
+                  correspond à nos critères, nous structurons votre dossier
+                  selon les exigences exactes du consulat ciblé et menons
+                  votre demande jusqu&apos;à la décision.
+                </p>
+
+                <div className="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4 lg:justify-start">
+                  <Link
+                    href="/services/visa/demarrer"
+                    className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+                  >
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
+                    />
+                    <FileText className="h-4 w-4" />
+                    Soumettre ma demande
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
+                  </Link>
+                  <Link
+                    href="/rendez-vous?service=visa"
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
+                  >
+                    <Calendar className="h-4 w-4" />
+                    Prendre rendez-vous
+                  </Link>
+                </div>
+
+                <p className="mt-6 text-xs text-slate-400">
+                  Étude initiale gratuite · Bilan de faisabilité honnête ·{" "}
+                  <a
+                    href={whatsappLink(
+                      "Bonjour Nexus, j'ai une question sur le service visa avant de soumettre ma demande."
+                    )}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-bold text-nexus-orange-300 underline-offset-4 hover:underline"
+                  >
+                    Question sur WhatsApp
+                  </a>
+                </p>
+
+                {/* Stats Premium tech */}
+                <div className="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3 lg:mx-0 lg:max-w-none">
+                  {STATS.map((s, i) => (
+                    <article
+                      key={s.label}
+                      className={`group/stat relative overflow-hidden rounded-2xl border bg-white/[0.04] px-5 py-4 backdrop-blur-md ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/[0.07] ${
+                        i === 0
+                          ? "border-nexus-orange-400/30 hover:border-nexus-orange-400/60"
+                          : "border-white/10 hover:border-white/25"
+                      }`}
+                    >
+                      <div
+                        aria-hidden
+                        className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover/stat:bg-nexus-orange-500/20"
+                      />
+                      <div className="relative">
+                        <p className="font-display text-xl font-bold leading-none text-white sm:text-2xl">
+                          <span className="bg-gradient-to-r from-nexus-orange-300 to-nexus-orange-500 bg-clip-text text-transparent">
+                            {s.value}
+                          </span>
+                        </p>
+                        <p className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400">
+                          {s.label}
+                        </p>
+                      </div>
+                    </article>
+                  ))}
+                </div>
               </div>
 
-              <p className="mt-6 text-xs text-slate-400">
-                Étude initiale gratuite · Bilan de faisabilité honnête ·{" "}
-                <a
-                  href={whatsappLink(
-                    "Bonjour Nexus, j'ai une question sur le service visa avant de soumettre ma demande."
-                  )}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-bold text-nexus-orange-300 underline-offset-4 hover:underline"
-                >
-                  Question sur WhatsApp
-                </a>
-              </p>
-            </div>
-
-            {/* Stats Premium tech */}
-            <div className="mx-auto mt-12 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3">
-              {STATS.map((s, i) => (
-                <article
-                  key={s.label}
-                  className={`group/stat relative overflow-hidden rounded-2xl border bg-white/[0.04] px-5 py-4 backdrop-blur-md ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/[0.07] ${
-                    i === 0
-                      ? "border-nexus-orange-400/30 hover:border-nexus-orange-400/60"
-                      : "border-white/10 hover:border-white/25"
-                  }`}
-                >
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover/stat:bg-nexus-orange-500/20"
-                  />
-                  <div className="relative">
-                    <p className="font-display text-xl font-bold leading-none text-white sm:text-2xl">
-                      <span className="bg-gradient-to-r from-nexus-orange-300 to-nexus-orange-500 bg-clip-text text-transparent">
-                        {s.value}
-                      </span>
-                    </p>
-                    <p className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400">
-                      {s.label}
-                    </p>
-                  </div>
-                </article>
-              ))}
+              {/* ─── Colonne secondaire (droite) — Companion panel assurance ─── */}
+              <div className="lg:col-span-5">
+                <AssuranceCompanionPanel variant="visa" />
+              </div>
             </div>
           </div>
         </section>
@@ -1218,61 +1227,6 @@ export default function VisaPage() {
                     Prendre rendez-vous
                   </Link>
                 </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 9 bis. BANDE CTA — ASSURANCE & MOBILITÉ INTERNATIONALE ───────── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-12 text-white sm:py-16">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-[0.35]"
-            style={DOT_GRID_DARK}
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -right-32 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-nexus-orange-500/15 blur-[100px]"
-          />
-
-          <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
-            <div className="overflow-hidden rounded-3xl border border-nexus-orange-400/25 bg-gradient-to-br from-nexus-orange-500/8 via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.20)]">
-              <div className="flex flex-col gap-6 p-7 sm:p-9 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
-                <div className="flex items-start gap-5 lg:items-center">
-                  <div className="hidden h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/10 sm:flex">
-                    <ShieldCheck className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
-                      Complément essentiel
-                    </p>
-                    <h3 className="mt-1.5 font-display text-xl font-bold leading-tight text-white sm:text-2xl lg:text-3xl">
-                      L&rsquo;assurance, le détail qui{" "}
-                      <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
-                        valide votre dossier
-                      </span>
-                      .
-                    </h3>
-                    <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
-                      Tout dossier visa Schengen exige une couverture conforme
-                      au standard 30 000 €. Notre cabinet de courtage
-                      sélectionne et accompagne votre assurance — voyage,
-                      santé internationale, études, mobilité business.
-                    </p>
-                  </div>
-                </div>
-
-                <Link
-                  href="/services/assurance"
-                  className="group/cta relative inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden rounded-2xl border border-nexus-orange-400/40 bg-nexus-orange-500/10 px-6 py-3.5 text-sm font-bold text-nexus-orange-200 backdrop-blur-md transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-400/60 hover:bg-nexus-orange-500/15 hover:text-white"
-                >
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/15 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
-                  />
-                  Découvrir notre cabinet assurance
-                  <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
-                </Link>
               </div>
             </div>
           </div>
