@@ -20,6 +20,7 @@ import {
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
+import { PublicHero } from "@/components/PublicHero";
 import { Button } from "@/components/ui/Button";
 import { Input, Textarea } from "@/components/ui/Input";
 import { whatsappLink } from "@/lib/utils";
@@ -130,61 +131,13 @@ export default function ContactPage() {
       <Navbar />
       <main>
         {/* ─── Hero Premium tech ────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 pt-28 pb-16 text-white sm:pt-40 sm:pb-24">
-          {/* Dot grid subtil (Stripe-like) */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-[0.55]"
-            style={DOT_GRID_STYLE}
-          />
-          {/* Blobs glow orange + navy clair */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -right-24 -top-24 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -bottom-32 -left-24 h-[28rem] w-[28rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
-          />
-          {/* Ligne séparatrice subtle en bas */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent"
-          />
-
-          <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
-            <div className="max-w-2xl">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md transition-all duration-300 hover:border-nexus-orange-500/40 hover:bg-white/10">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
-                </span>
-                {t("eyebrow")}
-              </span>
-              <h1 className="mt-5 font-display text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-6xl">
-                {t("title")}
-              </h1>
-              <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                {t("subtitle")}
-              </p>
-
-              <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-400">
-                <span className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-200">
-                  <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-300" />
-                  {t("trust_encrypted")}
-                </span>
-                <span className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-200">
-                  <Clock className="h-3.5 w-3.5 text-nexus-orange-300" />
-                  {t("trust_response")}
-                </span>
-                <span className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-200">
-                  <MapPin className="h-3.5 w-3.5 text-nexus-orange-300" />
-                  {t("trust_office")}
-                </span>
-              </div>
-            </div>
-          </div>
-        </section>
+        <PublicHero
+          eyebrow={t("hero_eyebrow")}
+          titleStart={t("hero_title_start")}
+          accentWord={t("hero_title_accent")}
+          titleEnd={t("hero_title_end")}
+          subtitle={t("hero_subtitle")}
+        />
 
         {/* ─── 3 canaux Premium tech ────────────────────────────────── */}
         <section className="bg-slate-50 py-14 sm:py-16">

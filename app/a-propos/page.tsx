@@ -3,7 +3,6 @@ import { useTranslations } from "next-intl";
 import {
   ArrowRight,
   Briefcase,
-  Building2,
   CheckCircle2,
   Compass,
   Globe2,
@@ -20,6 +19,7 @@ import {
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
+import { PublicHero } from "@/components/PublicHero";
 
 export const metadata = {
   title: "À propos | Nexus RCA",
@@ -96,57 +96,13 @@ export default function AProposPage() {
       <Navbar />
       <main>
         {/* ─── HERO Premium tech ──────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 pt-28 pb-16 text-white sm:pt-40 sm:pb-24">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-[0.55]"
-            style={DOT_GRID_DARK}
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -right-24 -top-24 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -bottom-32 -left-24 h-[28rem] w-[28rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent"
-          />
-
-          <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
-            <div className="text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md transition-all duration-300 hover:border-nexus-orange-500/40 hover:bg-white/10">
-                <Building2 className="h-3 w-3" />
-                {t("hero_eyebrow")}
-              </span>
-
-              <h1 className="mx-auto mt-5 max-w-3xl font-display text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-6xl">
-                {t("hero_title")}
-              </h1>
-
-              <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                {t("hero_subtitle")}
-              </p>
-
-              <div className="mt-9 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-slate-400">
-                <span className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-200">
-                  <MapPin className="h-3.5 w-3.5 text-nexus-orange-300" />
-                  {t("hero_trust_bureau")}
-                </span>
-                <span className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-200">
-                  <Globe2 className="h-3.5 w-3.5 text-nexus-orange-300" />
-                  {t("hero_trust_presence")}
-                </span>
-                <span className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-200">
-                  <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-300" />
-                  {t("hero_trust_method")}
-                </span>
-              </div>
-            </div>
-          </div>
-        </section>
+        <PublicHero
+          eyebrow={t("hero_eyebrow")}
+          titleStart={t("hero_title_start")}
+          accentWord={t("hero_title_accent")}
+          titleEnd={t("hero_title_end")}
+          subtitle={t("hero_subtitle")}
+        />
 
         {/* ─── QUI SOMMES-NOUS ────────────────────────────────────────── */}
         <section className="bg-white py-20 sm:py-24">

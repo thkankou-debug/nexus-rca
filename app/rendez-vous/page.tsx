@@ -3,6 +3,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { AppointmentForm } from "@/components/AppointmentForm";
+import { PublicHero } from "@/components/PublicHero";
 import {
   Zap,
   FilePlus,
@@ -11,7 +12,6 @@ import {
   Lightbulb,
   MessageCircle,
   ArrowRight,
-  CheckCircle2,
 } from "lucide-react";
 import { whatsappLink } from "@/lib/utils";
 import { NEXUS_CONTACT } from "@/lib/contact";
@@ -22,60 +22,19 @@ export const metadata = {
     "Réservez un échange structuré avec l'équipe Nexus RCA pour analyser votre besoin, clarifier votre situation et définir les prochaines étapes.",
 };
 
-const REASSURANCE_POINTS = [
-  "Réponse claire et professionnelle",
-  "Orientation adaptée à votre service",
-  "Confirmation après vérification de disponibilité",
-];
-
 export default function RendezVousPage() {
   return (
     <>
       <Navbar />
       <main className="min-h-screen bg-surface-sunken">
         {/* HERO ─────────────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 pt-32 pb-16 text-white">
-          <div className="absolute inset-0 bg-mesh-gradient opacity-40" />
-          <div className="absolute -right-32 top-1/4 h-96 w-96 rounded-full bg-nexus-orange-500/20 blur-3xl" />
-          <div className="grain pointer-events-none absolute inset-0 opacity-20" />
-
-          <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
-            <div className="max-w-3xl">
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-overline text-nexus-orange-300 backdrop-blur">
-                <span className="flex h-2 w-2 rounded-full bg-emerald-400" />
-                Prise de rendez-vous en ligne
-              </div>
-
-              <h1
-                className="font-display text-display-xl text-white lg:text-display-2xl"
-                style={{ paddingBottom: "0.15em" }}
-              >
-                Prendre un rendez-vous avec{" "}
-                <span className="text-gradient-orange">Nexus RCA</span>
-              </h1>
-
-              <p className="mt-5 text-body-lg text-slate-300">
-                Réservez un échange structuré avec notre équipe pour analyser
-                votre besoin, clarifier votre situation et définir les
-                prochaines étapes.
-              </p>
-
-              <ul className="mt-8 grid gap-3 sm:grid-cols-3">
-                {REASSURANCE_POINTS.map((point) => (
-                  <li
-                    key={point}
-                    className="flex items-start gap-2.5 rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur"
-                  >
-                    <CheckCircle2 className="h-5 w-5 shrink-0 text-nexus-orange-400" />
-                    <span className="text-body-sm font-medium text-white/90">
-                      {point}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
+        <PublicHero
+          eyebrow="Prendre rendez-vous"
+          titleStart="Un agent. Un créneau. "
+          accentWord="C'est parti"
+          titleEnd="."
+          subtitle="Choisissez le service, le motif, votre créneau. Confirmation immédiate par email et WhatsApp."
+        />
 
         {/* CONTENT ───────────────────────────────────────────── */}
         <section className="mx-auto max-w-7xl px-4 py-12 lg:px-8">
