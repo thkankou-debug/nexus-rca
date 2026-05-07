@@ -4,18 +4,25 @@ import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import {
   ArrowRight,
+  Award,
   Calendar,
   Check,
   CheckCircle2,
   ClipboardCheck,
   Eye,
+  FileSearch,
   FileText,
+  Globe2,
+  Layers,
+  Lock,
   MapPin,
   MessageCircle,
+  Scale,
   Search,
   ShieldCheck,
   Smartphone,
   Sparkles,
+  UserCircle,
   Wallet,
   XCircle,
   Zap,
@@ -57,31 +64,157 @@ const POUR_QUI = {
 const METHODOLOGIE = [
   {
     num: "01",
-    icon: FileText,
-    title: "Soumission de la demande",
+    icon: MessageCircle,
+    title: "Brief stratégique",
     description:
-      "Vous remplissez notre formulaire structuré ou prenez rendez-vous. Nous recueillons les éléments essentiels de votre situation.",
+      "Recueil structuré des éléments du projet : objet, calendrier, situation personnelle et professionnelle. Un échange approfondi pour comprendre l'enjeu réel.",
   },
   {
     num: "02",
-    icon: Search,
-    title: "Analyse de faisabilité",
+    icon: FileSearch,
+    title: "Étude de faisabilité",
     description:
-      "Un conseiller Nexus étudie votre dossier, identifie le type de visa adapté et évalue la faisabilité. Bilan honnête écrit avant tout engagement.",
+      "Analyse du dossier, identification du poste consulaire ciblé, évaluation des points forts et des risques. Bilan honnête écrit transmis avant tout engagement.",
   },
   {
     num: "03",
-    icon: ClipboardCheck,
-    title: "Accompagnement structuré",
+    icon: Layers,
+    title: "Stratégie & cadrage",
     description:
-      "Constitution du dossier complet selon les exigences exactes du consulat ciblé : formulaires, justificatifs, lettre, préparation à l'entretien.",
+      "Construction du fil conducteur du dossier : motivation, ressources, hébergement, attaches, cohérence narrative. Définition de la stratégie documentaire.",
   },
   {
     num: "04",
-    icon: Eye,
-    title: "Suivi jusqu'au résultat",
+    icon: ClipboardCheck,
+    title: "Constitution du dossier",
     description:
-      "Prise de rendez-vous au consulat ou centre VFS/TLS, accompagnement le jour du dépôt, suivi actif jusqu'à la décision finale, communication transparente.",
+      "Pièces administratives, lettres, justificatifs financiers et professionnels rassemblés selon le référentiel exact du poste consulaire ciblé.",
+  },
+  {
+    num: "05",
+    icon: Eye,
+    title: "Examen interne",
+    description:
+      "Double-relecture systématique par un binôme de conseillers avant tout dépôt. Vérification de la conformité, de la cohérence et de la complétude.",
+  },
+  {
+    num: "06",
+    icon: Calendar,
+    title: "Dépôt & coordination",
+    description:
+      "Prise de rendez-vous TLS/VFS, accompagnement du déplacement à Yaoundé, coordination de la biométrie. Dossier physique remis prêt à déposer.",
+  },
+  {
+    num: "07",
+    icon: ShieldCheck,
+    title: "Suivi de la décision",
+    description:
+      "Réponse aux compléments d'information demandés, ajustement du dossier si nécessaire, transmission de la décision finale dès sa notification.",
+  },
+];
+
+// Indicateurs qualitatifs (NEW E)
+const INDICATEURS = [
+  {
+    icon: Scale,
+    label: "Sélectif",
+    sub: "Étude initiale obligatoire",
+  },
+  {
+    icon: FileSearch,
+    label: "Rigoureux",
+    sub: "Bilan écrit avant engagement",
+  },
+  {
+    icon: ClipboardCheck,
+    label: "Documenté",
+    sub: "Procédure tracée jusqu'à décision",
+  },
+  {
+    icon: Lock,
+    label: "Confidentiel",
+    sub: "Protocole strict",
+  },
+];
+
+// Piliers approche concierge (NEW A)
+const APPROCHE_PILIERS = [
+  {
+    icon: UserCircle,
+    title: "Interlocuteur unique",
+    desc: "Du premier contact à la décision finale, un seul conseiller pilote votre dossier.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Référentiel consulaire",
+    desc: "Dossier construit selon les exigences exactes du poste consulaire ciblé.",
+  },
+  {
+    icon: Eye,
+    title: "Suivi traçable",
+    desc: "Chaque décision est documentée, chaque étape est communiquée par écrit.",
+  },
+];
+
+// Domaines d'intervention (NEW B)
+interface ZoneCompetence {
+  id: string;
+  region: string;
+  count: string;
+  detail: string;
+  icon: typeof Globe2;
+}
+
+const ZONES_COMPETENCE: ZoneCompetence[] = [
+  {
+    id: "schengen",
+    region: "Schengen",
+    count: "26 pays",
+    detail: "Procédure cadrée — biométrie Yaoundé",
+    icon: Globe2,
+  },
+  {
+    id: "canada",
+    region: "Canada",
+    count: "1 destination",
+    detail: "Procédure cadrée — visiteur, études, travail",
+    icon: MapPin,
+  },
+  {
+    id: "asie",
+    region: "e-Visa Asie",
+    count: "5 destinations",
+    detail: "Inde, Vietnam, Thaïlande, Sri Lanka, Chine",
+    icon: Globe2,
+  },
+  {
+    id: "mena",
+    region: "Moyen-Orient & Afrique",
+    count: "5 destinations",
+    detail: "Émirats, Turquie, Maroc, Kenya, Rwanda",
+    icon: Globe2,
+  },
+];
+
+// Le cabinet Nexus Visa (NEW D)
+const CABINET_PILIERS = [
+  {
+    icon: ShieldCheck,
+    eyebrow: "Méthode",
+    title: "Rigueur",
+    desc: "Méthodologie écrite, double-relecture systématique, référentiel consulaire à jour.",
+  },
+  {
+    icon: Lock,
+    eyebrow: "Protocole",
+    title: "Confidentialité",
+    desc: "Protocole strict de confidentialité, données chiffrées, accès restreint au binôme dédié.",
+  },
+  {
+    icon: Award,
+    eyebrow: "Engagement",
+    title: "Excellence",
+    desc: "Engagement de moyens documenté, suivi traçable jusqu'à la décision finale.",
   },
 ];
 
@@ -105,70 +238,6 @@ const E_VISA_AVANTAGES = [
     icon: CheckCircle2,
     title: "Moins de pièces",
     description: "Procédure plus accessible que le visa classique.",
-  },
-];
-
-interface Destination {
-  name: string;
-  type: string;
-  emoji: string;
-}
-
-interface Region {
-  title: string;
-  emoji: string;
-  description: string;
-  destinations: Destination[];
-  highlight?: boolean;
-}
-
-const REGIONS: Region[] = [
-  {
-    title: "Asie",
-    emoji: "🌏",
-    description: "Voyages d'affaires, tourisme, études — forte demande RCA.",
-    highlight: true,
-    destinations: [
-      { name: "Inde", type: "e-Visa tourisme & affaires", emoji: "🇮🇳" },
-      { name: "Indonésie (Bali)", type: "e-Visa tourisme", emoji: "🇮🇩" },
-      { name: "Vietnam", type: "e-Visa rapide", emoji: "🇻🇳" },
-      { name: "Thaïlande", type: "Visa & e-Visa", emoji: "🇹🇭" },
-      { name: "Sri Lanka", type: "ETA en ligne", emoji: "🇱🇰" },
-      { name: "Chine", type: "Visa classique", emoji: "🇨🇳" },
-    ],
-  },
-  {
-    title: "Moyen-Orient",
-    emoji: "🌍",
-    description: "Business, commerce, transit aérien.",
-    destinations: [
-      { name: "Émirats Arabes Unis (Dubaï)", type: "e-Visa rapide", emoji: "🇦🇪" },
-      { name: "Turquie", type: "e-Visa simplifié", emoji: "🇹🇷" },
-    ],
-  },
-  {
-    title: "Europe & Amérique",
-    emoji: "🌎",
-    description:
-      "Démarches consulaires complètes — biométrie souvent à Yaoundé ou Douala.",
-    destinations: [
-      {
-        name: "Visa Schengen",
-        type: "Tourisme, études, travail (26 pays)",
-        emoji: "🇪🇺",
-      },
-      { name: "Canada", type: "Visiteur, études, travail", emoji: "🇨🇦" },
-    ],
-  },
-  {
-    title: "Afrique",
-    emoji: "🌍",
-    description: "Démarches régionales et continentales.",
-    destinations: [
-      { name: "Maroc", type: "Visa & e-Visa", emoji: "🇲🇦" },
-      { name: "Kenya", type: "e-Visa en ligne", emoji: "🇰🇪" },
-      { name: "Rwanda", type: "e-Visa rapide", emoji: "🇷🇼" },
-    ],
   },
 ];
 
@@ -345,7 +414,7 @@ export default function VisaPage() {
                 </span>
               </h1>
 
-              <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
+              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-300 sm:text-xl">
                 Nous étudions chaque dossier avec rigueur avant d&apos;accepter
                 de l&apos;accompagner. Si votre projet correspond à nos
                 critères, nous structurons votre dossier selon les exigences
@@ -411,7 +480,7 @@ export default function VisaPage() {
                         {s.value}
                       </span>
                     </p>
-                    <p className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                    <p className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400">
                       {s.label}
                     </p>
                   </div>
@@ -421,10 +490,68 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 2. DIAGNOSTIC VISA — navy + cards glass claires (lisibilité checkers) ── */}
+        {/* 2. INDICATEURS QUALITATIFS — bandeau premium navy (NEW E) ─────────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-12 text-white sm:py-14">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
+            style={DOT_GRID_DARK}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/10 blur-[120px]"
+          />
+
+          <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+              {INDICATEURS.map((ind, i) => {
+                const Icon = ind.icon;
+                return (
+                  <article
+                    key={ind.label}
+                    className={`group relative overflow-hidden rounded-2xl border bg-white/[0.04] p-5 backdrop-blur-md ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/[0.07] ${
+                      i === 0
+                        ? "border-nexus-orange-400/30 hover:border-nexus-orange-400/60"
+                        : "border-white/10 hover:border-white/25"
+                    }`}
+                  >
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                    />
+                    <div className="relative">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500/20 to-nexus-orange-700/10 text-nexus-orange-300 ring-1 ring-nexus-orange-400/30 backdrop-blur transition-transform duration-300 ease-out group-hover:scale-105">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                        Marqueur
+                      </p>
+                      <p className="mt-1 font-display text-lg font-bold leading-tight text-white sm:text-xl">
+                        {ind.label}
+                      </p>
+                      <p className="mt-1 text-xs leading-relaxed text-slate-400 sm:text-sm">
+                        {ind.sub}
+                      </p>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* 3. DIAGNOSTIC VISA — navy + cards glass claires (lisibilité checkers) ── */}
         <section
           id="diagnostic"
-          className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24 lg:py-28"
+          className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-24 text-white sm:py-28 lg:py-32"
         >
           <div
             aria-hidden
@@ -453,7 +580,7 @@ export default function VisaPage() {
                 </span>
                 Diagnostic gratuit
               </span>
-              <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+              <h2 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Évaluez votre dossier en{" "}
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
@@ -466,7 +593,7 @@ export default function VisaPage() {
                 </span>
                 .
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+              <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-slate-300 sm:text-xl">
                 Deux outils Nexus pour identifier votre type de visa et vos
                 exigences avant même de nous contacter — sans inscription.
               </p>
@@ -495,7 +622,107 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 3. INTRO COURTE — navy editorial ─────────────────────────── */}
+        {/* 4. APPROCHE CONCIERGE — bloc institutionnel premium (NEW A) ─────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-24 text-white sm:py-28 lg:py-32">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
+            style={DOT_GRID_DARK}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -left-32 top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-32 bottom-32 h-[32rem] w-[32rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+          />
+
+          <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
+            <div className="mx-auto max-w-3xl text-center">
+              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+                Notre approche
+              </span>
+              <h2 className="mt-4 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Une approche{" "}
+                <span className="relative inline-block">
+                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    concierge
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  />
+                </span>{" "}
+                du visa.
+              </h2>
+            </div>
+
+            {/* Bloc éditorial — quote pattern Stripe Sessions */}
+            <div className="mx-auto mt-12 max-w-3xl">
+              <blockquote className="relative">
+                <span
+                  aria-hidden
+                  className="absolute -left-2 -top-6 font-display text-7xl leading-none text-nexus-orange-500/30 sm:-left-6 sm:-top-4 sm:text-8xl"
+                >
+                  &ldquo;
+                </span>
+                <p className="relative text-lg leading-relaxed text-white sm:text-xl">
+                  Le visa n&apos;est pas une formalité administrative. C&apos;est
+                  une décision d&apos;État qui demande structure, transparence et
+                  conformité. Notre approche : un interlocuteur unique, un
+                  dossier construit selon le référentiel exact du poste
+                  consulaire ciblé, un suivi rigoureux jusqu&apos;à la décision
+                  finale.
+                </p>
+                <footer className="mt-6 flex items-center gap-3">
+                  <span
+                    aria-hidden
+                    className="h-px w-10 bg-gradient-to-r from-nexus-orange-500/60 to-transparent"
+                  />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                    Cabinet Nexus Visa &mdash; Bangui
+                  </span>
+                </footer>
+              </blockquote>
+            </div>
+
+            {/* 3 piliers glass */}
+            <div className="mt-16 grid gap-5 sm:grid-cols-3">
+              {APPROCHE_PILIERS.map((p) => {
+                const Icon = p.icon;
+                return (
+                  <article
+                    key={p.title}
+                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                  >
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                    />
+                    <div className="relative">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
+                        <Icon className="h-6 w-6" />
+                      </div>
+                      <h3 className="mt-5 font-display text-lg font-bold leading-tight text-white sm:text-xl">
+                        {p.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-relaxed text-slate-300 sm:text-base">
+                        {p.desc}
+                      </p>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* 5. INTRO COURTE — navy editorial ─────────────────────────── */}
         <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-16 text-white lg:py-20">
           <div
             aria-hidden
@@ -533,7 +760,7 @@ export default function VisaPage() {
         </section>
 
         {/* 4. CE QUE NOUS FAISONS — navy glass split ────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-24 text-white sm:py-28 lg:py-32">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-[0.55]"
@@ -554,7 +781,7 @@ export default function VisaPage() {
                 <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                   Périmètre
                 </span>
-                <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                   Ce que nous{" "}
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
                     faisons
@@ -637,7 +864,7 @@ export default function VisaPage() {
         </section>
 
         {/* 5. CE QUE VOUS OBTENEZ — navy glass grid 4 ───────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-24 text-white sm:py-28 lg:py-32">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-[0.55]"
@@ -661,7 +888,7 @@ export default function VisaPage() {
               <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Résultat
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+              <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Ce que vous{" "}
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
@@ -674,7 +901,7 @@ export default function VisaPage() {
                 </span>
                 .
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+              <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-slate-300 sm:text-xl">
                 Pas de promesse de visa — la décision appartient au consulat.
                 En revanche, voici ce que nous vous garantissons concrètement.
               </p>
@@ -745,7 +972,7 @@ export default function VisaPage() {
         </section>
 
         {/* 6. POUR QUI — navy glass split emerald / rose accents ────── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-24 text-white sm:py-28 lg:py-32">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-[0.55]"
@@ -765,7 +992,7 @@ export default function VisaPage() {
               <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Sélectivité
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+              <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Pour qui ce service est{" "}
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
@@ -778,7 +1005,7 @@ export default function VisaPage() {
                 </span>
                 .
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+              <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-slate-300 sm:text-xl">
                 Nous n&apos;accompagnons pas tous les profils. Cette
                 transparence fait partie de notre engagement professionnel.
               </p>
@@ -856,10 +1083,10 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 7. MÉTHODOLOGIE — navy timeline numbers gradient orange ──── */}
+        {/* 9. MÉTHODOLOGIE 7 PHASES — navy timeline numbers gradient orange (NEW C) ── */}
         <section
           id="methodologie"
-          className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24 lg:py-28"
+          className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-24 text-white sm:py-28 lg:py-32"
         >
           <div
             aria-hidden
@@ -884,11 +1111,11 @@ export default function VisaPage() {
               <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Notre méthodologie
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+              <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Un parcours en{" "}
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
-                    quatre étapes
+                    sept phases
                   </span>
                   <span
                     aria-hidden
@@ -897,9 +1124,10 @@ export default function VisaPage() {
                 </span>
                 .
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                De la soumission à la décision, chaque étape est documentée et
-                communiquée. Vous savez à tout moment où en est votre dossier.
+              <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-slate-300 sm:text-xl">
+                Du brief stratégique à la décision finale, chaque phase est
+                documentée et communiquée. Vous savez à tout moment où en est
+                votre dossier.
               </p>
             </div>
 
@@ -994,10 +1222,10 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 8. DESTINATIONS — navy bento glass ───────────────────────── */}
+        {/* 10. DOMAINES D'INTERVENTION — Carte du monde stylisée (NEW B) ───── */}
         <section
           id="destinations"
-          className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24"
+          className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-24 text-white sm:py-28 lg:py-32"
         >
           <div
             aria-hidden
@@ -1012,17 +1240,21 @@ export default function VisaPage() {
             aria-hidden
             className="pointer-events-none absolute -right-40 bottom-1/4 h-[28rem] w-[28rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
           />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+          />
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
-                Destinations couvertes
+                Zones de compétence
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-                Treize destinations principales,{" "}
+              <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Nos domaines{" "}
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
-                    et davantage sur demande
+                    d&apos;intervention
                   </span>
                   <span
                     aria-hidden
@@ -1031,70 +1263,290 @@ export default function VisaPage() {
                 </span>
                 .
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                Si votre destination n&apos;est pas listée, contactez-nous —
-                nous traitons à la demande selon la complexité du dossier.
+              <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-slate-300 sm:text-xl">
+                Quatre zones de compétence consulaires couvertes selon procédure
+                cadrée. Pour toute autre destination, traitement sur demande.
               </p>
             </div>
 
-            <div className="space-y-12">
-              {REGIONS.map((region) => (
-                <div key={region.title}>
-                  <div className="mb-5 flex items-center gap-3">
-                    <span className="text-3xl">{region.emoji}</span>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-display text-xl font-bold tracking-tight text-white sm:text-2xl">
-                          {region.title}
-                        </h3>
-                        {region.highlight && (
-                          <span className="rounded-full border border-nexus-orange-400/40 bg-nexus-orange-500/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-nexus-orange-300 backdrop-blur">
-                            Forte demande
-                          </span>
-                        )}
+            {/* Carte du monde stylisée SVG */}
+            <div className="relative mx-auto mb-12 max-w-4xl overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] sm:p-8">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/15 blur-[100px]"
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-nexus-blue-500/15 blur-[100px]"
+              />
+              <svg
+                viewBox="0 0 800 400"
+                className="relative w-full"
+                role="img"
+                aria-label="Carte du monde stylisée — zones de compétence Nexus Visa"
+              >
+                <defs>
+                  <linearGradient
+                    id="zone-gradient"
+                    x1="0"
+                    y1="0"
+                    x2="1"
+                    y2="1"
+                  >
+                    <stop offset="0%" stopColor="#FF6600" stopOpacity="0.6" />
+                    <stop offset="100%" stopColor="#FF6600" stopOpacity="0.15" />
+                  </linearGradient>
+                  <linearGradient
+                    id="continent-gradient"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="0%" stopColor="#1E3A8A" stopOpacity="0.4" />
+                    <stop offset="100%" stopColor="#0C1C40" stopOpacity="0.6" />
+                  </linearGradient>
+                  <radialGradient id="pulse-orange">
+                    <stop offset="0%" stopColor="#FF6600" stopOpacity="0.8" />
+                    <stop offset="100%" stopColor="#FF6600" stopOpacity="0" />
+                  </radialGradient>
+                </defs>
+
+                {/* Continents stylisés (formes simplifiées non-réalistes) */}
+                <g stroke="rgba(255,255,255,0.12)" strokeWidth="1">
+                  {/* Amérique du Nord */}
+                  <path
+                    d="M 80 100 Q 120 80, 180 90 L 200 130 Q 190 170, 160 180 L 100 175 Q 70 150, 80 100 Z"
+                    fill="url(#continent-gradient)"
+                  />
+                  {/* Amérique du Sud */}
+                  <path
+                    d="M 170 200 Q 200 200, 215 230 L 210 290 Q 195 320, 180 310 L 165 270 Q 155 230, 170 200 Z"
+                    fill="url(#continent-gradient)"
+                  />
+                  {/* Europe */}
+                  <path
+                    d="M 360 100 Q 410 90, 450 100 L 460 130 Q 440 145, 410 145 L 370 140 Q 350 125, 360 100 Z"
+                    fill="url(#continent-gradient)"
+                  />
+                  {/* Afrique */}
+                  <path
+                    d="M 380 170 Q 440 165, 470 195 L 475 270 Q 455 320, 425 320 L 395 290 Q 370 230, 380 170 Z"
+                    fill="url(#continent-gradient)"
+                  />
+                  {/* Moyen-Orient */}
+                  <path
+                    d="M 470 145 Q 510 140, 540 160 L 545 195 Q 525 215, 495 210 L 470 190 Q 460 170, 470 145 Z"
+                    fill="url(#continent-gradient)"
+                  />
+                  {/* Asie */}
+                  <path
+                    d="M 540 100 Q 620 85, 700 105 L 720 160 Q 700 200, 640 205 L 555 195 Q 530 145, 540 100 Z"
+                    fill="url(#continent-gradient)"
+                  />
+                  {/* Océanie */}
+                  <path
+                    d="M 660 270 Q 700 265, 730 285 L 730 310 Q 700 320, 670 310 L 655 295 Q 650 280, 660 270 Z"
+                    fill="url(#continent-gradient)"
+                  />
+                </g>
+
+                {/* Zone Schengen (Europe) — highlighted orange */}
+                <g>
+                  <path
+                    d="M 360 100 Q 410 90, 450 100 L 460 130 Q 440 145, 410 145 L 370 140 Q 350 125, 360 100 Z"
+                    fill="url(#zone-gradient)"
+                    stroke="#FF6600"
+                    strokeWidth="1.5"
+                    strokeOpacity="0.6"
+                  />
+                  {/* Pulse dot Europe */}
+                  <circle cx="410" cy="120" r="20" fill="url(#pulse-orange)">
+                    <animate
+                      attributeName="r"
+                      values="14;22;14"
+                      dur="3s"
+                      repeatCount="indefinite"
+                    />
+                    <animate
+                      attributeName="opacity"
+                      values="0.8;0.2;0.8"
+                      dur="3s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                  <circle cx="410" cy="120" r="4" fill="#FF6600" />
+                </g>
+
+                {/* Zone Canada (Amérique du Nord) — highlighted orange */}
+                <g>
+                  <path
+                    d="M 80 100 Q 120 80, 180 90 L 200 130 Q 190 170, 160 180 L 100 175 Q 70 150, 80 100 Z"
+                    fill="url(#zone-gradient)"
+                    stroke="#FF6600"
+                    strokeWidth="1.5"
+                    strokeOpacity="0.6"
+                  />
+                  <circle cx="135" cy="130" r="20" fill="url(#pulse-orange)">
+                    <animate
+                      attributeName="r"
+                      values="14;22;14"
+                      dur="3.5s"
+                      repeatCount="indefinite"
+                    />
+                    <animate
+                      attributeName="opacity"
+                      values="0.8;0.2;0.8"
+                      dur="3.5s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                  <circle cx="135" cy="130" r="4" fill="#FF6600" />
+                </g>
+
+                {/* Zone Asie e-Visa */}
+                <g>
+                  <path
+                    d="M 540 100 Q 620 85, 700 105 L 720 160 Q 700 200, 640 205 L 555 195 Q 530 145, 540 100 Z"
+                    fill="url(#zone-gradient)"
+                    stroke="#FF6600"
+                    strokeWidth="1.5"
+                    strokeOpacity="0.6"
+                  />
+                  <circle cx="625" cy="150" r="20" fill="url(#pulse-orange)">
+                    <animate
+                      attributeName="r"
+                      values="14;22;14"
+                      dur="2.5s"
+                      repeatCount="indefinite"
+                    />
+                    <animate
+                      attributeName="opacity"
+                      values="0.8;0.2;0.8"
+                      dur="2.5s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                  <circle cx="625" cy="150" r="4" fill="#FF6600" />
+                </g>
+
+                {/* Zone Moyen-Orient & Afrique */}
+                <g>
+                  <path
+                    d="M 470 145 Q 510 140, 540 160 L 545 195 Q 525 215, 495 210 L 470 190 Q 460 170, 470 145 Z"
+                    fill="url(#zone-gradient)"
+                    stroke="#FF6600"
+                    strokeWidth="1.5"
+                    strokeOpacity="0.6"
+                  />
+                  <path
+                    d="M 380 170 Q 440 165, 470 195 L 475 270 Q 455 320, 425 320 L 395 290 Q 370 230, 380 170 Z"
+                    fill="url(#zone-gradient)"
+                    fillOpacity="0.6"
+                    stroke="#FF6600"
+                    strokeWidth="1.5"
+                    strokeOpacity="0.4"
+                  />
+                  <circle cx="505" cy="180" r="18" fill="url(#pulse-orange)">
+                    <animate
+                      attributeName="r"
+                      values="12;20;12"
+                      dur="4s"
+                      repeatCount="indefinite"
+                    />
+                    <animate
+                      attributeName="opacity"
+                      values="0.8;0.2;0.8"
+                      dur="4s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                  <circle cx="505" cy="180" r="4" fill="#FF6600" />
+                  <circle cx="425" cy="245" r="18" fill="url(#pulse-orange)">
+                    <animate
+                      attributeName="r"
+                      values="12;20;12"
+                      dur="3.2s"
+                      repeatCount="indefinite"
+                    />
+                    <animate
+                      attributeName="opacity"
+                      values="0.8;0.2;0.8"
+                      dur="3.2s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                  <circle cx="425" cy="245" r="4" fill="#FF6600" />
+                </g>
+
+                {/* Étiquettes zones */}
+                <g
+                  fontFamily="ui-sans-serif, system-ui"
+                  fontSize="10"
+                  fontWeight="700"
+                  letterSpacing="2"
+                  textAnchor="middle"
+                >
+                  <text x="135" y="105" fill="#FFA366">
+                    CANADA
+                  </text>
+                  <text x="410" y="92" fill="#FFA366">
+                    SCHENGEN
+                  </text>
+                  <text x="625" y="92" fill="#FFA366">
+                    e-VISA ASIE
+                  </text>
+                  <text x="465" y="220" fill="#FFA366">
+                    MENA
+                  </text>
+                </g>
+              </svg>
+            </div>
+
+            {/* 4 cards zones de compétence */}
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {ZONES_COMPETENCE.map((zone) => {
+                const Icon = zone.icon;
+                return (
+                  <article
+                    key={zone.id}
+                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                  >
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                    />
+                    <div className="relative">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
+                        <Icon className="h-5 w-5" />
                       </div>
-                      <p className="text-sm text-slate-300">
-                        {region.description}
+                      <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                        Zone
+                      </p>
+                      <h3 className="mt-1 font-display text-lg font-bold leading-tight text-white">
+                        {zone.region}
+                      </h3>
+                      <p className="mt-1 font-display text-sm font-bold tabular-nums text-nexus-orange-300">
+                        {zone.count}
+                      </p>
+                      <p className="mt-3 text-sm leading-relaxed text-slate-300">
+                        {zone.detail}
                       </p>
                     </div>
-                  </div>
-
-                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                    {region.destinations.map((dest) => (
-                      <article
-                        key={dest.name}
-                        className={`group relative flex items-center gap-3 overflow-hidden rounded-2xl border p-4 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 ${
-                          region.highlight
-                            ? "border-nexus-orange-400/30 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 hover:border-nexus-orange-400/50"
-                            : "border-white/10 bg-white/[0.04] ring-1 ring-white/5 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
-                        }`}
-                      >
-                        <div
-                          aria-hidden
-                          className="pointer-events-none absolute -right-10 -top-10 h-24 w-24 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
-                        />
-                        <span className="relative text-2xl transition-transform duration-300 ease-out group-hover:scale-110">
-                          {dest.emoji}
-                        </span>
-                        <div className="relative min-w-0 flex-1">
-                          <p className="font-display text-sm font-bold text-white">
-                            {dest.name}
-                          </p>
-                          <p className="truncate text-xs text-slate-400">
-                            {dest.type}
-                          </p>
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-                </div>
-              ))}
+                  </article>
+                );
+              })}
             </div>
+
+            <p className="mx-auto mt-10 max-w-2xl text-center text-sm leading-relaxed text-slate-400">
+              Si votre destination n&apos;est pas listée, contactez-nous — nous
+              traitons à la demande selon la complexité du dossier.
+            </p>
           </div>
         </section>
 
         {/* 9. e-VISA — navy glass grid 4 ───────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-24 text-white sm:py-28 lg:py-32">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-[0.55]"
@@ -1127,7 +1579,7 @@ export default function VisaPage() {
               <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Visa électronique
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+              <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Le e-Visa, procédure{" "}
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
@@ -1140,7 +1592,7 @@ export default function VisaPage() {
                 </span>
                 .
               </h2>
-              <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
+              <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-slate-300 sm:text-xl">
                 Pour de nombreuses destinations, la procédure se déroule
                 entièrement en ligne. Aucun déplacement à Yaoundé n&apos;est
                 requis.
@@ -1228,7 +1680,7 @@ export default function VisaPage() {
         </section>
 
         {/* 10. DOCUMENTS PAR TYPE — navy + wrapper glass clair ─────── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-24 text-white sm:py-28 lg:py-32">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-[0.55]"
@@ -1248,7 +1700,7 @@ export default function VisaPage() {
               <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Documents fréquents
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+              <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Pièces requises selon votre{" "}
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
@@ -1261,7 +1713,7 @@ export default function VisaPage() {
                 </span>
                 .
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+              <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-slate-300 sm:text-xl">
                 Liste indicative par type. Le consulat ciblé peut exiger des
                 pièces complémentaires — c&apos;est ce que Nexus cadre pour
                 vous.
@@ -1282,7 +1734,7 @@ export default function VisaPage() {
         </section>
 
         {/* 11. CAS TYPES — 3 cards tech case study factuel ─────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-24 text-white sm:py-28 lg:py-32">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-[0.55]"
@@ -1306,7 +1758,7 @@ export default function VisaPage() {
               <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Cas types traités
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+              <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Voici comment ça se passe{" "}
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
@@ -1334,7 +1786,7 @@ export default function VisaPage() {
                       className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-nexus-orange-500/10 blur-[80px] transition-all duration-500 group-hover:bg-nexus-orange-500/25"
                     />
                     <div className="relative flex h-full flex-col">
-                      <span className="inline-flex w-fit items-center gap-2 rounded-full border border-nexus-orange-400/40 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur">
+                      <span className="inline-flex w-fit items-center gap-2 rounded-full border border-nexus-orange-400/40 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur">
                         <Sparkles className="h-3 w-3" />
                         {cas.badge}
                       </span>
@@ -1363,7 +1815,7 @@ export default function VisaPage() {
                       </p>
 
                       <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
-                        <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.18em] text-transparent">
+                        <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                           Approche méthodologique
                         </span>
                         <ArrowRight className="h-4 w-4 text-nexus-orange-300 transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -1386,7 +1838,7 @@ export default function VisaPage() {
                     className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/10 blur-[100px] transition-all duration-500 group-hover:bg-nexus-orange-500/30"
                   />
                   <div className="relative flex h-full flex-col">
-                    <span className="inline-flex w-fit items-center gap-2 rounded-full border border-nexus-orange-400/40 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur">
+                    <span className="inline-flex w-fit items-center gap-2 rounded-full border border-nexus-orange-400/40 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur">
                       <Sparkles className="h-3 w-3" />
                       {cas.badge}
                     </span>
@@ -1415,7 +1867,7 @@ export default function VisaPage() {
                     </p>
 
                     <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-5">
-                      <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.18em] text-transparent">
+                      <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                         Approche méthodologique
                       </span>
                       <ArrowRight className="h-4 w-4 text-nexus-orange-300 transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -1428,7 +1880,7 @@ export default function VisaPage() {
         </section>
 
         {/* 12. ENGAGEMENT TRANSPARENCE — navy glass asymétrique ────── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-24 text-white sm:py-28 lg:py-32">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-[0.55]"
@@ -1448,7 +1900,7 @@ export default function VisaPage() {
               <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Engagement
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+              <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Aucune agence sérieuse ne peut{" "}
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
@@ -1461,7 +1913,7 @@ export default function VisaPage() {
                 </span>
                 .
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+              <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-slate-300 sm:text-xl">
                 La décision finale appartient toujours aux autorités
                 consulaires. Toute structure qui vous promet une obtention vous
                 trompe. Nexus RCA ne le fera jamais.
@@ -1535,7 +1987,7 @@ export default function VisaPage() {
         </section>
 
         {/* 13. CADRE TARIFAIRE — navy glass 3 cards ───────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-24 text-white sm:py-28 lg:py-32">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-[0.55]"
@@ -1555,7 +2007,7 @@ export default function VisaPage() {
               <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Cadre tarifaire
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+              <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Une transparence économique{" "}
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
@@ -1568,7 +2020,7 @@ export default function VisaPage() {
                 </span>
                 .
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+              <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-slate-300 sm:text-xl">
                 Vous savez ce que ça coûte avant de signer. Aucun frais caché.
               </p>
             </div>
@@ -1641,10 +2093,101 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 14. FORMULAIRE EXPRESS — navy + wrapper glass clair ────── */}
+        {/* 16. LE CABINET NEXUS VISA — bloc institutionnel premium (NEW D) ─── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-24 text-white sm:py-28 lg:py-32">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
+            style={DOT_GRID_DARK}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -left-32 top-1/4 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-32 bottom-1/4 h-[32rem] w-[32rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/8 blur-[120px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+          />
+
+          <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
+            <div className="mx-auto max-w-3xl text-center">
+              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+                Le cabinet
+              </span>
+              <h2 className="mt-4 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Nexus Visa :{" "}
+                <span className="relative inline-block">
+                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    excellence
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  />
+                </span>{" "}
+                documentée.
+              </h2>
+              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-300 sm:text-xl">
+                Nexus Visa est la branche dédiée aux démarches consulaires et
+                migratoires de Nexus RCA. Une équipe pluridisciplinaire
+                (consulaire, juridique, administrative) au service de la
+                mobilité internationale. Méthode rigoureuse, confidentialité
+                absolue, traçabilité complète.
+              </p>
+            </div>
+
+            {/* 3 piliers institutionnels — cards glass premium */}
+            <div className="mt-14 grid gap-5 sm:grid-cols-3">
+              {CABINET_PILIERS.map((p) => {
+                const Icon = p.icon;
+                return (
+                  <article
+                    key={p.title}
+                    className="group relative overflow-hidden rounded-3xl border border-nexus-orange-400/30 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.18)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/60 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_30px_60px_-16px_rgba(255,102,0,0.35)] sm:p-8"
+                  >
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/15 blur-[100px] transition-all duration-500 group-hover:bg-nexus-orange-500/35"
+                    />
+                    <div className="relative">
+                      <div className="relative inline-flex">
+                        <div
+                          aria-hidden
+                          className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 blur-md transition-all duration-500 group-hover:bg-nexus-orange-500/60"
+                        />
+                        <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
+                          <Icon className="h-6 w-6" />
+                        </div>
+                      </div>
+                      <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                        {p.eyebrow}
+                      </p>
+                      <h3 className="mt-1 font-display text-xl font-bold leading-tight text-white sm:text-2xl">
+                        {p.title}
+                      </h3>
+                      <p className="mt-3 text-sm leading-relaxed text-slate-300 sm:text-base">
+                        {p.desc}
+                      </p>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* 17. FORMULAIRE EXPRESS — navy + wrapper glass clair ────── */}
         <section
           id="demarrer"
-          className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24 lg:py-28"
+          className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-24 text-white sm:py-28 lg:py-32"
         >
           <div
             aria-hidden
@@ -1673,7 +2216,7 @@ export default function VisaPage() {
                 </span>
                 Démarche express
               </span>
-              <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+              <h2 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Soumettez votre{" "}
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
@@ -1686,7 +2229,7 @@ export default function VisaPage() {
                 </span>
                 .
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+              <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-slate-300 sm:text-xl">
                 Un conseiller Nexus revient vers vous sous 24 h à 3 jours selon
                 urgence. Étude initiale gratuite, bilan écrit avant tout
                 engagement.
@@ -1757,7 +2300,7 @@ export default function VisaPage() {
               .
             </h2>
 
-            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+            <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-slate-300 sm:text-xl">
               Vous hésitez sur la procédure, le timing ou les pièces ? Notre
               équipe à Bangui vous répond personnellement.
             </p>
