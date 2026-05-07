@@ -8,7 +8,6 @@ import {
   Receipt,
   TrendingUp,
   ShoppingCart,
-  AlertTriangle,
   CheckCircle2,
   Clock,
   Briefcase,
@@ -17,22 +16,20 @@ import {
   PieChart,
   ArrowUpRight,
   Activity,
-  ArrowDownRight,
   CircleDollarSign,
-  ShieldAlert,
   ClipboardCheck,
   FolderOpen,
   Globe,
   ShieldCheck,
   Settings,
-  Sparkles,
+  Plus,
   type LucideIcon,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
-import { DashboardHero } from "@/components/dashboard/DashboardHero";
-import { DashboardQuickActions } from "@/components/dashboard/DashboardQuickActions";
+import { PilotageHero } from "@/components/dashboard/PilotageHero";
+import { AlertCard, type AlertUrgency } from "@/components/dashboard/AlertCard";
 import { Sparkline } from "@/components/ui/Sparkline";
 import { EmptyState } from "@/components/ui/EmptyState";
 import {
@@ -50,9 +47,6 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-// ─── Format ─────────────────────────────────────────────────────────────────
-// Pas de toLocaleString fr-FR ici (insère espace insécable étroit qui pose
-// problème dans certains contextes). Format manuel avec espace standard.
 function formatMoney(amount: number, currency = "FCFA"): string {
   const intPart = Math.round(amount)
     .toString()
@@ -94,18 +88,23 @@ export default async function SuperAdminDashboard() {
   monthStart.setDate(1);
   const monthStartISO = monthStart.toISOString();
 
-  // Fenêtre 7 jours glissants pour les vraies trends.
+  const prevMonthStart = new Date(monthStart);
+  prevMonthStart.setMonth(prevMonthStart.getMonth() - 1);
+  const prevMonthStartISO = prevMonthStart.toISOString();
+
   const sevenDaysAgoISO = isoDaysAgo(6);
 
   // ============================================================
-  // CHARGEMENT EN PARALLÈLE (Promise.all)
+  // QUERIES PARALLELES
   // ============================================================
   const [
     paymentsTodayRes,
     paymentsMonthRes,
     paymentsAllRes,
+    paymentsPrevMonthRes,
     quickSalesTodayRes,
     quickSalesMonthRes,
+    quickSalesPrevMonthRes,
     expensesPendingRes,
     expensesValidatedMonthRes,
     demandesNouvellesRes,
@@ -118,13 +117,11 @@ export default async function SuperAdminDashboard() {
     lastActivePaymentRes,
     transfertsToValidateRes,
     paiementsPartielsRes,
-    // ─── 7 jours pour trends réelles ───────────────────────────
     payments7dRes,
     quickSales7dRes,
     demandes7dRes,
     appointments7dRes,
     expenses7dRes,
-    // ─── RH (nouveau) ──────────────────────────────────────────
     employeesActifsRes,
     payslipsPendingRes,
     payslipsPendingDetailsRes,
@@ -140,6 +137,11 @@ export default async function SuperAdminDashboard() {
       .gte("date_paiement", monthStartISO),
     supabase.from("payments").select("montant_recu, montant_total, statut"),
     supabase
+      .from("payments")
+      .select("montant_recu")
+      .gte("date_paiement", prevMonthStartISO)
+      .lt("date_paiement", monthStartISO),
+    supabase
       .from("quick_sales")
       .select("montant_total")
       .gte("date_paiement", todayISO),
@@ -147,6 +149,11 @@ export default async function SuperAdminDashboard() {
       .from("quick_sales")
       .select("montant_total")
       .gte("date_paiement", monthStartISO),
+    supabase
+      .from("quick_sales")
+      .select("montant_total")
+      .gte("date_paiement", prevMonthStartISO)
+      .lt("date_paiement", monthStartISO),
     supabase.from("expenses").select("montant").eq("statut", "en_attente"),
     supabase
       .from("expenses")
@@ -202,11 +209,12 @@ export default async function SuperAdminDashboard() {
       .limit(3),
     supabase
       .from("payments")
-      .select("id, reference, client_nom, montant_total, montant_recu, devise")
+      .select(
+        "id, reference, client_nom, montant_total, montant_recu, devise, created_at"
+      )
       .eq("statut", "partiel")
       .order("created_at", { ascending: false })
       .limit(3),
-    // 7 jours
     supabase
       .from("payments")
       .select("date_paiement, montant_recu")
@@ -228,7 +236,6 @@ export default async function SuperAdminDashboard() {
       .select("date_depense, montant")
       .eq("statut", "valide")
       .gte("date_depense", sevenDaysAgoISO),
-    // RH
     supabase
       .from("employees")
       .select("id, salaire_base", { count: "exact" })
@@ -240,11 +247,11 @@ export default async function SuperAdminDashboard() {
     supabase
       .from("payslips")
       .select(
-        "id, reference, mois_libelle, salaire_net, employee_id, employees(nom_complet, poste)"
+        "id, reference, mois_libelle, salaire_net, employee_id, submitted_at, employees(nom_complet, poste)"
       )
       .eq("statut", "en_attente_validation")
       .order("submitted_at", { ascending: false })
-      .limit(3),
+      .limit(4),
     supabase
       .from("payslips")
       .select("id", { count: "exact", head: true })
@@ -275,6 +282,23 @@ export default async function SuperAdminDashboard() {
   );
   const totalMonth = paiementsMonth + caisseMonth;
 
+  const paiementsPrevMonth = (paymentsPrevMonthRes.data || []).reduce(
+    (s, p) => s + Number(p.montant_recu || 0),
+    0
+  );
+  const caissePrevMonth = (quickSalesPrevMonthRes.data || []).reduce(
+    (s, p) => s + Number(p.montant_total || 0),
+    0
+  );
+  const totalPrevMonth = paiementsPrevMonth + caissePrevMonth;
+
+  const monthDelta =
+    totalPrevMonth > 0
+      ? ((totalMonth - totalPrevMonth) / totalPrevMonth) * 100
+      : totalMonth > 0
+        ? 100
+        : 0;
+
   const allPayments = paymentsAllRes.data || [];
   const totalAttendu = allPayments.reduce(
     (s, p) => s + Number(p.montant_total || 0),
@@ -299,7 +323,6 @@ export default async function SuperAdminDashboard() {
 
   const soldeNet = totalMonth - depensesMonth;
 
-  // Compteurs
   const nbDemandesNouvelles = demandesNouvellesRes.count ?? 0;
   const nbDemandesEnCours = demandesEnCoursRes.count ?? 0;
   const nbTransfertsPending = transfertsPendingRes.count ?? 0;
@@ -307,7 +330,6 @@ export default async function SuperAdminDashboard() {
   const nbEmployes = teamCountRes.count ?? 0;
   const nbRdvToday = (appointmentsTodayRes.data || []).length;
 
-  // RH
   const nbEmployeesActifs = employeesActifsRes.count ?? 0;
   const masseSalariale = (employeesActifsRes.data || []).reduce(
     (s, e) => s + Number(e.salaire_base || 0),
@@ -325,9 +347,7 @@ export default async function SuperAdminDashboard() {
 
   const derniereActivite = lastActivePaymentRes.data?.created_at;
 
-  // ============================================================
-  // TRENDS RÉELS (7 derniers jours, oldest → newest)
-  // ============================================================
+  // Trends
   const paymentsByDay = bucketByDay(
     payments7dRes.data || [],
     "date_paiement",
@@ -350,13 +370,7 @@ export default async function SuperAdminDashboard() {
     appointments7dRes.data || [],
     "date_heure"
   );
-  // Restant à encaisser : on n'a pas d'historique facile, on garde une série
-  // plate pour ne pas tromper l'œil.
-  const restantByDay = new Array(7).fill(restantAEncaisser);
 
-  // ============================================================
-  // RENDU
-  // ============================================================
   const initials = (
     (profile.prenom?.[0] ?? "") + (profile.nom?.[0] ?? "")
   ).toUpperCase();
@@ -366,207 +380,209 @@ export default async function SuperAdminDashboard() {
     month: "long",
     year: "numeric",
   });
-  const heroSubtitle = derniereActivite
-    ? `${todayLabel} · Dernière activité ${formatRelativeTime(derniereActivite)}`
-    : todayLabel;
 
+  // ============================================================
+  // ALERTES — toutes converties en cards opérationnelles
+  // ============================================================
+  type AlertCardData = {
+    id: string;
+    type: string;
+    title: string;
+    subtitle?: string;
+    amount?: string;
+    metaLabel?: string;
+    urgency: AlertUrgency;
+    icon: LucideIcon;
+    href: string;
+  };
+
+  const alertCards: AlertCardData[] = [];
+
+  // Fiches paie en attente
+  for (const p of payslipsPendingDetailsRes.data || []) {
+    const emp =
+      (p.employees as
+        | { nom_complet?: string; poste?: string }
+        | { nom_complet?: string; poste?: string }[]
+        | null) ?? null;
+    const empSingle = Array.isArray(emp) ? emp[0] : emp;
+    alertCards.push({
+      id: `payslip-${p.id}`,
+      type: "Fiche de paie",
+      title: empSingle?.nom_complet ?? "Employé inconnu",
+      subtitle: `${empSingle?.poste ?? ""} · ${p.mois_libelle}`,
+      amount: formatMoney(Number(p.salaire_net)),
+      metaLabel: `Soumis ${formatRelativeTime(p.submitted_at)}`,
+      urgency: "haute",
+      icon: ClipboardCheck,
+      href: `/dashboard/super-admin/rh/paie/${p.id}`,
+    });
+  }
+
+  // Transferts en attente
+  for (const t of transfertsToValidateRes.data || []) {
+    alertCards.push({
+      id: `transfert-${t.id}`,
+      type: "Transfert",
+      title: `${t.expediteur_nom} → ${t.beneficiaire_nom}`,
+      subtitle: t.reference,
+      amount: formatMoney(Number(t.montant_envoye), t.devise),
+      metaLabel: formatRelativeTime(t.created_at),
+      urgency: "moyenne",
+      icon: Send,
+      href: "/dashboard/super-admin/transferts",
+    });
+  }
+
+  // Paiements partiels
+  for (const p of paiementsPartielsRes.data || []) {
+    const restant = Number(p.montant_total) - Number(p.montant_recu);
+    alertCards.push({
+      id: `partiel-${p.id}`,
+      type: "Paiement partiel",
+      title: p.client_nom ?? "Client",
+      subtitle: `${p.reference} · sur ${formatMoney(Number(p.montant_total), p.devise)}`,
+      amount: formatMoney(restant, p.devise),
+      metaLabel: `Restant à encaisser`,
+      urgency: "moyenne",
+      icon: Wallet,
+      href: "/dashboard/super-admin/paiements",
+    });
+  }
+
+  // Dépenses en attente (1 card aggregate)
+  if (nbDepensesEnAttente > 0) {
+    alertCards.push({
+      id: "depenses-pending",
+      type: "Dépenses",
+      title: `${nbDepensesEnAttente} dépense${nbDepensesEnAttente > 1 ? "s" : ""} à valider`,
+      subtitle: "Montant total en attente de validation",
+      amount: formatMoney(depensesEnAttente),
+      metaLabel: "Validation requise",
+      urgency: "basse",
+      icon: Receipt,
+      href: "/dashboard/super-admin/depenses",
+    });
+  }
+
+  // Demandes nouvelles (1 card aggregate)
+  if (nbDemandesNouvelles > 0) {
+    alertCards.push({
+      id: "demandes-nouvelles",
+      type: "Demandes",
+      title: `${nbDemandesNouvelles} nouvelle${nbDemandesNouvelles > 1 ? "s" : ""} demande${nbDemandesNouvelles > 1 ? "s" : ""}`,
+      subtitle: "Non assignée(s) à un agent",
+      metaLabel: "À traiter",
+      urgency: "info",
+      icon: FileText,
+      href: "/dashboard/super-admin/demandes",
+    });
+  }
+
+  // ============================================================
+  // RENDU
+  // ============================================================
   return (
     <DashboardShell profile={profile}>
       {/* ────────────────────────────────────────────────────── */}
-      {/* 1. HERO                                                */}
+      {/* 1. HERO PILOTAGE — grand chiffre central + chart        */}
       {/* ────────────────────────────────────────────────────── */}
-      <DashboardHero
+      <PilotageHero
         initials={initials}
-        roleLabel="Centre de pilotage"
-        title={`Bonjour ${profile.prenom || profile.nom}`}
-        subtitle={heroSubtitle}
-        stats={[
+        greeting={`Bonjour ${profile.prenom || profile.nom}`}
+        todayLabel={todayLabel}
+        lastActivity={derniereActivite ? formatRelativeTime(derniereActivite) : undefined}
+        mainKpiLabel="Encaissé ce mois"
+        mainKpiValue={formatMoney(totalMonth)}
+        mainKpiDelta={monthDelta}
+        mainKpiSubLabel={`vs mois dernier · ${formatMoney(totalPrevMonth)}`}
+        trend7d={encaisseCumulMonth}
+        secondaryStats={[
           {
-            label: "Encaissé aujourd'hui",
+            label: "Aujourd'hui",
             value: formatMoney(totalToday),
             accent: "white",
-          },
-          {
-            label: "Encaissé ce mois",
-            value: formatMoney(totalMonth),
-            accent: "orange",
           },
           {
             label: "Solde net du mois",
             value: formatMoney(soldeNet),
             accent: soldeNet >= 0 ? "emerald" : "rose",
           },
+          {
+            label: "Restant à encaisser",
+            value: formatMoney(restantAEncaisser),
+            accent: "amber",
+          },
         ]}
-        rightSlot={
-          totalAlertes > 0 ? (
-            <Link
-              href="#alertes"
-              className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-500/15 px-4 py-2 text-sm font-semibold text-amber-200 backdrop-blur transition hover:bg-amber-500/25"
-            >
-              <AlertTriangle className="h-4 w-4" />
-              {totalAlertes} à traiter
-            </Link>
-          ) : undefined
-        }
-      />
-
-      {/* ────────────────────────────────────────────────────── */}
-      {/* 2. ACTIONS RAPIDES                                     */}
-      {/* ────────────────────────────────────────────────────── */}
-      <DashboardQuickActions
-        title="Actions rapides"
-        actions={[
+        quickActions={[
           {
             href: "/dashboard/super-admin/clients",
-            icon: UserCircle,
             label: "Nouveau client",
-            color: "blue",
+            icon: UserCircle,
           },
           {
             href: "/dashboard/super-admin/rh/employes/nouveau",
-            icon: Briefcase,
             label: "Créer employé",
-            color: "indigo",
+            icon: Briefcase,
           },
           {
             href: "/dashboard/super-admin/rh/paie/nouvelle",
+            label: "Fiche de paie",
             icon: Wallet,
-            label: "Nouvelle fiche paie",
-            color: "emerald",
           },
           {
             href: "/dashboard/super-admin/caisse",
-            icon: ShoppingCart,
             label: "Caisse rapide",
-            color: "orange",
+            icon: ShoppingCart,
           },
           {
-            href: "/dashboard/super-admin/transferts",
-            icon: Send,
-            label: "Voir transferts",
-            color: "purple",
-            badge: nbTransfertsPending > 0 ? nbTransfertsPending : undefined,
-          },
-          {
-            href: "/dashboard/super-admin/depenses",
-            icon: Receipt,
-            label: "Valider dépenses",
-            color: "amber",
-            badge: nbDepensesEnAttente > 0 ? nbDepensesEnAttente : undefined,
+            href: "/dashboard/super-admin/paiements/nouveau-lien",
+            label: "Lien paiement",
+            icon: Plus,
           },
         ]}
+        alertCount={totalAlertes > 0 ? totalAlertes : undefined}
+        alertHref="#alertes"
       />
 
       {/* ────────────────────────────────────────────────────── */}
-      {/* 3. À TRAITER — alertes en haut (command center)        */}
+      {/* 2. ALERTES — vraies cards opérationnelles               */}
       {/* ────────────────────────────────────────────────────── */}
-      {totalAlertes > 0 ? (
+      {alertCards.length > 0 ? (
         <Section
           id="alertes"
           eyebrow="Priorité"
           title="À traiter maintenant"
-          icon={ShieldAlert}
-          accent="amber"
           subtitle={`${totalAlertes} élément${totalAlertes > 1 ? "s" : ""} en attente d'action`}
+          icon={ClipboardCheck}
+          accent="rose"
         >
-          <div className="space-y-2">
-            {/* Fiches de paie à valider (NEW) */}
-            {(payslipsPendingDetailsRes.data || []).map((p) => {
-              const emp =
-                (p.employees as
-                  | { nom_complet?: string; poste?: string }
-                  | { nom_complet?: string; poste?: string }[]
-                  | null) ?? null;
-              const empSingle = Array.isArray(emp) ? emp[0] : emp;
-              return (
-                <AlertRow
-                  key={p.id}
-                  icon={ClipboardCheck}
-                  iconColor="text-emerald-600"
-                  iconBg="bg-emerald-50"
-                  title={`Fiche de paie : ${empSingle?.nom_complet ?? "—"}`}
-                  subtitle={`${p.mois_libelle} · ${formatMoney(Number(p.salaire_net))} net`}
-                  badge="À valider"
-                  badgeColor="bg-emerald-100 text-emerald-700"
-                  href={`/dashboard/super-admin/rh/paie/${p.id}`}
-                />
-              );
-            })}
-            {nbPayslipsPending > 3 && (
-              <AlertRow
-                icon={ClipboardCheck}
-                iconColor="text-emerald-600"
-                iconBg="bg-emerald-50"
-                title={`+ ${nbPayslipsPending - 3} autre${nbPayslipsPending - 3 > 1 ? "s" : ""} fiche${nbPayslipsPending - 3 > 1 ? "s" : ""} en attente`}
-                subtitle="Voir toutes les fiches à valider"
-                badge="Voir tout"
-                badgeColor="bg-emerald-100 text-emerald-700"
-                href="/dashboard/super-admin/rh/paie/a-valider"
-              />
-            )}
-
-            {/* Transferts à valider */}
-            {(transfertsToValidateRes.data || []).map((t) => (
-              <AlertRow
-                key={t.id}
-                icon={Send}
-                iconColor="text-purple-600"
-                iconBg="bg-purple-50"
-                title={`Transfert ${t.expediteur_nom} → ${t.beneficiaire_nom}`}
-                subtitle={`${formatMoney(Number(t.montant_envoye), t.devise)} · ${formatRelativeTime(t.created_at)}`}
-                badge="À valider"
-                badgeColor="bg-purple-100 text-purple-700"
-                href="/dashboard/super-admin/transferts"
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {alertCards.slice(0, 8).map((a) => (
+              <AlertCard
+                key={a.id}
+                type={a.type}
+                title={a.title}
+                subtitle={a.subtitle}
+                amount={a.amount}
+                metaLabel={a.metaLabel}
+                urgency={a.urgency}
+                icon={a.icon}
+                href={a.href}
               />
             ))}
-
-            {/* Dépenses en attente */}
-            {nbDepensesEnAttente > 0 && (
-              <AlertRow
-                icon={Receipt}
-                iconColor="text-amber-600"
-                iconBg="bg-amber-50"
-                title={`${nbDepensesEnAttente} dépense${nbDepensesEnAttente > 1 ? "s" : ""} en attente de validation`}
-                subtitle={`Montant total : ${formatMoney(depensesEnAttente)}`}
-                badge="À valider"
-                badgeColor="bg-amber-100 text-amber-700"
-                href="/dashboard/super-admin/depenses"
-              />
-            )}
-
-            {/* Paiements partiels */}
-            {(paiementsPartielsRes.data || []).map((p) => {
-              const restant =
-                Number(p.montant_total) - Number(p.montant_recu);
-              return (
-                <AlertRow
-                  key={p.id}
-                  icon={Wallet}
-                  iconColor="text-orange-600"
-                  iconBg="bg-orange-50"
-                  title={`Paiement partiel : ${p.client_nom}`}
-                  subtitle={`Restant : ${formatMoney(restant, p.devise)} sur ${formatMoney(Number(p.montant_total), p.devise)}`}
-                  badge="Partiel"
-                  badgeColor="bg-orange-100 text-orange-700"
-                  href="/dashboard/super-admin/paiements"
-                />
-              );
-            })}
-
-            {/* Demandes nouvelles */}
-            {nbDemandesNouvelles > 0 && (
-              <AlertRow
-                icon={FileText}
-                iconColor="text-blue-600"
-                iconBg="bg-blue-50"
-                title={`${nbDemandesNouvelles} demande${nbDemandesNouvelles > 1 ? "s" : ""} non traitée${nbDemandesNouvelles > 1 ? "s" : ""}`}
-                subtitle="À assigner ou traiter par un agent"
-                badge="Nouvelles"
-                badgeColor="bg-blue-100 text-blue-700"
-                href="/dashboard/super-admin/demandes"
-              />
-            )}
           </div>
+          {totalAlertes > 8 && (
+            <div className="mt-4 text-center">
+              <Link
+                href="/dashboard/super-admin/rh/paie/a-valider"
+                className="inline-flex items-center gap-1 text-sm font-semibold text-nexus-orange-600 hover:text-nexus-orange-700"
+              >
+                Voir les {totalAlertes - 8} autres alertes
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </div>
+          )}
         </Section>
       ) : (
         <Section
@@ -579,13 +595,13 @@ export default async function SuperAdminDashboard() {
             icon={CheckCircle2}
             tone="success"
             title="Aucune alerte"
-            description="Pas de transfert à valider, pas de dépense en attente, pas de fiche de paie à examiner."
+            description="Pas de fiche de paie à valider, pas de transfert en attente, pas de dépense à examiner."
           />
         </Section>
       )}
 
       {/* ────────────────────────────────────────────────────── */}
-      {/* 4. VUE FINANCIÈRE                                      */}
+      {/* 3. INDICATEURS FINANCIERS                              */}
       {/* ────────────────────────────────────────────────────── */}
       <Section
         eyebrow="Pilotage financier"
@@ -598,7 +614,7 @@ export default async function SuperAdminDashboard() {
           <MetricCard
             label="Encaissé aujourd'hui"
             value={formatMoney(totalToday)}
-            sub={`${formatMoney(paiementsToday)} paie. + ${formatMoney(caisseToday)} caisse`}
+            sub={`${formatMoney(paiementsToday)} paie · ${formatMoney(caisseToday)} caisse`}
             icon={Wallet}
             accent="green"
             trend={encaisseByDay}
@@ -612,7 +628,7 @@ export default async function SuperAdminDashboard() {
             icon={TrendingUp}
             accent="emerald"
             trend={encaisseCumulMonth}
-            delta={trendDelta(encaisseCumulMonth)}
+            delta={monthDelta}
             href="/dashboard/super-admin/finances"
             highlight
           />
@@ -622,7 +638,6 @@ export default async function SuperAdminDashboard() {
             sub="Paiements partiels & non payés"
             icon={Clock}
             accent="orange"
-            trend={restantByDay}
             href="/dashboard/super-admin/paiements"
           />
           <MetricCard
@@ -639,7 +654,7 @@ export default async function SuperAdminDashboard() {
       </Section>
 
       {/* ────────────────────────────────────────────────────── */}
-      {/* 5. ACTIVITÉ OPÉRATIONNELLE                             */}
+      {/* 4. ACTIVITÉ OPÉRATIONNELLE                             */}
       {/* ────────────────────────────────────────────────────── */}
       <Section
         eyebrow="Opérations"
@@ -682,7 +697,7 @@ export default async function SuperAdminDashboard() {
       </Section>
 
       {/* ────────────────────────────────────────────────────── */}
-      {/* 6. TALENT & RH                                         */}
+      {/* 5. TALENT & RH                                         */}
       {/* ────────────────────────────────────────────────────── */}
       <Section
         eyebrow="Capital humain"
@@ -727,7 +742,7 @@ export default async function SuperAdminDashboard() {
           <RhStatCard
             label="Performances équipe"
             value={`${nbPayslipsValidatedMonth}`}
-            sub={`Fiches validées ce mois · classement agents`}
+            sub="Fiches validées ce mois · classement agents"
             icon={Trophy}
             href="/dashboard/super-admin/stats-agents"
             iconColor="text-yellow-600"
@@ -738,7 +753,7 @@ export default async function SuperAdminDashboard() {
       </Section>
 
       {/* ────────────────────────────────────────────────────── */}
-      {/* 7. PROCHAINS ÉVÉNEMENTS — RDV + Demandes côte à côte   */}
+      {/* 6. ÉVÉNEMENTS — RDV + Demandes côte à côte             */}
       {/* ────────────────────────────────────────────────────── */}
       {(nbRdvToday > 0 || (demandesUrgentesRes.data || []).length > 0) && (
         <Section
@@ -748,7 +763,6 @@ export default async function SuperAdminDashboard() {
           accent="blue"
         >
           <div className="grid gap-4 lg:grid-cols-2">
-            {/* RDV du jour */}
             <EventList
               title="Rendez-vous aujourd'hui"
               icon={CalendarCheck}
@@ -784,7 +798,6 @@ export default async function SuperAdminDashboard() {
               })}
             </EventList>
 
-            {/* Dernières demandes */}
             <EventList
               title="Dernières demandes reçues"
               icon={FileText}
@@ -795,10 +808,7 @@ export default async function SuperAdminDashboard() {
               footerLabel="Voir toutes les demandes"
             >
               {(demandesUrgentesRes.data || []).map((d) => (
-                <li
-                  key={d.id}
-                  className="flex items-center gap-3 px-4 py-3"
-                >
+                <li key={d.id} className="flex items-center gap-3 px-4 py-3">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
                     <FileText className="h-4 w-4" />
                   </div>
@@ -828,7 +838,7 @@ export default async function SuperAdminDashboard() {
       )}
 
       {/* ────────────────────────────────────────────────────── */}
-      {/* 8. RACCOURCIS NAVIGATION                               */}
+      {/* 7. RACCOURCIS                                          */}
       {/* ────────────────────────────────────────────────────── */}
       <Section
         eyebrow="Navigation"
@@ -837,20 +847,76 @@ export default async function SuperAdminDashboard() {
         accent="slate"
       >
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
-          <NavLink href="/dashboard/super-admin/finances" icon={PieChart} label="Finances" />
-          <NavLink href="/dashboard/super-admin/paiements" icon={Wallet} label="Paiements" />
-          <NavLink href="/dashboard/super-admin/caisse" icon={ShoppingCart} label="Caisse" />
-          <NavLink href="/dashboard/super-admin/transferts" icon={Send} label="Transferts" />
-          <NavLink href="/dashboard/super-admin/depenses" icon={Receipt} label="Dépenses" />
-          <NavLink href="/dashboard/super-admin/clients" icon={UserCircle} label="Clients (CRM)" />
-          <NavLink href="/dashboard/super-admin/comptes-clients" icon={Users} label="Comptes clients" />
-          <NavLink href="/dashboard/super-admin/equipe" icon={Briefcase} label="Équipe Nexus" />
-          <NavLink href="/dashboard/super-admin/rh/employes" icon={Users} label="RH — Employés" />
-          <NavLink href="/dashboard/super-admin/rh/paie" icon={Wallet} label="RH — Fiches paie" />
-          <NavLink href="/dashboard/super-admin/rh/documents" icon={FolderOpen} label="RH — Documents" />
-          <NavLink href="/dashboard/super-admin/i18n" icon={Globe} label="Multi-langue" />
-          <NavLink href="/dashboard/super-admin/audit-log" icon={ShieldCheck} label="Audit log" />
-          <NavLink href="/dashboard/super-admin/parametres" icon={Settings} label="Paramètres" />
+          <NavLink
+            href="/dashboard/super-admin/finances"
+            icon={PieChart}
+            label="Finances"
+          />
+          <NavLink
+            href="/dashboard/super-admin/paiements"
+            icon={Wallet}
+            label="Paiements"
+          />
+          <NavLink
+            href="/dashboard/super-admin/caisse"
+            icon={ShoppingCart}
+            label="Caisse"
+          />
+          <NavLink
+            href="/dashboard/super-admin/transferts"
+            icon={Send}
+            label="Transferts"
+          />
+          <NavLink
+            href="/dashboard/super-admin/depenses"
+            icon={Receipt}
+            label="Dépenses"
+          />
+          <NavLink
+            href="/dashboard/super-admin/clients"
+            icon={UserCircle}
+            label="Clients (CRM)"
+          />
+          <NavLink
+            href="/dashboard/super-admin/comptes-clients"
+            icon={Users}
+            label="Comptes clients"
+          />
+          <NavLink
+            href="/dashboard/super-admin/equipe"
+            icon={Briefcase}
+            label="Équipe Nexus"
+          />
+          <NavLink
+            href="/dashboard/super-admin/rh/employes"
+            icon={Users}
+            label="RH — Employés"
+          />
+          <NavLink
+            href="/dashboard/super-admin/rh/paie"
+            icon={Wallet}
+            label="RH — Fiches paie"
+          />
+          <NavLink
+            href="/dashboard/super-admin/rh/documents"
+            icon={FolderOpen}
+            label="RH — Documents"
+          />
+          <NavLink
+            href="/dashboard/super-admin/i18n"
+            icon={Globe}
+            label="Multi-langue"
+          />
+          <NavLink
+            href="/dashboard/super-admin/audit-log"
+            icon={ShieldCheck}
+            label="Audit log"
+          />
+          <NavLink
+            href="/dashboard/super-admin/parametres"
+            icon={Settings}
+            label="Paramètres"
+          />
         </div>
       </Section>
     </DashboardShell>
@@ -867,7 +933,8 @@ type SectionAccent =
   | "purple"
   | "blue"
   | "slate"
-  | "orange";
+  | "orange"
+  | "rose";
 
 function Section({
   id,
@@ -893,6 +960,7 @@ function Section({
     blue: "from-blue-500 to-blue-700",
     slate: "from-slate-500 to-slate-700",
     orange: "from-nexus-orange-500 to-nexus-orange-700",
+    rose: "from-rose-500 to-rose-700",
   };
 
   const eyebrowColor: Record<SectionAccent, string> = {
@@ -902,10 +970,11 @@ function Section({
     blue: "text-blue-600",
     slate: "text-slate-500",
     orange: "text-nexus-orange-600",
+    rose: "text-rose-600",
   };
 
   return (
-    <section id={id} className="mb-6 scroll-mt-6 sm:mb-8">
+    <section id={id} className="mb-8 scroll-mt-6 sm:mb-10">
       <div className="mb-4 flex items-start gap-3 sm:mb-5">
         <div
           className={cn(
@@ -941,7 +1010,6 @@ function Section({
   );
 }
 
-// ─── Card métrique financière (avec sparkline + delta) ─────────────────────
 function MetricCard({
   label,
   value,
@@ -1038,7 +1106,6 @@ function MetricCard({
               )}
             >
               {deltaUp && <ArrowUpRight className="h-3 w-3" />}
-              {deltaDown && <ArrowDownRight className="h-3 w-3" />}
               {Math.abs(delta!).toFixed(1)}%
             </span>
           )}
@@ -1053,7 +1120,6 @@ function MetricCard({
   );
 }
 
-// ─── Card opérationnelle compacte ──────────────────────────────────────────
 function OpCard({
   label,
   value,
@@ -1120,7 +1186,6 @@ function OpCard({
   );
 }
 
-// ─── Card RH / Talent ──────────────────────────────────────────────────────
 function RhStatCard({
   label,
   value,
@@ -1176,7 +1241,6 @@ function RhStatCard({
   );
 }
 
-// ─── Liste d'événements (RDV / demandes) ───────────────────────────────────
 function EventList({
   title,
   icon: Icon,
@@ -1228,59 +1292,6 @@ function EventList({
   );
 }
 
-// ─── Ligne d'alerte ────────────────────────────────────────────────────────
-function AlertRow({
-  icon: Icon,
-  iconColor,
-  iconBg,
-  title,
-  subtitle,
-  badge,
-  badgeColor,
-  href,
-}: {
-  icon: LucideIcon;
-  iconColor: string;
-  iconBg: string;
-  title: string;
-  subtitle: string;
-  badge: string;
-  badgeColor: string;
-  href: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3 ring-1 ring-slate-100/80 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/40 hover:shadow-md"
-    >
-      <div
-        className={cn(
-          "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
-          iconBg
-        )}
-      >
-        <Icon className={cn("h-4 w-4", iconColor)} />
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-semibold text-nexus-blue-950">
-          {title}
-        </p>
-        <p className="truncate text-xs text-slate-500">{subtitle}</p>
-      </div>
-      <span
-        className={cn(
-          "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase",
-          badgeColor
-        )}
-      >
-        {badge}
-      </span>
-      <ArrowUpRight className="hidden h-4 w-4 shrink-0 text-slate-400 sm:block" />
-    </Link>
-  );
-}
-
-// ─── Lien navigation rapide ────────────────────────────────────────────────
 function NavLink({
   href,
   icon: Icon,
