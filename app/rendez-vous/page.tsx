@@ -29,11 +29,11 @@ export default function RendezVousPage() {
       <main className="min-h-screen bg-surface-sunken">
         {/* HERO ─────────────────────────────────────────────── */}
         <PublicHero
-          eyebrow="Prendre rendez-vous"
-          titleStart="Un agent. Un créneau. "
-          accentWord="C'est parti"
+          eyebrow="Réservation premium"
+          titleStart="Prendre un rendez-vous avec "
+          accentWord="Nexus RCA"
           titleEnd="."
-          subtitle="Choisissez le service, le motif, votre créneau. Confirmation immédiate par email et WhatsApp."
+          subtitle="Réservez un échange structuré avec notre équipe pour analyser votre besoin, clarifier votre situation et définir les prochaines étapes."
         />
 
         {/* CONTENT ───────────────────────────────────────────── */}
