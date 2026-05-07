@@ -221,11 +221,23 @@ body {
     transform: translateX(-100%);
   }
 }
+@keyframes marquee-reverse {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
 .animate-marquee {
   animation: marquee 40s linear infinite;
 }
+.animate-marquee-reverse {
+  animation: marquee-reverse 50s linear infinite;
+}
 @media (prefers-reduced-motion: reduce) {
-  .animate-marquee {
+  .animate-marquee,
+  .animate-marquee-reverse {
     animation: none;
   }
 }
