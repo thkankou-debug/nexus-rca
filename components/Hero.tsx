@@ -1,107 +1,178 @@
+import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { FilePlus, Calendar, ShieldCheck, Clock, Sparkles } from "lucide-react";
-import { PublicHero } from "@/components/PublicHero";
+import {
+  ArrowRight,
+  Calendar,
+  Clock,
+  FilePlus,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
 
 // ─── Hero homepage Premium tech ─────────────────────────────────────────────
-// Server component, zero framer-motion, animations CSS pures.
-// S'appuie sur <PublicHero> partagé avec toutes les pages publiques.
-// Les signaux de confiance + stats sont conservés dans une section dédiée
-// juste après le hero.
+// Hero custom navy + dot grid + 2 blobs.
+// Stats + trust badges INTÉGRÉS dans le hero (cards glass navy compactes).
+// Plus de bandeau blanc séparé qui cassait l'ambiance navy.
+// Cohérent avec les heros services (visa, billets, a-propos).
 // ────────────────────────────────────────────────────────────────────────────
+
+const DOT_GRID_DARK: React.CSSProperties = {
+  backgroundImage:
+    "radial-gradient(circle at center, rgba(255,255,255,0.06) 1px, transparent 1px)",
+  backgroundSize: "28px 28px",
+};
+
 export function Hero() {
   const t = useTranslations("Hero");
 
+  const STATS = [
+    { value: t("stat1_value"), label: t("stat1_label"), highlight: true },
+    { value: t("stat2_value"), label: t("stat2_label") },
+    {
+      value: t("stat3_value"),
+      label: t("stat3_label"),
+      hint: t("stat3_hint"),
+    },
+  ];
+
+  const TRUST = [
+    { icon: ShieldCheck, label: t("trust_free") },
+    { icon: Clock, label: t("trust_24h") },
+    { icon: Sparkles, label: t("trust_confidential") },
+  ];
+
   return (
-    <>
-      <PublicHero
-        eyebrow={t("eyebrow")}
-        titleStart={t("title_start")}
-        accentWord={t("title_accent")}
-        titleEnd={t("title_end")}
-        subtitle={t("subtitle")}
-        ctaPrimary={{
-          href: "/demande/complet",
-          label: t("cta_primary"),
-          icon: FilePlus,
-        }}
-        ctaSecondary={{
-          href: "/rendez-vous",
-          label: t("cta_secondary"),
-          icon: Calendar,
-        }}
-      />
-
-      {/* ─── Bandeau confiance + stats — après le hero ──────────────── */}
-      <section className="relative overflow-hidden border-b border-slate-200 bg-white py-10 sm:py-12">
-        <div className="mx-auto w-full max-w-6xl px-4 lg:px-8">
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs text-slate-500">
-            <span className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-800">
-              <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-500" />
-              {t("trust_free")}
-            </span>
-            <span className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-800">
-              <Clock className="h-3.5 w-3.5 text-nexus-orange-500" />
-              {t("trust_24h")}
-            </span>
-            <span className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-800">
-              <Sparkles className="h-3.5 w-3.5 text-nexus-orange-500" />
-              {t("trust_confidential")}
-            </span>
-          </div>
-
-          <div className="mx-auto mt-8 grid max-w-3xl grid-cols-1 gap-3 sm:grid-cols-3">
-            <StatCard
-              number={t("stat1_value")}
-              label={t("stat1_label")}
-              highlight
-            />
-            <StatCard number={t("stat2_value")} label={t("stat2_label")} />
-            <StatCard
-              number={t("stat3_value")}
-              label={t("stat3_label")}
-              hint={t("stat3_hint")}
-            />
-          </div>
-        </div>
-      </section>
-    </>
-  );
-}
-
-function StatCard({
-  number,
-  label,
-  hint,
-  highlight = false,
-}: {
-  number: string;
-  label: string;
-  hint?: string;
-  highlight?: boolean;
-}) {
-  return (
-    <div
-      className={`group/stat relative overflow-hidden rounded-2xl border bg-white px-5 py-4 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-18px_rgba(12,28,64,0.18)] ${
-        highlight
-          ? "border-nexus-orange-300/60 hover:border-nexus-orange-400/70"
-          : "border-slate-200 hover:border-slate-300"
-      }`}
-    >
+    <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 px-4 pt-20 pb-16 text-white sm:px-6 sm:pt-24 sm:pb-20 lg:px-8 lg:pt-32 lg:pb-24">
+      {/* Dot grid pattern */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover/stat:bg-nexus-orange-500/15"
+        className="pointer-events-none absolute inset-0 opacity-[0.6]"
+        style={DOT_GRID_DARK}
       />
-      <div className="relative">
-        <p className="font-display text-2xl font-bold leading-none text-nexus-blue-950 sm:text-3xl">
-          <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-            {number}
+
+      {/* Orb central rayonnant */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[40rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/15 blur-[140px]"
+      />
+      {/* Blob top-right (orange) */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/10 blur-[120px]"
+      />
+      {/* Blob bottom-left (bleu) */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-32 -left-32 h-[36rem] w-[36rem] rounded-full bg-nexus-blue-500/15 blur-[120px]"
+      />
+
+      {/* Bordure inférieure éclairée */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+      />
+
+      <div className="relative mx-auto max-w-5xl text-center">
+        {/* Eyebrow badge avec pulse dot orange */}
+        <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md transition-all duration-300 hover:border-nexus-orange-500/50 hover:bg-nexus-orange-500/15">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
           </span>
+          {t("eyebrow")}
+        </span>
+
+        {/* Titre principal */}
+        <h1 className="mt-6 font-display text-3xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+          {t("title_start")}
+          <span className="relative inline-block">
+            <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+              {t("title_accent")}
+            </span>
+            <span
+              aria-hidden
+              className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+            />
+          </span>
+          {t("title_end")}
+        </h1>
+
+        {/* Sous-titre */}
+        <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
+          {t("subtitle")}
         </p>
-        <p className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
-          {label}
-        </p>
-        {hint && <p className="mt-0.5 text-[10px] text-slate-400">{hint}</p>}
+
+        {/* CTAs */}
+        <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:justify-center">
+          <Link
+            href="/demande/complet"
+            className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_10px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+          >
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
+            />
+            <FilePlus className="h-4 w-4" />
+            {t("cta_primary")}
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
+          </Link>
+          <Link
+            href="/rendez-vous"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
+          >
+            <Calendar className="h-4 w-4" />
+            {t("cta_secondary")}
+          </Link>
+        </div>
+
+        {/* Trust pills — intégrés dans le hero navy */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[11px] uppercase tracking-[0.18em] text-white/60">
+          {TRUST.map((trust) => {
+            const Icon = trust.icon;
+            return (
+              <span
+                key={trust.label}
+                className="inline-flex items-center gap-1.5 transition-colors duration-200 hover:text-white/85"
+              >
+                <Icon className="h-3 w-3 text-nexus-orange-300" />
+                {trust.label}
+              </span>
+            );
+          })}
+        </div>
+
+        {/* Stats compactes — cards glass navy intégrées */}
+        <div className="mx-auto mt-10 grid max-w-3xl grid-cols-1 gap-3 sm:grid-cols-3">
+          {STATS.map((stat) => (
+            <article
+              key={stat.label}
+              className={`group/stat relative overflow-hidden rounded-2xl border bg-white/[0.04] px-5 py-4 backdrop-blur-md ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/[0.07] ${
+                stat.highlight
+                  ? "border-nexus-orange-400/30 hover:border-nexus-orange-400/60"
+                  : "border-white/10 hover:border-white/25"
+              }`}
+            >
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover/stat:bg-nexus-orange-500/20"
+              />
+              <div className="relative">
+                <p className="font-display text-2xl font-bold leading-none text-white sm:text-3xl">
+                  <span className="bg-gradient-to-r from-nexus-orange-300 to-nexus-orange-500 bg-clip-text text-transparent">
+                    {stat.value}
+                  </span>
+                </p>
+                <p className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                  {stat.label}
+                </p>
+                {stat.hint && (
+                  <p className="mt-0.5 text-[10px] text-slate-500">{stat.hint}</p>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
