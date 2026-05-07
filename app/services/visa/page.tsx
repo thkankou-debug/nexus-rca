@@ -12,10 +12,10 @@ import {
   FileText,
   MapPin,
   MessageCircle,
-  Plane,
   Search,
   ShieldCheck,
   Smartphone,
+  Sparkles,
   Wallet,
   XCircle,
   Zap,
@@ -32,21 +32,11 @@ export const metadata = {
     "L'expertise centrafricaine pour vos démarches visa. Nous étudions chaque dossier avec rigueur avant d'accepter de l'accompagner. Schengen, Canada, e-Visa Asie et Moyen-Orient.",
 };
 
-// ─── Patterns dot grid ──────────────────────────────────────────────────────
+// ─── Pattern dot grid ───────────────────────────────────────────────────────
 const DOT_GRID_DARK: React.CSSProperties = {
   backgroundImage:
     "radial-gradient(circle at center, rgba(255,255,255,0.06) 1px, transparent 1px)",
   backgroundSize: "28px 28px",
-};
-const DOT_GRID_LIGHT: React.CSSProperties = {
-  backgroundImage:
-    "radial-gradient(circle at center, rgba(12,28,64,0.05) 1px, transparent 1px)",
-  backgroundSize: "28px 28px",
-};
-const DOT_GRID_LIGHT_SUBTLE: React.CSSProperties = {
-  backgroundImage:
-    "radial-gradient(circle at center, rgba(12,28,64,0.04) 1px, transparent 1px)",
-  backgroundSize: "32px 32px",
 };
 
 // ─── Données ────────────────────────────────────────────────────────────────
@@ -188,6 +178,123 @@ const STATS = [
   { value: "Bilan", label: "Honnête écrit" },
 ];
 
+const NOUS_FAISONS = [
+  {
+    title: "Audit du projet et identification de la procédure",
+    desc: "Schengen, Canada, e-Visa, biométrie : nous déterminons la procédure exacte applicable à votre destination et à votre profil avant tout engagement.",
+  },
+  {
+    title: "Constitution du dossier aux exigences du consulat",
+    desc: "Pièces administratives, lettre de motivation, ressources, hébergement, assurance : tout est cadré selon le référentiel exact du poste consulaire ciblé.",
+  },
+  {
+    title: "Prise de rendez-vous TLS/VFS et coordination",
+    desc: "Réservation du créneau, préparation du dossier physique remis prêt-à-déposer, instructions précises pour la dépose à Yaoundé.",
+  },
+  {
+    title: "Suivi jusqu'à la décision",
+    desc: "Réponse aux compléments d'information demandés, ajustement du dossier si nécessaire, transmission de la décision finale.",
+  },
+];
+
+const VOUS_OBTENEZ = [
+  {
+    title: "Un dossier conforme dès la première dépose",
+    desc: "Aucun retour pour pièces manquantes ou non conformes au référentiel consulaire.",
+  },
+  {
+    title: "Une compréhension claire de vos chances",
+    desc: "Bilan de faisabilité écrit avant tout engagement. Pas de zone grise.",
+  },
+  {
+    title: "Une économie de déplacements",
+    desc: "Un seul aller-retour Bangui-Yaoundé pour la biométrie. Tout le reste géré depuis nos bureaux.",
+  },
+  {
+    title: "Un interlocuteur unique",
+    desc: "Du premier contact à la décision finale, le même conseiller suit votre dossier.",
+  },
+];
+
+const CAS = [
+  {
+    badge: "Études en France",
+    title: "Étudiante en master, admission validée",
+    stats: [
+      { label: "Procédure", value: "Schengen études" },
+      { label: "Biométrie", value: "Yaoundé (TLS)" },
+      { label: "Dépose", value: "1 aller-retour" },
+      { label: "Approche", value: "Dossier complet" },
+    ],
+    desc: "Visa Schengen études, biométrie obligatoire à Yaoundé. Nexus RCA monte le dossier complet (admission, ressources, hébergement, assurance, lettre de motivation), prend le rendez-vous TLS et remet à la cliente un dossier physique prêt à déposer.",
+  },
+  {
+    badge: "Salon professionnel à Dubaï",
+    title: "Cadre d'une PME centrafricaine, délais courts",
+    stats: [
+      { label: "Procédure", value: "e-Visa EAU" },
+      { label: "Délai", value: "48 à 72 h" },
+      { label: "Dépose", value: "100 % en ligne" },
+      { label: "Approche", value: "Coordination hôtel" },
+    ],
+    desc: "Premier voyage international, agenda chargé, salon dans 10 jours. Nexus RCA prépare l'e-Visa EAU en 48 à 72 heures, organise la réservation d'hôtel à proximité du salon, et transmet le visa par e-mail avant le décollage.",
+  },
+  {
+    badge: "Famille Schengen",
+    title: "Regroupement familial, dossier sensible",
+    stats: [
+      { label: "Procédure", value: "Schengen long séjour" },
+      { label: "Profil", value: "Sensible" },
+      { label: "Étape", value: "Audit préalable" },
+      { label: "Approche", value: "Bilan écrit" },
+    ],
+    desc: "Demande de regroupement familial avec documents d'état civil à harmoniser. Nexus RCA effectue d'abord un audit complet du dossier, identifie les points faibles, propose un plan d'amélioration et n'engage la dépose qu'après mise en conformité.",
+  },
+];
+
+const ENGAGEMENT_NO = [
+  "Garantir l'obtention d'un visa",
+  "Influencer la décision consulaire",
+  "Promettre une admission certaine",
+];
+
+const ENGAGEMENT_YES = [
+  "Un dossier solide et complet, conforme aux exigences exactes du consulat",
+  "Une présentation optimisée qui valorise votre profil",
+  "La réduction maximale des risques de refus pour motifs évitables",
+  "Un conseil honnête sur vos chances réelles avant tout engagement",
+];
+
+type TarifAccent = "emerald" | "orange" | "blue";
+interface Tarif {
+  icon: typeof Search;
+  accent: TarifAccent;
+  title: string;
+  desc: string;
+  highlight?: boolean;
+}
+const TARIFS: Tarif[] = [
+  {
+    icon: Search,
+    accent: "emerald",
+    title: "Étude initiale",
+    desc: "Gratuite, sans engagement. Bilan de faisabilité écrit.",
+  },
+  {
+    icon: ClipboardCheck,
+    accent: "orange",
+    highlight: true,
+    title: "Accompagnement Nexus",
+    desc: "Devis fixe communiqué après le bilan de faisabilité. Aucune facturation surprise en cours de route.",
+  },
+  {
+    icon: Wallet,
+    accent: "blue",
+    title: "Frais consulaires",
+    desc: "À votre charge, montant détaillé à l'avance par pays. Reversés directement aux autorités.",
+  },
+];
+
 // ─── Composant ──────────────────────────────────────────────────────────────
 
 export default function VisaPage() {
@@ -204,7 +311,7 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
+            className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -217,7 +324,7 @@ export default function VisaPage() {
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md transition-all duration-300 hover:border-nexus-orange-500/40 hover:bg-white/10">
+              <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md transition-all duration-300 hover:border-nexus-orange-500/50">
                 <span className="relative flex h-1.5 w-1.5">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
@@ -225,7 +332,7 @@ export default function VisaPage() {
                 Service visa
               </span>
 
-              <h1 className="mx-auto mt-6 max-w-3xl font-display text-3xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+              <h1 className="mx-auto mt-6 max-w-3xl font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Visa &{" "}
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
@@ -288,7 +395,7 @@ export default function VisaPage() {
               {STATS.map((s, i) => (
                 <article
                   key={s.label}
-                  className={`group/stat relative overflow-hidden rounded-2xl border bg-white/[0.04] px-5 py-4 backdrop-blur-md transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/[0.07] ${
+                  className={`group/stat relative overflow-hidden rounded-2xl border bg-white/[0.04] px-5 py-4 backdrop-blur-md ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/[0.07] ${
                     i === 0
                       ? "border-nexus-orange-400/30 hover:border-nexus-orange-400/60"
                       : "border-white/10 hover:border-white/25"
@@ -314,132 +421,210 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 1.0 DIAGNOSTIC VISA ──────────────────────────────────────── */}
+        {/* 2. DIAGNOSTIC VISA — navy + cards glass claires (lisibilité checkers) ── */}
         <section
           id="diagnostic"
-          className="relative overflow-hidden bg-slate-50 py-20 sm:py-24 lg:py-28"
+          className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24 lg:py-28"
         >
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-50"
-            style={DOT_GRID_LIGHT}
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
+            style={DOT_GRID_DARK}
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 top-32 h-96 w-96 rounded-full bg-nexus-orange-500/8 blur-[100px]"
+            className="pointer-events-none absolute -right-40 top-32 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-32 bottom-32 h-96 w-96 rounded-full bg-nexus-blue-500/8 blur-[100px]"
+            className="pointer-events-none absolute -left-40 bottom-32 h-[28rem] w-[28rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-200/70 bg-nexus-orange-50 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-700">
+              <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
                 <span className="relative flex h-1.5 w-1.5">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
                 </span>
                 Diagnostic gratuit
               </span>
-              <h2 className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
+              <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                 Évaluez votre dossier en{" "}
-                <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  60 secondes
+                <span className="relative inline-block">
+                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    60 secondes
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  />
                 </span>
                 .
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
                 Deux outils Nexus pour identifier votre type de visa et vos
                 exigences avant même de nous contacter — sans inscription.
               </p>
             </div>
 
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
-              <VisaRequirementChecker />
-              <EVisaEligibilityChecker />
+              <div className="group relative overflow-hidden rounded-3xl border border-white/30 bg-white/[0.92] p-1 ring-1 ring-white/5 backdrop-blur-xl shadow-[0_24px_48px_-16px_rgba(0,0,0,0.4)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40">
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/25"
+                />
+                <div className="relative">
+                  <VisaRequirementChecker />
+                </div>
+              </div>
+              <div className="group relative overflow-hidden rounded-3xl border border-white/30 bg-white/[0.92] p-1 ring-1 ring-white/5 backdrop-blur-xl shadow-[0_24px_48px_-16px_rgba(0,0,0,0.4)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40">
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/25"
+                />
+                <div className="relative">
+                  <EVisaEligibilityChecker />
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* 1.5 INTRO COURTE ──────────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-white py-16 lg:py-20">
+        {/* 3. INTRO COURTE — navy editorial ─────────────────────────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-16 text-white lg:py-20">
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-25"
-            style={DOT_GRID_LIGHT_SUBTLE}
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
+            style={DOT_GRID_DARK}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/8 blur-[120px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
           />
           <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
-            <p className="font-display text-2xl font-bold leading-snug tracking-tight text-nexus-blue-950 sm:text-3xl lg:text-4xl">
+            <p className="font-display text-2xl font-bold leading-snug tracking-tight text-white sm:text-3xl lg:text-4xl">
               Le visa n&apos;est pas une formalité. C&apos;est une décision
               d&apos;État qui demande{" "}
-              <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                structure, transparence et conformité
+              <span className="relative inline-block">
+                <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  structure, transparence et conformité
+                </span>
+                <span
+                  aria-hidden
+                  className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                />
               </span>
               .
             </p>
           </div>
         </section>
 
-        {/* 1.6 CE QUE NOUS FAISONS ──────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/40 to-white py-20 sm:py-24">
+        {/* 4. CE QUE NOUS FAISONS — navy glass split ────────────────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-30"
-            style={DOT_GRID_LIGHT_SUBTLE}
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
+            style={DOT_GRID_DARK}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-40 bottom-1/4 h-[28rem] w-[28rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
           />
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mb-12 grid gap-10 lg:grid-cols-[1fr_2fr] lg:items-start lg:gap-16">
               <div>
-                <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+                <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                   Périmètre
                 </span>
-                <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                  Ce que nous faisons.
+                <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                  Ce que nous{" "}
+                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    faisons
+                  </span>
+                  .
                 </h2>
-                <p className="mt-4 text-sm leading-relaxed text-slate-600">
+                <p className="mt-4 text-sm leading-relaxed text-slate-300 sm:text-base">
                   Quatre prestations encadrées, livrables documentés à chaque
                   étape.
                 </p>
               </div>
 
-              <ul className="space-y-4">
-                {[
-                  {
-                    title: "Audit du projet et identification de la procédure",
-                    desc: "Schengen, Canada, e-Visa, biométrie : nous déterminons la procédure exacte applicable à votre destination et à votre profil avant tout engagement.",
-                  },
-                  {
-                    title: "Constitution du dossier aux exigences du consulat",
-                    desc: "Pièces administratives, lettre de motivation, ressources, hébergement, assurance : tout est cadré selon le référentiel exact du poste consulaire ciblé.",
-                  },
-                  {
-                    title: "Prise de rendez-vous TLS/VFS et coordination",
-                    desc: "Réservation du créneau, préparation du dossier physique remis prêt-à-déposer, instructions précises pour la dépose à Yaoundé.",
-                  },
-                  {
-                    title: "Suivi jusqu'à la décision",
-                    desc: "Réponse aux compléments d'information demandés, ajustement du dossier si nécessaire, transmission de la décision finale.",
-                  },
-                ].map((item, i) => (
+              {/* Mobile : scroll-snap */}
+              <div className="sm:hidden">
+                <div className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-4">
+                  {NOUS_FAISONS.map((item, i) => (
+                    <article
+                      key={i}
+                      className="group relative w-[85vw] shrink-0 snap-center overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40"
+                    >
+                      <div
+                        aria-hidden
+                        className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                      />
+                      <div className="relative flex items-start gap-3">
+                        <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)]">
+                          <Check className="h-3.5 w-3.5" strokeWidth={3} />
+                        </div>
+                        <div className="min-w-0">
+                          <h3 className="font-display text-base font-bold leading-tight text-white">
+                            {item.title}
+                          </h3>
+                          <p className="mt-2 text-sm leading-relaxed text-slate-300">
+                            {item.desc}
+                          </p>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+                <div className="mt-2 flex items-center justify-center gap-1.5">
+                  {NOUS_FAISONS.map((_, i) => (
+                    <span
+                      key={i}
+                      className="h-1.5 w-1.5 rounded-full bg-white/20"
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Desktop */}
+              <ul className="hidden space-y-4 sm:block">
+                {NOUS_FAISONS.map((item, i) => (
                   <li
                     key={i}
-                    className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_16px_36px_-16px_rgba(255,102,0,0.20)]"
+                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/12"
+                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
                     />
-                    <div className="relative flex items-start gap-3">
-                      <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-sm transition-transform duration-300 ease-out group-hover:scale-110">
+                    <div className="relative flex items-start gap-3.5">
+                      <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] transition-transform duration-300 ease-out group-hover:scale-110">
                         <Check className="h-3.5 w-3.5" strokeWidth={3} />
                       </div>
                       <div>
-                        <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950">
+                        <h3 className="font-display text-base font-bold leading-tight text-white sm:text-lg">
                           {item.title}
                         </h3>
-                        <p className="mt-1.5 text-sm leading-relaxed text-slate-600">
+                        <p className="mt-1.5 text-sm leading-relaxed text-slate-300">
                           {item.desc}
                         </p>
                       </div>
@@ -451,64 +636,105 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 1.7 CE QUE VOUS OBTENEZ ──────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-slate-50 py-20 sm:py-24">
+        {/* 5. CE QUE VOUS OBTENEZ — navy glass grid 4 ───────────────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-50"
-            style={DOT_GRID_LIGHT}
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
+            style={DOT_GRID_DARK}
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 top-32 h-96 w-96 rounded-full bg-nexus-orange-500/8 blur-[100px]"
+            className="pointer-events-none absolute -right-40 top-32 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -left-40 bottom-32 h-96 w-96 rounded-full bg-nexus-blue-500/20 blur-[120px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Résultat
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Ce que vous obtenez.
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                Ce que vous{" "}
+                <span className="relative inline-block">
+                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    obtenez
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  />
+                </span>
+                .
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
                 Pas de promesse de visa — la décision appartient au consulat.
                 En revanche, voici ce que nous vous garantissons concrètement.
               </p>
             </div>
 
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                {
-                  title: "Un dossier conforme dès la première dépose",
-                  desc: "Aucun retour pour pièces manquantes ou non conformes au référentiel consulaire.",
-                },
-                {
-                  title: "Une compréhension claire de vos chances",
-                  desc: "Bilan de faisabilité écrit avant tout engagement. Pas de zone grise.",
-                },
-                {
-                  title: "Une économie de déplacements",
-                  desc: "Un seul aller-retour Bangui-Yaoundé pour la biométrie. Tout le reste géré depuis nos bureaux.",
-                },
-                {
-                  title: "Un interlocuteur unique",
-                  desc: "Du premier contact à la décision finale, le même conseiller suit votre dossier.",
-                },
-              ].map((item, i) => (
+            {/* Mobile : scroll-snap */}
+            <div className="sm:hidden">
+              <div className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-4">
+                {VOUS_OBTENEZ.map((item, i) => (
+                  <article
+                    key={i}
+                    className="group relative w-[80vw] shrink-0 snap-center overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]"
+                  >
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/10 blur-2xl"
+                    />
+                    <div className="relative">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10">
+                        <Check className="h-5 w-5" />
+                      </div>
+                      <h3 className="mt-4 font-display text-base font-bold leading-tight text-white">
+                        {item.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-relaxed text-slate-300">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+              <div className="mt-2 flex items-center justify-center gap-1.5">
+                {VOUS_OBTENEZ.map((_, i) => (
+                  <span
+                    key={i}
+                    className="h-1.5 w-1.5 rounded-full bg-white/20"
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop : grid 4 */}
+            <div className="hidden gap-5 sm:grid sm:grid-cols-2 lg:grid-cols-4">
+              {VOUS_OBTENEZ.map((item, i) => (
                 <article
                   key={i}
-                  className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
+                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
                 >
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
+                    className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
                   />
                   <div className="relative">
-                    <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
+                      <Check className="h-5 w-5" />
+                    </div>
+                    <h3 className="mt-4 font-display text-base font-bold leading-tight text-white">
                       {item.title}
                     </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                    <p className="mt-2 text-sm leading-relaxed text-slate-300">
                       {item.desc}
                     </p>
                   </div>
@@ -518,50 +744,74 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 2. POUR QUI ──────────────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/40 to-white py-20 sm:py-24">
+        {/* 6. POUR QUI — navy glass split emerald / rose accents ────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-30"
-            style={DOT_GRID_LIGHT_SUBTLE}
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
+            style={DOT_GRID_DARK}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -left-40 top-1/3 h-[32rem] w-[32rem] rounded-full bg-emerald-500/12 blur-[140px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-40 bottom-1/3 h-[32rem] w-[32rem] rounded-full bg-rose-500/12 blur-[140px]"
           />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
-              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Sélectivité
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Pour qui ce service est conçu.
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                Pour qui ce service est{" "}
+                <span className="relative inline-block">
+                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    conçu
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  />
+                </span>
+                .
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
                 Nous n&apos;accompagnons pas tous les profils. Cette
                 transparence fait partie de notre engagement professionnel.
               </p>
             </div>
 
             <div className="mt-12 grid gap-5 lg:grid-cols-2">
-              <article className="group relative overflow-hidden rounded-3xl border-2 border-emerald-200/70 bg-gradient-to-br from-emerald-50/60 via-white to-emerald-50/30 p-7 shadow-[0_16px_36px_-16px_rgba(16,185,129,0.18)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-emerald-300/80 hover:shadow-[0_24px_48px_-18px_rgba(16,185,129,0.30)]">
+              {/* Adapté */}
+              <article className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-7 ring-1 ring-emerald-400/30 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-emerald-400/40 hover:bg-white/[0.06] sm:p-9">
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-emerald-400/0 blur-2xl transition-all duration-500 group-hover:bg-emerald-400/20"
+                  className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-emerald-500/10 blur-[100px] transition-all duration-500 group-hover:bg-emerald-500/25"
                 />
                 <div className="relative">
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-sm transition-transform duration-300 ease-out group-hover:scale-105">
-                      <CheckCircle2 className="h-5 w-5" />
+                  <div className="mb-5 flex items-center gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-300 ring-1 ring-emerald-400/30 backdrop-blur transition-transform duration-300 ease-out group-hover:scale-105">
+                      <CheckCircle2 className="h-6 w-6" />
                     </div>
-                    <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                      Service adapté à vous si…
-                    </h3>
+                    <div>
+                      <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-emerald-300">
+                        Adapté
+                      </span>
+                      <h3 className="font-display text-lg font-bold leading-tight text-white sm:text-xl">
+                        Service adapté à vous si…
+                      </h3>
+                    </div>
                   </div>
-                  <ul className="space-y-3">
+                  <ul className="space-y-3.5">
                     {POUR_QUI.oui.map((item, i) => (
                       <li
                         key={i}
-                        className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
+                        className="flex items-start gap-3 text-sm leading-relaxed text-slate-200 sm:text-base"
                       >
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -569,27 +819,33 @@ export default function VisaPage() {
                 </div>
               </article>
 
-              <article className="group relative overflow-hidden rounded-3xl border-2 border-rose-200/70 bg-gradient-to-br from-rose-50/60 via-white to-rose-50/30 p-7 shadow-[0_16px_36px_-16px_rgba(244,63,94,0.16)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-rose-300/80 hover:shadow-[0_24px_48px_-18px_rgba(244,63,94,0.28)]">
+              {/* Pas adapté */}
+              <article className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-7 ring-1 ring-rose-400/30 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-rose-400/40 hover:bg-white/[0.06] sm:p-9">
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-rose-400/0 blur-2xl transition-all duration-500 group-hover:bg-rose-400/18"
+                  className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-rose-500/10 blur-[100px] transition-all duration-500 group-hover:bg-rose-500/25"
                 />
                 <div className="relative">
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 to-rose-600 text-white shadow-sm transition-transform duration-300 ease-out group-hover:scale-105">
-                      <XCircle className="h-5 w-5" />
+                  <div className="mb-5 flex items-center gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-500/10 text-rose-300 ring-1 ring-rose-400/30 backdrop-blur transition-transform duration-300 ease-out group-hover:scale-105">
+                      <XCircle className="h-6 w-6" />
                     </div>
-                    <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                      Pas adapté si…
-                    </h3>
+                    <div>
+                      <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-rose-300">
+                        Non adapté
+                      </span>
+                      <h3 className="font-display text-lg font-bold leading-tight text-white sm:text-xl">
+                        Pas adapté si…
+                      </h3>
+                    </div>
                   </div>
-                  <ul className="space-y-3">
+                  <ul className="space-y-3.5">
                     {POUR_QUI.non.map((item, i) => (
                       <li
                         key={i}
-                        className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
+                        className="flex items-start gap-3 text-sm leading-relaxed text-slate-200 sm:text-base"
                       >
-                        <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
+                        <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-300" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -600,84 +856,116 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 3. MÉTHODOLOGIE ──────────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-slate-50 py-20 sm:py-24">
+        {/* 7. MÉTHODOLOGIE — navy timeline numbers gradient orange ──── */}
+        <section
+          id="methodologie"
+          className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24 lg:py-28"
+        >
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-50"
-            style={DOT_GRID_LIGHT}
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
+            style={DOT_GRID_DARK}
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-32 top-32 h-96 w-96 rounded-full bg-nexus-blue-500/8 blur-[100px]"
+            className="pointer-events-none absolute -left-40 top-32 h-[32rem] w-[32rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-40 bottom-32 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
           />
 
-          <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
-            <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+          <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
+            <div className="mx-auto mb-14 max-w-2xl text-center">
+              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Notre méthodologie
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                 Un parcours en{" "}
-                <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  quatre étapes documentées
+                <span className="relative inline-block">
+                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    quatre étapes
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  />
                 </span>
                 .
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
                 De la soumission à la décision, chaque étape est documentée et
                 communiquée. Vous savez à tout moment où en est votre dossier.
               </p>
             </div>
 
-            <div className="grid gap-5 lg:grid-cols-2">
-              {METHODOLOGIE.map((etape) => {
-                const Icon = etape.icon;
-                return (
-                  <article
-                    key={etape.num}
-                    className="group relative flex items-start gap-4 overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)] sm:p-7"
-                  >
+            {/* Timeline */}
+            <div className="relative">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute left-8 top-4 bottom-4 w-px bg-gradient-to-b from-nexus-orange-500/40 via-nexus-orange-500/20 to-transparent sm:left-[3.75rem]"
+              />
+
+              <div className="space-y-7">
+                {METHODOLOGIE.map((etape) => {
+                  const Icon = etape.icon;
+                  return (
                     <div
-                      aria-hidden
-                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
-                    />
-                    <div className="relative shrink-0">
-                      <div
-                        aria-hidden
-                        className="absolute inset-0 rounded-2xl bg-nexus-orange-500/30 opacity-50 blur-md transition-all duration-500 group-hover:opacity-100"
-                      />
-                      <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 font-display text-base font-bold text-white shadow-[0_8px_24px_-8px_rgba(255,102,0,0.5)] transition-transform duration-300 ease-out group-hover:scale-105">
-                        {etape.num}
+                      key={etape.num}
+                      className="group relative grid grid-cols-[4rem_1fr] gap-5 sm:grid-cols-[7.5rem_1fr] sm:gap-7"
+                    >
+                      <div className="relative flex justify-center sm:justify-start">
+                        <div className="relative">
+                          <div
+                            aria-hidden
+                            className="absolute inset-0 rounded-3xl bg-nexus-orange-500/40 blur-md transition-all duration-500 group-hover:bg-nexus-orange-500/60"
+                          />
+                          <span className="relative inline-flex h-16 w-16 items-center justify-center rounded-3xl border border-nexus-orange-400/30 bg-nexus-blue-900/60 backdrop-blur-md font-display text-5xl font-bold tabular-nums shadow-[0_10px_28px_-10px_rgba(255,102,0,0.4)] sm:h-[7.5rem] sm:w-[7.5rem] sm:text-7xl">
+                            <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                              {etape.num}
+                            </span>
+                          </span>
+                        </div>
                       </div>
+
+                      <article className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out group-hover:-translate-y-1 group-hover:border-nexus-orange-400/40 group-hover:bg-white/[0.06] sm:p-7">
+                        <div
+                          aria-hidden
+                          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                        />
+                        <div className="relative">
+                          <div className="flex items-center gap-2.5">
+                            <Icon className="h-4 w-4 shrink-0 text-nexus-orange-300" />
+                            <h3 className="font-display text-lg font-bold leading-tight text-white sm:text-xl">
+                              {etape.title}
+                            </h3>
+                          </div>
+                          <p className="mt-3 text-sm leading-relaxed text-slate-300 sm:text-base">
+                            {etape.description}
+                          </p>
+                        </div>
+                      </article>
                     </div>
-                    <div className="relative min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <Icon className="h-4 w-4 shrink-0 text-nexus-orange-600" />
-                        <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                          {etape.title}
-                        </h3>
-                      </div>
-                      <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {etape.description}
-                      </p>
-                    </div>
-                  </article>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
 
-            {/* CTA Premium en sortie de méthodologie */}
-            <div className="mt-10 overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-nexus-orange-50/30 p-7 shadow-[0_20px_50px_-20px_rgba(255,102,0,0.20)] ring-1 ring-slate-100/80 sm:p-8">
+            {/* CTA méthodologie */}
+            <div className="mt-12 overflow-hidden rounded-3xl border border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)] sm:p-8">
               <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+                  <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                     Démarrer la démarche
                   </span>
-                  <p className="mt-3 font-display text-xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-2xl">
+                  <p className="mt-3 font-display text-xl font-bold leading-tight tracking-tight text-white sm:text-2xl">
                     Soumettez votre dossier dès aujourd&apos;hui.
                   </p>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                  <p className="mt-2 text-sm leading-relaxed text-slate-300">
                     Étude initiale gratuite. Bilan de faisabilité écrit.
                   </p>
                 </div>
@@ -695,7 +983,7 @@ export default function VisaPage() {
                   </Link>
                   <Link
                     href="/rendez-vous?service=visa"
-                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-nexus-blue-950 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-nexus-orange-300/70 hover:bg-slate-50"
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
                   >
                     <Calendar className="h-4 w-4" />
                     Prendre rendez-vous
@@ -706,52 +994,66 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 4. DESTINATIONS ──────────────────────────────────────────── */}
+        {/* 8. DESTINATIONS — navy bento glass ───────────────────────── */}
         <section
           id="destinations"
-          className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/40 to-white py-20 sm:py-24"
+          className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24"
         >
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-30"
-            style={DOT_GRID_LIGHT_SUBTLE}
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
+            style={DOT_GRID_DARK}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-40 bottom-1/4 h-[28rem] w-[28rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
           />
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Destinations couvertes
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                 Treize destinations principales,{" "}
-                <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  et davantage sur demande
+                <span className="relative inline-block">
+                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    et davantage sur demande
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  />
                 </span>
                 .
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
                 Si votre destination n&apos;est pas listée, contactez-nous —
                 nous traitons à la demande selon la complexité du dossier.
               </p>
             </div>
 
-            <div className="space-y-10">
+            <div className="space-y-12">
               {REGIONS.map((region) => (
                 <div key={region.title}>
-                  <div className="mb-4 flex items-center gap-3">
+                  <div className="mb-5 flex items-center gap-3">
                     <span className="text-3xl">{region.emoji}</span>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="font-display text-xl font-bold tracking-tight text-nexus-blue-950 sm:text-2xl">
+                        <h3 className="font-display text-xl font-bold tracking-tight text-white sm:text-2xl">
                           {region.title}
                         </h3>
                         {region.highlight && (
-                          <span className="rounded-full border border-nexus-orange-200/70 bg-nexus-orange-50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-nexus-orange-700">
+                          <span className="rounded-full border border-nexus-orange-400/40 bg-nexus-orange-500/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-nexus-orange-300 backdrop-blur">
                             Forte demande
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-slate-600">
+                      <p className="text-sm text-slate-300">
                         {region.description}
                       </p>
                     </div>
@@ -761,16 +1063,24 @@ export default function VisaPage() {
                     {region.destinations.map((dest) => (
                       <article
                         key={dest.name}
-                        className="group flex items-center gap-3 overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_12px_28px_-12px_rgba(255,102,0,0.20)]"
+                        className={`group relative flex items-center gap-3 overflow-hidden rounded-2xl border p-4 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 ${
+                          region.highlight
+                            ? "border-nexus-orange-400/30 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 hover:border-nexus-orange-400/50"
+                            : "border-white/10 bg-white/[0.04] ring-1 ring-white/5 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                        }`}
                       >
-                        <span className="text-2xl transition-transform duration-300 ease-out group-hover:scale-110">
+                        <div
+                          aria-hidden
+                          className="pointer-events-none absolute -right-10 -top-10 h-24 w-24 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                        />
+                        <span className="relative text-2xl transition-transform duration-300 ease-out group-hover:scale-110">
                           {dest.emoji}
                         </span>
-                        <div className="min-w-0 flex-1">
-                          <p className="font-display text-sm font-bold text-nexus-blue-950">
+                        <div className="relative min-w-0 flex-1">
+                          <p className="font-display text-sm font-bold text-white">
                             {dest.name}
                           </p>
-                          <p className="truncate text-xs text-slate-500">
+                          <p className="truncate text-xs text-slate-400">
                             {dest.type}
                           </p>
                         </div>
@@ -783,20 +1093,24 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 5. e-VISA Premium tech (déjà navy, polish léger) ─────────── */}
+        {/* 9. e-VISA — navy glass grid 4 ───────────────────────────── */}
         <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-[0.5]"
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
             style={DOT_GRID_DARK}
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 top-1/4 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/12 blur-[120px]"
+            className="pointer-events-none absolute -right-32 top-1/4 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -bottom-32 -left-32 h-[28rem] w-[28rem] rounded-full bg-nexus-blue-500/15 blur-[100px]"
+            className="pointer-events-none absolute -bottom-32 -left-32 h-[28rem] w-[28rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
@@ -806,15 +1120,25 @@ export default function VisaPage() {
                   aria-hidden
                   className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 opacity-50 blur-md"
                 />
-                <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_12px_30px_-8px_rgba(255,102,0,0.55)]">
+                <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_12px_30px_-8px_rgba(255,102,0,0.55)] ring-1 ring-white/10">
                   <Smartphone className="h-6 w-6" />
                 </div>
               </div>
-              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Visa électronique
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
-                Le e-Visa, procédure simplifiée.
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                Le e-Visa, procédure{" "}
+                <span className="relative inline-block">
+                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    simplifiée
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  />
+                </span>
+                .
               </h2>
               <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
                 Pour de nombreuses destinations, la procédure se déroule
@@ -823,26 +1147,66 @@ export default function VisaPage() {
               </p>
             </div>
 
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {/* Mobile : scroll-snap */}
+            <div className="sm:hidden">
+              <div className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-4">
+                {E_VISA_AVANTAGES.map((avantage) => {
+                  const Icon = avantage.icon;
+                  return (
+                    <article
+                      key={avantage.title}
+                      className="group relative w-[78vw] shrink-0 snap-center overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]"
+                    >
+                      <div
+                        aria-hidden
+                        className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-nexus-orange-500/10 blur-2xl"
+                      />
+                      <div className="relative">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10">
+                          <Icon className="h-5 w-5 text-white" />
+                        </div>
+                        <h3 className="mt-4 font-display text-base font-bold text-white">
+                          {avantage.title}
+                        </h3>
+                        <p className="mt-2 text-sm leading-relaxed text-slate-300">
+                          {avantage.description}
+                        </p>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+              <div className="mt-2 flex items-center justify-center gap-1.5">
+                {E_VISA_AVANTAGES.map((_, i) => (
+                  <span
+                    key={i}
+                    className="h-1.5 w-1.5 rounded-full bg-white/20"
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop : grid 4 */}
+            <div className="hidden gap-5 sm:grid sm:grid-cols-2 lg:grid-cols-4">
               {E_VISA_AVANTAGES.map((avantage) => {
                 const Icon = avantage.icon;
                 return (
                   <article
                     key={avantage.title}
-                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-md transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-400/40 hover:bg-white/[0.08]"
+                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/20"
+                      className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
                     />
                     <div className="relative">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] transition-transform duration-300 ease-out group-hover:scale-105">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
                         <Icon className="h-5 w-5 text-white" />
                       </div>
                       <h3 className="mt-4 font-display text-base font-bold text-white">
                         {avantage.title}
                       </h3>
-                      <p className="mt-2 text-sm leading-relaxed text-slate-300/95">
+                      <p className="mt-2 text-sm leading-relaxed text-slate-300">
                         {avantage.description}
                       </p>
                     </div>
@@ -851,7 +1215,8 @@ export default function VisaPage() {
               })}
             </div>
 
-            <div className="mt-10 rounded-3xl border border-nexus-orange-500/30 bg-gradient-to-br from-nexus-orange-500/15 via-nexus-orange-500/10 to-nexus-orange-500/5 p-7 text-center backdrop-blur-md sm:p-8">
+            {/* Note glass orange */}
+            <div className="mt-10 overflow-hidden rounded-3xl border border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/15 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.25)] sm:p-8">
               <p className="text-base leading-relaxed text-white sm:text-lg">
                 <strong className="text-nexus-orange-300">À savoir : </strong>
                 tous les pays ne proposent pas le e-Visa. La procédure adaptée
@@ -862,93 +1227,199 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 5.5 DOCUMENTS PAR TYPE DE VISA ────────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/40 to-white py-20 sm:py-24">
+        {/* 10. DOCUMENTS PAR TYPE — navy + wrapper glass clair ─────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-30"
-            style={DOT_GRID_LIGHT_SUBTLE}
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
+            style={DOT_GRID_DARK}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-40 bottom-1/4 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
           />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-10 max-w-2xl text-center">
-              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Documents fréquents
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Pièces requises selon votre type de visa.
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                Pièces requises selon votre{" "}
+                <span className="relative inline-block">
+                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    type de visa
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  />
+                </span>
+                .
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
                 Liste indicative par type. Le consulat ciblé peut exiger des
                 pièces complémentaires — c&apos;est ce que Nexus cadre pour
                 vous.
               </p>
             </div>
 
-            <VisaDocumentChecklist />
+            {/* Wrapper glass clair pour lisibilité du checklist interactif */}
+            <div className="relative overflow-hidden rounded-3xl border border-white/30 bg-white/[0.92] p-1 ring-1 ring-white/5 backdrop-blur-xl shadow-[0_24px_48px_-16px_rgba(0,0,0,0.4)]">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/15 blur-[100px]"
+              />
+              <div className="relative">
+                <VisaDocumentChecklist />
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* 6. CAS TYPES ─────────────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-slate-50 py-20 sm:py-24">
+        {/* 11. CAS TYPES — 3 cards tech case study factuel ─────────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-50"
-            style={DOT_GRID_LIGHT}
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
+            style={DOT_GRID_DARK}
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 top-32 h-96 w-96 rounded-full bg-nexus-orange-500/8 blur-[100px]"
+            className="pointer-events-none absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-40 bottom-1/4 h-[32rem] w-[32rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
           />
 
-          <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
-            <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+          <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="mx-auto mb-14 max-w-2xl text-center">
+              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Cas types traités
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Voici comment ça se passe concrètement.
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                Voici comment ça se passe{" "}
+                <span className="relative inline-block">
+                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    concrètement
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  />
+                </span>
+                .
               </h2>
             </div>
 
-            <div className="grid gap-5 lg:grid-cols-2">
-              {[
-                {
-                  badge: "🎓 Études en France",
-                  title: "Étudiante en master, admission validée",
-                  desc: "Visa Schengen études, biométrie obligatoire à Yaoundé. Nexus RCA monte le dossier complet (admission, ressources, hébergement, assurance, lettre de motivation), prend le rendez-vous TLS et remet à la cliente un dossier physique prêt à déposer.",
-                  result:
-                    "Résultat : un seul aller-retour Bangui-Yaoundé. Dossier conforme dès le premier passage.",
-                },
-                {
-                  badge: "💼 Salon professionnel à Dubaï",
-                  title: "Cadre d'une PME centrafricaine, délais courts",
-                  desc: "Premier voyage international, agenda chargé, salon dans 10 jours. Nexus RCA prépare l'e-Visa EAU en 48 à 72 heures, organise la réservation d'hôtel à proximité du salon, et transmet le visa par e-mail avant le décollage.",
-                  result:
-                    "Résultat : aucun déplacement physique. Tout traité depuis Bangui.",
-                },
-              ].map((cas) => (
+            {/* Mobile : scroll-snap */}
+            <div className="lg:hidden">
+              <div className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-1 pb-4 sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible sm:px-0">
+                {CAS.map((cas, idx) => (
+                  <article
+                    key={idx}
+                    className="group relative w-[85vw] shrink-0 snap-center overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06] sm:w-auto sm:p-7"
+                  >
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-nexus-orange-500/10 blur-[80px] transition-all duration-500 group-hover:bg-nexus-orange-500/25"
+                    />
+                    <div className="relative flex h-full flex-col">
+                      <span className="inline-flex w-fit items-center gap-2 rounded-full border border-nexus-orange-400/40 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur">
+                        <Sparkles className="h-3 w-3" />
+                        {cas.badge}
+                      </span>
+                      <h3 className="mt-4 font-display text-lg font-bold leading-tight text-white">
+                        {cas.title}
+                      </h3>
+
+                      <div className="mt-5 grid grid-cols-2 gap-3">
+                        {cas.stats.map((s) => (
+                          <div
+                            key={s.label}
+                            className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur"
+                          >
+                            <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-nexus-orange-300">
+                              {s.label}
+                            </p>
+                            <p className="mt-1 font-display text-xs font-bold leading-tight text-white">
+                              {s.value}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+
+                      <p className="mt-5 text-sm leading-relaxed text-slate-300">
+                        {cas.desc}
+                      </p>
+
+                      <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
+                        <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.18em] text-transparent">
+                          Approche méthodologique
+                        </span>
+                        <ArrowRight className="h-4 w-4 text-nexus-orange-300 transition-transform duration-300 group-hover:translate-x-0.5" />
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop lg+ */}
+            <div className="hidden lg:grid lg:grid-cols-3 lg:gap-5">
+              {CAS.map((cas, idx) => (
                 <article
-                  key={cas.title}
-                  className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-7 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
+                  key={idx}
+                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)]"
                 >
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
+                    className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/10 blur-[100px] transition-all duration-500 group-hover:bg-nexus-orange-500/30"
                   />
-                  <div className="relative">
-                    <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-nexus-orange-200/70 bg-nexus-orange-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-700">
+                  <div className="relative flex h-full flex-col">
+                    <span className="inline-flex w-fit items-center gap-2 rounded-full border border-nexus-orange-400/40 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur">
+                      <Sparkles className="h-3 w-3" />
                       {cas.badge}
-                    </div>
-                    <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
+                    </span>
+                    <h3 className="mt-4 font-display text-xl font-bold leading-tight text-white">
                       {cas.title}
                     </h3>
-                    <p className="mt-3 text-sm leading-relaxed text-slate-600">
+
+                    <div className="mt-5 grid grid-cols-2 gap-3">
+                      {cas.stats.map((s) => (
+                        <div
+                          key={s.label}
+                          className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur transition-all duration-300 group-hover:border-nexus-orange-400/30"
+                        >
+                          <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-nexus-orange-300">
+                            {s.label}
+                          </p>
+                          <p className="mt-1 font-display text-xs font-bold leading-tight text-white">
+                            {s.value}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+
+                    <p className="mt-5 text-sm leading-relaxed text-slate-300">
                       {cas.desc}
                     </p>
-                    <p className="mt-3 text-sm font-bold leading-relaxed text-nexus-blue-950">
-                      {cas.result}
-                    </p>
+
+                    <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-5">
+                      <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.18em] text-transparent">
+                        Approche méthodologique
+                      </span>
+                      <ArrowRight className="h-4 w-4 text-nexus-orange-300 transition-transform duration-300 group-hover:translate-x-0.5" />
+                    </div>
                   </div>
                 </article>
               ))}
@@ -956,54 +1427,68 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 7. ENGAGEMENT TRANSPARENCE ────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/40 to-white py-20 sm:py-24">
+        {/* 12. ENGAGEMENT TRANSPARENCE — navy glass asymétrique ────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-30"
-            style={DOT_GRID_LIGHT_SUBTLE}
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
+            style={DOT_GRID_DARK}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-40 top-1/3 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -left-40 bottom-1/3 h-96 w-96 rounded-full bg-rose-500/10 blur-[140px]"
           />
 
-          <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
+          <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Engagement
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                 Aucune agence sérieuse ne peut{" "}
-                <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  garantir un visa
+                <span className="relative inline-block">
+                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    garantir un visa
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  />
                 </span>
                 .
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
                 La décision finale appartient toujours aux autorités
                 consulaires. Toute structure qui vous promet une obtention vous
                 trompe. Nexus RCA ne le fera jamais.
               </p>
             </div>
 
-            <div className="grid gap-5 lg:grid-cols-2">
-              <article className="group relative overflow-hidden rounded-3xl border-2 border-rose-200/70 bg-gradient-to-br from-rose-50/60 via-white to-rose-50/30 p-7 shadow-[0_16px_36px_-16px_rgba(244,63,94,0.16)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-rose-300/80">
+            <div className="grid gap-5 lg:grid-cols-3">
+              {/* Ce que nous ne pouvons pas — 1 col rose */}
+              <article className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-7 ring-1 ring-rose-400/20 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-rose-400/40 hover:bg-white/[0.06]">
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-rose-400/0 blur-2xl transition-all duration-500 group-hover:bg-rose-400/18"
+                  className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-rose-500/10 blur-[80px] transition-all duration-500 group-hover:bg-rose-500/25"
                 />
                 <div className="relative">
-                  <span className="inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-rose-700">
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-rose-500/10 text-rose-300 ring-1 ring-rose-400/30 backdrop-blur">
+                    <XCircle className="h-5 w-5" />
+                  </div>
+                  <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-rose-300">
                     Ce que nous ne pouvons pas
                   </span>
                   <ul className="mt-4 space-y-3">
-                    {[
-                      "Garantir l'obtention d'un visa",
-                      "Influencer la décision consulaire",
-                      "Promettre une admission certaine",
-                    ].map((item, i) => (
+                    {ENGAGEMENT_NO.map((item, i) => (
                       <li
                         key={i}
-                        className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
+                        className="flex items-start gap-3 text-sm leading-relaxed text-slate-200"
                       >
-                        <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
+                        <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-300" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -1011,27 +1496,34 @@ export default function VisaPage() {
                 </div>
               </article>
 
-              <article className="group relative overflow-hidden rounded-3xl border-2 border-nexus-orange-300/70 bg-gradient-to-br from-nexus-orange-50/60 via-white to-nexus-orange-50/30 p-7 shadow-[0_16px_36px_-16px_rgba(255,102,0,0.20)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-400/80">
+              {/* Ce que nous garantissons — 2 col orange highlight */}
+              <article className="group relative overflow-hidden rounded-3xl border border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/60 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_30px_60px_-16px_rgba(255,102,0,0.40)] sm:p-9 lg:col-span-2">
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/18"
+                  className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/25 blur-[100px] transition-all duration-500 group-hover:bg-nexus-orange-500/40"
                 />
                 <div className="relative">
-                  <span className="inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-700">
-                    Ce que nous garantissons
-                  </span>
-                  <ul className="mt-4 space-y-3">
-                    {[
-                      "Un dossier solide et complet, conforme aux exigences exactes du consulat",
-                      "Une présentation optimisée qui valorise votre profil",
-                      "La réduction maximale des risques de refus pour motifs évitables",
-                      "Un conseil honnête sur vos chances réelles avant tout engagement",
-                    ].map((item, i) => (
+                  <div className="mb-4 flex items-center gap-3">
+                    <div className="relative">
+                      <div
+                        aria-hidden
+                        className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 blur-md"
+                      />
+                      <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/10">
+                        <ShieldCheck className="h-6 w-6" />
+                      </div>
+                    </div>
+                    <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+                      Ce que nous garantissons
+                    </span>
+                  </div>
+                  <ul className="grid gap-3 sm:grid-cols-2">
+                    {ENGAGEMENT_YES.map((item, i) => (
                       <li
                         key={i}
-                        className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
+                        className="flex items-start gap-3 text-sm leading-relaxed text-slate-200 sm:text-base"
                       >
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-600" />
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-300" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -1042,75 +1534,103 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 8. CADRE TARIFAIRE ───────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-slate-50 py-20 sm:py-24">
+        {/* 13. CADRE TARIFAIRE — navy glass 3 cards ───────────────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-50"
-            style={DOT_GRID_LIGHT}
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
+            style={DOT_GRID_DARK}
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-32 bottom-32 h-96 w-96 rounded-full bg-nexus-orange-500/8 blur-[100px]"
+            className="pointer-events-none absolute -left-40 bottom-32 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-40 top-32 h-96 w-96 rounded-full bg-emerald-500/10 blur-[140px]"
           />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Cadre tarifaire
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Une transparence économique complète.
+              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                Une transparence économique{" "}
+                <span className="relative inline-block">
+                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    complète
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  />
+                </span>
+                .
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
                 Vous savez ce que ça coûte avant de signer. Aucun frais caché.
               </p>
             </div>
 
             <div className="grid gap-5 sm:grid-cols-3">
-              {[
-                {
-                  icon: Search,
-                  iconBg:
-                    "bg-gradient-to-br from-emerald-500 to-emerald-600",
-                  title: "Étude initiale",
-                  desc: "Gratuite, sans engagement. Bilan de faisabilité écrit.",
-                },
-                {
-                  icon: ClipboardCheck,
-                  iconBg:
-                    "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700",
-                  title: "Accompagnement Nexus",
-                  desc: "Devis fixe communiqué après le bilan de faisabilité. Aucune facturation surprise en cours de route.",
-                },
-                {
-                  icon: Wallet,
-                  iconBg:
-                    "bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900",
-                  title: "Frais consulaires",
-                  desc: "À votre charge, montant détaillé à l'avance par pays. Reversés directement aux autorités.",
-                },
-              ].map((tarif) => {
+              {TARIFS.map((tarif) => {
                 const Icon = tarif.icon;
+                const isHi = tarif.highlight;
+                const accentRing =
+                  tarif.accent === "emerald"
+                    ? "ring-emerald-400/25"
+                    : tarif.accent === "blue"
+                      ? "ring-nexus-blue-400/25"
+                      : "ring-white/5";
+                const iconBg =
+                  tarif.accent === "emerald"
+                    ? "bg-emerald-500/10 text-emerald-300 ring-1 ring-emerald-400/30"
+                    : tarif.accent === "blue"
+                      ? "bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900 text-white ring-1 ring-white/10"
+                      : "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/10";
+                const accentEyebrow =
+                  tarif.accent === "emerald"
+                    ? "text-emerald-300"
+                    : tarif.accent === "blue"
+                      ? "text-slate-200"
+                      : "text-nexus-orange-300";
+                const eyebrowLabel =
+                  tarif.accent === "emerald"
+                    ? "Gratuit"
+                    : tarif.accent === "blue"
+                      ? "À votre charge"
+                      : "Notre prestation";
                 return (
                   <article
                     key={tarif.title}
-                    className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
+                    className={`group relative overflow-hidden rounded-3xl border p-7 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 ${
+                      isHi
+                        ? `border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/15 via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)] hover:border-nexus-orange-400/60`
+                        : `border-white/10 bg-white/[0.04] ring-1 ${accentRing} hover:border-nexus-orange-400/40 hover:bg-white/[0.06]`
+                    }`}
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
+                      className={`pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full ${
+                        isHi ? "bg-nexus-orange-500/25" : "bg-nexus-orange-500/0"
+                      } blur-[80px] transition-all duration-500 group-hover:bg-nexus-orange-500/30`}
                     />
                     <div className="relative">
                       <div
-                        className={`flex h-11 w-11 items-center justify-center rounded-2xl text-white shadow-sm transition-transform duration-300 ease-out group-hover:scale-105 ${tarif.iconBg}`}
+                        className={`flex h-11 w-11 items-center justify-center rounded-2xl backdrop-blur transition-transform duration-300 ease-out group-hover:scale-105 ${iconBg}`}
                       >
                         <Icon className="h-5 w-5" />
                       </div>
-                      <h3 className="mt-4 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
+                      <span
+                        className={`mt-4 inline-block text-[10px] font-bold uppercase tracking-[0.22em] ${accentEyebrow}`}
+                      >
+                        {eyebrowLabel}
+                      </span>
+                      <h3 className="mt-1 font-display text-base font-bold leading-tight text-white sm:text-lg">
                         {tarif.title}
                       </h3>
-                      <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                      <p className="mt-2 text-sm leading-relaxed text-slate-300">
                         {tarif.desc}
                       </p>
                     </div>
@@ -1121,61 +1641,100 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 8.5 FORMULAIRE EXPRESS ────────────────────────────────────── */}
+        {/* 14. FORMULAIRE EXPRESS — navy + wrapper glass clair ────── */}
         <section
           id="demarrer"
-          className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/40 to-white py-20 sm:py-24 lg:py-28"
+          className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24 lg:py-28"
         >
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-30"
-            style={DOT_GRID_LIGHT_SUBTLE}
-          />
-
-          <div className="relative mx-auto max-w-4xl px-4 lg:px-8">
-            <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-200/70 bg-nexus-orange-50 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-700">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
-                </span>
-                Démarche express
-              </span>
-              <h2 className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Soumettez votre dossier.
-              </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Un conseiller Nexus revient vers vous sous 24 h à 3 jours selon
-                urgence. Étude initiale gratuite, bilan écrit avant tout
-                engagement.
-              </p>
-            </div>
-
-            <VisaExpressForm />
-          </div>
-        </section>
-
-        {/* 9. CTA FINAL Premium tech ─────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24 lg:py-28">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-[0.5]"
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
             style={DOT_GRID_DARK}
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -top-32 -right-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
+            className="pointer-events-none absolute -right-32 top-32 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -bottom-40 -left-32 h-[36rem] w-[36rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
+            className="pointer-events-none absolute -left-32 bottom-32 h-[28rem] w-[28rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
           />
           <div
             aria-hidden
             className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
           />
 
-          <div className="relative mx-auto max-w-3xl px-4 text-center lg:px-8">
+          <div className="relative mx-auto max-w-4xl px-4 lg:px-8">
+            <div className="mx-auto mb-12 max-w-2xl text-center">
+              <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                </span>
+                Démarche express
+              </span>
+              <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                Soumettez votre{" "}
+                <span className="relative inline-block">
+                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    dossier
+                  </span>
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  />
+                </span>
+                .
+              </h2>
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+                Un conseiller Nexus revient vers vous sous 24 h à 3 jours selon
+                urgence. Étude initiale gratuite, bilan écrit avant tout
+                engagement.
+              </p>
+            </div>
+
+            {/* Wrapper glass clair pour lisibilité du formulaire */}
+            <div className="relative overflow-hidden rounded-3xl border border-white/30 bg-white/[0.92] p-1 ring-1 ring-white/5 backdrop-blur-xl shadow-[0_24px_48px_-16px_rgba(0,0,0,0.4)]">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/15 blur-[100px]"
+              />
+              <div className="relative">
+                <VisaExpressForm />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 15. CTA FINAL — hero card premium navy ──────────────────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24 lg:py-32">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-[0.55]"
+            style={DOT_GRID_DARK}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -top-40 -right-40 h-[40rem] w-[40rem] rounded-full bg-nexus-orange-500/20 blur-[140px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -bottom-40 -left-40 h-[40rem] w-[40rem] rounded-full bg-nexus-blue-500/25 blur-[140px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/8 blur-[120px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+          />
+
+          <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
@@ -1184,11 +1743,21 @@ export default function VisaPage() {
               Une question avant de démarrer
             </span>
 
-            <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-              Parlons de votre projet.
+            <h2 className="mt-6 font-display text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+              Parlons de votre{" "}
+              <span className="relative inline-block">
+                <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  projet
+                </span>
+                <span
+                  aria-hidden
+                  className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                />
+              </span>
+              .
             </h2>
 
-            <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
               Vous hésitez sur la procédure, le timing ou les pièces ? Notre
               équipe à Bangui vous répond personnellement.
             </p>
@@ -1216,19 +1785,36 @@ export default function VisaPage() {
                 <Calendar className="h-4 w-4" />
                 Prendre rendez-vous
               </Link>
+              <Link
+                href="#methodologie"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl px-3 py-3.5 text-sm font-bold text-white/70 transition-all duration-300 hover:text-white"
+              >
+                Voir la méthodologie
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
 
-            <div className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[11px] uppercase tracking-[0.18em] text-white/50">
-              <span className="flex items-center gap-1.5">
-                <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-300" />
-                Étude gratuite
-              </span>
-              <span className="h-1 w-1 rounded-full bg-white/20" />
-              <span>Bilan écrit</span>
-              <span className="h-1 w-1 rounded-full bg-white/20" />
-              <span>Devis fixe</span>
-              <span className="h-1 w-1 rounded-full bg-white/20" />
-              <span>Confidentialité absolue</span>
+            {/* 4 trust signals */}
+            <div className="mt-16 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+              {[
+                { icon: ShieldCheck, label: "Étude gratuite" },
+                { icon: FileText, label: "Bilan écrit" },
+                { icon: ClipboardCheck, label: "Devis fixe" },
+                { icon: Eye, label: "Confidentialité" },
+              ].map((s, i) => {
+                const Icon = s.icon;
+                return (
+                  <div
+                    key={i}
+                    className="flex flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-4 text-center backdrop-blur-md ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                  >
+                    <Icon className="h-4 w-4 text-nexus-orange-300" />
+                    <span className="text-[10px] font-bold uppercase leading-tight tracking-[0.16em] text-white/80">
+                      {s.label}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
