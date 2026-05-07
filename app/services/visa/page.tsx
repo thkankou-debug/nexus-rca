@@ -11,6 +11,7 @@ import {
   ClipboardCheck,
   Eye,
   FileSearch,
+  FileSignature,
   FileText,
   Globe2,
   Layers,
@@ -137,7 +138,7 @@ const INDICATEURS = [
   },
 ];
 
-// Piliers approche concierge (NEW A)
+// Piliers approche Expert (NEW A)
 const APPROCHE_PILIERS = [
   {
     icon: UserCircle,
@@ -622,7 +623,7 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 4. APPROCHE CONCIERGE — bloc institutionnel premium (NEW A) ─────── */}
+        {/* 4. APPROCHE EXPERT — bloc institutionnel premium (NEW A) ─────── */}
         <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-24 text-white sm:py-28 lg:py-32">
           <div
             aria-hidden
@@ -651,7 +652,7 @@ export default function VisaPage() {
                 Une approche{" "}
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
-                    concierge
+                    Expert
                   </span>
                   <span
                     aria-hidden
@@ -2184,7 +2185,7 @@ export default function VisaPage() {
           </div>
         </section>
 
-        {/* 17. FORMULAIRE EXPRESS — navy + wrapper glass clair ────── */}
+        {/* 17. FORMULAIRE EXPRESS — cabinet exécutif premium ────────── */}
         <section
           id="demarrer"
           className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-24 text-white sm:py-28 lg:py-32"
@@ -2196,25 +2197,30 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 top-32 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-32 top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-32 bottom-32 h-[28rem] w-[28rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
+            className="pointer-events-none absolute -left-32 bottom-32 h-[32rem] w-[32rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
           />
           <div
             aria-hidden
             className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
           />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+          />
 
-          <div className="relative mx-auto max-w-4xl px-4 lg:px-8">
-            <div className="mx-auto mb-12 max-w-2xl text-center">
+          <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
+            {/* Header institutionnel */}
+            <div className="mx-auto mb-14 max-w-3xl text-center">
               <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
                 <span className="relative flex h-1.5 w-1.5">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
                 </span>
-                Démarche express
+                Démarche officielle
               </span>
               <h2 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Soumettez votre{" "}
@@ -2229,22 +2235,118 @@ export default function VisaPage() {
                 </span>
                 .
               </h2>
-              <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-slate-300 sm:text-xl">
-                Un conseiller Nexus revient vers vous sous 24 h à 3 jours selon
-                urgence. Étude initiale gratuite, bilan écrit avant tout
-                engagement.
+              <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-slate-300 sm:text-xl">
+                Étude initiale gratuite. Bilan de faisabilité écrit. Devis fixe
+                avant tout engagement.
               </p>
             </div>
 
-            {/* Wrapper glass clair pour lisibilité du formulaire */}
-            <div className="relative overflow-hidden rounded-3xl border border-white/30 bg-white/[0.92] p-1 ring-1 ring-white/5 backdrop-blur-xl shadow-[0_24px_48px_-16px_rgba(0,0,0,0.4)]">
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/15 blur-[100px]"
-              />
-              <div className="relative">
+            {/* Layout 2 colonnes — 60/40 desktop */}
+            <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
+              {/* Colonne gauche — Formulaire (lg:col-span-7) */}
+              <div className="lg:col-span-7">
                 <VisaExpressForm />
               </div>
+
+              {/* Colonne droite — Trust signals sticky (lg:col-span-5) */}
+              <aside className="lg:col-span-5">
+                <div className="lg:sticky lg:top-24">
+                  <div className="mb-5 flex items-center gap-3">
+                    <span
+                      aria-hidden
+                      className="h-px w-10 bg-gradient-to-r from-nexus-orange-500/60 to-transparent"
+                    />
+                    <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                      Pourquoi soumettre via Nexus
+                    </span>
+                  </div>
+                  <h3 className="font-display text-2xl font-bold leading-tight tracking-tight text-white sm:text-3xl">
+                    Cinq engagements{" "}
+                    <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                      institutionnels
+                    </span>
+                    .
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-slate-300">
+                    Le visa est une décision d&apos;État. Nous appliquons les
+                    mêmes standards qu&apos;un cabinet juridique international.
+                  </p>
+
+                  <ul className="mt-8 space-y-3">
+                    {[
+                      {
+                        icon: FileSignature,
+                        title: "Bilan écrit avant tout engagement",
+                        desc: "Document signé qui formalise notre analyse et notre stratégie.",
+                      },
+                      {
+                        icon: ShieldCheck,
+                        title: "Étude de faisabilité gratuite",
+                        desc: "Évaluation honnête. Si votre dossier n'est pas prêt, nous le disons.",
+                      },
+                      {
+                        icon: Eye,
+                        title: "Suivi traçable jusqu'à décision",
+                        desc: "Chaque étape consignée, chaque action horodatée.",
+                      },
+                      {
+                        icon: Lock,
+                        title: "Confidentialité absolue",
+                        desc: "Protocole interne strict. Données chiffrées en transit et au repos.",
+                      },
+                      {
+                        icon: Award,
+                        title: "Devis fixe communiqué",
+                        desc: "Aucun frais caché. Le montant final est connu avant signature.",
+                      },
+                    ].map((s, i) => {
+                      const Icon = s.icon;
+                      return (
+                        <li
+                          key={i}
+                          className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-5 ring-1 ring-white/5 backdrop-blur-md shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                        >
+                          <div
+                            aria-hidden
+                            className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/20"
+                          />
+                          <div className="relative flex items-start gap-4">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_22px_-8px_rgba(255,102,0,0.6)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
+                              <Icon className="h-5 w-5" />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <h4 className="font-display text-base font-bold leading-tight text-white">
+                                {s.title}
+                              </h4>
+                              <p className="mt-1 text-sm leading-relaxed text-slate-300">
+                                {s.desc}
+                              </p>
+                            </div>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+
+                  {/* Quote signature cabinet */}
+                  <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.03] p-5 ring-1 ring-white/5 backdrop-blur-md">
+                    <p className="text-sm leading-relaxed text-slate-300">
+                      « Nous traitons chaque dossier comme un cabinet
+                      international traite un mandat — avec rigueur,
+                      documentation et discrétion. »
+                    </p>
+                    <div className="mt-3 flex items-center gap-3">
+                      <span
+                        aria-hidden
+                        className="h-px w-8 bg-gradient-to-r from-nexus-orange-500/60 to-transparent"
+                      />
+                      <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                        Cabinet Nexus Visa &mdash; Bangui
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </aside>
             </div>
           </div>
         </section>
