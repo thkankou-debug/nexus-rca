@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
@@ -48,120 +49,97 @@ const DOT_GRID_LIGHT_SUBTLE: React.CSSProperties = {
   backgroundSize: "32px 32px",
 };
 
-// ─── Données ────────────────────────────────────────────────────────────────
-
-const POUR_QUI = {
-  oui: [
-    "Vous avez besoin d'un score TCF Canada pour un projet d'immigration, d'études ou de travail au Canada francophone",
-    "Vous êtes prêt(e) à vous entraîner régulièrement (plusieurs sessions par semaine pendant 4 à 16 semaines)",
-    "Vous acceptez de passer un test de positionnement initial pour construire un plan d'entraînement réaliste",
-  ],
-  non: [
-    "Vous voulez une certification de complaisance sans test réel — ce n'est pas notre cabinet",
-    "Vous cherchez un score garanti — aucun préparateur sérieux ne peut le promettre",
-    "Votre niveau de français est insuffisant pour viser un score utile dans un délai raisonnable et vous refusez la mise à niveau préalable",
-  ],
-};
+// ─── Données : icônes + clés de traduction ─────────────────────────────────
 
 const METHODOLOGIE = [
+  { num: "01", icon: FileText, key: "metho_01" },
+  { num: "02", icon: Search, key: "metho_02" },
+  { num: "03", icon: ClipboardCheck, key: "metho_03" },
+  { num: "04", icon: GraduationCap, key: "metho_04" },
+] as const;
+
+const EPREUVES = [
+  { icon: Headphones, key: "epreuve_co" },
+  { icon: BookOpen, key: "epreuve_ce" },
+  { icon: PenLine, key: "epreuve_ee" },
+  { icon: Mic, key: "epreuve_eo" },
+] as const;
+
+const NIVEAUX_KEYS: Array<{ key: string; pivot?: boolean }> = [
+  { key: "niveaux_1" },
+  { key: "niveaux_2", pivot: true },
+  { key: "niveaux_3" },
+];
+
+const METHODE = [
+  { icon: Target, key: "methode_1" },
+  { icon: Mic, key: "methode_2" },
+  { icon: ClipboardCheck, key: "methode_3" },
+  { icon: TrendingUp, key: "methode_4" },
+] as const;
+
+const TARIFS = [
   {
-    num: "01",
-    icon: FileText,
-    title: "Soumission de la demande",
-    description:
-      "Vous remplissez notre formulaire structuré ou prenez rendez-vous. Nous recueillons votre niveau de français déclaré, votre projet d'immigration et votre calendrier cible.",
-  },
-  {
-    num: "02",
     icon: Search,
-    title: "Test de positionnement & analyse",
-    description:
-      "Un coach Nexus mesure votre niveau réel sur les quatre épreuves et compare au score visé. Bilan honnête écrit avant tout engagement, avec proposition de plan adapté.",
+    iconBg: "bg-gradient-to-br from-emerald-500 to-emerald-600",
+    key: "tarif_1",
   },
   {
-    num: "03",
     icon: ClipboardCheck,
-    title: "Accompagnement structuré",
-    description:
-      "Cours, exercices ciblés par épreuve, méthodologie de gestion du temps, coaching individuel sur l'expression orale, simulations dans les conditions réelles du test.",
+    iconBg: "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700",
+    key: "tarif_2",
   },
   {
-    num: "04",
-    icon: GraduationCap,
-    title: "Inscription & suivi jusqu'au test",
-    description:
-      "Inscription officielle au centre agréé, briefing avant le jour J, debriefing après le test. Si le score n'est pas suffisant, nous reprenons le plan ensemble.",
+    icon: Wallet,
+    iconBg: "bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900",
+    key: "tarif_3",
   },
-];
-
-interface EpreuveType {
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
-  description: string;
-  duree: string;
-}
-
-const EPREUVES: EpreuveType[] = [
-  {
-    icon: Headphones,
-    title: "Compréhension orale",
-    description:
-      "QCM sur dialogues, annonces et conversations. Travail de l'oreille et des stratégies d'écoute ciblée.",
-    duree: "39 questions · 35 min",
-  },
-  {
-    icon: BookOpen,
-    title: "Compréhension écrite",
-    description:
-      "QCM sur courriels, articles, textes informatifs. Lecture rapide, repérage et inférence.",
-    duree: "39 questions · 60 min",
-  },
-  {
-    icon: PenLine,
-    title: "Expression écrite",
-    description:
-      "Trois tâches rédactionnelles (message, article, argumentation). Travail de structure et de précision.",
-    duree: "3 tâches · 60 min",
-  },
-  {
-    icon: Mic,
-    title: "Expression orale",
-    description:
-      "Trois tâches face à un examinateur (entretien, présentation, argumentation). Le point faible le plus fréquent.",
-    duree: "3 tâches · 12 min",
-  },
-];
-
-const NIVEAUX_VISES = [
-  {
-    nclc: "NCLC 4–6",
-    cefr: "B1",
-    usage: "Seuil minimum pour certains permis de travail et programmes provinciaux.",
-  },
-  {
-    nclc: "NCLC 7",
-    cefr: "B2",
-    usage:
-      "Seuil clé pour Entrée express : maximisation des points liés à la langue française.",
-    pivot: true,
-  },
-  {
-    nclc: "NCLC 9–10",
-    cefr: "C1",
-    usage:
-      "Bonus de points significatif pour profils francophones avancés (PEQ Québec, Mobilité francophone).",
-  },
-];
-
-const STATS = [
-  { value: "Test", label: "Positionnement gratuit" },
-  { value: "4 épreuves", label: "Travaillées séparément" },
-  { value: "Bilan", label: "Honnête écrit" },
-];
+] as const;
 
 // ─── Composant ──────────────────────────────────────────────────────────────
 
 export default function TcfPage() {
+  const t = useTranslations("ServiceTcf");
+
+  const STATS = [
+    { value: t("stat1_value"), label: t("stat1_label") },
+    { value: t("stat2_value"), label: t("stat2_label") },
+    { value: t("stat3_value"), label: t("stat3_label") },
+  ];
+
+  const POUR_QUI_OUI = [
+    t("pourqui_oui_1"),
+    t("pourqui_oui_2"),
+    t("pourqui_oui_3"),
+  ];
+  const POUR_QUI_NON = [
+    t("pourqui_non_1"),
+    t("pourqui_non_2"),
+    t("pourqui_non_3"),
+  ];
+
+  const ENGAGEMENT_NO = [
+    t("engagement_no_1"),
+    t("engagement_no_2"),
+    t("engagement_no_3"),
+  ];
+  const ENGAGEMENT_YES = [
+    t("engagement_yes_1"),
+    t("engagement_yes_2"),
+    t("engagement_yes_3"),
+    t("engagement_yes_4"),
+  ];
+
+  const SCOPE_ITEMS = [1, 2, 3, 4].map((i) => ({
+    title: t(`scope_item${i}_title`),
+    desc: t(`scope_item${i}_desc`),
+  }));
+
+  const RESULT_ITEMS = [1, 2, 3, 4].map((i) => ({
+    title: t(`result_item${i}_title`),
+    desc: t(`result_item${i}_desc`),
+  }));
+
   return (
     <>
       <Navbar />
@@ -194,28 +172,24 @@ export default function TcfPage() {
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
                 </span>
                 <Languages className="h-3 w-3" />
-                Service TCF Canada
+                {t("hero_eyebrow")}
               </span>
 
               <h1 className="mx-auto mt-6 max-w-3xl font-display text-3xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
-                    Préparation ciblée
+                    {t("hero_title_highlight")}
                   </span>
                   <span
                     aria-hidden
                     className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
                   />
                 </span>{" "}
-                au TCF Canada avec optimisation du score requis.
+                {t("hero_title_after")}
               </h1>
 
               <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                Nous mesurons d&apos;abord votre niveau réel et vous disons
-                honnêtement le score atteignable dans votre délai. Si votre
-                profil correspond à nos critères, nous construisons un plan
-                d&apos;entraînement adapté aux quatre épreuves jusqu&apos;au
-                passage officiel.
+                {t("hero_subtitle")}
               </p>
 
               <div className="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
@@ -228,7 +202,7 @@ export default function TcfPage() {
                     className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
                   />
                   <FileText className="h-4 w-4" />
-                  Soumettre ma demande
+                  {t("hero_cta_primary")}
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
                 </Link>
                 <Link
@@ -236,22 +210,19 @@ export default function TcfPage() {
                   className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
                 >
                   <Calendar className="h-4 w-4" />
-                  Prendre rendez-vous
+                  {t("hero_cta_secondary")}
                 </Link>
               </div>
 
               <p className="mt-6 text-xs text-slate-400">
-                Test de positionnement gratuit · Bilan honnête écrit · Une
-                question ?{" "}
+                {t("hero_trust_before")}
                 <a
-                  href={whatsappLink(
-                    "Bonjour Nexus, j'ai une question sur la préparation TCF Canada avant de soumettre ma demande."
-                  )}
+                  href={whatsappLink(t("wa_question"))}
                   target="_blank"
                   rel="noreferrer"
                   className="font-bold text-nexus-orange-300 underline-offset-4 hover:underline"
                 >
-                  contactez-nous sur WhatsApp
+                  {t("hero_trust_link")}
                 </a>
               </p>
             </div>
@@ -296,12 +267,11 @@ export default function TcfPage() {
           />
           <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
             <p className="font-display text-2xl font-bold leading-snug tracking-tight text-nexus-blue-950 sm:text-3xl lg:text-4xl">
-              Le TCF Canada n&apos;est pas un examen de français. C&apos;est{" "}
+              {t("intro_before")}
               <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                la mesure documentée
-              </span>{" "}
-              de votre capacité à atteindre un niveau précis dans un délai
-              précis.
+                {t("intro_highlight")}
+              </span>
+              {t("intro_after")}
             </p>
           </div>
         </section>
@@ -318,35 +288,18 @@ export default function TcfPage() {
             <div className="mb-12 grid gap-10 lg:grid-cols-[1fr_2fr] lg:items-start lg:gap-16">
               <div>
                 <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                  Périmètre
+                  {t("scope_eyebrow")}
                 </span>
                 <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                  Ce que nous faisons.
+                  {t("scope_title")}
                 </h2>
                 <p className="mt-4 text-sm leading-relaxed text-slate-600">
-                  Quatre étapes encadrées, du diagnostic au passage officiel.
+                  {t("scope_subtitle")}
                 </p>
               </div>
 
               <ul className="space-y-4">
-                {[
-                  {
-                    title: "Diagnostic linguistique initial",
-                    desc: "Évaluation honnête de votre niveau actuel sur les quatre épreuves : compréhension orale et écrite, expression orale et écrite.",
-                  },
-                  {
-                    title: "Plan d'entraînement personnalisé",
-                    desc: "Programme adapté à vos points faibles, votre score visé et la date de passage cible.",
-                  },
-                  {
-                    title: "Simulations dans les conditions du test",
-                    desc: "Examens blancs chronométrés et corrigés, familiarisation totale avec le format réel.",
-                  },
-                  {
-                    title: "Inscription officielle au centre agréé",
-                    desc: "Réservation du créneau, accompagnement administratif et orientation le jour du passage.",
-                  },
-                ].map((item, i) => (
+                {SCOPE_ITEMS.map((item, i) => (
                   <li
                     key={i}
                     className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_16px_36px_-16px_rgba(255,102,0,0.20)]"
@@ -390,37 +343,18 @@ export default function TcfPage() {
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Résultat
+                {t("result_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Ce que vous obtenez.
+                {t("result_title")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Pas de promesse de score — il dépend de votre travail et de la
-                grille du jour. En revanche, voici ce que nous garantissons sur
-                la préparation.
+                {t("result_subtitle")}
               </p>
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                {
-                  title: "Score visé objectivé",
-                  desc: "Niveau cible défini selon votre projet (admission universitaire, immigration économique, etc.).",
-                },
-                {
-                  title: "Méthode adaptée à votre profil",
-                  desc: "Pas de programme générique. Votre plan tient compte de votre niveau réel.",
-                },
-                {
-                  title: "Familiarité totale avec le format",
-                  desc: "Aucune surprise le jour de l'examen — vous connaissez chaque épreuve.",
-                },
-                {
-                  title: "Inscription au centre agréé",
-                  desc: "Démarches administratives prises en charge, créneau officiel sécurisé.",
-                },
-              ].map((item, i) => (
+              {RESULT_ITEMS.map((item, i) => (
                 <article
                   key={i}
                   className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
@@ -454,14 +388,13 @@ export default function TcfPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Sélectivité
+                {t("pourqui_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Pour qui ce service est conçu.
+                {t("pourqui_title")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Nous n&apos;inscrivons pas tous les candidats. Cette
-                transparence fait partie de notre engagement professionnel.
+                {t("pourqui_subtitle")}
               </p>
             </div>
 
@@ -477,11 +410,11 @@ export default function TcfPage() {
                       <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                      Ce service s&apos;adresse aux personnes
+                      {t("pourqui_oui_title")}
                     </h3>
                   </div>
                   <ul className="space-y-3">
-                    {POUR_QUI.oui.map((item, i) => (
+                    {POUR_QUI_OUI.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -505,11 +438,11 @@ export default function TcfPage() {
                       <XCircle className="h-5 w-5" />
                     </div>
                     <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                      Ce service ne s&apos;adresse pas aux personnes
+                      {t("pourqui_non_title")}
                     </h3>
                   </div>
                   <ul className="space-y-3">
-                    {POUR_QUI.non.map((item, i) => (
+                    {POUR_QUI_NON.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -540,18 +473,17 @@ export default function TcfPage() {
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Notre méthodologie
+                {t("metho_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Un parcours en{" "}
+                {t("metho_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  quatre étapes documentées
+                  {t("metho_title_highlight")}
                 </span>
-                .
+                {t("metho_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Du test de positionnement initial jusqu&apos;au passage
-                officiel, chaque étape est documentée et communiquée.
+                {t("metho_subtitle")}
               </p>
             </div>
 
@@ -580,11 +512,11 @@ export default function TcfPage() {
                       <div className="flex items-center gap-2">
                         <Icon className="h-4 w-4 shrink-0 text-nexus-orange-600" />
                         <h3 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                          {etape.title}
+                          {t(`${etape.key}_title`)}
                         </h3>
                       </div>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {etape.description}
+                        {t(`${etape.key}_desc`)}
                       </p>
                     </div>
                   </article>
@@ -596,13 +528,13 @@ export default function TcfPage() {
               <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                    Démarrer la démarche
+                    {t("metho_cta_eyebrow")}
                   </span>
                   <p className="mt-3 font-display text-xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-2xl">
-                    Soumettez votre demande de préparation TCF.
+                    {t("metho_cta_title")}
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                    Test de positionnement gratuit. Bilan honnête écrit.
+                    {t("metho_cta_subtitle")}
                   </p>
                 </div>
                 <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:gap-3">
@@ -614,7 +546,7 @@ export default function TcfPage() {
                       aria-hidden
                       className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/btn:left-[120%] group-hover/btn:opacity-100"
                     />
-                    Soumettre ma demande
+                    {t("metho_cta_primary")}
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                   <Link
@@ -622,7 +554,7 @@ export default function TcfPage() {
                     className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-nexus-blue-950 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-nexus-orange-300/70 hover:bg-slate-50"
                   >
                     <Calendar className="h-4 w-4" />
-                    Prendre rendez-vous
+                    {t("metho_cta_secondary")}
                   </Link>
                 </div>
               </div>
@@ -641,19 +573,17 @@ export default function TcfPage() {
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Le test, en quatre épreuves
+                {t("epreuves_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Quatre compétences,{" "}
+                {t("epreuves_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  quatre stratégies
+                  {t("epreuves_title_highlight")}
                 </span>
-                .
+                {t("epreuves_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Chaque épreuve a sa logique. Bien parler français ne suffit
-                pas — il faut aussi maîtriser le format du test, la grille
-                d&apos;évaluation et les pièges récurrents.
+                {t("epreuves_subtitle")}
               </p>
             </div>
 
@@ -662,7 +592,7 @@ export default function TcfPage() {
                 const Icon = ep.icon;
                 return (
                   <article
-                    key={ep.title}
+                    key={ep.key}
                     className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
                   >
                     <div
@@ -674,13 +604,13 @@ export default function TcfPage() {
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="mt-5 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                        {ep.title}
+                        {t(`${ep.key}_title`)}
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {ep.description}
+                        {t(`${ep.key}_desc`)}
                       </p>
                       <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-nexus-orange-200/70 bg-nexus-orange-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-700">
-                        {ep.duree}
+                        {t(`${ep.key}_duree`)}
                       </div>
                     </div>
                   </article>
@@ -709,22 +639,20 @@ export default function TcfPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Niveaux &amp; scores
+                {t("niveaux_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Quel score viser, et pour quel projet.
+                {t("niveaux_title")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Le score utile dépend de votre projet. Notre coach définit
-                avec vous l&apos;objectif réaliste après le test de
-                positionnement.
+                {t("niveaux_subtitle")}
               </p>
             </div>
 
             <div className="grid gap-5 md:grid-cols-3">
-              {NIVEAUX_VISES.map((n) => (
+              {NIVEAUX_KEYS.map((n) => (
                 <article
-                  key={n.nclc}
+                  key={n.key}
                   className={
                     n.pivot
                       ? "group relative overflow-hidden rounded-3xl border-2 border-nexus-orange-400/70 bg-gradient-to-br from-nexus-orange-50/60 via-white to-nexus-orange-50/30 p-6 shadow-[0_18px_44px_-18px_rgba(255,102,0,0.30)] ring-1 ring-nexus-orange-100/60 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-500/80"
@@ -739,21 +667,21 @@ export default function TcfPage() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                          {n.nclc}
+                          {t(`${n.key}_nclc`)}
                         </p>
                         <p className="mt-1 font-display text-2xl font-bold text-nexus-blue-950 sm:text-3xl">
-                          {n.cefr}
+                          {t(`${n.key}_cefr`)}
                         </p>
                       </div>
                       {n.pivot && (
                         <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white shadow-sm">
                           <TrendingUp className="h-3 w-3" />
-                          Pivot
+                          {t("niveaux_pivot_label")}
                         </span>
                       )}
                     </div>
                     <p className="mt-4 text-sm leading-relaxed text-slate-600">
-                      {n.usage}
+                      {t(`${n.key}_usage`)}
                     </p>
                   </div>
                 </article>
@@ -762,11 +690,8 @@ export default function TcfPage() {
 
             <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-5 text-sm leading-relaxed text-slate-600 ring-1 ring-slate-100/80 sm:p-6">
               <p>
-                <strong className="text-nexus-blue-950">À noter.</strong> Les
-                seuils exacts varient selon le programme (Entrée express, PEQ
-                Québec, Mobilité francophone, admission universitaire). Le
-                conseiller Nexus précise le score exact à viser après
-                l&apos;étude de votre projet.
+                <strong className="text-nexus-blue-950">{t("niveaux_note_strong")}</strong>
+                {t("niveaux_note_text")}
               </p>
             </div>
           </div>
@@ -783,44 +708,23 @@ export default function TcfPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Méthode pédagogique
+                {t("methode_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Nous travaillons{" "}
+                {t("methode_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  le score
+                  {t("methode_title_highlight")}
                 </span>
-                , pas la conversation.
+                {t("methode_title_after")}
               </h2>
             </div>
 
             <div className="grid gap-5 lg:grid-cols-2">
-              {[
-                {
-                  icon: Target,
-                  title: "Grille d'évaluation maîtrisée",
-                  desc: "Nos coachs connaissent la grille exacte du TCF, ce que l'examinateur cherche, ce qu'il pénalise. La performance vient de cette connaissance — pas du seul niveau de langue.",
-                },
-                {
-                  icon: Mic,
-                  title: "Coaching individuel sur l'oral",
-                  desc: "L'expression orale est le point faible le plus fréquent. Nous y consacrons un coaching individuel sérieux : argumentation structurée, gestion du stress, articulation.",
-                },
-                {
-                  icon: ClipboardCheck,
-                  title: "Simulations dans les conditions réelles",
-                  desc: "Tests blancs au format exact, durée réelle, type de consignes identique. Corrections détaillées. Beaucoup de candidats gagnent un niveau complet entre le test blanc d'entrée et le test officiel.",
-                },
-                {
-                  icon: TrendingUp,
-                  title: "Progression mesurée",
-                  desc: "Test de positionnement initial, mi-parcours, et test blanc final. Vous savez précisément où vous en êtes avant de payer l'inscription officielle.",
-                },
-              ].map((item) => {
+              {METHODE.map((item) => {
                 const Icon = item.icon;
                 return (
                   <article
-                    key={item.title}
+                    key={item.key}
                     className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-7 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
                   >
                     <div
@@ -832,10 +736,10 @@ export default function TcfPage() {
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="mt-5 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                        {item.title}
+                        {t(`${item.key}_title`)}
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {item.desc}
+                        {t(`${item.key}_desc`)}
                       </p>
                     </div>
                   </article>
@@ -860,19 +764,17 @@ export default function TcfPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Engagement
+                {t("engagement_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Aucun préparateur sérieux ne peut{" "}
+                {t("engagement_title_before")}
                 <span className="bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-700 bg-clip-text text-transparent">
-                  garantir un score
+                  {t("engagement_title_highlight")}
                 </span>
-                .
+                {t("engagement_title_after")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Le score final dépend de votre travail et de votre performance
-                le jour J. Toute structure qui vous promet un score précis vous
-                trompe. Nexus RCA ne le fera jamais.
+                {t("engagement_subtitle")}
               </p>
             </div>
 
@@ -884,14 +786,10 @@ export default function TcfPage() {
                 />
                 <div className="relative">
                   <span className="inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-rose-700">
-                    Ce que nous ne pouvons pas
+                    {t("engagement_no_title")}
                   </span>
                   <ul className="mt-4 space-y-3">
-                    {[
-                      "Garantir un score précis",
-                      "Influencer le résultat ou l'examinateur",
-                      "Faire progresser un candidat qui ne s'entraîne pas",
-                    ].map((item, i) => (
+                    {ENGAGEMENT_NO.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -911,15 +809,10 @@ export default function TcfPage() {
                 />
                 <div className="relative">
                   <span className="inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-700">
-                    Ce que nous garantissons
+                    {t("engagement_yes_title")}
                   </span>
                   <ul className="mt-4 space-y-3">
-                    {[
-                      "Un diagnostic linguistique honnête avant tout engagement",
-                      "Un plan d'entraînement construit sur vos points faibles réels",
-                      "Des simulations conformes au format officiel du TCF",
-                      "Un conseil franc sur la faisabilité de votre score cible dans votre délai",
-                    ].map((item, i) => (
+                    {ENGAGEMENT_YES.map((item, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-nexus-blue-950"
@@ -946,44 +839,22 @@ export default function TcfPage() {
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
-                Cadre tarifaire
+                {t("tarif_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
-                Une transparence économique complète.
+                {t("tarif_title")}
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Vous savez ce que ça coûte avant de signer. Aucun frais caché.
+                {t("tarif_subtitle")}
               </p>
             </div>
 
             <div className="grid gap-5 sm:grid-cols-3">
-              {[
-                {
-                  icon: Search,
-                  iconBg:
-                    "bg-gradient-to-br from-emerald-500 to-emerald-600",
-                  title: "Test de positionnement",
-                  desc: "Gratuit, sans engagement. Bilan écrit avec score estimé actuel et score atteignable.",
-                },
-                {
-                  icon: ClipboardCheck,
-                  iconBg:
-                    "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700",
-                  title: "Préparation Nexus",
-                  desc: "Devis fixe communiqué après le test. Format groupe ou individuel, durée selon écart à combler. Aucune facturation surprise.",
-                },
-                {
-                  icon: Wallet,
-                  iconBg:
-                    "bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900",
-                  title: "Inscription officielle",
-                  desc: "Frais d'inscription au centre agréé en supplément, montant détaillé à l'avance et reversé directement au centre.",
-                },
-              ].map((tarif) => {
+              {TARIFS.map((tarif) => {
                 const Icon = tarif.icon;
                 return (
                   <article
-                    key={tarif.title}
+                    key={tarif.key}
                     className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_22px_48px_-18px_rgba(255,102,0,0.22)]"
                   >
                     <div
@@ -997,10 +868,10 @@ export default function TcfPage() {
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="mt-4 font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
-                        {tarif.title}
+                        {t(`${tarif.key}_title`)}
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                        {tarif.desc}
+                        {t(`${tarif.key}_desc`)}
                       </p>
                     </div>
                   </article>
@@ -1036,34 +907,32 @@ export default function TcfPage() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
               </span>
-              Lancer la préparation
+              {t("cta_final_eyebrow")}
             </span>
 
             <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-              Mesurons votre niveau réel et fixons un objectif honnête.
+              {t("cta_final_title")}
             </h2>
 
             <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              Plus vous commencez tôt, meilleur sera le score. Soumettez votre
-              demande pour un test de positionnement gratuit et un bilan clair
-              sous 48 heures ouvrées.
+              {t("cta_final_subtitle")}
             </p>
 
             <div className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80">
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 backdrop-blur-md">
-                Test
+                {t("cta_final_chip1_top")}
                 <br />
-                <span className="text-white">Gratuit</span>
+                <span className="text-white">{t("cta_final_chip1_bot")}</span>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 backdrop-blur-md">
-                Bilan
+                {t("cta_final_chip2_top")}
                 <br />
-                <span className="text-white">Honnête</span>
+                <span className="text-white">{t("cta_final_chip2_bot")}</span>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 backdrop-blur-md">
-                Inscription
+                {t("cta_final_chip3_top")}
                 <br />
-                <span className="text-white">Gérée</span>
+                <span className="text-white">{t("cta_final_chip3_bot")}</span>
               </div>
             </div>
 
@@ -1077,7 +946,7 @@ export default function TcfPage() {
                   className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
                 />
                 <FileText className="h-4 w-4" />
-                Soumettre ma demande
+                {t("cta_final_primary")}
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
               </Link>
               <Link
@@ -1085,36 +954,34 @@ export default function TcfPage() {
                 className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
               >
                 <Calendar className="h-4 w-4" />
-                Prendre rendez-vous
+                {t("cta_final_secondary")}
               </Link>
             </div>
 
             <p className="mt-8 text-xs text-white/70">
-              Une question avant de commencer ?{" "}
+              {t("cta_final_question_before")}
               <a
-                href={whatsappLink(
-                  "Bonjour Nexus, j'ai une question sur la préparation TCF Canada avant de soumettre ma demande."
-                )}
+                href={whatsappLink(t("cta_final_wa_msg"))}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1.5 font-bold text-nexus-orange-300 underline-offset-4 hover:underline"
               >
                 <MessageCircle className="h-3.5 w-3.5" />
-                Contactez-nous sur WhatsApp
+                {t("cta_final_question_link")}
               </a>
             </p>
 
             <div className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[11px] uppercase tracking-[0.18em] text-white/50">
               <span className="flex items-center gap-1.5">
                 <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-300" />
-                Test gratuit
+                {t("cta_final_foot1")}
               </span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
-              <span>Bilan honnête</span>
+              <span>{t("cta_final_foot2")}</span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
-              <span>Inscription gérée</span>
+              <span>{t("cta_final_foot3")}</span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
-              <span>Confidentialité absolue</span>
+              <span>{t("cta_final_foot4")}</span>
             </div>
           </div>
         </section>

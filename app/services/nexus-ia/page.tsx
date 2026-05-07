@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
@@ -32,61 +33,78 @@ export const metadata = {
     "L'expertise centrafricaine pour vos questions et un assistant IA dédié à votre activité. Chat 24/7 sur le site, et intégrations sur-mesure pour entrepreneurs RCA.",
 };
 
-// ─── Données ────────────────────────────────────────────────────────────────
-
-const POUR_QUI = {
-  oui: [
-    "Vous voulez une réponse rapide à une question simple sur nos services (visa, études, transfert, change…) sans attendre",
-    "Vous êtes entrepreneur ou structure et envisagez un assistant IA dédié à votre activité (FAQ client, prise de RDV, prospection)",
-    "Vous comprenez qu'une IA n'est pas humaine : elle bascule sur un conseiller dès qu'un dossier sérieux le demande",
-  ],
-  non: [
-    "Vous attendez d'une IA qu'elle traite un dossier officiel (visa, admission, financement) — seul un conseiller humain le peut",
-    "Vous cherchez une IA pour fournir des informations sensibles ou personnelles à des tiers — la confidentialité passe avant",
-    "Vous voulez remplacer toute votre équipe par un chatbot — l'IA augmente, elle ne remplace pas",
-  ],
-};
+// ─── Données : icônes + clés de traduction ─────────────────────────────────
 
 const METHODOLOGIE = [
-  {
-    num: "01",
-    icon: MessageCircle,
-    title: "Discutez avec Nexus IA",
-    description:
-      "Posez votre question dans le chat. Réponse instantanée 24/7 sur les services Nexus, les démarches courantes et l'orientation.",
-  },
-  {
-    num: "02",
-    icon: Sparkles,
-    title: "Évaluez le besoin",
-    description:
-      "Si l'échange suffit, vous repartez avec votre réponse. Si la demande est sérieuse, l'IA propose le bon canal humain.",
-  },
-  {
-    num: "03",
-    icon: Workflow,
-    title: "Pour un projet IA dédié",
-    description:
-      "Vous êtes entrepreneur et voulez un assistant IA pour votre activité ? Soumettez votre besoin, nous cadrons un assistant sur-mesure (FAQ, RDV, prospection).",
-  },
-  {
-    num: "04",
-    icon: ClipboardCheck,
-    title: "Cadrage & devis",
-    description:
-      "Pour un projet IA dédié : un conseiller revient avec une démo, un périmètre, un devis fixe et un calendrier réaliste.",
-  },
-];
+  { num: "01", icon: MessageCircle, key: "metho_01" },
+  { num: "02", icon: Sparkles, key: "metho_02" },
+  { num: "03", icon: Workflow, key: "metho_03" },
+  { num: "04", icon: ClipboardCheck, key: "metho_04" },
+] as const;
 
-const STATS = [
-  { value: "24/7", label: "Chat disponible" },
-  { value: "FR", label: "Réponses en français" },
-  { value: "Humain", label: "Relais à tout moment" },
-];
+const CHAT_FEATURES = [
+  { icon: Clock, key: "chat_feature1" },
+  { icon: Zap, key: "chat_feature2" },
+  { icon: Bot, key: "chat_feature3" },
+  { icon: ShieldCheck, key: "chat_feature4" },
+] as const;
+
+const PRINCIPES = [
+  { icon: Lock, key: "principes_1" },
+  { icon: ShieldCheck, key: "principes_2" },
+  { icon: Zap, key: "principes_3" },
+  { icon: Workflow, key: "principes_4" },
+  { icon: Bot, key: "principes_5" },
+  { icon: ClipboardCheck, key: "principes_6" },
+] as const;
 
 // ─── Composant ──────────────────────────────────────────────────────────────
 
 export default function NexusIAPage() {
+  const t = useTranslations("ServiceNexusIa");
+
+  const STATS = [
+    { value: t("stat1_value"), label: t("stat1_label") },
+    { value: t("stat2_value"), label: t("stat2_label") },
+    { value: t("stat3_value"), label: t("stat3_label") },
+  ];
+
+  const POUR_QUI_OUI = [
+    t("pourqui_oui_1"),
+    t("pourqui_oui_2"),
+    t("pourqui_oui_3"),
+  ];
+  const POUR_QUI_NON = [
+    t("pourqui_non_1"),
+    t("pourqui_non_2"),
+    t("pourqui_non_3"),
+  ];
+
+  const USAGES_PUBLIC = [
+    t("usages_public_q1"),
+    t("usages_public_q2"),
+    t("usages_public_q3"),
+    t("usages_public_q4"),
+  ];
+  const USAGES_DEDIE = [
+    t("usages_dedie_q1"),
+    t("usages_dedie_q2"),
+    t("usages_dedie_q3"),
+    t("usages_dedie_q4"),
+  ];
+
+  const ENGAGEMENT_NO = [
+    t("engagement_no_1"),
+    t("engagement_no_2"),
+    t("engagement_no_3"),
+  ];
+  const ENGAGEMENT_YES = [
+    t("engagement_yes_1"),
+    t("engagement_yes_2"),
+    t("engagement_yes_3"),
+    t("engagement_yes_4"),
+  ];
+
   return (
     <>
       <Navbar />
@@ -100,18 +118,15 @@ export default function NexusIAPage() {
             <div className="text-center">
               <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-overline text-nexus-orange-300 backdrop-blur">
                 <Bot className="h-3.5 w-3.5" />
-                Nexus IA — Assistant virtuel
+                {t("hero_eyebrow")}
               </div>
 
               <h1 className="mt-6 font-display text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-                Rencontrez NEXUS IA 🤖
+                {t("hero_title")}
               </h1>
 
               <p className="mx-auto mt-8 max-w-3xl text-body-lg text-slate-300">
-                Discutez avec Nexus IA pour vos questions courantes (visa,
-                études, transfert, change…) ou demandez un assistant IA dédié
-                à votre activité. L'IA augmente nos conseillers — elle ne les
-                remplace jamais sur les dossiers sérieux.
+                {t("hero_subtitle")}
               </p>
 
               <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
@@ -120,7 +135,7 @@ export default function NexusIAPage() {
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
                 >
                   <MessageCircle className="h-5 w-5" />
-                  Discuter avec Nexus IA
+                  {t("hero_cta_primary")}
                   <ArrowRight className="h-5 w-5" />
                 </Link>
                 <Link
@@ -128,21 +143,19 @@ export default function NexusIAPage() {
                   className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/30 bg-white/5 px-8 py-4 text-body font-semibold text-white backdrop-blur transition hover:bg-white/10"
                 >
                   <FileText className="h-5 w-5" />
-                  Demander un assistant IA dédié
+                  {t("hero_cta_secondary")}
                 </Link>
               </div>
 
               <p className="mt-5 text-caption text-slate-400">
-                Chat gratuit · Sans inscription · Une question complexe ?{" "}
+                {t("hero_trust_before")}
                 <a
-                  href={whatsappLink(
-                    "Bonjour Nexus, j'ai une question complexe que je préfère poser à un conseiller humain."
-                  )}
+                  href={whatsappLink(t("wa_complex"))}
                   target="_blank"
                   rel="noreferrer"
                   className="font-semibold text-nexus-orange-300 underline-offset-4 hover:underline"
                 >
-                  contactez-nous sur WhatsApp
+                  {t("hero_trust_link")}
                 </a>
               </p>
             </div>
@@ -166,8 +179,9 @@ export default function NexusIAPage() {
         <section className="border-b border-line bg-surface py-12 lg:py-16">
           <div className="mx-auto max-w-4xl px-4 text-center lg:px-8">
             <p className="font-display text-display-sm text-ink lg:text-display-md">
-              L&apos;intelligence opérationnelle ne remplace pas la décision humaine.{" "}
-              <span className="text-brand">Elle l&apos;éclaire, la documente et l&apos;accélère</span>.
+              {t("intro_before")}
+              <span className="text-brand">{t("intro_highlight")}</span>
+              {t("intro_after")}
             </p>
           </div>
         </section>
@@ -177,25 +191,20 @@ export default function NexusIAPage() {
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mb-12 grid gap-10 lg:grid-cols-[1fr_2fr] lg:gap-16 lg:items-start">
               <div>
-                <p className="text-overline text-brand">Périmètre</p>
+                <p className="text-overline text-brand">{t("scope_eyebrow")}</p>
                 <h2 className="mt-3 font-display text-display-md text-ink">
-                  Ce que nous faisons
+                  {t("scope_title")}
                 </h2>
                 <p className="mt-4 text-body-sm text-ink-muted">
-                  Quatre étapes pour mettre l&apos;IA au service d&apos;un métier précis, pas l&apos;inverse.
+                  {t("scope_subtitle")}
                 </p>
               </div>
               <ul className="space-y-5">
-                {[
-                  { title: "Cadrage du cas d'usage", desc: "Identification précise du processus à outiller : réponses clients, analyse de dossier, génération documentaire, etc." },
-                  { title: "Configuration de l'assistant dédié", desc: "Paramétrage selon votre métier, votre vocabulaire et vos sources de référence." },
-                  { title: "Intégration aux outils existants", desc: "Connexion à WhatsApp, e-mail, site, sans rupture de votre stack actuelle." },
-                  { title: "Formation et accompagnement", desc: "Prise en main par votre équipe, ajustements selon retours d'usage des premières semaines." },
-                ].map((item, i) => (
+                {[1, 2, 3, 4].map((i) => (
                   <li key={i} className="flex items-start gap-4 border-l-2 border-line pl-5 py-1">
                     <div>
-                      <h3 className="font-display text-headline text-ink">{item.title}</h3>
-                      <p className="mt-1 text-body-sm text-ink-muted">{item.desc}</p>
+                      <h3 className="font-display text-headline text-ink">{t(`scope_item${i}_title`)}</h3>
+                      <p className="mt-1 text-body-sm text-ink-muted">{t(`scope_item${i}_desc`)}</p>
                     </div>
                   </li>
                 ))}
@@ -208,22 +217,17 @@ export default function NexusIAPage() {
         <section className="bg-surface-sunken py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-3xl text-center">
-              <p className="text-overline text-brand">Résultat</p>
-              <h2 className="mt-3 font-display text-display-md text-ink">Ce que vous obtenez</h2>
+              <p className="text-overline text-brand">{t("result_eyebrow")}</p>
+              <h2 className="mt-3 font-display text-display-md text-ink">{t("result_title")}</h2>
               <p className="mt-4 text-body-lg text-ink-muted">
-                Un outil précis, pas un chatbot générique. Documenté, traçable, contrôlable.
+                {t("result_subtitle")}
               </p>
             </div>
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                { title: "Assistant ajusté au métier", desc: "Pas de chatbot générique. Un outil qui parle votre langue et connaît vos procédures." },
-                { title: "Réponses sourcées", desc: "Chaque réponse documentée, traçable, vérifiable sur les sources fournies." },
-                { title: "Intégration sans friction", desc: "L'outil s'ajoute, ne remplace pas votre stack actuelle." },
-                { title: "Équipe autonome", desc: "Votre équipe sait l'utiliser et l'ajuster sans dépendance externe." },
-              ].map((item, i) => (
+              {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="rounded-2xl border border-line bg-surface-elevated p-6">
-                  <h3 className="font-display text-headline text-ink">{item.title}</h3>
-                  <p className="mt-2 text-body-sm text-ink-muted">{item.desc}</p>
+                  <h3 className="font-display text-headline text-ink">{t(`result_item${i}_title`)}</h3>
+                  <p className="mt-2 text-body-sm text-ink-muted">{t(`result_item${i}_desc`)}</p>
                 </div>
               ))}
             </div>
@@ -234,14 +238,12 @@ export default function NexusIAPage() {
         <section className="bg-surface py-20">
           <div className="mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
-              <p className="text-overline text-brand">Cadre du service</p>
+              <p className="text-overline text-brand">{t("pourqui_eyebrow")}</p>
               <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Pour qui ce service est conçu
+                {t("pourqui_title")}
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
-                Nexus IA a deux usages distincts : un chat public 24/7 pour
-                tout le monde, et des assistants dédiés sur-mesure pour
-                entrepreneurs et structures.
+                {t("pourqui_subtitle")}
               </p>
             </div>
 
@@ -252,11 +254,11 @@ export default function NexusIAPage() {
                     <CheckCircle2 className="h-5 w-5" />
                   </div>
                   <h3 className="font-display text-headline text-ink">
-                    Ce service s'adresse aux personnes
+                    {t("pourqui_oui_title")}
                   </h3>
                 </div>
                 <ul className="space-y-3">
-                  {POUR_QUI.oui.map((item, i) => (
+                  {POUR_QUI_OUI.map((item, i) => (
                     <li
                       key={i}
                       className="flex items-start gap-3 text-body-sm text-ink"
@@ -274,11 +276,11 @@ export default function NexusIAPage() {
                     <XCircle className="h-5 w-5" />
                   </div>
                   <h3 className="font-display text-headline text-ink">
-                    Ce service ne s'adresse pas aux personnes
+                    {t("pourqui_non_title")}
                   </h3>
                 </div>
                 <ul className="space-y-3">
-                  {POUR_QUI.non.map((item, i) => (
+                  {POUR_QUI_NON.map((item, i) => (
                     <li
                       key={i}
                       className="flex items-start gap-3 text-body-sm text-ink"
@@ -297,13 +299,12 @@ export default function NexusIAPage() {
         <section className="bg-surface-sunken py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="text-center">
-              <p className="text-overline text-brand">Notre méthodologie</p>
+              <p className="text-overline text-brand">{t("metho_eyebrow")}</p>
               <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Du chat public à l'assistant dédié
+                {t("metho_title")}
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
-                Le chat public est immédiat. L'assistant dédié exige un
-                cadrage. Les deux parcours sont structurés.
+                {t("metho_subtitle")}
               </p>
             </div>
 
@@ -322,11 +323,11 @@ export default function NexusIAPage() {
                       <div className="flex items-center gap-2">
                         <Icon className="h-5 w-5 text-brand" />
                         <h3 className="font-display text-headline text-ink">
-                          {etape.title}
+                          {t(`${etape.key}_title`)}
                         </h3>
                       </div>
                       <p className="mt-2 text-body-sm text-ink-muted">
-                        {etape.description}
+                        {t(`${etape.key}_desc`)}
                       </p>
                     </div>
                   </div>
@@ -338,14 +339,13 @@ export default function NexusIAPage() {
               <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-overline text-brand">
-                    Démarrer la démarche
+                    {t("metho_cta_eyebrow")}
                   </p>
                   <p className="mt-2 font-display text-headline text-ink sm:text-display-sm">
-                    Discuter ou demander un assistant IA dédié.
+                    {t("metho_cta_title")}
                   </p>
                   <p className="mt-1 text-body-sm text-ink-muted">
-                    Chat public gratuit · Cadrage assistant dédié sous 48 h
-                    ouvrées.
+                    {t("metho_cta_subtitle")}
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
@@ -353,7 +353,7 @@ export default function NexusIAPage() {
                     href="#chat"
                     className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-body-sm font-semibold text-white shadow-elev-2 transition hover:bg-brand-hover hover:shadow-glow-orange"
                   >
-                    Discuter avec Nexus IA
+                    {t("metho_cta_primary")}
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                   <Link
@@ -361,7 +361,7 @@ export default function NexusIAPage() {
                     className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-line-strong bg-surface-elevated px-6 py-3 text-body-sm font-semibold text-ink transition hover:border-brand/40 hover:bg-surface-sunken"
                   >
                     <Calendar className="h-4 w-4" />
-                    Soumettre un projet IA
+                    {t("metho_cta_secondary")}
                   </Link>
                 </div>
               </div>
@@ -373,13 +373,12 @@ export default function NexusIAPage() {
         <section id="chat" className="bg-surface py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="text-center">
-              <p className="text-overline text-brand">Le service en direct</p>
+              <p className="text-overline text-brand">{t("chat_eyebrow")}</p>
               <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Posez une question, recevez une réponse
+                {t("chat_title")}
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
-                L'IA répond aux questions courantes Nexus en quelques secondes.
-                Pour les cas complexes, elle bascule vers un conseiller humain.
+                {t("chat_subtitle")}
               </p>
             </div>
 
@@ -388,41 +387,20 @@ export default function NexusIAPage() {
             </div>
 
             <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                {
-                  icon: Clock,
-                  title: "Disponible 24/7",
-                  desc: "Jour, nuit, week-end. Pas d'horaires d'ouverture.",
-                },
-                {
-                  icon: Zap,
-                  title: "Réponses instantanées",
-                  desc: "Pas d'attente. Question posée, réponse donnée.",
-                },
-                {
-                  icon: Bot,
-                  title: "Spécialiste Nexus",
-                  desc: "Formé sur tous nos services et procédures RCA.",
-                },
-                {
-                  icon: ShieldCheck,
-                  title: "Relais humain",
-                  desc: "Un conseiller prend le relais dès que nécessaire.",
-                },
-              ].map((f, i) => {
+              {CHAT_FEATURES.map((f) => {
                 const Icon = f.icon;
                 return (
                   <div
-                    key={i}
+                    key={f.key}
                     className="rounded-3xl border border-line bg-surface-elevated p-6 text-center shadow-elev-2 transition hover:border-brand/40 hover:shadow-elev-3"
                   >
                     <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-800 to-nexus-orange-500 text-white shadow-elev-2">
                       <Icon className="h-6 w-6" />
                     </div>
                     <h3 className="font-display text-headline text-ink">
-                      {f.title}
+                      {t(`${f.key}_title`)}
                     </h3>
-                    <p className="mt-1 text-body-sm text-ink-muted">{f.desc}</p>
+                    <p className="mt-1 text-body-sm text-ink-muted">{t(`${f.key}_desc`)}</p>
                   </div>
                 );
               })}
@@ -434,13 +412,12 @@ export default function NexusIAPage() {
         <section className="bg-surface-sunken py-20">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
             <div className="text-center">
-              <p className="text-overline text-brand">Quand ça aide</p>
+              <p className="text-overline text-brand">{t("usages_eyebrow")}</p>
               <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Deux usages, deux portées
+                {t("usages_title")}
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
-                Le chat public sur ce site, ou un assistant IA sur-mesure que
-                nous construisons pour votre activité.
+                {t("usages_subtitle")}
               </p>
             </div>
 
@@ -450,19 +427,13 @@ export default function NexusIAPage() {
                   <FileQuestion className="h-6 w-6" />
                 </div>
                 <h3 className="mt-5 font-display text-headline text-ink">
-                  Chat public Nexus IA
+                  {t("usages_public_title")}
                 </h3>
                 <p className="mt-2 text-body-sm text-ink-muted">
-                  Pour orientation, vérification rapide, premières questions
-                  avant un rendez-vous, choix du bon service Nexus.
+                  {t("usages_public_desc")}
                 </p>
                 <ul className="mt-4 space-y-2 text-body-sm text-ink">
-                  {[
-                    "Quel visa pour ma destination ?",
-                    "Combien coûte un transfert vers la France ?",
-                    "Quel TCF viser pour Entrée express ?",
-                    "Différence entre les packs digitalisation ?",
-                  ].map((q) => (
+                  {USAGES_PUBLIC.map((q) => (
                     <li key={q} className="flex items-start gap-2">
                       <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
                       <span>{q}</span>
@@ -474,7 +445,7 @@ export default function NexusIAPage() {
                   className="mt-5 inline-flex items-center gap-2 rounded-full border-2 border-line-strong bg-surface-elevated px-5 py-2.5 text-body-sm font-semibold text-ink transition hover:border-brand/40 hover:bg-surface-sunken"
                 >
                   <MessageCircle className="h-4 w-4" />
-                  Tester le chat
+                  {t("usages_public_cta")}
                 </Link>
               </div>
 
@@ -483,19 +454,13 @@ export default function NexusIAPage() {
                   <Users className="h-6 w-6" />
                 </div>
                 <h3 className="mt-5 font-display text-headline text-ink">
-                  Assistant IA dédié à votre activité
+                  {t("usages_dedie_title")}
                 </h3>
                 <p className="mt-2 text-body-sm text-ink-muted">
-                  Pour entrepreneurs et structures qui veulent un assistant
-                  IA branché sur leur propre offre, FAQ ou processus.
+                  {t("usages_dedie_desc")}
                 </p>
                 <ul className="mt-4 space-y-2 text-body-sm text-ink">
-                  {[
-                    "FAQ client automatisée 24/7",
-                    "Pré-qualification de prospects",
-                    "Prise de rendez-vous guidée",
-                    "Support client de niveau 1",
-                  ].map((q) => (
+                  {USAGES_DEDIE.map((q) => (
                     <li key={q} className="flex items-start gap-2">
                       <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
                       <span>{q}</span>
@@ -506,7 +471,7 @@ export default function NexusIAPage() {
                   href="/services/nexus-ia/demarrer"
                   className="mt-5 inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-body-sm font-semibold text-white shadow-elev-2 transition hover:bg-brand-hover hover:shadow-glow-orange"
                 >
-                  Soumettre un projet IA
+                  {t("usages_dedie_cta")}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -518,63 +483,31 @@ export default function NexusIAPage() {
         <section className="bg-surface py-20">
           <div className="mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
-              <p className="text-overline text-brand">Principes IA</p>
+              <p className="text-overline text-brand">{t("principes_eyebrow")}</p>
               <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                L'IA augmente, elle ne remplace pas
+                {t("principes_title")}
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
-                Nous utilisons l'IA comme un outil au service de l'humain —
-                pas l'inverse.
+                {t("principes_subtitle")}
               </p>
             </div>
 
             <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  icon: Lock,
-                  title: "Confidentialité",
-                  text: "Conversations privées. Données utilisées uniquement pour mieux vous accompagner.",
-                },
-                {
-                  icon: ShieldCheck,
-                  title: "Relais humain systématique",
-                  text: "Sur tout dossier officiel, un conseiller humain prend la suite. Pas d'exception.",
-                },
-                {
-                  icon: Zap,
-                  title: "Réponses sourcées Nexus",
-                  text: "Le chat public répond uniquement sur les services Nexus et les démarches RCA.",
-                },
-                {
-                  icon: Workflow,
-                  title: "Cadrage avant intégration",
-                  text: "Pour un assistant dédié : analyse de l'usage réel avant de proposer une IA.",
-                },
-                {
-                  icon: Bot,
-                  title: "Limites assumées",
-                  text: "L'IA dit clairement quand elle ne sait pas. Pas d'invention, pas d'à-peu-près.",
-                },
-                {
-                  icon: ClipboardCheck,
-                  title: "Transparence",
-                  text: "Vous savez toujours que vous parlez à une IA. Le bouton « parler à un humain » est visible.",
-                },
-              ].map((it) => {
+              {PRINCIPES.map((it) => {
                 const Icon = it.icon;
                 return (
                   <div
-                    key={it.title}
+                    key={it.key}
                     className="rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2"
                   >
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-subtle text-brand">
                       <Icon className="h-5 w-5" />
                     </div>
                     <h3 className="mt-4 font-display text-headline text-ink">
-                      {it.title}
+                      {t(`${it.key}_title`)}
                     </h3>
                     <p className="mt-2 text-body-sm text-ink-muted">
-                      {it.text}
+                      {t(`${it.key}_desc`)}
                     </p>
                   </div>
                 );
@@ -587,27 +520,22 @@ export default function NexusIAPage() {
         <section className="bg-surface-sunken py-20">
           <div className="mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
-              <p className="text-overline text-brand">Engagement</p>
+              <p className="text-overline text-brand">{t("engagement_eyebrow")}</p>
               <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Ce que l'IA fait, ce qu'elle ne fait pas
+                {t("engagement_title")}
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
-                Une délimitation claire pour préserver la qualité du service
-                et votre confiance.
+                {t("engagement_subtitle")}
               </p>
             </div>
 
             <div className="mt-12 grid gap-5 lg:grid-cols-2">
               <div className="rounded-3xl border-2 border-rose-200/60 bg-rose-50/40 p-7 dark:border-rose-500/20 dark:bg-rose-500/5">
                 <p className="text-overline text-rose-700 dark:text-rose-300">
-                  Ce que nous ne pouvons pas
+                  {t("engagement_no_title")}
                 </p>
                 <ul className="mt-4 space-y-3">
-                  {[
-                    "Traiter un dossier officiel à la place d'un conseiller humain",
-                    "Garantir la justesse à 100 % sur les cas particuliers — préférer un humain",
-                    "Faire des promesses commerciales (admissions, visas) — l'IA n'a pas autorité",
-                  ].map((item, i) => (
+                  {ENGAGEMENT_NO.map((item, i) => (
                     <li
                       key={i}
                       className="flex items-start gap-3 text-body-sm text-ink"
@@ -621,15 +549,10 @@ export default function NexusIAPage() {
 
               <div className="rounded-3xl border-2 border-brand/40 bg-brand-subtle/40 p-7">
                 <p className="text-overline text-nexus-orange-700 dark:text-brand">
-                  Ce que nous garantissons
+                  {t("engagement_yes_title")}
                 </p>
                 <ul className="mt-4 space-y-3">
-                  {[
-                    "Un chat public gratuit, 24/7, en français, sans inscription",
-                    "Une orientation rapide vers le bon service ou le bon conseiller",
-                    "Pour un assistant dédié : un cadrage écrit et un devis fixe",
-                    "Une bascule humaine claire et visible à tout moment",
-                  ].map((item, i) => (
+                  {ENGAGEMENT_YES.map((item, i) => (
                     <li
                       key={i}
                       className="flex items-start gap-3 text-body-sm text-ink"
@@ -648,13 +571,12 @@ export default function NexusIAPage() {
         <section className="bg-surface py-20">
           <div className="mx-auto max-w-4xl px-4 lg:px-8">
             <div className="text-center">
-              <p className="text-overline text-brand">Cadre tarifaire</p>
+              <p className="text-overline text-brand">{t("tarif_eyebrow")}</p>
               <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
-                Une transparence économique complète
+                {t("tarif_title")}
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-body-lg text-ink-muted">
-                Le chat public est gratuit. Les assistants dédiés ont un
-                cadre tarifaire clair selon le périmètre.
+                {t("tarif_subtitle")}
               </p>
             </div>
 
@@ -664,11 +586,10 @@ export default function NexusIAPage() {
                   <Search className="h-5 w-5" />
                 </div>
                 <h3 className="mt-4 font-display text-headline text-ink">
-                  Chat public
+                  {t("tarif_1_title")}
                 </h3>
                 <p className="mt-2 text-body-sm text-ink-muted">
-                  Gratuit pour tout visiteur. Sans inscription. Disponible
-                  24/7 sur ce site.
+                  {t("tarif_1_desc")}
                 </p>
               </div>
 
@@ -677,11 +598,10 @@ export default function NexusIAPage() {
                   <ClipboardCheck className="h-5 w-5" />
                 </div>
                 <h3 className="mt-4 font-display text-headline text-ink">
-                  Cadrage assistant dédié
+                  {t("tarif_2_title")}
                 </h3>
                 <p className="mt-2 text-body-sm text-ink-muted">
-                  Gratuit. Analyse de l'usage, démo et devis fixe avant tout
-                  engagement.
+                  {t("tarif_2_desc")}
                 </p>
               </div>
 
@@ -690,11 +610,10 @@ export default function NexusIAPage() {
                   <Wallet className="h-5 w-5" />
                 </div>
                 <h3 className="mt-4 font-display text-headline text-ink">
-                  Assistant sur-mesure
+                  {t("tarif_3_title")}
                 </h3>
                 <p className="mt-2 text-body-sm text-ink-muted">
-                  Devis fixe selon périmètre. Frais récurrents (hébergement,
-                  API IA) annoncés à part avec leur tarif mensuel.
+                  {t("tarif_3_desc")}
                 </p>
               </div>
             </div>
@@ -709,31 +628,30 @@ export default function NexusIAPage() {
           <div className="relative mx-auto max-w-4xl px-4 lg:px-8">
             <div className="text-center">
               <p className="text-overline text-nexus-orange-300">
-                Démarrer la démarche
+                {t("cta_final_eyebrow")}
               </p>
               <h2 className="mt-3 font-display text-display-md text-white sm:text-display-lg">
-                Discuter maintenant ou cadrer un projet IA
+                {t("cta_final_title")}
               </h2>
               <p className="mx-auto mt-5 max-w-2xl text-body-lg text-slate-300">
-                Le chat est ouvert ci-dessus. Pour un assistant dédié à votre
-                activité, soumettez votre besoin pour un cadrage écrit.
+                {t("cta_final_subtitle")}
               </p>
 
               <div className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-3 text-overline text-white/80">
                 <div className="rounded-2xl bg-white/10 p-3 backdrop-blur">
-                  Chat public
+                  {t("cta_final_chip1_top")}
                   <br />
-                  <span className="text-white">Gratuit 24/7</span>
+                  <span className="text-white">{t("cta_final_chip1_bot")}</span>
                 </div>
                 <div className="rounded-2xl bg-white/10 p-3 backdrop-blur">
-                  Cadrage IA
+                  {t("cta_final_chip2_top")}
                   <br />
-                  <span className="text-white">Sous 48 h</span>
+                  <span className="text-white">{t("cta_final_chip2_bot")}</span>
                 </div>
                 <div className="rounded-2xl bg-white/10 p-3 backdrop-blur">
-                  Relais
+                  {t("cta_final_chip3_top")}
                   <br />
-                  <span className="text-white">Humain</span>
+                  <span className="text-white">{t("cta_final_chip3_bot")}</span>
                 </div>
               </div>
 
@@ -743,7 +661,7 @@ export default function NexusIAPage() {
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-4 transition hover:bg-brand-hover hover:shadow-glow-orange"
                 >
                   <MessageCircle className="h-5 w-5" />
-                  Discuter avec Nexus IA
+                  {t("cta_final_primary")}
                   <ArrowRight className="h-5 w-5" />
                 </Link>
                 <Link
@@ -751,22 +669,20 @@ export default function NexusIAPage() {
                   className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/40 bg-white/10 px-8 py-4 text-body font-semibold text-white backdrop-blur transition hover:bg-white/20"
                 >
                   <FileText className="h-5 w-5" />
-                  Soumettre un projet IA
+                  {t("cta_final_secondary")}
                 </Link>
               </div>
 
               <p className="mt-8 text-caption text-white/70">
-                Une question avant de commencer ?{" "}
+                {t("cta_final_question_before")}
                 <a
-                  href={whatsappLink(
-                    "Bonjour Nexus, j'ai une question sur le service Nexus IA."
-                  )}
+                  href={whatsappLink(t("cta_final_wa_msg"))}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-1.5 font-semibold text-nexus-orange-300 underline-offset-4 hover:underline"
                 >
                   <MessageCircle className="h-3.5 w-3.5" />
-                  Contactez-nous sur WhatsApp
+                  {t("cta_final_question_link")}
                 </a>
               </p>
             </div>
