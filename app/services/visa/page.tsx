@@ -1223,6 +1223,61 @@ export default function VisaPage() {
           </div>
         </section>
 
+        {/* 9 bis. BANDE CTA — ASSURANCE & MOBILITÉ INTERNATIONALE ───────── */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-12 text-white sm:py-16">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-[0.35]"
+            style={DOT_GRID_DARK}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-32 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-nexus-orange-500/15 blur-[100px]"
+          />
+
+          <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="overflow-hidden rounded-3xl border border-nexus-orange-400/25 bg-gradient-to-br from-nexus-orange-500/8 via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.20)]">
+              <div className="flex flex-col gap-6 p-7 sm:p-9 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
+                <div className="flex items-start gap-5 lg:items-center">
+                  <div className="hidden h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/10 sm:flex">
+                    <ShieldCheck className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                      Complément essentiel
+                    </p>
+                    <h3 className="mt-1.5 font-display text-xl font-bold leading-tight text-white sm:text-2xl lg:text-3xl">
+                      L&rsquo;assurance, le détail qui{" "}
+                      <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                        valide votre dossier
+                      </span>
+                      .
+                    </h3>
+                    <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
+                      Tout dossier visa Schengen exige une couverture conforme
+                      au standard 30 000 €. Notre cabinet de courtage
+                      sélectionne et accompagne votre assurance — voyage,
+                      santé internationale, études, mobilité business.
+                    </p>
+                  </div>
+                </div>
+
+                <Link
+                  href="/services/assurance"
+                  className="group/cta relative inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden rounded-2xl border border-nexus-orange-400/40 bg-nexus-orange-500/10 px-6 py-3.5 text-sm font-bold text-nexus-orange-200 backdrop-blur-md transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-400/60 hover:bg-nexus-orange-500/15 hover:text-white"
+                >
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/15 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
+                  />
+                  Découvrir notre cabinet assurance
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* 10. DOMAINES D'INTERVENTION — Carte du monde stylisée (NEW B) ───── */}
         <section
           id="destinations"

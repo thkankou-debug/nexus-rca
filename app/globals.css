@@ -311,6 +311,24 @@ body {
   }
 }
 
+/* Assurance pulse — dots glow capitales + hub Bangui (page assurance) */
+@keyframes assurance-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.25);
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [style*="assurance-pulse"] {
+    animation: none !important;
+  }
+}
+
 /* Typing dots — indicateur "Nexus IA est en train d'écrire" (page nexus-ia) */
 @keyframes typing-dot {
   0%,
