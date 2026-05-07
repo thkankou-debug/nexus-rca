@@ -1,5 +1,6 @@
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { BackButton } from "@/components/ui/BackButton";
 import { AllDocumentsView } from "@/components/dashboard/rh/AllDocumentsView";
 
 export const dynamic = "force-dynamic";
@@ -9,6 +10,10 @@ export default async function AdminAllDocumentsPage() {
 
   return (
     <DashboardShell profile={profile}>
+      <BackButton
+        fallbackHref="/dashboard/admin"
+        label="Retour au tableau de bord"
+      />
       <div className="mb-8">
         <p className="text-xs font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
           Ressources humaines

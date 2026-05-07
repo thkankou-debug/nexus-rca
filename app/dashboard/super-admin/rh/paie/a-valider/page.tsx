@@ -1,5 +1,6 @@
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { BackButton } from "@/components/ui/BackButton";
 import { PayslipsListView } from "@/components/dashboard/rh/PayslipsListView";
 
 export const dynamic = "force-dynamic";
@@ -9,6 +10,10 @@ export default async function SuperAdminPayslipsAValiderPage() {
 
   return (
     <DashboardShell profile={profile}>
+      <BackButton
+        fallbackHref="/dashboard/super-admin/rh/paie"
+        label="Retour aux fiches"
+      />
       <div className="mb-8">
         <p className="text-xs font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
           Workflow validation
