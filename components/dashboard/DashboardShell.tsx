@@ -73,6 +73,7 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { href: "/dashboard/agent/transferts", label: "Transferts", icon: Send },
     { href: "/dashboard/agent/depenses", label: "Mes dépenses", icon: Receipt },
     { href: "/dashboard/agent/notes", label: "Mes notes", icon: FileBarChart },
+    { href: "/dashboard/agent/mes-rh", label: "Mon espace RH", icon: Briefcase },
   ],
   admin: [
     { href: "/dashboard/admin", label: "Tableau de bord", icon: LayoutDashboard },
@@ -83,6 +84,8 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { href: "/dashboard/admin/rdv", label: "Rendez-vous", icon: CalendarCheck },
     { href: "/dashboard/admin/paiements", label: "Paiements", icon: Wallet },
     { href: "/dashboard/admin/rapports", label: "Rapports mensuels", icon: FileBarChart },
+    { href: "/dashboard/admin/rh/employes", label: "RH — Employés", icon: Users },
+    { href: "/dashboard/admin/rh/paie", label: "RH — Fiches de paie", icon: Wallet },
     { href: "/dashboard/super-admin/contacts", label: "Messages contact", icon: Inbox },
   ],
   super_admin: [
@@ -108,6 +111,9 @@ const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { href: "/dashboard/super-admin/depenses", label: "Dépenses", icon: Receipt },
     // Gouvernance & configuration
     { href: "/dashboard/super-admin/equipe", label: "Équipe Nexus", icon: Briefcase },
+    { href: "/dashboard/super-admin/rh", label: "RH — Vue d'ensemble", icon: Briefcase },
+    { href: "/dashboard/super-admin/rh/employes", label: "RH — Employés", icon: Users },
+    { href: "/dashboard/super-admin/rh/paie", label: "RH — Fiches de paie", icon: Wallet },
     { href: "/dashboard/super-admin/roles", label: "Rôles & permissions", icon: ShieldCheck },
     { href: "/dashboard/super-admin/i18n", label: "Multi-langue", icon: Globe },
     { href: "/dashboard/super-admin/audit-log", label: "Audit log", icon: ShieldCheck },

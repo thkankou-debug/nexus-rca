@@ -151,3 +151,110 @@ export interface Contact {
   traite: boolean;
   created_at: string;
 }
+
+// ---- Module RH / Paie (migration 022) -----------------------------------
+
+export type EmployeeStatut = "actif" | "inactif" | "suspendu" | "parti";
+export type EmployeeFrequencePaie = "mensuel" | "bi-mensuel" | "hebdomadaire";
+export type EmployeeTypeContrat = "CDI" | "CDD" | "Stage" | "Freelance" | string;
+
+export interface Employee {
+  id: string;
+  profile_id: string | null;
+
+  nom_complet: string;
+  email: string;
+  telephone: string | null;
+  adresse: string | null;
+  date_naissance: string | null;
+  numero_cni: string | null;
+
+  poste: string;
+  departement: string;
+  date_embauche: string;
+  type_contrat: EmployeeTypeContrat | null;
+  statut: EmployeeStatut;
+
+  salaire_base: number;
+  frequence_paie: EmployeeFrequencePaie;
+
+  notes_internes: string | null;
+
+  created_at: string;
+  updated_at: string;
+}
+
+export type PayslipStatut = "brouillon" | "en_attente_validation" | "validee";
+
+export interface PayslipLigne {
+  type: "prime" | "indemnite" | "heures_supp" | "avance" | "deduction" | string;
+  label: string;
+  montant: number;
+}
+
+export interface PayslipCotisations {
+  cnss?: number;
+  irpp?: number;
+  its?: number;
+  [key: string]: number | undefined;
+}
+
+export interface Payslip {
+  id: string;
+  employee_id: string;
+  reference: string;
+
+  periode_debut: string;
+  periode_fin: string;
+  mois_libelle: string;
+
+  salaire_brut: number;
+  salaire_net: number;
+
+  details_lignes: PayslipLigne[];
+  cotisations: PayslipCotisations;
+
+  statut: PayslipStatut;
+  created_by: string | null;
+  submitted_at: string | null;
+  validated_by: string | null;
+  validated_at: string | null;
+  pdf_url: string | null;
+
+  notes_admin: string | null;
+  notes_super_admin: string | null;
+
+  created_at: string;
+  updated_at: string;
+}
+
+export type PayslipHistoryAction =
+  | "created"
+  | "submitted"
+  | "validated"
+  | "rejected"
+  | "edited";
+
+export interface PayslipValidationHistory {
+  id: string;
+  payslip_id: string;
+  action: PayslipHistoryAction;
+  performed_by: string | null;
+  note: string | null;
+  created_at: string;
+}
+
+export type HrDocumentType = "contrat" | "diplome" | "piece_identite" | "autre";
+
+export interface HrDocument {
+  id: string;
+  employee_id: string;
+  type: HrDocumentType;
+  nom: string;
+  description: string | null;
+  storage_path: string;
+  file_size_bytes: number | null;
+  mime_type: string | null;
+  uploaded_by: string | null;
+  created_at: string;
+}
