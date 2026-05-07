@@ -14,14 +14,19 @@ import {
   Briefcase,
   UserCircle,
   Trophy,
-  Plus,
   PieChart,
   ArrowUpRight,
   Activity,
-  Zap,
   ArrowDownRight,
   CircleDollarSign,
   ShieldAlert,
+  ClipboardCheck,
+  FolderOpen,
+  Globe,
+  ShieldCheck,
+  Settings,
+  Sparkles,
+  type LucideIcon,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
@@ -30,43 +35,14 @@ import { DashboardHero } from "@/components/dashboard/DashboardHero";
 import { DashboardQuickActions } from "@/components/dashboard/DashboardQuickActions";
 import { Sparkline } from "@/components/ui/Sparkline";
 import { EmptyState } from "@/components/ui/EmptyState";
+import {
+  bucketByDay,
+  cumulativeSeries,
+  isoDaysAgo,
+  sumSeries,
+  trendDelta,
+} from "@/lib/dashboard/trends";
 import { cn } from "@/lib/utils";
-
-// ─── DEMO DATA ─────────────────────────────────────────────────────────────
-// Génère une série temporelle plausible terminant sur `current`.
-// TODO: remplacer par des queries Supabase groupées par jour
-//       (ex: payments WHERE date_paiement >= now() - interval '7 days'
-//        GROUP BY date_trunc('day', date_paiement))
-function fakeTrend(
-  current: number,
-  direction: "up" | "down" | "flat",
-  seed: number,
-  points = 7
-): number[] {
-  if (current <= 0) return Array(points).fill(0);
-  const dirFactor =
-    direction === "up" ? 0.55 : direction === "down" ? 1.4 : 1;
-  const start = current * dirFactor;
-  const out: number[] = [];
-  for (let i = 0; i < points; i++) {
-    const t = i / (points - 1);
-    const base = start + (current - start) * t;
-    const noise =
-      (Math.sin(seed + i * 1.7) + Math.sin(seed * 2.3 + i * 0.9)) *
-      (current * 0.08);
-    out.push(Math.max(0, base + noise));
-  }
-  out[points - 1] = current;
-  return out;
-}
-
-function trendDelta(series: number[]): number {
-  if (series.length < 2) return 0;
-  const first = series[0];
-  const last = series[series.length - 1];
-  if (first === 0) return last > 0 ? 100 : 0;
-  return ((last - first) / first) * 100;
-}
 
 export const metadata = {
   title: "Centre de pilotage | Super Admin",
@@ -74,8 +50,14 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-function formatMoney(amount: number, currency = "XAF"): string {
-  return `${Math.round(amount).toLocaleString("fr-FR")} ${currency}`;
+// ─── Format ─────────────────────────────────────────────────────────────────
+// Pas de toLocaleString fr-FR ici (insère espace insécable étroit qui pose
+// problème dans certains contextes). Format manuel avec espace standard.
+function formatMoney(amount: number, currency = "FCFA"): string {
+  const intPart = Math.round(amount)
+    .toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return `${intPart} ${currency}`;
 }
 
 function formatRelativeTime(dateStr: string | null): string {
@@ -97,6 +79,9 @@ function formatRelativeTime(dateStr: string | null): string {
   }
 }
 
+// ============================================================================
+// PAGE
+// ============================================================================
 export default async function SuperAdminDashboard() {
   const profile = await requireProfile(["super_admin", "admin"]);
   const supabase = createClient();
@@ -109,8 +94,11 @@ export default async function SuperAdminDashboard() {
   monthStart.setDate(1);
   const monthStartISO = monthStart.toISOString();
 
+  // Fenêtre 7 jours glissants pour les vraies trends.
+  const sevenDaysAgoISO = isoDaysAgo(6);
+
   // ============================================================
-  // CHARGEMENT EN PARALLELE
+  // CHARGEMENT EN PARALLÈLE (Promise.all)
   // ============================================================
   const [
     paymentsTodayRes,
@@ -130,60 +118,55 @@ export default async function SuperAdminDashboard() {
     lastActivePaymentRes,
     transfertsToValidateRes,
     paiementsPartielsRes,
+    // ─── 7 jours pour trends réelles ───────────────────────────
+    payments7dRes,
+    quickSales7dRes,
+    demandes7dRes,
+    appointments7dRes,
+    expenses7dRes,
+    // ─── RH (nouveau) ──────────────────────────────────────────
+    employeesActifsRes,
+    payslipsPendingRes,
+    payslipsPendingDetailsRes,
+    payslipsValidatedMonthRes,
   ] = await Promise.all([
-    // Paiements aujourd hui
     supabase
       .from("payments")
       .select("montant_recu, montant_total")
       .gte("date_paiement", todayISO),
-    // Paiements ce mois
     supabase
       .from("payments")
       .select("montant_recu, montant_total")
       .gte("date_paiement", monthStartISO),
-    // Tous les paiements (pour montant restant)
-    supabase
-      .from("payments")
-      .select("montant_recu, montant_total, statut"),
-    // Ventes caisse aujourd hui
+    supabase.from("payments").select("montant_recu, montant_total, statut"),
     supabase
       .from("quick_sales")
       .select("montant_total")
       .gte("date_paiement", todayISO),
-    // Ventes caisse ce mois
     supabase
       .from("quick_sales")
       .select("montant_total")
       .gte("date_paiement", monthStartISO),
-    // Depenses en attente
-    supabase
-      .from("expenses")
-      .select("montant")
-      .eq("statut", "en_attente"),
-    // Depenses validees ce mois
+    supabase.from("expenses").select("montant").eq("statut", "en_attente"),
     supabase
       .from("expenses")
       .select("montant")
       .eq("statut", "valide")
       .gte("date_depense", monthStartISO),
-    // Demandes nouvelles
     supabase
       .from("demandes")
       .select("id", { count: "exact", head: true })
       .eq("statut", "nouvelle"),
-    // Demandes en cours
     supabase
       .from("demandes")
       .select("id", { count: "exact", head: true })
       .in("statut", ["en_cours", "en_traitement"]),
-    // Demandes urgentes (avec une priorité haute si la colonne existe)
     supabase
       .from("demandes")
       .select("id, objet, service, statut, created_at")
       .in("statut", ["nouvelle", "en_cours"])
       .order("created_at", { ascending: false })
       .limit(5),
-    // RDV aujourd hui
     supabase
       .from("appointments")
       .select("id, nom, prenom, service, date_heure")
@@ -193,46 +176,84 @@ export default async function SuperAdminDashboard() {
         new Date(today.getTime() + 24 * 60 * 60 * 1000).toISOString()
       )
       .order("date_heure"),
-    // Transferts en attente de validation
     supabase
       .from("transferts")
       .select("id", { count: "exact", head: true })
       .eq("statut", "en_attente"),
-    // Nombre de clients (CRM)
-    supabase
-      .from("clients")
-      .select("id", { count: "exact", head: true }),
-    // Nombre d employes
+    supabase.from("clients").select("id", { count: "exact", head: true }),
     supabase
       .from("profiles")
       .select("id", { count: "exact", head: true })
       .in("role", ["agent", "admin", "super_admin"])
       .eq("actif", true),
-    // Derniere activite paiement
     supabase
       .from("payments")
       .select("created_at, agent_id")
       .order("created_at", { ascending: false })
       .limit(1)
       .single(),
-    // Transferts a valider (details pour bloc alertes)
     supabase
       .from("transferts")
-      .select("id, reference, expediteur_nom, beneficiaire_nom, montant_envoye, devise, created_at")
+      .select(
+        "id, reference, expediteur_nom, beneficiaire_nom, montant_envoye, devise, created_at"
+      )
       .eq("statut", "en_attente")
       .order("created_at", { ascending: false })
       .limit(3),
-    // Paiements partiels
     supabase
       .from("payments")
       .select("id, reference, client_nom, montant_total, montant_recu, devise")
       .eq("statut", "partiel")
       .order("created_at", { ascending: false })
       .limit(3),
+    // 7 jours
+    supabase
+      .from("payments")
+      .select("date_paiement, montant_recu")
+      .gte("date_paiement", sevenDaysAgoISO),
+    supabase
+      .from("quick_sales")
+      .select("date_paiement, montant_total")
+      .gte("date_paiement", sevenDaysAgoISO),
+    supabase
+      .from("demandes")
+      .select("created_at")
+      .gte("created_at", sevenDaysAgoISO),
+    supabase
+      .from("appointments")
+      .select("date_heure")
+      .gte("date_heure", sevenDaysAgoISO),
+    supabase
+      .from("expenses")
+      .select("date_depense, montant")
+      .eq("statut", "valide")
+      .gte("date_depense", sevenDaysAgoISO),
+    // RH
+    supabase
+      .from("employees")
+      .select("id, salaire_base", { count: "exact" })
+      .eq("statut", "actif"),
+    supabase
+      .from("payslips")
+      .select("id", { count: "exact", head: true })
+      .eq("statut", "en_attente_validation"),
+    supabase
+      .from("payslips")
+      .select(
+        "id, reference, mois_libelle, salaire_net, employee_id, employees(nom_complet, poste)"
+      )
+      .eq("statut", "en_attente_validation")
+      .order("submitted_at", { ascending: false })
+      .limit(3),
+    supabase
+      .from("payslips")
+      .select("id", { count: "exact", head: true })
+      .eq("statut", "validee")
+      .gte("validated_at", monthStartISO),
   ]);
 
   // ============================================================
-  // CALCULS FINANCIERS
+  // CALCULS
   // ============================================================
   const paiementsToday = (paymentsTodayRes.data || []).reduce(
     (s, p) => s + Number(p.montant_recu || 0),
@@ -286,15 +307,56 @@ export default async function SuperAdminDashboard() {
   const nbEmployes = teamCountRes.count ?? 0;
   const nbRdvToday = (appointmentsTodayRes.data || []).length;
 
+  // RH
+  const nbEmployeesActifs = employeesActifsRes.count ?? 0;
+  const masseSalariale = (employeesActifsRes.data || []).reduce(
+    (s, e) => s + Number(e.salaire_base || 0),
+    0
+  );
+  const nbPayslipsPending = payslipsPendingRes.count ?? 0;
+  const nbPayslipsValidatedMonth = payslipsValidatedMonthRes.count ?? 0;
+
   const totalAlertes =
     nbDepensesEnAttente +
     nbTransfertsPending +
     nbDemandesNouvelles +
-    (paiementsPartielsRes.data || []).length;
+    (paiementsPartielsRes.data || []).length +
+    nbPayslipsPending;
 
-  // Derniere activite
   const derniereActivite = lastActivePaymentRes.data?.created_at;
 
+  // ============================================================
+  // TRENDS RÉELS (7 derniers jours, oldest → newest)
+  // ============================================================
+  const paymentsByDay = bucketByDay(
+    payments7dRes.data || [],
+    "date_paiement",
+    "montant_recu"
+  );
+  const caisseByDay = bucketByDay(
+    quickSales7dRes.data || [],
+    "date_paiement",
+    "montant_total"
+  );
+  const encaisseByDay = sumSeries(paymentsByDay, caisseByDay);
+  const encaisseCumulMonth = cumulativeSeries(encaisseByDay);
+  const expensesByDay = bucketByDay(
+    expenses7dRes.data || [],
+    "date_depense",
+    "montant"
+  );
+  const demandesByDay = bucketByDay(demandes7dRes.data || [], "created_at");
+  const appointmentsByDay = bucketByDay(
+    appointments7dRes.data || [],
+    "date_heure"
+  );
+  // Restant à encaisser : on n'a pas d'historique facile, on garde une série
+  // plate pour ne pas tromper l'œil.
+  const restantByDay = new Array(7).fill(restantAEncaisser);
+
+  // ============================================================
+  // RENDU
+  // ============================================================
   const initials = (
     (profile.prenom?.[0] ?? "") + (profile.nom?.[0] ?? "")
   ).toUpperCase();
@@ -310,9 +372,9 @@ export default async function SuperAdminDashboard() {
 
   return (
     <DashboardShell profile={profile}>
-      {/* ======================================================== */}
-      {/* HERO PREMIUM */}
-      {/* ======================================================== */}
+      {/* ────────────────────────────────────────────────────── */}
+      {/* 1. HERO                                                */}
+      {/* ────────────────────────────────────────────────────── */}
       <DashboardHero
         initials={initials}
         roleLabel="Centre de pilotage"
@@ -348,10 +410,9 @@ export default async function SuperAdminDashboard() {
         }
       />
 
-
-      {/* ======================================================== */}
-      {/* ACTIONS RAPIDES */}
-      {/* ======================================================== */}
+      {/* ────────────────────────────────────────────────────── */}
+      {/* 2. ACTIONS RAPIDES                                     */}
+      {/* ────────────────────────────────────────────────────── */}
       <DashboardQuickActions
         title="Actions rapides"
         actions={[
@@ -362,15 +423,15 @@ export default async function SuperAdminDashboard() {
             color: "blue",
           },
           {
-            href: "/dashboard/super-admin/equipe/nouveau",
+            href: "/dashboard/super-admin/rh/employes/nouveau",
             icon: Briefcase,
             label: "Créer employé",
             color: "indigo",
           },
           {
-            href: "/dashboard/super-admin/paiements",
+            href: "/dashboard/super-admin/rh/paie/nouvelle",
             icon: Wallet,
-            label: "Enregistrer paiement",
+            label: "Nouvelle fiche paie",
             color: "emerald",
           },
           {
@@ -396,75 +457,196 @@ export default async function SuperAdminDashboard() {
         ]}
       />
 
-      {/* ======================================================== */}
-      {/* VUE FINANCIERE */}
-      {/* ======================================================== */}
+      {/* ────────────────────────────────────────────────────── */}
+      {/* 3. À TRAITER — alertes en haut (command center)        */}
+      {/* ────────────────────────────────────────────────────── */}
+      {totalAlertes > 0 ? (
+        <Section
+          id="alertes"
+          eyebrow="Priorité"
+          title="À traiter maintenant"
+          icon={ShieldAlert}
+          accent="amber"
+          subtitle={`${totalAlertes} élément${totalAlertes > 1 ? "s" : ""} en attente d'action`}
+        >
+          <div className="space-y-2">
+            {/* Fiches de paie à valider (NEW) */}
+            {(payslipsPendingDetailsRes.data || []).map((p) => {
+              const emp =
+                (p.employees as
+                  | { nom_complet?: string; poste?: string }
+                  | { nom_complet?: string; poste?: string }[]
+                  | null) ?? null;
+              const empSingle = Array.isArray(emp) ? emp[0] : emp;
+              return (
+                <AlertRow
+                  key={p.id}
+                  icon={ClipboardCheck}
+                  iconColor="text-emerald-600"
+                  iconBg="bg-emerald-50"
+                  title={`Fiche de paie : ${empSingle?.nom_complet ?? "—"}`}
+                  subtitle={`${p.mois_libelle} · ${formatMoney(Number(p.salaire_net))} net`}
+                  badge="À valider"
+                  badgeColor="bg-emerald-100 text-emerald-700"
+                  href={`/dashboard/super-admin/rh/paie/${p.id}`}
+                />
+              );
+            })}
+            {nbPayslipsPending > 3 && (
+              <AlertRow
+                icon={ClipboardCheck}
+                iconColor="text-emerald-600"
+                iconBg="bg-emerald-50"
+                title={`+ ${nbPayslipsPending - 3} autre${nbPayslipsPending - 3 > 1 ? "s" : ""} fiche${nbPayslipsPending - 3 > 1 ? "s" : ""} en attente`}
+                subtitle="Voir toutes les fiches à valider"
+                badge="Voir tout"
+                badgeColor="bg-emerald-100 text-emerald-700"
+                href="/dashboard/super-admin/rh/paie/a-valider"
+              />
+            )}
+
+            {/* Transferts à valider */}
+            {(transfertsToValidateRes.data || []).map((t) => (
+              <AlertRow
+                key={t.id}
+                icon={Send}
+                iconColor="text-purple-600"
+                iconBg="bg-purple-50"
+                title={`Transfert ${t.expediteur_nom} → ${t.beneficiaire_nom}`}
+                subtitle={`${formatMoney(Number(t.montant_envoye), t.devise)} · ${formatRelativeTime(t.created_at)}`}
+                badge="À valider"
+                badgeColor="bg-purple-100 text-purple-700"
+                href="/dashboard/super-admin/transferts"
+              />
+            ))}
+
+            {/* Dépenses en attente */}
+            {nbDepensesEnAttente > 0 && (
+              <AlertRow
+                icon={Receipt}
+                iconColor="text-amber-600"
+                iconBg="bg-amber-50"
+                title={`${nbDepensesEnAttente} dépense${nbDepensesEnAttente > 1 ? "s" : ""} en attente de validation`}
+                subtitle={`Montant total : ${formatMoney(depensesEnAttente)}`}
+                badge="À valider"
+                badgeColor="bg-amber-100 text-amber-700"
+                href="/dashboard/super-admin/depenses"
+              />
+            )}
+
+            {/* Paiements partiels */}
+            {(paiementsPartielsRes.data || []).map((p) => {
+              const restant =
+                Number(p.montant_total) - Number(p.montant_recu);
+              return (
+                <AlertRow
+                  key={p.id}
+                  icon={Wallet}
+                  iconColor="text-orange-600"
+                  iconBg="bg-orange-50"
+                  title={`Paiement partiel : ${p.client_nom}`}
+                  subtitle={`Restant : ${formatMoney(restant, p.devise)} sur ${formatMoney(Number(p.montant_total), p.devise)}`}
+                  badge="Partiel"
+                  badgeColor="bg-orange-100 text-orange-700"
+                  href="/dashboard/super-admin/paiements"
+                />
+              );
+            })}
+
+            {/* Demandes nouvelles */}
+            {nbDemandesNouvelles > 0 && (
+              <AlertRow
+                icon={FileText}
+                iconColor="text-blue-600"
+                iconBg="bg-blue-50"
+                title={`${nbDemandesNouvelles} demande${nbDemandesNouvelles > 1 ? "s" : ""} non traitée${nbDemandesNouvelles > 1 ? "s" : ""}`}
+                subtitle="À assigner ou traiter par un agent"
+                badge="Nouvelles"
+                badgeColor="bg-blue-100 text-blue-700"
+                href="/dashboard/super-admin/demandes"
+              />
+            )}
+          </div>
+        </Section>
+      ) : (
+        <Section
+          eyebrow="Priorité"
+          title="Tout est sous contrôle"
+          icon={CheckCircle2}
+          accent="emerald"
+        >
+          <EmptyState
+            icon={CheckCircle2}
+            tone="success"
+            title="Aucune alerte"
+            description="Pas de transfert à valider, pas de dépense en attente, pas de fiche de paie à examiner."
+          />
+        </Section>
+      )}
+
+      {/* ────────────────────────────────────────────────────── */}
+      {/* 4. VUE FINANCIÈRE                                      */}
+      {/* ────────────────────────────────────────────────────── */}
       <Section
+        eyebrow="Pilotage financier"
         title="Vue financière"
         icon={CircleDollarSign}
-        color="text-emerald-600"
+        accent="emerald"
+        subtitle="Encaissements, restants et dépenses — 7 derniers jours"
       >
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {(() => {
-            const t1 = fakeTrend(totalToday, "up", 1);
-            const t2 = fakeTrend(totalMonth, "up", 2);
-            const t3 = fakeTrend(restantAEncaisser, "down", 3);
-            const t4 = fakeTrend(depensesEnAttente, "flat", 4);
-            return (
-              <>
-                <FinanceCard
-                  label="Encaissé aujourd'hui"
-                  value={formatMoney(totalToday)}
-                  sub={`${formatMoney(paiementsToday)} paie. + ${formatMoney(caisseToday)} caisse`}
-                  icon={Wallet}
-                  accent="green"
-                  trend={t1}
-                  delta={trendDelta(t1)}
-                  href="/dashboard/super-admin/paiements"
-                />
-                <FinanceCard
-                  label="Encaissé ce mois"
-                  value={formatMoney(totalMonth)}
-                  sub={`Solde net : ${formatMoney(soldeNet)}`}
-                  icon={TrendingUp}
-                  accent="emerald"
-                  trend={t2}
-                  delta={trendDelta(t2)}
-                  href="/dashboard/super-admin/finances"
-                />
-                <FinanceCard
-                  label="Restant à encaisser"
-                  value={formatMoney(restantAEncaisser)}
-                  sub="Paiements partiels & non payés"
-                  icon={Clock}
-                  accent="orange"
-                  trend={t3}
-                  delta={trendDelta(t3)}
-                  href="/dashboard/super-admin/paiements"
-                />
-                <FinanceCard
-                  label="Dépenses en attente"
-                  value={formatMoney(depensesEnAttente)}
-                  sub={`${nbDepensesEnAttente} dépense${nbDepensesEnAttente > 1 ? "s" : ""} à valider`}
-                  icon={Receipt}
-                  accent="amber"
-                  trend={t4}
-                  delta={trendDelta(t4)}
-                  href="/dashboard/super-admin/depenses"
-                />
-              </>
-            );
-          })()}
+          <MetricCard
+            label="Encaissé aujourd'hui"
+            value={formatMoney(totalToday)}
+            sub={`${formatMoney(paiementsToday)} paie. + ${formatMoney(caisseToday)} caisse`}
+            icon={Wallet}
+            accent="green"
+            trend={encaisseByDay}
+            delta={trendDelta(encaisseByDay)}
+            href="/dashboard/super-admin/paiements"
+          />
+          <MetricCard
+            label="Encaissé ce mois"
+            value={formatMoney(totalMonth)}
+            sub={`Solde net : ${formatMoney(soldeNet)}`}
+            icon={TrendingUp}
+            accent="emerald"
+            trend={encaisseCumulMonth}
+            delta={trendDelta(encaisseCumulMonth)}
+            href="/dashboard/super-admin/finances"
+            highlight
+          />
+          <MetricCard
+            label="Restant à encaisser"
+            value={formatMoney(restantAEncaisser)}
+            sub="Paiements partiels & non payés"
+            icon={Clock}
+            accent="orange"
+            trend={restantByDay}
+            href="/dashboard/super-admin/paiements"
+          />
+          <MetricCard
+            label="Dépenses validées 7j"
+            value={formatMoney(expensesByDay.reduce((s, v) => s + v, 0))}
+            sub={`${nbDepensesEnAttente} en attente · ${formatMoney(depensesEnAttente)}`}
+            icon={Receipt}
+            accent="amber"
+            trend={expensesByDay}
+            delta={trendDelta(expensesByDay)}
+            href="/dashboard/super-admin/depenses"
+          />
         </div>
       </Section>
 
-      {/* ======================================================== */}
-      {/* ACTIVITE OPERATIONNELLE */}
-      {/* ======================================================== */}
+      {/* ────────────────────────────────────────────────────── */}
+      {/* 5. ACTIVITÉ OPÉRATIONNELLE                             */}
+      {/* ────────────────────────────────────────────────────── */}
       <Section
+        eyebrow="Opérations"
         title="Activité opérationnelle"
         icon={Activity}
-        color="text-purple-600"
+        accent="purple"
+        subtitle="Demandes, rendez-vous et transferts"
       >
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <OpCard
@@ -473,21 +655,21 @@ export default async function SuperAdminDashboard() {
             icon={FileText}
             href="/dashboard/super-admin/demandes"
             urgent={nbDemandesNouvelles > 5}
-            trend={fakeTrend(nbDemandesNouvelles, "up", 5)}
+            trend={demandesByDay}
           />
           <OpCard
             label="Demandes en cours"
             value={nbDemandesEnCours}
             icon={FileText}
             href="/dashboard/super-admin/demandes"
-            trend={fakeTrend(nbDemandesEnCours, "up", 6)}
+            trend={demandesByDay}
           />
           <OpCard
             label="RDV aujourd'hui"
             value={nbRdvToday}
             icon={CalendarCheck}
-            href="/dashboard/super-admin/rendez-vous"
-            trend={fakeTrend(nbRdvToday, "flat", 7)}
+            href="/dashboard/super-admin/rdv"
+            trend={appointmentsByDay}
           />
           <OpCard
             label="Transferts à valider"
@@ -495,175 +677,98 @@ export default async function SuperAdminDashboard() {
             icon={Send}
             href="/dashboard/super-admin/transferts"
             urgent={nbTransfertsPending > 0}
-            trend={fakeTrend(nbTransfertsPending, "down", 8)}
           />
         </div>
       </Section>
 
-      {/* ======================================================== */}
-      {/* EQUIPE NEXUS */}
-      {/* ======================================================== */}
-      <Section title="Équipe Nexus" icon={Briefcase} color="text-nexus-blue-700">
-        <div className="grid gap-4 lg:grid-cols-3">
-          <Link
+      {/* ────────────────────────────────────────────────────── */}
+      {/* 6. TALENT & RH                                         */}
+      {/* ────────────────────────────────────────────────────── */}
+      <Section
+        eyebrow="Capital humain"
+        title="Talent & RH"
+        icon={Briefcase}
+        accent="blue"
+        subtitle="Clients CRM, employés, masse salariale et workflow paie"
+      >
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <RhStatCard
+            label="Clients CRM"
+            value={String(nbClients)}
+            sub="Fiches business actives"
+            icon={UserCircle}
             href="/dashboard/super-admin/clients"
-            className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-colors hover:bg-slate-50/60"
-          >
-            <div className="flex items-center justify-between">
-              <UserCircle className="h-6 w-6 text-blue-600" />
-              <ArrowUpRight className="h-4 w-4 text-slate-400 transition group-hover:text-nexus-blue-950" />
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold text-nexus-blue-950">
-              {nbClients}
-            </p>
-            <p className="mt-1 text-sm font-semibold text-slate-700">
-              Clients dans le CRM
-            </p>
-            <p className="mt-0.5 text-xs text-slate-500">
-              Fiches business actives
-            </p>
-          </Link>
-
-          <Link
-            href="/dashboard/super-admin/equipe"
-            className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-colors hover:bg-slate-50/60"
-          >
-            <div className="flex items-center justify-between">
-              <Briefcase className="h-6 w-6 text-indigo-600" />
-              <ArrowUpRight className="h-4 w-4 text-slate-400 transition group-hover:text-nexus-blue-950" />
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold text-nexus-blue-950">
-              {nbEmployes}
-            </p>
-            <p className="mt-1 text-sm font-semibold text-slate-700">
-              Employés Nexus
-            </p>
-            <p className="mt-0.5 text-xs text-slate-500">
-              Agents, admins, super-admins actifs
-            </p>
-          </Link>
-
-          <Link
+            iconColor="text-blue-600"
+            iconBg="bg-blue-50"
+          />
+          <RhStatCard
+            label="Employés actifs"
+            value={String(nbEmployeesActifs)}
+            sub={`${nbEmployes} comptes app · masse ${formatMoney(masseSalariale)}/mois`}
+            icon={Users}
+            href="/dashboard/super-admin/rh/employes"
+            iconColor="text-indigo-600"
+            iconBg="bg-indigo-50"
+          />
+          <RhStatCard
+            label="Fiches paie à valider"
+            value={String(nbPayslipsPending)}
+            sub={
+              nbPayslipsPending > 0
+                ? "Action requise — workflow validation"
+                : "Aucune fiche en attente"
+            }
+            icon={ClipboardCheck}
+            href="/dashboard/super-admin/rh/paie/a-valider"
+            iconColor="text-emerald-600"
+            iconBg="bg-emerald-50"
+            urgent={nbPayslipsPending > 0}
+          />
+          <RhStatCard
+            label="Performances équipe"
+            value={`${nbPayslipsValidatedMonth}`}
+            sub={`Fiches validées ce mois · classement agents`}
+            icon={Trophy}
             href="/dashboard/super-admin/stats-agents"
-            className="group rounded-2xl border-2 border-yellow-300 bg-gradient-to-br from-yellow-50 to-white p-5 shadow-sm transition-colors hover:bg-slate-50/60"
-          >
-            <div className="flex items-center justify-between">
-              <Trophy className="h-6 w-6 text-yellow-600" />
-              <ArrowUpRight className="h-4 w-4 text-yellow-600 transition group-hover:translate-x-0.5" />
-            </div>
-            <p className="mt-3 font-display text-lg font-bold text-nexus-blue-950">
-              Voir performances
-            </p>
-            <p className="mt-1 text-sm text-slate-700">
-              Classement, scores, exports
-            </p>
-            <p className="mt-2 inline-flex items-center gap-1 rounded-full bg-yellow-200 px-2 py-0.5 text-[10px] font-bold uppercase text-yellow-900">
-              <Zap className="h-3 w-3" />
-              Recommandé chaque lundi
-            </p>
-          </Link>
+            iconColor="text-yellow-600"
+            iconBg="bg-yellow-50"
+            highlight
+          />
         </div>
       </Section>
 
-      {/* ======================================================== */}
-      {/* A TRAITER MAINTENANT */}
-      {/* ======================================================== */}
-      {totalAlertes > 0 && (
-        <div id="alertes" className="mb-6 scroll-mt-6">
-          <Section
-            title="À traiter maintenant"
-            icon={ShieldAlert}
-            color="text-amber-600"
-          >
-            <div className="space-y-2">
-              {/* Transferts a valider */}
-              {(transfertsToValidateRes.data || []).map((t) => (
-                <AlertRow
-                  key={t.id}
-                  icon={Send}
-                  iconColor="text-purple-600"
-                  iconBg="bg-purple-100"
-                  title={`Transfert ${t.expediteur_nom} → ${t.beneficiaire_nom}`}
-                  subtitle={`${formatMoney(Number(t.montant_envoye), t.devise)} · ${formatRelativeTime(t.created_at)}`}
-                  badge="À valider"
-                  badgeColor="bg-purple-100 text-purple-700"
-                  href="/dashboard/super-admin/transferts"
-                />
-              ))}
-
-              {/* Depenses en attente */}
-              {nbDepensesEnAttente > 0 && (
-                <AlertRow
-                  icon={Receipt}
-                  iconColor="text-amber-600"
-                  iconBg="bg-amber-100"
-                  title={`${nbDepensesEnAttente} dépense${nbDepensesEnAttente > 1 ? "s" : ""} en attente de validation`}
-                  subtitle={`Montant total : ${formatMoney(depensesEnAttente)}`}
-                  badge="À valider"
-                  badgeColor="bg-amber-100 text-amber-700"
-                  href="/dashboard/super-admin/depenses"
-                />
-              )}
-
-              {/* Paiements partiels */}
-              {(paiementsPartielsRes.data || []).map((p) => {
-                const restant =
-                  Number(p.montant_total) - Number(p.montant_recu);
-                return (
-                  <AlertRow
-                    key={p.id}
-                    icon={Wallet}
-                    iconColor="text-orange-600"
-                    iconBg="bg-orange-100"
-                    title={`Paiement partiel : ${p.client_nom}`}
-                    subtitle={`Restant : ${formatMoney(restant, p.devise)} sur ${formatMoney(Number(p.montant_total), p.devise)}`}
-                    badge="Partiel"
-                    badgeColor="bg-orange-100 text-orange-700"
-                    href="/dashboard/super-admin/paiements"
-                  />
-                );
-              })}
-
-              {/* Demandes nouvelles */}
-              {nbDemandesNouvelles > 0 && (
-                <AlertRow
-                  icon={FileText}
-                  iconColor="text-blue-600"
-                  iconBg="bg-blue-100"
-                  title={`${nbDemandesNouvelles} demande${nbDemandesNouvelles > 1 ? "s" : ""} non traitée${nbDemandesNouvelles > 1 ? "s" : ""}`}
-                  subtitle="À assigner ou traiter par un agent"
-                  badge="Nouvelles"
-                  badgeColor="bg-blue-100 text-blue-700"
-                  href="/dashboard/super-admin/demandes"
-                />
-              )}
-            </div>
-          </Section>
-        </div>
-      )}
-
-      {/* ======================================================== */}
-      {/* RDV DU JOUR */}
-      {/* ======================================================== */}
-      {nbRdvToday > 0 && (
+      {/* ────────────────────────────────────────────────────── */}
+      {/* 7. PROCHAINS ÉVÉNEMENTS — RDV + Demandes côte à côte   */}
+      {/* ────────────────────────────────────────────────────── */}
+      {(nbRdvToday > 0 || (demandesUrgentesRes.data || []).length > 0) && (
         <Section
-          title="Rendez-vous du jour"
+          eyebrow="Agenda du jour"
+          title="Prochains événements"
           icon={CalendarCheck}
-          color="text-blue-600"
+          accent="blue"
         >
-          <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <div className="divide-y divide-slate-100">
+          <div className="grid gap-4 lg:grid-cols-2">
+            {/* RDV du jour */}
+            <EventList
+              title="Rendez-vous aujourd'hui"
+              icon={CalendarCheck}
+              iconColor="text-blue-600"
+              iconBg="bg-blue-50"
+              empty="Aucun rendez-vous prévu"
+              footerHref="/dashboard/super-admin/rdv"
+              footerLabel="Voir tous les rendez-vous"
+            >
               {(appointmentsTodayRes.data || []).map((rdv) => {
                 const time = new Date(rdv.date_heure).toLocaleTimeString(
                   "fr-FR",
                   { hour: "2-digit", minute: "2-digit" }
                 );
                 return (
-                  <div
+                  <li
                     key={rdv.id}
-                    className="flex items-center gap-3 p-3 hover:bg-slate-50"
+                    className="flex items-center gap-3 px-4 py-3"
                   >
-                    <div className="flex h-10 w-12 shrink-0 flex-col items-center justify-center rounded-lg bg-blue-100 font-mono text-xs font-bold text-blue-700">
+                    <div className="flex h-10 w-12 shrink-0 flex-col items-center justify-center rounded-lg bg-blue-50 font-mono text-xs font-bold text-blue-700">
                       {time}
                     </div>
                     <div className="min-w-0 flex-1">
@@ -674,40 +779,27 @@ export default async function SuperAdminDashboard() {
                         {rdv.service}
                       </p>
                     </div>
-                  </div>
+                  </li>
                 );
               })}
-            </div>
-            <div className="border-t border-slate-200 p-3 text-center">
-              <Link
-                href="/dashboard/super-admin/rendez-vous"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-nexus-blue-950"
-              >
-                Voir tous les rendez-vous
-                <ArrowUpRight className="h-3 w-3" />
-              </Link>
-            </div>
-          </div>
-        </Section>
-      )}
+            </EventList>
 
-      {/* ======================================================== */}
-      {/* DERNIERES DEMANDES */}
-      {/* ======================================================== */}
-      {(demandesUrgentesRes.data || []).length > 0 && (
-        <Section
-          title="Dernières demandes reçues"
-          icon={FileText}
-          color="text-purple-600"
-        >
-          <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <div className="divide-y divide-slate-100">
+            {/* Dernières demandes */}
+            <EventList
+              title="Dernières demandes reçues"
+              icon={FileText}
+              iconColor="text-purple-600"
+              iconBg="bg-purple-50"
+              empty="Aucune nouvelle demande"
+              footerHref="/dashboard/super-admin/demandes"
+              footerLabel="Voir toutes les demandes"
+            >
               {(demandesUrgentesRes.data || []).map((d) => (
-                <div
+                <li
                   key={d.id}
-                  className="flex items-center gap-3 p-3 hover:bg-slate-50"
+                  className="flex items-center gap-3 px-4 py-3"
                 >
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-purple-100 text-purple-600">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
                     <FileText className="h-4 w-4" />
                   </div>
                   <div className="min-w-0 flex-1">
@@ -720,7 +812,7 @@ export default async function SuperAdminDashboard() {
                   </div>
                   <span
                     className={cn(
-                      "rounded-full px-2 py-0.5 text-[10px] font-bold uppercase",
+                      "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase",
                       d.statut === "nouvelle"
                         ? "bg-blue-100 text-blue-700"
                         : "bg-amber-100 text-amber-700"
@@ -728,41 +820,23 @@ export default async function SuperAdminDashboard() {
                   >
                     {d.statut}
                   </span>
-                </div>
+                </li>
               ))}
-            </div>
-            <div className="border-t border-slate-200 p-3 text-center">
-              <Link
-                href="/dashboard/super-admin/demandes"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-nexus-blue-950"
-              >
-                Voir toutes les demandes
-                <ArrowUpRight className="h-3 w-3" />
-              </Link>
-            </div>
+            </EventList>
           </div>
         </Section>
       )}
 
-      {/* ======================================================== */}
-      {/* SI RIEN A TRAITER */}
-      {/* ======================================================== */}
-      {totalAlertes === 0 && (
-        <div className="mb-6">
-          <EmptyState
-            icon={CheckCircle2}
-            tone="success"
-            title="Tout est sous contrôle"
-            description="Aucune alerte. Pas de transfert à valider, pas de dépense en attente, pas de demande non traitée."
-          />
-        </div>
-      )}
-
-      {/* ======================================================== */}
-      {/* FOOTER NAVIGATION COMPLETE */}
-      {/* ======================================================== */}
-      <Section title="Toutes les sections" icon={PieChart} color="text-slate-600">
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+      {/* ────────────────────────────────────────────────────── */}
+      {/* 8. RACCOURCIS NAVIGATION                               */}
+      {/* ────────────────────────────────────────────────────── */}
+      <Section
+        eyebrow="Navigation"
+        title="Raccourcis"
+        icon={PieChart}
+        accent="slate"
+      >
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
           <NavLink href="/dashboard/super-admin/finances" icon={PieChart} label="Finances" />
           <NavLink href="/dashboard/super-admin/paiements" icon={Wallet} label="Paiements" />
           <NavLink href="/dashboard/super-admin/caisse" icon={ShoppingCart} label="Caisse" />
@@ -771,6 +845,12 @@ export default async function SuperAdminDashboard() {
           <NavLink href="/dashboard/super-admin/clients" icon={UserCircle} label="Clients (CRM)" />
           <NavLink href="/dashboard/super-admin/comptes-clients" icon={Users} label="Comptes clients" />
           <NavLink href="/dashboard/super-admin/equipe" icon={Briefcase} label="Équipe Nexus" />
+          <NavLink href="/dashboard/super-admin/rh/employes" icon={Users} label="RH — Employés" />
+          <NavLink href="/dashboard/super-admin/rh/paie" icon={Wallet} label="RH — Fiches paie" />
+          <NavLink href="/dashboard/super-admin/rh/documents" icon={FolderOpen} label="RH — Documents" />
+          <NavLink href="/dashboard/super-admin/i18n" icon={Globe} label="Multi-langue" />
+          <NavLink href="/dashboard/super-admin/audit-log" icon={ShieldCheck} label="Audit log" />
+          <NavLink href="/dashboard/super-admin/parametres" icon={Settings} label="Paramètres" />
         </div>
       </Section>
     </DashboardShell>
@@ -778,64 +858,91 @@ export default async function SuperAdminDashboard() {
 }
 
 // ============================================================================
-// SOUS-COMPOSANTS
+// SOUS-COMPOSANTS premium tech
 // ============================================================================
+
+type SectionAccent =
+  | "emerald"
+  | "amber"
+  | "purple"
+  | "blue"
+  | "slate"
+  | "orange";
+
 function Section({
+  id,
+  eyebrow,
   title,
   icon: Icon,
-  color,
+  accent = "orange",
   subtitle,
   children,
 }: {
+  id?: string;
+  eyebrow?: string;
   title: string;
-  icon: React.ComponentType<{ className?: string }>;
-  /** Couleur Tailwind du texte (ex: "text-emerald-600") — utilisée pour
-   *  déterminer l'accent du badge gradient. */
-  color: string;
+  icon: LucideIcon;
+  accent?: SectionAccent;
   subtitle?: string;
   children: React.ReactNode;
 }) {
-  // Mappe la couleur de texte vers un gradient (orange = accent par défaut)
-  const accent = color.includes("emerald") || color.includes("green")
-    ? "from-emerald-500 to-emerald-700"
-    : color.includes("rose") || color.includes("red")
-      ? "from-rose-500 to-rose-700"
-      : color.includes("amber") || color.includes("yellow")
-        ? "from-amber-500 to-amber-700"
-        : color.includes("purple")
-          ? "from-purple-500 to-purple-700"
-          : color.includes("blue")
-            ? "from-blue-500 to-blue-700"
-            : color.includes("slate")
-              ? "from-slate-500 to-slate-700"
-              : "from-nexus-orange-500 to-nexus-orange-700";
+  const gradient: Record<SectionAccent, string> = {
+    emerald: "from-emerald-500 to-emerald-700",
+    amber: "from-amber-500 to-amber-700",
+    purple: "from-purple-500 to-purple-700",
+    blue: "from-blue-500 to-blue-700",
+    slate: "from-slate-500 to-slate-700",
+    orange: "from-nexus-orange-500 to-nexus-orange-700",
+  };
+
+  const eyebrowColor: Record<SectionAccent, string> = {
+    emerald: "text-emerald-600",
+    amber: "text-amber-600",
+    purple: "text-purple-600",
+    blue: "text-blue-600",
+    slate: "text-slate-500",
+    orange: "text-nexus-orange-600",
+  };
 
   return (
-    <div className="mb-8">
-      <div className="mb-4 flex items-center gap-3">
+    <section id={id} className="mb-6 scroll-mt-6 sm:mb-8">
+      <div className="mb-4 flex items-start gap-3 sm:mb-5">
         <div
           className={cn(
-            "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-sm",
-            accent
+            "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-sm sm:h-10 sm:w-10",
+            gradient[accent]
           )}
         >
-          <Icon className="h-4 w-4" />
+          <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
         </div>
-        <div className="min-w-0">
-          <h2 className="font-display text-base font-bold text-nexus-blue-950 sm:text-lg">
+        <div className="min-w-0 flex-1">
+          {eyebrow && (
+            <p
+              className={cn(
+                "text-[10px] font-bold uppercase tracking-[0.18em]",
+                eyebrowColor[accent]
+              )}
+            >
+              {eyebrow}
+            </p>
+          )}
+          <h2 className="font-display text-base font-bold leading-tight text-nexus-blue-950 sm:text-lg">
             {title}
           </h2>
           {subtitle && (
-            <p className="truncate text-xs text-slate-500">{subtitle}</p>
+            <p className="mt-0.5 truncate text-xs text-slate-500 sm:text-sm">
+              {subtitle}
+            </p>
           )}
         </div>
       </div>
       {children}
-    </div>
+    </section>
   );
 }
 
-function FinanceCard({
+// ─── Card métrique financière (avec sparkline + delta) ─────────────────────
+function MetricCard({
   label,
   value,
   sub,
@@ -844,15 +951,17 @@ function FinanceCard({
   trend,
   delta,
   href,
+  highlight,
 }: {
   label: string;
   value: string;
   sub?: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
   accent: "green" | "emerald" | "orange" | "amber";
   trend?: number[];
   delta?: number;
   href: string;
+  highlight?: boolean;
 }) {
   const colorMap = {
     green: "from-emerald-400 to-emerald-600",
@@ -867,7 +976,7 @@ function FinanceCard({
     amber: "text-amber-500",
   };
 
-  const showSpark = trend && trend.length >= 2;
+  const showSpark = trend && trend.length >= 2 && trend.some((v) => v > 0);
   const showDelta = typeof delta === "number" && Number.isFinite(delta);
   const deltaUp = showDelta && delta! > 0;
   const deltaDown = showDelta && delta! < 0;
@@ -875,19 +984,41 @@ function FinanceCard({
   return (
     <Link
       href={href}
-      className="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-colors hover:bg-slate-50/60"
+      className={cn(
+        "group relative overflow-hidden rounded-2xl border bg-white p-4 ring-1 ring-slate-100/80 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/40 hover:shadow-lg",
+        highlight
+          ? "border-nexus-orange-200 bg-gradient-to-br from-white via-white to-nexus-orange-50/40"
+          : "border-slate-200"
+      )}
     >
-      <div className="flex items-start justify-between">
+      {highlight && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/10 blur-2xl transition-opacity duration-500 group-hover:bg-nexus-orange-500/20"
+        />
+      )}
+      <div className="relative flex items-start justify-between">
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-medium text-slate-500">{label}</p>
-          <p className="mt-1 truncate font-display text-xl font-bold text-nexus-blue-950">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            {label}
+          </p>
+          <p
+            className={cn(
+              "mt-1 truncate font-display text-xl font-bold tabular-nums sm:text-2xl",
+              highlight
+                ? "bg-gradient-to-r from-nexus-orange-600 to-nexus-orange-800 bg-clip-text text-transparent"
+                : "text-nexus-blue-950"
+            )}
+          >
             {value}
           </p>
-          {sub && <p className="mt-0.5 text-[11px] text-slate-500">{sub}</p>}
+          {sub && (
+            <p className="mt-0.5 truncate text-[11px] text-slate-500">{sub}</p>
+          )}
         </div>
         <div
           className={cn(
-            "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br text-white shadow",
+            "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow",
             colorMap[accent]
           )}
         >
@@ -896,16 +1027,14 @@ function FinanceCard({
       </div>
 
       {(showSpark || showDelta) && (
-        <div className="mt-3 flex items-center gap-2">
+        <div className="relative mt-3 flex items-center gap-2">
           {showDelta && (
             <span
               className={cn(
                 "inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums",
                 deltaUp && "bg-emerald-100 text-emerald-700",
                 deltaDown && "bg-rose-100 text-rose-700",
-                !deltaUp &&
-                  !deltaDown &&
-                  "bg-slate-100 text-slate-600"
+                !deltaUp && !deltaDown && "bg-slate-100 text-slate-600"
               )}
             >
               {deltaUp && <ArrowUpRight className="h-3 w-3" />}
@@ -924,6 +1053,7 @@ function FinanceCard({
   );
 }
 
+// ─── Card opérationnelle compacte ──────────────────────────────────────────
 function OpCard({
   label,
   value,
@@ -934,58 +1064,171 @@ function OpCard({
 }: {
   label: string;
   value: number;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
   href: string;
   urgent?: boolean;
   trend?: number[];
 }) {
-  const showSpark = trend && trend.length >= 2;
+  const showSpark = trend && trend.length >= 2 && trend.some((v) => v > 0);
   return (
     <Link
       href={href}
       className={cn(
-        "group rounded-2xl border bg-white p-4 shadow-sm transition-colors hover:bg-slate-50/60",
-        urgent ? "border-red-300 bg-red-50" : "border-slate-200"
+        "group rounded-2xl border bg-white p-4 ring-1 ring-slate-100/80 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md",
+        urgent
+          ? "border-rose-300 bg-rose-50/60"
+          : "border-slate-200 hover:border-nexus-orange-300/40"
       )}
     >
       <div className="flex items-start justify-between">
         <Icon
           className={cn(
             "h-5 w-5",
-            urgent ? "text-red-600" : "text-slate-400"
+            urgent ? "text-rose-600" : "text-slate-400"
           )}
         />
         {urgent && (
-          <span className="inline-flex h-2 w-2 animate-pulse rounded-full bg-red-500" />
+          <span className="inline-flex h-2 w-2 animate-pulse rounded-full bg-rose-500" />
         )}
       </div>
       <p
         className={cn(
           "mt-2 font-display text-2xl font-bold tabular-nums",
-          urgent ? "text-red-700" : "text-nexus-blue-950"
+          urgent ? "text-rose-700" : "text-nexus-blue-950"
         )}
       >
         {value}
       </p>
-      <p className="text-xs font-semibold text-slate-700">{label}</p>
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-600">
+        {label}
+      </p>
       {showSpark ? (
         <div
           className={cn(
             "mt-2 -mb-1",
-            urgent ? "text-red-500" : "text-nexus-blue-500"
+            urgent ? "text-rose-500" : "text-nexus-blue-500"
           )}
         >
           <Sparkline data={trend!} height={20} />
         </div>
       ) : (
-        <div className="mt-1 flex items-center gap-1 text-[10px] font-semibold text-slate-400 transition group-hover:text-nexus-blue-950">
+        <p className="mt-1 text-[10px] font-semibold text-slate-400 transition group-hover:text-nexus-blue-950">
           Voir →
-        </div>
+        </p>
       )}
     </Link>
   );
 }
 
+// ─── Card RH / Talent ──────────────────────────────────────────────────────
+function RhStatCard({
+  label,
+  value,
+  sub,
+  icon: Icon,
+  href,
+  iconColor,
+  iconBg,
+  urgent,
+  highlight,
+}: {
+  label: string;
+  value: string;
+  sub: string;
+  icon: LucideIcon;
+  href: string;
+  iconColor: string;
+  iconBg: string;
+  urgent?: boolean;
+  highlight?: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "group rounded-2xl border bg-white p-4 ring-1 ring-slate-100/80 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md",
+        urgent
+          ? "border-emerald-300 bg-emerald-50/60"
+          : highlight
+            ? "border-yellow-300 bg-gradient-to-br from-yellow-50/60 via-white to-white"
+            : "border-slate-200 hover:border-nexus-orange-300/40"
+      )}
+    >
+      <div className="flex items-center justify-between">
+        <div
+          className={cn(
+            "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
+            iconBg
+          )}
+        >
+          <Icon className={cn("h-4 w-4", iconColor)} />
+        </div>
+        <ArrowUpRight className="h-4 w-4 text-slate-300 transition group-hover:text-nexus-blue-950" />
+      </div>
+      <p className="mt-3 font-display text-2xl font-bold tabular-nums text-nexus-blue-950">
+        {value}
+      </p>
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-600">
+        {label}
+      </p>
+      <p className="mt-1 text-[11px] text-slate-500">{sub}</p>
+    </Link>
+  );
+}
+
+// ─── Liste d'événements (RDV / demandes) ───────────────────────────────────
+function EventList({
+  title,
+  icon: Icon,
+  iconColor,
+  iconBg,
+  empty,
+  footerHref,
+  footerLabel,
+  children,
+}: {
+  title: string;
+  icon: LucideIcon;
+  iconColor: string;
+  iconBg: string;
+  empty: string;
+  footerHref: string;
+  footerLabel: string;
+  children: React.ReactNode;
+}) {
+  const hasItems = Array.isArray(children) ? children.length > 0 : !!children;
+  return (
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-100/80">
+      <div className="flex items-center gap-2 border-b border-slate-100 px-4 py-3">
+        <div
+          className={cn(
+            "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg",
+            iconBg
+          )}
+        >
+          <Icon className={cn("h-3.5 w-3.5", iconColor)} />
+        </div>
+        <p className="text-sm font-semibold text-nexus-blue-950">{title}</p>
+      </div>
+      {hasItems ? (
+        <ul className="divide-y divide-slate-100 text-sm">{children}</ul>
+      ) : (
+        <p className="p-6 text-center text-xs text-slate-400">{empty}</p>
+      )}
+      <div className="border-t border-slate-100 p-3 text-center">
+        <Link
+          href={footerHref}
+          className="inline-flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-nexus-blue-950"
+        >
+          {footerLabel}
+          <ArrowUpRight className="h-3 w-3" />
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+// ─── Ligne d'alerte ────────────────────────────────────────────────────────
 function AlertRow({
   icon: Icon,
   iconColor,
@@ -996,7 +1239,7 @@ function AlertRow({
   badgeColor,
   href,
 }: {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
   iconColor: string;
   iconBg: string;
   title: string;
@@ -1008,11 +1251,11 @@ function AlertRow({
   return (
     <Link
       href={href}
-      className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition-colors hover:bg-slate-50/60"
+      className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3 ring-1 ring-slate-100/80 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/40 hover:shadow-md"
     >
       <div
         className={cn(
-          "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg",
+          "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
           iconBg
         )}
       >
@@ -1032,27 +1275,28 @@ function AlertRow({
       >
         {badge}
       </span>
-      <ArrowUpRight className="h-4 w-4 shrink-0 text-slate-400" />
+      <ArrowUpRight className="hidden h-4 w-4 shrink-0 text-slate-400 sm:block" />
     </Link>
   );
 }
 
+// ─── Lien navigation rapide ────────────────────────────────────────────────
 function NavLink({
   href,
   icon: Icon,
   label,
 }: {
   href: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
   label: string;
 }) {
   return (
     <Link
       href={href}
-      className="group flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-3 transition-colors hover:border-nexus-orange-300/60 hover:bg-slate-50/60"
+      className="group flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-3 ring-1 ring-slate-100/80 transition hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-sm"
     >
       <Icon className="h-4 w-4 text-slate-500 transition group-hover:text-nexus-blue-950" />
-      <span className="text-xs font-semibold text-slate-700 group-hover:text-nexus-blue-950">
+      <span className="truncate text-xs font-semibold text-slate-700 group-hover:text-nexus-blue-950">
         {label}
       </span>
     </Link>
