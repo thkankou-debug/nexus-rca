@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Plus, Search, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Employee, EmployeeStatut } from "@/types";
@@ -27,6 +28,7 @@ const STATUT_LABEL: Record<EmployeeStatut, string> = {
 };
 
 export function EmployeesListView({ basePath }: EmployeesListViewProps) {
+  const router = useRouter();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -157,7 +159,11 @@ export function EmployeesListView({ basePath }: EmployeesListViewProps) {
             </thead>
             <tbody className="divide-y divide-slate-100 text-sm">
               {filtered.map((e) => (
-                <tr key={e.id} className="hover:bg-slate-50/60">
+                <tr
+                  key={e.id}
+                  onClick={() => router.push(`${basePath}/employes/${e.id}`)}
+                  className="cursor-pointer transition hover:bg-nexus-orange-50/40"
+                >
                   <td className="px-4 py-3">
                     <p className="font-semibold text-nexus-blue-950">
                       {e.nom_complet}
@@ -182,9 +188,10 @@ export function EmployeesListView({ basePath }: EmployeesListViewProps) {
                   <td className="px-4 py-3 text-right">
                     <Link
                       href={`${basePath}/employes/${e.id}`}
+                      onClick={(ev) => ev.stopPropagation()}
                       className="text-xs font-semibold text-nexus-orange-600 hover:underline"
                     >
-                      Détail →
+                      Ouvrir →
                     </Link>
                   </td>
                 </tr>

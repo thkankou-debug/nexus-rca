@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Plus, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Employee, Payslip, PayslipStatut } from "@/types";
@@ -10,6 +11,7 @@ import { PayslipStatusBadge, PAYSLIP_STATUS_LABELS } from "./PayslipStatusBadge"
 
 interface PayslipsListViewProps {
   basePath: string;
+  defaultStatutFilter?: "all" | PayslipStatut;
 }
 
 type PayslipWithEmployee = Payslip & {
@@ -22,11 +24,12 @@ const STATUT_KEYS: PayslipStatut[] = [
   "validee",
 ];
 
-export function PayslipsListView({ basePath }: PayslipsListViewProps) {
+export function PayslipsListView({ basePath, defaultStatutFilter = "all" }: PayslipsListViewProps) {
+  const router = useRouter();
   const [payslips, setPayslips] = useState<PayslipWithEmployee[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filterStatut, setFilterStatut] = useState<"all" | PayslipStatut>("all");
+  const [filterStatut, setFilterStatut] = useState<"all" | PayslipStatut>(defaultStatutFilter);
 
   useEffect(() => {
     let cancelled = false;
@@ -116,7 +119,11 @@ export function PayslipsListView({ basePath }: PayslipsListViewProps) {
             </thead>
             <tbody className="divide-y divide-slate-100 text-sm">
               {filtered.map((p) => (
-                <tr key={p.id} className="hover:bg-slate-50/60">
+                <tr
+                  key={p.id}
+                  onClick={() => router.push(`${basePath}/paie/${p.id}`)}
+                  className="cursor-pointer transition hover:bg-nexus-orange-50/40"
+                >
                   <td className="px-4 py-3 font-mono text-xs font-semibold text-nexus-blue-950">
                     {p.reference}
                   </td>
@@ -149,9 +156,10 @@ export function PayslipsListView({ basePath }: PayslipsListViewProps) {
                   <td className="px-4 py-3 text-right">
                     <Link
                       href={`${basePath}/paie/${p.id}`}
+                      onClick={(ev) => ev.stopPropagation()}
                       className="text-xs font-semibold text-nexus-orange-600 hover:underline"
                     >
-                      Détail →
+                      Ouvrir →
                     </Link>
                   </td>
                 </tr>
