@@ -242,6 +242,18 @@ body {
   }
 }
 
+/* Money flow — circulation animée des dashes le long des lignes SVG (page transfert) */
+@keyframes dashflow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [style*="dashflow"] {
+    animation: none !important;
+  }
+}
+
 /* Skeleton shimmer — highlight qui balaie de gauche à droite */
 @keyframes skeleton-sweep {
   0% {
