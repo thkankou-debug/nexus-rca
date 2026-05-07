@@ -14,6 +14,8 @@ import {
   FileText,
   ArrowUpRight,
   Plus,
+  Plane,
+  CalendarDays,
   type LucideIcon,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
@@ -128,6 +130,7 @@ export default async function RhOverviewPage() {
     hrDocsRecentRes,
     profilesRes,
     employeesNamedRes,
+    leavesPendingRes,
   ] = await Promise.all([
     supabase
       .from("employees")
@@ -180,6 +183,10 @@ export default async function RhOverviewPage() {
     supabase
       .from("employees")
       .select("id, nom_complet"),
+    supabase
+      .from("leave_requests")
+      .select("id", { count: "exact", head: true })
+      .eq("statut", "en_attente"),
   ]);
 
   const employees = (employeesRes.data ?? []) as EmployeeLite[];
@@ -210,6 +217,7 @@ export default async function RhOverviewPage() {
   const nbFichesTotal = payslipsTotalRes.count ?? 0;
   const nbHrDocs = hrDocsCountRes.count ?? 0;
   const nbCompanyDocs = companyDocsCountRes.count ?? 0;
+  const nbCongesEnAttente = leavesPendingRes.count ?? 0;
 
   // Employés sans contrat
   const contratsRows = (contratsRes.data ?? []) as { employee_id: string }[];
@@ -441,6 +449,16 @@ export default async function RhOverviewPage() {
               label="Fiches à valider"
             />
             <HeroChip
+              href={`${BASE}/conges`}
+              icon={Plane}
+              label="Congés"
+            />
+            <HeroChip
+              href={`${BASE}/calendrier`}
+              icon={CalendarDays}
+              label="Calendrier RH"
+            />
+            <HeroChip
               href={`${BASE}/statistiques`}
               icon={BarChart3}
               label="Statistiques RH"
@@ -495,6 +513,14 @@ export default async function RhOverviewPage() {
             count={nbFichesEnAttente}
             tone={nbFichesEnAttente > 0 ? "warning" : "ok"}
             cta={nbFichesEnAttente > 0 ? "Ouvrir →" : "Tout est validé"}
+          />
+          <AlertItem
+            href={`${BASE}/conges`}
+            icon={Plane}
+            label="Demandes de congés en attente"
+            count={nbCongesEnAttente}
+            tone={nbCongesEnAttente > 0 ? "warning" : "ok"}
+            cta={nbCongesEnAttente > 0 ? "Traiter →" : "Tout est traité"}
           />
           <AlertItem
             href={`${BASE}/documents`}
@@ -553,6 +579,20 @@ export default async function RhOverviewPage() {
             label="Documents entreprise"
             count={nbCompanyDocs}
             countLabel="documents"
+          />
+          <ModuleCard
+            href={`${BASE}/conges`}
+            icon={Plane}
+            label="Congés"
+            count={nbCongesEnAttente}
+            countLabel="en attente"
+          />
+          <ModuleCard
+            href={`${BASE}/calendrier`}
+            icon={CalendarDays}
+            label="Calendrier RH"
+            count={null}
+            countLabel="vue agrégée"
           />
           <ModuleCard
             href={`${BASE}/statistiques`}

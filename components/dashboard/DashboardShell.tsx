@@ -38,6 +38,8 @@ import {
   Network,
   Library,
   BarChart3,
+  Plane,
+  CalendarDays,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -106,6 +108,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
       label: "Mon RH",
       items: [
         { href: "/dashboard/agent/mes-rh", label: "Mon espace RH", icon: Briefcase },
+        { href: "/dashboard/agent/mes-rh/conges", label: "Mes congés", icon: Plane },
       ],
     },
   ],
@@ -138,6 +141,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
       items: [
         { href: "/dashboard/admin/rh/employes", label: "Employés", icon: Users },
         { href: "/dashboard/admin/rh/paie", label: "Fiches de paie", icon: Wallet },
+        { href: "/dashboard/admin/rh/conges", label: "Congés", icon: Plane },
         { href: "/dashboard/admin/rh/documents", label: "Documents RH", icon: FolderOpen },
       ],
     },
@@ -187,6 +191,8 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/super-admin/rh/employes", label: "Employés", icon: Users },
         { href: "/dashboard/super-admin/rh/paie", label: "Fiches de paie", icon: Wallet },
         { href: "/dashboard/super-admin/rh/paie/a-valider", label: "À valider", icon: ClipboardCheck, highlight: true },
+        { href: "/dashboard/super-admin/rh/conges", label: "Congés", icon: Plane },
+        { href: "/dashboard/super-admin/rh/calendrier", label: "Calendrier RH", icon: CalendarDays },
         { href: "/dashboard/super-admin/rh/documents", label: "Documents RH", icon: FolderOpen },
         { href: "/dashboard/super-admin/rh/documents-entreprise", label: "Documents entreprise", icon: Library },
         { href: "/dashboard/super-admin/rh/statistiques", label: "Statistiques RH", icon: BarChart3 },

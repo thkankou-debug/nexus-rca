@@ -277,6 +277,62 @@ export interface EmployeeNote {
   created_at: string;
 }
 
+// Phase B — Conges & absences (migration 025)
+export interface LeaveType {
+  id: string;
+  code: string;
+  label: string;
+  max_days_year: number;
+  color_hex: string;
+  paid: boolean;
+  requires_doc: boolean;
+  active: boolean;
+  created_at: string;
+}
+
+export type LeaveRequestStatut = "en_attente" | "valide" | "refuse" | "annule";
+
+export interface LeaveRequest {
+  id: string;
+  employee_id: string;
+  leave_type_id: string;
+  start_date: string;
+  end_date: string;
+  total_days: number;
+  half_day_start: boolean;
+  half_day_end: boolean;
+  reason: string | null;
+  doc_url: string | null;
+  statut: LeaveRequestStatut;
+  requested_by: string | null;
+  requested_at: string;
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  review_notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface LeaveBalance {
+  id: string;
+  employee_id: string;
+  year: number;
+  leave_type_id: string;
+  acquired_days: number;
+  used_days: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface HolidayCar {
+  id: string;
+  year: number;
+  date: string;
+  label: string;
+  fixed: boolean;
+  created_at: string;
+}
+
 // Phase A — Documents entreprise (migration 024)
 export type CompanyDocumentType =
   | "reglement_interieur"
