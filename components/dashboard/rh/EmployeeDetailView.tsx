@@ -16,6 +16,9 @@ import {
   MessageSquarePlus,
   FileSignature,
   Sparkles,
+  Rocket,
+  ArrowUpRight,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type {
@@ -24,6 +27,8 @@ import type {
   HrDocument,
   HrDocumentType,
   Payslip,
+  OnboardingTemplate,
+  OnboardingTaskTemplate,
 } from "@/types";
 import { HR_DOCUMENT_SUBCATEGORIES } from "@/types";
 import { EmployeeForm } from "./EmployeeForm";
@@ -39,7 +44,7 @@ interface EmployeeDetailViewProps {
   canDelete: boolean;
 }
 
-type TabKey = "infos" | "documents" | "paie" | "notes";
+type TabKey = "infos" | "documents" | "paie" | "notes" | "onboarding";
 
 export function EmployeeDetailView({
   employeeId,
@@ -167,6 +172,9 @@ export function EmployeeDetailView({
         <Tab active={tab === "paie"} onClick={() => setTab("paie")} icon={Wallet}>
           Fiches de paie
         </Tab>
+        <Tab active={tab === "onboarding"} onClick={() => setTab("onboarding")} icon={Rocket}>
+          Onboarding
+        </Tab>
         {canSeeNotes && (
           <Tab active={tab === "notes"} onClick={() => setTab("notes")} icon={StickyNote}>
             Notes internes
@@ -188,6 +196,9 @@ export function EmployeeDetailView({
       )}
       {tab === "paie" && (
         <PayslipsTab employeeId={employee.id} basePath={basePath} />
+      )}
+      {tab === "onboarding" && (
+        <OnboardingTab employeeId={employee.id} basePath={basePath} />
       )}
       {tab === "notes" && canSeeNotes && (
         <NotesTab employee={employee} />
@@ -1048,6 +1059,269 @@ function ContractGenerator({
           {generating ? "Génération…" : "Générer le PDF"}
         </button>
       </div>
+    </div>
+  );
+}
+
+// ─── Onboarding Tab ────────────────────────────────────────────────────────
+
+interface OnboardingTabSummary {
+  id: string;
+  employee_id: string;
+  template_id: string | null;
+  started_at: string;
+  completed_at: string | null;
+  completion_pct: number;
+  onboarding_templates?: { id: string; name: string } | null;
+}
+
+function OnboardingTab({
+  employeeId,
+  basePath,
+}: {
+  employeeId: string;
+  basePath: string;
+}) {
+  const router = useRouter();
+  const [onboarding, setOnboarding] = useState<OnboardingTabSummary | null>(
+    null
+  );
+  const [tasksCount, setTasksCount] = useState(0);
+  const [tasksDone, setTasksDone] = useState(0);
+  const [templates, setTemplates] = useState<OnboardingTemplate[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [showTemplates, setShowTemplates] = useState(false);
+  const [selectedTplId, setSelectedTplId] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const refresh = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [obRes, tplRes] = await Promise.all([
+        fetch(`/api/rh/onboarding/${employeeId}`, { cache: "no-store" }),
+        fetch("/api/rh/onboarding-templates", { cache: "no-store" }),
+      ]);
+      const obJson = await obRes.json();
+      const tplJson = await tplRes.json();
+      if (!obJson.success) throw new Error(obJson.error || "Erreur");
+      if (!tplJson.success) throw new Error(tplJson.error || "Erreur");
+      setOnboarding(obJson.onboarding);
+      setTasksCount((obJson.tasks ?? []).length);
+      setTasksDone(
+        (obJson.tasks ?? []).filter(
+          (t: { completed_at: string | null }) => !!t.completed_at
+        ).length
+      );
+      const tpls = (tplJson.templates ?? []) as OnboardingTemplate[];
+      setTemplates(tpls);
+      if (!selectedTplId && tpls.length > 0) {
+        setSelectedTplId(tpls[0].id);
+      }
+    } catch (e) {
+      console.error("[RH_ONBOARDING_TAB]", e);
+      setError((e as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [employeeId]);
+
+  const handleStart = async () => {
+    if (!selectedTplId) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch(`/api/rh/onboarding/${employeeId}/start`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ template_id: selectedTplId }),
+      });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error || "Erreur");
+      router.push(`${basePath}/onboarding/${employeeId}`);
+    } catch (e) {
+      console.error("[RH_ONBOARDING_TAB] start", e);
+      alert((e as Error).message);
+      setSubmitting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm">
+        <Loader2 className="h-4 w-4 animate-spin" /> Chargement…
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm font-semibold text-rose-700">
+        <AlertTriangle className="h-5 w-5 shrink-0" />
+        <p>{error}</p>
+      </div>
+    );
+  }
+
+  if (onboarding) {
+    const pct = Math.round(onboarding.completion_pct ?? 0);
+    const done = !!onboarding.completed_at || pct >= 100;
+    return (
+      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm ring-1 ring-slate-100/80">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
+              <Rocket className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="font-display text-base font-bold text-nexus-blue-950 sm:text-lg">
+                Onboarding en cours
+              </h3>
+              <p className="mt-1 text-sm text-slate-600">
+                {onboarding.onboarding_templates?.name ?? "Sans template"}
+              </p>
+            </div>
+          </div>
+          <Link
+            href={`${basePath}/onboarding/${employeeId}`}
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-nexus-blue-950 shadow-sm transition hover:border-nexus-orange-300 hover:text-nexus-orange-700"
+          >
+            Voir détail
+            <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        <div className="mt-5">
+          <div className="flex items-baseline justify-between">
+            <p className="text-xs text-slate-500">
+              {tasksDone} sur {tasksCount} tasks complétées
+            </p>
+            <p className="font-display text-2xl font-bold tabular-nums text-nexus-blue-950">
+              {pct}%
+            </p>
+          </div>
+          <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-slate-100">
+            <div
+              className={`h-full rounded-full transition-all ${
+                done ? "bg-emerald-500" : "bg-nexus-orange-500"
+              }`}
+              style={{ width: `${Math.max(2, Math.min(100, pct))}%` }}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Pas d onboarding
+  return (
+    <div className="rounded-3xl border border-dashed border-nexus-orange-300 bg-gradient-to-br from-nexus-orange-50/60 via-white to-white p-6 shadow-sm">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="flex items-start gap-3">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
+            <Rocket className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+              Onboarding
+            </p>
+            <h3 className="mt-1 font-display text-base font-bold text-nexus-blue-950 sm:text-lg">
+              Aucun parcours d&apos;intégration
+            </h3>
+            <p className="mt-1 text-sm text-slate-600">
+              Lancez un onboarding à partir d&apos;un template pré-rempli.
+            </p>
+          </div>
+        </div>
+        {!showTemplates && (
+          <button
+            type="button"
+            onClick={() => setShowTemplates(true)}
+            className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600"
+          >
+            <Sparkles className="h-4 w-4" />
+            Démarrer un onboarding
+          </button>
+        )}
+      </div>
+
+      {showTemplates && (
+        <div className="mt-5">
+          {templates.length === 0 ? (
+            <div className="rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
+              Aucun template disponible.
+            </div>
+          ) : (
+            <>
+              <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                Sélectionnez un template
+              </p>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {templates.map((t) => {
+                  const active = selectedTplId === t.id;
+                  const tasks =
+                    (t.default_tasks as OnboardingTaskTemplate[]) ?? [];
+                  return (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => setSelectedTplId(t.id)}
+                      className={`rounded-2xl border p-3 text-left transition ${
+                        active
+                          ? "border-nexus-orange-400 bg-nexus-orange-50/60 ring-2 ring-nexus-orange-200"
+                          : "border-slate-200 bg-white hover:border-nexus-orange-300"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="font-display text-sm font-bold text-nexus-blue-950">
+                          {t.name}
+                        </p>
+                        {t.type_contrat && (
+                          <span className="inline-flex items-center rounded-full bg-nexus-blue-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-nexus-blue-800 ring-1 ring-nexus-blue-200">
+                            {t.type_contrat}
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-1 text-[11px] font-semibold text-slate-500">
+                        {tasks.length} task{tasks.length > 1 ? "s" : ""}
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-end">
+                <button
+                  type="button"
+                  onClick={() => setShowTemplates(false)}
+                  disabled={submitting}
+                  className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-60"
+                >
+                  <X className="mr-1 inline h-4 w-4" />
+                  Annuler
+                </button>
+                <button
+                  type="button"
+                  onClick={handleStart}
+                  disabled={submitting || !selectedTplId}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {submitting ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Rocket className="h-4 w-4" />
+                  )}
+                  Démarrer
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }

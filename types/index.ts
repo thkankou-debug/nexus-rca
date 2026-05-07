@@ -333,6 +333,76 @@ export interface HolidayCar {
   created_at: string;
 }
 
+// Phase C — Onboarding (migration 026)
+export type OnboardingTaskCategory =
+  | "contrat"
+  | "equipement"
+  | "formation"
+  | "admin"
+  | "rh"
+  | "integration"
+  | "autre";
+
+export const ONBOARDING_CATEGORY_LABELS: Record<OnboardingTaskCategory, string> = {
+  contrat: "Contrat",
+  equipement: "Équipement",
+  formation: "Formation",
+  admin: "Administratif",
+  rh: "RH",
+  integration: "Intégration",
+  autre: "Autre",
+};
+
+export interface OnboardingTaskTemplate {
+  order: number;
+  label: string;
+  category: OnboardingTaskCategory;
+  days_offset: number;
+  mandatory: boolean;
+  description?: string;
+}
+
+export interface OnboardingTemplate {
+  id: string;
+  name: string;
+  description: string | null;
+  type_contrat: string | null;
+  default_tasks: OnboardingTaskTemplate[];
+  active: boolean;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface EmployeeOnboarding {
+  id: string;
+  employee_id: string;
+  template_id: string | null;
+  started_at: string;
+  completed_at: string | null;
+  completion_pct: number;
+  notes: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface OnboardingTask {
+  id: string;
+  employee_onboarding_id: string;
+  task_order: number;
+  label: string;
+  category: OnboardingTaskCategory;
+  description: string | null;
+  due_date: string | null;
+  mandatory: boolean;
+  completed_at: string | null;
+  completed_by: string | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 // Phase A — Documents entreprise (migration 024)
 export type CompanyDocumentType =
   | "reglement_interieur"
