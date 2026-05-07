@@ -4,7 +4,12 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { PublicHero } from "@/components/PublicHero";
-import { TransferCalculator } from "@/components/services/TransferCalculator";
+import dynamic from "next/dynamic";
+const TransferCalculator = dynamic(() =>
+  import("@/components/services/TransferCalculator").then(
+    (m) => m.TransferCalculator
+  )
+);
 import {
   Send,
   ArrowRight,

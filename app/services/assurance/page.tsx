@@ -1,10 +1,21 @@
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { PublicHero } from "@/components/PublicHero";
-import { AssuranceWorldMap } from "@/components/services/AssuranceWorldMap";
-import { AssuranceUniverseCards } from "@/components/services/AssuranceUniverseCards";
+
+// Code splitting — composants client lourds, lazy loaded (SSR conservé)
+const AssuranceWorldMap = dynamic(() =>
+  import("@/components/services/AssuranceWorldMap").then(
+    (m) => m.AssuranceWorldMap
+  )
+);
+const AssuranceUniverseCards = dynamic(() =>
+  import("@/components/services/AssuranceUniverseCards").then(
+    (m) => m.AssuranceUniverseCards
+  )
+);
 import {
   ShieldCheck,
   Globe2,

@@ -392,3 +392,61 @@ body {
   outline-offset: 2px;
   border-radius: 8px;
 }
+
+/* ============================================================
+   Optimisations performance mobile (≤ 767px)
+   ============================================================
+   Le design premium est conservé — seul le coût GPU est réduit :
+   - backdrop-filter intensif → blur léger (4-6px au lieu de 24px+)
+   - blobs glow géants (blur-[120-160px]) → blur 30px modéré
+   - blur-3xl Tailwind (64px) → blur 28px
+   - animations infinies coûteuses (companion-float, assurance-pulse,
+     dashflow, planefly, marquee) → pause sur mobile
+   Le rendu visuel reste fidèle à l'identité, juste moins coûteux.
+   Aucun impact desktop — tout est sous @media (max-width: 767px).
+   ============================================================ */
+@media (max-width: 767px) {
+  /* === Backdrop-blur intensif → blur léger === */
+  .backdrop-blur-xl {
+    backdrop-filter: blur(4px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(4px) saturate(140%) !important;
+  }
+  .backdrop-blur-2xl {
+    backdrop-filter: blur(6px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(6px) saturate(140%) !important;
+  }
+  .backdrop-blur-3xl {
+    backdrop-filter: blur(6px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(6px) saturate(140%) !important;
+  }
+
+  /* === Blobs glow géants — blur arbitrary [120px..200px] → 30px === */
+  /* Cible toute classe blur-[XXpx] (Tailwind arbitrary) sans toucher
+     aux backdrop-blur (vérifié : 0 occurrence backdrop-blur-[) */
+  [class*="blur-["] {
+    filter: blur(30px) !important;
+    opacity: 0.55 !important;
+  }
+
+  /* === Tailwind blur-3xl (= filter: blur(64px)) → 28px === */
+  .blur-3xl {
+    filter: blur(28px) !important;
+    opacity: 0.6 !important;
+  }
+
+  /* === Pause animations infinies coûteuses sur mobile === */
+  /* Animations CSS via class .animate-* */
+  .animate-marquee,
+  .animate-marquee-reverse {
+    animation-play-state: paused !important;
+  }
+
+  /* Animations inline via style[animation] (companion-float, assurance-pulse,
+     dashflow, planefly, step-in et autres) — on désactive */
+  [style*="companion-float"],
+  [style*="assurance-pulse"],
+  [style*="dashflow"],
+  [style*="planefly"] {
+    animation: none !important;
+  }
+}

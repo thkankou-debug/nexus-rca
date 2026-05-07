@@ -4,7 +4,12 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { PublicHero } from "@/components/PublicHero";
-import { CurrencyConverterPro } from "@/components/services/CurrencyConverterPro";
+import dynamic from "next/dynamic";
+const CurrencyConverterPro = dynamic(() =>
+  import("@/components/services/CurrencyConverterPro").then(
+    (m) => m.CurrencyConverterPro
+  )
+);
 import {
   Coins,
   ArrowRight,

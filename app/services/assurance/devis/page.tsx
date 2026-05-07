@@ -1,9 +1,16 @@
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
-import { AssuranceQuoteWizard } from "@/components/services/AssuranceQuoteWizard";
 import { ArrowLeft, Lock, ShieldCheck, Sparkles } from "lucide-react";
+
+// Wizard lazy-loaded — composant client lourd avec validation + Supabase
+const AssuranceQuoteWizard = dynamic(() =>
+  import("@/components/services/AssuranceQuoteWizard").then(
+    (m) => m.AssuranceQuoteWizard
+  )
+);
 
 export const metadata = {
   title: "Devis assurance personnalisé | Nexus RCA — courtage premium",

@@ -4,7 +4,10 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { PublicHero } from "@/components/PublicHero";
-import { AdminChecklist } from "@/components/services/AdminChecklist";
+import dynamic from "next/dynamic";
+const AdminChecklist = dynamic(() =>
+  import("@/components/services/AdminChecklist").then((m) => m.AdminChecklist)
+);
 import {
   FileText,
   ArrowRight,

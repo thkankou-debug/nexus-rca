@@ -4,7 +4,12 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { PublicHero } from "@/components/PublicHero";
-import { TcfScoreCalculator } from "@/components/services/TcfScoreCalculator";
+import dynamic from "next/dynamic";
+const TcfScoreCalculator = dynamic(() =>
+  import("@/components/services/TcfScoreCalculator").then(
+    (m) => m.TcfScoreCalculator
+  )
+);
 import {
   Headphones,
   Mic,

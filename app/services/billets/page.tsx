@@ -3,8 +3,15 @@ import { useTranslations } from "next-intl";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
-import { FlightSearchMock } from "@/components/services/FlightSearchMock";
+import dynamic from "next/dynamic";
 import { AssuranceCompanionPanel } from "@/components/services/AssuranceCompanionPanel";
+
+// Lazy load FlightSearchMock — composant client interactif lourd
+const FlightSearchMock = dynamic(() =>
+  import("@/components/services/FlightSearchMock").then(
+    (m) => m.FlightSearchMock
+  )
+);
 import {
   Plane,
   Hotel,

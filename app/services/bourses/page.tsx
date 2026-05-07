@@ -4,7 +4,12 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { PublicHero } from "@/components/PublicHero";
-import { EducationLevelSelector } from "@/components/services/EducationLevelSelector";
+import dynamic from "next/dynamic";
+const EducationLevelSelector = dynamic(() =>
+  import("@/components/services/EducationLevelSelector").then(
+    (m) => m.EducationLevelSelector
+  )
+);
 import {
   GraduationCap,
   School,

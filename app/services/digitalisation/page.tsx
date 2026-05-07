@@ -4,7 +4,12 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { PublicHero } from "@/components/PublicHero";
-import { PackPreviewSwitcher } from "@/components/services/PackPreviewSwitcher";
+import dynamic from "next/dynamic";
+const PackPreviewSwitcher = dynamic(() =>
+  import("@/components/services/PackPreviewSwitcher").then(
+    (m) => m.PackPreviewSwitcher
+  )
+);
 import {
   Globe,
   Code,
