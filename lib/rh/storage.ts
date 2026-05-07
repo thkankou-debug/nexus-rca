@@ -8,6 +8,7 @@ const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 export const HR_DOCUMENTS_BUCKET = "hr-documents";
 export const PAYSLIPS_BUCKET = "employee-payslips";
+export const COMPANY_DOCUMENTS_BUCKET = "company-documents";
 
 export function getStorageAdminClient() {
   if (!NEXT_PUBLIC_SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
@@ -41,6 +42,28 @@ export async function uploadHrDocument(opts: {
 
   if (error) {
     throw new Error(`[RH_STORAGE] upload hr-document: ${error.message}`);
+  }
+  return { path };
+}
+
+export async function uploadCompanyDocument(opts: {
+  file: ArrayBuffer | Uint8Array;
+  fileName: string;
+  mimeType: string;
+}): Promise<{ path: string }> {
+  const safeFileName = opts.fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const path = `${Date.now()}-${safeFileName}`;
+
+  const supabase = getStorageAdminClient();
+  const { error } = await supabase.storage
+    .from(COMPANY_DOCUMENTS_BUCKET)
+    .upload(path, opts.file, {
+      contentType: opts.mimeType,
+      upsert: false,
+    });
+
+  if (error) {
+    throw new Error(`[RH_STORAGE] upload company-doc: ${error.message}`);
   }
   return { path };
 }

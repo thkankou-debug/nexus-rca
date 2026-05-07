@@ -35,6 +35,9 @@ import {
   Inbox,
   ClipboardCheck,
   FolderOpen,
+  Network,
+  Library,
+  BarChart3,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -180,10 +183,13 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
       label: "Ressources humaines",
       items: [
         { href: "/dashboard/super-admin/rh", label: "Vue d'ensemble", icon: Briefcase },
+        { href: "/dashboard/super-admin/rh/annuaire", label: "Annuaire", icon: Network },
         { href: "/dashboard/super-admin/rh/employes", label: "Employés", icon: Users },
         { href: "/dashboard/super-admin/rh/paie", label: "Fiches de paie", icon: Wallet },
         { href: "/dashboard/super-admin/rh/paie/a-valider", label: "À valider", icon: ClipboardCheck, highlight: true },
         { href: "/dashboard/super-admin/rh/documents", label: "Documents RH", icon: FolderOpen },
+        { href: "/dashboard/super-admin/rh/documents-entreprise", label: "Documents entreprise", icon: Library },
+        { href: "/dashboard/super-admin/rh/statistiques", label: "Statistiques RH", icon: BarChart3 },
       ],
     },
     {

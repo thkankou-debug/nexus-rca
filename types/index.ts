@@ -276,3 +276,38 @@ export interface EmployeeNote {
   created_by: string | null;
   created_at: string;
 }
+
+// Phase A — Documents entreprise (migration 024)
+export type CompanyDocumentType =
+  | "reglement_interieur"
+  | "charte"
+  | "convention_collective"
+  | "guide"
+  | "proces_verbal"
+  | "autre";
+
+export type CompanyDocumentVisibility = "tous" | "staff" | "super_admin";
+
+export const COMPANY_DOCUMENT_TYPE_LABELS: Record<CompanyDocumentType, string> = {
+  reglement_interieur: "Règlement intérieur",
+  charte: "Charte",
+  convention_collective: "Convention collective",
+  guide: "Guide",
+  proces_verbal: "Procès-verbal",
+  autre: "Autre",
+};
+
+export interface CompanyDocument {
+  id: string;
+  type: CompanyDocumentType;
+  name: string;
+  description: string | null;
+  storage_path: string;
+  file_size_bytes: number | null;
+  mime_type: string | null;
+  version: string | null;
+  visible_to: CompanyDocumentVisibility;
+  uploaded_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
