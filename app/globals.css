@@ -231,9 +231,19 @@ body {
 }
 .animate-marquee {
   animation: marquee 40s linear infinite;
+  will-change: transform;
 }
 .animate-marquee-reverse {
   animation: marquee-reverse 50s linear infinite;
+  will-change: transform;
+}
+
+/* Pause au hover (desktop) — wrappe la track dans .marquee-track */
+@media (hover: hover) {
+  .marquee-track:hover .animate-marquee,
+  .marquee-track:hover .animate-marquee-reverse {
+    animation-play-state: paused;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee,
@@ -435,11 +445,8 @@ body {
   }
 
   /* === Pause animations infinies coûteuses sur mobile === */
-  /* Animations CSS via class .animate-* */
-  .animate-marquee,
-  .animate-marquee-reverse {
-    animation-play-state: paused !important;
-  }
+  /* Marquee partenaires : on garde le défilement (effet réseau vivant)
+     même sur mobile. Coût GPU minimal (translation 2D simple). */
 
   /* Animations inline via style[animation] (companion-float, assurance-pulse,
      dashflow, planefly, step-in et autres) — on désactive */

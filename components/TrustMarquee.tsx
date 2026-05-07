@@ -1,12 +1,18 @@
 // ─── TrustMarquee Premium tech ──────────────────────────────────────────────
 // Bandeau partenaires sur fond navy + dot grid + blob orange.
 // Pills glass blur avec monogramme + label uppercase.
-// 2 lignes croisees (sens opposes) pour effet plus tech.
-// Mobile : memes lignes (CSS marquee fluide, zero JS), mais density resserree.
+// 2 lignes croisées (sens opposés) pour effet réseau international vivant.
+//
+// Marquee :
+// - boucle infinie sans saut (2 copies identiques des partenaires par track)
+// - vitesse lente et élégante (60s + 75s)
+// - pause au hover desktop (via .marquee-track + media (hover: hover))
+// - défilement actif aussi sur mobile (coût GPU minimal — translation 2D)
+// - prefers-reduced-motion respecté (animation:none dans globals.css)
 // ────────────────────────────────────────────────────────────────────────────
 
 interface Partner {
-  monogram: string;  // 2-3 lettres
+  monogram: string;
   label: string;
 }
 
@@ -55,7 +61,7 @@ export function TrustMarquee() {
         aria-hidden
         className="pointer-events-none absolute -left-32 -bottom-24 h-72 w-72 rounded-full bg-nexus-blue-500/15 blur-[100px]"
       />
-      {/* Bordure inferieure eclairee */}
+      {/* Bordure inférieure éclairée */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
@@ -75,14 +81,22 @@ export function TrustMarquee() {
         </h3>
       </div>
 
-      {/* Marquee — 2 lignes croisees */}
+      {/* Marquee — 2 lignes croisées */}
       <div className="relative space-y-3 sm:space-y-4">
-        {/* Fades lateraux */}
+        {/* Fades latéraux pour masquer le hard-cut aux bords */}
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-nexus-blue-950 to-transparent sm:w-32" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-nexus-blue-950 to-transparent sm:w-32" />
 
-        <Track partners={PARTNERS_LINE_1} reverse={false} />
-        <Track partners={PARTNERS_LINE_2} reverse={true} />
+        <Track
+          partners={PARTNERS_LINE_1}
+          reverse={false}
+          durationSec={60}
+        />
+        <Track
+          partners={PARTNERS_LINE_2}
+          reverse={true}
+          durationSec={75}
+        />
       </div>
     </section>
   );
@@ -91,16 +105,24 @@ export function TrustMarquee() {
 function Track({
   partners,
   reverse,
+  durationSec,
 }: {
   partners: Partner[];
   reverse: boolean;
+  durationSec: number;
 }) {
+  // Wrapper .marquee-track + overflow-hidden : permet le hover-pause CSS
+  // (cf. globals.css règle @media (hover: hover))
+  // Le `flex` interne contient deux copies identiques côte-à-côte ; quand la
+  // 1ère atteint translateX(-100%), la 2e a pris exactement sa place visuelle
+  // → reset au cycle suivant invisible (pas de saut).
   return (
-    <div className="flex">
+    <div className="marquee-track relative flex overflow-hidden">
       <div
         className={`flex shrink-0 items-center gap-3 pr-3 sm:gap-4 sm:pr-4 ${
           reverse ? "animate-marquee-reverse" : "animate-marquee"
         }`}
+        style={{ animationDuration: `${durationSec}s` }}
       >
         {partners.map((p) => (
           <Pill key={`a-${p.label}`} partner={p} />
@@ -111,6 +133,7 @@ function Track({
         className={`flex shrink-0 items-center gap-3 pr-3 sm:gap-4 sm:pr-4 ${
           reverse ? "animate-marquee-reverse" : "animate-marquee"
         }`}
+        style={{ animationDuration: `${durationSec}s` }}
       >
         {partners.map((p) => (
           <Pill key={`b-${p.label}`} partner={p} />
