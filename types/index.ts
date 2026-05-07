@@ -403,6 +403,77 @@ export interface OnboardingTask {
   updated_at: string;
 }
 
+// Phase D — Évaluations performance (migration 027)
+export type ReviewPeriodStatut = "planifie" | "en_cours" | "termine" | "archive";
+export type PerformanceReviewStatut =
+  | "programme"
+  | "auto_eval"
+  | "manager_review"
+  | "meeting"
+  | "signe"
+  | "annule";
+
+export interface ReviewPeriod {
+  id: string;
+  year: number;
+  label: string;
+  description: string | null;
+  start_date: string;
+  end_date: string;
+  statut: ReviewPeriodStatut;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SelfAssessment {
+  realizations?: string;
+  challenges?: string;
+  skills_developed?: string;
+  self_rating?: number; // 1-5
+  objectives_review?: Array<{
+    objective: string;
+    achievement: number; // 0-100
+    comment?: string;
+  }>;
+}
+
+export interface ManagerAssessment {
+  strengths?: string;
+  areas_to_improve?: string;
+  overall_rating?: number; // 1-5
+  salary_recommendation?: string;
+  comments?: string;
+}
+
+export interface ReviewObjective {
+  objective: string;
+  target?: string;
+  deadline?: string;
+  weight?: number; // %
+}
+
+export interface PerformanceReview {
+  id: string;
+  employee_id: string;
+  period_id: string;
+  manager_id: string | null;
+  statut: PerformanceReviewStatut;
+  self_assessment: SelfAssessment;
+  self_assessment_submitted_at: string | null;
+  manager_assessment: ManagerAssessment;
+  manager_assessment_submitted_at: string | null;
+  objectives: ReviewObjective[];
+  formation_plan: string | null;
+  meeting_date: string | null;
+  meeting_notes: string | null;
+  signed_employee_at: string | null;
+  signed_manager_at: string | null;
+  notes_finales: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 // Phase A — Documents entreprise (migration 024)
 export type CompanyDocumentType =
   | "reglement_interieur"

@@ -42,6 +42,7 @@ import {
   CalendarDays,
   Rocket,
   ListChecks,
+  Award,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -112,6 +113,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/agent/mes-rh", label: "Mon espace RH", icon: Briefcase },
         { href: "/dashboard/agent/mes-rh/conges", label: "Mes congés", icon: Plane },
         { href: "/dashboard/agent/mes-rh/onboarding", label: "Mon onboarding", icon: Rocket },
+        { href: "/dashboard/agent/mes-rh/evaluations", label: "Mes évaluations", icon: Award },
       ],
     },
   ],
@@ -147,6 +149,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/admin/rh/conges", label: "Congés", icon: Plane },
         { href: "/dashboard/admin/rh/documents", label: "Documents RH", icon: FolderOpen },
         { href: "/dashboard/admin/rh/onboarding", label: "Onboarding", icon: ListChecks },
+        { href: "/dashboard/admin/rh/evaluations", label: "Évaluations", icon: Award },
       ],
     },
   ],
@@ -198,6 +201,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/super-admin/rh/conges", label: "Congés", icon: Plane },
         { href: "/dashboard/super-admin/rh/calendrier", label: "Calendrier RH", icon: CalendarDays },
         { href: "/dashboard/super-admin/rh/onboarding", label: "Onboarding", icon: ListChecks },
+        { href: "/dashboard/super-admin/rh/evaluations", label: "Évaluations", icon: Award },
         { href: "/dashboard/super-admin/rh/documents", label: "Documents RH", icon: FolderOpen },
         { href: "/dashboard/super-admin/rh/documents-entreprise", label: "Documents entreprise", icon: Library },
         { href: "/dashboard/super-admin/rh/statistiques", label: "Statistiques RH", icon: BarChart3 },
