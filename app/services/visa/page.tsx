@@ -58,7 +58,7 @@ const POUR_QUI = {
   non: [
     "Vous avez un départ dans moins de 10 jours pour un visa Schengen ou Canada",
     "Vous avez un historique de plusieurs refus successifs sans changement de situation",
-    "Vous cherchez uniquement à obtenir un visa « à tout prix »",
+    "Vous cherchez uniquement à obtenir un visa « à tout prix »",
   ],
 };
 
@@ -222,7 +222,7 @@ const CABINET_PILIERS = [
 const E_VISA_AVANTAGES = [
   {
     icon: Smartphone,
-    title: "100 % en ligne",
+    title: "100 % en ligne",
     description: "La procédure ne nécessite pas de déplacement au consulat.",
   },
   {
@@ -259,7 +259,7 @@ const NOUS_FAISONS = [
   },
   {
     title: "Prise de rendez-vous TLS/VFS et coordination",
-    desc: "Réservation du créneau, préparation du dossier physique remis prêt-à-déposer, instructions précises pour la dépose à Yaoundé.",
+    desc: "Réservation du créneau, préparation du dossier physique remis prêt à déposer, instructions précises pour la dépose à Yaoundé.",
   },
   {
     title: "Suivi jusqu'à la décision",
@@ -303,8 +303,8 @@ const CAS = [
     title: "Cadre d'une PME centrafricaine, délais courts",
     stats: [
       { label: "Procédure", value: "e-Visa EAU" },
-      { label: "Délai", value: "48 à 72 h" },
-      { label: "Dépose", value: "100 % en ligne" },
+      { label: "Délai", value: "48 à 72 h" },
+      { label: "Dépose", value: "100 % en ligne" },
       { label: "Approche", value: "Coordination hôtel" },
     ],
     desc: "Premier voyage international, agenda chargé, salon dans 10 jours. Nexus RCA prépare l'e-Visa EAU en 48 à 72 heures, organise la réservation d'hôtel à proximité du salon, et transmet le visa par e-mail avant le décollage.",
@@ -652,7 +652,7 @@ export default function VisaPage() {
                 Une approche{" "}
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
-                    Expert
+                    d&rsquo;expert
                   </span>
                   <span
                     aria-hidden
