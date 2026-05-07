@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Loader2, FileText, Download, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Employee, HrDocument, HrDocumentType } from "@/types";
+import { HR_DOCUMENT_SUBCATEGORIES } from "@/types";
 import { HrDocumentTypeBadge, HR_DOCUMENT_TYPE_LABELS } from "./HrDocumentTypeBadge";
 import { formatDateShort } from "./format";
 
@@ -24,7 +25,13 @@ export function AllDocumentsView({ basePath }: AllDocumentsViewProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filterType, setFilterType] = useState<"all" | HrDocumentType>("all");
+  const [filterSubcategory, setFilterSubcategory] = useState<"all" | string>("all");
   const [search, setSearch] = useState("");
+
+  // Reset subcategory quand on change de type
+  useEffect(() => {
+    setFilterSubcategory("all");
+  }, [filterType]);
 
   useEffect(() => {
     let cancelled = false;
@@ -66,11 +73,15 @@ export function AllDocumentsView({ basePath }: AllDocumentsViewProps) {
   const filtered = useMemo(() => {
     return documents.filter((d) => {
       if (filterType !== "all" && d.type !== filterType) return false;
+      if (filterSubcategory !== "all" && d.subcategory !== filterSubcategory) {
+        return false;
+      }
       if (search) {
         const q = search.toLowerCase();
         const hay = [
           d.nom,
           d.description ?? "",
+          d.subcategory ?? "",
           d.employees?.nom_complet ?? "",
           d.employees?.poste ?? "",
         ]
@@ -80,7 +91,33 @@ export function AllDocumentsView({ basePath }: AllDocumentsViewProps) {
       }
       return true;
     });
-  }, [documents, filterType, search]);
+  }, [documents, filterType, filterSubcategory, search]);
+
+  // Sub-categories disponibles pour le type sélectionné (intersect type-doc + presence in current data)
+  const availableSubcategories = useMemo(() => {
+    if (filterType === "all") return [];
+    const declared = HR_DOCUMENT_SUBCATEGORIES[filterType] ?? [];
+    const presentInDocs = new Set<string>();
+    documents.forEach((d) => {
+      if (d.type === filterType && d.subcategory) {
+        presentInDocs.add(d.subcategory);
+      }
+    });
+    // On affiche : déclarées ∪ présentes (pour couvrir "autre" en libre)
+    const set = new Set<string>([...declared, ...presentInDocs]);
+    return Array.from(set);
+  }, [filterType, documents]);
+
+  const subcategoryCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    documents.forEach((d) => {
+      if (filterType !== "all" && d.type !== filterType) return;
+      if (d.subcategory) {
+        counts.set(d.subcategory, (counts.get(d.subcategory) ?? 0) + 1);
+      }
+    });
+    return counts;
+  }, [filterType, documents]);
 
   const handleDownload = async (docId: string) => {
     try {
@@ -114,7 +151,7 @@ export function AllDocumentsView({ basePath }: AllDocumentsViewProps) {
   return (
     <div>
       {/* Filters */}
-      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-2">
           <ChipBtn
             active={filterType === "all"}
@@ -139,6 +176,32 @@ export function AllDocumentsView({ basePath }: AllDocumentsViewProps) {
           className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200 sm:w-72"
         />
       </div>
+
+      {/* Sub-categories (visible quand un type est sélectionné) */}
+      {filterType !== "all" && availableSubcategories.length > 0 && (
+        <div className="mb-6 flex flex-wrap items-center gap-2">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+            Sous-catégorie :
+          </span>
+          <ChipBtn
+            active={filterSubcategory === "all"}
+            onClick={() => setFilterSubcategory("all")}
+            label="Toutes"
+          />
+          {availableSubcategories.map((s) => (
+            <ChipBtn
+              key={s}
+              active={filterSubcategory === s}
+              onClick={() => setFilterSubcategory(s)}
+              label={
+                subcategoryCounts.get(s) !== undefined
+                  ? `${s} (${subcategoryCounts.get(s)})`
+                  : s
+              }
+            />
+          ))}
+        </div>
+      )}
 
       {loading ? (
         <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-8 text-sm text-slate-500 shadow-sm">
@@ -173,7 +236,14 @@ export function AllDocumentsView({ basePath }: AllDocumentsViewProps) {
               {filtered.map((d) => (
                 <tr key={d.id} className="hover:bg-slate-50/60">
                   <td className="px-4 py-3">
-                    <HrDocumentTypeBadge type={d.type} />
+                    <div className="flex flex-col items-start gap-1">
+                      <HrDocumentTypeBadge type={d.type} />
+                      {d.subcategory && (
+                        <span className="text-[10px] font-semibold text-slate-500">
+                          {d.subcategory}
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-3">
                     <p className="font-semibold text-nexus-blue-950">{d.nom}</p>

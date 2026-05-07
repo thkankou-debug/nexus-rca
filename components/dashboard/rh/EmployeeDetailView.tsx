@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -12,11 +12,18 @@ import {
   Plus,
   Loader2,
   Download,
-  Save,
   AlertTriangle,
+  MessageSquarePlus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Employee, HrDocument, HrDocumentType, Payslip } from "@/types";
+import type {
+  Employee,
+  EmployeeNote,
+  HrDocument,
+  HrDocumentType,
+  Payslip,
+} from "@/types";
+import { HR_DOCUMENT_SUBCATEGORIES } from "@/types";
 import { EmployeeForm } from "./EmployeeForm";
 import { FileUploader } from "./FileUploader";
 import { HrDocumentTypeBadge, HR_DOCUMENT_TYPE_LABELS } from "./HrDocumentTypeBadge";
@@ -181,7 +188,7 @@ export function EmployeeDetailView({
         <PayslipsTab employeeId={employee.id} basePath={basePath} />
       )}
       {tab === "notes" && canSeeNotes && (
-        <NotesTab employee={employee} onUpdate={(e) => setEmployee(e)} />
+        <NotesTab employee={employee} />
       )}
     </div>
   );
@@ -241,8 +248,18 @@ function DocumentsTab({ employeeId }: { employeeId: string }) {
 
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [uploadType, setUploadType] = useState<HrDocumentType>("contrat");
+  const [uploadSubcategory, setUploadSubcategory] = useState<string>("");
+  const [uploadSubcategoryFree, setUploadSubcategoryFree] = useState<string>("");
   const [uploadDescription, setUploadDescription] = useState("");
   const [uploading, setUploading] = useState(false);
+
+  // Reset sub-category quand type change
+  useEffect(() => {
+    setUploadSubcategory("");
+    setUploadSubcategoryFree("");
+  }, [uploadType]);
+
+  const subOptions = HR_DOCUMENT_SUBCATEGORIES[uploadType] ?? [];
 
   const refresh = () => {
     setLoading(true);
@@ -273,6 +290,13 @@ function DocumentsTab({ employeeId }: { employeeId: string }) {
       fd.append("file", uploadFile);
       fd.append("employee_id", employeeId);
       fd.append("type", uploadType);
+      const sub =
+        uploadType === "autre"
+          ? uploadSubcategoryFree.trim() || uploadSubcategory.trim()
+          : uploadSubcategory.trim();
+      if (sub) {
+        fd.append("subcategory", sub);
+      }
       if (uploadDescription.trim()) {
         fd.append("description", uploadDescription.trim());
       }
@@ -281,6 +305,8 @@ function DocumentsTab({ employeeId }: { employeeId: string }) {
       if (!json.success) throw new Error(json.error || "Erreur");
       setUploadFile(null);
       setUploadDescription("");
+      setUploadSubcategory("");
+      setUploadSubcategoryFree("");
       refresh();
     } catch (e) {
       console.error("[RH_DOC_TAB] upload", e);
@@ -349,6 +375,33 @@ function DocumentsTab({ employeeId }: { employeeId: string }) {
 
             <label className="block">
               <span className="mb-1.5 block text-xs font-semibold text-slate-700">
+                Sous-catégorie (optionnel)
+              </span>
+              <select
+                value={uploadSubcategory}
+                onChange={(e) => setUploadSubcategory(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm"
+              >
+                <option value="">— Aucune —</option>
+                {subOptions.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+              {uploadType === "autre" && (
+                <input
+                  type="text"
+                  value={uploadSubcategoryFree}
+                  onChange={(e) => setUploadSubcategoryFree(e.target.value)}
+                  placeholder="Ou saisir une sous-catégorie libre"
+                  className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm"
+                />
+              )}
+            </label>
+
+            <label className="block">
+              <span className="mb-1.5 block text-xs font-semibold text-slate-700">
                 Description (optionnel)
               </span>
               <input
@@ -408,9 +461,16 @@ function DocumentsTab({ employeeId }: { employeeId: string }) {
               >
                 <HrDocumentTypeBadge type={doc.type} />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-nexus-blue-950">
-                    {doc.nom}
-                  </p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="truncate text-sm font-semibold text-nexus-blue-950">
+                      {doc.nom}
+                    </p>
+                    {doc.subcategory && (
+                      <span className="text-[10px] font-semibold text-slate-500">
+                        · {doc.subcategory}
+                      </span>
+                    )}
+                  </div>
                   {doc.description && (
                     <p className="truncate text-xs text-slate-500">
                       {doc.description}
@@ -543,38 +603,85 @@ function PayslipsTab({
   );
 }
 
-// ─── Notes Tab (super-admin only) ──────────────────────────────────────────
+// ─── Notes Tab (super-admin/admin) ─────────────────────────────────────────
 
-function NotesTab({
-  employee,
-  onUpdate,
-}: {
-  employee: Employee;
-  onUpdate: (e: Employee) => void;
-}) {
-  const [notes, setNotes] = useState(employee.notes_internes ?? "");
-  const [saving, setSaving] = useState(false);
+type NoteWithAuthor = EmployeeNote & {
+  profiles?: { id: string; nom: string; prenom: string | null; email: string } | null;
+};
+
+function relativeDate(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "—";
+  const diffMs = Date.now() - d.getTime();
+  const diffMin = Math.round(diffMs / (1000 * 60));
+  if (diffMin < 1) return "à l'instant";
+  if (diffMin < 60) return `il y a ${diffMin} min`;
+  const diffH = Math.round(diffMin / 60);
+  if (diffH < 24) return `il y a ${diffH} h`;
+  const diffD = Math.round(diffH / 24);
+  if (diffD === 1) return "hier";
+  if (diffD < 7) return `il y a ${diffD} jours`;
+  return formatDateTimeShort(iso);
+}
+
+function authorInitials(p: NoteWithAuthor["profiles"]): string {
+  if (!p) return "?";
+  const a = (p.prenom?.[0] ?? "").toUpperCase();
+  const b = (p.nom?.[0] ?? "").toUpperCase();
+  return (a + b) || (p.email[0] ?? "?").toUpperCase();
+}
+
+function authorLabel(p: NoteWithAuthor["profiles"]): string {
+  if (!p) return "Auteur inconnu";
+  const full = `${p.prenom ?? ""} ${p.nom ?? ""}`.trim();
+  return full || p.email;
+}
+
+function NotesTab({ employee }: { employee: Employee }) {
+  const [notes, setNotes] = useState<NoteWithAuthor[]>([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [savedAt, setSavedAt] = useState<string | null>(null);
 
-  const dirty = useMemo(
-    () => notes !== (employee.notes_internes ?? ""),
-    [notes, employee.notes_internes]
-  );
+  const [adding, setAdding] = useState(false);
+  const [content, setContent] = useState("");
+  const [saving, setSaving] = useState(false);
 
-  const save = async () => {
+  const refresh = () => {
+    setLoading(true);
+    fetch(`/api/rh/employees/${employee.id}/notes`)
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.success) setNotes(json.notes as NoteWithAuthor[]);
+        else setError(json.error || "Erreur");
+      })
+      .catch((e) => {
+        console.error("[RH_NOTES_TAB] fetch", e);
+        setError((e as Error).message);
+      })
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [employee.id]);
+
+  const submitNote = async () => {
+    const trimmed = content.trim();
+    if (!trimmed) return;
     setSaving(true);
     setError(null);
     try {
-      const res = await fetch(`/api/rh/employees/${employee.id}`, {
-        method: "PATCH",
+      const res = await fetch(`/api/rh/employees/${employee.id}/notes`, {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ notes_internes: notes.trim() || null }),
+        body: JSON.stringify({ content: trimmed }),
       });
       const json = await res.json();
       if (!json.success) throw new Error(json.error || "Erreur");
-      onUpdate(json.employee as Employee);
-      setSavedAt(new Date().toISOString());
+      setContent("");
+      setAdding(false);
+      refresh();
     } catch (e) {
       console.error("[RH_NOTES_TAB] save", e);
       setError((e as Error).message);
@@ -584,51 +691,138 @@ function NotesTab({
   };
 
   return (
-    <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div>
-        <h3 className="font-display text-base font-bold text-nexus-blue-950">
-          Notes internes (super-admin)
-        </h3>
-        <p className="mt-1 text-sm text-slate-500">
-          Visible uniquement par le super-admin. Utilisez pour informations
-          sensibles (négociations, problèmes RH…).
-        </p>
-      </div>
-
-      <textarea
-        rows={10}
-        value={notes}
-        onChange={(e) => setNotes(e.target.value)}
-        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
-        placeholder="Écrire une note interne…"
-      />
-
-      {error && (
-        <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-semibold text-rose-700">
-          {error}
+    <div className="space-y-6">
+      {/* Note legacy en lecture seule */}
+      {employee.notes_internes && employee.notes_internes.trim() !== "" && (
+        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 shadow-sm">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+            Note historique (ancienne)
+          </p>
+          <p className="mt-2 whitespace-pre-line text-sm text-slate-700">
+            {employee.notes_internes}
+          </p>
+          <p className="mt-2 text-[11px] text-slate-400">
+            Lecture seule. Utilisez la timeline ci-dessous pour ajouter de
+            nouvelles notes.
+          </p>
         </div>
       )}
 
-      <div className="flex items-center justify-between">
-        <p className="text-xs text-slate-500">
-          {savedAt
-            ? `Sauvegardé ${formatDateTimeShort(savedAt)}`
-            : "Non sauvegardé"}
-        </p>
-        <button
-          type="button"
-          onClick={save}
-          disabled={!dirty || saving}
-          className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {saving ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Save className="h-4 w-4" />
+      {/* Header + bouton ajouter */}
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm ring-1 ring-slate-100/80">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h3 className="font-display text-base font-bold text-nexus-blue-950">
+              Notes internes
+            </h3>
+            <p className="mt-1 text-sm text-slate-500">
+              Append-only. Chaque entrée est horodatée et signée par son auteur.
+              Aucune modification ni suppression possible.
+            </p>
+          </div>
+          {!adding && (
+            <button
+              type="button"
+              onClick={() => setAdding(true)}
+              className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600"
+            >
+              <MessageSquarePlus className="h-4 w-4" />
+              Ajouter une note
+            </button>
           )}
-          Enregistrer
-        </button>
+        </div>
+
+        {adding && (
+          <div className="mt-4 space-y-3">
+            <textarea
+              rows={4}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Écrire une note… (max 5000 caractères)"
+              maxLength={5000}
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+            />
+            <div className="flex flex-wrap justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setAdding(false);
+                  setContent("");
+                }}
+                disabled={saving}
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50 disabled:opacity-60"
+              >
+                Annuler
+              </button>
+              <button
+                type="button"
+                onClick={submitNote}
+                disabled={saving || content.trim() === ""}
+                className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {saving ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Plus className="h-4 w-4" />
+                )}
+                Enregistrer
+              </button>
+            </div>
+          </div>
+        )}
+
+        {error && (
+          <div className="mt-4 rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-semibold text-rose-700">
+            {error}
+          </div>
+        )}
       </div>
+
+      {/* Timeline */}
+      {loading ? (
+        <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm">
+          <Loader2 className="h-4 w-4 animate-spin" /> Chargement…
+        </div>
+      ) : notes.length === 0 ? (
+        <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500 shadow-sm">
+          <StickyNote className="mx-auto mb-3 h-8 w-8 text-slate-300" />
+          Aucune note pour le moment.
+        </div>
+      ) : (
+        <ol className="relative space-y-4 border-l-2 border-slate-200 pl-6">
+          {notes.map((note) => (
+            <li key={note.id} className="relative">
+              {/* Dot */}
+              <span className="absolute -left-[31px] top-3 flex h-4 w-4 items-center justify-center">
+                <span className="h-2.5 w-2.5 rounded-full bg-nexus-orange-500 ring-4 ring-white" />
+              </span>
+
+              <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm ring-1 ring-slate-100/80">
+                <header className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900 text-[11px] font-bold text-white">
+                      {authorInitials(note.profiles ?? null)}
+                    </span>
+                    <span className="text-sm font-semibold text-nexus-blue-950">
+                      {authorLabel(note.profiles ?? null)}
+                    </span>
+                  </div>
+                  <time
+                    dateTime={note.created_at}
+                    className="text-xs text-slate-500"
+                    title={formatDateTimeShort(note.created_at)}
+                  >
+                    {relativeDate(note.created_at)}
+                  </time>
+                </header>
+                <p className="whitespace-pre-line text-sm text-slate-700">
+                  {note.content}
+                </p>
+              </article>
+            </li>
+          ))}
+        </ol>
+      )}
     </div>
   );
 }

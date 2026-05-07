@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { buildPayslipPdf } from "@/lib/rh/payslip-pdf";
-import { uploadPayslipPdf } from "@/lib/rh/storage";
+import { uploadPayslipPdf, getSignedUrl, PAYSLIPS_BUCKET } from "@/lib/rh/storage";
+import { sendPayslipValidatedEmail } from "@/lib/rh/payslip-email";
 import type { Employee, Payslip } from "@/types";
 
 // Super-admin valide une fiche en attente.
@@ -101,6 +102,33 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     performed_by: profile.id,
     note: body.note ?? null,
   });
+
+  // Email best-effort — ne fait jamais echouer la validation
+  if (typed.employees?.email) {
+    try {
+      const signedUrl = await getSignedUrl(
+        PAYSLIPS_BUCKET,
+        pdfPath,
+        7 * 24 * 60 * 60 // 7 jours
+      );
+      const firstName =
+        typed.employees.nom_complet?.split(" ")[0] ??
+        typed.employees.nom_complet ??
+        "";
+      void sendPayslipValidatedEmail({
+        to: typed.employees.email,
+        employeeFirstName: firstName,
+        employeeFullName: typed.employees.nom_complet,
+        moisLibelle: typed.mois_libelle,
+        reference: typed.reference,
+        salaireNet: Number(typed.salaire_net),
+        pdfDownloadUrl: signedUrl,
+        pdfBytes,
+      });
+    } catch (e) {
+      console.error("[RH_PAYSLIPS_VALIDATE_EMAIL] best-effort fail", e);
+    }
+  }
 
   return NextResponse.json({ success: true, payslip: updated });
 }

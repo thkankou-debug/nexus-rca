@@ -246,15 +246,33 @@ export interface PayslipValidationHistory {
 
 export type HrDocumentType = "contrat" | "diplome" | "piece_identite" | "autre";
 
+// Sous-catégories par type (Phase B.2)
+export const HR_DOCUMENT_SUBCATEGORIES: Record<HrDocumentType, string[]> = {
+  contrat: ["CDI", "CDD", "Stage", "Avenant", "Rupture"],
+  diplome: ["Bac", "Licence", "Master", "Doctorat", "Certification", "Autre"],
+  piece_identite: ["CNI", "Passeport", "Permis", "Visa", "Autre"],
+  autre: ["Justificatif domicile", "Attestation", "Lettre", "Autre"],
+};
+
 export interface HrDocument {
   id: string;
   employee_id: string;
   type: HrDocumentType;
+  subcategory: string | null;
   nom: string;
   description: string | null;
   storage_path: string;
   file_size_bytes: number | null;
   mime_type: string | null;
   uploaded_by: string | null;
+  created_at: string;
+}
+
+// Phase B.3 — notes historisées (append-only)
+export interface EmployeeNote {
+  id: string;
+  employee_id: string;
+  content: string;
+  created_by: string | null;
   created_at: string;
 }

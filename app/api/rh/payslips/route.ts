@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { buildMoisLibelle, buildPayslipReference, payslipReferencePrefix } from "@/lib/rh/reference";
-import type { Payslip, PayslipLigne } from "@/types";
+import type { Payslip, PayslipLigne, PayslipCotisations } from "@/types";
 
 export async function GET(req: Request) {
   await requireProfile(["admin", "super_admin"]);
@@ -35,6 +35,7 @@ interface CreatePayslipBody {
   salaire_brut: number;
   salaire_net: number;
   details_lignes?: PayslipLigne[];
+  cotisations?: PayslipCotisations;
   notes_admin?: string;
 }
 
@@ -87,7 +88,7 @@ export async function POST(req: Request) {
       salaire_brut: body.salaire_brut,
       salaire_net: body.salaire_net,
       details_lignes: body.details_lignes ?? [],
-      cotisations: {},
+      cotisations: body.cotisations ?? {},
       statut: "brouillon",
       created_by: profile.id,
       notes_admin: body.notes_admin ?? null,

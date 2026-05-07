@@ -15,6 +15,7 @@ export async function POST(req: Request) {
   const file = formData.get("file") as File | null;
   const employeeId = formData.get("employee_id") as string | null;
   const type = formData.get("type") as HrDocumentType | null;
+  const subcategory = (formData.get("subcategory") as string | null) ?? null;
   const nom = (formData.get("nom") as string | null) ?? null;
   const description = (formData.get("description") as string | null) ?? null;
 
@@ -65,6 +66,7 @@ export async function POST(req: Request) {
     .insert({
       employee_id: employeeId,
       type,
+      subcategory,
       nom: nom ?? file.name,
       description,
       storage_path: storagePath,

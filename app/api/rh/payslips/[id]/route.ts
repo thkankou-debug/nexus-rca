@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import type { Payslip, PayslipLigne } from "@/types";
+import type { Payslip, PayslipLigne, PayslipCotisations } from "@/types";
 
 export async function GET(_: Request, { params }: { params: { id: string } }) {
   await requireProfile(["admin", "super_admin"]);
@@ -30,6 +30,7 @@ interface UpdatePayslipBody {
   salaire_brut?: number;
   salaire_net?: number;
   details_lignes?: PayslipLigne[];
+  cotisations?: PayslipCotisations;
   notes_admin?: string;
 }
 
@@ -66,6 +67,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (body.salaire_brut !== undefined) update.salaire_brut = body.salaire_brut;
   if (body.salaire_net !== undefined) update.salaire_net = body.salaire_net;
   if (body.details_lignes !== undefined) update.details_lignes = body.details_lignes;
+  if (body.cotisations !== undefined) update.cotisations = body.cotisations;
   if (body.notes_admin !== undefined) update.notes_admin = body.notes_admin;
 
   if (Object.keys(update).length === 0) {
