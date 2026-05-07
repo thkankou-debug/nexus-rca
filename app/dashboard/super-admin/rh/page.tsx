@@ -16,6 +16,11 @@ import {
   Plus,
   Plane,
   CalendarDays,
+  ListChecks,
+  Award,
+  Sliders,
+  ClipboardCheck,
+  Sparkles,
   type LucideIcon,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
@@ -115,6 +120,11 @@ export default async function RhOverviewPage() {
   monthStart.setDate(1);
   monthStart.setHours(0, 0, 0, 0);
   const monthStartISO = monthStart.toISOString();
+  const monthStartDate = monthStartISO.split("T")[0];
+
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const thirtyDaysAgoISO = thirtyDaysAgo.toISOString();
 
   const [
     employeesRes,
@@ -131,6 +141,14 @@ export default async function RhOverviewPage() {
     profilesRes,
     employeesNamedRes,
     leavesPendingRes,
+    leavesValidatedMonthRes,
+    onboardingActiveRes,
+    onboardingLateRes,
+    reviewsActiveRes,
+    reviewsAutoEvalRes,
+    reviewsManagerRes,
+    templatesCountRes,
+    leavePeriodsRes,
   ] = await Promise.all([
     supabase
       .from("employees")
@@ -177,16 +195,46 @@ export default async function RhOverviewPage() {
       .select("id, employee_id, nom, uploaded_by, created_at")
       .order("created_at", { ascending: false })
       .limit(5),
-    supabase
-      .from("profiles")
-      .select("id, nom, prenom, email"),
-    supabase
-      .from("employees")
-      .select("id, nom_complet"),
+    supabase.from("profiles").select("id, nom, prenom, email"),
+    supabase.from("employees").select("id, nom_complet"),
     supabase
       .from("leave_requests")
       .select("id", { count: "exact", head: true })
       .eq("statut", "en_attente"),
+    supabase
+      .from("leave_requests")
+      .select("total_days")
+      .eq("statut", "valide")
+      .gte("start_date", monthStartDate),
+    supabase
+      .from("employee_onboarding")
+      .select("id, completion_pct, started_at"),
+    supabase
+      .from("employee_onboarding")
+      .select("id", { count: "exact", head: true })
+      .lt("completion_pct", 100)
+      .lt("started_at", thirtyDaysAgoISO),
+    supabase
+      .from("performance_reviews")
+      .select("id", { count: "exact", head: true })
+      .neq("statut", "signe")
+      .neq("statut", "annule"),
+    supabase
+      .from("performance_reviews")
+      .select("id", { count: "exact", head: true })
+      .eq("statut", "auto_eval"),
+    supabase
+      .from("performance_reviews")
+      .select("id", { count: "exact", head: true })
+      .eq("statut", "manager_review"),
+    supabase
+      .from("onboarding_templates")
+      .select("id", { count: "exact", head: true })
+      .eq("active", true),
+    supabase
+      .from("review_periods")
+      .select("id", { count: "exact", head: true })
+      .eq("statut", "en_cours"),
   ]);
 
   const employees = (employeesRes.data ?? []) as EmployeeLite[];
@@ -198,7 +246,6 @@ export default async function RhOverviewPage() {
     0
   );
 
-  // Ancienneté moyenne (années)
   const ancArr = actifs
     .map((e) => {
       if (!e.date_embauche) return null;
@@ -218,6 +265,33 @@ export default async function RhOverviewPage() {
   const nbHrDocs = hrDocsCountRes.count ?? 0;
   const nbCompanyDocs = companyDocsCountRes.count ?? 0;
   const nbCongesEnAttente = leavesPendingRes.count ?? 0;
+  const joursCongesPrisMois = (leavesValidatedMonthRes.data ?? []).reduce(
+    (s, r) => s + Number((r as { total_days?: number }).total_days ?? 0),
+    0
+  );
+
+  // Onboarding metrics
+  const onboardings = (onboardingActiveRes.data ?? []) as Array<{
+    id: string;
+    completion_pct: number | string | null;
+    started_at: string;
+  }>;
+  const nbOnboardingsActifs = onboardings.filter(
+    (o) => Number(o.completion_pct ?? 0) < 100
+  ).length;
+  const nbOnboardingsTotal = onboardings.length;
+  const completionMoy = onboardings.length
+    ? onboardings.reduce((s, o) => s + Number(o.completion_pct ?? 0), 0) /
+      onboardings.length
+    : 0;
+  const nbOnboardingsLate = onboardingLateRes.count ?? 0;
+
+  // Reviews metrics
+  const nbReviewsActives = reviewsActiveRes.count ?? 0;
+  const nbReviewsAutoEval = reviewsAutoEvalRes.count ?? 0;
+  const nbReviewsManager = reviewsManagerRes.count ?? 0;
+  const nbTemplates = templatesCountRes.count ?? 0;
+  const nbPeriodesActives = leavePeriodsRes.count ?? 0;
 
   // Employés sans contrat
   const contratsRows = (contratsRes.data ?? []) as { employee_id: string }[];
@@ -246,7 +320,6 @@ export default async function RhOverviewPage() {
     employeesById.set(e.id, e.nom_complet);
   }
 
-  // ---- Activité récente (fusion + tri) -----------------------------------
   type Activity = {
     key: string;
     icon: LucideIcon;
@@ -270,10 +343,9 @@ export default async function RhOverviewPage() {
     let icon: LucideIcon = Wallet;
     if (h.action === "created") {
       label = "Fiche de paie créée";
-      accent = "navy";
       icon = Plus;
     } else if (h.action === "submitted") {
-      label = "Fiche soumise pour validation";
+      label = "Fiche soumise";
       accent = "amber";
       icon = Clock;
     } else if (h.action === "validated") {
@@ -286,7 +358,6 @@ export default async function RhOverviewPage() {
       icon = AlertTriangle;
     } else if (h.action === "edited") {
       label = "Fiche modifiée";
-      accent = "navy";
       icon = FileText;
     }
     activity.push({
@@ -368,6 +439,14 @@ export default async function RhOverviewPage() {
       ? "—"
       : `${ancienneteMoyenne.toFixed(1)} an${ancienneteMoyenne >= 2 ? "s" : ""}`;
 
+  const totalAlertes =
+    nbFichesEnAttente +
+    nbCongesEnAttente +
+    nbOnboardingsLate +
+    nbReviewsAutoEval +
+    nbSansContrat +
+    nbSansProfile;
+
   return (
     <DashboardShell profile={profile}>
       <BackButton
@@ -396,25 +475,41 @@ export default async function RhOverviewPage() {
         />
 
         <div className="relative">
-          <div className="flex items-start gap-3">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md sm:h-14 sm:w-14">
-              <Briefcase className="h-6 w-6 sm:h-7 sm:w-7" />
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md sm:h-14 sm:w-14">
+                <Briefcase className="h-6 w-6 sm:h-7 sm:w-7" />
+              </div>
+              <div className="min-w-0">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur-md">
+                  <span className="relative flex h-1 w-1">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
+                    <span className="relative inline-flex h-1 w-1 rounded-full bg-nexus-orange-400" />
+                  </span>
+                  Ressources humaines
+                </span>
+                <h1 className="mt-3 font-display text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
+                  Centre de pilotage entreprise
+                </h1>
+                <p className="mt-3 max-w-2xl text-sm text-slate-300 sm:text-base">
+                  Effectif, paie, congés, onboarding, évaluations, documents,
+                  statistiques — un seul tableau pour piloter Nexus RCA.
+                </p>
+              </div>
             </div>
-            <div className="min-w-0">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur-md">
-                Ressources humaines
-              </span>
-              <h1 className="mt-3 font-display text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
-                Centre de pilotage entreprise
-              </h1>
-              <p className="mt-3 max-w-2xl text-sm text-slate-300 sm:text-base">
-                Effectif, masse salariale, paie, documents, statistiques —
-                un seul tableau pour piloter l&apos;équipe Nexus RCA.
-              </p>
-            </div>
+
+            {totalAlertes > 0 && (
+              <Link
+                href="#a-traiter"
+                className="hidden shrink-0 items-center gap-2 rounded-full border border-amber-400/40 bg-amber-500/15 px-4 py-2 text-sm font-semibold text-amber-200 backdrop-blur transition hover:bg-amber-500/25 sm:inline-flex"
+              >
+                <AlertTriangle className="h-4 w-4" />
+                {totalAlertes} à traiter
+              </Link>
+            )}
           </div>
 
-          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+          <div className="mt-8 grid gap-3 sm:grid-cols-4">
             <HeroStat
               label="Effectif actif"
               value={formatNumber(effectifActif)}
@@ -429,6 +524,11 @@ export default async function RhOverviewPage() {
               label="Fiches en attente"
               value={formatNumber(nbFichesEnAttente)}
               accent={nbFichesEnAttente > 0 ? "amber" : "white"}
+            />
+            <HeroStat
+              label="Évaluations en cours"
+              value={formatNumber(nbReviewsActives)}
+              accent="white"
             />
           </div>
 
@@ -445,7 +545,7 @@ export default async function RhOverviewPage() {
             />
             <HeroChip
               href={`${BASE}/paie/a-valider`}
-              icon={Clock}
+              icon={ClipboardCheck}
               label="Fiches à valider"
             />
             <HeroChip
@@ -454,23 +554,36 @@ export default async function RhOverviewPage() {
               label="Congés"
             />
             <HeroChip
+              href={`${BASE}/onboarding`}
+              icon={ListChecks}
+              label="Onboarding"
+            />
+            <HeroChip
+              href={`${BASE}/evaluations`}
+              icon={Award}
+              label="Évaluations"
+            />
+            <HeroChip
               href={`${BASE}/calendrier`}
               icon={CalendarDays}
-              label="Calendrier RH"
+              label="Calendrier"
             />
             <HeroChip
               href={`${BASE}/statistiques`}
               icon={BarChart3}
-              label="Statistiques RH"
+              label="Statistiques"
             />
           </div>
         </div>
       </section>
 
-      {/* INDICATEURS CLÉS */}
+      {/* INDICATEURS CLÉS — 8 KPIs en 2 lignes */}
       <section className="mb-10">
-        <SectionEyebrow>Indicateurs clés</SectionEyebrow>
-        <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mb-3 flex items-center gap-2">
+          <Sparkles className="h-3.5 w-3.5 text-nexus-orange-500" />
+          <SectionEyebrow>Indicateurs clés</SectionEyebrow>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <KpiCard
             label="Effectif actif"
             value={formatNumber(effectifActif)}
@@ -481,34 +594,66 @@ export default async function RhOverviewPage() {
           <KpiCard
             label="Masse salariale / mois"
             value={formatFcfa(masseSalariale)}
-            sub="Somme des salaires de base actifs"
+            sub="Somme salaires de base"
             icon={TrendingUp}
             accent="from-emerald-500 to-emerald-700"
+            highlight
           />
           <KpiCard
             label="Ancienneté moyenne"
             value={ancienneteValue}
-            sub="Sur effectif actif"
+            sub="Effectif actif"
             icon={Clock}
             accent="from-nexus-orange-400 to-nexus-orange-600"
           />
           <KpiCard
             label="Fiches validées ce mois"
             value={formatNumber(nbFichesValideesMois)}
-            sub="Bulletins clôturés"
+            sub={`${formatNumber(nbFichesTotal)} au total`}
             icon={CheckCircle2}
             accent="from-purple-500 to-purple-700"
+          />
+          <KpiCard
+            label="Onboardings actifs"
+            value={formatNumber(nbOnboardingsActifs)}
+            sub={`Complétion moy. ${completionMoy.toFixed(0)}%`}
+            icon={ListChecks}
+            accent="from-blue-500 to-blue-700"
+          />
+          <KpiCard
+            label="Évaluations en cours"
+            value={formatNumber(nbReviewsActives)}
+            sub={`${formatNumber(nbPeriodesActives)} période${nbPeriodesActives > 1 ? "s" : ""} active${nbPeriodesActives > 1 ? "s" : ""}`}
+            icon={Award}
+            accent="from-amber-500 to-amber-700"
+          />
+          <KpiCard
+            label="Congés pris ce mois"
+            value={`${joursCongesPrisMois.toFixed(1)} j`}
+            sub="Validés"
+            icon={Plane}
+            accent="from-sky-500 to-sky-700"
+          />
+          <KpiCard
+            label="Documents stockés"
+            value={formatNumber(nbHrDocs + nbCompanyDocs)}
+            sub={`${formatNumber(nbHrDocs)} RH · ${formatNumber(nbCompanyDocs)} entreprise`}
+            icon={FolderOpen}
+            accent="from-rose-500 to-rose-700"
           />
         </div>
       </section>
 
-      {/* À TRAITER */}
-      <section className="mb-10">
-        <SectionEyebrow>À traiter</SectionEyebrow>
-        <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {/* À TRAITER — 6 alertes */}
+      <section id="a-traiter" className="mb-10 scroll-mt-6">
+        <div className="mb-3 flex items-center gap-2">
+          <AlertTriangle className="h-3.5 w-3.5 text-amber-600" />
+          <SectionEyebrow>À traiter</SectionEyebrow>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           <AlertItem
             href={`${BASE}/paie/a-valider`}
-            icon={Clock}
+            icon={ClipboardCheck}
             label="Fiches en attente de validation"
             count={nbFichesEnAttente}
             tone={nbFichesEnAttente > 0 ? "warning" : "ok"}
@@ -523,12 +668,28 @@ export default async function RhOverviewPage() {
             cta={nbCongesEnAttente > 0 ? "Traiter →" : "Tout est traité"}
           />
           <AlertItem
+            href={`${BASE}/onboarding`}
+            icon={ListChecks}
+            label="Onboardings > 30j incomplets"
+            count={nbOnboardingsLate}
+            tone={nbOnboardingsLate > 0 ? "danger" : "ok"}
+            cta={nbOnboardingsLate > 0 ? "Voir onboardings →" : "Tous à jour"}
+          />
+          <AlertItem
+            href={`${BASE}/evaluations`}
+            icon={Award}
+            label="Auto-évaluations en attente"
+            count={nbReviewsAutoEval}
+            tone={nbReviewsAutoEval > 0 ? "warning" : "ok"}
+            cta={nbReviewsAutoEval > 0 ? "Suivre →" : "Tout est saisi"}
+          />
+          <AlertItem
             href={`${BASE}/documents`}
             icon={FileText}
             label="Employés sans contrat uploadé"
             count={nbSansContrat}
             tone={nbSansContrat > 0 ? "danger" : "ok"}
-            cta={nbSansContrat > 0 ? "Voir documents RH →" : "Tous documentés"}
+            cta={nbSansContrat > 0 ? "Voir documents →" : "Tous documentés"}
           />
           <AlertItem
             href={`${BASE}/employes`}
@@ -541,16 +702,22 @@ export default async function RhOverviewPage() {
         </div>
       </section>
 
-      {/* MODULES */}
+      {/* MODULES — 12 cards groupées par catégorie */}
       <section className="mb-10">
-        <SectionEyebrow>Modules</SectionEyebrow>
-        <div className="mt-3 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mb-3 flex items-center gap-2">
+          <Network className="h-3.5 w-3.5 text-nexus-blue-600" />
+          <SectionEyebrow>Modules · Tout le centre RH</SectionEyebrow>
+        </div>
+
+        {/* Groupe 1 : Équipe */}
+        <ModuleGroup label="Équipe">
           <ModuleCard
             href={`${BASE}/annuaire`}
             icon={Network}
             label="Annuaire"
             count={effectifActif}
             countLabel="actifs"
+            accent="navy"
           />
           <ModuleCard
             href={`${BASE}/employes`}
@@ -558,20 +725,75 @@ export default async function RhOverviewPage() {
             label="Employés"
             count={totalEmployees}
             countLabel="fiches"
+            accent="navy"
           />
+          <ModuleCard
+            href={`${BASE}/onboarding`}
+            icon={ListChecks}
+            label="Onboarding"
+            count={nbOnboardingsActifs}
+            countLabel={`/ ${nbOnboardingsTotal} actifs · ${nbTemplates} templates`}
+            accent="blue"
+          />
+          <ModuleCard
+            href={`${BASE}/evaluations`}
+            icon={Award}
+            label="Évaluations"
+            count={nbReviewsActives}
+            countLabel={`en cours · ${nbReviewsManager} en revue manager`}
+            accent="amber"
+          />
+        </ModuleGroup>
+
+        {/* Groupe 2 : Paie & Congés */}
+        <ModuleGroup label="Paie & Congés" className="mt-6">
           <ModuleCard
             href={`${BASE}/paie`}
             icon={Wallet}
             label="Fiches de paie"
             count={nbFichesTotal}
             countLabel="bulletins"
+            accent="emerald"
           />
+          <ModuleCard
+            href={`${BASE}/paie/a-valider`}
+            icon={ClipboardCheck}
+            label="À valider"
+            count={nbFichesEnAttente}
+            countLabel="fiches en attente"
+            accent={nbFichesEnAttente > 0 ? "orange" : "navy"}
+            highlight={nbFichesEnAttente > 0}
+          />
+          <ModuleCard
+            href={`${BASE}/conges`}
+            icon={Plane}
+            label="Congés"
+            count={nbCongesEnAttente}
+            countLabel={
+              nbCongesEnAttente > 0 ? "demandes en attente" : "tout traité"
+            }
+            accent={nbCongesEnAttente > 0 ? "orange" : "sky"}
+            highlight={nbCongesEnAttente > 0}
+          />
+          <ModuleCard
+            href={`${BASE}/calendrier`}
+            icon={CalendarDays}
+            label="Calendrier RH"
+            count={null}
+            countLabel="vue agrégée mois"
+            accent="sky"
+          />
+        </ModuleGroup>
+
+        {/* Groupe 3 : Documents & Pilotage */}
+        <ModuleGroup label="Documents & Pilotage" className="mt-6">
           <ModuleCard
             href={`${BASE}/documents`}
             icon={FolderOpen}
             label="Documents employés"
             count={nbHrDocs}
             countLabel="fichiers"
+            accent="navy"
           />
           <ModuleCard
             href={`${BASE}/documents-entreprise`}
@@ -579,35 +801,34 @@ export default async function RhOverviewPage() {
             label="Documents entreprise"
             count={nbCompanyDocs}
             countLabel="documents"
-          />
-          <ModuleCard
-            href={`${BASE}/conges`}
-            icon={Plane}
-            label="Congés"
-            count={nbCongesEnAttente}
-            countLabel="en attente"
-          />
-          <ModuleCard
-            href={`${BASE}/calendrier`}
-            icon={CalendarDays}
-            label="Calendrier RH"
-            count={null}
-            countLabel="vue agrégée"
+            accent="purple"
           />
           <ModuleCard
             href={`${BASE}/statistiques`}
             icon={BarChart3}
-            label="Statistiques"
+            label="Statistiques RH"
             count={null}
-            countLabel="analytics"
+            countLabel="dashboard analytics"
+            accent="rose"
           />
-        </div>
+          <ModuleCard
+            href={`${BASE}/parametres`}
+            icon={Sliders}
+            label="Paramètres RH"
+            count={null}
+            countLabel="cotisations · contrat · paie"
+            accent="navy"
+          />
+        </ModuleGroup>
       </section>
 
       {/* ACTIVITÉ RÉCENTE */}
       <section>
-        <SectionEyebrow>Activité récente</SectionEyebrow>
-        <div className="mt-3 rounded-3xl border border-slate-200 bg-white p-2 shadow-sm ring-1 ring-slate-100/80">
+        <div className="mb-3 flex items-center gap-2">
+          <TrendingUp className="h-3.5 w-3.5 text-emerald-600" />
+          <SectionEyebrow>Activité récente</SectionEyebrow>
+        </div>
+        <div className="rounded-3xl border border-slate-200 bg-white p-2 shadow-sm ring-1 ring-slate-100/80">
           {activityFeed.length === 0 ? (
             <div className="p-8 text-center text-sm text-slate-500">
               Aucune activité enregistrée pour le moment.
@@ -662,6 +883,25 @@ function SectionEyebrow({ children }: { children: React.ReactNode }) {
     <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
       {children}
     </p>
+  );
+}
+
+function ModuleGroup({
+  label,
+  children,
+  className,
+}: {
+  label: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={className}>
+      <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+        {label}
+      </p>
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{children}</div>
+    </div>
   );
 }
 
@@ -720,16 +960,30 @@ function KpiCard({
   sub,
   icon: Icon,
   accent,
+  highlight,
 }: {
   label: string;
   value: string;
   sub?: string;
   icon: LucideIcon;
   accent: string;
+  highlight?: boolean;
 }) {
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm ring-1 ring-slate-100/80 transition hover:-translate-y-0.5 hover:shadow-lg">
-      <div className="flex items-start justify-between gap-3">
+    <div
+      className={`relative overflow-hidden rounded-3xl border bg-white p-5 ring-1 ring-slate-100/80 transition hover:-translate-y-0.5 hover:shadow-lg ${
+        highlight
+          ? "border-nexus-orange-200 shadow-[0_20px_40px_-20px_rgba(255,102,0,0.18)]"
+          : "border-slate-200 shadow-sm"
+      }`}
+    >
+      {highlight && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/15 blur-2xl"
+        />
+      )}
+      <div className="relative flex items-start justify-between gap-3">
         <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
           {label}
         </p>
@@ -739,10 +993,10 @@ function KpiCard({
           <Icon className="h-5 w-5" />
         </div>
       </div>
-      <p className="mt-3 font-display text-2xl font-bold tabular-nums text-nexus-blue-950 sm:text-3xl">
+      <p className="relative mt-3 font-display text-2xl font-bold tabular-nums text-nexus-blue-950 sm:text-3xl">
         {value}
       </p>
-      {sub && <p className="mt-1 text-xs text-slate-500">{sub}</p>}
+      {sub && <p className="relative mt-1 text-xs text-slate-500">{sub}</p>}
     </div>
   );
 }
@@ -808,29 +1062,62 @@ function ModuleCard({
   label,
   count,
   countLabel,
+  accent,
+  highlight,
 }: {
   href: string;
   icon: LucideIcon;
   label: string;
   count: number | null;
   countLabel: string;
+  accent: "navy" | "orange" | "emerald" | "amber" | "blue" | "purple" | "sky" | "rose";
+  highlight?: boolean;
 }) {
+  const accentMap: Record<typeof accent, string> = {
+    navy: "from-nexus-blue-700 to-nexus-blue-900",
+    orange: "from-nexus-orange-500 to-nexus-orange-700",
+    emerald: "from-emerald-500 to-emerald-700",
+    amber: "from-amber-500 to-amber-700",
+    blue: "from-blue-500 to-blue-700",
+    purple: "from-purple-500 to-purple-700",
+    sky: "from-sky-500 to-sky-700",
+    rose: "from-rose-500 to-rose-700",
+  };
+  const hoverBorder = highlight
+    ? "hover:border-nexus-orange-300"
+    : "hover:border-nexus-orange-200";
+  const borderClass = highlight ? "border-nexus-orange-200" : "border-slate-200";
+  const shadowClass = highlight
+    ? "shadow-[0_18px_36px_-20px_rgba(255,102,0,0.20)]"
+    : "shadow-sm";
+
   return (
     <Link
       href={href}
-      className="group block rounded-3xl border border-slate-200 bg-white p-5 shadow-sm ring-1 ring-slate-100/80 transition hover:-translate-y-0.5 hover:border-nexus-orange-200 hover:shadow-lg"
+      className={`group relative block overflow-hidden rounded-3xl border bg-white p-5 ring-1 ring-slate-100/80 transition hover:-translate-y-0.5 hover:shadow-lg ${borderClass} ${shadowClass} ${hoverBorder}`}
     >
-      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900 text-white shadow-sm transition group-hover:from-nexus-orange-500 group-hover:to-nexus-orange-700">
-        <Icon className="h-6 w-6" />
+      {highlight && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-nexus-orange-500/15 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/25"
+        />
+      )}
+      <div className="relative flex items-start justify-between">
+        <div
+          className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br text-white shadow-sm transition group-hover:scale-105 ${accentMap[accent]}`}
+        >
+          <Icon className="h-6 w-6" />
+        </div>
+        <ArrowUpRight className="h-4 w-4 text-slate-300 transition group-hover:text-nexus-orange-600" />
       </div>
-      <p className="mt-4 font-display text-base font-bold text-nexus-blue-950">
+      <p className="relative mt-4 font-display text-base font-bold text-nexus-blue-950">
         {label}
       </p>
-      <p className="mt-1 text-xs text-slate-500">
-        {count === null ? "Analytics" : `${formatNumber(count)} ${countLabel}`}
+      <p className="relative mt-1 text-xs text-slate-500">
+        {count === null ? countLabel : `${formatNumber(count)} ${countLabel}`}
       </p>
-      <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-nexus-orange-600 group-hover:underline">
-        Ouvrir <ArrowUpRight className="h-3 w-3" />
+      <span className="relative mt-3 inline-flex items-center gap-1 text-xs font-semibold text-nexus-orange-600">
+        Ouvrir <ArrowUpRight className="h-3 w-3 transition group-hover:translate-x-0.5" />
       </span>
     </Link>
   );
