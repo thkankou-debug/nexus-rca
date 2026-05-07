@@ -474,6 +474,38 @@ export interface PerformanceReview {
   updated_at: string;
 }
 
+// Phase E — Settings RH (migration 028)
+export type RhSettingCategory =
+  | "general"
+  | "cotisations"
+  | "paie"
+  | "conges"
+  | "contrat"
+  | "notifications";
+
+export const RH_SETTING_CATEGORY_LABELS: Record<RhSettingCategory, string> = {
+  general: "Général",
+  cotisations: "Cotisations",
+  paie: "Paie",
+  conges: "Congés",
+  contrat: "Contrat",
+  notifications: "Notifications",
+};
+
+export interface RhSetting {
+  id: string;
+  key: string;
+  label: string;
+  category: RhSettingCategory;
+  value_text: string | null;
+  value_number: number | null;
+  value_json: unknown;
+  description: string | null;
+  updated_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 // Phase A — Documents entreprise (migration 024)
 export type CompanyDocumentType =
   | "reglement_interieur"

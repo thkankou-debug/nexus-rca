@@ -43,6 +43,7 @@ import {
   Rocket,
   ListChecks,
   Award,
+  Sliders,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -205,6 +206,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/super-admin/rh/documents", label: "Documents RH", icon: FolderOpen },
         { href: "/dashboard/super-admin/rh/documents-entreprise", label: "Documents entreprise", icon: Library },
         { href: "/dashboard/super-admin/rh/statistiques", label: "Statistiques RH", icon: BarChart3 },
+        { href: "/dashboard/super-admin/rh/parametres", label: "Paramètres RH", icon: Sliders },
       ],
     },
     {
