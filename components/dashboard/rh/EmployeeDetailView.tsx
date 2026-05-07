@@ -14,6 +14,8 @@ import {
   Download,
   AlertTriangle,
   MessageSquarePlus,
+  FileSignature,
+  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type {
@@ -343,6 +345,9 @@ function DocumentsTab({ employeeId }: { employeeId: string }) {
 
   return (
     <div className="space-y-6">
+      {/* Génération auto contrat */}
+      <ContractGenerator employeeId={employeeId} onGenerated={refresh} />
+
       {/* Upload */}
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <h3 className="font-display text-base font-bold text-nexus-blue-950">
@@ -823,6 +828,226 @@ function NotesTab({ employee }: { employee: Employee }) {
           ))}
         </ol>
       )}
+    </div>
+  );
+}
+
+// ─── Contract Generator ────────────────────────────────────────────────────
+// Génère un PDF de contrat de travail (CDI/CDD/Stage/Freelance) à partir
+// des données employé et l'upload automatiquement comme document type=contrat.
+
+type ContractType = "CDI" | "CDD" | "Stage" | "Freelance";
+
+const CONTRACT_TYPE_INFO: Record<
+  ContractType,
+  { label: string; description: string; periodEssai: string }
+> = {
+  CDI: {
+    label: "CDI",
+    description: "Contrat à durée indéterminée",
+    periodEssai: "3 mois renouvelables",
+  },
+  CDD: {
+    label: "CDD",
+    description: "Contrat à durée déterminée — date de fin requise",
+    periodEssai: "1 mois",
+  },
+  Stage: {
+    label: "Stage",
+    description: "Convention de stage",
+    periodEssai: "15 jours",
+  },
+  Freelance: {
+    label: "Freelance",
+    description: "Contrat de prestation indépendante",
+    periodEssai: "Sans période d'essai",
+  },
+};
+
+function ContractGenerator({
+  employeeId,
+  onGenerated,
+}: {
+  employeeId: string;
+  onGenerated: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [type, setType] = useState<ContractType>("CDI");
+  const [cddEndDate, setCddEndDate] = useState("");
+  const [lieu, setLieu] = useState("Bangui, Republique Centrafricaine");
+  const [generating, setGenerating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleGenerate = async () => {
+    setError(null);
+    if (type === "CDD" && !cddEndDate) {
+      setError("Date de fin requise pour un CDD");
+      return;
+    }
+    setGenerating(true);
+    try {
+      const res = await fetch(`/api/rh/employees/${employeeId}/generate-contract`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contract_type: type,
+          cdd_end_date: type === "CDD" ? cddEndDate : undefined,
+          lieu_travail: lieu,
+        }),
+      });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error || "Erreur génération");
+      setOpen(false);
+      setCddEndDate("");
+      onGenerated();
+    } catch (e) {
+      console.error("[RH_CONTRACT_GEN]", e);
+      setError((e as Error).message);
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  if (!open) {
+    return (
+      <div className="relative overflow-hidden rounded-2xl border-2 border-dashed border-nexus-orange-300 bg-gradient-to-br from-nexus-orange-50/60 via-white to-white p-6 shadow-sm">
+        <div className="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/15 blur-2xl" />
+        <div className="relative flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-3">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
+              <FileSignature className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+                Génération automatique
+              </p>
+              <h3 className="mt-1 font-display text-base font-bold text-nexus-blue-950 sm:text-lg">
+                Générer un contrat de travail
+              </h3>
+              <p className="mt-1 text-sm text-slate-600">
+                CDI · CDD · Stage · Freelance — PDF Nexus RCA pré-rempli avec
+                toutes les données de l'employé.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600"
+          >
+            <Sparkles className="h-4 w-4" />
+            Générer
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-2xl border-2 border-nexus-orange-300 bg-white p-6 shadow-md">
+      <div className="flex items-start gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
+          <FileSignature className="h-5 w-5" />
+        </div>
+        <div>
+          <h3 className="font-display text-base font-bold text-nexus-blue-950 sm:text-lg">
+            Générer un contrat de travail
+          </h3>
+          <p className="mt-1 text-sm text-slate-600">
+            Le PDF sera créé et automatiquement archivé dans les documents.
+          </p>
+        </div>
+      </div>
+
+      {/* Type cards */}
+      <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+        {(Object.keys(CONTRACT_TYPE_INFO) as ContractType[]).map((t) => {
+          const info = CONTRACT_TYPE_INFO[t];
+          const active = type === t;
+          return (
+            <button
+              key={t}
+              type="button"
+              onClick={() => setType(t)}
+              className={cn(
+                "rounded-xl border p-3 text-left transition",
+                active
+                  ? "border-nexus-orange-400 bg-nexus-orange-50/60 ring-2 ring-nexus-orange-200"
+                  : "border-slate-200 bg-white hover:border-nexus-orange-300"
+              )}
+            >
+              <p className="font-display text-base font-bold text-nexus-blue-950">
+                {info.label}
+              </p>
+              <p className="mt-1 text-[11px] text-slate-600">{info.description}</p>
+              <p className="mt-2 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                Essai : {info.periodEssai}
+              </p>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* CDD end date */}
+      {type === "CDD" && (
+        <label className="mt-4 block">
+          <span className="mb-1.5 block text-xs font-semibold text-slate-700">
+            Date de fin du contrat *
+          </span>
+          <input
+            type="date"
+            value={cddEndDate}
+            onChange={(e) => setCddEndDate(e.target.value)}
+            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm sm:w-64"
+          />
+        </label>
+      )}
+
+      {/* Lieu */}
+      <label className="mt-4 block">
+        <span className="mb-1.5 block text-xs font-semibold text-slate-700">
+          Lieu de travail
+        </span>
+        <input
+          type="text"
+          value={lieu}
+          onChange={(e) => setLieu(e.target.value)}
+          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm"
+        />
+      </label>
+
+      {error && (
+        <div className="mt-4 flex items-start gap-2 rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-semibold text-rose-700">
+          <AlertTriangle className="h-4 w-4 shrink-0" />
+          {error}
+        </div>
+      )}
+
+      <div className="mt-5 flex flex-col items-stretch gap-2 sm:flex-row sm:justify-end">
+        <button
+          type="button"
+          onClick={() => {
+            setOpen(false);
+            setError(null);
+          }}
+          className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+        >
+          Annuler
+        </button>
+        <button
+          type="button"
+          onClick={handleGenerate}
+          disabled={generating}
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {generating ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Sparkles className="h-4 w-4" />
+          )}
+          {generating ? "Génération…" : "Générer le PDF"}
+        </button>
+      </div>
     </div>
   );
 }
