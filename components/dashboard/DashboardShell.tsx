@@ -95,6 +95,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/agent/clients", label: "Mes clients", icon: UserCircle },
         { href: "/dashboard/agent/demandes", label: "Mes dossiers", icon: FileText },
         { href: "/dashboard/agent/demandes-visa", label: "Demandes visa", icon: FileText },
+        { href: "/dashboard/agent/assurance", label: "Devis assurance", icon: ShieldCheck },
         { href: "/dashboard/agent/rdv", label: "Mon agenda", icon: CalendarCheck },
         { href: "/dashboard/agent/notes", label: "Mes notes", icon: FileBarChart },
       ],

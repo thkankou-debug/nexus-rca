@@ -276,7 +276,7 @@ export function AssuranceUniverseCards() {
               {/* CTA discret */}
               <div className="mt-6 flex flex-1 items-end">
                 <Link
-                  href="/contact?service=assurance"
+                  href="/services/assurance/devis"
                   className="inline-flex items-center gap-2 text-sm font-semibold text-nexus-orange-300 transition-colors hover:text-nexus-orange-200"
                 >
                   Demander un diagnostic

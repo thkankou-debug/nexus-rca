@@ -311,6 +311,23 @@ body {
   }
 }
 
+/* Step-in — apparition étape de wizard (page assurance/devis) */
+@keyframes step-in {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [style*="step-in"] {
+    animation: none !important;
+  }
+}
+
 /* Companion float — flottement subtil du panel assurance hero (visa/billets) */
 @keyframes companion-float {
   0%,

@@ -187,8 +187,8 @@ export default function AssurancePage() {
           titleEnd="."
           subtitle="Cabinet de courtage Nexus RCA. Nous sélectionnons, négocions et accompagnons vos couvertures voyage, visa, santé, études et mobilité professionnelle — avec le sérieux d'une plateforme internationale."
           ctaPrimary={{
-            href: "/contact?service=assurance",
-            label: "Demander un diagnostic",
+            href: "/services/assurance/devis",
+            label: "Démarrer un devis personnalisé",
             icon: ShieldCheck,
           }}
           ctaSecondary={{
@@ -647,6 +647,142 @@ export default function AssurancePage() {
           </div>
         </section>
 
+        {/* 8 bis. DÉMARRAGE DEVIS — section dédiée premium ─────────────── */}
+        <section
+          id="devis"
+          className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24 lg:py-28"
+        >
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-[0.5]"
+            style={DOT_GRID_DARK}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-32 top-1/2 h-[36rem] w-[36rem] -translate-y-1/2 rounded-full bg-nexus-orange-500/15 blur-[140px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -left-32 bottom-0 h-[28rem] w-[28rem] rounded-full bg-nexus-blue-500/15 blur-[120px]"
+          />
+
+          <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="overflow-hidden rounded-[2.25rem] border border-nexus-orange-400/30 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.05] to-white/[0.02] ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_36px_72px_-24px_rgba(255,102,0,0.30)]">
+              <div className="grid gap-10 p-8 sm:p-10 lg:grid-cols-12 lg:items-center lg:gap-14 lg:p-14">
+                <div className="lg:col-span-7">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
+                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                    </span>
+                    Demande de devis · 4 étapes guidées
+                  </span>
+
+                  <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                    Construisons votre{" "}
+                    <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                      couverture sur mesure
+                    </span>
+                    .
+                  </h2>
+
+                  <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+                    Un parcours guidé en 4 étapes. Une référence dédiée
+                    générée immédiatement. Un cabinet derrière chaque
+                    dossier. Vous recevez un email de confirmation et un
+                    suivi continu.
+                  </p>
+
+                  {/* Mini steps */}
+                  <ul className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    {[
+                      { n: "01", label: "Identité" },
+                      { n: "02", label: "Voyage" },
+                      { n: "03", label: "Couverture" },
+                      { n: "04", label: "Confirmation" },
+                    ].map((s) => (
+                      <li
+                        key={s.n}
+                        className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5 backdrop-blur-md"
+                      >
+                        <p className="font-display text-base font-bold text-nexus-orange-300">
+                          {s.n}
+                        </p>
+                        <p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.16em] text-white/85">
+                          {s.label}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
+                    <Link
+                      href="/services/assurance/devis"
+                      className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+                    >
+                      <span
+                        aria-hidden
+                        className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
+                      />
+                      <ShieldCheck className="h-4 w-4" />
+                      Démarrer mon devis personnalisé
+                      <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
+                    </Link>
+                    <span className="inline-flex items-center gap-1.5 self-start rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/65 backdrop-blur sm:self-center">
+                      <Award className="h-3 w-3 text-nexus-orange-300" />
+                      Référence NX-ASS-2026-XXXX dédiée
+                    </span>
+                  </div>
+                </div>
+
+                {/* Visualisation des 4 statuts dossier */}
+                <div className="lg:col-span-5">
+                  <div className="rounded-3xl border border-white/10 bg-nexus-blue-950/40 p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                      Suivi du dossier
+                    </p>
+                    <p className="mt-1 text-xs text-white/55">
+                      Visible en temps réel sur votre URL personnelle
+                    </p>
+                    <ol className="mt-5 space-y-4">
+                      {[
+                        { n: "01", label: "Devis reçu", desc: "Enregistrement immédiat" },
+                        { n: "02", label: "Analyse en cours", desc: "Étude de votre profil" },
+                        { n: "03", label: "Validation agent", desc: "Sélection assureurs" },
+                        { n: "04", label: "Devis prêt", desc: "Tarif définitif validé" },
+                      ].map((s, i) => (
+                        <li key={s.n} className="flex items-start gap-3">
+                          <div
+                            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ring-2 ${
+                              i === 0
+                                ? "bg-nexus-orange-500 text-white ring-nexus-orange-400/60 shadow-[0_0_24px_-4px_rgba(255,102,0,0.7)]"
+                                : "bg-white/[0.04] text-white/40 ring-white/10"
+                            }`}
+                          >
+                            <span className="text-[10px] font-bold">{s.n}</span>
+                          </div>
+                          <div className="flex-1">
+                            <p
+                              className={`text-xs font-bold uppercase tracking-[0.18em] ${
+                                i === 0 ? "text-nexus-orange-300" : "text-white/40"
+                              }`}
+                            >
+                              {s.label}
+                            </p>
+                            <p className="mt-0.5 text-[11px] text-white/55">
+                              {s.desc}
+                            </p>
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* 9. FAQ ─────────────────────────────────────────────────────── */}
         <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
           <div
@@ -754,7 +890,7 @@ export default function AssurancePage() {
 
             <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
               <Link
-                href="/contact?service=assurance"
+                href="/services/assurance/devis"
                 className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
               >
                 <span
