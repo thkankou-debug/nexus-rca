@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { Plus, FileText, Zap, Filter } from "lucide-react";
+import { Plus, FileText, Zap, Filter, ArrowRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { StatusBadge, UrgenceBadge } from "@/components/dashboard/StatCard";
-import { DemandeDocumentsList } from "@/components/dashboard/DemandeDocumentsList";
 import { formatDate } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import type { Demande } from "@/types";
@@ -199,37 +198,54 @@ export default async function ClientDemandesPage({
         </div>
       ) : (
         <div className="space-y-4">
-          {list.map((d) => (
-            <div
-              key={d.id}
-              className="rounded-2xl border border-slate-200 bg-white p-6 shadow-card transition hover:shadow-card-hover"
-            >
-              <div className="flex flex-wrap items-center gap-2">
-                <h3 className="font-semibold text-nexus-blue-950">{d.service}</h3>
-                <StatusBadge status={d.statut} />
-                <UrgenceBadge level={d.urgence} />
-                {d.traitement_prioritaire && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600 px-2 py-0.5 text-xs font-semibold text-white">
-                    <Zap className="h-3 w-3" />
-                    Prioritaire
+          {list.map((d) => {
+            const dRecord = d as unknown as Record<string, unknown>;
+            const ref =
+              (dRecord.reference as string) ||
+              `NX-${d.id.slice(0, 8).toUpperCase()}`;
+            return (
+              <Link
+                key={d.id}
+                href={`/dashboard/client/demandes/${d.id}`}
+                className="group block rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-nexus-orange-200 hover:shadow-md"
+              >
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-md bg-nexus-blue-50 px-2 py-0.5 font-mono text-[11px] font-bold text-nexus-orange-600">
+                    {ref}
                   </span>
+                  <h3 className="font-semibold text-nexus-blue-950">
+                    {d.service}
+                  </h3>
+                  <StatusBadge status={d.statut} />
+                  <UrgenceBadge level={d.urgence} />
+                  {d.traitement_prioritaire && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600 px-2 py-0.5 text-xs font-semibold text-white">
+                      <Zap className="h-3 w-3" />
+                      Prioritaire
+                    </span>
+                  )}
+                </div>
+                {d.objet && (
+                  <p className="mt-2 font-medium text-nexus-blue-900">{d.objet}</p>
                 )}
-              </div>
-              {d.objet && (
-                <p className="mt-2 font-medium text-nexus-blue-900">{d.objet}</p>
-              )}
-              <p className="mt-1 text-sm text-slate-600">{d.description}</p>
+                {d.description && (
+                  <p className="mt-1 line-clamp-2 text-sm text-slate-600">
+                    {d.description}
+                  </p>
+                )}
 
-              <div className="mt-4 border-t border-slate-100 pt-3">
-                <DemandeDocumentsList demandeId={d.id} />
-              </div>
-
-              <p className="mt-3 text-xs text-slate-500">
-                Envoyée le {formatDate(d.created_at)} · Réf.{" "}
-                {d.id.slice(0, 8).toUpperCase()}
-              </p>
-            </div>
-          ))}
+                <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3">
+                  <p className="text-xs text-slate-500">
+                    Envoyée le {formatDate(d.created_at)}
+                  </p>
+                  <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 transition group-hover:text-nexus-orange-600">
+                    Ouvrir
+                    <ArrowRight className="h-3 w-3" />
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       )}
     </DashboardShell>

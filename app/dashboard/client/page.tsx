@@ -109,29 +109,34 @@ export default async function ClientDashboard() {
   const paiements = paiementsData || [];
 
   const { data: rdvsData } = await supabase
-    .from("appointment_requests")
-    .select("id, service, date_souhaitee, heure_souhaitee, statut, email")
+    .from("appointments")
+    .select("id, service, rdv_date, rdv_heure, statut, email")
     .eq("email", userEmail)
-    .order("date_souhaitee", { ascending: false })
+    .order("rdv_date", { ascending: false })
     .limit(5);
 
   const rdvs = rdvsData || [];
 
-  const dossierAvecAgent = demandes.find((d) => d.assigne_a);
-  let agentInfo: {
+  const dossierAvecAgent = demandes.find(
+    (d) => (d as Record<string, unknown>).agent_id
+  );
+  type AgentInfo = {
     prenom?: string | null;
     nom?: string | null;
     email?: string | null;
     telephone?: string | null;
     poste?: string | null;
-  } | null = null;
-  if (dossierAvecAgent?.assigne_a) {
+  };
+  let agentInfo: AgentInfo | null = null;
+  const agentIdFromDossier = (dossierAvecAgent as Record<string, unknown> | undefined)
+    ?.agent_id as string | undefined;
+  if (agentIdFromDossier) {
     const { data: agentData } = await supabase
       .from("profiles")
       .select("prenom, nom, email, telephone, poste")
-      .eq("id", dossierAvecAgent.assigne_a)
+      .eq("id", agentIdFromDossier)
       .single();
-    agentInfo = agentData;
+    agentInfo = (agentData as AgentInfo | null) || null;
   }
 
   const totalPaye = paiements.reduce((s, p) => s + Number(p.montant_recu || 0), 0);
@@ -256,14 +261,25 @@ export default async function ClientDashboard() {
                 {demandes.slice(0, 5).map((d) => {
                   const status = getStatusInfo(d.statut || "");
                   const StatusIcon = status.icon;
+                  const dRecord = d as Record<string, unknown>;
+                  const ref =
+                    (dRecord.reference as string) ||
+                    `NX-${(d.id as string).slice(0, 8).toUpperCase()}`;
                   return (
-                    <div key={d.id} className="flex items-center gap-3 p-4">
+                    <Link
+                      key={d.id}
+                      href={`/dashboard/client/demandes/${d.id}`}
+                      className="flex items-center gap-3 p-4 transition hover:bg-slate-50"
+                    >
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-nexus-orange-50 text-nexus-orange-600">
                         <FolderOpen className="h-5 w-5" />
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-semibold text-nexus-blue-950">
                           {d.objet || d.service || "Demande"}
+                        </p>
+                        <p className="font-mono text-[11px] text-nexus-orange-600">
+                          {ref}
                         </p>
                         <p className="text-xs text-slate-500">
                           {d.service} · {formatDate(d.created_at)}
@@ -278,7 +294,7 @@ export default async function ClientDashboard() {
                         <StatusIcon className="h-2.5 w-2.5" />
                         {status.label}
                       </span>
-                    </div>
+                    </Link>
                   );
                 })}
               </div>
@@ -430,17 +446,22 @@ export default async function ClientDashboard() {
                 </h3>
               </div>
               <div className="divide-y divide-slate-100">
-                {rdvs.slice(0, 3).map((rdv) => (
-                  <div key={rdv.id} className="p-3">
-                    <p className="text-sm font-semibold text-nexus-blue-950">
-                      {rdv.service || "Rendez-vous"}
-                    </p>
-                    <p className="mt-1 text-xs text-slate-500">
-                      {rdv.date_souhaitee ? formatDate(rdv.date_souhaitee) : ""}
-                      {rdv.heure_souhaitee && ` · ${rdv.heure_souhaitee}`}
-                    </p>
-                  </div>
-                ))}
+                {rdvs.slice(0, 3).map((rdv) => {
+                  const r = rdv as Record<string, unknown>;
+                  const date = r.rdv_date as string | undefined;
+                  const heure = r.rdv_heure as string | undefined;
+                  return (
+                    <div key={r.id as string} className="p-3">
+                      <p className="text-sm font-semibold text-nexus-blue-950">
+                        {(r.service as string) || "Rendez-vous"}
+                      </p>
+                      <p className="mt-1 text-xs text-slate-500">
+                        {date ? formatDate(date) : ""}
+                        {heure && ` · ${heure}`}
+                      </p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
