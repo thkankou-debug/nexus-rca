@@ -8,7 +8,7 @@ import { HowItWorks } from "@/components/HowItWorks";
 import { TravelCTA } from "@/components/TravelCTA";
 import { Testimonials } from "@/components/Testimonials";
 import { FinalCTA } from "@/components/FinalCTA";
-import { ProblemsSolved } from "@/components/home/ProblemsSolved";
+import { IdentityStatement } from "@/components/home/IdentityStatement";
 import { WhyTrust } from "@/components/home/WhyTrust";
 import { NextSteps } from "@/components/home/NextSteps";
 
@@ -19,7 +19,7 @@ export default function HomePage() {
       <main>
         <Hero />
         <TrustMarquee />
-        <ProblemsSolved />
+        <IdentityStatement />
         <ServicesGrid />
         <HowItWorks />
         <WhyTrust />
