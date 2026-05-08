@@ -11,7 +11,7 @@
 // supprimera automatiquement TOUS les anciens caches au prochain SW install.
 // ============================================================================
 
-const SW_VERSION = "nexus-rca-perf-v2.0.0";
+const SW_VERSION = "nexus-rca-perf-v2.1.0";
 const STATIC_CACHE = `${SW_VERSION}-static`;
 const IMAGES_CACHE = `${SW_VERSION}-images`;
 
