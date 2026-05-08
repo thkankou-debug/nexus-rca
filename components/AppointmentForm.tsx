@@ -20,7 +20,7 @@ import { cn, whatsappLink } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 
 // ============================================================================
-// TYPES
+// TYPES — INCHANGÉS (ne pas modifier)
 // ============================================================================
 type StepId = 1 | 2 | 3;
 
@@ -60,7 +60,7 @@ interface ValidationErrors {
 }
 
 // ============================================================================
-// OPTIONS
+// OPTIONS — INCHANGÉES
 // ============================================================================
 const SERVICES = [
   "Financement business & partenariat",
@@ -136,7 +136,7 @@ const DEFAULT_DATA: AppointmentData = {
 const STORAGE_KEY = "nexus_rdv_draft_v1";
 
 // ============================================================================
-// COMPOSANT PRINCIPAL
+// COMPOSANT PRINCIPAL — logique métier 100% préservée
 // ============================================================================
 export function AppointmentForm() {
   const [currentStep, setCurrentStep] = useState<StepId>(1);
@@ -261,9 +261,7 @@ export function AppointmentForm() {
     }
   };
 
-  // ============================================================================
-  // SOUMISSION — CONNECTE A SUPABASE
-  // ============================================================================
+  // ─── Soumission Supabase — logique 100% préservée ────────────────────
   const handleSubmit = async () => {
     const allErrors: ValidationErrors = {};
     [1, 2, 3].forEach((s) => {
@@ -299,22 +297,16 @@ export function AppointmentForm() {
     setLoading(true);
     setSubmitError(null);
 
-    // Mapping frontend -> colonnes DB
     const payload = {
-      // Etape 1
       service: data.service,
       appointment_object: data.appointmentObject,
       meeting_type: data.meetingType,
       duration: data.duration,
       urgency: data.urgency,
-
-      // Etape 2
       preferred_date: data.preferredDate,
       preferred_time: data.preferredTime,
       alternative_availability: data.alternativeAvailability || null,
       timezone: data.timezone,
-
-      // Etape 3
       full_name: data.fullName.trim(),
       email: data.email.trim().toLowerCase(),
       phone: data.phone.trim(),
@@ -324,10 +316,9 @@ export function AppointmentForm() {
       specific_subject: data.specificSubject.trim(),
       situation: data.situation.trim(),
       has_existing_file: data.hasExistingFile || null,
-      file_number: data.hasExistingFile === "oui" ? data.fileNumber.trim() : null,
+      file_number:
+        data.hasExistingFile === "oui" ? data.fileNumber.trim() : null,
       has_documents_ready: data.hasDocumentsReady || null,
-
-      // Consentements
       consent_accuracy: data.consentAccuracy,
       consent_contact: data.consentContact,
       consent_validation: data.consentValidation,
@@ -356,7 +347,6 @@ export function AppointmentForm() {
       return;
     }
 
-    // Nettoyage du brouillon
     try {
       localStorage.removeItem(STORAGE_KEY);
     } catch {
@@ -367,90 +357,98 @@ export function AppointmentForm() {
   };
 
   // ============================================================================
-  // ECRAN DE SUCCES
+  // ÉCRAN DE SUCCÈS — premium navy
   // ============================================================================
   if (success) {
     return (
-      <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-xl sm:p-12">
-        <div className="mx-auto max-w-xl text-center">
-          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
-            <CheckCircle2 className="h-10 w-10 text-green-600" />
+      <div className="relative overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/[0.06] via-white/[0.04] to-white/[0.02] p-8 ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(255,102,0,0.20)] sm:p-12">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-emerald-500/20 blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-20 -left-12 h-56 w-56 rounded-full bg-nexus-orange-500/15 blur-3xl"
+        />
+
+        <div className="relative mx-auto max-w-xl text-center">
+          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500/30 to-emerald-700/20 ring-1 ring-emerald-400/40 shadow-[0_18px_40px_-12px_rgba(52,211,153,0.4)]">
+            <CheckCircle2 className="h-10 w-10 text-emerald-300" />
           </div>
 
-          <h1 className="font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl">
-            Demande de rendez-vous recue
+          <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-emerald-300 backdrop-blur-md">
+            <Check className="h-3 w-3" />
+            Demande enregistrée
+          </span>
+
+          <h1 className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
+            Demande de rendez-vous reçue
           </h1>
 
-          <p className="mt-4 text-lg text-slate-600">
-            Merci <strong>{data.fullName}</strong>. Votre demande a bien ete
-            enregistree.
+          <p className="mt-4 text-base leading-relaxed text-slate-300 sm:text-lg">
+            Merci <strong className="text-white">{data.fullName}</strong>. Votre
+            demande a bien été enregistrée.
           </p>
 
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5">
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
-              Numero de reference
+          <div className="mt-8 rounded-2xl border border-nexus-orange-400/30 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-white/5 backdrop-blur-xl">
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+              Numéro de référence
             </p>
-            <p className="mt-1 font-mono text-2xl font-bold text-nexus-blue-950">
-              {success.referenceId}
+            <p className="mt-2 break-all font-mono text-2xl font-bold leading-tight sm:text-3xl">
+              <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-500 bg-clip-text text-transparent">
+                {success.referenceId}
+              </span>
             </p>
           </div>
 
           <div className="mt-8 space-y-3 text-left">
-            <h3 className="font-semibold text-nexus-blue-950">
-              Prochaines etapes :
-            </h3>
-            <ul className="space-y-2">
-              <li className="flex items-start gap-2 text-sm text-slate-700">
-                <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-nexus-orange-100 text-xs font-bold text-nexus-orange-700">
-                  1
-                </div>
-                <span>
-                  Un conseiller Nexus RCA examine votre demande sous 24h
-                </span>
-              </li>
-              <li className="flex items-start gap-2 text-sm text-slate-700">
-                <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-nexus-orange-100 text-xs font-bold text-nexus-orange-700">
-                  2
-                </div>
-                <span>
-                  Vous recevez une confirmation par{" "}
-                  {data.meetingType === "whatsapp"
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">
+              Prochaines étapes
+            </p>
+            <ul className="space-y-2.5">
+              {[
+                "Un conseiller Nexus RCA examine votre demande sous 24 h",
+                `Vous recevez une confirmation par ${
+                  data.meetingType === "whatsapp"
                     ? "WhatsApp"
                     : data.meetingType === "phone"
-                    ? "telephone"
-                    : data.meetingType === "video"
-                    ? "email (lien visio)"
-                    : "email"}
-                </span>
-              </li>
-              <li className="flex items-start gap-2 text-sm text-slate-700">
-                <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-nexus-orange-100 text-xs font-bold text-nexus-orange-700">
-                  3
-                </div>
-                <span>
-                  Apres verification de disponibilite, votre rendez-vous est
-                  confirme
-                </span>
-              </li>
+                      ? "téléphone"
+                      : data.meetingType === "video"
+                        ? "email (lien visio)"
+                        : "email"
+                }`,
+                "Après vérification de disponibilité, votre rendez-vous est confirmé",
+              ].map((step, i) => (
+                <li key={i} className="flex items-start gap-3 text-sm text-slate-300">
+                  <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-nexus-orange-400/40 bg-nexus-orange-500/10 text-xs font-bold text-nexus-orange-300">
+                    {i + 1}
+                  </div>
+                  <span>{step}</span>
+                </li>
+              ))}
             </ul>
           </div>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Link
               href="/"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-blue-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-nexus-blue-900"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
             >
               <Home className="h-4 w-4" />
-              Retour a l'accueil
+              Retour à l&rsquo;accueil
             </Link>
             <a
               href={whatsappLink(
-                `Bonjour, je viens de demander un rendez-vous (reference ${success.referenceId}).`
+                `Bonjour, je viens de demander un rendez-vous (référence ${success.referenceId}).`
               )}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-green-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-green-600"
+              className="group/wa relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-emerald-500 px-6 py-3 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(52,211,153,0.5)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-600"
             >
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/wa:left-[120%] group-hover/wa:opacity-100"
+              />
               <MessageCircle className="h-4 w-4" />
               Confirmer sur WhatsApp
             </a>
@@ -460,454 +458,498 @@ export function AppointmentForm() {
     );
   }
 
+  // ============================================================================
+  // FORMULAIRE — wizard 3 étapes premium navy
+  // ============================================================================
   return (
-    <div ref={topRef} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl sm:p-8">
-      <Stepper currentStep={currentStep} onStepClick={goToStep} />
+    <div
+      ref={topRef}
+      className="relative overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/[0.06] via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(255,102,0,0.20)] sm:p-8 lg:p-10"
+    >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-nexus-orange-500/15 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-300/60 to-transparent"
+      />
 
-      {/* ETAPE 1 */}
-      {currentStep === 1 && (
-        <div className="space-y-6">
-          <StepTitle
-            title="Type de rendez-vous"
-            subtitle="Dites-nous de quoi il s'agit pour vous orienter vers le bon conseiller."
-          />
+      <div className="relative">
+        <Stepper currentStep={currentStep} onStepClick={goToStep} />
 
-          <FieldGroup label="Service concerne *" error={errors.service} dataField="service">
-            <div className="grid gap-2 sm:grid-cols-2">
-              {SERVICES.map((s) => (
-                <OptionCard
-                  key={s}
-                  label={s}
-                  selected={data.service === s}
-                  onClick={() => update("service", s)}
-                />
-              ))}
-            </div>
-          </FieldGroup>
-
-          <FieldGroup
-            label="Objet du rendez-vous *"
-            error={errors.appointmentObject}
-            dataField="appointmentObject"
+        {/* ETAPE 1 */}
+        {currentStep === 1 && (
+          <div
+            className="space-y-7"
+            style={{ animation: "step-in 0.4s ease-out" }}
           >
-            <div className="grid gap-2 sm:grid-cols-2">
-              {OBJECTS.map((o) => (
-                <OptionCard
-                  key={o}
-                  label={o}
-                  selected={data.appointmentObject === o}
-                  onClick={() => update("appointmentObject", o)}
-                />
-              ))}
-            </div>
-          </FieldGroup>
-
-          <FieldGroup
-            label="Type de rendez-vous *"
-            error={errors.meetingType}
-            dataField="meetingType"
-          >
-            <div className="grid gap-2 sm:grid-cols-2">
-              {MEETING_TYPES.map((m) => (
-                <OptionCard
-                  key={m.value}
-                  label={m.label}
-                  selected={data.meetingType === m.value}
-                  onClick={() => update("meetingType", m.value)}
-                />
-              ))}
-            </div>
-          </FieldGroup>
-
-          <FieldGroup label="Duree souhaitee">
-            <div className="grid gap-2 grid-cols-2 sm:grid-cols-4">
-              {DURATIONS.map((d) => (
-                <OptionCard
-                  key={d}
-                  label={d}
-                  selected={data.duration === d}
-                  onClick={() => update("duration", d)}
-                  compact
-                />
-              ))}
-            </div>
-          </FieldGroup>
-
-          <FieldGroup label="Niveau d'urgence">
-            <div className="grid gap-2 sm:grid-cols-3">
-              {URGENCY_OPTIONS.map((u) => (
-                <button
-                  key={u.value}
-                  type="button"
-                  onClick={() => update("urgency", u.value)}
-                  className={cn(
-                    "rounded-2xl border-2 p-4 text-left transition-all",
-                    data.urgency === u.value
-                      ? u.value === "tres_urgent"
-                        ? "border-red-500 bg-red-50"
-                        : u.value === "prioritaire"
-                        ? "border-nexus-orange-500 bg-nexus-orange-50"
-                        : "border-nexus-blue-500 bg-nexus-blue-50"
-                      : "border-slate-200 bg-white hover:border-slate-300"
-                  )}
-                >
-                  <p className="font-semibold text-nexus-blue-950">{u.label}</p>
-                  <p className="mt-0.5 text-xs text-slate-500">{u.desc}</p>
-                </button>
-              ))}
-            </div>
-          </FieldGroup>
-        </div>
-      )}
-
-      {/* ETAPE 2 */}
-      {currentStep === 2 && (
-        <div className="space-y-6">
-          <StepTitle
-            title="Disponibilite"
-            subtitle="Proposez une date et une heure. Nous confirmerons apres verification."
-          />
-
-          <div className="grid gap-5 sm:grid-cols-2">
-            <FieldGroup
-              label="Date souhaitee *"
-              error={errors.preferredDate}
-              dataField="preferredDate"
-            >
-              <input
-                type="date"
-                value={data.preferredDate}
-                onChange={(e) => update("preferredDate", e.target.value)}
-                min={new Date().toISOString().split("T")[0]}
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/20"
-              />
-            </FieldGroup>
-
-            <FieldGroup
-              label="Heure souhaitee *"
-              error={errors.preferredTime}
-              dataField="preferredTime"
-            >
-              <input
-                type="time"
-                value={data.preferredTime}
-                onChange={(e) => update("preferredTime", e.target.value)}
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/20"
-              />
-            </FieldGroup>
-          </div>
-
-          <FieldGroup label="Autres disponibilites (optionnel)">
-            <textarea
-              value={data.alternativeAvailability}
-              onChange={(e) =>
-                update("alternativeAvailability", e.target.value)
-              }
-              rows={3}
-              placeholder="Ex: aussi disponible mardi matin et jeudi en fin de journee"
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/20"
+            <StepTitle
+              title="Type de rendez-vous"
+              subtitle="Dites-nous de quoi il s'agit pour vous orienter vers le bon conseiller."
             />
-          </FieldGroup>
 
-          <FieldGroup label="Pays / Fuseau horaire">
-            <input
-              type="text"
-              value={data.timezone}
-              onChange={(e) => update("timezone", e.target.value)}
-              placeholder="Ex: Africa/Bangui (GMT+1)"
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/20"
-            />
-            <p className="mt-1 text-xs text-slate-500">
-              Indiquez votre fuseau si vous etes a l'etranger.
-            </p>
-          </FieldGroup>
-        </div>
-      )}
-
-      {/* ETAPE 3 */}
-      {currentStep === 3 && (
-        <div className="space-y-6">
-          <StepTitle
-            title="Coordonnees et contexte"
-            subtitle="Ces informations nous permettront de vous rappeler et de preparer l'echange."
-          />
-
-          <div className="grid gap-5 sm:grid-cols-2">
-            <FieldGroup label="Nom complet *" error={errors.fullName} dataField="fullName">
-              <TextInput
-                value={data.fullName}
-                onChange={(v) => update("fullName", v)}
-                placeholder="Jean Dupont"
-              />
-            </FieldGroup>
-            <FieldGroup label="Email *" error={errors.email} dataField="email">
-              <TextInput
-                type="email"
-                value={data.email}
-                onChange={(v) => update("email", v)}
-                placeholder="vous@exemple.com"
-              />
-            </FieldGroup>
             <FieldGroup
-              label="Telephone / WhatsApp *"
-              error={errors.phone}
-              dataField="phone"
+              label="Service concerné *"
+              error={errors.service}
+              dataField="service"
             >
-              <TextInput
-                value={data.phone}
-                onChange={(v) => update("phone", v)}
-                placeholder="+236 ..."
-              />
-            </FieldGroup>
-            <FieldGroup label="Pays de residence *" error={errors.country} dataField="country">
-              <TextInput
-                value={data.country}
-                onChange={(v) => update("country", v)}
-              />
-            </FieldGroup>
-            <FieldGroup label="Ville *" error={errors.city} dataField="city">
-              <TextInput
-                value={data.city}
-                onChange={(v) => update("city", v)}
-                placeholder="Bangui, Paris, Montreal..."
-              />
-            </FieldGroup>
-            <FieldGroup label="Langue preferee">
-              <select
-                value={data.language}
-                onChange={(e) => update("language", e.target.value)}
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/20"
-              >
-                {LANGUAGES.map((l) => (
-                  <option key={l} value={l}>
-                    {l}
-                  </option>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {SERVICES.map((s) => (
+                  <OptionCard
+                    key={s}
+                    label={s}
+                    selected={data.service === s}
+                    onClick={() => update("service", s)}
+                  />
                 ))}
-              </select>
-            </FieldGroup>
-          </div>
-
-          <FieldGroup
-            label="Objet precis du rendez-vous *"
-            error={errors.specificSubject}
-            dataField="specificSubject"
-          >
-            <TextInput
-              value={data.specificSubject}
-              onChange={(v) => update("specificSubject", v)}
-              placeholder="Ex: Etude de mon profil pour une admission Canada rentree septembre"
-            />
-          </FieldGroup>
-
-          <FieldGroup
-            label="Decrivez brievement votre situation *"
-            error={errors.situation}
-            dataField="situation"
-          >
-            <textarea
-              value={data.situation}
-              onChange={(e) => update("situation", e.target.value)}
-              rows={4}
-              placeholder="Expliquez votre situation actuelle, vos objectifs et ce que vous attendez du rendez-vous..."
-              className={cn(
-                "w-full rounded-xl border px-4 py-3 text-sm focus:outline-none focus:ring-2",
-                errors.situation
-                  ? "border-red-400 bg-red-50 focus:border-red-500 focus:ring-red-500/20"
-                  : "border-slate-300 focus:border-nexus-orange-500 focus:ring-nexus-orange-500/20"
-              )}
-            />
-            <p className="mt-1 text-xs text-slate-500">
-              {data.situation.length} / min. 20 caracteres
-            </p>
-          </FieldGroup>
-
-          <FieldGroup label="Avez-vous deja un dossier chez Nexus RCA ?">
-            <div className="grid gap-2 sm:grid-cols-2">
-              <YesNoButton
-                label="Oui"
-                selected={data.hasExistingFile === "oui"}
-                onClick={() => update("hasExistingFile", "oui")}
-              />
-              <YesNoButton
-                label="Non"
-                selected={data.hasExistingFile === "non"}
-                onClick={() => update("hasExistingFile", "non")}
-              />
-            </div>
-          </FieldGroup>
-
-          {data.hasExistingFile === "oui" && (
-            <FieldGroup
-              label="Numero de dossier *"
-              error={errors.fileNumber}
-              dataField="fileNumber"
-            >
-              <TextInput
-                value={data.fileNumber}
-                onChange={(v) => update("fileNumber", v)}
-                placeholder="NX-2026-XXXXXX"
-              />
-            </FieldGroup>
-          )}
-
-          <FieldGroup label="Avez-vous deja des documents prets ?">
-            <div className="grid gap-2 sm:grid-cols-2">
-              <YesNoButton
-                label="Oui, je les ai"
-                selected={data.hasDocumentsReady === "oui"}
-                onClick={() => update("hasDocumentsReady", "oui")}
-              />
-              <YesNoButton
-                label="Pas encore"
-                selected={data.hasDocumentsReady === "non"}
-                onClick={() => update("hasDocumentsReady", "non")}
-              />
-            </div>
-            {data.hasDocumentsReady === "oui" && (
-              <p className="mt-2 flex items-start gap-2 rounded-xl bg-nexus-blue-50 p-3 text-xs text-nexus-blue-900">
-                <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-nexus-blue-700" />
-                <span>
-                  Parfait ! Vous pourrez les transmettre lors du rendez-vous ou
-                  via notre formulaire de dossier complet.
-                </span>
-              </p>
-            )}
-          </FieldGroup>
-
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-            <div className="mb-4 flex items-center gap-2">
-              <ClipboardCheck className="h-5 w-5 text-nexus-blue-700" />
-              <h3 className="font-semibold text-nexus-blue-950">
-                Recapitulatif de votre demande
-              </h3>
-            </div>
-            <dl className="space-y-2 text-sm">
-              <SummaryRow label="Service" value={data.service} />
-              <SummaryRow label="Objet" value={data.appointmentObject} />
-              <SummaryRow
-                label="Type"
-                value={
-                  MEETING_TYPES.find((m) => m.value === data.meetingType)
-                    ?.label || "-"
-                }
-              />
-              <SummaryRow label="Duree" value={data.duration} />
-              <SummaryRow
-                label="Date et heure"
-                value={
-                  data.preferredDate && data.preferredTime
-                    ? `${data.preferredDate} a ${data.preferredTime}`
-                    : "-"
-                }
-              />
-              <SummaryRow
-                label="Urgence"
-                value={
-                  URGENCY_OPTIONS.find((u) => u.value === data.urgency)
-                    ?.label || "-"
-                }
-              />
-            </dl>
-          </div>
-
-          <div className="space-y-3">
-            <ConsentBox
-              checked={data.consentAccuracy}
-              onChange={(v) => update("consentAccuracy", v)}
-              error={errors.consentAccuracy}
-              label="Je confirme que les informations fournies sont exactes."
-            />
-            <ConsentBox
-              checked={data.consentContact}
-              onChange={(v) => update("consentContact", v)}
-              error={errors.consentContact}
-              label="J'autorise Nexus RCA a me contacter pour confirmer ce rendez-vous."
-            />
-            <ConsentBox
-              checked={data.consentValidation}
-              onChange={(v) => update("consentValidation", v)}
-              error={errors.consentValidation}
-              label="Je comprends que le rendez-vous n'est confirme qu'apres validation par Nexus RCA."
-            />
-          </div>
-
-          {submitError && (
-            <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4">
-              <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-600" />
-              <div>
-                <p className="font-semibold text-red-900">
-                  Erreur lors de l'envoi
-                </p>
-                <p className="mt-0.5 text-sm text-red-700">{submitError}</p>
               </div>
+            </FieldGroup>
+
+            <FieldGroup
+              label="Objet du rendez-vous *"
+              error={errors.appointmentObject}
+              dataField="appointmentObject"
+            >
+              <div className="grid gap-2 sm:grid-cols-2">
+                {OBJECTS.map((o) => (
+                  <OptionCard
+                    key={o}
+                    label={o}
+                    selected={data.appointmentObject === o}
+                    onClick={() => update("appointmentObject", o)}
+                  />
+                ))}
+              </div>
+            </FieldGroup>
+
+            <FieldGroup
+              label="Type de rendez-vous *"
+              error={errors.meetingType}
+              dataField="meetingType"
+            >
+              <div className="grid gap-2 sm:grid-cols-2">
+                {MEETING_TYPES.map((m) => (
+                  <OptionCard
+                    key={m.value}
+                    label={m.label}
+                    selected={data.meetingType === m.value}
+                    onClick={() => update("meetingType", m.value)}
+                  />
+                ))}
+              </div>
+            </FieldGroup>
+
+            <FieldGroup label="Durée souhaitée">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {DURATIONS.map((d) => (
+                  <OptionCard
+                    key={d}
+                    label={d}
+                    selected={data.duration === d}
+                    onClick={() => update("duration", d)}
+                    compact
+                  />
+                ))}
+              </div>
+            </FieldGroup>
+
+            <FieldGroup label="Niveau d'urgence">
+              <div className="grid gap-2 sm:grid-cols-3">
+                {URGENCY_OPTIONS.map((u) => (
+                  <UrgencyCard
+                    key={u.value}
+                    selected={data.urgency === u.value}
+                    onClick={() => update("urgency", u.value)}
+                    label={u.label}
+                    desc={u.desc}
+                    value={u.value}
+                  />
+                ))}
+              </div>
+            </FieldGroup>
+          </div>
+        )}
+
+        {/* ETAPE 2 */}
+        {currentStep === 2 && (
+          <div
+            className="space-y-7"
+            style={{ animation: "step-in 0.4s ease-out" }}
+          >
+            <StepTitle
+              title="Disponibilité"
+              subtitle="Proposez une date et une heure. Nous confirmerons après vérification."
+            />
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <FieldGroup
+                label="Date souhaitée *"
+                error={errors.preferredDate}
+                dataField="preferredDate"
+              >
+                <PremiumInput
+                  type="date"
+                  value={data.preferredDate}
+                  onChange={(v) => update("preferredDate", v)}
+                  min={new Date().toISOString().split("T")[0]}
+                />
+              </FieldGroup>
+
+              <FieldGroup
+                label="Heure souhaitée *"
+                error={errors.preferredTime}
+                dataField="preferredTime"
+              >
+                <PremiumInput
+                  type="time"
+                  value={data.preferredTime}
+                  onChange={(v) => update("preferredTime", v)}
+                />
+              </FieldGroup>
             </div>
-          )}
 
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={loading}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:shadow-xl disabled:opacity-60"
+            <FieldGroup label="Autres disponibilités (optionnel)">
+              <PremiumTextarea
+                value={data.alternativeAvailability}
+                onChange={(v) => update("alternativeAvailability", v)}
+                rows={3}
+                placeholder="Ex : aussi disponible mardi matin et jeudi en fin de journée"
+              />
+            </FieldGroup>
+
+            <FieldGroup label="Pays / Fuseau horaire">
+              <PremiumInput
+                value={data.timezone}
+                onChange={(v) => update("timezone", v)}
+                placeholder="Ex : Africa/Bangui (GMT+1)"
+              />
+              <p className="mt-1.5 text-xs text-white/55">
+                Indiquez votre fuseau si vous êtes à l&rsquo;étranger.
+              </p>
+            </FieldGroup>
+          </div>
+        )}
+
+        {/* ETAPE 3 */}
+        {currentStep === 3 && (
+          <div
+            className="space-y-7"
+            style={{ animation: "step-in 0.4s ease-out" }}
           >
-            {loading ? (
-              <>
-                <Loader2 className="h-5 w-5 animate-spin" />
-                Envoi en cours...
-              </>
-            ) : (
-              <>
-                <Check className="h-5 w-5" />
-                Demander mon rendez-vous
-              </>
+            <StepTitle
+              title="Coordonnées et contexte"
+              subtitle="Ces informations nous permettront de vous rappeler et de préparer l'échange."
+            />
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <FieldGroup
+                label="Nom complet *"
+                error={errors.fullName}
+                dataField="fullName"
+              >
+                <PremiumInput
+                  value={data.fullName}
+                  onChange={(v) => update("fullName", v)}
+                  placeholder="Jean Dupont"
+                />
+              </FieldGroup>
+              <FieldGroup
+                label="Email *"
+                error={errors.email}
+                dataField="email"
+              >
+                <PremiumInput
+                  type="email"
+                  value={data.email}
+                  onChange={(v) => update("email", v)}
+                  placeholder="vous@exemple.com"
+                />
+              </FieldGroup>
+              <FieldGroup
+                label="Téléphone / WhatsApp *"
+                error={errors.phone}
+                dataField="phone"
+              >
+                <PremiumInput
+                  value={data.phone}
+                  onChange={(v) => update("phone", v)}
+                  placeholder="+236 ..."
+                />
+              </FieldGroup>
+              <FieldGroup
+                label="Pays de résidence *"
+                error={errors.country}
+                dataField="country"
+              >
+                <PremiumInput
+                  value={data.country}
+                  onChange={(v) => update("country", v)}
+                />
+              </FieldGroup>
+              <FieldGroup
+                label="Ville *"
+                error={errors.city}
+                dataField="city"
+              >
+                <PremiumInput
+                  value={data.city}
+                  onChange={(v) => update("city", v)}
+                  placeholder="Bangui, Paris, Montréal..."
+                />
+              </FieldGroup>
+              <FieldGroup label="Langue préférée">
+                <PremiumSelect
+                  value={data.language}
+                  onChange={(v) => update("language", v)}
+                  options={LANGUAGES}
+                />
+              </FieldGroup>
+            </div>
+
+            <FieldGroup
+              label="Objet précis du rendez-vous *"
+              error={errors.specificSubject}
+              dataField="specificSubject"
+            >
+              <PremiumInput
+                value={data.specificSubject}
+                onChange={(v) => update("specificSubject", v)}
+                placeholder="Ex : Étude de mon profil pour une admission Canada rentrée septembre"
+              />
+            </FieldGroup>
+
+            <FieldGroup
+              label="Décrivez brièvement votre situation *"
+              error={errors.situation}
+              dataField="situation"
+            >
+              <PremiumTextarea
+                value={data.situation}
+                onChange={(v) => update("situation", v)}
+                rows={4}
+                placeholder="Expliquez votre situation actuelle, vos objectifs et ce que vous attendez du rendez-vous..."
+                hasError={!!errors.situation}
+              />
+              <p
+                className={cn(
+                  "mt-1.5 text-xs",
+                  data.situation.length >= 20
+                    ? "text-emerald-300"
+                    : "text-white/55"
+                )}
+              >
+                {data.situation.length} / min. 20 caractères
+              </p>
+            </FieldGroup>
+
+            <FieldGroup label="Avez-vous déjà un dossier chez Nexus RCA ?">
+              <div className="grid gap-2 sm:grid-cols-2">
+                <YesNoButton
+                  label="Oui"
+                  selected={data.hasExistingFile === "oui"}
+                  onClick={() => update("hasExistingFile", "oui")}
+                />
+                <YesNoButton
+                  label="Non"
+                  selected={data.hasExistingFile === "non"}
+                  onClick={() => update("hasExistingFile", "non")}
+                />
+              </div>
+            </FieldGroup>
+
+            {data.hasExistingFile === "oui" && (
+              <FieldGroup
+                label="Numéro de dossier *"
+                error={errors.fileNumber}
+                dataField="fileNumber"
+              >
+                <PremiumInput
+                  value={data.fileNumber}
+                  onChange={(v) => update("fileNumber", v)}
+                  placeholder="NX-2026-XXXXXX"
+                />
+              </FieldGroup>
             )}
-          </button>
-        </div>
-      )}
 
-      {currentStep < 3 && (
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-between">
-          <button
-            type="button"
-            onClick={handlePrev}
-            disabled={currentStep === 1}
-            className={cn(
-              "inline-flex items-center justify-center gap-2 rounded-full border-2 border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400",
-              currentStep === 1 && "invisible"
+            <FieldGroup label="Avez-vous déjà des documents prêts ?">
+              <div className="grid gap-2 sm:grid-cols-2">
+                <YesNoButton
+                  label="Oui, je les ai"
+                  selected={data.hasDocumentsReady === "oui"}
+                  onClick={() => update("hasDocumentsReady", "oui")}
+                />
+                <YesNoButton
+                  label="Pas encore"
+                  selected={data.hasDocumentsReady === "non"}
+                  onClick={() => update("hasDocumentsReady", "non")}
+                />
+              </div>
+              {data.hasDocumentsReady === "oui" && (
+                <p className="mt-3 flex items-start gap-2 rounded-xl border border-nexus-orange-400/30 bg-nexus-orange-500/10 p-3 text-xs text-nexus-orange-200 backdrop-blur-md">
+                  <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-300" />
+                  <span>
+                    Parfait ! Vous pourrez les transmettre lors du rendez-vous
+                    ou via notre formulaire de dossier complet.
+                  </span>
+                </p>
+              )}
+            </FieldGroup>
+
+            {/* Récap */}
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 ring-1 ring-white/5 backdrop-blur-md sm:p-6">
+              <div className="mb-4 flex items-center gap-2">
+                <ClipboardCheck className="h-4 w-4 text-nexus-orange-300" />
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                  Récapitulatif de votre demande
+                </h3>
+              </div>
+              <dl className="space-y-2 text-sm">
+                <SummaryRow label="Service" value={data.service} />
+                <SummaryRow label="Objet" value={data.appointmentObject} />
+                <SummaryRow
+                  label="Type"
+                  value={
+                    MEETING_TYPES.find((m) => m.value === data.meetingType)
+                      ?.label || "—"
+                  }
+                />
+                <SummaryRow label="Durée" value={data.duration} />
+                <SummaryRow
+                  label="Date et heure"
+                  value={
+                    data.preferredDate && data.preferredTime
+                      ? `${data.preferredDate} à ${data.preferredTime}`
+                      : "—"
+                  }
+                />
+                <SummaryRow
+                  label="Urgence"
+                  value={
+                    URGENCY_OPTIONS.find((u) => u.value === data.urgency)
+                      ?.label || "—"
+                  }
+                />
+              </dl>
+            </div>
+
+            <div className="space-y-2.5">
+              <ConsentBox
+                checked={data.consentAccuracy}
+                onChange={(v) => update("consentAccuracy", v)}
+                error={errors.consentAccuracy}
+                label="Je confirme que les informations fournies sont exactes."
+              />
+              <ConsentBox
+                checked={data.consentContact}
+                onChange={(v) => update("consentContact", v)}
+                error={errors.consentContact}
+                label="J'autorise Nexus RCA à me contacter pour confirmer ce rendez-vous."
+              />
+              <ConsentBox
+                checked={data.consentValidation}
+                onChange={(v) => update("consentValidation", v)}
+                error={errors.consentValidation}
+                label="Je comprends que le rendez-vous n'est confirmé qu'après validation par Nexus RCA."
+              />
+            </div>
+
+            {submitError && (
+              <div className="flex items-start gap-3 rounded-2xl border border-rose-400/40 bg-rose-500/10 p-4 backdrop-blur-md">
+                <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-rose-300" />
+                <div>
+                  <p className="font-semibold text-rose-200">
+                    Erreur lors de l&rsquo;envoi
+                  </p>
+                  <p className="mt-0.5 text-sm text-rose-200/85">
+                    {submitError}
+                  </p>
+                </div>
+              </div>
             )}
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Precedent
-          </button>
-          <button
-            type="button"
-            onClick={handleNext}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
-          >
-            Continuer
-            <ArrowRight className="h-4 w-4" />
-          </button>
-        </div>
-      )}
 
-      {currentStep === 3 && (
-        <div className="mt-6 flex justify-start">
-          <button
-            type="button"
-            onClick={handlePrev}
-            className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Precedent
-          </button>
-        </div>
-      )}
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={loading}
+              className="group/cta relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600 px-7 py-4 text-base font-bold text-white shadow-[0_12px_32px_-10px_rgba(255,102,0,0.7)] transition-all duration-300 hover:-translate-y-0.5 hover:from-nexus-orange-600 hover:to-nexus-orange-700 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
+              />
+              {loading ? (
+                <>
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  Envoi en cours…
+                </>
+              ) : (
+                <>
+                  <Check className="h-5 w-5" />
+                  Demander mon rendez-vous
+                </>
+              )}
+            </button>
+          </div>
+        )}
+
+        {/* Navigation */}
+        {currentStep < 3 && (
+          <div className="mt-8 flex flex-col-reverse gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <button
+              type="button"
+              onClick={handlePrev}
+              disabled={currentStep === 1}
+              className={cn(
+                "inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white/80 backdrop-blur-md transition-all duration-200 hover:border-white/20 hover:bg-white/[0.07] disabled:opacity-40",
+                currentStep === 1 && "invisible"
+              )}
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Précédent
+            </button>
+            <p className="text-center text-xs text-white/55 sm:text-left sm:flex-1 sm:px-6">
+              Étape {currentStep} sur 3 ·{" "}
+              <span className="font-semibold text-white/80">
+                {STEPS.find((s) => s.id === currentStep)?.title}
+              </span>
+            </p>
+            <button
+              type="button"
+              onClick={handleNext}
+              className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-nexus-orange-500 px-7 py-3 text-sm font-bold text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-nexus-orange-600"
+            >
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
+              />
+              Continuer
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
+            </button>
+          </div>
+        )}
+
+        {currentStep === 3 && (
+          <div className="mt-6 flex justify-start">
+            <button
+              type="button"
+              onClick={handlePrev}
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white/80 backdrop-blur-md transition-all duration-200 hover:border-white/20 hover:bg-white/[0.07]"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Précédent
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
 // ============================================================================
-// SOUS-COMPOSANTS
+// SOUS-COMPOSANTS — refonte visuelle premium navy
 // ============================================================================
+
 function Stepper({
   currentStep,
   onStepClick,
@@ -915,47 +957,61 @@ function Stepper({
   currentStep: StepId;
   onStepClick: (s: StepId) => void;
 }) {
-  const progressPercent = ((currentStep - 1) / (STEPS.length - 1)) * 100;
-
   return (
     <div className="mb-8">
+      {/* Desktop : stepper horizontal premium */}
       <div className="relative hidden sm:block">
-        <div className="absolute left-0 right-0 top-5 h-0.5 bg-slate-200" />
         <div
-          className="absolute left-0 top-5 h-0.5 bg-nexus-orange-500 transition-all duration-500"
-          style={{ width: `${progressPercent}%` }}
+          aria-hidden
+          className="absolute inset-x-0 top-5 h-0.5 rounded-full bg-white/10"
         />
-        <ol className="relative flex justify-between">
+        <div
+          aria-hidden
+          className="absolute left-0 top-5 h-0.5 rounded-full bg-gradient-to-r from-nexus-orange-500 via-nexus-orange-400 to-nexus-orange-300 shadow-[0_0_18px_-2px_rgba(255,102,0,0.7)] transition-all duration-700 ease-out"
+          style={{ width: `${((currentStep - 1) / (STEPS.length - 1)) * 100}%` }}
+        />
+        <ol className="relative grid grid-cols-3 gap-2">
           {STEPS.map((step) => {
-            const isComplete = step.id < currentStep;
-            const isCurrent = step.id === currentStep;
+            const state =
+              step.id < currentStep
+                ? "done"
+                : step.id === currentStep
+                  ? "active"
+                  : "todo";
             const Icon = step.icon;
             return (
-              <li key={step.id} className="flex flex-col items-center">
+              <li
+                key={step.id}
+                className="flex flex-col items-center text-center"
+              >
                 <button
                   type="button"
                   onClick={() => onStepClick(step.id)}
                   className={cn(
-                    "flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all",
-                    isComplete &&
-                      "border-nexus-orange-500 bg-nexus-orange-500 text-white",
-                    isCurrent &&
-                      "border-nexus-orange-500 bg-white text-nexus-orange-600 ring-4 ring-nexus-orange-100",
-                    !isComplete &&
-                      !isCurrent &&
-                      "border-slate-300 bg-white text-slate-400 hover:border-slate-400"
+                    "relative flex h-10 w-10 items-center justify-center rounded-full ring-2 transition-all duration-500 sm:h-12 sm:w-12",
+                    state === "done"
+                      ? "bg-nexus-orange-500 text-white ring-nexus-orange-400/40 shadow-[0_0_24px_-4px_rgba(255,102,0,0.6)]"
+                      : state === "active"
+                        ? "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white ring-nexus-orange-400/70 shadow-[0_0_28px_-4px_rgba(255,102,0,0.9)]"
+                        : "bg-nexus-blue-950 text-white/40 ring-white/10 backdrop-blur-md hover:ring-white/20"
                   )}
                 >
-                  {isComplete ? (
-                    <Check className="h-5 w-5" />
+                  {state === "done" ? (
+                    <Check className="h-4 w-4 sm:h-5 sm:w-5" />
                   ) : (
-                    <Icon className="h-5 w-5" />
+                    <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
+                  )}
+                  {state === "active" && (
+                    <span
+                      aria-hidden
+                      className="absolute inset-0 rounded-full bg-nexus-orange-500/40 animate-ping"
+                    />
                   )}
                 </button>
                 <span
                   className={cn(
-                    "mt-2 text-xs font-semibold",
-                    isCurrent ? "text-nexus-blue-950" : "text-slate-500"
+                    "mt-3 text-[10px] font-bold uppercase tracking-[0.16em] sm:text-xs",
+                    state === "todo" ? "text-white/40" : "text-white/85"
                   )}
                 >
                   {step.title}
@@ -966,18 +1022,19 @@ function Stepper({
         </ol>
       </div>
 
+      {/* Mobile : indicator + barre */}
       <div className="sm:hidden">
         <div className="flex items-center justify-between text-sm">
-          <span className="font-semibold text-nexus-blue-950">
-            Etape {currentStep} / {STEPS.length}
+          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+            Étape {currentStep} / {STEPS.length}
           </span>
-          <span className="text-slate-500">
+          <span className="text-xs font-semibold text-white/85">
             {STEPS.find((s) => s.id === currentStep)?.title}
           </span>
         </div>
-        <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-200">
+        <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-white/10">
           <div
-            className="h-full bg-nexus-orange-500 transition-all duration-500"
+            className="h-full bg-gradient-to-r from-nexus-orange-500 via-nexus-orange-400 to-nexus-orange-300 shadow-[0_0_12px_-2px_rgba(255,102,0,0.6)] transition-all duration-500"
             style={{ width: `${(currentStep / STEPS.length) * 100}%` }}
           />
         </div>
@@ -989,10 +1046,12 @@ function Stepper({
 function StepTitle({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <div>
-      <h2 className="font-display text-2xl font-bold text-nexus-blue-950">
+      <h2 className="font-display text-2xl font-bold leading-tight tracking-tight text-white sm:text-3xl">
         {title}
       </h2>
-      <p className="mt-1 text-sm text-slate-600">{subtitle}</p>
+      <p className="mt-2 text-sm leading-relaxed text-slate-300 sm:text-base">
+        {subtitle}
+      </p>
     </div>
   );
 }
@@ -1010,13 +1069,13 @@ function FieldGroup({
 }) {
   return (
     <div data-field={dataField}>
-      <label className="mb-2 block text-sm font-semibold text-nexus-blue-950">
+      <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.18em] text-white/65">
         {label}
       </label>
       {children}
       {error && (
-        <p className="mt-1.5 flex items-center gap-1 text-sm text-red-600">
-          <AlertCircle className="h-4 w-4" />
+        <p className="mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-rose-300">
+          <AlertCircle className="h-3.5 w-3.5" />
           {error}
         </p>
       )}
@@ -1040,14 +1099,64 @@ function OptionCard({
       type="button"
       onClick={onClick}
       className={cn(
-        "rounded-2xl border-2 text-left font-medium transition-all",
-        compact ? "px-3 py-2.5 text-sm text-center" : "p-4 text-sm",
+        "rounded-xl border text-left font-medium backdrop-blur-md transition-all duration-200",
+        compact
+          ? "px-3 py-2.5 text-sm text-center"
+          : "p-3.5 text-sm",
         selected
-          ? "border-nexus-orange-500 bg-nexus-orange-50 text-nexus-blue-950"
-          : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
+          ? "border-nexus-orange-400/60 bg-nexus-orange-500/10 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_8px_24px_-8px_rgba(255,102,0,0.30)]"
+          : "border-white/10 bg-white/[0.04] text-white/85 hover:border-white/20 hover:bg-white/[0.07]"
       )}
     >
       {label}
+    </button>
+  );
+}
+
+function UrgencyCard({
+  selected,
+  onClick,
+  label,
+  desc,
+  value,
+}: {
+  selected: boolean;
+  onClick: () => void;
+  label: string;
+  desc: string;
+  value: Urgency;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "rounded-xl border p-4 text-left backdrop-blur-md transition-all duration-300",
+        selected
+          ? value === "tres_urgent"
+            ? "border-rose-400/60 bg-rose-500/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_18px_36px_-16px_rgba(244,63,94,0.30)]"
+            : value === "prioritaire"
+              ? "border-amber-400/60 bg-amber-500/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_18px_36px_-16px_rgba(251,191,36,0.30)]"
+              : "border-emerald-400/60 bg-emerald-500/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_18px_36px_-16px_rgba(52,211,153,0.30)]"
+          : "border-white/10 bg-white/[0.04] hover:border-white/20 hover:bg-white/[0.07]"
+      )}
+    >
+      <p
+        className={cn(
+          "font-display text-sm font-bold leading-tight",
+          selected ? "text-white" : "text-white/85"
+        )}
+      >
+        {label}
+      </p>
+      <p
+        className={cn(
+          "mt-1 text-xs",
+          selected ? "text-white/85" : "text-white/55"
+        )}
+      >
+        {desc}
+      </p>
     </button>
   );
 }
@@ -1066,10 +1175,10 @@ function YesNoButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "rounded-xl border-2 p-3 text-sm font-semibold transition-all",
+        "rounded-xl border p-3 text-sm font-semibold backdrop-blur-md transition-all duration-200",
         selected
-          ? "border-nexus-orange-500 bg-nexus-orange-50 text-nexus-blue-950"
-          : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
+          ? "border-nexus-orange-400/60 bg-nexus-orange-500/10 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]"
+          : "border-white/10 bg-white/[0.04] text-white/85 hover:border-white/20 hover:bg-white/[0.07]"
       )}
     >
       {label}
@@ -1077,16 +1186,18 @@ function YesNoButton({
   );
 }
 
-function TextInput({
+function PremiumInput({
   value,
   onChange,
   placeholder,
   type = "text",
+  min,
 }: {
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
   type?: string;
+  min?: string;
 }) {
   return (
     <input
@@ -1094,17 +1205,77 @@ function TextInput({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/20"
+      min={min}
+      className="w-full rounded-xl border border-white/10 bg-nexus-blue-950/40 px-4 py-3 text-sm text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/20 [color-scheme:dark]"
     />
+  );
+}
+
+function PremiumTextarea({
+  value,
+  onChange,
+  placeholder,
+  rows = 3,
+  hasError,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  rows?: number;
+  hasError?: boolean;
+}) {
+  return (
+    <textarea
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      rows={rows}
+      className={cn(
+        "w-full rounded-xl border bg-nexus-blue-950/40 px-4 py-3 text-sm text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-2",
+        hasError
+          ? "border-rose-400/40 focus:border-rose-400/70 focus:ring-rose-500/20"
+          : "border-white/10 focus:border-nexus-orange-400/60 focus:ring-nexus-orange-500/20"
+      )}
+    />
+  );
+}
+
+function PremiumSelect({
+  value,
+  onChange,
+  options,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  options: string[];
+}) {
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="w-full rounded-xl border border-white/10 bg-nexus-blue-950/40 px-4 py-3 text-sm text-white backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/20 [color-scheme:dark]"
+    >
+      {options.map((o) => (
+        <option key={o} value={o} className="bg-nexus-blue-950 text-white">
+          {o}
+        </option>
+      ))}
+    </select>
   );
 }
 
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex gap-2">
-      <dt className="font-medium text-slate-500">{label} :</dt>
-      <dd className="text-slate-800">
-        {value || <em className="text-slate-400">non renseigne</em>}
+    <div className="flex items-baseline gap-3 border-b border-white/5 pb-2 last:border-0 last:pb-0">
+      <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">
+        {label}
+      </dt>
+      <dd className="flex-1 text-right text-sm text-white/85">
+        {value && value !== "—" ? (
+          value
+        ) : (
+          <em className="text-white/40">non renseigné</em>
+        )}
       </dd>
     </div>
   );
@@ -1125,24 +1296,32 @@ function ConsentBox({
     <div>
       <label
         className={cn(
-          "flex cursor-pointer items-start gap-3 rounded-xl border p-3 transition-colors",
+          "flex cursor-pointer items-start gap-3 rounded-xl border p-3 backdrop-blur-md transition-colors",
           checked
-            ? "border-nexus-orange-300 bg-nexus-orange-50/50"
-            : "border-slate-200",
-          error && "border-red-400 bg-red-50"
+            ? "border-nexus-orange-400/40 bg-nexus-orange-500/10"
+            : error
+              ? "border-rose-400/40 bg-rose-500/10"
+              : "border-white/10 bg-white/[0.04] hover:bg-white/[0.06]"
         )}
       >
         <input
           type="checkbox"
           checked={checked}
           onChange={(e) => onChange(e.target.checked)}
-          className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer rounded border-slate-300 text-nexus-orange-600 focus:ring-2 focus:ring-nexus-orange-500/30"
+          className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-white/30 bg-transparent accent-nexus-orange-500"
         />
-        <span className="text-sm text-nexus-blue-950">{label}</span>
+        <span
+          className={cn(
+            "text-xs leading-relaxed sm:text-sm",
+            checked ? "text-white" : "text-slate-200"
+          )}
+        >
+          {label}
+        </span>
       </label>
       {error && (
-        <p className="mt-1 flex items-center gap-1 text-xs text-red-600">
-          <AlertCircle className="h-3.5 w-3.5" />
+        <p className="mt-1 flex items-center gap-1 text-xs font-semibold text-rose-300">
+          <AlertCircle className="h-3 w-3" />
           {error}
         </p>
       )}
