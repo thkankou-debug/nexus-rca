@@ -1,67 +1,47 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import toast from "react-hot-toast";
 import {
-  ArrowRight,
-  ArrowLeft,
-  CheckCircle2,
-  MessageCircle,
-  Paperclip,
-  User,
-  FileText,
-  ShieldCheck,
-  Zap,
-  Loader2,
-  ClipboardCheck,
-  Check,
-  Hash,
-  HeartHandshake,
-  Lock,
-  Search,
-  Clock,
   AlertCircle,
-  Briefcase,
-  Layers,
-  Folder,
-  PenLine,
-  Sparkles,
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  ClipboardCheck,
+  FileText,
+  Loader2,
+  Lock,
+  LogIn,
+  Paperclip,
+  Trash2,
+  Upload,
+  User,
+  UserPlus,
 } from "lucide-react";
-import { DynamicServiceFields } from "@/components/DynamicServiceFields";
-import { FileUploader } from "@/components/FileUploader";
-import { createClient } from "@/lib/supabase/client";
+import { cn } from "@/lib/utils";
 import {
-  SERVICE_TYPES,
-  getServiceTypeConfig,
-  DEFAULT_FORM_VALUES,
-  validateDemandeForm,
-  type DemandeCompleteForm,
+  CATEGORIES_PAR_SERVICE,
+  DEFAULT_FORM_VALUES_COMPLETE,
+  DOCUMENT_CATEGORIES,
+  NIVEAUX_ETUDES,
+  SERVICES_COMPLETS,
+  SEXES,
+  SITUATIONS_MATRIMONIALES,
+  validateFinal,
+  validateSection,
+  type DemandeCompletePayload,
+  type DocumentCategorie,
+  type ServiceComplet,
   type ValidationErrors,
-  SERVICE_SLUG_TO_TYPE,
-} from "@/lib/demande-form";
-import { whatsappLink, cn } from "@/lib/utils";
-import type { ServiceType, UrgenceLevel } from "@/types";
+} from "@/lib/demande-complete-form";
 
-// ============================================================================
-// TYPE LOCAL — étend DemandeCompleteForm avec 4 textareas section 5 + source
-// (les 4 textareas sont concaténées dans `description` au submit Supabase)
-// ============================================================================
-type DemandeCompleteFormWithSource = DemandeCompleteForm & {
-  source?: string;
-  // Section 05 — 4 zones structurées (concat dans description au submit)
-  description_situation?: string;
-  description_entrepris?: string;
-  description_difficultes?: string;
-  description_attendu?: string;
-};
+const STORAGE_KEY = "nexus_demande_complete_v4";
 
-// ============================================================================
-// SECTIONS — 6 sections numérotées style dossier administratif
-// ============================================================================
-type StepId = 1 | 2 | 3 | 4 | 5 | 6;
+// 7 sections : 0 (identification), 1 (personnel), 2 (demande), 3 (spécifique),
+// 4 (documents), 5 (complémentaires), 6 (validation)
+type StepId = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 const SECTIONS: Array<{
   id: StepId;
@@ -69,243 +49,113 @@ const SECTIONS: Array<{
   title: string;
   shortTitle: string;
   description: string;
-  icon: React.ComponentType<{ className?: string }>;
 }> = [
+  {
+    id: 0,
+    number: "00",
+    title: "Identification",
+    shortTitle: "Identification",
+    description: "Êtes-vous déjà client de Nexus RCA ?",
+  },
   {
     id: 1,
     number: "01",
-    title: "Informations personnelles",
-    shortTitle: "Informations",
+    title: "Identification du demandeur",
+    shortTitle: "Personnel",
     description: "Renseignez les coordonnées du demandeur principal.",
-    icon: User,
   },
   {
     id: 2,
     number: "02",
-    title: "Nature de la demande",
+    title: "Type de demande",
     shortTitle: "Demande",
-    description:
-      "Sélectionnez le service concerné et précisez l'objet de votre demande.",
-    icon: Briefcase,
+    description: "Sélectionnez le service et précisez le contexte de votre demande.",
   },
   {
     id: 3,
     number: "03",
-    title: "Contexte du dossier",
-    shortTitle: "Contexte",
-    description:
-      "Précisions complémentaires : urgence, dates, pays concernés, budget.",
-    icon: Layers,
+    title: "Informations spécifiques",
+    shortTitle: "Spécifique",
+    description: "Précisions complémentaires liées au service demandé.",
   },
   {
     id: 4,
     number: "04",
-    title: "Documents justificatifs",
+    title: "Documents",
     shortTitle: "Documents",
     description:
-      "Joignez les pièces utiles à votre dossier. Confidentialité garantie.",
-    icon: Folder,
+      "Joignez les pièces utiles à votre dossier. Aucune catégorie n'est obligatoire.",
   },
   {
     id: 5,
     number: "05",
-    title: "Description détaillée",
-    shortTitle: "Description",
-    description:
-      "Quatre questions structurées pour permettre une analyse adaptée.",
-    icon: PenLine,
+    title: "Informations complémentaires",
+    shortTitle: "Notes",
+    description: "Toute information utile au traitement de votre dossier.",
   },
   {
     id: 6,
     number: "06",
-    title: "Confirmation",
-    shortTitle: "Confirmation",
-    description:
-      "Vérification du dossier et acceptation des conditions de traitement.",
-    icon: ClipboardCheck,
+    title: "Validation",
+    shortTitle: "Validation",
+    description: "Vérification du dossier et acceptation des conditions.",
   },
 ];
 
-// ============================================================================
-// CHECKLIST DOCUMENTS PAR SERVICE
-// ============================================================================
-const DOCUMENTS_CHECKLIST: Record<string, string[]> = {
-  visa: [
-    "Passeport (copie de toutes les pages utiles)",
-    "Photos d'identité aux normes",
-    "Justificatifs financiers (relevés bancaires 3-6 mois)",
-    "Justificatif de domicile",
-    "Documents liés au motif du voyage (invitation, réservation)",
-    "CV récent",
-  ],
-  billet: [
-    "Copie du passeport (nom exact, expiration)",
-    "Dates et villes précises du voyage",
-  ],
-  hotel: ["Copie du passeport", "Dates précises du séjour"],
-  tcf: [
-    "Pièce d'identité en cours de validité",
-    "Résultats de tests précédents (si applicable)",
-  ],
-  etudes: [
-    "Diplômes et relevés de notes",
-    "CV académique",
-    "Lettres de recommandation",
-    "Preuve de niveau linguistique (TCF, IELTS)",
-    "Passeport",
-    "Justificatifs financiers",
-  ],
-  financement: [
-    "Présentation du projet (pitch deck si disponible)",
-    "Pièce d'identité du porteur",
-    "Registre de commerce (si société existe)",
-    "États financiers (si applicable)",
-    "CV de l'équipe",
-    "Devis fournisseurs, lettres d'intention clients",
-  ],
-  partenariat: [
-    "Présentation de votre activité",
-    "Pièce d'identité",
-    "Documents légaux de la société",
-    "Liste des partenaires recherchés",
-  ],
-  administratif: [
-    "Document source à traduire ou traiter",
-    "Version précédente (si applicable)",
-    "Pièce d'identité",
-    "CV existant (si pertinent)",
-  ],
-  change_transfert: [
-    "Pièce d'identité pour gros montants",
-    "Coordonnées du bénéficiaire (si transfert)",
-  ],
-  assistance: ["Tout document utile à votre demande"],
-  autre: ["Tout document utile pour clarifier votre demande"],
+type FilesByCategory = Record<DocumentCategorie, File[]>;
+const EMPTY_FILES: FilesByCategory = {
+  piece_identite: [],
+  passeport: [],
+  diplomes: [],
+  documents_financiers: [],
+  documents_administratifs: [],
+  lettre_invitation: [],
+  photos_identite: [],
+  documents_complementaires: [],
 };
 
-const STORAGE_KEY = "nexus_demande_draft_v1";
-
-function generatePreviewRef(): string {
-  const year = new Date().getFullYear();
-  const rand = Math.floor(1000 + Math.random() * 8999);
-  return `NX-DEM-${year}-${rand}`;
-}
-
-// Construit la description finale Supabase à partir des 4 zones structurées
-function buildStructuredDescription(
-  form: DemandeCompleteFormWithSource
-): string {
-  const blocks = [
-    form.description_situation?.trim()
-      ? `SITUATION ACTUELLE :\n${form.description_situation.trim()}`
-      : null,
-    form.description_entrepris?.trim()
-      ? `DÉMARCHES DÉJÀ ENTREPRISES :\n${form.description_entrepris.trim()}`
-      : null,
-    form.description_difficultes?.trim()
-      ? `DIFFICULTÉS RENCONTRÉES :\n${form.description_difficultes.trim()}`
-      : null,
-    form.description_attendu?.trim()
-      ? `RÉSULTAT ATTENDU DE NEXUS RCA :\n${form.description_attendu.trim()}`
-      : null,
-  ].filter(Boolean);
-
-  if (blocks.length === 0) return form.description || "";
-  return blocks.join("\n\n");
-}
-
-// ============================================================================
-// COMPOSANT PRINCIPAL — 6 sections, logique Supabase 100% préservée
-// ============================================================================
 export function DemandeFormComplete() {
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const supabase = createClient();
 
-  const [currentStep, setCurrentStep] = useState<StepId>(1);
-  const [form, setForm] = useState<DemandeCompleteFormWithSource>(
-    DEFAULT_FORM_VALUES
+  const [currentStep, setCurrentStep] = useState<StepId>(0);
+  const [form, setForm] = useState<DemandeCompletePayload>(
+    DEFAULT_FORM_VALUES_COMPLETE
   );
-  const [files, setFiles] = useState<File[]>([]);
+  const [filesByCategory, setFilesByCategory] =
+    useState<FilesByCategory>(EMPTY_FILES);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [loading, setLoading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState<{
-    current: number;
-    total: number;
-  } | null>(null);
-  const [success, setSuccess] = useState<{
-    demandeId: string;
-    prioritaire: boolean;
-  } | null>(null);
-  const [showSidebarMobile, setShowSidebarMobile] = useState(false);
 
   const hydratedRef = useRef(false);
   const topRef = useRef<HTMLDivElement>(null);
-  const reduceMotion = useReducedMotion();
-  const previewRef = useMemo(() => generatePreviewRef(), []);
 
-  // ===== HYDRATATION (inchangée) =====
+  // ===== Hydratation localStorage =====
   useEffect(() => {
     if (hydratedRef.current) return;
     hydratedRef.current = true;
-
     try {
       const draft = localStorage.getItem(STORAGE_KEY);
       if (draft) {
-        const parsed = JSON.parse(
-          draft
-        ) as Partial<DemandeCompleteFormWithSource>;
+        const parsed = JSON.parse(draft) as Partial<DemandeCompletePayload>;
         setForm((f) => ({ ...f, ...parsed }));
       }
     } catch {
       /* ignore */
     }
 
-    const serviceSlug = searchParams.get("service");
-    const iaContext = searchParams.get("ia_context");
-
-    if (serviceSlug && SERVICE_SLUG_TO_TYPE[serviceSlug]) {
-      const inferredType = SERVICE_SLUG_TO_TYPE[serviceSlug];
-      setForm((f) => ({ ...f, service_type: inferredType }));
-    }
-
-    if (iaContext) {
-      try {
-        const decoded = decodeURIComponent(iaContext);
-        setForm((f) => ({
-          ...f,
-          description_situation: f.description_situation || decoded,
-          source: "nexus_ia",
-        }));
-      } catch {
-        /* ignore */
+    const serviceParam = searchParams.get("service");
+    if (serviceParam) {
+      const service = SERVICES_COMPLETS.find((s) =>
+        s.toLowerCase().includes(serviceParam.toLowerCase())
+      );
+      if (service) {
+        setForm((f) => ({ ...f, service }));
       }
     }
+  }, [searchParams]);
 
-    (async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return;
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .single();
-      if (profile) {
-        setForm((f) => ({
-          ...f,
-          nom_complet:
-            f.nom_complet ||
-            `${profile.prenom ?? ""} ${profile.nom ?? ""}`.trim(),
-          email: f.email || profile.email,
-          telephone: f.telephone || profile.telephone || "",
-          pays: f.pays || profile.pays || "Centrafrique",
-        }));
-      }
-    })();
-  }, [searchParams, supabase]);
-
-  // ===== SAUVEGARDE AUTO (inchangée) =====
+  // ===== Sauvegarde auto =====
   useEffect(() => {
     if (!hydratedRef.current) return;
     try {
@@ -315,19 +165,14 @@ export function DemandeFormComplete() {
     }
   }, [form]);
 
-  // ===== SCROLL EN HAUT AU CHANGEMENT D'ÉTAPE =====
+  // ===== Scroll en haut au changement de section =====
   useEffect(() => {
     topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [currentStep]);
 
-  // ===== HELPERS =====
-  const serviceConfig = form.service_type
-    ? getServiceTypeConfig(form.service_type)
-    : undefined;
-
-  const updateField = <K extends keyof DemandeCompleteFormWithSource>(
+  const update = <K extends keyof DemandeCompletePayload>(
     key: K,
-    value: DemandeCompleteFormWithSource[K]
+    value: DemandeCompletePayload[K]
   ) => {
     setForm((f) => ({ ...f, [key]: value }));
     if (errors[key as string]) {
@@ -336,73 +181,11 @@ export function DemandeFormComplete() {
   };
 
   const updateDetail = (key: string, value: unknown) => {
-    setForm((f) => ({ ...f, details: { ...f.details, [key]: value } }));
-  };
-
-  // ===== VALIDATION PAR SECTION (6 étapes) =====
-  const validateStep = (step: StepId): ValidationErrors => {
-    const e: ValidationErrors = {};
-
-    if (step === 1) {
-      // Section 01 — Informations personnelles
-      if (!form.nom_complet.trim()) e.nom_complet = "Nom complet requis";
-      if (!form.email.trim()) e.email = "Email requis";
-      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-        e.email = "Email invalide";
-      if (!form.telephone.trim()) e.telephone = "Téléphone requis";
-      if (!form.pays.trim()) e.pays = "Pays requis";
-      if (!form.ville.trim()) e.ville = "Ville requise";
-    }
-
-    if (step === 2) {
-      // Section 02 — Nature de la demande
-      if (!form.service_type) e.service_type = "Veuillez sélectionner un service";
-      if (!form.objet.trim()) e.objet = "Objet de la demande requis";
-      else if (form.objet.length < 5)
-        e.objet = "Objet trop court (min. 5 caractères)";
-    }
-
-    // Section 03 — Contexte : tous champs optionnels
-    // Section 04 — Documents : optionnel
-
-    if (step === 5) {
-      // Section 05 — Description détaillée : situation et attendu requis
-      if (!form.description_situation?.trim())
-        e.description_situation = "Description de votre situation requise";
-      else if ((form.description_situation || "").length < 20)
-        e.description_situation =
-          "Description trop courte (min. 20 caractères)";
-      if (!form.description_attendu?.trim())
-        e.description_attendu = "Précisez le résultat attendu";
-    }
-
-    // Section 06 — Consentements : validés dans handleSubmit
-    return e;
-  };
-
-  const goToStep = (step: StepId) => {
-    if (step < currentStep) {
-      setCurrentStep(step);
-      setErrors({});
-      return;
-    }
-    for (let s = 1 as StepId; s < step; s = (s + 1) as StepId) {
-      const err = validateStep(s);
-      if (Object.keys(err).length > 0) {
-        setErrors(err);
-        setCurrentStep(s);
-        toast.error(
-          `Merci de compléter la section ${s.toString().padStart(2, "0")} avant de continuer`
-        );
-        return;
-      }
-    }
-    setCurrentStep(step);
-    setErrors({});
+    setForm((f) => ({ ...f, details_service: { ...f.details_service, [key]: value } }));
   };
 
   const handleNext = () => {
-    const err = validateStep(currentStep);
+    const err = validateSection(currentStep, form);
     if (Object.keys(err).length > 0) {
       setErrors(err);
       toast.error("Merci de corriger les champs indiqués");
@@ -411,6 +194,13 @@ export function DemandeFormComplete() {
       el?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
+
+    // Étape 0 : si "déjà client" → redirect /login
+    if (currentStep === 0 && form.identification_mode === "deja_client") {
+      router.push("/login?redirectTo=/demande/complet");
+      return;
+    }
+
     setErrors({});
     if (currentStep < 6) {
       setCurrentStep((s) => (s + 1) as StepId);
@@ -419,37 +209,46 @@ export function DemandeFormComplete() {
 
   const handlePrev = () => {
     setErrors({});
-    if (currentStep > 1) {
+    if (currentStep > 0) {
       setCurrentStep((s) => (s - 1) as StepId);
     }
   };
 
-  // ===== SOUMISSION (Supabase intacte — description construite à partir des 4 zones) =====
-  const handleSubmit = async (prioritaire: boolean) => {
-    // Construire la description finale à partir des 4 zones structurées
-    const structuredDescription = buildStructuredDescription(form);
-    const formForValidation = {
-      ...form,
-      description: structuredDescription || form.description,
-    };
-
-    const validation = validateDemandeForm(formForValidation);
-    if (Object.keys(validation).length > 0) {
-      setErrors(validation);
+  // ===== Submission =====
+  const handleSubmit = async () => {
+    const err = validateFinal(form);
+    if (Object.keys(err).length > 0) {
+      setErrors(err);
       toast.error("Merci de corriger les champs indiqués");
-      // Routing vers section concernée
+      // Routing vers la première section avec erreur
       if (
-        validation.nom_complet ||
-        validation.email ||
-        validation.telephone ||
-        validation.pays ||
-        validation.ville
+        err.identification_mode
+      ) {
+        setCurrentStep(0);
+      } else if (
+        err.nom_complet ||
+        err.sexe ||
+        err.date_naissance ||
+        err.nationalite ||
+        err.pays ||
+        err.ville ||
+        err.adresse ||
+        err.telephone ||
+        err.email ||
+        err.situation_matrimoniale ||
+        err.profession ||
+        err.niveau_etudes
       ) {
         setCurrentStep(1);
-      } else if (validation.service_type || validation.objet) {
+      } else if (
+        err.service ||
+        err.categorie_demande ||
+        err.pays_concerne ||
+        err.type_procedure ||
+        err.date_souhaitee ||
+        err.numero_dossier_existant
+      ) {
         setCurrentStep(2);
-      } else if (validation.description) {
-        setCurrentStep(5);
       } else {
         setCurrentStep(6);
       }
@@ -457,76 +256,27 @@ export function DemandeFormComplete() {
     }
 
     setLoading(true);
+    const formData = new FormData();
+    formData.append("payload", JSON.stringify(form));
+
+    // Append files par catégorie
+    for (const cat of DOCUMENT_CATEGORIES) {
+      for (const f of filesByCategory[cat.value]) {
+        formData.append(`documents_${cat.value}`, f);
+      }
+    }
+
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      const serviceLabel = serviceConfig?.label || form.service_type;
-      const demandeId = crypto.randomUUID();
-
-      const { error: insertError } = await supabase.from("demandes").insert({
-        id: demandeId,
-        client_id: user?.id ?? null,
-        nom_complet: form.nom_complet,
-        email: form.email,
-        telephone: form.telephone,
-        pays: form.pays,
-        ville: form.ville,
-        langue_preferee: form.langue_preferee,
-        service: serviceLabel,
-        objet: form.objet,
-        description: structuredDescription || form.description, // ← description structurée
-        urgence: form.urgence,
-        date_souhaitee: form.date_souhaitee || null,
-        pays_concerne: form.pays_concerne || null,
-        destination: form.destination || null,
-        budget_estimatif: form.budget_estimatif || null,
-        traitement_prioritaire: prioritaire,
-        source: form.source || "formulaire_complet",
-        details_service: form.details,
-        consentement_examen: form.consentement_examen,
-        consentement_documents: form.consentement_documents,
-        consentement_recontact: form.consentement_recontact,
-        statut: "nouveau",
+      const res = await fetch("/api/demandes/complete", {
+        method: "POST",
+        body: formData,
       });
-
-      if (insertError) throw insertError;
-
-      if (files.length > 0) {
-        setUploadProgress({ current: 0, total: files.length });
-        for (let i = 0; i < files.length; i++) {
-          const file = files[i];
-          const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-          const path = `${demandeId}/${crypto.randomUUID()}-${safeName}`;
-
-          const { error: uploadError } = await supabase.storage
-            .from("demande-documents")
-            .upload(path, file, {
-              cacheControl: "3600",
-              upsert: false,
-              contentType: file.type || undefined,
-            });
-
-          if (uploadError) {
-            console.error("Upload error:", uploadError);
-            toast.error(`Erreur upload ${file.name}`);
-            continue;
-          }
-
-          await supabase.from("demande_documents").insert({
-            demande_id: demandeId,
-            uploaded_by: user?.id ?? null,
-            storage_path: path,
-            file_name: file.name,
-            file_size_bytes: file.size,
-            mime_type: file.type || "application/octet-stream",
-          });
-
-          setUploadProgress({ current: i + 1, total: files.length });
-        }
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Erreur lors de la soumission");
       }
 
+      // Nettoyage du brouillon
       try {
         localStorage.removeItem(STORAGE_KEY);
       } catch {
@@ -534,640 +284,470 @@ export function DemandeFormComplete() {
       }
 
       toast.success(
-        prioritaire
-          ? "Dossier prioritaire soumis. Un conseiller vous contactera rapidement."
-          : "Dossier soumis avec succès. Réponse sous 24 h ouvrées."
+        data.account_created
+          ? "Dossier soumis. Un mot de passe temporaire vous a été envoyé par email."
+          : "Dossier soumis avec succès."
       );
-      setSuccess({ demandeId, prioritaire });
+
+      // Redirect vers Nexus Connect (page détail dossier)
+      router.push(`/dashboard/client/demandes/${data.demande_id}`);
     } catch (err) {
-      console.error(err);
       const message =
         err instanceof Error ? err.message : "Erreur lors de la soumission";
       toast.error(message);
-    } finally {
       setLoading(false);
-      setUploadProgress(null);
     }
   };
 
-  // ============================================================================
-  // ÉCRAN DE SUCCÈS
-  // ============================================================================
-  if (success) {
-    return (
-      <div className="relative overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/[0.06] via-white/[0.04] to-white/[0.02] p-8 ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(255,102,0,0.20)] sm:p-12">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-emerald-500/20 blur-3xl"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -bottom-20 -left-12 h-56 w-56 rounded-full bg-nexus-orange-500/15 blur-3xl"
-        />
-
-        <div className="relative mx-auto max-w-2xl text-center">
-          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500/30 to-emerald-700/20 ring-1 ring-emerald-400/40 shadow-[0_18px_40px_-12px_rgba(52,211,153,0.4)]">
-            <CheckCircle2 className="h-10 w-10 text-emerald-300" />
-          </div>
-
-          <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-emerald-300 backdrop-blur-md">
-            <Check className="h-3 w-3" />
-            Dossier enregistré
-          </span>
-
-          <h1 className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
-            Demande enregistrée
-          </h1>
-
-          <p className="mt-4 text-base leading-relaxed text-slate-300 sm:text-lg">
-            Merci <strong className="text-white">{form.nom_complet}</strong>.
-            {success.prioritaire
-              ? " Votre dossier a été marqué comme prioritaire. Un conseiller vous contactera dans les heures qui suivent."
-              : " Un conseiller Nexus RCA examine votre dossier et vous revient sous 24 h ouvrées."}
-          </p>
-
-          <div className="mt-8 rounded-2xl border border-nexus-orange-400/30 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-white/5 backdrop-blur-xl">
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
-              Référence dossier
-            </p>
-            <p className="mt-2 break-all font-mono text-2xl font-bold leading-tight sm:text-3xl">
-              <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-500 bg-clip-text text-transparent">
-                NX-{success.demandeId.slice(0, 8).toUpperCase()}
-              </span>
-            </p>
-          </div>
-
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
-            >
-              Mon espace
-            </Link>
-            <a
-              href={whatsappLink(
-                `Bonjour, je viens de soumettre mon dossier NX-${success.demandeId.slice(0, 8).toUpperCase()} pour : ${serviceConfig?.label}`
-              )}
-              target="_blank"
-              rel="noreferrer"
-              className="group/wa relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-emerald-500 px-6 py-3 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(52,211,153,0.5)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-600"
-            >
-              <MessageCircle className="h-4 w-4" />
-              Suivre sur WhatsApp
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const isUploading = uploadProgress !== null;
   const currentSection = SECTIONS.find((s) => s.id === currentStep)!;
+  const totalFiles = Object.values(filesByCategory).reduce(
+    (sum, arr) => sum + arr.length,
+    0
+  );
 
-  // ============================================================================
-  // FORMULAIRE — wizard 6 sections style dossier admin + sidebar
-  // ============================================================================
   return (
     <div ref={topRef} className="grid gap-6 lg:grid-cols-12 lg:gap-8">
       {/* ─── Colonne formulaire (8/12) ─── */}
       <div className="lg:col-span-8">
         <div className="relative overflow-hidden rounded-2xl border border-white/12 bg-gradient-to-br from-white/[0.06] via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(255,102,0,0.20)]">
-          {/* En-tête avec stepper compact */}
-          <SectionStepper currentStep={currentStep} onStepClick={goToStep} />
+          {/* Stepper compact */}
+          <SectionStepper currentStep={currentStep} />
 
           <div className="relative p-6 sm:p-8 lg:p-10">
-            {/* Bandeau Nexus IA si applicable */}
-            {form.source === "nexus_ia" && currentStep === 1 && (
-              <div className="mb-6 rounded-xl border border-nexus-orange-400/30 bg-nexus-orange-500/10 p-4 backdrop-blur-md">
-                <div className="flex items-center gap-3">
-                  <Sparkles className="h-4 w-4 shrink-0 text-nexus-orange-300" />
-                  <p className="text-sm text-white">
-                    <strong>Conversation Nexus IA reprise.</strong> Nous avons
-                    pré-rempli votre situation, ajustez-la si besoin.
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* En-tête section : "01 — Titre" */}
+            {/* Header section */}
             <SectionHeader
               number={currentSection.number}
               title={currentSection.title}
               description={currentSection.description}
             />
 
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={currentStep}
-                initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reduceMotion ? undefined : { opacity: 0, y: -4 }}
-                transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
-              >
-                {/* ====== 01 — INFORMATIONS PERSONNELLES ====== */}
-                {currentStep === 1 && (
-                  <div className="grid gap-5 sm:grid-cols-2">
-                    <FormField
-                      label="Nom complet *"
-                      error={errors.nom_complet}
-                      dataField="nom_complet"
-                    >
-                      <PremiumInput
-                        value={form.nom_complet}
-                        onChange={(v) => updateField("nom_complet", v)}
-                        placeholder="Jean Dupont"
-                      />
-                    </FormField>
-                    <FormField
-                      label="Adresse email *"
-                      error={errors.email}
-                      dataField="email"
-                    >
-                      <PremiumInput
-                        type="email"
-                        value={form.email}
-                        onChange={(v) => updateField("email", v)}
-                        placeholder="vous@exemple.com"
-                      />
-                    </FormField>
-                    <FormField
-                      label="Téléphone / WhatsApp *"
-                      error={errors.telephone}
-                      dataField="telephone"
-                    >
-                      <PremiumInput
-                        value={form.telephone}
-                        onChange={(v) => updateField("telephone", v)}
-                        placeholder="+236 ..."
-                      />
-                    </FormField>
-                    <FormField
-                      label="Pays de résidence *"
-                      error={errors.pays}
-                      dataField="pays"
-                    >
-                      <PremiumInput
-                        value={form.pays}
-                        onChange={(v) => updateField("pays", v)}
-                      />
-                    </FormField>
-                    <FormField
-                      label="Ville *"
-                      error={errors.ville}
-                      dataField="ville"
-                    >
-                      <PremiumInput
-                        value={form.ville}
-                        onChange={(v) => updateField("ville", v)}
-                        placeholder="Bangui, Paris, Montréal…"
-                      />
-                    </FormField>
-                    <FormField label="Langue préférée">
-                      <PremiumSelect
-                        value={form.langue_preferee}
-                        onChange={(v) => updateField("langue_preferee", v)}
-                        options={["Francais", "English", "Sango", "Arabe"]}
-                      />
-                    </FormField>
-                  </div>
+            {/* ===== Section 00 — Identification ===== */}
+            {currentStep === 0 && (
+              <div className="space-y-3" data-field="identification_mode">
+                <RadioCard
+                  selected={form.identification_mode === "deja_client"}
+                  onClick={() => update("identification_mode", "deja_client")}
+                  icon={LogIn}
+                  title="Je suis déjà client Nexus RCA"
+                  description="Vous serez redirigé vers la page de connexion."
+                />
+                <RadioCard
+                  selected={form.identification_mode === "nouveau"}
+                  onClick={() => update("identification_mode", "nouveau")}
+                  icon={UserPlus}
+                  title="Je suis un nouveau demandeur"
+                  description="Un compte sera automatiquement créé pour vous à la soumission de votre dossier."
+                />
+                {errors.identification_mode && (
+                  <p className="flex items-center gap-1.5 text-xs font-semibold text-rose-300">
+                    <AlertCircle className="h-3.5 w-3.5" />
+                    {errors.identification_mode}
+                  </p>
                 )}
+              </div>
+            )}
 
-                {/* ====== 02 — NATURE DE LA DEMANDE ====== */}
-                {currentStep === 2 && (
-                  <div className="space-y-7">
-                    <FormField
-                      label="Service concerné *"
-                      error={errors.service_type}
-                      dataField="service_type"
-                    >
-                      <ServiceVerticalList
-                        services={SERVICE_TYPES}
-                        value={form.service_type}
-                        onChange={(v) => {
-                          updateField("service_type", v as ServiceType);
-                          setForm((f) => ({ ...f, details: {} }));
-                        }}
-                      />
-                    </FormField>
-
-                    <FormField
-                      label="Objet de la demande *"
-                      error={errors.objet}
-                      dataField="objet"
-                    >
-                      <PremiumInput
-                        value={form.objet}
-                        onChange={(v) => updateField("objet", v)}
-                        placeholder="ex : Visa étudiant Canada pour rentrée septembre"
-                      />
-                    </FormField>
-
-                    {/* Champs dynamiques selon service */}
-                    {form.service_type && serviceConfig?.hasDynamicFields && (
-                      <div className="rounded-xl border border-white/10 bg-nexus-blue-950/40 p-5 backdrop-blur-md sm:p-6">
-                        <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
-                          Précisions spécifiques au service
-                        </p>
-                        <div className="text-white">
-                          <DynamicServiceFields
-                            serviceType={form.service_type as ServiceType}
-                            details={form.details}
-                            onChange={updateDetail}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* ====== 03 — CONTEXTE DU DOSSIER ====== */}
-                {currentStep === 3 && (
-                  <div className="grid gap-5 sm:grid-cols-2">
-                    <FormField label="Niveau d'urgence">
-                      <PremiumSelect
-                        value={form.urgence}
-                        onChange={(v) =>
-                          updateField("urgence", v as UrgenceLevel)
-                        }
-                        options={["faible", "normale", "elevee", "critique"]}
-                        optionLabels={{
-                          faible: "Faible (plus d'un mois)",
-                          normale: "Normale (quelques semaines)",
-                          elevee: "Élevée (sous 2 semaines)",
-                          critique: "Critique (urgent)",
-                        }}
-                      />
-                    </FormField>
-                    <FormField label="Date souhaitée">
-                      <PremiumInput
-                        type="date"
-                        value={form.date_souhaitee}
-                        onChange={(v) => updateField("date_souhaitee", v)}
-                      />
-                    </FormField>
-                    <FormField label="Pays concerné">
-                      <PremiumInput
-                        value={form.pays_concerne}
-                        onChange={(v) => updateField("pays_concerne", v)}
-                        placeholder="ex : Canada, France…"
-                      />
-                    </FormField>
-                    <FormField label="Destination (si voyage)">
-                      <PremiumInput
-                        value={form.destination}
-                        onChange={(v) => updateField("destination", v)}
-                        placeholder="ex : Montréal, Paris…"
-                      />
-                    </FormField>
-                    <div className="sm:col-span-2">
-                      <FormField label="Budget estimatif">
-                        <PremiumInput
-                          value={form.budget_estimatif}
-                          onChange={(v) =>
-                            updateField("budget_estimatif", v)
-                          }
-                          placeholder="ex : 500 000 FCFA, 1000 EUR, flexible…"
-                        />
-                      </FormField>
-                    </div>
-                  </div>
-                )}
-
-                {/* ====== 04 — DOCUMENTS JUSTIFICATIFS ====== */}
-                {currentStep === 4 && (
-                  <div className="space-y-5">
-                    {form.service_type &&
-                      DOCUMENTS_CHECKLIST[form.service_type] && (
-                        <div className="rounded-xl border border-nexus-orange-400/25 bg-gradient-to-br from-nexus-orange-500/8 via-white/[0.03] to-transparent p-5 backdrop-blur-md">
-                          <div className="mb-3 flex items-center gap-2">
-                            <ClipboardCheck className="h-4 w-4 text-nexus-orange-300" />
-                            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
-                              Documents recommandés
-                            </p>
-                          </div>
-                          <ul className="space-y-2 text-sm text-slate-200">
-                            {DOCUMENTS_CHECKLIST[form.service_type].map(
-                              (doc, i) => (
-                                <li
-                                  key={i}
-                                  className="flex items-start gap-2"
-                                >
-                                  <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-nexus-orange-300" />
-                                  <span>{doc}</span>
-                                </li>
-                              )
-                            )}
-                          </ul>
-                          <p className="mt-3 text-xs text-slate-400">
-                            Optionnel à ce stade. Les documents manquants
-                            pourront être transmis ultérieurement.
-                          </p>
-                        </div>
-                      )}
-
-                    <div className="rounded-xl border border-white/10 bg-nexus-blue-950/40 p-5 backdrop-blur-md sm:p-6">
-                      <p className="mb-4 text-xs leading-relaxed text-slate-400">
-                        Formats acceptés : PDF, JPG, PNG, DOC, DOCX. Taille
-                        max 10 Mo par fichier. Tous les fichiers sont stockés
-                        de manière confidentielle.
-                      </p>
-                      <FileUploader
-                        files={files}
-                        onChange={setFiles}
-                        disabled={loading}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* ====== 05 — DESCRIPTION DÉTAILLÉE ====== */}
-                {currentStep === 5 && (
-                  <div className="space-y-6">
-                    <DetailedField
-                      number="1"
-                      label="Expliquez votre situation actuelle *"
-                      error={errors.description_situation}
-                      dataField="description_situation"
-                      value={form.description_situation || ""}
-                      onChange={(v) => updateField("description_situation", v)}
-                      placeholder="Décrivez le contexte général : votre projet, votre situation personnelle ou professionnelle, le besoin précis…"
-                      rows={4}
-                      minLength={20}
+            {/* ===== Section 01 — Identification du demandeur ===== */}
+            {currentStep === 1 && (
+              <div className="grid gap-5 sm:grid-cols-2">
+                <FormField
+                  label="Nom complet *"
+                  error={errors.nom_complet}
+                  dataField="nom_complet"
+                >
+                  <PremiumInput
+                    value={form.nom_complet}
+                    onChange={(v) => update("nom_complet", v)}
+                    placeholder="Jean Dupont"
+                  />
+                </FormField>
+                <FormField label="Sexe *" error={errors.sexe} dataField="sexe">
+                  <PremiumSelect
+                    value={form.sexe}
+                    onChange={(v) => update("sexe", v as DemandeCompletePayload["sexe"])}
+                    options={["", ...SEXES]}
+                    optionLabels={{ "": "— Sélectionnez —" }}
+                  />
+                </FormField>
+                <FormField
+                  label="Date de naissance *"
+                  error={errors.date_naissance}
+                  dataField="date_naissance"
+                >
+                  <PremiumInput
+                    type="date"
+                    value={form.date_naissance}
+                    onChange={(v) => update("date_naissance", v)}
+                  />
+                </FormField>
+                <FormField
+                  label="Nationalité *"
+                  error={errors.nationalite}
+                  dataField="nationalite"
+                >
+                  <PremiumInput
+                    value={form.nationalite}
+                    onChange={(v) => update("nationalite", v)}
+                    placeholder="ex : Centrafricaine"
+                  />
+                </FormField>
+                <FormField
+                  label="Pays de résidence *"
+                  error={errors.pays}
+                  dataField="pays"
+                >
+                  <PremiumInput
+                    value={form.pays}
+                    onChange={(v) => update("pays", v)}
+                  />
+                </FormField>
+                <FormField label="Ville *" error={errors.ville} dataField="ville">
+                  <PremiumInput
+                    value={form.ville}
+                    onChange={(v) => update("ville", v)}
+                    placeholder="Bangui"
+                  />
+                </FormField>
+                <div className="sm:col-span-2">
+                  <FormField
+                    label="Adresse complète *"
+                    error={errors.adresse}
+                    dataField="adresse"
+                  >
+                    <PremiumInput
+                      value={form.adresse}
+                      onChange={(v) => update("adresse", v)}
+                      placeholder="Quartier, rue, repère…"
                     />
-                    <DetailedField
-                      number="2"
-                      label="Démarches déjà entreprises"
-                      value={form.description_entrepris || ""}
-                      onChange={(v) => updateField("description_entrepris", v)}
-                      placeholder="Décrivez ce que vous avez déjà fait ou tenté (recherches, contacts, démarches administratives, etc.)"
-                      rows={3}
-                    />
-                    <DetailedField
-                      number="3"
-                      label="Difficultés rencontrées"
-                      value={form.description_difficultes || ""}
+                  </FormField>
+                </div>
+                <FormField
+                  label="Téléphone / WhatsApp *"
+                  error={errors.telephone}
+                  dataField="telephone"
+                >
+                  <PremiumInput
+                    value={form.telephone}
+                    onChange={(v) => update("telephone", v)}
+                    placeholder="+236 ..."
+                  />
+                </FormField>
+                <FormField label="Email *" error={errors.email} dataField="email">
+                  <PremiumInput
+                    type="email"
+                    value={form.email}
+                    onChange={(v) => update("email", v)}
+                    placeholder="vous@exemple.com"
+                  />
+                </FormField>
+                <FormField
+                  label="Situation matrimoniale *"
+                  error={errors.situation_matrimoniale}
+                  dataField="situation_matrimoniale"
+                >
+                  <PremiumSelect
+                    value={form.situation_matrimoniale}
+                    onChange={(v) =>
+                      update("situation_matrimoniale", v as DemandeCompletePayload["situation_matrimoniale"])
+                    }
+                    options={["", ...SITUATIONS_MATRIMONIALES]}
+                    optionLabels={{ "": "— Sélectionnez —" }}
+                  />
+                </FormField>
+                <FormField
+                  label="Profession actuelle *"
+                  error={errors.profession}
+                  dataField="profession"
+                >
+                  <PremiumInput
+                    value={form.profession}
+                    onChange={(v) => update("profession", v)}
+                    placeholder="ex : Ingénieur logiciel"
+                  />
+                </FormField>
+                <FormField label="Employeur / établissement (optionnel)">
+                  <PremiumInput
+                    value={form.employeur}
+                    onChange={(v) => update("employeur", v)}
+                  />
+                </FormField>
+                <div className="sm:col-span-2">
+                  <FormField
+                    label="Niveau d'études *"
+                    error={errors.niveau_etudes}
+                    dataField="niveau_etudes"
+                  >
+                    <PremiumSelect
+                      value={form.niveau_etudes}
                       onChange={(v) =>
-                        updateField("description_difficultes", v)
+                        update("niveau_etudes", v as DemandeCompletePayload["niveau_etudes"])
                       }
-                      placeholder="Quels obstacles ou points de blocage avez-vous rencontrés ?"
-                      rows={3}
+                      options={["", ...NIVEAUX_ETUDES]}
+                      optionLabels={{ "": "— Sélectionnez —" }}
                     />
-                    <DetailedField
-                      number="4"
-                      label="Résultat attendu de Nexus RCA *"
-                      error={errors.description_attendu}
-                      dataField="description_attendu"
-                      value={form.description_attendu || ""}
-                      onChange={(v) => updateField("description_attendu", v)}
-                      placeholder="Que souhaitez-vous précisément obtenir grâce à notre accompagnement ?"
-                      rows={3}
+                  </FormField>
+                </div>
+              </div>
+            )}
+
+            {/* ===== Section 02 — Type de demande ===== */}
+            {currentStep === 2 && (
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div className="sm:col-span-2">
+                  <FormField
+                    label="Service demandé *"
+                    error={errors.service}
+                    dataField="service"
+                  >
+                    <PremiumSelect
+                      value={form.service}
+                      onChange={(v) => {
+                        update("service", v as ServiceComplet);
+                        update("categorie_demande", "");
+                      }}
+                      options={["", ...SERVICES_COMPLETS]}
+                      optionLabels={{ "": "— Sélectionnez —" }}
                     />
+                  </FormField>
+                </div>
+                <div className="sm:col-span-2">
+                  <FormField
+                    label="Catégorie de demande *"
+                    error={errors.categorie_demande}
+                    dataField="categorie_demande"
+                  >
+                    <PremiumSelect
+                      value={form.categorie_demande}
+                      onChange={(v) => update("categorie_demande", v)}
+                      options={[
+                        "",
+                        ...(form.service
+                          ? CATEGORIES_PAR_SERVICE[form.service as ServiceComplet]
+                          : []),
+                      ]}
+                      optionLabels={{
+                        "": form.service
+                          ? "— Sélectionnez —"
+                          : "— Choisissez d'abord un service —",
+                      }}
+                      disabled={!form.service}
+                    />
+                  </FormField>
+                </div>
+                <FormField
+                  label="Pays concerné *"
+                  error={errors.pays_concerne}
+                  dataField="pays_concerne"
+                >
+                  <PremiumInput
+                    value={form.pays_concerne}
+                    onChange={(v) => update("pays_concerne", v)}
+                    placeholder="ex : Canada, France…"
+                  />
+                </FormField>
+                <FormField
+                  label="Type de procédure *"
+                  error={errors.type_procedure}
+                  dataField="type_procedure"
+                >
+                  <PremiumInput
+                    value={form.type_procedure}
+                    onChange={(v) => update("type_procedure", v)}
+                    placeholder="ex : Première demande / renouvellement"
+                  />
+                </FormField>
+                <div className="sm:col-span-2">
+                  <FormField
+                    label="Date prévue du projet ou déplacement *"
+                    error={errors.date_souhaitee}
+                    dataField="date_souhaitee"
+                  >
+                    <PremiumInput
+                      type="date"
+                      value={form.date_souhaitee}
+                      onChange={(v) => update("date_souhaitee", v)}
+                    />
+                  </FormField>
+                </div>
+                <div className="sm:col-span-2">
+                  <FormField label="Avez-vous déjà effectué cette démarche auparavant ?">
+                    <div className="flex gap-2">
+                      <YesNoButton
+                        label="Non"
+                        selected={!form.dossier_existant}
+                        onClick={() => update("dossier_existant", false)}
+                      />
+                      <YesNoButton
+                        label="Oui"
+                        selected={form.dossier_existant}
+                        onClick={() => update("dossier_existant", true)}
+                      />
+                    </div>
+                  </FormField>
+                </div>
+                {form.dossier_existant && (
+                  <div className="sm:col-span-2">
+                    <FormField
+                      label="Numéro de dossier existant *"
+                      error={errors.numero_dossier_existant}
+                      dataField="numero_dossier_existant"
+                    >
+                      <PremiumInput
+                        value={form.numero_dossier_existant}
+                        onChange={(v) =>
+                          update("numero_dossier_existant", v)
+                        }
+                        placeholder="Référence du dossier précédent"
+                      />
+                    </FormField>
                   </div>
                 )}
+              </div>
+            )}
 
-                {/* ====== 06 — CONFIRMATION ====== */}
-                {currentStep === 6 && (
-                  <div className="space-y-6">
-                    {/* Récapitulatif */}
-                    <SummaryBlock
-                      title="Informations personnelles"
-                      onEdit={() => goToStep(1)}
-                    >
-                      <SummaryRow label="Nom" value={form.nom_complet} />
-                      <SummaryRow label="Email" value={form.email} />
-                      <SummaryRow label="Téléphone" value={form.telephone} />
-                      <SummaryRow
-                        label="Pays / Ville"
-                        value={`${form.pays} / ${form.ville}`}
-                      />
-                      <SummaryRow
-                        label="Langue"
-                        value={form.langue_preferee}
-                      />
-                    </SummaryBlock>
+            {/* ===== Section 03 — Informations spécifiques ===== */}
+            {currentStep === 3 && (
+              <DynamicFields
+                service={form.service}
+                details={form.details_service}
+                onChange={updateDetail}
+              />
+            )}
 
-                    <SummaryBlock
-                      title="Nature de la demande"
-                      onEdit={() => goToStep(2)}
-                    >
-                      <SummaryRow
-                        label="Service"
-                        value={serviceConfig?.label || "Non défini"}
-                      />
-                      <SummaryRow label="Objet" value={form.objet} />
-                    </SummaryBlock>
+            {/* ===== Section 04 — Documents ===== */}
+            {currentStep === 4 && (
+              <DocumentsUpload
+                filesByCategory={filesByCategory}
+                onChange={setFilesByCategory}
+              />
+            )}
 
-                    <SummaryBlock
-                      title="Contexte du dossier"
-                      onEdit={() => goToStep(3)}
-                    >
-                      <SummaryRow
-                        label="Urgence"
-                        value={urgenceLabel(form.urgence)}
-                      />
-                      {form.date_souhaitee && (
-                        <SummaryRow
-                          label="Date souhaitée"
-                          value={form.date_souhaitee}
-                        />
-                      )}
-                      {form.pays_concerne && (
-                        <SummaryRow
-                          label="Pays concerné"
-                          value={form.pays_concerne}
-                        />
-                      )}
-                      {form.destination && (
-                        <SummaryRow
-                          label="Destination"
-                          value={form.destination}
-                        />
-                      )}
-                      {form.budget_estimatif && (
-                        <SummaryRow
-                          label="Budget"
-                          value={form.budget_estimatif}
-                        />
-                      )}
-                    </SummaryBlock>
+            {/* ===== Section 05 — Informations complémentaires ===== */}
+            {currentStep === 5 && (
+              <FormField
+                label="Informations complémentaires relatives à votre demande"
+                dataField="informations_complementaires"
+              >
+                <PremiumTextarea
+                  value={form.informations_complementaires}
+                  onChange={(v) => update("informations_complementaires", v)}
+                  rows={6}
+                  placeholder="Précisez ici toute information utile au traitement de votre dossier (numéros de référence, contacts antérieurs, contraintes particulières, etc.)"
+                />
+                <p className="mt-2 text-[11px] text-white/55">
+                  Optionnel — vous pouvez compléter ces informations plus tard
+                  depuis votre espace Nexus Connect.
+                </p>
+              </FormField>
+            )}
 
-                    <SummaryBlock
-                      title="Documents joints"
-                      onEdit={() => goToStep(4)}
-                    >
-                      {files.length === 0 ? (
-                        <p className="text-sm italic text-white/55">
-                          Aucun document joint
-                        </p>
-                      ) : (
-                        <ul className="space-y-1.5 text-sm text-slate-200">
-                          {files.map((f, i) => (
-                            <li
-                              key={i}
-                              className="flex items-center gap-2"
-                            >
-                              <Paperclip className="h-3.5 w-3.5 text-nexus-orange-300" />
-                              {f.name}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </SummaryBlock>
-
-                    <SummaryBlock
-                      title="Description détaillée"
-                      onEdit={() => goToStep(5)}
-                    >
-                      <SummaryParagraph
-                        label="Situation actuelle"
-                        value={form.description_situation || ""}
-                      />
-                      <SummaryParagraph
-                        label="Démarches déjà entreprises"
-                        value={form.description_entrepris || ""}
-                      />
-                      <SummaryParagraph
-                        label="Difficultés rencontrées"
-                        value={form.description_difficultes || ""}
-                      />
-                      <SummaryParagraph
-                        label="Résultat attendu"
-                        value={form.description_attendu || ""}
-                      />
-                    </SummaryBlock>
-
-                    {/* Consentements */}
-                    <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5 ring-1 ring-white/5 backdrop-blur-md sm:p-6">
-                      <div className="mb-4 flex items-center gap-2">
-                        <ShieldCheck className="h-4 w-4 text-nexus-orange-300" />
-                        <h3 className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
-                          Consentements
-                        </h3>
-                      </div>
-                      <div className="space-y-2.5">
-                        <ConsentCheckbox
-                          checked={form.consentement_examen}
-                          onChange={(v) =>
-                            updateField("consentement_examen", v)
-                          }
-                          error={errors.consentement_examen}
-                          label="J'accepte que Nexus RCA examine mon dossier et les documents transmis."
-                        />
-                        <ConsentCheckbox
-                          checked={form.consentement_documents}
-                          onChange={(v) =>
-                            updateField("consentement_documents", v)
-                          }
-                          error={errors.consentement_documents}
-                          label="J'autorise Nexus RCA à traiter les documents joints dans le cadre de ma demande."
-                        />
-                        <ConsentCheckbox
-                          checked={true}
-                          onChange={() => {}}
-                          disabled
-                          label="Je comprends que Nexus RCA fournit un service d'accompagnement et qu'aucun résultat n'est garanti."
-                        />
-                        <ConsentCheckbox
-                          checked={form.consentement_recontact}
-                          onChange={(v) =>
-                            updateField("consentement_recontact", v)
-                          }
-                          label="J'accepte d'être recontacté(e) par Nexus RCA pour le suivi de ma demande."
-                        />
-                      </div>
-                    </div>
-
-                    {/* Upload progress */}
-                    {isUploading && (
-                      <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-md">
-                        <div className="flex items-center gap-2 text-sm font-medium text-white">
-                          <Loader2 className="h-4 w-4 animate-spin text-nexus-orange-300" />
-                          Envoi des documents… {uploadProgress!.current} /{" "}
-                          {uploadProgress!.total}
-                        </div>
-                        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-                          <div
-                            className="h-full bg-gradient-to-r from-nexus-orange-500 via-nexus-orange-400 to-nexus-orange-300 transition-all"
-                            style={{
-                              width: `${(uploadProgress!.current / uploadProgress!.total) * 100}%`,
-                            }}
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Submit */}
-                    <div className="rounded-xl border border-nexus-orange-400/30 bg-gradient-to-br from-nexus-orange-500/12 via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-white/5 backdrop-blur-xl sm:p-7">
-                      <h3 className="font-display text-lg font-bold leading-tight text-white sm:text-xl">
-                        Prêt à soumettre votre dossier ?
-                      </h3>
-                      <p className="mt-2 text-sm leading-relaxed text-slate-300">
-                        Un conseiller examine votre dossier et vous revient
-                        sous 24 h ouvrées. Pour une réponse plus rapide,
-                        sélectionnez le traitement prioritaire.
-                      </p>
-                      <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                        <button
-                          type="button"
-                          onClick={() => handleSubmit(false)}
-                          disabled={loading}
-                          className="group/cta relative inline-flex flex-1 items-center justify-center gap-2 overflow-hidden rounded-xl bg-nexus-orange-500 px-6 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
-                        >
-                          <span
-                            aria-hidden
-                            className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
-                          />
-                          {loading && !form.traitement_prioritaire ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <ArrowRight className="h-4 w-4" />
-                          )}
-                          Soumettre ma demande complète
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleSubmit(true)}
-                          disabled={loading}
-                          className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-60"
-                        >
-                          {loading && form.traitement_prioritaire ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <Zap className="h-4 w-4 text-nexus-orange-300" />
-                          )}
-                          Traitement prioritaire
-                        </button>
-                      </div>
-                    </div>
+            {/* ===== Section 06 — Validation ===== */}
+            {currentStep === 6 && (
+              <div className="space-y-5">
+                <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5 ring-1 ring-white/5 backdrop-blur-md sm:p-6">
+                  <div className="mb-4 flex items-center gap-2">
+                    <ClipboardCheck className="h-4 w-4 text-nexus-orange-300" />
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                      Récapitulatif
+                    </h3>
                   </div>
-                )}
-              </motion.div>
-            </AnimatePresence>
+                  <RecapBlock title="Identification">
+                    <RecapRow label="Nom" value={form.nom_complet} />
+                    <RecapRow label="Email" value={form.email} />
+                    <RecapRow label="Téléphone" value={form.telephone} />
+                    <RecapRow
+                      label="Adresse"
+                      value={`${form.ville}, ${form.pays}`}
+                    />
+                  </RecapBlock>
+                  <RecapBlock title="Demande">
+                    <RecapRow label="Service" value={form.service} />
+                    <RecapRow label="Catégorie" value={form.categorie_demande} />
+                    <RecapRow label="Pays concerné" value={form.pays_concerne} />
+                    <RecapRow label="Date prévue" value={form.date_souhaitee} />
+                  </RecapBlock>
+                  <RecapBlock title="Documents joints">
+                    <p className="text-sm text-white/85">
+                      {totalFiles === 0
+                        ? "Aucun document joint pour le moment"
+                        : `${totalFiles} fichier(s) joint(s)`}
+                    </p>
+                  </RecapBlock>
+                </div>
 
-            {/* Navigation */}
+                <div className="space-y-2.5">
+                  <ConsentCheckbox
+                    checked={form.consentement_examen}
+                    onChange={(v) => update("consentement_examen", v)}
+                    error={errors.consentement_examen}
+                    label="Je certifie l'exactitude des informations fournies."
+                  />
+                  <ConsentCheckbox
+                    checked={form.consentement_documents}
+                    onChange={(v) => update("consentement_documents", v)}
+                    error={errors.consentement_documents}
+                    label="J'autorise Nexus RCA à traiter mon dossier et les documents joints."
+                  />
+                  <ConsentCheckbox
+                    checked={form.consentement_recontact}
+                    onChange={(v) => update("consentement_recontact", v)}
+                    error={errors.consentement_recontact}
+                    label="J'accepte d'être contacté par Nexus RCA concernant ma demande."
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={loading}
+                  className="group/cta relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600 px-7 py-4 text-base font-bold text-white shadow-[0_12px_32px_-10px_rgba(255,102,0,0.7)] transition-all duration-300 hover:-translate-y-0.5 hover:from-nexus-orange-600 hover:to-nexus-orange-700 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
+                  />
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      Soumission en cours…
+                    </>
+                  ) : (
+                    <>
+                      <Check className="h-5 w-5" />
+                      Soumettre la demande complète
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+
+            {/* ===== Navigation ===== */}
             {currentStep < 6 && (
               <div className="mt-10 flex flex-col-reverse gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
                 <button
                   type="button"
                   onClick={handlePrev}
-                  disabled={currentStep === 1}
+                  disabled={currentStep === 0}
                   className={cn(
                     "inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-5 py-2.5 text-xs font-semibold text-white/80 backdrop-blur-md transition-all duration-200 hover:border-white/20 hover:bg-white/[0.07] disabled:opacity-40",
-                    currentStep === 1 && "invisible"
+                    currentStep === 0 && "invisible"
                   )}
                 >
                   <ArrowLeft className="h-3.5 w-3.5" />
                   Section précédente
                 </button>
                 <p className="text-center text-[11px] uppercase tracking-[0.16em] text-white/55 sm:flex-1 sm:px-6">
-                  Section {currentStep.toString().padStart(2, "0")} / 06
+                  Section {currentSection.number} / 06
                 </p>
                 <button
                   type="button"
                   onClick={handleNext}
                   className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-lg bg-nexus-orange-500 px-6 py-2.5 text-xs font-bold uppercase tracking-[0.14em] text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-nexus-orange-600"
                 >
-                  Section suivante
+                  {currentStep === 0 &&
+                  form.identification_mode === "deja_client"
+                    ? "Aller à la connexion"
+                    : "Section suivante"}
                   <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
                 </button>
               </div>
@@ -1187,32 +767,15 @@ export function DemandeFormComplete() {
             )}
           </div>
         </div>
-
-        {/* Mobile : toggle sidebar */}
-        <button
-          type="button"
-          onClick={() => setShowSidebarMobile((v) => !v)}
-          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-4 py-2.5 text-xs font-semibold text-white/85 backdrop-blur-md lg:hidden"
-        >
-          {showSidebarMobile ? "Masquer" : "Afficher"} le résumé du dossier
-          <ArrowRight className="h-3.5 w-3.5" />
-        </button>
       </div>
 
       {/* ─── Sidebar (4/12 desktop) ─── */}
-      <aside
-        className={cn(
-          "lg:col-span-4",
-          showSidebarMobile ? "block" : "hidden lg:block"
-        )}
-      >
+      <aside className="hidden lg:col-span-4 lg:block">
         <div className="lg:sticky lg:top-24">
-          <DossierSidebar
-            previewRef={previewRef}
+          <ResumeSidebar
             currentStep={currentStep}
             form={form}
-            files={files}
-            serviceConfig={serviceConfig}
+            totalFiles={totalFiles}
           />
         </div>
       </aside>
@@ -1224,73 +787,45 @@ export function DemandeFormComplete() {
 // SOUS-COMPOSANTS
 // ============================================================================
 
-function SectionStepper({
-  currentStep,
-  onStepClick,
-}: {
-  currentStep: StepId;
-  onStepClick: (s: StepId) => void;
-}) {
+function SectionStepper({ currentStep }: { currentStep: StepId }) {
   return (
-    <div className="border-b border-white/10 px-6 py-4 sm:px-8">
-      {/* Desktop : compteur sections cliquables */}
-      <ol className="hidden items-center gap-1 sm:flex">
-        {SECTIONS.map((section, i) => {
+    <div className="border-b border-white/10 px-6 py-3 sm:px-8">
+      <div className="hidden items-center gap-1 sm:flex">
+        {SECTIONS.map((s, i) => {
           const state =
-            section.id < currentStep
-              ? "done"
-              : section.id === currentStep
-                ? "active"
-                : "todo";
+            s.id < currentStep ? "done" : s.id === currentStep ? "active" : "todo";
           return (
-            <li key={section.id} className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={() => onStepClick(section.id)}
+            <div key={s.id} className="flex items-center gap-1">
+              <span
                 className={cn(
-                  "flex items-center gap-1.5 rounded-md px-2 py-1 text-[10px] font-bold uppercase tracking-[0.18em] transition-colors",
+                  "flex h-5 w-5 items-center justify-center rounded-full font-mono text-[9px] transition-all",
                   state === "active"
-                    ? "text-nexus-orange-300"
+                    ? "bg-nexus-orange-500 text-white shadow-[0_0_18px_-2px_rgba(255,102,0,0.7)]"
                     : state === "done"
-                      ? "text-white/85 hover:text-white"
-                      : "text-white/35"
+                      ? "bg-white/15 text-white"
+                      : "bg-white/[0.04] text-white/35 ring-1 ring-white/10"
                 )}
               >
-                <span
-                  className={cn(
-                    "flex h-5 w-5 items-center justify-center rounded-full font-mono text-[10px] transition-all",
-                    state === "active"
-                      ? "bg-nexus-orange-500 text-white shadow-[0_0_18px_-2px_rgba(255,102,0,0.7)]"
-                      : state === "done"
-                        ? "bg-white/15 text-white"
-                        : "bg-white/[0.04] text-white/35 ring-1 ring-white/10"
-                  )}
-                >
-                  {state === "done" ? (
-                    <Check className="h-3 w-3" />
-                  ) : (
-                    section.number
-                  )}
-                </span>
-                <span className="hidden lg:inline">{section.shortTitle}</span>
-              </button>
+                {state === "done" ? (
+                  <Check className="h-2.5 w-2.5" />
+                ) : (
+                  s.number
+                )}
+              </span>
               {i < SECTIONS.length - 1 && (
                 <span
-                  aria-hidden
                   className={cn(
-                    "h-px w-3 transition-colors",
-                    section.id < currentStep
+                    "h-px w-2 transition-colors",
+                    s.id < currentStep
                       ? "bg-nexus-orange-400/60"
                       : "bg-white/10"
                   )}
                 />
               )}
-            </li>
+            </div>
           );
         })}
-      </ol>
-
-      {/* Mobile */}
+      </div>
       <div className="sm:hidden">
         <div className="flex items-center justify-between text-xs">
           <span className="font-mono font-bold text-nexus-orange-300">
@@ -1303,7 +838,7 @@ function SectionStepper({
         <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-white/10">
           <div
             className="h-full bg-gradient-to-r from-nexus-orange-500 via-nexus-orange-400 to-nexus-orange-300 shadow-[0_0_12px_-2px_rgba(255,102,0,0.6)] transition-all duration-500"
-            style={{ width: `${(currentStep / 6) * 100}%` }}
+            style={{ width: `${((currentStep + 1) / 7) * 100}%` }}
           />
         </div>
       </div>
@@ -1341,61 +876,64 @@ function SectionHeader({
   );
 }
 
-function ServiceVerticalList({
-  services,
-  value,
-  onChange,
+function RadioCard({
+  selected,
+  onClick,
+  icon: Icon,
+  title,
+  description,
 }: {
-  services: typeof SERVICE_TYPES;
-  value: string;
-  onChange: (v: string) => void;
+  selected: boolean;
+  onClick: () => void;
+  icon: typeof User;
+  title: string;
+  description: string;
 }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-white/10 bg-nexus-blue-950/40 backdrop-blur-md">
-      <ul role="radiogroup" className="divide-y divide-white/5">
-        {services.map((s) => {
-          const selected = value === s.value;
-          return (
-            <li key={s.value}>
-              <button
-                type="button"
-                role="radio"
-                aria-checked={selected}
-                onClick={() => onChange(s.value)}
-                className={cn(
-                  "flex w-full items-center justify-between gap-4 px-4 py-3.5 text-left transition-colors duration-150 hover:bg-white/[0.03]",
-                  selected && "bg-nexus-orange-500/10"
-                )}
-              >
-                <div className="min-w-0 flex-1">
-                  <p
-                    className={cn(
-                      "text-sm font-semibold leading-tight",
-                      selected ? "text-white" : "text-white/85"
-                    )}
-                  >
-                    {s.label}
-                  </p>
-                  <p className="mt-0.5 text-xs leading-relaxed text-slate-400">
-                    {s.description}
-                  </p>
-                </div>
-                <div
-                  className={cn(
-                    "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all",
-                    selected
-                      ? "border-nexus-orange-400 bg-nexus-orange-500 text-white"
-                      : "border-white/20 bg-transparent"
-                  )}
-                >
-                  {selected && <Check className="h-3 w-3" />}
-                </div>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "flex w-full items-start gap-4 rounded-xl border p-5 text-left backdrop-blur-md transition-all duration-200",
+        selected
+          ? "border-nexus-orange-400/60 bg-nexus-orange-500/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_8px_24px_-8px_rgba(255,102,0,0.30)]"
+          : "border-white/10 bg-white/[0.04] hover:border-white/20 hover:bg-white/[0.07]"
+      )}
+    >
+      <div
+        className={cn(
+          "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-all",
+          selected
+            ? "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white"
+            : "bg-white/[0.04] text-white/60 ring-1 ring-white/10"
+        )}
+      >
+        <Icon className="h-5 w-5" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p
+          className={cn(
+            "font-display text-base font-bold leading-tight",
+            selected ? "text-white" : "text-white/85"
+          )}
+        >
+          {title}
+        </p>
+        <p className="mt-1.5 text-sm leading-relaxed text-slate-400">
+          {description}
+        </p>
+      </div>
+      <div
+        className={cn(
+          "mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all",
+          selected
+            ? "border-nexus-orange-400 bg-nexus-orange-500 text-white"
+            : "border-white/20 bg-transparent"
+        )}
+      >
+        {selected && <Check className="h-3 w-3" />}
+      </div>
+    </button>
   );
 }
 
@@ -1416,64 +954,6 @@ function FormField({
         {label}
       </label>
       {children}
-      {error && (
-        <p className="mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-rose-300">
-          <AlertCircle className="h-3.5 w-3.5" />
-          {error}
-        </p>
-      )}
-    </div>
-  );
-}
-
-function DetailedField({
-  number,
-  label,
-  value,
-  onChange,
-  placeholder,
-  rows = 3,
-  error,
-  dataField,
-  minLength,
-}: {
-  number: string;
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  placeholder?: string;
-  rows?: number;
-  error?: string;
-  dataField?: string;
-  minLength?: number;
-}) {
-  return (
-    <div data-field={dataField}>
-      <div className="mb-2 flex items-baseline gap-3">
-        <span className="font-mono text-xs font-bold text-nexus-orange-300">
-          {number}.
-        </span>
-        <label className="text-sm font-semibold text-white/90">{label}</label>
-      </div>
-      <PremiumTextarea
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        rows={rows}
-        hasError={!!error}
-      />
-      {minLength !== undefined && (
-        <p
-          className={cn(
-            "mt-1.5 text-[11px]",
-            value.length >= minLength
-              ? "text-emerald-300"
-              : "text-white/55"
-          )}
-        >
-          {value.length} / min. {minLength} caractères
-        </p>
-      )}
       {error && (
         <p className="mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-rose-300">
           <AlertCircle className="h-3.5 w-3.5" />
@@ -1511,13 +991,11 @@ function PremiumTextarea({
   onChange,
   placeholder,
   rows = 3,
-  hasError,
 }: {
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
   rows?: number;
-  hasError?: boolean;
 }) {
   return (
     <textarea
@@ -1525,12 +1003,7 @@ function PremiumTextarea({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       rows={rows}
-      className={cn(
-        "w-full rounded-lg border bg-nexus-blue-950/40 px-4 py-3 text-sm leading-relaxed text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1",
-        hasError
-          ? "border-rose-400/40 focus:border-rose-400/70 focus:ring-rose-500/30"
-          : "border-white/10 focus:border-nexus-orange-400/60 focus:ring-nexus-orange-500/30"
-      )}
+      className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 px-4 py-3 text-sm leading-relaxed text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-nexus-orange-500/30"
     />
   );
 }
@@ -1540,17 +1013,20 @@ function PremiumSelect({
   onChange,
   options,
   optionLabels,
+  disabled,
 }: {
   value: string;
   onChange: (v: string) => void;
-  options: string[];
+  options: readonly string[];
   optionLabels?: Record<string, string>;
+  disabled?: boolean;
 }) {
   return (
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 px-4 py-2.5 text-sm text-white backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-nexus-orange-500/30 [color-scheme:dark]"
+      disabled={disabled}
+      className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 px-4 py-2.5 text-sm text-white backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-nexus-orange-500/30 disabled:opacity-50 [color-scheme:dark]"
     >
       {options.map((o) => (
         <option key={o} value={o} className="bg-nexus-blue-950 text-white">
@@ -1561,37 +1037,426 @@ function PremiumSelect({
   );
 }
 
-function SummaryBlock({
-  title,
-  children,
-  onEdit,
+function YesNoButton({
+  label,
+  selected,
+  onClick,
 }: {
-  title: string;
-  children: React.ReactNode;
-  onEdit: () => void;
+  label: string;
+  selected: boolean;
+  onClick: () => void;
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5 ring-1 ring-white/5 backdrop-blur-md">
-      <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
-          {title}
-        </h3>
-        <button
-          type="button"
-          onClick={onEdit}
-          className="text-[11px] font-semibold uppercase tracking-[0.14em] text-nexus-orange-300 transition-colors hover:text-nexus-orange-200"
-        >
-          Modifier
-        </button>
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "flex-1 rounded-lg border px-4 py-2.5 text-sm font-semibold backdrop-blur-md transition-all duration-200",
+        selected
+          ? "border-nexus-orange-400/60 bg-nexus-orange-500/10 text-white"
+          : "border-white/10 bg-white/[0.04] text-white/85 hover:border-white/20 hover:bg-white/[0.07]"
+      )}
+    >
+      {label}
+    </button>
+  );
+}
+
+function DynamicFields({
+  service,
+  details,
+  onChange,
+}: {
+  service: string;
+  details: Record<string, unknown>;
+  onChange: (key: string, value: unknown) => void;
+}) {
+  if (!service) {
+    return (
+      <p className="rounded-lg border border-white/10 bg-white/[0.04] p-5 text-sm text-white/55">
+        Sélectionnez d&rsquo;abord un service à la section 02 pour afficher les
+        champs spécifiques.
+      </p>
+    );
+  }
+
+  // Visa
+  if (service === "Visa & e-Visa") {
+    return (
+      <div className="grid gap-5 sm:grid-cols-2">
+        <FormField label="Type de passeport">
+          <PremiumSelect
+            value={(details.type_passeport as string) || ""}
+            onChange={(v) => onChange("type_passeport", v)}
+            options={["", "Ordinaire", "Diplomatique", "Service"]}
+            optionLabels={{ "": "— Sélectionnez —" }}
+          />
+        </FormField>
+        <FormField label="Numéro de passeport">
+          <PremiumInput
+            value={(details.numero_passeport as string) || ""}
+            onChange={(v) => onChange("numero_passeport", v)}
+          />
+        </FormField>
+        <FormField label="Date d'expiration du passeport">
+          <PremiumInput
+            type="date"
+            value={(details.expiration_passeport as string) || ""}
+            onChange={(v) => onChange("expiration_passeport", v)}
+          />
+        </FormField>
+        <FormField label="Motif du voyage">
+          <PremiumSelect
+            value={(details.motif_voyage as string) || ""}
+            onChange={(v) => onChange("motif_voyage", v)}
+            options={["", "Tourisme", "Affaires", "Études", "Médical", "Famille", "Autre"]}
+            optionLabels={{ "": "— Sélectionnez —" }}
+          />
+        </FormField>
+        <FormField label="Durée prévue du séjour (jours)">
+          <PremiumInput
+            type="number"
+            value={(details.duree_sejour_jours as string) || ""}
+            onChange={(v) => onChange("duree_sejour_jours", v)}
+          />
+        </FormField>
+        <FormField label="Refus de visa antérieur ?">
+          <PremiumSelect
+            value={(details.refus_visa_anterieur as string) || ""}
+            onChange={(v) => onChange("refus_visa_anterieur", v)}
+            options={["", "non", "oui"]}
+            optionLabels={{ "": "— Sélectionnez —", non: "Non", oui: "Oui" }}
+          />
+        </FormField>
+        {details.refus_visa_anterieur === "oui" && (
+          <>
+            <FormField label="Pays du refus">
+              <PremiumInput
+                value={(details.pays_refus as string) || ""}
+                onChange={(v) => onChange("pays_refus", v)}
+              />
+            </FormField>
+            <FormField label="Date approximative du refus">
+              <PremiumInput
+                type="date"
+                value={(details.date_refus as string) || ""}
+                onChange={(v) => onChange("date_refus", v)}
+              />
+            </FormField>
+          </>
+        )}
+        <div className="sm:col-span-2">
+          <FormField label="Pays déjà visités">
+            <PremiumTextarea
+              value={(details.pays_visites as string) || ""}
+              onChange={(v) => onChange("pays_visites", v)}
+              rows={2}
+              placeholder="Liste des pays visités au cours des 5 dernières années"
+            />
+          </FormField>
+        </div>
+        <FormField label="Avez-vous une personne invitante ?">
+          <PremiumSelect
+            value={(details.invitant as string) || ""}
+            onChange={(v) => onChange("invitant", v)}
+            options={["", "non", "oui"]}
+            optionLabels={{ "": "— Sélectionnez —", non: "Non", oui: "Oui" }}
+          />
+        </FormField>
+        {details.invitant === "oui" && (
+          <FormField label="Nom de l'invitant">
+            <PremiumInput
+              value={(details.nom_invitant as string) || ""}
+              onChange={(v) => onChange("nom_invitant", v)}
+            />
+          </FormField>
+        )}
       </div>
-      <div className="space-y-2">{children}</div>
+    );
+  }
+
+  // Études
+  if (service === "Études à l'étranger") {
+    return (
+      <div className="grid gap-5 sm:grid-cols-2">
+        <FormField label="Dernier diplôme obtenu">
+          <PremiumInput
+            value={(details.dernier_diplome as string) || ""}
+            onChange={(v) => onChange("dernier_diplome", v)}
+            placeholder="ex : Bac, Licence en informatique…"
+          />
+        </FormField>
+        <FormField label="Domaine d'études">
+          <PremiumInput
+            value={(details.domaine_etudes as string) || ""}
+            onChange={(v) => onChange("domaine_etudes", v)}
+            placeholder="ex : Informatique, Médecine…"
+          />
+        </FormField>
+        <FormField label="Niveau recherché">
+          <PremiumSelect
+            value={(details.niveau_recherche as string) || ""}
+            onChange={(v) => onChange("niveau_recherche", v)}
+            options={["", "Licence", "Master", "Doctorat", "Formation pro"]}
+            optionLabels={{ "": "— Sélectionnez —" }}
+          />
+        </FormField>
+        <FormField label="Établissement ciblé">
+          <PremiumInput
+            value={(details.etablissement_cible as string) || ""}
+            onChange={(v) => onChange("etablissement_cible", v)}
+            placeholder="Nom de l'université ou de l'école"
+          />
+        </FormField>
+        <FormField label="Admission déjà obtenue ?">
+          <PremiumSelect
+            value={(details.admission_obtenue as string) || ""}
+            onChange={(v) => onChange("admission_obtenue", v)}
+            options={["", "non", "oui"]}
+            optionLabels={{ "": "— Sélectionnez —", non: "Non", oui: "Oui" }}
+          />
+        </FormField>
+        <FormField label="Passeport disponible ?">
+          <PremiumSelect
+            value={(details.passeport_disponible as string) || ""}
+            onChange={(v) => onChange("passeport_disponible", v)}
+            options={["", "non", "oui"]}
+            optionLabels={{ "": "— Sélectionnez —", non: "Non", oui: "Oui" }}
+          />
+        </FormField>
+        <div className="sm:col-span-2">
+          <FormField label="Niveau linguistique (FR / EN / autre)">
+            <PremiumInput
+              value={(details.niveau_linguistique as string) || ""}
+              onChange={(v) => onChange("niveau_linguistique", v)}
+              placeholder="ex : FR natif, EN B2, TCF NCLC 7…"
+            />
+          </FormField>
+        </div>
+        <FormField label="Besoin de bourse ?">
+          <PremiumSelect
+            value={(details.besoin_bourse as string) || ""}
+            onChange={(v) => onChange("besoin_bourse", v)}
+            options={["", "non", "oui"]}
+            optionLabels={{ "": "— Sélectionnez —", non: "Non", oui: "Oui" }}
+          />
+        </FormField>
+      </div>
+    );
+  }
+
+  // Business / Incubateur
+  if (service === "Incubateur & Financement") {
+    return (
+      <div className="grid gap-5 sm:grid-cols-2">
+        <FormField label="Nom de l'entreprise / projet">
+          <PremiumInput
+            value={(details.nom_projet as string) || ""}
+            onChange={(v) => onChange("nom_projet", v)}
+          />
+        </FormField>
+        <FormField label="Secteur d'activité">
+          <PremiumInput
+            value={(details.secteur as string) || ""}
+            onChange={(v) => onChange("secteur", v)}
+          />
+        </FormField>
+        <FormField label="Pays d'activité">
+          <PremiumInput
+            value={(details.pays_activite as string) || ""}
+            onChange={(v) => onChange("pays_activite", v)}
+          />
+        </FormField>
+        <FormField label="Stade du projet">
+          <PremiumSelect
+            value={(details.stade_projet as string) || ""}
+            onChange={(v) => onChange("stade_projet", v)}
+            options={["", "Idée", "Prototype", "Lancé", "En croissance"]}
+            optionLabels={{ "": "— Sélectionnez —" }}
+          />
+        </FormField>
+        <div className="sm:col-span-2">
+          <FormField label="Type d'accompagnement recherché">
+            <PremiumTextarea
+              value={(details.type_accompagnement as string) || ""}
+              onChange={(v) => onChange("type_accompagnement", v)}
+              rows={3}
+            />
+          </FormField>
+        </div>
+        <FormField label="Société enregistrée ?">
+          <PremiumSelect
+            value={(details.societe_enregistree as string) || ""}
+            onChange={(v) => onChange("societe_enregistree", v)}
+            options={["", "non", "oui"]}
+            optionLabels={{ "": "— Sélectionnez —", non: "Non", oui: "Oui" }}
+          />
+        </FormField>
+      </div>
+    );
+  }
+
+  // Administratif / Recouvrement
+  if (
+    service === "Recouvrement de documents" ||
+    service === "Autre service administratif"
+  ) {
+    return (
+      <div className="grid gap-5 sm:grid-cols-2">
+        <FormField label="Type de document demandé">
+          <PremiumInput
+            value={(details.type_document as string) || ""}
+            onChange={(v) => onChange("type_document", v)}
+          />
+        </FormField>
+        <FormField label="Organisme concerné">
+          <PremiumInput
+            value={(details.organisme_concerne as string) || ""}
+            onChange={(v) => onChange("organisme_concerne", v)}
+          />
+        </FormField>
+        <FormField label="Document déjà disponible ?">
+          <PremiumSelect
+            value={(details.document_disponible as string) || ""}
+            onChange={(v) => onChange("document_disponible", v)}
+            options={["", "non", "oui"]}
+            optionLabels={{ "": "— Sélectionnez —", non: "Non", oui: "Oui" }}
+          />
+        </FormField>
+        <FormField label="Date limite si applicable">
+          <PremiumInput
+            type="date"
+            value={(details.date_limite as string) || ""}
+            onChange={(v) => onChange("date_limite", v)}
+          />
+        </FormField>
+      </div>
+    );
+  }
+
+  // Default — pas de champs dynamiques pour billet/transferts/autre
+  return (
+    <p className="rounded-lg border border-white/10 bg-white/[0.04] p-5 text-sm text-white/65">
+      Aucune information spécifique requise pour ce service. Vous pouvez
+      passer à la section suivante.
+    </p>
+  );
+}
+
+function DocumentsUpload({
+  filesByCategory,
+  onChange,
+}: {
+  filesByCategory: FilesByCategory;
+  onChange: (f: FilesByCategory) => void;
+}) {
+  const handleFiles = (cat: DocumentCategorie, fileList: FileList | null) => {
+    if (!fileList) return;
+    const newFiles = Array.from(fileList);
+    onChange({
+      ...filesByCategory,
+      [cat]: [...filesByCategory[cat], ...newFiles],
+    });
+  };
+
+  const removeFile = (cat: DocumentCategorie, index: number) => {
+    onChange({
+      ...filesByCategory,
+      [cat]: filesByCategory[cat].filter((_, i) => i !== index),
+    });
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="rounded-lg border border-nexus-orange-400/25 bg-nexus-orange-500/10 p-4 text-sm text-nexus-orange-100">
+        <p>
+          <strong>Aucune catégorie n&rsquo;est obligatoire.</strong> Vous
+          pourrez ajouter ou compléter vos documents après soumission depuis
+          votre espace Nexus Connect.
+        </p>
+      </div>
+      {DOCUMENT_CATEGORIES.map((cat) => {
+        const files = filesByCategory[cat.value];
+        return (
+          <div
+            key={cat.value}
+            className="rounded-lg border border-white/10 bg-nexus-blue-950/40 p-4 backdrop-blur-md"
+          >
+            <div className="mb-3 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <FileText className="h-4 w-4 text-nexus-orange-300" />
+                <p className="text-sm font-semibold text-white">{cat.label}</p>
+                {files.length > 0 && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-200">
+                    <Check className="h-2.5 w-2.5" />
+                    {files.length} fichier(s)
+                  </span>
+                )}
+              </div>
+              <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] font-semibold text-white/85 transition-colors hover:border-nexus-orange-400/40 hover:text-white">
+                <Upload className="h-3 w-3" />
+                Ajouter
+                <input
+                  type="file"
+                  multiple
+                  className="hidden"
+                  onChange={(e) => handleFiles(cat.value, e.target.files)}
+                />
+              </label>
+            </div>
+            {files.length > 0 && (
+              <ul className="space-y-1.5">
+                {files.map((f, i) => (
+                  <li
+                    key={i}
+                    className="flex items-center justify-between gap-2 rounded-md border border-white/5 bg-white/[0.03] px-3 py-2 text-xs text-slate-200"
+                  >
+                    <span className="flex min-w-0 items-center gap-2">
+                      <Paperclip className="h-3 w-3 shrink-0 text-nexus-orange-300" />
+                      <span className="truncate">{f.name}</span>
+                      <span className="shrink-0 text-[10px] text-white/45">
+                        ({(f.size / 1024).toFixed(0)} Ko)
+                      </span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeFile(cat.value, i)}
+                      className="text-rose-300 transition-colors hover:text-rose-200"
+                      aria-label="Supprimer le fichier"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
 
-function SummaryRow({ label, value }: { label: string; value: string }) {
+function RecapBlock({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="flex items-baseline gap-3 border-b border-white/5 pb-2 text-sm last:border-0 last:pb-0">
+    <div className="border-b border-white/5 py-3 last:border-0 last:pb-0">
+      <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">
+        {title}
+      </p>
+      <div className="space-y-1.5">{children}</div>
+    </div>
+  );
+}
+
+function RecapRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-baseline gap-3 text-sm">
       <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">
         {label}
       </span>
@@ -1602,37 +1467,16 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-function SummaryParagraph({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="border-b border-white/5 pb-3 last:border-0 last:pb-0">
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">
-        {label}
-      </p>
-      <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-white/85">
-        {value || <em className="text-white/40">non renseigné</em>}
-      </p>
-    </div>
-  );
-}
-
 function ConsentCheckbox({
   checked,
   onChange,
   label,
   error,
-  disabled,
 }: {
   checked: boolean;
   onChange: (v: boolean) => void;
   label: string;
   error?: string;
-  disabled?: boolean;
 }) {
   return (
     <div>
@@ -1643,23 +1487,16 @@ function ConsentCheckbox({
             ? "border-nexus-orange-400/40 bg-nexus-orange-500/10"
             : error
               ? "border-rose-400/40 bg-rose-500/10"
-              : "border-white/10 bg-white/[0.04] hover:bg-white/[0.06]",
-          disabled && "cursor-default opacity-80"
+              : "border-white/10 bg-white/[0.04] hover:bg-white/[0.06]"
         )}
       >
         <input
           type="checkbox"
           checked={checked}
-          onChange={(e) => !disabled && onChange(e.target.checked)}
-          disabled={disabled}
+          onChange={(e) => onChange(e.target.checked)}
           className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-white/30 bg-transparent accent-nexus-orange-500"
         />
-        <span
-          className={cn(
-            "text-xs leading-relaxed sm:text-sm",
-            checked ? "text-white" : "text-slate-200"
-          )}
-        >
+        <span className="text-xs leading-relaxed text-slate-200 sm:text-sm">
           {label}
         </span>
       </label>
@@ -1673,241 +1510,99 @@ function ConsentCheckbox({
   );
 }
 
-// ============================================================================
-// SIDEBAR — Résumé du dossier
-// ============================================================================
-function DossierSidebar({
-  previewRef,
+function ResumeSidebar({
   currentStep,
   form,
-  files,
-  serviceConfig,
+  totalFiles,
 }: {
-  previewRef: string;
   currentStep: StepId;
-  form: DemandeCompleteFormWithSource;
-  files: File[];
-  serviceConfig: ReturnType<typeof getServiceTypeConfig> | undefined;
+  form: DemandeCompletePayload;
+  totalFiles: number;
 }) {
-  const PRIORITY_MAP: Record<
-    UrgenceLevel,
-    { label: string; tone: string; estimate: string }
-  > = {
-    faible: {
-      label: "Standard",
-      tone: "border-slate-400/30 bg-slate-500/10 text-slate-200",
-      estimate: "Sous 48 h ouvrées",
-    },
-    normale: {
-      label: "Normal",
-      tone: "border-emerald-400/30 bg-emerald-500/10 text-emerald-200",
-      estimate: "Sous 24-48 h ouvrées",
-    },
-    elevee: {
-      label: "Élevée",
-      tone: "border-amber-400/40 bg-amber-500/10 text-amber-200",
-      estimate: "Sous 24 h ouvrées",
-    },
-    critique: {
-      label: "Critique",
-      tone: "border-rose-400/40 bg-rose-500/10 text-rose-200",
-      estimate: "Traitement prioritaire immédiat",
-    },
-  };
-  const priority =
-    PRIORITY_MAP[form.urgence as UrgenceLevel] || PRIORITY_MAP.normale;
-
-  const requiredDocs =
-    form.service_type && DOCUMENTS_CHECKLIST[form.service_type]
-      ? DOCUMENTS_CHECKLIST[form.service_type]
-      : [];
-
   return (
-    <div className="space-y-4">
-      <div className="overflow-hidden rounded-2xl border border-white/12 bg-gradient-to-br from-white/[0.06] via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(255,102,0,0.20)]">
-        {/* En-tête */}
-        <div className="border-b border-white/10 px-5 py-4">
-          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
-            Résumé du dossier
-          </p>
-          <p className="mt-1 text-[11px] text-white/55">
-            Mis à jour en temps réel
-          </p>
-        </div>
+    <div className="overflow-hidden rounded-2xl border border-white/12 bg-gradient-to-br from-white/[0.06] via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 backdrop-blur-2xl">
+      <div className="border-b border-white/10 px-5 py-4">
+        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+          Résumé du dossier
+        </p>
+        <p className="mt-1 text-[11px] text-white/55">
+          Mis à jour en temps réel
+        </p>
+      </div>
 
-        {/* Référence */}
-        <div className="border-b border-white/10 px-5 py-4">
-          <div className="flex items-baseline gap-2">
-            <Hash className="h-3 w-3 text-white/40" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">
-              Référence prévisionnelle
-            </span>
-          </div>
-          <p className="mt-1 break-all font-mono text-base font-bold text-white">
-            <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-500 bg-clip-text text-transparent">
-              {previewRef}
-            </span>
-          </p>
-        </div>
-
-        {/* Progression */}
-        <div className="border-b border-white/10 px-5 py-4">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">
-            Progression
-          </p>
-          <p className="mt-1.5 text-sm font-semibold text-white">
-            Section {currentStep.toString().padStart(2, "0")} sur 06
-          </p>
-          <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/10">
-            <div
-              className="h-full bg-gradient-to-r from-nexus-orange-500 via-nexus-orange-400 to-nexus-orange-300 transition-all duration-500"
-              style={{ width: `${(currentStep / 6) * 100}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Service */}
-        {serviceConfig && (
-          <div className="border-b border-white/10 px-5 py-4">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">
-              Service ciblé
-            </p>
-            <p className="mt-1 text-sm font-semibold text-white">
-              {serviceConfig.label}
-            </p>
-            <p className="mt-1 text-xs leading-relaxed text-slate-400">
-              {serviceConfig.description}
-            </p>
-          </div>
-        )}
-
-        {/* Priorité */}
-        <div className="border-b border-white/10 px-5 py-4">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">
-            Niveau de priorité
-          </p>
-          <span
-            className={cn(
-              "mt-1.5 inline-flex items-center gap-1.5 rounded-full border px-3 py-0.5 text-[10px] font-bold uppercase tracking-[0.16em] backdrop-blur-md",
-              priority.tone
-            )}
-          >
-            <Zap className="h-3 w-3" />
-            {priority.label}
-          </span>
-          <div className="mt-2 inline-flex items-center gap-1.5 text-xs text-slate-400">
-            <Clock className="h-3 w-3 text-nexus-orange-300" />
-            {priority.estimate}
-          </div>
-        </div>
-
-        {/* Documents */}
-        {requiredDocs.length > 0 && (
-          <div className="border-b border-white/10 px-5 py-4">
-            <div className="flex items-center justify-between">
-              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">
-                Documents recommandés
-              </p>
-              <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[10px] font-bold text-white/70">
-                {files.length} / {requiredDocs.length}
-              </span>
-            </div>
-            <ul className="mt-2.5 space-y-1.5 text-[11px] leading-tight text-slate-300">
-              {requiredDocs.slice(0, 4).map((doc, i) => (
-                <li key={i} className="flex items-start gap-1.5">
-                  <span className="mt-1 inline-block h-1 w-1 shrink-0 rounded-full bg-nexus-orange-400/60" />
-                  <span>{doc}</span>
-                </li>
-              ))}
-              {requiredDocs.length > 4 && (
-                <li className="text-[10px] italic text-white/40">
-                  + {requiredDocs.length - 4} autres…
-                </li>
-              )}
-            </ul>
-          </div>
-        )}
-
-        {/* Délai */}
-        <div className="bg-gradient-to-br from-nexus-orange-500/10 via-nexus-orange-500/5 to-transparent px-5 py-4">
-          <div className="flex items-center gap-1.5">
-            <Search className="h-3 w-3 text-nexus-orange-300" />
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
-              Délai estimé
-            </p>
-          </div>
-          <p className="mt-1.5 font-display text-base font-bold text-white">
-            {priority.estimate}
-          </p>
-          <p className="mt-1 text-[11px] leading-relaxed text-slate-400">
-            Délai indicatif. Confirmé par le conseiller après prise en charge.
-          </p>
+      <div className="border-b border-white/10 px-5 py-4">
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">
+          Progression
+        </p>
+        <p className="mt-1.5 text-sm font-semibold text-white">
+          Section {SECTIONS.find((s) => s.id === currentStep)?.number} / 06
+        </p>
+        <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/10">
+          <div
+            className="h-full bg-gradient-to-r from-nexus-orange-500 via-nexus-orange-400 to-nexus-orange-300 transition-all duration-500"
+            style={{ width: `${((currentStep + 1) / 7) * 100}%` }}
+          />
         </div>
       </div>
 
-      {/* Trust signals */}
-      <div className="space-y-2.5 rounded-xl border border-white/10 bg-white/[0.03] px-5 py-4 ring-1 ring-white/5 backdrop-blur-md">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
-          Notre engagement
+      {form.nom_complet && (
+        <div className="border-b border-white/10 px-5 py-4">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">
+            Demandeur
+          </p>
+          <p className="mt-1 text-sm font-semibold text-white">
+            {form.nom_complet}
+          </p>
+          {form.email && (
+            <p className="mt-0.5 text-xs text-slate-400">{form.email}</p>
+          )}
+        </div>
+      )}
+
+      {form.service && (
+        <div className="border-b border-white/10 px-5 py-4">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">
+            Service
+          </p>
+          <p className="mt-1 text-sm font-semibold text-white">
+            {form.service}
+          </p>
+          {form.categorie_demande && (
+            <p className="mt-0.5 text-xs text-slate-400">
+              {form.categorie_demande}
+            </p>
+          )}
+        </div>
+      )}
+
+      <div className="border-b border-white/10 px-5 py-4">
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">
+          Documents joints
         </p>
-        <TrustSignal
-          icon={HeartHandshake}
-          label="Conseiller dédié"
-          desc="Un interlocuteur unique pour votre dossier."
-        />
-        <TrustSignal
-          icon={Lock}
-          label="Documents protégés"
-          desc="Stockage chiffré, accès restreint."
-        />
-        <TrustSignal
-          icon={Search}
-          label="Analyse personnalisée"
-          desc="Étude réelle de votre situation."
-        />
+        <p className="mt-1 text-sm font-semibold text-white">
+          {totalFiles} fichier(s)
+        </p>
+      </div>
+
+      <div className="bg-gradient-to-br from-nexus-orange-500/10 via-nexus-orange-500/5 to-transparent px-5 py-4">
+        <div className="flex items-center gap-1.5">
+          <Lock className="h-3 w-3 text-nexus-orange-300" />
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+            Espace sécurisé
+          </p>
+        </div>
+        <p className="mt-1.5 text-[11px] leading-relaxed text-slate-400">
+          Toutes vos informations et documents sont chiffrés. Vous pourrez
+          compléter votre dossier à tout moment depuis Nexus Connect.
+        </p>
+        <Link
+          href="/login"
+          className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-semibold text-nexus-orange-300 transition-colors hover:text-nexus-orange-200"
+        >
+          <LogIn className="h-3 w-3" />
+          Accéder à mon espace existant
+        </Link>
       </div>
     </div>
   );
-}
-
-function TrustSignal({
-  icon: Icon,
-  label,
-  desc,
-}: {
-  icon: typeof HeartHandshake;
-  label: string;
-  desc: string;
-}) {
-  return (
-    <div className="flex items-start gap-2.5">
-      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-nexus-orange-500/25 to-nexus-orange-700/15 ring-1 ring-nexus-orange-400/30">
-        <Icon className="h-3 w-3 text-nexus-orange-300" />
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="text-xs font-bold text-white">{label}</p>
-        <p className="mt-0.5 text-[10px] leading-relaxed text-slate-400">
-          {desc}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-// ============================================================================
-// HELPERS
-// ============================================================================
-function urgenceLabel(urgence: string): string {
-  switch (urgence) {
-    case "faible":
-      return "Faible (plus d'un mois)";
-    case "normale":
-      return "Normale (quelques semaines)";
-    case "elevee":
-      return "Élevée (sous 2 semaines)";
-    case "critique":
-      return "Critique (urgent)";
-    default:
-      return urgence;
-  }
 }
