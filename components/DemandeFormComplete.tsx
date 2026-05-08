@@ -10,6 +10,8 @@ import {
   ArrowRight,
   Check,
   ClipboardCheck,
+  Eye,
+  EyeOff,
   FileText,
   Loader2,
   Lock,
@@ -21,10 +23,12 @@ import {
   UserPlus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/client";
 import {
   CATEGORIES_PAR_SERVICE,
   DEFAULT_FORM_VALUES_COMPLETE,
   DOCUMENT_CATEGORIES,
+  getPasswordStrength,
   NIVEAUX_ETUDES,
   SERVICES_COMPLETS,
   SEXES,
@@ -33,6 +37,7 @@ import {
   validateSection,
   type DemandeCompletePayload,
   type DocumentCategorie,
+  type PasswordStrength,
   type ServiceComplet,
   type ValidationErrors,
 } from "@/lib/demande-complete-form";
@@ -117,6 +122,7 @@ const EMPTY_FILES: FilesByCategory = {
 export function DemandeFormComplete() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const supabaseClient = createClient();
 
   const [currentStep, setCurrentStep] = useState<StepId>(0);
   const [form, setForm] = useState<DemandeCompletePayload>(
@@ -126,9 +132,45 @@ export function DemandeFormComplete() {
     useState<FilesByCategory>(EMPTY_FILES);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [loading, setLoading] = useState(false);
+  // Détection client déjà authentifié → skip Section 00 + cache email/password
+  const [clientAuthenticated, setClientAuthenticated] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
 
   const hydratedRef = useRef(false);
   const topRef = useRef<HTMLDivElement>(null);
+
+  // ===== Détection auth + auto-fill profile =====
+  useEffect(() => {
+    (async () => {
+      const {
+        data: { user },
+      } = await supabaseClient.auth.getUser();
+      if (user) {
+        // Récupérer le profile pour auto-fill
+        const { data: profile } = await supabaseClient
+          .from("profiles")
+          .select("nom, prenom, email, telephone, pays")
+          .eq("id", user.id)
+          .single();
+        setClientAuthenticated(true);
+        setForm((f) => ({
+          ...f,
+          identification_mode: "deja_client",
+          email: profile?.email || user.email || f.email,
+          nom_complet:
+            profile && (profile.prenom || profile.nom)
+              ? `${profile.prenom ?? ""} ${profile.nom ?? ""}`.trim()
+              : f.nom_complet,
+          telephone: profile?.telephone || f.telephone,
+          pays: profile?.pays || f.pays,
+        }));
+        // Skip Section 00 directement à Section 01
+        setCurrentStep(1);
+      }
+      setAuthChecked(true);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // ===== Hydratation localStorage =====
   useEffect(() => {
@@ -138,6 +180,9 @@ export function DemandeFormComplete() {
       const draft = localStorage.getItem(STORAGE_KEY);
       if (draft) {
         const parsed = JSON.parse(draft) as Partial<DemandeCompletePayload>;
+        // Ne jamais restaurer le mot de passe depuis localStorage (sécurité)
+        delete parsed.password;
+        delete parsed.password_confirm;
         setForm((f) => ({ ...f, ...parsed }));
       }
     } catch {
@@ -155,11 +200,12 @@ export function DemandeFormComplete() {
     }
   }, [searchParams]);
 
-  // ===== Sauvegarde auto =====
+  // ===== Sauvegarde auto (sans le mot de passe) =====
   useEffect(() => {
     if (!hydratedRef.current) return;
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
+      const safeForm = { ...form, password: "", password_confirm: "" };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(safeForm));
     } catch {
       /* ignore */
     }
@@ -209,7 +255,9 @@ export function DemandeFormComplete() {
 
   const handlePrev = () => {
     setErrors({});
-    if (currentStep > 0) {
+    // Si client authentifié, on ne redescend jamais à Section 00
+    const minStep: StepId = clientAuthenticated ? 1 : 0;
+    if (currentStep > minStep) {
       setCurrentStep((s) => (s - 1) as StepId);
     }
   };
@@ -273,7 +321,32 @@ export function DemandeFormComplete() {
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
-        throw new Error(data.error || "Erreur lors de la soumission");
+        // Cas spécial : email déjà utilisé → 409
+        if (res.status === 409 && data.error?.includes("déjà associé")) {
+          toast.error(data.error);
+          setErrors({ email: data.error });
+          setCurrentStep(1);
+        } else {
+          throw new Error(data.error || "Erreur lors de la soumission");
+        }
+        setLoading(false);
+        return;
+      }
+
+      // Si compte créé : on connecte le client immédiatement avec ses identifiants
+      if (data.account_created && form.password) {
+        const { error: signInErr } =
+          await supabaseClient.auth.signInWithPassword({
+            email: form.email,
+            password: form.password,
+          });
+        if (signInErr) {
+          console.warn(
+            "[DEMANDE_COMPLETE] auto-login failed:",
+            signInErr.message
+          );
+          // On continue quand même — le dossier est créé
+        }
       }
 
       // Nettoyage du brouillon
@@ -285,7 +358,7 @@ export function DemandeFormComplete() {
 
       toast.success(
         data.account_created
-          ? "Dossier soumis. Un mot de passe temporaire vous a été envoyé par email."
+          ? "Dossier soumis. Votre compte Nexus Connect est créé."
           : "Dossier soumis avec succès."
       );
 
@@ -432,14 +505,58 @@ export function DemandeFormComplete() {
                     placeholder="+236 ..."
                   />
                 </FormField>
-                <FormField label="Email *" error={errors.email} dataField="email">
-                  <PremiumInput
-                    type="email"
-                    value={form.email}
-                    onChange={(v) => update("email", v)}
-                    placeholder="vous@exemple.com"
-                  />
-                </FormField>
+                {/* Email — masqué si déjà authentifié (auto-fill) */}
+                {!clientAuthenticated && (
+                  <FormField label="Email *" error={errors.email} dataField="email">
+                    <PremiumInput
+                      type="email"
+                      value={form.email}
+                      onChange={(v) => update("email", v)}
+                      placeholder="vous@exemple.com"
+                    />
+                  </FormField>
+                )}
+                {clientAuthenticated && (
+                  <FormField label="Email (compte connecté)">
+                    <div className="flex items-center gap-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-4 py-2.5 text-sm text-emerald-200">
+                      <Check className="h-3.5 w-3.5 shrink-0" />
+                      <span className="truncate">{form.email}</span>
+                    </div>
+                  </FormField>
+                )}
+                {/* Mots de passe — uniquement pour mode "nouveau" */}
+                {form.identification_mode === "nouveau" &&
+                  !clientAuthenticated && (
+                    <>
+                      <div className="sm:col-span-2">
+                        <PasswordHelpBox />
+                      </div>
+                      <FormField
+                        label="Mot de passe *"
+                        error={errors.password}
+                        dataField="password"
+                      >
+                        <PasswordField
+                          value={form.password}
+                          onChange={(v) => update("password", v)}
+                          placeholder="Minimum 8 caractères"
+                          showStrength
+                        />
+                      </FormField>
+                      <FormField
+                        label="Confirmer le mot de passe *"
+                        error={errors.password_confirm}
+                        dataField="password_confirm"
+                      >
+                        <PasswordField
+                          value={form.password_confirm}
+                          onChange={(v) => update("password_confirm", v)}
+                          placeholder="Saisissez à nouveau"
+                          matchValue={form.password}
+                        />
+                      </FormField>
+                    </>
+                  )}
                 <FormField
                   label="Situation matrimoniale *"
                   error={errors.situation_matrimoniale}
@@ -983,6 +1100,124 @@ function PremiumInput({
       placeholder={placeholder}
       className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 px-4 py-2.5 text-sm text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-nexus-orange-500/30 [color-scheme:dark]"
     />
+  );
+}
+
+function PasswordField({
+  value,
+  onChange,
+  placeholder,
+  showStrength,
+  matchValue,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  showStrength?: boolean;
+  matchValue?: string;
+}) {
+  const [visible, setVisible] = useState(false);
+  const strength = showStrength ? getPasswordStrength(value) : null;
+  const matches = matchValue !== undefined && value && value === matchValue;
+
+  return (
+    <div className="space-y-1.5">
+      <div className="relative">
+        <input
+          type={visible ? "text" : "password"}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          autoComplete="new-password"
+          className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 py-2.5 pl-4 pr-11 text-sm text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-nexus-orange-500/30 [color-scheme:dark]"
+        />
+        <button
+          type="button"
+          onClick={() => setVisible((v) => !v)}
+          className="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-white/55 transition-colors hover:text-white/85"
+          aria-label={
+            visible ? "Masquer le mot de passe" : "Afficher le mot de passe"
+          }
+        >
+          {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+        </button>
+      </div>
+
+      {/* Indicateur de force */}
+      {showStrength && value && strength && (
+        <PasswordStrengthBar strength={strength} />
+      )}
+
+      {/* Match feedback (champ confirm) */}
+      {matchValue !== undefined && value && (
+        <p
+          className={cn(
+            "flex items-center gap-1 text-[11px]",
+            matches ? "text-emerald-300" : "text-rose-300"
+          )}
+        >
+          {matches ? (
+            <>
+              <Check className="h-3 w-3" />
+              Les mots de passe correspondent
+            </>
+          ) : (
+            <>
+              <AlertCircle className="h-3 w-3" />
+              Les mots de passe ne correspondent pas
+            </>
+          )}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function PasswordStrengthBar({ strength }: { strength: PasswordStrength }) {
+  const config: Record<
+    PasswordStrength,
+    { label: string; color: string; width: string }
+  > = {
+    vide: { label: "—", color: "bg-white/10", width: "w-0" },
+    faible: { label: "Faible", color: "bg-rose-400", width: "w-1/3" },
+    moyen: { label: "Moyen", color: "bg-amber-400", width: "w-2/3" },
+    fort: { label: "Fort", color: "bg-emerald-400", width: "w-full" },
+  };
+  const c = config[strength];
+  return (
+    <div className="flex items-center gap-2">
+      <div className="h-1 flex-1 overflow-hidden rounded-full bg-white/10">
+        <div
+          className={cn(
+            "h-full rounded-full transition-all duration-300",
+            c.color,
+            c.width
+          )}
+        />
+      </div>
+      <span
+        className={cn(
+          "text-[10px] font-bold uppercase tracking-[0.14em]",
+          strength === "faible" && "text-rose-300",
+          strength === "moyen" && "text-amber-300",
+          strength === "fort" && "text-emerald-300"
+        )}
+      >
+        {c.label}
+      </span>
+    </div>
+  );
+}
+
+function PasswordHelpBox() {
+  return (
+    <div className="flex items-start gap-2 rounded-lg border border-nexus-orange-400/25 bg-nexus-orange-500/8 p-3 text-xs leading-relaxed text-nexus-orange-100">
+      <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-nexus-orange-300" />
+      <span>
+        <strong>Minimum 8 caractères.</strong> Vous utiliserez ce mot de passe
+        pour accéder à votre espace Nexus Connect et suivre votre dossier.
+      </span>
+    </div>
   );
 }
 

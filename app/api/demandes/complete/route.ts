@@ -4,7 +4,6 @@ import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import {
   DEFAULT_FORM_VALUES_COMPLETE,
   DOCUMENT_CATEGORIES,
-  generateTempPassword,
   validateFinal,
   type DemandeCompletePayload,
   type DocumentCategorie,
@@ -96,10 +95,9 @@ export async function POST(
     // ─── Création/récupération du compte client ────────────────────────────
     let clientProfileId: string | null = null;
     let accountCreated = false;
-    let tempPassword: string | null = null;
 
     if (form.identification_mode === "nouveau") {
-      // Vérifier si l'email existe déjà
+      // Vérifier si l'email existe déjà dans auth.users (via profiles qui sync)
       const { data: existing } = await admin
         .from("profiles")
         .select("id")
@@ -107,44 +105,88 @@ export async function POST(
         .maybeSingle();
 
       if (existing) {
-        clientProfileId = existing.id;
-      } else {
-        // Création compte via service_role (admin API — pas de confirmation email)
-        tempPassword = generateTempPassword(12);
-        const { data: newUser, error: signupErr } =
-          await admin.auth.admin.createUser({
-            email: form.email.toLowerCase().trim(),
-            password: tempPassword,
-            email_confirm: true,
-            user_metadata: {
-              nom: form.nom_complet.split(" ").pop() || form.nom_complet,
-              prenom: form.nom_complet.split(" ").slice(0, -1).join(" ") || "",
-            },
-          });
+        // Email déjà associé à un compte → erreur explicite 409
+        return NextResponse.json(
+          {
+            success: false,
+            error:
+              "Cet email est déjà associé à un compte. Veuillez vous connecter.",
+          },
+          { status: 409 }
+        );
+      }
 
-        if (signupErr || !newUser?.user) {
-          console.error("[DEMANDE_COMPLETE] signup error:", signupErr?.message);
-          return NextResponse.json(
-            {
-              success: false,
-              error: `Création de compte échouée : ${signupErr?.message || "inconnu"}`,
-            },
-            { status: 500 }
-          );
-        }
+      // Vérifier que le mot de passe est fourni (sécurité côté serveur)
+      if (!form.password || form.password.length < 8) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Mot de passe requis (minimum 8 caractères).",
+          },
+          { status: 400 }
+        );
+      }
 
-        clientProfileId = newUser.user.id;
-        accountCreated = true;
+      // Création compte via service_role (admin API — pas de confirmation email)
+      // avec le mot de passe choisi par le client lui-même
+      const splitName = form.nom_complet.trim().split(/\s+/);
+      const prenom = splitName.length > 1 ? splitName.slice(0, -1).join(" ") : "";
+      const nom = splitName.length > 1 ? splitName[splitName.length - 1] : form.nom_complet;
 
-        // Mettre à jour le profile avec téléphone et pays (le trigger Supabase
-        // a déjà créé une ligne profiles)
-        await admin
-          .from("profiles")
-          .update({
-            telephone: form.telephone,
-            pays: form.pays,
-          })
-          .eq("id", clientProfileId);
+      const { data: newUser, error: signupErr } =
+        await admin.auth.admin.createUser({
+          email: form.email.toLowerCase().trim(),
+          password: form.password,
+          email_confirm: true,
+          user_metadata: { nom, prenom },
+        });
+
+      if (signupErr || !newUser?.user) {
+        console.error("[DEMANDE_COMPLETE] signup error:", signupErr?.message);
+        return NextResponse.json(
+          {
+            success: false,
+            error: `Création de compte échouée : ${signupErr?.message || "inconnu"}`,
+          },
+          { status: 500 }
+        );
+      }
+
+      clientProfileId = newUser.user.id;
+      accountCreated = true;
+
+      // Mettre à jour le profile avec téléphone et pays (le trigger Supabase
+      // a déjà créé une ligne profiles via handle_new_user)
+      await admin
+        .from("profiles")
+        .update({
+          telephone: form.telephone,
+          pays: form.pays,
+        })
+        .eq("id", clientProfileId);
+
+      // Créer l'entrée `clients` (table métier B2B/particulier)
+      await admin.from("clients").insert({
+        type: "particulier",
+        nom,
+        prenom,
+        email: form.email.toLowerCase().trim(),
+        telephone: form.telephone,
+        adresse: form.adresse,
+        ville: form.ville,
+        pays: form.pays,
+        profile_id: clientProfileId,
+      });
+    } else if (form.identification_mode === "deja_client") {
+      // Récupérer l'utilisateur authentifié via les cookies (createServerClient)
+      // Pour simplifier, on cherche par email
+      const { data: existingProfile } = await admin
+        .from("profiles")
+        .select("id")
+        .eq("email", form.email.toLowerCase().trim())
+        .maybeSingle();
+      if (existingProfile) {
+        clientProfileId = existingProfile.id;
       }
     }
 
@@ -256,18 +298,16 @@ export async function POST(
         process.env.NEXT_PUBLIC_SITE_URL || "https://www.nexusrca.com";
 
       // ─── Email client ─────────────────────────────────────────────────
-      const tempPwdBlock =
-        accountCreated && tempPassword
-          ? `<table cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:20px 0;background:#fffbeb;border-radius:12px;border:1px solid #fde68a;">
+      const accountInfoBlock = accountCreated
+        ? `<table cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:20px 0;background:#ecfdf5;border-radius:12px;border:1px solid #a7f3d0;">
               <tr><td style="padding:18px 20px;">
-                <p style="margin:0 0 8px;font-size:11px;font-weight:700;letter-spacing:0.16em;color:#92400e;">VOTRE COMPTE NEXUS CONNECT</p>
-                <p style="margin:0 0 6px;font-size:13px;color:#78350f;">Un compte a été créé pour vous afin de suivre votre dossier en temps réel.</p>
-                <p style="margin:8px 0 4px;font-size:12px;color:#78350f;"><strong>Email :</strong> ${escapeHtml(form.email)}</p>
-                <p style="margin:0 0 12px;font-size:12px;color:#78350f;"><strong>Mot de passe temporaire :</strong> <code style="background:#fef3c7;padding:2px 6px;border-radius:4px;font-family:monospace;font-weight:700;">${escapeHtml(tempPassword)}</code></p>
-                <p style="margin:0;font-size:11px;color:#92400e;">Connectez-vous via <a href="${siteUrl}/login" style="color:#92400e;">${siteUrl}/login</a> et changez votre mot de passe dans votre profil.</p>
+                <p style="margin:0 0 8px;font-size:11px;font-weight:700;letter-spacing:0.16em;color:#065f46;">VOTRE COMPTE NEXUS CONNECT</p>
+                <p style="margin:0 0 6px;font-size:13px;color:#064e3b;">Votre compte a été créé. Connectez-vous avec l'email et le mot de passe que vous avez choisis.</p>
+                <p style="margin:8px 0 0;font-size:12px;color:#064e3b;"><strong>Email :</strong> ${escapeHtml(form.email)}</p>
+                <p style="margin:4px 0 0;font-size:11px;color:#065f46;">Vous êtes déjà connecté depuis le formulaire — vous pouvez fermer cet onglet ou vous reconnecter via <a href="${siteUrl}/login" style="color:#065f46;">${siteUrl}/login</a>.</p>
               </td></tr>
             </table>`
-          : "";
+        : "";
 
       const clientHtml = `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;background:#f1f5f9;padding:24px;margin:0;">
         <table cellspacing="0" cellpadding="0" border="0" width="600" align="center" style="background:#fff;border-radius:16px;overflow:hidden;">
@@ -281,7 +321,7 @@ export async function POST(
             <p style="margin:0 0 14px;font-size:14px;line-height:1.6;color:#475569;">
               Votre dossier a été enregistré dans notre système. Un conseiller Nexus RCA va l'examiner et vous reviendra sous 24 h ouvrées.
             </p>
-            ${tempPwdBlock}
+            ${accountInfoBlock}
             <table cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:20px 0;background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0;">
               <tr><td style="padding:16px 20px;">
                 <p style="margin:0 0 8px;font-size:11px;font-weight:700;letter-spacing:0.16em;color:#64748b;">RÉCAPITULATIF</p>

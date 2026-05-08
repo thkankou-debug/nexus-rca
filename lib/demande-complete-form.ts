@@ -192,6 +192,9 @@ export type DemandeCompletePayload = {
   adresse: string;
   telephone: string;
   email: string;
+  // Mots de passe — uniquement pour mode "nouveau" (saisis par le client)
+  password: string;
+  password_confirm: string;
   situation_matrimoniale: SituationMatrimoniale | "";
   profession: string;
   employeur: string;
@@ -229,6 +232,8 @@ export const DEFAULT_FORM_VALUES_COMPLETE: DemandeCompletePayload = {
   adresse: "",
   telephone: "",
   email: "",
+  password: "",
+  password_confirm: "",
   situation_matrimoniale: "",
   profession: "",
   employeur: "",
@@ -274,6 +279,16 @@ export function validateSection(
     if (!form.email.trim()) e.email = "Email requis";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
       e.email = "Email invalide";
+    // Mots de passe — uniquement requis pour mode "nouveau"
+    if (form.identification_mode === "nouveau") {
+      if (!form.password) e.password = "Mot de passe requis";
+      else if (form.password.length < 8)
+        e.password = "Le mot de passe doit faire au moins 8 caractères";
+      if (!form.password_confirm)
+        e.password_confirm = "Veuillez confirmer le mot de passe";
+      else if (form.password !== form.password_confirm)
+        e.password_confirm = "Les mots de passe ne correspondent pas";
+    }
     if (!form.situation_matrimoniale)
       e.situation_matrimoniale = "Situation matrimoniale requise";
     if (!form.profession.trim()) e.profession = "Profession requise";
@@ -315,14 +330,19 @@ export function validateFinal(form: DemandeCompletePayload): ValidationErrors {
   return e;
 }
 
-// ─── Génération mot de passe temporaire ─────────────────────────────────────
+// ─── Force du mot de passe ──────────────────────────────────────────────────
 
-export function generateTempPassword(length = 12): string {
-  const chars =
-    "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$&";
-  let pwd = "";
-  for (let i = 0; i < length; i++) {
-    pwd += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return pwd;
+export type PasswordStrength = "vide" | "faible" | "moyen" | "fort";
+
+export function getPasswordStrength(pwd: string): PasswordStrength {
+  if (!pwd) return "vide";
+  let score = 0;
+  if (pwd.length >= 8) score++;
+  if (pwd.length >= 12) score++;
+  if (/[a-z]/.test(pwd) && /[A-Z]/.test(pwd)) score++;
+  if (/\d/.test(pwd)) score++;
+  if (/[^a-zA-Z0-9]/.test(pwd)) score++;
+  if (score <= 2) return "faible";
+  if (score <= 3) return "moyen";
+  return "fort";
 }
