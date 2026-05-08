@@ -41,7 +41,7 @@ const PILIERS: Pilier[] = [
     icon: Network,
     title: "Coordination internationale",
     description:
-      "Liaisons consulaires officielles (TLS, VFS, Yaoundé), opérateurs aériens et hôteliers reconnus, plateformes e-Visa. Un canal unifié pour vos démarches transfrontalières.",
+      "Liaisons consulaires officielles, opérateurs aériens et hôteliers reconnus, partenaires financiers, établissements académiques, circuits de transferts agréés. Un canal unifié pour vos démarches transfrontalières.",
   },
 ];
 
