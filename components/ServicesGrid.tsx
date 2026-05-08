@@ -13,11 +13,21 @@ import {
 } from "lucide-react";
 
 // ─── ServicesGrid — Écosystème Nexus ────────────────────────────────────────
-// Bento asymétrique 8 piliers (vs grille uniforme précédente).
-// Variations chromatiques subtiles par card (anti-uniformité).
-// Tonalité éditoriale (fait + bénéfice concret), zéro langage marketing.
-// 100% navy + glass + cohérent avec hero homepage.
+// Bento : 1 hero card (Visa) + 7 cards compactes premium.
+// Chaque compacte = icône + titre + description courte + 2 tags + lien.
+// Tonalités chromatiques par card (anti-uniformité).
+// 100% navy + glass, dense, lisible, haut de gamme.
 // ────────────────────────────────────────────────────────────────────────────
+
+type Tone =
+  | "orange"
+  | "tech"
+  | "academic"
+  | "secure"
+  | "finance"
+  | "navy"
+  | "neutral"
+  | "world";
 
 type Pilier = {
   id: string;
@@ -25,101 +35,103 @@ type Pilier = {
   description: string;
   icon: LucideIcon;
   href: string;
-  /** Variations subtiles par card pour briser l'uniformité */
-  tone:
-    | "orange"      // hero (Visa)
-    | "tech"        // bleu tech (Digitalisation)
-    | "academic"    // violet/indigo (Études)
-    | "secure"      // émeraude (Assurance)
-    | "finance"     // ambre (Financement)
-    | "navy"        // navy classique (Accompagnement)
-    | "neutral"     // gris pro (Administratif)
-    | "world";      // turquoise subtil (Réseau)
+  tone: Tone;
+  tags: [string, string];
 };
 
-const PILIERS: Pilier[] = [
-  {
+const PILIERS = {
+  visa: {
     id: "visa",
     title: "Visa & mobilité",
     description:
       "Préparation de dossier conforme aux standards consulaires — Schengen, Canada, e-Visa. Diagnostic, structuration, suivi jusqu'à la décision.",
     icon: ShieldCheck,
     href: "/services/visa",
-    tone: "orange",
+    tone: "orange" as Tone,
+    tags: ["Schengen", "Canada"] as [string, string],
   },
-  {
+  digital: {
     id: "digital",
-    title: "Digitalisation & tech",
+    title: "Digitalisation & technologie",
     description:
       "Sites, e-commerce, présence digitale durable. Du brief à la mise en ligne avec accompagnement opérationnel.",
     icon: Code,
     href: "/services/digitalisation",
-    tone: "tech",
+    tone: "tech" as Tone,
+    tags: ["Sites web", "E-commerce"] as [string, string],
   },
-  {
-    id: "etudes",
-    title: "Études internationales",
-    description:
-      "Canada, France, Europe — choix de programme, dossier admissions, CAQ, Campus France, TCF. Parcours documenté.",
-    icon: GraduationCap,
-    href: "/services/etudes",
-    tone: "academic",
-  },
-  {
-    id: "assurance",
-    title: "Assurance & voyage",
-    description:
-      "Cabinet de courtage : couverture Schengen, santé internationale, assistance médicale, rapatriement.",
-    icon: ShieldCheck,
-    href: "/services/assurance",
-    tone: "secure",
-  },
-  {
+  financement: {
     id: "financement",
     title: "Financement & incubation",
     description:
       "Structuration de projet, recherche de financement, mise en relation investisseurs, incubateur Nexus.",
     icon: HandCoins,
     href: "/services/financement",
-    tone: "finance",
+    tone: "finance" as Tone,
+    tags: ["Incubation", "Investisseurs"] as [string, string],
   },
-  {
+  business: {
     id: "business",
     title: "Accompagnement business",
     description:
       "Stratégie, partenariats, entrée de marché. Pour entrepreneurs et entreprises ambitieuses.",
     icon: Briefcase,
     href: "/services/financement",
-    tone: "navy",
+    tone: "navy" as Tone,
+    tags: ["Stratégie", "Partenariats"] as [string, string],
   },
-  {
-    id: "admin",
-    title: "Services administratifs",
-    description:
-      "Démarches officielles complexes traitées avec rigueur — légalisations, attestations, courriers consulaires.",
-    icon: ClipboardCheck,
-    href: "/services/administratif",
-    tone: "neutral",
-  },
-  {
+  reseau: {
     id: "reseau",
     title: "Réseau international",
     description:
       "Trois pôles actifs : Bangui (siège), Europe, Canada. Une équipe, une méthode, partout.",
     icon: Network,
     href: "/a-propos",
-    tone: "world",
+    tone: "world" as Tone,
+    tags: ["3 continents", "10+ services"] as [string, string],
   },
-];
+  etudes: {
+    id: "etudes",
+    title: "Études internationales",
+    description:
+      "Canada, France, Europe — choix de programme, dossier admissions, CAQ, Campus France, TCF.",
+    icon: GraduationCap,
+    href: "/services/etudes",
+    tone: "academic" as Tone,
+    tags: ["Canada", "France"] as [string, string],
+  },
+  assurance: {
+    id: "assurance",
+    title: "Assurance & voyage",
+    description:
+      "Cabinet de courtage : couverture Schengen, santé internationale, assistance médicale, rapatriement.",
+    icon: ShieldCheck,
+    href: "/services/assurance",
+    tone: "secure" as Tone,
+    tags: ["Schengen", "Santé intl"] as [string, string],
+  },
+  admin: {
+    id: "admin",
+    title: "Services administratifs",
+    description:
+      "Démarches officielles complexes traitées avec rigueur — légalisations, attestations, courriers.",
+    icon: ClipboardCheck,
+    href: "/services/administratif",
+    tone: "neutral" as Tone,
+    tags: ["Légalisations", "Attestations"] as [string, string],
+  },
+} satisfies Record<string, Pilier>;
 
-// Map ton chromatique → classes (subtil, pas dominant — préserve palette navy/orange)
+// Map ton chromatique → classes (subtil, pas dominant)
 const TONE_STYLES: Record<
-  Pilier["tone"],
+  Tone,
   {
     iconBg: string;
     iconColor: string;
     glowHover: string;
     accent: string;
+    borderHover: string;
+    tagBg: string;
   }
 > = {
   orange: {
@@ -127,12 +139,17 @@ const TONE_STYLES: Record<
     iconColor: "text-white",
     glowHover: "group-hover:bg-nexus-orange-500/20",
     accent: "text-nexus-orange-300",
+    borderHover: "hover:border-nexus-orange-400/50",
+    tagBg: "bg-nexus-orange-500/10 text-nexus-orange-200 border-nexus-orange-400/30",
   },
   tech: {
-    iconBg: "bg-gradient-to-br from-sky-500/30 to-sky-700/20 ring-1 ring-sky-400/30",
+    iconBg:
+      "bg-gradient-to-br from-sky-500/30 to-sky-700/20 ring-1 ring-sky-400/30",
     iconColor: "text-sky-300",
     glowHover: "group-hover:bg-sky-500/15",
     accent: "text-sky-300",
+    borderHover: "hover:border-sky-400/40",
+    tagBg: "bg-sky-500/10 text-sky-200 border-sky-400/30",
   },
   academic: {
     iconBg:
@@ -140,6 +157,8 @@ const TONE_STYLES: Record<
     iconColor: "text-violet-300",
     glowHover: "group-hover:bg-violet-500/15",
     accent: "text-violet-300",
+    borderHover: "hover:border-violet-400/40",
+    tagBg: "bg-violet-500/10 text-violet-200 border-violet-400/30",
   },
   secure: {
     iconBg:
@@ -147,6 +166,8 @@ const TONE_STYLES: Record<
     iconColor: "text-emerald-300",
     glowHover: "group-hover:bg-emerald-500/15",
     accent: "text-emerald-300",
+    borderHover: "hover:border-emerald-400/40",
+    tagBg: "bg-emerald-500/10 text-emerald-200 border-emerald-400/30",
   },
   finance: {
     iconBg:
@@ -154,24 +175,34 @@ const TONE_STYLES: Record<
     iconColor: "text-amber-300",
     glowHover: "group-hover:bg-amber-500/15",
     accent: "text-amber-300",
+    borderHover: "hover:border-amber-400/40",
+    tagBg: "bg-amber-500/10 text-amber-200 border-amber-400/30",
   },
   navy: {
     iconBg: "bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900",
     iconColor: "text-white",
     glowHover: "group-hover:bg-nexus-blue-500/20",
     accent: "text-nexus-blue-300",
+    borderHover: "hover:border-nexus-blue-400/40",
+    tagBg: "bg-nexus-blue-500/15 text-nexus-blue-200 border-nexus-blue-400/30",
   },
   neutral: {
-    iconBg: "bg-gradient-to-br from-slate-500/30 to-slate-700/20 ring-1 ring-slate-400/30",
+    iconBg:
+      "bg-gradient-to-br from-slate-500/30 to-slate-700/20 ring-1 ring-slate-400/30",
     iconColor: "text-slate-300",
     glowHover: "group-hover:bg-slate-500/15",
     accent: "text-slate-300",
+    borderHover: "hover:border-slate-400/40",
+    tagBg: "bg-slate-500/10 text-slate-200 border-slate-400/30",
   },
   world: {
-    iconBg: "bg-gradient-to-br from-teal-500/30 to-teal-700/20 ring-1 ring-teal-400/30",
+    iconBg:
+      "bg-gradient-to-br from-teal-500/30 to-teal-700/20 ring-1 ring-teal-400/30",
     iconColor: "text-teal-300",
     glowHover: "group-hover:bg-teal-500/15",
     accent: "text-teal-300",
+    borderHover: "hover:border-teal-400/40",
+    tagBg: "bg-teal-500/10 text-teal-200 border-teal-400/30",
   },
 };
 
@@ -182,10 +213,6 @@ const DOT_GRID_DARK: React.CSSProperties = {
 };
 
 export function ServicesGrid() {
-  // Découpage pour le bento
-  const [hero, ...rest] = PILIERS;
-  const [topRight1, topRight2, mid1, mid2, mid3, wide1, wide2] = rest;
-
   return (
     <section
       id="services"
@@ -230,25 +257,35 @@ export function ServicesGrid() {
           </p>
         </div>
 
-        {/* ─── Bento asymétrique ─── */}
-        <div className="mt-14 grid auto-rows-[minmax(0,_1fr)] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-12 lg:gap-5">
-          {/* Hero — Visa & mobilité (col-span-7 row-span-2) */}
-          <HeroCard pilier={hero} />
+        {/* ─── Bento dense ─── */}
+        <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-12 lg:gap-5">
+          {/* Hero Visa — col-span-7 row-span-2 */}
+          <HeroCard pilier={PILIERS.visa} />
 
-          {/* Top right — Digitalisation */}
-          <MidCard pilier={topRight1} className="lg:col-span-5" />
+          {/* 2 signatures verticales (col-span-5) */}
+          <CompactSignatureCard pilier={PILIERS.digital} className="lg:col-span-5" />
+          <CompactSignatureCard
+            pilier={PILIERS.financement}
+            className="lg:col-span-5"
+          />
 
-          {/* Mid right — Études internationales */}
-          <MidCard pilier={topRight2} className="lg:col-span-5" />
+          {/* 2 signatures horizontales larges (col-span-6) */}
+          <CompactSignatureWide
+            pilier={PILIERS.business}
+            className="lg:col-span-6"
+          />
+          <CompactSignatureWide
+            pilier={PILIERS.reseau}
+            className="lg:col-span-6"
+          />
 
-          {/* Row 3 — 3 cards mid */}
-          <MidCompactCard pilier={mid1} className="lg:col-span-4" />
-          <MidCompactCard pilier={mid2} className="lg:col-span-4" />
-          <MidCompactCard pilier={mid3} className="lg:col-span-4" />
-
-          {/* Row 4 — 2 cards horizontales */}
-          <WideHorizCard pilier={wide1} className="lg:col-span-6" />
-          <WideHorizCard pilier={wide2} className="lg:col-span-6" />
+          {/* 3 simples compactes (col-span-4) */}
+          <CompactSimpleCard pilier={PILIERS.etudes} className="lg:col-span-4" />
+          <CompactSimpleCard
+            pilier={PILIERS.assurance}
+            className="lg:col-span-4"
+          />
+          <CompactSimpleCard pilier={PILIERS.admin} className="lg:col-span-4" />
         </div>
 
         {/* CTA fin de section */}
@@ -267,10 +304,8 @@ export function ServicesGrid() {
 }
 
 // ============================================================================
-// Cards bento — 4 variations
+// ─── Hero card — Visa (préservée) ──────────────────────────────────────────
 // ============================================================================
-
-// ─── Hero card — Visa (large + KPI + CTA) ──────────────────────────────────
 function HeroCard({ pilier }: { pilier: Pilier }) {
   const Icon = pilier.icon;
   const tone = TONE_STYLES[pilier.tone];
@@ -280,7 +315,6 @@ function HeroCard({ pilier }: { pilier: Pilier }) {
       href={pilier.href}
       className="group relative overflow-hidden rounded-3xl border border-nexus-orange-400/30 bg-gradient-to-br from-nexus-orange-500/12 via-white/[0.05] to-white/[0.02] ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_28px_60px_-24px_rgba(255,102,0,0.30)] transition-all duration-500 hover:-translate-y-1 hover:border-nexus-orange-400/60 sm:col-span-2 lg:col-span-7 lg:row-span-2"
     >
-      {/* Glow décoratif animé */}
       <div
         aria-hidden
         className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-nexus-orange-500/30 blur-3xl"
@@ -295,7 +329,6 @@ function HeroCard({ pilier }: { pilier: Pilier }) {
       />
 
       <div className="relative flex h-full flex-col p-7 sm:p-8 lg:p-10">
-        {/* Icône + eyebrow */}
         <div className="flex items-start justify-between gap-4">
           <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
             Pilier signature
@@ -307,7 +340,6 @@ function HeroCard({ pilier }: { pilier: Pilier }) {
           </div>
         </div>
 
-        {/* Titre + description */}
         <div className="mt-7 flex-1">
           <h3 className="font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-[2.4rem]">
             {pilier.title}
@@ -317,16 +349,15 @@ function HeroCard({ pilier }: { pilier: Pilier }) {
           </p>
         </div>
 
-        {/* Mini-KPIs en bas */}
+        {/* Mini-KPIs */}
         <div className="mt-8 grid grid-cols-3 gap-3 border-t border-white/10 pt-6">
           <KpiPill value="Schengen" label="Standard UE" />
           <KpiPill value="Canada" label="IRCC" />
           <KpiPill value="e-Visa" label="50+ pays" />
         </div>
 
-        {/* CTA */}
         <div className="mt-7 inline-flex items-center gap-2 self-start text-sm font-bold text-nexus-orange-300 transition-colors group-hover:text-nexus-orange-200">
-          Découvrir le service
+          Découvrir
           <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-1" />
         </div>
       </div>
@@ -347,45 +378,10 @@ function KpiPill({ value, label }: { value: string; label: string }) {
   );
 }
 
-// ─── Mid card (Digitalisation, Études) ──────────────────────────────────────
-function MidCard({ pilier, className }: { pilier: Pilier; className?: string }) {
-  const Icon = pilier.icon;
-  const tone = TONE_STYLES[pilier.tone];
-
-  return (
-    <Link
-      href={pilier.href}
-      className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06] sm:p-7 ${className || ""}`}
-    >
-      <div
-        aria-hidden
-        className={`pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-nexus-orange-500/0 blur-3xl transition-all duration-500 ${tone.glowHover}`}
-      />
-      <div className="relative flex h-full flex-col">
-        <div
-          className={`flex h-12 w-12 items-center justify-center rounded-2xl ${tone.iconBg} ${tone.iconColor} transition-transform duration-300 group-hover:scale-105`}
-        >
-          <Icon className="h-5 w-5" />
-        </div>
-        <h3 className="mt-5 font-display text-xl font-bold leading-tight text-white sm:text-2xl">
-          {pilier.title}
-        </h3>
-        <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-300 sm:text-base">
-          {pilier.description}
-        </p>
-        <div
-          className={`mt-5 inline-flex items-center gap-2 self-start text-sm font-semibold ${tone.accent} transition-colors`}
-        >
-          Découvrir
-          <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-1" />
-        </div>
-      </div>
-    </Link>
-  );
-}
-
-// ─── Mid compact (Assurance, Financement, Accompagnement) ──────────────────
-function MidCompactCard({
+// ============================================================================
+// ─── Compact signature card (vertical) — Digital + Financement ─────────────
+// ============================================================================
+function CompactSignatureCard({
   pilier,
   className,
 }: {
@@ -398,26 +394,52 @@ function MidCompactCard({
   return (
     <Link
       href={pilier.href}
-      className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06] ${className || ""}`}
+      className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-5 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.06] sm:p-6 ${tone.borderHover} ${className || ""}`}
     >
       <div
         aria-hidden
-        className={`pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 ${tone.glowHover}`}
+        className={`pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-3xl transition-all duration-500 ${tone.glowHover}`}
       />
       <div className="relative flex h-full flex-col">
-        <div
-          className={`flex h-10 w-10 items-center justify-center rounded-xl ${tone.iconBg} ${tone.iconColor} transition-transform duration-300 group-hover:scale-105`}
-        >
-          <Icon className="h-4 w-4" />
+        {/* Header — icône + eyebrow */}
+        <div className="flex items-start justify-between gap-3">
+          <div
+            className={`flex h-11 w-11 items-center justify-center rounded-xl ${tone.iconBg} ${tone.iconColor} transition-transform duration-300 group-hover:scale-105`}
+          >
+            <Icon className="h-5 w-5" />
+          </div>
+          <span
+            className={`text-[9px] font-bold uppercase tracking-[0.18em] ${tone.accent}`}
+          >
+            Signature
+          </span>
         </div>
-        <h3 className="mt-4 font-display text-base font-bold leading-tight text-white sm:text-lg">
+
+        {/* Titre */}
+        <h3 className="mt-4 font-display text-lg font-bold leading-tight text-white sm:text-xl">
           {pilier.title}
         </h3>
-        <p className="mt-2 flex-1 text-xs leading-relaxed text-slate-400 sm:text-sm">
+
+        {/* Description courte */}
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-300">
           {pilier.description}
         </p>
+
+        {/* 2 tags */}
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {pilier.tags.map((tag) => (
+            <span
+              key={tag}
+              className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] backdrop-blur-md ${tone.tagBg}`}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        {/* Lien Découvrir */}
         <div
-          className={`mt-4 inline-flex items-center gap-1.5 self-start text-xs font-semibold ${tone.accent}`}
+          className={`mt-4 inline-flex items-center gap-1.5 self-start text-xs font-semibold ${tone.accent} transition-colors`}
         >
           Découvrir
           <ArrowRight className="h-3 w-3 transition-transform duration-300 ease-out group-hover:translate-x-0.5" />
@@ -427,8 +449,10 @@ function MidCompactCard({
   );
 }
 
-// ─── Wide horizontal (Administratif, Réseau intl) ──────────────────────────
-function WideHorizCard({
+// ============================================================================
+// ─── Compact signature wide (horizontal) — Accompagnement + Réseau ─────────
+// ============================================================================
+function CompactSignatureWide({
   pilier,
   className,
 }: {
@@ -441,7 +465,7 @@ function WideHorizCard({
   return (
     <Link
       href={pilier.href}
-      className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06] sm:p-7 ${className || ""}`}
+      className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-5 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.06] sm:p-6 ${tone.borderHover} ${className || ""}`}
     >
       <div
         aria-hidden
@@ -453,21 +477,96 @@ function WideHorizCard({
         >
           <Icon className="h-5 w-5" />
         </div>
+
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-            <h3 className="font-display text-lg font-bold leading-tight text-white sm:text-xl">
+            <h3 className="font-display text-base font-bold leading-tight text-white sm:text-lg">
               {pilier.title}
             </h3>
             <span
-              className={`inline-flex items-center gap-1 text-xs font-semibold ${tone.accent} transition-transform duration-300 group-hover:translate-x-0.5`}
+              className={`text-[9px] font-bold uppercase tracking-[0.18em] ${tone.accent}`}
             >
-              Découvrir
-              <ArrowRight className="h-3 w-3" />
+              Signature
             </span>
           </div>
-          <p className="mt-2 text-sm leading-relaxed text-slate-300">
+
+          <p className="mt-2 text-xs leading-relaxed text-slate-300 sm:text-sm">
             {pilier.description}
           </p>
+
+          {/* 2 tags + Découvrir alignés */}
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            {pilier.tags.map((tag) => (
+              <span
+                key={tag}
+                className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] backdrop-blur-md ${tone.tagBg}`}
+              >
+                {tag}
+              </span>
+            ))}
+            <span className="ml-auto inline-flex items-center gap-1 text-xs font-semibold text-white/85">
+              <span className={tone.accent}>Découvrir</span>
+              <ArrowRight
+                className={`h-3 w-3 ${tone.accent} transition-transform duration-300 ease-out group-hover:translate-x-0.5`}
+              />
+            </span>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+// ============================================================================
+// ─── Compact simple — Études, Assurance, Administratifs ───────────────────
+// ============================================================================
+function CompactSimpleCard({
+  pilier,
+  className,
+}: {
+  pilier: Pilier;
+  className?: string;
+}) {
+  const Icon = pilier.icon;
+  const tone = TONE_STYLES[pilier.tone];
+
+  return (
+    <Link
+      href={pilier.href}
+      className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-5 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.06] sm:p-6 ${className || ""}`}
+    >
+      <div
+        aria-hidden
+        className={`pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-white/0 blur-2xl transition-all duration-500 group-hover:bg-white/5`}
+      />
+      <div className="relative flex h-full flex-col">
+        <div
+          className={`flex h-10 w-10 items-center justify-center rounded-xl ${tone.iconBg} ${tone.iconColor} transition-transform duration-300 group-hover:scale-105`}
+        >
+          <Icon className="h-4 w-4" />
+        </div>
+
+        <h3 className="mt-4 font-display text-base font-bold leading-tight text-white sm:text-lg">
+          {pilier.title}
+        </h3>
+        <p className="mt-1.5 flex-1 text-xs leading-relaxed text-slate-400">
+          {pilier.description}
+        </p>
+
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {pilier.tags.map((tag) => (
+            <span
+              key={tag}
+              className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-white/70 backdrop-blur"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-3 inline-flex items-center gap-1 self-start text-xs font-semibold text-white/85 transition-colors group-hover:text-nexus-orange-200">
+          Découvrir
+          <ArrowRight className="h-3 w-3 transition-transform duration-300 ease-out group-hover:translate-x-0.5" />
         </div>
       </div>
     </Link>
