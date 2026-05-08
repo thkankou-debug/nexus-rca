@@ -14,28 +14,28 @@ const PHASES: Phase[] = [
     icon: MessageSquare,
     eyebrow: "Phase 01",
     title: "Saisine et qualification",
-    desc: "Nous écoutons l'intention, qualifions sa viabilité et identifions sans détour les leviers et les risques du projet — qu'il porte sur une mobilité, un financement, une formation ou une opération internationale.",
+    desc: "Nous écoutons l'intention, qualifions sa recevabilité juridique et identifions sans détour les risques structurels du dossier.",
   },
   {
     num: "02",
     icon: FileCheck,
     eyebrow: "Phase 02",
     title: "Bilan de faisabilité écrit",
-    desc: "Sous 24 à 72 heures ouvrées, un conseiller produit un avis documenté : voie recommandée, ressources requises, calendrier indicatif et devis fixé à l'avance — quel que soit le service mobilisé.",
+    desc: "Sous 24 à 72 heures ouvrées, un conseiller produit un avis documenté : voie recommandée, pièces, calendrier et devis fixé à l'avance.",
   },
   {
     num: "03",
     icon: Rocket,
     eyebrow: "Phase 03",
-    title: "Constitution et exécution",
-    desc: "Le mandat est monté aux standards internationaux propres à son domaine. Pièces vérifiées, démarches coordonnées, partenaires officiels engagés. Chaque action est tracée et communiquée.",
+    title: "Constitution et instruction",
+    desc: "Le dossier est monté aux standards consulaires en vigueur. Pièces traduites, légalisées, ordonnées, soumises à l'autorité compétente.",
   },
   {
     num: "04",
     icon: CheckCircle2,
     eyebrow: "Phase 04",
-    title: "Aboutissement et clôture",
-    desc: "Nous portons le résultat jusqu'à vous, accompagnons les itérations éventuelles et archivons le dossier sous protocole sécurisé. Le mandat ne se ferme qu'avec votre quitus.",
+    title: "Décision et clôture",
+    desc: "Nous portons la décision finale jusqu'à vous, accompagnons les recours éventuels et conservons l'archive sous protocole sécurisé.",
   },
 ];
 
@@ -70,10 +70,9 @@ export function HowItWorks() {
             <span className="text-nexus-orange-400">Une trajectoire instruite.</span>
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
-            Nexus n&apos;improvise pas un mandat. Mobilité internationale,
-            financement, parcours académique, opération transfrontalière ou
-            démarche administrative : chaque mission obéit au même protocole —
-            structuré, exigeant, traçable.
+            Nexus n&apos;improvise pas un dossier. Chaque mission s&apos;inscrit
+            dans un protocole structuré, hérité de l&apos;expérience consulaire
+            et adapté aux exigences institutionnelles internationales.
           </p>
         </div>
 
