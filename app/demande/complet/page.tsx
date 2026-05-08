@@ -1,9 +1,16 @@
 import { Suspense } from "react";
-import { Lock, ShieldCheck } from "lucide-react";
+import {
+  ArrowDown,
+  Globe2,
+  Lock,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { DemandeFormComplete } from "@/components/DemandeFormComplete";
+import { HeroDemandeVisual } from "@/components/demande/HeroDemandeVisual";
 
 export const metadata = {
   title: "Soumettre votre dossier | Nexus RCA",
@@ -43,41 +50,92 @@ export default function DemandeCompletePage() {
           />
 
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            {/* Hero contenu — hiérarchie aérée */}
-            <div className="mx-auto max-w-3xl">
-              {/* 1. Eyebrow / pré-titre */}
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-white/55 backdrop-blur-md">
-                Espace de soumission
-              </span>
-
-              {/* 2. Titre principal — espace généreux au-dessus */}
-              <h1 className="mt-6 font-display text-3xl font-bold leading-[1.1] tracking-tight text-white sm:mt-7 sm:text-4xl md:text-5xl lg:text-[3.25rem] lg:leading-[1.05] xl:text-[3.75rem]">
-                Soumettre votre dossier
-              </h1>
-
-              {/* 3. Sous-titre — espace généreux entre titre et sous-titre */}
-              <p className="mt-7 max-w-2xl text-base leading-relaxed text-slate-300 sm:mt-8 sm:text-lg lg:text-xl lg:leading-[1.65]">
-                Veuillez renseigner les informations nécessaires afin de
-                permettre à notre équipe d&rsquo;analyser votre dossier et de
-                vous orienter vers le service adapté.
-              </p>
-
-              {/* 4. Badge confidentialité — espace généreux + meta-info */}
-              <div className="mt-10 flex flex-wrap items-center gap-x-3 gap-y-2 sm:mt-12">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/65 backdrop-blur-md">
-                  <Lock className="h-3 w-3 text-nexus-orange-300" />
-                  Espace sécurisé
-                  <span className="mx-0.5 text-white/30">·</span>
-                  <ShieldCheck className="h-3 w-3 text-nexus-orange-300" />
-                  Traitement confidentiel
+            {/* Layout 2 colonnes — contenu gauche / visuel cinématographique droite */}
+            <div className="grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-10 xl:gap-16">
+              {/* ─── Colonne gauche : contenu premium (lg:col-span-7) ─── */}
+              <div className="lg:col-span-7">
+                {/* 1. Badge institutionnel premium */}
+                <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                  </span>
+                  Espace de soumission · cabinet international
                 </span>
+
+                {/* 2. Titre — grande typo display */}
+                <h1 className="mt-6 font-display text-3xl font-bold leading-[1.05] tracking-tight text-white sm:mt-7 sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.75rem]">
+                  Soumettre votre{" "}
+                  <span className="relative inline-block">
+                    <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                      dossier
+                    </span>
+                    <span
+                      aria-hidden
+                      className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    />
+                  </span>
+                </h1>
+
+                {/* 3. Texte institutionnel */}
+                <p className="mt-7 max-w-xl text-base leading-relaxed text-slate-300 sm:mt-8 sm:text-lg lg:text-xl lg:leading-[1.65]">
+                  Renseignez les informations nécessaires pour permettre à
+                  notre équipe d&rsquo;analyser votre dossier et de vous
+                  orienter vers le service adapté.
+                </p>
+
+                {/* 4. Indicateurs premium (3 stats institutionnels) */}
+                <div className="mt-10 grid grid-cols-3 gap-3 sm:mt-12 sm:gap-4">
+                  <HeroIndicator
+                    icon={Globe2}
+                    value="150+"
+                    label="Pays couverts"
+                  />
+                  <HeroIndicator
+                    icon={Sparkles}
+                    value="24 h"
+                    label="Délai de réponse"
+                  />
+                  <HeroIndicator
+                    icon={ShieldCheck}
+                    value="100%"
+                    label="Confidentiel"
+                  />
+                </div>
+
+                {/* 5. CTAs */}
+                <div className="mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
+                  <a
+                    href="#dossier-form"
+                    className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+                  >
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
+                    />
+                    Démarrer ma demande
+                    <ArrowDown className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-y-0.5" />
+                  </a>
+                  <span className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/65 backdrop-blur-md">
+                    <Lock className="h-3 w-3 text-nexus-orange-300" />
+                    Espace sécurisé · Traitement confidentiel
+                  </span>
+                </div>
+              </div>
+
+              {/* ─── Colonne droite : visuel cinématographique (lg:col-span-5) ─── */}
+              <div className="relative lg:col-span-5">
+                <HeroDemandeVisual />
               </div>
             </div>
           </div>
         </section>
 
         {/* Formulaire — section séparée avec son propre rythme */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 pb-16 text-white sm:pb-20 lg:pb-24">
+        <section
+          id="dossier-form"
+          className="relative overflow-hidden bg-gradient-to-b from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 pt-8 pb-16 text-white sm:pb-20 lg:pt-12 lg:pb-24"
+        >
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-[0.4]"
@@ -102,5 +160,36 @@ export default function DemandeCompletePage() {
       <Footer />
       <WhatsAppFloat />
     </>
+  );
+}
+
+// ─── Indicateur premium hero ──────────────────────────────────────────────
+function HeroIndicator({
+  icon: Icon,
+  value,
+  label,
+}: {
+  icon: typeof Globe2;
+  value: string;
+  label: string;
+}) {
+  return (
+    <article className="group/ind relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3 ring-1 ring-white/5 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-nexus-orange-400/40 hover:bg-white/[0.07] sm:px-4 sm:py-4">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-6 -top-6 h-20 w-20 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover/ind:bg-nexus-orange-500/15"
+      />
+      <div className="relative">
+        <Icon className="h-3.5 w-3.5 text-nexus-orange-300" />
+        <p className="mt-2 font-display text-xl font-bold leading-none text-white sm:text-2xl">
+          <span className="bg-gradient-to-r from-nexus-orange-300 to-nexus-orange-500 bg-clip-text text-transparent">
+            {value}
+          </span>
+        </p>
+        <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.16em] text-slate-400 sm:text-[10px]">
+          {label}
+        </p>
+      </div>
+    </article>
   );
 }
