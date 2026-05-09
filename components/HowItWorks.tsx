@@ -14,42 +14,51 @@ const PHASES: Phase[] = [
     icon: MessageSquare,
     eyebrow: "Phase 01",
     title: "Saisine et qualification",
-    desc: "Nous écoutons l'intention, qualifions sa recevabilité juridique et identifions sans détour les risques structurels du dossier.",
+    desc: "Nous écoutons l'intention, qualifions sa viabilité et identifions sans détour les leviers et les risques du projet — qu'il porte sur une mobilité, un financement, une formation ou une opération internationale.",
   },
   {
     num: "02",
     icon: FileCheck,
     eyebrow: "Phase 02",
     title: "Bilan de faisabilité écrit",
-    desc: "Sous 24 à 72 heures ouvrées, un conseiller produit un avis documenté : voie recommandée, pièces, calendrier et devis fixé à l'avance.",
+    desc: "Sous 24 à 72 heures ouvrées, un conseiller produit un avis documenté : voie recommandée, ressources requises, calendrier indicatif et devis fixé à l'avance — quel que soit le service mobilisé.",
   },
   {
     num: "03",
     icon: Rocket,
     eyebrow: "Phase 03",
-    title: "Constitution et instruction",
-    desc: "Le dossier est monté aux standards consulaires en vigueur. Pièces traduites, légalisées, ordonnées, soumises à l'autorité compétente.",
+    title: "Constitution et exécution",
+    desc: "Le mandat est monté aux standards internationaux propres à son domaine. Pièces vérifiées, démarches coordonnées, partenaires officiels engagés. Chaque action est tracée et communiquée.",
   },
   {
     num: "04",
     icon: CheckCircle2,
     eyebrow: "Phase 04",
-    title: "Décision et clôture",
-    desc: "Nous portons la décision finale jusqu'à vous, accompagnons les recours éventuels et conservons l'archive sous protocole sécurisé.",
+    title: "Aboutissement et clôture",
+    desc: "Nous portons le résultat jusqu'à vous, accompagnons les itérations éventuelles et archivons le dossier sous protocole sécurisé. Le mandat ne se ferme qu'avec votre quitus.",
   },
 ];
 
 export function HowItWorks() {
   return (
-    <section className="relative overflow-hidden bg-nexus-blue-950 py-20 sm:py-24 lg:py-28">
-      {/* === Orbes ambiantes (lumière, pas de grain) === */}
+    <section className="relative overflow-hidden bg-[#070C1A] py-24 sm:py-28 lg:py-32">
+      {/* === Mesh diagonal très subtil (pas de grain qui salit les textes) === */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-50"
+        style={{
+          backgroundImage:
+            "linear-gradient(135deg, rgba(255,102,0,0.05) 0%, transparent 35%, transparent 65%, rgba(56,80,160,0.07) 100%)",
+        }}
+      />
+      {/* === Orbes ambiantes lumineuses === */}
       <div
         aria-hidden
         className="pointer-events-none absolute -left-32 top-0 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-40 bottom-0 h-[32rem] w-[32rem] rounded-full bg-nexus-blue-500/15 blur-[120px]"
+        className="pointer-events-none absolute -right-40 bottom-0 h-[32rem] w-[32rem] rounded-full bg-[#1f3a8a]/20 blur-[120px]"
       />
       {/* === Hairline top === */}
       <div
@@ -59,7 +68,7 @@ export function HowItWorks() {
 
       <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
         {/* === Header éditorial === */}
-        <div className="mx-auto mb-14 max-w-3xl text-center">
+        <div className="mx-auto mb-16 max-w-3xl text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.24em] text-nexus-orange-300">
             <span className="h-1 w-1 rounded-full bg-nexus-orange-400" />
             Méthodologie
@@ -69,67 +78,84 @@ export function HowItWorks() {
             <br />
             <span className="text-nexus-orange-400">Une trajectoire instruite.</span>
           </h2>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
-            Nexus n&apos;improvise pas un dossier. Chaque mission s&apos;inscrit
-            dans un protocole structuré, hérité de l&apos;expérience consulaire
-            et adapté aux exigences institutionnelles internationales.
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-200 sm:text-lg">
+            Nexus n&apos;improvise pas un mandat. Mobilité internationale,
+            financement, parcours académique, opération transfrontalière ou
+            démarche administrative : chaque mission obéit au même protocole —
+            structuré, exigeant, traçable.
           </p>
         </div>
 
-        {/* === Cards solides === */}
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-          {PHASES.map((phase) => {
-            const Icon = phase.icon;
-            return (
-              <article
-                key={phase.num}
-                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#0F1B40] p-6 shadow-[0_20px_50px_-25px_rgba(0,0,0,0.6)] transition-all duration-500 hover:-translate-y-1 hover:border-nexus-orange-500/50 hover:shadow-[0_30px_60px_-25px_rgba(255,102,0,0.4)]"
-              >
-                {/* Glow corner hover */}
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-nexus-orange-500/0 blur-3xl transition-all duration-700 group-hover:bg-nexus-orange-500/30"
-                />
+        {/* === Cards solides denses === */}
+        <div className="relative">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+            {PHASES.map((phase) => {
+              const Icon = phase.icon;
+              return (
+                <article
+                  key={phase.num}
+                  className="group relative overflow-hidden rounded-3xl border border-white/15 bg-[#101A38] p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.7)] transition-all duration-500 hover:-translate-y-1 hover:border-nexus-orange-400/60 hover:bg-[#142146] hover:shadow-[0_40px_70px_-20px_rgba(255,102,0,0.45)] sm:p-7"
+                >
+                  {/* Numéro fantôme XXL */}
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute -right-3 -top-3 select-none font-display text-[7rem] font-black leading-none tracking-tighter text-white/[0.07] transition-all duration-500 group-hover:text-nexus-orange-400/[0.18]"
+                  >
+                    {phase.num}
+                  </span>
 
-                <div className="relative">
-                  {/* Numéro orange XL + icône */}
-                  <div className="flex items-center justify-between">
-                    <span className="font-display text-5xl font-black tabular-nums leading-none text-nexus-orange-500">
-                      {phase.num}
-                    </span>
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-nexus-orange-500/10 ring-1 ring-nexus-orange-500/30 backdrop-blur-md transition-transform duration-500 group-hover:scale-105">
-                      <Icon className="h-5 w-5 text-nexus-orange-300" />
-                    </div>
-                  </div>
-
-                  {/* Hairline */}
+                  {/* Glow corner hover */}
                   <div
                     aria-hidden
-                    className="my-5 h-px w-full bg-gradient-to-r from-nexus-orange-500/40 via-white/10 to-transparent"
+                    className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-nexus-orange-500/0 blur-3xl transition-all duration-700 group-hover:bg-nexus-orange-500/35"
                   />
 
-                  {/* Eyebrow */}
-                  <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-nexus-orange-300/80">
-                    {phase.eyebrow}
-                  </p>
+                  <div className="relative">
+                    {/* Icône premium */}
+                    <div className="relative inline-flex">
+                      <div
+                        aria-hidden
+                        className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 blur-md opacity-70 transition-opacity duration-500 group-hover:opacity-100"
+                      />
+                      <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_24px_-8px_rgba(255,102,0,0.7)] ring-1 ring-white/15">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                    </div>
 
-                  {/* Titre */}
-                  <h3 className="mt-2 font-display text-lg font-bold leading-snug text-white sm:text-xl">
-                    {phase.title}
-                  </h3>
+                    {/* Numéro orange XL */}
+                    <p className="mt-6 font-display text-4xl font-black tabular-nums leading-none text-nexus-orange-500">
+                      {phase.num}
+                    </p>
 
-                  {/* Description */}
-                  <p className="mt-3 text-sm leading-relaxed text-slate-300">
-                    {phase.desc}
-                  </p>
-                </div>
-              </article>
-            );
-          })}
+                    {/* Eyebrow */}
+                    <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.24em] text-nexus-orange-300">
+                      {phase.eyebrow}
+                    </p>
+
+                    {/* Titre — text-white pur pour lisibilité MAX */}
+                    <h3 className="mt-2 font-display text-lg font-bold leading-snug text-white sm:text-xl">
+                      {phase.title}
+                    </h3>
+
+                    {/* Hairline */}
+                    <div
+                      aria-hidden
+                      className="my-4 h-px w-12 bg-gradient-to-r from-nexus-orange-400 to-transparent"
+                    />
+
+                    {/* Description — slate-200 (plus contrasté que slate-300) */}
+                    <p className="text-sm leading-relaxed text-slate-200">
+                      {phase.desc}
+                    </p>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
         </div>
 
         {/* === Note de bas === */}
-        <p className="mt-12 text-center text-[11px] font-medium uppercase tracking-[0.22em] text-slate-400">
+        <p className="mt-14 text-center text-[11px] font-medium uppercase tracking-[0.22em] text-slate-400">
           Ce protocole s&apos;applique à chaque dossier — sans exception, sans dérogation.
         </p>
       </div>
