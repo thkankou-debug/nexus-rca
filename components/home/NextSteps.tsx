@@ -3,10 +3,8 @@ import {
   ArrowRight,
   FileText,
   HandshakeIcon,
-  MessageCircle,
   Search,
 } from "lucide-react";
-import { whatsappLink } from "@/lib/utils";
 
 interface Step {
   num: string;
@@ -212,8 +210,8 @@ export function NextSteps() {
           </div>
         </div>
 
-        {/* === CTA double premium === */}
-        <div className="mt-16 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
+        {/* === CTA principal === */}
+        <div className="mt-16 flex justify-center">
           <Link
             href="/demande/complet"
             className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
@@ -226,17 +224,6 @@ export function NextSteps() {
             Soumettre mon dossier
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/cta:translate-x-0.5" />
           </Link>
-          <a
-            href={whatsappLink(
-              "Bonjour Nexus, je souhaite échanger sur un projet avant de soumettre une demande."
-            )}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-400/40 hover:bg-emerald-500/10"
-          >
-            <MessageCircle className="h-4 w-4 text-emerald-300" />
-            Échanger sur WhatsApp
-          </a>
         </div>
 
         {/* === Note discrète === */}

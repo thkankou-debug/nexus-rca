@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, FileText, MessageCircle } from "lucide-react";
-import { whatsappLink } from "@/lib/utils";
+import { ArrowRight, FileText } from "lucide-react";
 
 const DOT_GRID_DARK: React.CSSProperties = {
   backgroundImage:
@@ -46,7 +45,7 @@ export function FinalCTA() {
           heures. Premier contact gratuit, sans engagement.
         </p>
 
-        <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
+        <div className="mt-10 flex justify-center">
           <Link
             href="/demande/complet"
             className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
@@ -59,17 +58,6 @@ export function FinalCTA() {
             Faire une demande
             <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
           </Link>
-          <a
-            href={whatsappLink(
-              "Bonjour Nexus, je souhaite discuter de mon projet."
-            )}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-400/40 hover:bg-emerald-500/10"
-          >
-            <MessageCircle className="h-4 w-4 text-emerald-300" />
-            Parler sur WhatsApp
-          </a>
         </div>
       </div>
     </section>
