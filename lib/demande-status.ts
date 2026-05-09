@@ -1,7 +1,11 @@
 // ============================================================================
-// LIB — Statuts détaillés par service (Nexus Connect Client)
-// Mapping des 7 services × 6 étapes selon BRIEF_NEXUS_CONNECT_CLIENT.md
+// LIB — Statuts détaillés par service ET par catégorie (Nexus Connect)
+// 7 services historiques × 6 étapes (rétrocompat)
+// 9 catégories de dossier × 6 étapes (refonte 032)
 // ============================================================================
+
+import type { CategorieDossier } from "./demande-categories";
+import { getCategorieFromService } from "./demande-categories";
 
 export type ServiceLabel =
   | "Visa & e-Visa"
@@ -14,11 +18,13 @@ export type ServiceLabel =
 
 export type StepLabel = string;
 
+type Steps6 = [string, string, string, string, string, string];
+
 /**
- * 6 étapes par service. La dernière étape peut avoir une variante "refusé"
- * gérée séparément via le statut `annule`.
+ * Étapes par SERVICE (legacy — utilisé par la Timeline existante).
+ * Conservé pour rétrocompatibilité — la Timeline lit toujours via getServiceSteps.
  */
-export const SERVICE_STEPS: Record<string, [string, string, string, string, string, string]> = {
+export const SERVICE_STEPS: Record<string, Steps6> = {
   "Visa & e-Visa": [
     "Dossier reçu",
     "Vérification documents",
@@ -77,8 +83,87 @@ export const SERVICE_STEPS: Record<string, [string, string, string, string, stri
   ],
 };
 
+/**
+ * Étapes par CATÉGORIE de dossier (refonte 032).
+ * Source de vérité côté staff (vue par catégorie).
+ */
+export const CATEGORIE_STEPS: Record<CategorieDossier, Steps6> = {
+  visa: [
+    "Dossier reçu",
+    "Vérification documents",
+    "Documents complémentaires requis",
+    "Dépôt à l'ambassade / consulat",
+    "En attente décision consulaire",
+    "Visa délivré",
+  ],
+  etudes_bourses: [
+    "Dossier reçu",
+    "Analyse du profil",
+    "Documents complémentaires requis",
+    "Candidature soumise",
+    "En attente d'admission",
+    "Admission obtenue",
+  ],
+  billets_hotels: [
+    "Dossier reçu",
+    "Recherche d'options",
+    "Validation client",
+    "Réservation en cours",
+    "Confirmation fournisseur",
+    "Billets / Réservations délivrés",
+  ],
+  assurances: [
+    "Dossier reçu",
+    "Analyse des besoins",
+    "Devis transmis",
+    "Validation client",
+    "Souscription en cours",
+    "Police d'assurance émise",
+  ],
+  financement_incubateur: [
+    "Dossier reçu",
+    "Évaluation du projet",
+    "Documents complémentaires requis",
+    "Présentation au comité",
+    "En attente de décision",
+    "Accompagnement validé",
+  ],
+  digitalisation: [
+    "Dossier reçu",
+    "Cadrage du projet",
+    "Devis et contrat",
+    "Production en cours",
+    "Livraison et tests",
+    "Projet livré",
+  ],
+  recouvrement: [
+    "Dossier reçu",
+    "Identification de l'organisme",
+    "Pouvoirs / autorisations requis",
+    "Demande déposée",
+    "En attente de l'organisme",
+    "Document récupéré",
+  ],
+  transferts: [
+    "Dossier reçu",
+    "Vérification destinataire",
+    "Justificatifs requis",
+    "Transfert initié",
+    "En cours d'acheminement",
+    "Transfert reçu",
+  ],
+  autres: [
+    "Dossier reçu",
+    "En analyse",
+    "Documents requis",
+    "En traitement",
+    "En attente externe",
+    "Finalisé",
+  ],
+};
+
 /** Étapes par défaut si le service n'est pas trouvé */
-const DEFAULT_STEPS: [string, string, string, string, string, string] = [
+const DEFAULT_STEPS: Steps6 = [
   "Dossier reçu",
   "En analyse",
   "Documents requis",
@@ -87,18 +172,36 @@ const DEFAULT_STEPS: [string, string, string, string, string, string] = [
   "Finalisé",
 ];
 
-export function getServiceSteps(
-  service: string | null | undefined
-): [string, string, string, string, string, string] {
+/**
+ * Lookup par SERVICE (legacy).
+ * Si non trouvé, fallback via mapping service → catégorie.
+ */
+export function getServiceSteps(service: string | null | undefined): Steps6 {
   if (!service) return DEFAULT_STEPS;
-  return SERVICE_STEPS[service] || DEFAULT_STEPS;
+  const direct = SERVICE_STEPS[service];
+  if (direct) return direct;
+  // Fallback : on déduit la catégorie depuis le service (variantes historiques)
+  return CATEGORIE_STEPS[getCategorieFromService(service)];
 }
 
+/**
+ * Lookup par CATÉGORIE (source de vérité refonte 032).
+ */
+export function getCategorieSteps(categorie: CategorieDossier | null | undefined): Steps6 {
+  if (!categorie) return DEFAULT_STEPS;
+  return CATEGORIE_STEPS[categorie];
+}
+
+/**
+ * Label de l'étape courante — pratique pour les badges/headers.
+ * Préfère la catégorie si fournie, sinon retombe sur le service.
+ */
 export function getCurrentStepLabel(
   service: string | null | undefined,
-  currentStep: number | null | undefined
+  currentStep: number | null | undefined,
+  categorie?: CategorieDossier | null
 ): string {
-  const steps = getServiceSteps(service);
+  const steps = categorie ? getCategorieSteps(categorie) : getServiceSteps(service);
   const idx = Math.max(0, Math.min(5, (currentStep || 1) - 1));
   return steps[idx];
 }
@@ -107,18 +210,11 @@ export function getStepProgress(currentStep: number | null | undefined): number 
   return Math.round(((currentStep || 1) / 6) * 100);
 }
 
-/**
- * Une demande est "refusée / annulée" si le statut enum global vaut
- * `annule`. Dans ce cas, on affiche un état rouge à la dernière étape.
- */
 export function isCancelled(statut: string | null | undefined): boolean {
   const lower = (statut || "").toLowerCase();
   return lower.includes("annul") || lower.includes("rejet") || lower.includes("refuse");
 }
 
-/**
- * Une demande est terminée si statut = `complete` OU current_step = 6.
- */
 export function isCompleted(
   statut: string | null | undefined,
   currentStep: number | null | undefined

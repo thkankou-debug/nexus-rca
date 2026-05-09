@@ -20,6 +20,11 @@ import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { cn } from "@/lib/utils";
+import {
+  CATEGORIE_META,
+  getCategorieFromService,
+  isCategorieDossier,
+} from "@/lib/demande-categories";
 
 export const metadata = {
   title: "NEXUS CONNECT - Mon espace",
@@ -96,6 +101,43 @@ export default async function ClientDashboard() {
     .order("created_at", { ascending: false });
 
   const demandes = demandesData || [];
+
+  // Compteurs documents requis (en_attente) par dossier
+  const demandeIds = demandes.map((d) => d.id);
+  let docsRequiredByDemande = new Map<string, number>();
+  let agentsByDemande = new Map<
+    string,
+    { id: string; nom: string | null; prenom: string | null }
+  >();
+  if (demandeIds.length > 0) {
+    const { data: docReqs } = await supabase
+      .from("demande_documents_requests")
+      .select("demande_id, statut")
+      .in("demande_id", demandeIds)
+      .eq("statut", "en_attente");
+    (docReqs || []).forEach((r) => {
+      const did = (r as { demande_id: string }).demande_id;
+      docsRequiredByDemande.set(did, (docsRequiredByDemande.get(did) || 0) + 1);
+    });
+
+    const agentIds = Array.from(
+      new Set(
+        demandes
+          .map((d) => (d as Record<string, unknown>).agent_id as string | null)
+          .filter((v): v is string => Boolean(v))
+      )
+    );
+    if (agentIds.length > 0) {
+      const { data: agentRows } = await supabase
+        .from("profiles")
+        .select("id, nom, prenom")
+        .in("id", agentIds);
+      (agentRows || []).forEach((a) => {
+        const aa = a as { id: string; nom: string | null; prenom: string | null };
+        agentsByDemande.set(aa.id, aa);
+      });
+    }
+  }
 
   const { data: paiementsData } = await supabase
     .from("payments")
@@ -265,35 +307,90 @@ export default async function ClientDashboard() {
                   const ref =
                     (dRecord.reference as string) ||
                     `NX-${(d.id as string).slice(0, 8).toUpperCase()}`;
+                  const catRaw = (dRecord.categorie_dossier as string) || "";
+                  const cat = isCategorieDossier(catRaw)
+                    ? catRaw
+                    : getCategorieFromService(d.service);
+                  const meta = CATEGORIE_META[cat];
+                  const Icon = meta.icon;
+                  const step = (dRecord.current_step as number) || 1;
+                  const docsReq = docsRequiredByDemande.get(d.id) || 0;
+                  const aId = (dRecord.agent_id as string) || null;
+                  const ag = aId ? agentsByDemande.get(aId) : null;
+                  const agName = ag
+                    ? [ag.prenom, ag.nom].filter(Boolean).join(" ").trim()
+                    : null;
+
                   return (
                     <Link
                       key={d.id}
                       href={`/dashboard/client/demandes/${d.id}`}
-                      className="flex items-center gap-3 p-4 transition hover:bg-slate-50"
+                      className="block p-4 transition hover:bg-slate-50"
                     >
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-nexus-orange-50 text-nexus-orange-600">
-                        <FolderOpen className="h-5 w-5" />
+                      <div className="flex items-start gap-3">
+                        <div
+                          className={cn(
+                            "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
+                            meta.iconBg
+                          )}
+                        >
+                          <Icon className={cn("h-5 w-5", meta.iconColor)} />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="truncate text-sm font-semibold text-nexus-blue-950">
+                              {d.objet || d.service || "Dossier"}
+                            </p>
+                            <span
+                              className={cn(
+                                "inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase",
+                                status.color
+                              )}
+                            >
+                              <StatusIcon className="h-2.5 w-2.5" />
+                              {status.label}
+                            </span>
+                          </div>
+                          <p className="font-mono text-[11px] text-nexus-orange-600">
+                            {ref}
+                          </p>
+                          <p className="text-xs text-slate-500">
+                            {meta.shortLabel} · {formatDate(d.created_at)}
+                          </p>
+                          {/* Mini progress bar X/6 */}
+                          <div className="mt-2 flex items-center gap-2 text-[11px] text-slate-500">
+                            <span className="font-semibold tabular-nums">
+                              Étape {step}/6
+                            </span>
+                            <span className="h-1 w-24 overflow-hidden rounded-full bg-slate-100">
+                              <span
+                                className="block h-full bg-nexus-orange-500"
+                                style={{
+                                  width: `${Math.min(100, (step / 6) * 100)}%`,
+                                }}
+                              />
+                            </span>
+                          </div>
+                          <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px]">
+                            {agName ? (
+                              <span className="inline-flex items-center gap-1 text-slate-600">
+                                <UserCircle className="h-3 w-3 text-nexus-blue-700" />
+                                Conseiller : {agName}
+                              </span>
+                            ) : (
+                              <span className="text-slate-400 italic">
+                                Conseiller : en cours d&rsquo;attribution
+                              </span>
+                            )}
+                            {docsReq > 0 && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-nexus-orange-100 px-2 py-0.5 font-semibold text-nexus-orange-700">
+                                <AlertCircle className="h-3 w-3" />
+                                {docsReq} document{docsReq > 1 ? "s" : ""} à fournir
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-semibold text-nexus-blue-950">
-                          {d.objet || d.service || "Demande"}
-                        </p>
-                        <p className="font-mono text-[11px] text-nexus-orange-600">
-                          {ref}
-                        </p>
-                        <p className="text-xs text-slate-500">
-                          {d.service} · {formatDate(d.created_at)}
-                        </p>
-                      </div>
-                      <span
-                        className={cn(
-                          "inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase",
-                          status.color
-                        )}
-                      >
-                        <StatusIcon className="h-2.5 w-2.5" />
-                        {status.label}
-                      </span>
                     </Link>
                   );
                 })}

@@ -35,7 +35,24 @@ export interface Profile {
   avatar_url: string | null;
   created_at: string;
   updated_at: string;
+  // Colonnes DB existantes (migration ≤ 029)
+  actif: boolean;
+  poste: string | null;
+  notes_internes: string | null;
+  // Colonne ajoutée par migration 032
+  specialites: string[] | null;
 }
+
+export type CategorieDossierSlug =
+  | "visa"
+  | "etudes_bourses"
+  | "billets_hotels"
+  | "assurances"
+  | "financement_incubateur"
+  | "digitalisation"
+  | "recouvrement"
+  | "transferts"
+  | "autres";
 
 // ---- Détails dynamiques par type de service (JSONB côté Supabase) ----
 
@@ -112,6 +129,24 @@ export interface Demande {
   notes_internes: string | null;
   created_at: string;
   updated_at: string;
+  // Colonnes ajoutées par migrations 030-032
+  reference: string | null;
+  sexe: string | null;
+  date_naissance: string | null;
+  nationalite: string | null;
+  adresse: string | null;
+  situation_matrimoniale: string | null;
+  profession: string | null;
+  employeur: string | null;
+  niveau_etudes: string | null;
+  categorie_demande: string | null;
+  type_procedure: string | null;
+  dossier_existant: boolean | null;
+  numero_dossier_existant: string | null;
+  informations_complementaires: string | null;
+  current_step: number | null;
+  current_step_label: string | null;
+  categorie_dossier: CategorieDossierSlug | null;
 }
 
 export interface DemandeAvecDocuments extends Demande {

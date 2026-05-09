@@ -38,7 +38,7 @@ export default async function AdminAgentsPage() {
         supabase
           .from("demandes")
           .select("created_at")
-          .or(`created_by.eq.${agent.id},assigne_a.eq.${agent.id}`),
+          .or(`created_by.eq.${agent.id},agent_id.eq.${agent.id}`),
         supabase
           .from("expenses")
           .select("date_depense, created_at, montant, statut")

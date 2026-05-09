@@ -163,7 +163,7 @@ export default async function SuperAdminDashboard() {
     supabase
       .from("demandes")
       .select("id", { count: "exact", head: true })
-      .eq("statut", "nouvelle"),
+      .eq("statut", "nouveau"),
     supabase
       .from("demandes")
       .select("id", { count: "exact", head: true })
@@ -171,7 +171,7 @@ export default async function SuperAdminDashboard() {
     supabase
       .from("demandes")
       .select("id, objet, service, statut, created_at")
-      .in("statut", ["nouvelle", "en_cours"])
+      .in("statut", ["nouveau", "en_cours"])
       .order("created_at", { ascending: false })
       .limit(5),
     supabase
@@ -823,7 +823,7 @@ export default async function SuperAdminDashboard() {
                   <span
                     className={cn(
                       "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase",
-                      d.statut === "nouvelle"
+                      d.statut === "nouveau"
                         ? "bg-blue-100 text-blue-700"
                         : "bg-amber-100 text-amber-700"
                     )}

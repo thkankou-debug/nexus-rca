@@ -50,7 +50,7 @@ export default async function AgentDetailPage({
       supabase
         .from("demandes")
         .select("id, objet, service, statut, created_at")
-        .or(`created_by.eq.${params.id},assigne_a.eq.${params.id}`)
+        .or(`created_by.eq.${params.id},agent_id.eq.${params.id}`)
         .order("created_at", { ascending: false }),
       supabase
         .from("transferts")

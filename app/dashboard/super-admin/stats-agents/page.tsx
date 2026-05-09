@@ -50,7 +50,7 @@ export default async function StatsAgentsPage() {
       const { data: demandesData } = await supabase
         .from("demandes")
         .select("created_at")
-        .or(`created_by.eq.${agent.id},assigne_a.eq.${agent.id}`);
+        .or(`created_by.eq.${agent.id},agent_id.eq.${agent.id}`);
 
       const demandes_dates = (demandesData || []).map((d) => d.created_at);
 
