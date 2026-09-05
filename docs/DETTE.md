@@ -9,18 +9,19 @@ raison de ne pas agir maintenant, phase qui devrait s'en charger.
 ## P2 — RBAC 9 rôles (05/09/2026)
 
 **1. Branches divergentes — `v3/p2-rbac` n'hérite pas de `v3/p1c-outillage`.**
-`v3/p2-rbac` est branchée depuis `v3/p1b-durcissement` (sur demande explicite).
-Les 4 branches de phase (`a1-tokens`, `a2-design-system`, `p1b-durcissement`,
-`p1c-outillage`) ont chacune divergé indépendamment de `main`. P2 n'a donc PAS
-les commits de P1c : config ESLint (`.eslintrc.json`), régénération des types
-TypeScript, optimisation `auth_rls_initplan` sur 122 policies, index sur 42 FK,
-séquence `gen_demande_ref()`. Les 3 fichiers `.backup.*` ont été re-supprimés
-manuellement sur cette branche (P1c l'avait déjà fait sur la sienne) car ils
-cassaient la compilation TypeScript de P2 — seul point réconcilié ici.
-**À faire** : fusionner les branches de phase entre elles (ou toutes dans
-`main`) avant que deux chantiers censés être indépendants ne divergent trop
-pour se réconcilier proprement. Décision de topologie, pas d'exécution de
-phase — à trancher avec Thierry.
+~~`v3/p2-rbac` est branchée depuis `v3/p1b-durcissement`...~~ **Résolu le
+05/09/2026** : réconciliation complète effectuée avant A3 (qui a besoin
+d'A2 et P2 simultanément — devenu bloquant). Branche `v3/integration-v3`
+créée depuis `v3/p3-schema-metier` (lignée P1b→P2→C0→P3, la plus complète),
+fusion de `v3/a2-design-system` — qui s'est révélée inclure déjà
+`v3/a1-tokens` **et** `v3/p1c-outillage` (fusion de ce dernier : "Already up
+to date", rien à apporter). 3 conflits réels résolus (tableau `NEXUS_RCA_
+FEUILLE_DE_ROUTE_V3 (2).md` → version P3 conservée, plus à jour ;
+`types/database.ts` → régénéré depuis le schéma réel plutôt que fusionné à
+la main, fichier généré ; `types/index.ts` → les deux côtés apportaient des
+ajouts complémentaires, fusionnés). Barrière de qualité repassée en entier
+après fusion : `tsc` 0 erreur, `next lint` 0 erreur, `next build` succès.
+Toutes les phases continuent désormais sur `v3/integration-v3`.
 
 **2. `<Can>`/`RoleGate.tsx` non migré vers le nouveau vocabulaire de permissions.**
 Le plan présenté prévoyait de faire migrer `<Can>` de `action`+`resource` vers

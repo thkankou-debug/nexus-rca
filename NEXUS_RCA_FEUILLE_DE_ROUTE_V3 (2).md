@@ -98,6 +98,11 @@ Push    : en fin de phase, après la barrière de qualité, jamais avant
 ```
 Le RÉCAP indique l'URL de prévisualisation pour que Thierry vérifie en ligne.
 
+**Note du 05/09/2026** : les branches de phase P0.5-P3/A1/A2 avaient divergé
+indépendamment de `main`. Réconciliées dans `v3/integration-v3` avant A3
+(voir `docs/DETTE.md`, entrée P2 #1). À partir d'A3, chaque nouvelle phase
+se branche depuis `v3/integration-v3`, pas depuis `main`.
+
 ## I.5 Tableau d'avancement — à tenir à jour dans ce fichier
 
 | Code | Phase | État | Branche | Date |
