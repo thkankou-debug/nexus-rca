@@ -25,15 +25,26 @@ interface AgentLite {
   prenom: string | null;
 }
 
+// P3 (migration 049a/049b) : 15 valeurs remplacent les 7 valeurs 2026-04 —
+// voir docs/AUDIT_CRM.md. Filtrer sur une ancienne valeur ne remonterait
+// plus aucun dossier réel.
 const STATUS_FILTERS: { value: DemandeStatus | "all"; label: string }[] = [
   { value: "all", label: "Tous" },
-  { value: "nouveau", label: "Nouveau" },
-  { value: "en_cours", label: "En cours" },
-  { value: "en_attente", label: "En attente" },
-  { value: "incomplet", label: "Incomplet" },
-  { value: "en_traitement", label: "En traitement" },
-  { value: "complete", label: "Complété" },
+  { value: "nouvelle_demande", label: "Nouvelle demande" },
+  { value: "qualification", label: "Qualification" },
+  { value: "documents_demandes", label: "Documents demandés" },
+  { value: "dossier_incomplet", label: "Dossier incomplet" },
+  { value: "etude_faisabilite", label: "Étude de faisabilité" },
+  { value: "devis_envoye", label: "Devis envoyé" },
+  { value: "devis_accepte", label: "Devis accepté" },
+  { value: "paiement_attente", label: "Paiement en attente" },
+  { value: "traitement", label: "Traitement" },
+  { value: "transmis_partenaire", label: "Transmis partenaire" },
+  { value: "decision_recue", label: "Décision reçue" },
+  { value: "termine", label: "Terminé" },
+  { value: "refuse", label: "Refusé" },
   { value: "annule", label: "Annulé" },
+  { value: "archive", label: "Archivé" },
 ];
 
 type SortKey = "date_desc" | "date_asc" | "step_desc" | "step_asc";

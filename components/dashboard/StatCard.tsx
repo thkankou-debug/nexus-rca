@@ -137,6 +137,9 @@ export function StatCard({
   );
 }
 
+// P3 (migration 049a/049b) : 15 valeurs remplacent les 7 valeurs 2026-04.
+// Les valeurs legacy restent typees (l'enum ne les retire jamais) mais plus
+// aucun dossier reel ne les porte — voir docs/AUDIT_CRM.md.
 const STATUS_STYLES: Record<DemandeStatus, string> = {
   nouveau: "bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-300",
   en_cours: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300",
@@ -145,6 +148,20 @@ const STATUS_STYLES: Record<DemandeStatus, string> = {
   en_traitement: "bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300",
   complete: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300",
   annule: "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300",
+  nouvelle_demande: "bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-300",
+  qualification: "bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-300",
+  documents_demandes: "bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-300",
+  dossier_incomplet: "bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-300",
+  etude_faisabilite: "bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300",
+  devis_envoye: "bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300",
+  devis_accepte: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300",
+  paiement_attente: "bg-slate-200 text-slate-700 dark:bg-slate-500/20 dark:text-slate-300",
+  traitement: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300",
+  transmis_partenaire: "bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300",
+  decision_recue: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300",
+  termine: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300",
+  refuse: "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300",
+  archive: "bg-slate-200 text-slate-700 dark:bg-slate-500/20 dark:text-slate-300",
 };
 
 const STATUS_LABELS: Record<DemandeStatus, string> = {
@@ -155,6 +172,20 @@ const STATUS_LABELS: Record<DemandeStatus, string> = {
   en_traitement: "En traitement",
   complete: "Complété",
   annule: "Annulé",
+  nouvelle_demande: "Nouvelle demande",
+  qualification: "Qualification",
+  documents_demandes: "Documents demandés",
+  dossier_incomplet: "Dossier incomplet",
+  etude_faisabilite: "Étude de faisabilité",
+  devis_envoye: "Devis envoyé",
+  devis_accepte: "Devis accepté",
+  paiement_attente: "Paiement en attente",
+  traitement: "Traitement",
+  transmis_partenaire: "Transmis partenaire",
+  decision_recue: "Décision reçue",
+  termine: "Terminé",
+  refuse: "Refusé",
+  archive: "Archivé",
 };
 
 export function StatusBadge({ status }: { status: DemandeStatus }) {

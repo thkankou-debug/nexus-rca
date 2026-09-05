@@ -230,7 +230,7 @@ export async function POST(
         consentement_examen: form.consentement_examen,
         consentement_documents: form.consentement_documents,
         consentement_recontact: form.consentement_recontact,
-        statut: "nouveau",
+        statut: "nouvelle_demande",
       })
       .select("id, reference")
       .single();

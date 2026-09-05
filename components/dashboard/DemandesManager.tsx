@@ -23,14 +23,24 @@ import { DemandeDocumentsList } from "@/components/dashboard/DemandeDocumentsLis
 import { formatDate, cn } from "@/lib/utils";
 import type { Demande, DemandeStatus } from "@/types";
 
+// P3 (migration 049a/049b) : 15 valeurs remplacent les 7 valeurs 2026-04 —
+// voir docs/AUDIT_CRM.md.
 const STATUSES: DemandeStatus[] = [
-  "nouveau",
-  "en_cours",
-  "en_attente",
-  "incomplet",
-  "en_traitement",
-  "complete",
+  "nouvelle_demande",
+  "qualification",
+  "documents_demandes",
+  "dossier_incomplet",
+  "etude_faisabilite",
+  "devis_envoye",
+  "devis_accepte",
+  "paiement_attente",
+  "traitement",
+  "transmis_partenaire",
+  "decision_recue",
+  "termine",
+  "refuse",
   "annule",
+  "archive",
 ];
 
 export function DemandesManager({

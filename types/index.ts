@@ -1,4 +1,5 @@
 import type { Database } from "./database";
+import type { DossierStatus } from "@/lib/dossier-transitions";
 
 export type UserRole =
   | "super_admin"
@@ -12,7 +13,10 @@ export type UserRole =
   | "partenaire"
   | "client";
 
-export type DemandeStatus =
+// Valeurs 2026-04 (018-032), conservees telles quelles — aucun dossier reel
+// ne les porte plus depuis la reassignation 049b, mais l'enum Postgres ne
+// retire jamais une valeur (regle P3, additif pur).
+export type LegacyDemandeStatus =
   | "nouveau"
   | "en_cours"
   | "en_attente"
@@ -20,6 +24,10 @@ export type DemandeStatus =
   | "en_traitement"
   | "complete"
   | "annule";
+
+// Machine a etats P3 (migration 049a/049b) — voir lib/dossier-transitions.ts
+// pour le graphe de transitions valide.
+export type DemandeStatus = LegacyDemandeStatus | DossierStatus;
 
 export type UrgenceLevel = "faible" | "normale" | "elevee" | "critique";
 

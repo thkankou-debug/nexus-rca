@@ -160,18 +160,22 @@ export default async function SuperAdminDashboard() {
       .select("montant")
       .eq("statut", "valide")
       .gte("date_depense", monthStartISO),
+    // P3 (migration 049a/049b) : "nouveau"/"en_cours"/"en_traitement" ont
+    // été réassignés vers la nouvelle machine à états — plus aucun dossier
+    // réel ne les porte (voir docs/AUDIT_CRM.md). Requêtes mises à jour pour
+    // ne pas afficher des zéros silencieux.
     supabase
       .from("demandes")
       .select("id", { count: "exact", head: true })
-      .eq("statut", "nouveau"),
+      .eq("statut", "nouvelle_demande"),
     supabase
       .from("demandes")
       .select("id", { count: "exact", head: true })
-      .in("statut", ["en_cours", "en_traitement"]),
+      .in("statut", ["traitement", "qualification", "documents_demandes"]),
     supabase
       .from("demandes")
       .select("id, objet, service, statut, created_at")
-      .in("statut", ["nouveau", "en_cours"])
+      .in("statut", ["nouvelle_demande", "traitement", "qualification"])
       .order("created_at", { ascending: false })
       .limit(5),
     supabase
@@ -823,7 +827,7 @@ export default async function SuperAdminDashboard() {
                   <span
                     className={cn(
                       "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase",
-                      d.statut === "nouveau"
+                      d.statut === "nouvelle_demande"
                         ? "bg-blue-100 text-blue-700"
                         : "bg-amber-100 text-amber-700"
                     )}

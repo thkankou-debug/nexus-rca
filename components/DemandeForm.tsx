@@ -81,7 +81,7 @@ export function DemandeForm() {
         service: form.service,
         description: form.description,
         urgence: form.urgence,
-        statut: "nouveau",
+        statut: "nouvelle_demande",
       });
 
       if (error) throw error;

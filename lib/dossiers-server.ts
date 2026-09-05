@@ -48,13 +48,19 @@ export async function getCategoryCounters(filterAgentId?: string): Promise<
     )
       ? (r.categorie_dossier as CategorieDossier)
       : "autres";
+    // P3 (migration 049a/049b) : "complete"/"nouveau" ont ete reassignes
+    // vers la nouvelle machine a etats — voir docs/AUDIT_CRM.md. Etats
+    // terminaux etendus a termine/refuse/archive en plus d'annule.
     if (
       r.statut === "complete" ||
-      r.statut === "annule"
+      r.statut === "annule" ||
+      r.statut === "termine" ||
+      r.statut === "refuse" ||
+      r.statut === "archive"
     )
       return;
     counters[cat].actifs += 1;
-    if (r.statut === "nouveau") counters[cat].nouveaux += 1;
+    if (r.statut === "nouveau" || r.statut === "nouvelle_demande") counters[cat].nouveaux += 1;
     if (r.urgence === "critique" || r.traitement_prioritaire)
       counters[cat].urgents += 1;
   });
@@ -89,7 +95,14 @@ export async function getGlobalDossiersStats(filterAgentId?: string): Promise<{
   let urgents = 0;
   let nonAssignes = 0;
   rows.forEach((r) => {
-    if (r.statut === "complete" || r.statut === "annule") return;
+    if (
+      r.statut === "complete" ||
+      r.statut === "annule" ||
+      r.statut === "termine" ||
+      r.statut === "refuse" ||
+      r.statut === "archive"
+    )
+      return;
     actifs++;
     if (r.urgence === "critique" || r.traitement_prioritaire) urgents++;
     if (!r.agent_id) nonAssignes++;

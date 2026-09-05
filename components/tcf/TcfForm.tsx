@@ -231,7 +231,7 @@ export function TcfForm() {
         consentement_examen: form.consentement_examen,
         consentement_documents: form.consentement_traitement,
         consentement_recontact: true,
-        statut: "nouveau",
+        statut: "nouvelle_demande",
       });
 
       if (error) throw error;
