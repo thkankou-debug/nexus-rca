@@ -111,7 +111,7 @@ Le RÉCAP indique l'URL de prévisualisation pour que Thierry vérifie en ligne.
 | A1 | Tokens et fondations visuelles | ✅ terminée | v3/a1-tokens | 05/09 |
 | A2 | Design system | ✅ terminée | v3/a2-design-system | 05/09 |
 | P2 | RBAC 9 rôles | ✅ terminée — voir docs/DETTE.md pour les écarts notés | v3/p2-rbac | 05/09 |
-| C0 | Audit CRM et schéma cible de la relation client | 🟡 rapport livré (docs/AUDIT_CRM.md) — en attente de confirmation D7 | v3/c0-audit-crm | 05/09 |
+| C0 | Audit CRM et schéma cible de la relation client | ✅ terminée — D7 confirmée par Thierry | v3/c0-audit-crm | 05/09 |
 | P3 | Extension du schéma métier | ⬜ | | |
 | A3 | Shell d'administration | ⬜ | | |
 | A4 | Tableau de bord | ⬜ | | |
