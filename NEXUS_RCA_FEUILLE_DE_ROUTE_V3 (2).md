@@ -121,7 +121,7 @@ se branche depuis `v3/integration-v3`, pas depuis `main`.
 | A3 | Shell d'administration | ✅ terminée — démo isolée, voir docs/DETTE.md | v3/integration-v3 | 05/09 |
 | A4 | Tableau de bord | ✅ terminée — démo isolée, voir docs/DETTE.md | v3/integration-v3 | 05/09 |
 | A5-0 | Audit CRM et consolidation d'identité | ✅ satisfaite par C0 — aucun corps de section propre dans ce document, voir docs/DETTE.md | — | 05/09 |
-| A5 | CRM — Dossiers et pipeline | ⬜ | | |
+| A5 | CRM — Dossiers et pipeline | ✅ terminée — vraies pages, voir docs/DETTE.md | v3/integration-v3 | 05/09 |
 | A6 | CRM — Clients 360, prospects, RDV, communications, tâches | ⬜ | | |
 | A7 | RH rhabillé | ⬜ | | |
 | P6-0 | Convergence des colonnes `payments` | ⬜ | | |

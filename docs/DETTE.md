@@ -131,6 +131,40 @@ depuis 48h" (le second est donné par la feuille de route, le premier non).
 **À ajuster** avec Thierry si 3 jours ne correspond pas à la réalité
 opérationnelle.
 
+---
+
+## A5 — CRM & Dossiers, noyau (05/09/2026)
+
+**1. `payments.demande_id`/`dossier_id` non renseignés sur aucun paiement réel.**
+Découvert en vérifiant le schéma avant d'écrire l'onglet Paiements de la
+fiche dossier — les deux colonnes existent (redondance déjà suspecte en
+soi) mais aucune des deux n'est peuplée sur les 3 paiements réels. Même
+défaut que `demandes.client_record_id` avant sa correction en P3. L'onglet
+Paiements est honnêtement vide tant que ce n'est pas corrigé.
+**À faire** : identifier où un paiement est créé pour un dossier (caisse,
+lien de paiement) et y renseigner `demande_id` — travail sur le flux de
+création, pas sur la fiche dossier. Candidat naturel : P6 (Finance).
+
+**2. `appointments` n'a aucune colonne reliant un rendez-vous à un dossier.**
+L'onglet Rendez-vous utilise `client_id` comme corrélation approchée
+(rendez-vous du même client, pas du même dossier précisément), étiqueté
+comme tel dans l'interface. **À trancher** : si un lien dossier-RDV précis
+est voulu, ajouter `appointments.demande_id` est un changement de schéma,
+pas un changement d'écran.
+
+**3. Vue Kanban limitée à 11 colonnes actives + 1 colonne "Terminés" groupée.**
+Choix pragmatique (16 dossiers réels répartis sur 15 états auraient produit
+des colonnes presque toutes vides). **À revoir** si le volume de dossiers
+grandit au point qu'une distinction entre `termine`/`refuse`/`annule`/
+`archive` devient utile dans le Kanban lui-même.
+
+**4. Actions de masse "Affecter"/"Changer le statut" appellent les routes existantes en boucle, une requête HTTP par dossier sélectionné.**
+Pas de véritable endpoint "bulk" côté API. Fonctionnel et correct (chaque
+dossier reçoit son historique/audit/email comme une action individuelle
+légitime), mais N requêtes séquentielles pour N dossiers sélectionnés —
+lent au-delà d'une trentaine. **À optimiser** si le volume réel le
+justifie un jour (paralléliser, ou un vrai endpoint bulk côté serveur).
+
 **3. `StatusBadge` du tableau Dossiers utilise une teinte unique (`progress`) pour tous les statuts.**
 Simplification de la démo — pas de mappage statut → teinte comme dans
 `DemandesManager.tsx`/`StatCard.tsx`. **À corriger** si cette table devient
