@@ -110,7 +110,7 @@ Le RÉCAP indique l'URL de prévisualisation pour que Thierry vérifie en ligne.
 | P1c | Outillage et dette technique | ✅ terminée | v3/p1c-outillage | 05/09 |
 | A1 | Tokens et fondations visuelles | ✅ terminée | v3/a1-tokens | 05/09 |
 | A2 | Design system | ✅ terminée | v3/a2-design-system | 05/09 |
-| P2 | RBAC 9 rôles | ⬜ | | |
+| P2 | RBAC 9 rôles | ✅ terminée — voir docs/DETTE.md pour les écarts notés | v3/p2-rbac | 05/09 |
 | C0 | Audit CRM et schéma cible de la relation client | ⬜ | | |
 | P3 | Extension du schéma métier | ⬜ | | |
 | A3 | Shell d'administration | ⬜ | | |
