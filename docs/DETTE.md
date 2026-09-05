@@ -184,3 +184,31 @@ Toutes RLS-protégées et prêtes, mais aucune page ne les consomme encore
 etc. — posées par anticipation en P2, avant que les tables elles-mêmes
 n'existent. Cohérent maintenant que P3 les a créées, mais aucune page ne
 vérifie encore ces permissions (même raison que le point 2).
+
+---
+
+## A6 — CRM, fiche client 360° et entrées (05/09/2026)
+
+**1. `contact_demandes` exclue du rattachement client (Lot 2).**
+Portée du Lot 2 tranchée avec Thierry : rattachement `client_record_id`
+ajouté sur `contacts` et `appointment_requests` uniquement.
+`contact_demandes` a 0 ligne et aucune route API n'y écrit (confirmé par
+recherche exhaustive) — c'est une table morte, rien à rattacher. **À
+traiter** si un jour un formulaire "contact pro" est branché dessus :
+ajouter la même colonne `client_record_id` à ce moment-là.
+
+**2. 1 dossier orphelin (`demandes`, statut `termine`) non couvert par la vue Réception.**
+La vue "Réception" d'A5 filtre sur `statut = 'nouvelle_demande'` — un
+dossier plus ancien (avril 2026, statut `termine`, sans agent, sans
+`client_record_id`) n'apparaît dans aucune vue enregistrée actuelle.
+**À traiter** : rattachement manuel ponctuel par Thierry, ou extension
+d'une vue "Non rattachés" si d'autres cas similaires apparaissent.
+
+**3. Page `/dashboard/admin/rdv` interroge des colonnes qui n'existent pas sur `appointment_requests`.**
+Découvert en vérifiant le périmètre du Lot 2 (non lié à ce lot — défaut
+préexistant) : la requête utilise `appointment_date`/`appointment_time`/
+`nom_complet`, alors que le schéma réel de `appointment_requests` porte
+`preferred_date`/`preferred_time`/`full_name`. L'erreur est absorbée par
+un `console.warn`, la page affiche silencieusement "Aucun rendez-vous".
+**À corriger** en dehors d'A6 — hors périmètre de ce lot, non introduit
+par lui.

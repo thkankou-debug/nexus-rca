@@ -21,7 +21,7 @@ export default async function SuperAdminContactsPage() {
   const { data, error } = await supabase
     .from("contacts")
     .select(
-      "id, reference, nom, email, telephone, sujet, message, status, source, notes_internes, processed_at, created_at, updated_at"
+      "id, reference, nom, email, telephone, sujet, message, status, source, notes_internes, client_record_id, processed_at, created_at, updated_at"
     )
     .order("created_at", { ascending: false })
     .limit(200);

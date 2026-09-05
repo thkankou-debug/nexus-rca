@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
+import { AttachClientAction } from "@/components/dashboard/AttachClientAction";
 
 // ============================================================================
 // TYPES
@@ -62,6 +63,7 @@ export interface AppointmentRequest {
   status: AppointmentStatus;
   admin_notes: string | null;
   assigned_to: string | null;
+  client_record_id: string | null;
 }
 
 // ============================================================================
@@ -182,6 +184,22 @@ export function AppointmentRequestsManager({
       list.map((r) => (r.id === id ? { ...r, status } : r))
     );
     toast.success("Statut mis à jour");
+  };
+
+  const attachClient = async (id: string, clientId: string) => {
+    const { error } = await supabase
+      .from("appointment_requests")
+      .update({ client_record_id: clientId })
+      .eq("id", id);
+    if (error) {
+      console.error("Erreur rattachement :", error);
+      toast.error("Rattachement impossible");
+      return;
+    }
+    setRequests((list) =>
+      list.map((r) => (r.id === id ? { ...r, client_record_id: clientId } : r))
+    );
+    toast.success("Client rattaché");
   };
 
   const deleteRequest = async (id: string) => {
@@ -375,6 +393,20 @@ export function AppointmentRequestsManager({
                       )}
                     </div>
                   )}
+
+                  {/* Rattachement client */}
+                  <div>
+                    <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Fiche client
+                    </h4>
+                    <AttachClientAction
+                      clientRecordId={req.client_record_id}
+                      nom={req.full_name}
+                      email={req.email}
+                      telephone={req.phone}
+                      onAttached={(clientId) => attachClient(req.id, clientId)}
+                    />
+                  </div>
 
                   {/* Actions */}
                   <div>

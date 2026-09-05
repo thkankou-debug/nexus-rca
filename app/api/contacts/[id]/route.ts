@@ -9,6 +9,7 @@ type Status = (typeof VALID_STATUS)[number];
 interface PatchBody {
   status?: Status;
   notes_internes?: string | null;
+  client_record_id?: string | null;
 }
 
 export async function PATCH(
@@ -54,6 +55,9 @@ export async function PATCH(
     }
     if (typeof body.notes_internes !== "undefined") {
       update.notes_internes = body.notes_internes || null;
+    }
+    if (typeof body.client_record_id !== "undefined") {
+      update.client_record_id = body.client_record_id || null;
     }
 
     if (Object.keys(update).length === 0) {

@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
+import { AttachClientAction } from "@/components/dashboard/AttachClientAction";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 export interface ContactRow {
@@ -31,6 +32,7 @@ export interface ContactRow {
   status: "nouveau" | "lu" | "repondu" | "archive";
   source: string | null;
   notes_internes: string | null;
+  client_record_id: string | null;
   processed_at: string | null;
   created_at: string;
   updated_at: string;
@@ -175,6 +177,30 @@ export function ContactsManager({ initialRows, readOnly = false }: Props) {
       toast.error(err instanceof Error ? err.message : "Mise à jour impossible");
     } finally {
       setSavingId(null);
+    }
+  }
+
+  async function attachClient(id: string, clientId: string) {
+    try {
+      const res = await fetch(`/api/contacts/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ client_record_id: clientId }),
+      });
+      const json = (await res.json().catch(() => ({}))) as {
+        success?: boolean;
+        error?: string;
+      };
+      if (!res.ok || !json.success) {
+        throw new Error(json.error || "Erreur serveur");
+      }
+      setRows((prev) =>
+        prev.map((r) => (r.id === id ? { ...r, client_record_id: clientId } : r))
+      );
+      toast.success("Client rattaché");
+    } catch (err) {
+      console.error(err);
+      toast.error(err instanceof Error ? err.message : "Rattachement impossible");
     }
   }
 
@@ -360,7 +386,7 @@ export function ContactsManager({ initialRows, readOnly = false }: Props) {
                     </div>
 
                     {!readOnly && (
-                      <div className="mt-5 flex flex-wrap gap-2">
+                      <div className="mt-5 flex flex-wrap items-start gap-2">
                         <a
                           href={`mailto:${row.email}?subject=Re: ${encodeURIComponent(row.sujet)}`}
                           className="inline-flex items-center gap-1.5 rounded-xl bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-nexus-orange-600"
@@ -368,6 +394,13 @@ export function ContactsManager({ initialRows, readOnly = false }: Props) {
                           <Mail className="h-4 w-4" />
                           Répondre par email
                         </a>
+                        <AttachClientAction
+                          clientRecordId={row.client_record_id}
+                          nom={row.nom}
+                          email={row.email}
+                          telephone={row.telephone}
+                          onAttached={(clientId) => attachClient(row.id, clientId)}
+                        />
                         {row.telephone && (
                           <a
                             href={`https://wa.me/${row.telephone.replace(/[^0-9]/g, "")}`}
