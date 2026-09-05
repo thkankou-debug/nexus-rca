@@ -1,3 +1,22 @@
+// P1c point 2 : types générés depuis le schéma réel via generate_typescript_types
+// (connecteur Supabase) — jamais à la main, pour ne pas dériver à la prochaine
+// migration. Les tables ci-dessous n'avaient encore aucun type dans ce fichier.
+import type { Database } from "./database";
+
+export type Payment = Database["public"]["Tables"]["payments"]["Row"];
+export type PaymentLink = Database["public"]["Tables"]["payment_links"]["Row"];
+export type PaymentEvent = Database["public"]["Tables"]["payment_events"]["Row"];
+export type StripeWebhookLog = Database["public"]["Tables"]["stripe_webhook_log"]["Row"];
+export type Client = Database["public"]["Tables"]["clients"]["Row"];
+export type Transfert = Database["public"]["Tables"]["transferts"]["Row"];
+export type QuickSale = Database["public"]["Tables"]["quick_sales"]["Row"];
+export type Expense = Database["public"]["Tables"]["expenses"]["Row"];
+export type Appointment = Database["public"]["Tables"]["appointments"]["Row"];
+export type AppointmentRequest = Database["public"]["Tables"]["appointment_requests"]["Row"];
+export type ContactDemande = Database["public"]["Tables"]["contact_demandes"]["Row"];
+export type VisaExpressRequest = Database["public"]["Tables"]["visa_express_requests"]["Row"];
+export type InsuranceQuote = Database["public"]["Tables"]["insurance_quotes"]["Row"];
+
 export type UserRole = "super_admin" | "admin" | "agent" | "client";
 
 export type DemandeStatus =
@@ -147,6 +166,8 @@ export interface Demande {
   current_step: number | null;
   current_step_label: string | null;
   categorie_dossier: CategorieDossierSlug | null;
+  // Ajouté P1c point 2 : présente en base, absente de ce type depuis sa création.
+  client_record_id: string | null;
 }
 
 export interface DemandeAvecDocuments extends Demande {
@@ -176,16 +197,12 @@ export interface RendezVous {
   created_at: string;
 }
 
-export interface Contact {
-  id: string;
-  nom: string;
-  email: string;
-  telephone: string | null;
-  sujet: string;
-  message: string;
-  traite: boolean;
-  created_at: string;
-}
+// P1c point 2 : dérivé du type généré plutôt que maintenu à la main — l'ancienne
+// version (8 champs) datait d'avant l'ajout de reference/status/ip/user_agent/
+// source/processed_at/processed_by/notes_internes/updated_at et n'était
+// importée nulle part (le vrai consommateur, ContactsManager.tsx, définit son
+// propre type local `ContactRow`).
+export type Contact = Database["public"]["Tables"]["contacts"]["Row"];
 
 // ---- Module RH / Paie (migration 022) -----------------------------------
 
