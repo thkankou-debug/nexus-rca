@@ -33,6 +33,20 @@
   --brand-hover: 234 88 12;          /* orange-600 */
   --brand-subtle: 255 237 213;       /* orange-100 */
 
+  /* Focus clavier — distinct de --brand : l'accent orange reste réservé à
+     une seule action par écran (A1), l'anneau de focus ne doit pas compter
+     comme cet accent. */
+  --focus: 59 99 255;                /* nexus-blue-500 */
+
+  /* Statuts — six familles, jamais quinze couleurs (A1). Un point coloré
+     + libellé sur fond neutre, jamais une pastille pleine. */
+  --status-neutral: 100 116 139;     /* slate-500 — nouvelle demande, qualification */
+  --status-waiting: 245 158 11;      /* amber-500 — attente côté client */
+  --status-progress: 59 130 246;     /* blue-500 — en cours côté agence */
+  --status-success: 16 185 129;      /* emerald-500 — devis accepté, terminé */
+  --status-failure: 239 68 68;       /* red-500 — refusé, annulé */
+  --status-inert: 148 163 184;       /* slate-400 — archivé, plus washed-out que neutral */
+
   /* Effets */
   --grain-opacity: 0.08;
   --grain-blend: overlay;
@@ -55,6 +69,15 @@
   --brand: 251 146 60;               /* orange-400 — plus lumineux sur sombre */
   --brand-hover: 249 115 22;
   --brand-subtle: 67 20 7;
+
+  --focus: 96 138 255;               /* nexus-blue-400 — plus lumineux sur sombre */
+
+  --status-neutral: 148 163 184;     /* slate-400 */
+  --status-waiting: 251 191 36;      /* amber-400 */
+  --status-progress: 96 165 250;     /* blue-400 */
+  --status-success: 52 211 153;      /* emerald-400 */
+  --status-failure: 248 113 113;     /* red-400 */
+  --status-inert: 100 116 139;       /* slate-500 — plus washed-out que neutral sur fond sombre */
 
   --grain-opacity: 0.05;
   --grain-blend: soft-light;
