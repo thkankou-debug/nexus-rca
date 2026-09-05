@@ -104,18 +104,20 @@ Le RÉCAP indique l'URL de prévisualisation pour que Thierry vérifie en ligne.
 |---|---|---|---|---|
 | P0 | Audit du dépôt | ✅ terminée | — | 04/09 |
 | P0.5 | Baseline schéma + RLS | ✅ terminée | — | 05/09 |
-| P1a | Correctif de sécurité immédiat | ✅ terminée | v3/p1b-durcissement | 05/09 |
-| P1a-bis | Compléter le rendu de P1a | ✅ terminée | v3/p1b-durcissement | 05/09 |
-| P1b | Durcissement sécurité | ✅ terminée | v3/p1b-durcissement | 05/09 |
-| P1c | Outillage et dette technique | ✅ terminée | v3/p1c-outillage | 05/09 |
+| P1a | Correctif de sécurité immédiat | ⚠️ partielle — verdict `profiles` manquant | — | 05/09 |
+| P1a-bis | Compléter le rendu de P1a | ⬜ à faire | | |
+| P1b | Durcissement sécurité | ⬜ GO donné | | |
+| P1c | Outillage et dette technique | ⬜ | | |
 | A1 | Tokens et fondations visuelles | ✅ terminée | v3/a1-tokens | 05/09 |
-| A2 | Design system | ⬜ *parallélisable* | | |
+| A2 | Design system | ✅ terminée | v3/a2-design-system | 05/09 |
 | P2 | RBAC 9 rôles | ⬜ | | |
+| C0 | Audit CRM et schéma cible de la relation client | ⬜ | | |
 | P3 | Extension du schéma métier | ⬜ | | |
 | A3 | Shell d'administration | ⬜ | | |
 | A4 | Tableau de bord | ⬜ | | |
-| A5 | Module Dossiers | ⬜ | | |
-| A6 | Clients · RDV · Communications · Notifications | ⬜ | | |
+| A5-0 | Audit CRM et consolidation d'identité | ⬜ | | |
+| A5 | CRM — Dossiers et pipeline | ⬜ | | |
+| A6 | CRM — Clients 360, prospects, RDV, communications, tâches | ⬜ | | |
 | A7 | RH rhabillé | ⬜ | | |
 | P6-0 | Convergence des colonnes `payments` | ⬜ | | |
 | P6 | Finance | ⬜ | | |
@@ -173,6 +175,7 @@ Volumes réels : 19 demandes, 20 profils, 9 liens de paiement, 3 paiements, 4 re
 | D4 | `framer-motion` : interdit par CLAUDE.md, utilisé dans 14 fichiers | P1c | Assumer, mettre à jour CLAUDE.md, l'interdire dans l'administration |
 | D5 | `pdf-lib` ou `jspdf` ? | P6 | `pdf-lib` (Unicode et accents), migration des 5 fichiers `jspdf` en entrée de P6 |
 | D6 | Quelles valeurs de `payment_status` font foi ? L'enum en compte 11, mélangeant deux vocabulaires (voir P6-0 §1) | **P6-0** | Choisir un jeu canonique de 5 à 6 valeurs anglaises, cohérent avec D1 |
+| D7 | **Quelle table est l'entité « personne » canonique ?** Cinq tables décrivent aujourd'hui un être humain : `profiles`, `clients`, `contacts`, `contact_demandes`, `appointment_requests` — plus les champs client dénormalisés dans `demandes`. Une fiche à 360° est impossible tant que ce n'est pas tranché | **C0, et tout le CRM** | `clients` = personne (prospect ou client, avec ou sans compte) ; `profiles` = compte d'authentification, relié par `clients.profile_id` ; tout le reste pointe sur `clients.id`. Voir C0 |
 
 ### Règle de nomenclature issue de D1
 
@@ -377,6 +380,58 @@ Tables `role_permissions` et `user_permissions` · migration du contenu de la ma
 
 ---
 
+## C0 · Audit CRM et schéma cible de la relation client
+**Préalable** : P1c. **Bloque P3.** Lecture seule, aucune écriture hors rapport.
+
+### Pourquoi cette phase existe
+
+Le CRM natif validé le 5 septembre n'est pas un module nouveau : environ 85 % de son périmètre est déjà couvert par les phases P3, A5, A6, P6 et l'`audit_log`. **Le risque n'est pas de manquer de fonctionnalités, c'est de construire « CRM & Dossiers » à côté de l'existant** et de recréer la duplication qu'on passe la V3 à supprimer.
+
+Un seul point est réellement nouveau et réellement bloquant : **il n'existe pas d'entité « personne » canonique.**
+
+Cinq tables décrivent aujourd'hui un être humain — `profiles` (comptes), `clients` (fiches), `contacts` (formulaire de contact), `contact_demandes` (contact pro), `appointment_requests` (prise de rendez-vous) — auxquelles s'ajoutent les champs client dénormalisés portés directement par `demandes`, qui possède en plus **deux** clés étrangères vers deux notions de client : `client_id` et `client_record_id`. Trois façons de savoir qui est le client d'un dossier.
+
+Une fiche à 360° est mathématiquement impossible dans cet état : selon la table interrogée, la même personne apparaît trois fois, sans lien entre ses dossiers, ses rendez-vous et ses paiements. **C'est la décision D7, et elle commande tout le CRM.**
+
+### Travaux — rapport `docs/AUDIT_CRM.md`
+
+**1. Inventaire des entités « personne »**
+Pour chacune des cinq tables : nombre de lignes, colonnes d'identité, colonnes de contact, qui l'écrit (formulaire public, staff, trigger), qui la lit. Combien de personnes physiques distinctes se cachent derrière l'ensemble, après normalisation des e-mails et des téléphones ?
+
+**2. Cartographie des relations**
+Graphe complet : client ↔ demande ↔ rendez-vous ↔ message ↔ note ↔ document ↔ paiement ↔ devis. Pour chaque lien : par quelle colonne, avec quelle intégrité (clé étrangère réelle ou simple correspondance d'e-mail), et combien de lignes sont orphelines.
+
+**3. Doublons de colonnes**
+Les champs client dénormalisés de `demandes` face à `client_id` et `client_record_id` : lesquels sont renseignés, lesquels divergent, lequel le code lit réellement. Même exercice sur `payment_links` (`client_nom`, `client_email` face à `client_id`).
+
+**4. Ce qui est cassé, vide ou simulé**
+Les tables à 0 ligne du parcours dossier (`demande_messages`, `demande_notes`, `demande_status_history`, `demande_documents_requests`) : pour chacune, **diagnostic de cause** — pas d'interface ? insertion cassée ? mauvaise table écrite ? RLS bloquante ? jamais raccordée ? C'est la décision D2 appliquée, et le diagnostic conditionne A5.
+
+**5. Schéma cible proposé**
+Sur la base recommandée en D7 :
+- `clients` devient l'entité personne unique — prospect **ou** client, avec **ou sans** compte. Un prospect est un client sans dossier, pas une table séparée.
+- `profiles` reste l'identité d'authentification, reliée par `clients.profile_id` (déjà présent).
+- `contacts`, `contact_demandes`, `appointment_requests` restent les **canaux d'entrée** : elles conservent leur rôle de boîte de réception, et un rattachement crée ou retrouve un `clients`. Elles ne sont ni fusionnées ni supprimées.
+- `demandes.client_record_id` (déjà présent, absent de `types/index.ts`) devient le lien canonique dossier → personne. Les champs dénormalisés sont conservés comme trace de la saisie d'origine, jamais lus comme source.
+- Aucune table `dossiers` n'est créée : **`demandes` est le dossier**, et la « conversion demande → dossier » est un changement d'étape dans la machine à états, pas un changement de table.
+
+**6. Stratégie de dédoublonnage**
+Règle de rapprochement (e-mail normalisé, téléphone au format international), seuil de correspondance, et surtout : **une fusion est toujours proposée à un humain, jamais automatique.** Prévoir la trace de fusion (qui, quand, quelles fiches) et la réversibilité tant que rien n'est supprimé.
+
+**7. Plan de migration non destructif**
+Ordre des backfills, ce qui est conservé, fusionné, migré, marqué obsolète. Aucune suppression.
+
+**8. Parcours et pages du CRM**
+Ce qui existe déjà, ce qui est à construire, et dans quelle phase (A5, A6, P6) — pas de module parallèle.
+
+**STOP.** Rapport présenté à Thierry, décision D7 confirmée ou corrigée, GO avant P3.
+
+### Ce que C0 ne fait pas
+
+Aucune écriture, aucune migration, aucune fusion. C'est un audit et une proposition de schéma. Les migrations correspondantes sont exécutées en P3.
+
+---
+
 ## P3 · Extension du schéma métier
 **Préalable** : P2.
 
@@ -514,8 +569,8 @@ Vide : « Aucun dossier ne demande d'action aujourd'hui. » — pas quatre zéro
 
 ---
 
-## A5 · Module Dossiers
-**Préalable** : A4, et la décision n°2.
+## A5 · CRM & Dossiers — noyau
+**Préalable** : A4, C0, et la décision D2.
 
 Liste avec vues enregistrées · vue Kanban sur la machine à états · fiche détaillée à onglets. **Sur `demandes`, jamais sur une nouvelle table.**
 
@@ -558,10 +613,22 @@ Les notes internes portent un repère visuel permanent : la protection RLS exist
 
 ---
 
-## A6 · Clients · Rendez-vous · Communications · Notifications
-**Préalable** : A5, et la décision n°3.
+## A6 · CRM — fiche client 360°, entrées, rendez-vous, communications
+**Préalable** : A5, C0, et la décision D3.
 
-Quatre modules sur le gabarit unique. `rendez_vous` retirée du code, non supprimée de la base.
+**1. Fiche client 360°** — la page qui donne son sens au CRM. Sur `clients` comme entité canonique : identité et coordonnées · origine du contact · services demandés · dossiers associés · rendez-vous · communications · documents · devis, factures, paiements et solde restant · chronologie complète. Onglets, pas une page fleuve.
+
+**2. Boîte de réception des demandes entrantes** — `contacts`, `contact_demandes`, `appointment_requests` et les demandes du site public convergent dans une file unique : qualification, priorité, source, attribution à un agent, rattachement ou création d'une fiche client, puis passage à l'étape suivante de la machine à états. **La « conversion en dossier » est un changement d'étape, pas un changement de table.**
+
+**3. Dédoublonnage** — détection au rattachement (e-mail normalisé, téléphone international), fusion **toujours proposée à un humain**, jamais automatique, tracée dans `audit_log`, sans suppression de la fiche absorbée.
+
+**4. Rendez-vous** — sur `appointments`, reliés au client, au dossier et à l'agent. Calendrier, confirmations, rappels, statuts, historique. `rendez_vous` : inventaire de ses données et de ses consommateurs, migration des données utiles, écritures bloquées après bascule, **suppression seulement sur autorisation explicite de Thierry** (D3) — donc pas en V3.
+
+**5. Communications et notes** — `demande_messages` (partageable avec le client) et `demande_notes` (strictement interne) rendues opérationnelles selon le diagnostic de C0 : auteur, horodatage, permissions, journalisation. Repère visuel permanent sur les notes internes. Pièces jointes. Architecture prête pour e-mail, SMS et WhatsApp via P11, sans dépendance dure à un fournisseur.
+
+**6. Notifications** — module sur `notifications`.
+
+**Performance CRM** — demandes reçues, dossiers actifs, délais moyens, dossiers en retard, revenus par service, performance par agent : chacun soumis à la règle du chiffre honnête (§I.6). Le **taux de conversion** exige d'abord une définition écrite du dénominateur et une colonne `source` fiable ; sans elles, il ne s'affiche pas. La **satisfaction client** n'a aucune source et n'est pas construite en V3.
 
 ---
 
