@@ -1,3 +1,5 @@
+import type { Database } from "./database";
+
 export type UserRole =
   | "super_admin"
   | "admin"
@@ -51,6 +53,9 @@ export interface Profile {
   notes_internes: string | null;
   // Colonne ajoutée par migration 032
   specialites: string[] | null;
+  // Colonnes ajoutées par migration 047 (P3)
+  service_id: string | null;
+  availability_status: "disponible" | "occupe" | "absent";
 }
 
 export type CategorieDossierSlug =
@@ -157,6 +162,16 @@ export interface Demande {
   current_step: number | null;
   current_step_label: string | null;
   categorie_dossier: CategorieDossierSlug | null;
+  // Absente de cette interface alors que la colonne existe en DB depuis
+  // longtemps (bug déjà signalé dans CLAUDE.md) — corrigée ici, à l'occasion
+  // de l'audit C0 qui a établi qu'elle n'est peuplée sur aucun des 16
+  // dossiers réels (voir docs/AUDIT_CRM.md §3).
+  client_record_id: string | null;
+  // Colonnes ajoutées par migration 047 (P3)
+  deadline: string | null;
+  service_id: string | null;
+  amount_estimated: number | null;
+  archived_at: string | null;
 }
 
 export interface DemandeAvecDocuments extends Demande {
@@ -520,6 +535,33 @@ export interface PerformanceReview {
 }
 
 // Phase E — Settings RH (migration 028)
+
+// ─── P3 — Extension du schéma métier (migrations 044-048) ──────────────────
+// Dérivés du type Database généré (jamais retapés à la main — voir CLAUDE.md,
+// bug déjà résolu "Property 'poste' does not exist").
+export type ServiceCatalogue = Database["public"]["Tables"]["services"]["Row"];
+export type DocumentRequis = Database["public"]["Tables"]["documents_requis"]["Row"];
+export type DossierEtape = Database["public"]["Tables"]["dossier_etapes"]["Row"];
+export type DossierPartage = Database["public"]["Tables"]["dossier_partages"]["Row"];
+export type Tache = Database["public"]["Tables"]["taches"]["Row"];
+export type AffectationHist = Database["public"]["Tables"]["affectations_hist"]["Row"];
+export type Devis = Database["public"]["Tables"]["devis"]["Row"];
+export type DevisLigne = Database["public"]["Tables"]["devis_lignes"]["Row"];
+export type Facture = Database["public"]["Tables"]["factures"]["Row"];
+export type FactureLigne = Database["public"]["Tables"]["facture_lignes"]["Row"];
+export type Echeancier = Database["public"]["Tables"]["echeanciers"]["Row"];
+export type CategorieCompta = Database["public"]["Tables"]["categories_compta"]["Row"];
+export type CaisseSession = Database["public"]["Tables"]["caisse_sessions"]["Row"];
+export type Commission = Database["public"]["Tables"]["commissions"]["Row"];
+export type ContenuSite = Database["public"]["Tables"]["contenus_site"]["Row"];
+export type Faq = Database["public"]["Tables"]["faq"]["Row"];
+export type Partenaire = Database["public"]["Tables"]["partenaires"]["Row"];
+export type Temoignage = Database["public"]["Tables"]["temoignages"]["Row"];
+export type PaysDestination = Database["public"]["Tables"]["pays_destinations"]["Row"];
+export type Bureau = Database["public"]["Tables"]["bureaux"]["Row"];
+export type NotificationPrefs = Database["public"]["Tables"]["notification_prefs"]["Row"];
+export type AgencySettings = Database["public"]["Tables"]["agency_settings"]["Row"];
+export type AuditLogEntry = Database["public"]["Tables"]["audit_log"]["Row"];
 export type RhSettingCategory =
   | "general"
   | "cotisations"
