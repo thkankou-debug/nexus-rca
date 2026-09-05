@@ -184,9 +184,11 @@ nexus-rca/
 │   ├── supabase/
 │   └── utils.ts
 ├── types/index.ts
-├── supabase/migrations/ (001 → 017)
+├── supabase/migrations/ (018 → 040 — voir note ci-dessous)
 └── public/ (manifest.json, sw.js, logo)
 ```
+
+> ⚠️ **Numérotation réelle des migrations** : les fichiers versionnés vont de 018 à 040. Les migrations 001-017 n'existent ni sur disque ni dans l'historique Git (elles ont été appliquées directement en base à un moment donné, sans fichier `.sql` committé). Voir `docs/AUDIT_V3.md` §3.2 et `docs/RLS_ETAT_REEL.md`. **Règle permanente : toute migration appliquée en base (via MCP, dashboard ou CLI) est committée en fichier `.sql` dans le même mouvement — c'est la pratique inverse qui a produit ce trou.**
 
 ---
 
@@ -276,7 +278,7 @@ Booking client 4 étapes, affectation auto agent, 8 statuts, email Resend.
 1. **WhatsApp Twilio** — notifications auto RDV/paiements
 2. **Stripe activation** — cartes bancaires internationales
 3. **Messagerie interne** — chat agent ↔ client
-4. **Multi-langue FR/EN** — pour diaspora
+4. ~~Multi-langue FR/EN~~ — **déjà livré** (`next-intl`, `i18n.ts`, `messages/fr.json` + `messages/en.json`, toggle dans `Navbar`/`Footer`, admin `/dashboard/super-admin/i18n`). Cette ligne était obsolète depuis un moment ; voir `docs/AUDIT_V3.md` §1.3.
 5. **Cron rapports mensuels** — PDF auto le 1er du mois
 6. **Search global** — recherche transverse
 7. **Notifications cloche** — in-app
@@ -296,7 +298,7 @@ Si tu touches à 5 fichiers, **liste-les explicitement** avant de coder.
 Les titres et textes UI sont des choix produit. **Ne les modifie JAMAIS** sans demande explicite de Thierry.
 
 ### ❌ Ajout d'animations/effets non demandés
-Pas de framer-motion, pas de transitions complexes. Le site est sobre et premium.
+**Position tranchée par Thierry (5 septembre 2026)** : `framer-motion` est **assumé** sur le site public — il est déjà utilisé dans 14 fichiers (transitions de page, micro-interactions) et le retirer coûterait cher pour rien. En revanche il est **interdit dans l'espace d'administration** (`app/dashboard/**`) : transitions CSS de 120-150 ms sur les changements d'état déclenchés par l'utilisateur, rien d'autre, `prefers-reduced-motion` respecté. Toujours interdit ailleurs : pas de nouvelle animation d'entrée de page, pas d'effet décoratif au survol.
 
 ### ❌ Création d'une nouvelle palette
 Bleu marine + orange. Point.
