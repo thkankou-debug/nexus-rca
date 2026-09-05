@@ -119,7 +119,7 @@ se branche depuis `v3/integration-v3`, pas depuis `main`.
 | C0 | Audit CRM et schéma cible de la relation client | ✅ terminée — D7 confirmée par Thierry | v3/c0-audit-crm | 05/09 |
 | P3 | Extension du schéma métier | ✅ terminée — voir docs/DETTE.md | v3/p3-schema-metier | 05/09 |
 | A3 | Shell d'administration | ✅ terminée — démo isolée, voir docs/DETTE.md | v3/integration-v3 | 05/09 |
-| A4 | Tableau de bord | ⬜ | | |
+| A4 | Tableau de bord | ✅ terminée — démo isolée, voir docs/DETTE.md | v3/integration-v3 | 05/09 |
 | A5-0 | Audit CRM et consolidation d'identité | ⬜ | | |
 | A5 | CRM — Dossiers et pipeline | ⬜ | | |
 | A6 | CRM — Clients 360, prospects, RDV, communications, tâches | ⬜ | | |

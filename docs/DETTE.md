@@ -94,6 +94,31 @@ tête de `lib/admin-nav.ts`. Sans conséquence aujourd'hui (seul
 `tkankou@gmail.com`, super_admin, contourne toute vérification), mais à
 vérifier quand de vrais comptes `dg`/`daf`/`chef_service`/etc. existeront.
 
+---
+
+## A4 — Tableau de bord (05/09/2026)
+
+**1. Choix « démonstration isolée » pris par défaut, pas confirmé explicitement.**
+La présentation d'A4 posait explicitement deux lectures (démo isolée vs
+bascule d'une vraie page) et demandait laquelle. Le GO reçu ne précisait
+pas — construction faite en lecture 1 (démo isolée), par cohérence avec le
+choix explicite de Thierry sur la même question posée pour A3, et parce
+que c'est l'option sans risque. **À confirmer** : si la lecture 2 était
+voulue, cette phase est à refaire sur une vraie page.
+
+**2. Alerte « documents rejetés sans relance » retirée — le concept n'existe pas dans le schéma.**
+Aucune colonne de validation sur `demande_documents`, et
+`demande_documents_requests.statut` n'admet que `('en_attente', 'fourni',
+'annule')` par contrainte CHECK — pas d'état "rejeté". **À trancher** si un
+jour un vrai flux de rejet de document est voulu : ajouter la colonne/l'état
+manquant est un travail de schéma, pas de tableau de bord.
+
+**3. Seuils d'alerte choisis sans consigne précise de la feuille de route.**
+"Paiements en attente depuis plus de N jours" (N=3) et "dossiers sans agent
+depuis 48h" (le second est donné par la feuille de route, le premier non).
+**À ajuster** avec Thierry si 3 jours ne correspond pas à la réalité
+opérationnelle.
+
 **3. `StatusBadge` du tableau Dossiers utilise une teinte unique (`progress`) pour tous les statuts.**
 Simplification de la démo — pas de mappage statut → teinte comme dans
 `DemandesManager.tsx`/`StatCard.tsx`. **À corriger** si cette table devient
