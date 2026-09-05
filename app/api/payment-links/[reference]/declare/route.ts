@@ -1,12 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { createNotificationsForRoles } from "@/lib/notifications";
 import { Resend } from "resend";
+import { rateLimitOrNull } from "@/lib/rate-limit";
 
 // ============================================================================
 // API : POST /api/payment-links/[reference]/declare
 // VERSION DURCIE - SESSION 20B-FIX
+// Migration 033 : passe en clé service_role — le client qui déclare un
+// paiement n'est pas forcément authentifié, et la policy RLS UPDATE de
+// payment_links est désormais réservée au staff (voir 033_hotfix_securite.sql).
+// Toute la validation métier ci-dessous (méthode valide, n° transaction,
+// expiration, statut) reste inchangée et s'applique avant toute écriture.
 // ============================================================================
+
+function getAdminClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) throw new Error("Supabase env vars manquantes");
+  return createSupabaseClient(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
 
 const VALID_METHODS = ["orange_money", "mtn_money", "express_union", "virement", "especes", "stripe_card"];
 
@@ -39,8 +54,11 @@ export async function POST(
 ) {
   console.log("===== [PAY-DECLARE] START =====", params.reference);
 
+  const limited = await rateLimitOrNull(request, "payment-links-declare");
+  if (limited) return limited;
+
   try {
-    const supabase = createClient();
+    const supabase = getAdminClient();
     const reference = params.reference;
 
     const { data: paymentLink, error: fetchError } = await supabase
