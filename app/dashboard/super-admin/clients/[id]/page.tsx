@@ -13,8 +13,9 @@ import {
   ArrowRight,
   CheckCircle2,
   Clock,
-  Info,
   Edit3,
+  CalendarCheck,
+  MessageCircle,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
@@ -164,30 +165,62 @@ export default async function ClientDetailPage({
   if (!clientData) notFound();
   const client = clientData as Client;
 
-  // Récupérer les paiements liés (par email ou téléphone)
-  let paymentsData: Payment[] = [];
-  const orFilters: string[] = [];
-  if (client.email) orFilters.push(`client_email.eq.${client.email}`);
-  if (client.telephone) orFilters.push(`client_telephone.eq.${client.telephone}`);
+  // A6 lot 1 : liaison directe par client_record_id (P3) — remplace le
+  // rapprochement par email/téléphone. "Une liaison directe par ID arrivera
+  // dans la prochaine mise à jour" (commentaire laissé dans ce fichier avant
+  // A6) : c'est fait.
+  const { data: paymentsRows } = await supabase
+    .from("payments")
+    .select("*")
+    .eq("client_record_id", client.id)
+    .order("created_at", { ascending: false });
+  const paymentsData = (paymentsRows || []) as Payment[];
 
-  if (orFilters.length > 0) {
+  const { data: demandesRows } = await supabase
+    .from("demandes")
+    .select("*")
+    .eq("client_record_id", client.id)
+    .order("created_at", { ascending: false });
+  const demandesData = (demandesRows || []) as Demande[];
+
+  // Rendez-vous : appointments.client_id référence profiles.id, pas
+  // clients.id — nécessite client.profile_id (peuplé par le trigger P3
+  // uniquement pour les clients ayant un compte).
+  let rdvData: Array<{
+    id: string;
+    reference: string | null;
+    rdv_date: string;
+    rdv_heure: string;
+    statut: string;
+    service_type: string | null;
+  }> = [];
+  if (client.profile_id) {
     const { data } = await supabase
-      .from("payments")
-      .select("*")
-      .or(orFilters.join(","))
-      .order("created_at", { ascending: false });
-    paymentsData = (data || []) as Payment[];
+      .from("appointments")
+      .select("id, reference, rdv_date, rdv_heure, statut, service_type")
+      .eq("client_id", client.profile_id)
+      .order("rdv_date", { ascending: false });
+    rdvData = data || [];
   }
 
-  // Récupérer les demandes liées (par email)
-  let demandesData: Demande[] = [];
-  if (client.email) {
+  // Communications récentes : messages des dossiers du client, tous
+  // regroupés (demande_messages est par dossier, pas par client).
+  const demandeIds = demandesData.map((d) => d.id);
+  let messagesData: Array<{
+    id: string;
+    demande_id: string;
+    author_name: string;
+    content: string;
+    created_at: string;
+  }> = [];
+  if (demandeIds.length > 0) {
     const { data } = await supabase
-      .from("demandes")
-      .select("*")
-      .eq("email", client.email)
-      .order("created_at", { ascending: false });
-    demandesData = (data || []) as Demande[];
+      .from("demande_messages")
+      .select("id, demande_id, author_name, content, created_at")
+      .in("demande_id", demandeIds)
+      .order("created_at", { ascending: false })
+      .limit(10);
+    messagesData = data || [];
   }
 
   const totalFacture = paymentsData.reduce(
@@ -312,19 +345,6 @@ export default async function ClientDetailPage({
           )}
         </div>
       </div>
-
-      {/* INFO LIAISON */}
-      {(client.email || client.telephone) && (
-        <div className="mb-6 flex items-start gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4">
-          <Info className="h-5 w-5 shrink-0 text-blue-600" />
-          <div className="text-sm text-blue-900">
-            <strong>Liaison automatique :</strong> les paiements et dossiers
-            ci-dessous sont identifiés en cherchant l&apos;email ou le téléphone du
-            client dans les enregistrements existants. Une liaison directe par
-            ID arrivera dans la prochaine mise à jour.
-          </div>
-        </div>
-      )}
 
       {/* STATS */}
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -495,6 +515,111 @@ export default async function ClientDetailPage({
                   </p>
                 </div>
                 <ArrowRight className="h-4 w-4 text-slate-400" />
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* RENDEZ-VOUS */}
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="flex items-center justify-between border-b border-slate-200 p-5">
+          <div className="flex items-center gap-2">
+            <CalendarCheck className="h-5 w-5 text-nexus-blue-700" />
+            <h2 className="font-display text-lg font-bold text-nexus-blue-950">
+              Rendez-vous
+            </h2>
+            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-600">
+              {rdvData.length}
+            </span>
+          </div>
+          <Link
+            href="/dashboard/super-admin/rdv"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-nexus-blue-700 hover:text-nexus-blue-900"
+          >
+            Voir tous
+            <ArrowRight className="h-3 w-3" />
+          </Link>
+        </div>
+
+        {rdvData.length === 0 ? (
+          <div className="p-8 text-center">
+            <CalendarCheck className="mx-auto h-10 w-10 text-slate-300" />
+            <p className="mt-3 text-sm text-slate-500">
+              Aucun rendez-vous enregistré pour ce client.
+            </p>
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-100">
+            {rdvData.map((rdv) => (
+              <div key={rdv.id} className="flex items-center gap-4 p-4">
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-700">
+                      {rdv.statut}
+                    </span>
+                    {rdv.service_type && (
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                        {rdv.service_type}
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-1 text-sm font-semibold text-nexus-blue-950">
+                    {rdv.reference || `RDV-${rdv.id.slice(0, 8).toUpperCase()}`}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    <Calendar className="mr-1 inline h-3 w-3" />
+                    {formatDate(rdv.rdv_date)} · {rdv.rdv_heure}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* COMMUNICATIONS RECENTES */}
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="flex items-center justify-between border-b border-slate-200 p-5">
+          <div className="flex items-center gap-2">
+            <MessageCircle className="h-5 w-5 text-nexus-blue-700" />
+            <h2 className="font-display text-lg font-bold text-nexus-blue-950">
+              Communications récentes
+            </h2>
+            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-600">
+              {messagesData.length}
+            </span>
+          </div>
+        </div>
+
+        {messagesData.length === 0 ? (
+          <div className="p-8 text-center">
+            <MessageCircle className="mx-auto h-10 w-10 text-slate-300" />
+            <p className="mt-3 text-sm text-slate-500">
+              Aucun message échangé sur les dossiers de ce client.
+            </p>
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-100">
+            {messagesData.map((message) => (
+              <Link
+                key={message.id}
+                href={`/dashboard/super-admin/demandes/${message.demande_id}`}
+                className="flex items-start gap-3 p-4 transition hover:bg-slate-50"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-sm font-semibold text-nexus-blue-950">
+                      {message.author_name}
+                    </p>
+                    <p className="shrink-0 text-xs text-slate-400">
+                      {formatDate(message.created_at)}
+                    </p>
+                  </div>
+                  <p className="mt-1 line-clamp-2 text-sm text-slate-600">
+                    {message.content}
+                  </p>
+                </div>
               </Link>
             ))}
           </div>
