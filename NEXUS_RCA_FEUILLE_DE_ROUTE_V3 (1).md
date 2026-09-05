@@ -107,7 +107,7 @@ Le RÉCAP indique l'URL de prévisualisation pour que Thierry vérifie en ligne.
 | P1a | Correctif de sécurité immédiat | ✅ terminée | v3/p1b-durcissement | 05/09 |
 | P1a-bis | Compléter le rendu de P1a | ✅ terminée | v3/p1b-durcissement | 05/09 |
 | P1b | Durcissement sécurité | ✅ terminée | v3/p1b-durcissement | 05/09 |
-| P1c | Outillage et dette technique | ⬜ | | |
+| P1c | Outillage et dette technique | ✅ terminée | v3/p1c-outillage | 05/09 |
 | A1 | Tokens et fondations visuelles | ⬜ *parallélisable* | | |
 | A2 | Design system | ⬜ *parallélisable* | | |
 | P2 | RBAC 9 rôles | ⬜ | | |
