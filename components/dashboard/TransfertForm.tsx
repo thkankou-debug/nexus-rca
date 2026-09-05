@@ -199,7 +199,7 @@ export function TransfertForm({
         <div className="flex items-center justify-between border-b border-slate-200 p-6">
           <div>
             <h2 className="font-display text-xl font-bold text-nexus-blue-950">
-              Nouveau transfert d'argent
+              Nouveau transfert d&apos;argent
             </h2>
             <p className="mt-1 text-xs text-slate-500">
               Sera envoyé pour validation au super-admin avant exécution.

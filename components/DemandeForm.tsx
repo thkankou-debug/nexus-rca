@@ -123,7 +123,7 @@ export function DemandeForm() {
             Nouvelle demande
           </Button>
           <Button href="/" variant="ghost">
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </Button>
         </div>
       </div>
@@ -222,7 +222,7 @@ export function DemandeForm() {
 
       <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-200 pt-6 sm:flex-row">
         <p className="text-xs text-slate-500">
-          En envoyant ce formulaire, vous acceptez d'être contacté par Nexus RCA.
+          En envoyant ce formulaire, vous acceptez d&apos;être contacté par Nexus RCA.
         </p>
         <Button type="submit" size="lg" disabled={loading}>
           {loading ? (

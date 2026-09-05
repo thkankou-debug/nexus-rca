@@ -134,7 +134,7 @@ export default async function SuperAdminRdvPage({
             Rendez-vous
           </h1>
           <p className="mt-1 text-sm text-slate-600">
-            Tous les rendez-vous de l'agence Nexus.
+            Tous les rendez-vous de l&apos;agence Nexus.
           </p>
         </div>
       </div>

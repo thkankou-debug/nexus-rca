@@ -937,7 +937,7 @@ function ContractGenerator({
               </h3>
               <p className="mt-1 text-sm text-slate-600">
                 CDI · CDD · Stage · Freelance — PDF Nexus RCA pré-rempli avec
-                toutes les données de l'employé.
+                toutes les données de l&apos;employé.
               </p>
             </div>
           </div>

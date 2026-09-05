@@ -220,7 +220,7 @@ export default function NexusConnectPage() {
               href="/login"
               className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
             >
-              J'ai déjà un compte
+              J&apos;ai déjà un compte
             </Link>
           </div>
 
@@ -272,7 +272,7 @@ export default function NexusConnectPage() {
               <div className="mb-7 flex flex-wrap items-end justify-between gap-3">
                 <div>
                   <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
-                    Aperçu de l'espace
+                    Aperçu de l&apos;espace
                   </span>
                   <h2 className="mt-2 font-display text-xl font-bold leading-tight tracking-tight text-white sm:text-2xl">
                     Tout ce qui vous attend dans NEXUS CONNECT.
@@ -399,7 +399,7 @@ export default function NexusConnectPage() {
               .
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-              Depuis votre espace NEXUS CONNECT, accédez à l'historique complet
+              Depuis votre espace NEXUS CONNECT, accédez à l&apos;historique complet
               de vos démarches avec Nexus RCA.
             </p>
           </div>
@@ -523,12 +523,12 @@ export default function NexusConnectPage() {
               </h2>
               <p className="mt-5 text-base leading-relaxed text-slate-300">
                 Chaque opération réalisée chez Nexus est enregistrée avec le nom
-                de l'agent, la date, le montant, le mode de paiement et le
+                de l&apos;agent, la date, le montant, le mode de paiement et le
                 statut.
               </p>
               <p className="mt-3 text-base leading-relaxed text-slate-300">
-                Vous savez toujours où en est votre dossier, qui s'en occupe et
-                ce qu'il vous reste à faire.
+                Vous savez toujours où en est votre dossier, qui s&apos;en occupe et
+                ce qu&apos;il vous reste à faire.
               </p>
             </div>
 
@@ -588,7 +588,7 @@ export default function NexusConnectPage() {
                 Prêt à rejoindre NEXUS CONNECT ?
               </h2>
               <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-white/95 sm:text-lg">
-                Ouvrez votre premier dossier en quelques minutes. C'est simple,
+                Ouvrez votre premier dossier en quelques minutes. C&apos;est simple,
                 rapide et professionnel.
               </p>
 

@@ -58,6 +58,17 @@ const config: Config = {
           hover: "rgb(var(--brand-hover) / <alpha-value>)",
           subtle: "rgb(var(--brand-subtle) / <alpha-value>)",
         },
+        // A1 — anneau de focus clavier, distinct de brand (voir globals.css)
+        focus: "rgb(var(--focus) / <alpha-value>)",
+        // A1 — six familles de statuts (admin), jamais quinze couleurs
+        status: {
+          neutral: "rgb(var(--status-neutral) / <alpha-value>)",
+          waiting: "rgb(var(--status-waiting) / <alpha-value>)",
+          progress: "rgb(var(--status-progress) / <alpha-value>)",
+          success: "rgb(var(--status-success) / <alpha-value>)",
+          failure: "rgb(var(--status-failure) / <alpha-value>)",
+          inert: "rgb(var(--status-inert) / <alpha-value>)",
+        },
       },
       fontFamily: {
         sans: ["var(--font-plus-jakarta)", "system-ui", "sans-serif"],

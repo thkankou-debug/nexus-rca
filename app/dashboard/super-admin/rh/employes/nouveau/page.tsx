@@ -28,7 +28,7 @@ export default async function NouvelEmployePage() {
             Nouvel employé
           </h1>
           <p className="mt-1 text-sm text-slate-600">
-            Créez la fiche d'un nouvel employé Nexus.
+            Créez la fiche d&apos;un nouvel employé Nexus.
           </p>
         </div>
       </div>

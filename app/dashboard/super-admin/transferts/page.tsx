@@ -39,7 +39,7 @@ export default async function SuperAdminTransfertsPage() {
         </div>
         <div>
           <h1 className="font-display text-3xl font-bold text-nexus-blue-950">
-            Transferts d'argent
+            Transferts d&apos;argent
           </h1>
           <p className="mt-1 text-slate-600">
             Validez les transferts initiés par les agents avant exécution.

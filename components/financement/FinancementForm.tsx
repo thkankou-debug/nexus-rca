@@ -373,9 +373,9 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
           Étude de faisabilité — Cofinancement de projet
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-body-lg text-ink-muted">
-          Environ 6 minutes. Vos réponses nous permettent d'évaluer la
+          Environ 6 minutes. Vos réponses nous permettent d&apos;évaluer la
           cohérence de votre projet et de nous prononcer honnêtement sur la
-          possibilité d'un partenariat. Un conseiller Nexus reprend contact
+          possibilité d&apos;un partenariat. Un conseiller Nexus reprend contact
           sous 24 heures ouvrées.
         </p>
 
@@ -396,7 +396,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
             <ArrowRight className="h-5 w-5" />
           </button>
           <p className="text-caption text-ink-muted">
-            Vous préférez parler à quelqu'un d'abord ?{" "}
+            Vous préférez parler à quelqu&apos;un d&apos;abord ?{" "}
             <Link
               href="/rendez-vous?service=financement"
               className="font-semibold text-brand underline-offset-4 hover:underline"
@@ -637,8 +637,8 @@ function Step1({
           <Notice tone="info">
             <strong>Porteur en diaspora.</strong> Un projet porté à distance
             exige un référent ou un opérateur local crédible. Nous le validerons
-            ensemble lors de l'analyse — c'est un point déterminant pour
-            l'acceptation du dossier.
+            ensemble lors de l&apos;analyse — c&apos;est un point déterminant pour
+            l&apos;acceptation du dossier.
           </Notice>
         </div>
       )}
@@ -752,7 +752,7 @@ function Step2({
       <div className="mt-6 space-y-3">
         {showIdeaWarning && (
           <Notice tone="warn">
-            <strong>Idée + montant élevé.</strong> Nexus n'engage pas de
+            <strong>Idée + montant élevé.</strong> Nexus n&apos;engage pas de
             cofinancement sur des idées non structurées au-delà de 50 millions
             FCFA. Une phase préalable de structuration (6 à 12 mois) sera
             proposée avant tout engagement financier.
@@ -762,14 +762,14 @@ function Step2({
           <Notice tone="info">
             <strong>Petit ticket.</strong> Les projets de moins de 5 millions
             FCFA sont étudiés selon des critères allégés. Notre accompagnement
-            reste exigeant sur l'engagement du porteur et la viabilité.
+            reste exigeant sur l&apos;engagement du porteur et la viabilité.
           </Notice>
         )}
         {showEstablishedActivity && (
           <Notice tone="info">
             <strong>Activité établie.</strong> Pour les projets en
             développement, les états financiers et la situation des dettes
-            seront déterminants. Préparez ces éléments à l'étape suivante.
+            seront déterminants. Préparez ces éléments à l&apos;étape suivante.
           </Notice>
         )}
       </div>
@@ -882,7 +882,7 @@ function Step3({
         {showLowApportFlag && (
           <Notice tone="warn">
             <strong>Apport personnel faible.</strong> Sans apport significatif,
-            l'engagement du porteur est jugé insuffisant. Ce point sera étudié
+            l&apos;engagement du porteur est jugé insuffisant. Ce point sera étudié
             par un conseiller senior — il peut être bloquant pour un
             cofinancement classique.
           </Notice>
@@ -898,9 +898,9 @@ function Step3({
         {showPartialEngagement && (
           <Notice tone="warn">
             <strong>Engagement non défini.</strong> Pour un projet à ce niveau
-            de financement, Nexus a besoin d'un porteur engagé à temps plein ou
-            à minima d'une équipe opérationnelle dédiée. Précisez ce point lors
-            de l'entretien.
+            de financement, Nexus a besoin d&apos;un porteur engagé à temps plein ou
+            à minima d&apos;une équipe opérationnelle dédiée. Précisez ce point lors
+            de l&apos;entretien.
           </Notice>
         )}
       </div>
@@ -961,7 +961,7 @@ function Step4({
         />
         <p className="-mt-3 text-caption text-ink-muted">
           Un ancrage local crédible est déterminant pour Nexus. Nous
-          n'accompagnons pas de projets à distance sans relais opérationnel
+          n&apos;accompagnons pas de projets à distance sans relais opérationnel
           réel.
         </p>
 
@@ -977,7 +977,7 @@ function Step4({
         {showInformalHint && (
           <Notice tone="info">
             <strong>Personne physique.</strong> Pas de souci à ce stade —
-            l'immatriculation peut faire partie de l'accompagnement. Précisez
+            l&apos;immatriculation peut faire partie de l&apos;accompagnement. Précisez
             simplement votre vision juridique pour la suite.
           </Notice>
         )}
@@ -987,7 +987,7 @@ function Step4({
             Documents déjà disponibles
           </p>
           <p className="mb-3 text-caption text-ink-muted">
-            Cochez ce que vous avez déjà préparé. Pas grave si vous n'avez
+            Cochez ce que vous avez déjà préparé. Pas grave si vous n&apos;avez
             rien — nous vous accompagnons dans la structuration.
           </p>
           <div className="grid gap-2 sm:grid-cols-2">
@@ -1134,7 +1134,7 @@ function Step5({
               <p className="font-display text-headline text-ink">{delai}</p>
               <p className="mt-2 text-caption text-ink-muted">
                 Cette estimation sera affinée par votre conseiller après
-                l'analyse complète.
+                l&apos;analyse complète.
               </p>
             </div>
           )}
@@ -1149,7 +1149,7 @@ function Step5({
             </h3>
           </div>
           <p className="text-body-sm text-ink-muted">
-            Nexus n'octroie pas de prêts. Si votre dossier est retenu, nous
+            Nexus n&apos;octroie pas de prêts. Si votre dossier est retenu, nous
             structurons un partenariat avec apport personnel, accompagnement
             opérationnel et partage des résultats — pas de dette à rembourser
             avec intérêts.
@@ -1396,7 +1396,7 @@ function SuccessScreen({
             onClick={() => router.push("/")}
             className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-line-strong bg-surface-elevated px-6 py-3 text-body-sm font-semibold text-ink transition hover:bg-surface-sunken"
           >
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </button>
         </div>
 

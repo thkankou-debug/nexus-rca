@@ -149,7 +149,7 @@ export function EVisaEligibilityChecker() {
 
       {!dest && (
         <p className="mt-5 text-xs text-slate-500">
-          Liste des destinations couvertes par Nexus RCA. Si la vôtre n'apparaît pas,
+          Liste des destinations couvertes par Nexus RCA. Si la vôtre n&apos;apparaît pas,
           contactez-nous : nous traitons à la demande.
         </p>
       )}

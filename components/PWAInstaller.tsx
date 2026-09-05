@@ -129,7 +129,7 @@ export function PWAInstaller() {
                 Installer Nexus RCA
               </p>
               <p className="text-xs text-slate-600">
-                Accès rapide depuis ton écran d'accueil, plein écran.
+                Accès rapide depuis ton écran d&apos;accueil, plein écran.
               </p>
             </div>
             <button
@@ -165,7 +165,7 @@ export function PWAInstaller() {
                   Installer sur iPhone
                 </p>
                 <p className="text-xs text-slate-600">
-                  Touche le bouton Partager puis "Sur l'écran d'accueil".
+                  Touche le bouton Partager puis &quot;Sur l&apos;écran d&apos;accueil&quot;.
                 </p>
               </div>
               <button
@@ -231,20 +231,20 @@ function IOSInstructionsModal({ onClose }: { onClose: () => void }) {
 
           <Step number={2} title="Fais défiler et touche">
             <p className="text-sm text-slate-600">
-              "Sur l'écran d'accueil"
+              &quot;Sur l&apos;écran d&apos;accueil&quot;
             </p>
             <div className="mt-2 inline-flex items-center gap-2 rounded-lg bg-slate-100 px-3 py-2">
               <span className="text-2xl">➕</span>
               <span className="text-xs font-mono text-slate-700">
-                Sur l'écran d'accueil
+                Sur l&apos;écran d&apos;accueil
               </span>
             </div>
           </Step>
 
           <Step number={3} title="Confirme">
             <p className="text-sm text-slate-600">
-              Touche "Ajouter" en haut à droite. L'icône Nexus apparaît sur ton
-              écran d'accueil.
+              Touche &quot;Ajouter&quot; en haut à droite. L&apos;icône Nexus apparaît sur ton
+              écran d&apos;accueil.
             </p>
           </Step>
         </div>
@@ -254,7 +254,7 @@ function IOSInstructionsModal({ onClose }: { onClose: () => void }) {
           onClick={onClose}
           className="mt-6 w-full rounded-full bg-nexus-blue-950 px-5 py-2.5 text-sm font-semibold text-white hover:bg-nexus-blue-800"
         >
-          J'ai compris
+          J&apos;ai compris
         </button>
       </div>
     </div>

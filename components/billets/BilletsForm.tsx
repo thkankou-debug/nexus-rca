@@ -375,7 +375,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
             <ArrowRight className="h-5 w-5" />
           </button>
           <p className="text-caption text-ink-muted">
-            Vous préférez parler à quelqu'un d'abord ?{" "}
+            Vous préférez parler à quelqu&apos;un d&apos;abord ?{" "}
             <Link
               href="/rendez-vous?service=billets"
               className="font-semibold text-brand underline-offset-4 hover:underline"
@@ -681,7 +681,7 @@ function Step3({
         subtitle="Vous avez choisi « Hôtel uniquement ». Cette étape est sans objet."
       >
         <Notice tone="info">
-          Passez à l'étape suivante pour préciser votre besoin hôtel.
+          Passez à l&apos;étape suivante pour préciser votre besoin hôtel.
         </Notice>
       </StepCard>
     );
@@ -1347,7 +1347,7 @@ function SuccessScreen({
             onClick={() => router.push("/")}
             className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-line-strong bg-surface-elevated px-6 py-3 text-body-sm font-semibold text-ink transition hover:bg-surface-sunken"
           >
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </button>
         </div>
 

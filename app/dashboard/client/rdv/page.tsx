@@ -138,7 +138,7 @@ export default async function ClientRdvPage() {
               Mes rendez-vous
             </h1>
             <p className="mt-1 text-sm text-slate-600">
-              Gérez vos consultations avec l'équipe Nexus.
+              Gérez vos consultations avec l&apos;équipe Nexus.
             </p>
           </div>
         </div>

@@ -319,7 +319,7 @@ export default async function ClientDetailPage({
           <Info className="h-5 w-5 shrink-0 text-blue-600" />
           <div className="text-sm text-blue-900">
             <strong>Liaison automatique :</strong> les paiements et dossiers
-            ci-dessous sont identifiés en cherchant l'email ou le téléphone du
+            ci-dessous sont identifiés en cherchant l&apos;email ou le téléphone du
             client dans les enregistrements existants. Une liaison directe par
             ID arrivera dans la prochaine mise à jour.
           </div>

@@ -631,7 +631,7 @@ export default function PaymentPageClient({ paymentLink, isExpired, token }: Pro
                   disabled={selectedMethodData.disabled}
                   className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-6 py-3.5 text-sm font-semibold text-white shadow-lg hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  J'ai effectué le paiement
+                  J&apos;ai effectué le paiement
                   <ChevronRight className="h-4 w-4" />
                 </button>
               </>

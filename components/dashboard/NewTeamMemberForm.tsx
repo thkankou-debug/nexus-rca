@@ -171,7 +171,7 @@ export default function NewTeamMemberPage() {
                     Mot de passe temporaire à transmettre
                   </p>
                   <p className="mt-1 text-xs text-amber-800">
-                    Donne ce mot de passe à l'employé en personne. Il devra le
+                    Donne ce mot de passe à l&apos;employé en personne. Il devra le
                     changer à sa première connexion.
                   </p>
                   <div className="mt-3 flex items-center gap-2 rounded-lg border border-amber-300 bg-white p-2 font-mono text-sm">
@@ -197,7 +197,7 @@ export default function NewTeamMemberPage() {
               href="/dashboard/super-admin/equipe"
               className="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
             >
-              Retour à l'équipe
+              Retour à l&apos;équipe
             </Link>
             <button
               type="button"
@@ -232,7 +232,7 @@ export default function NewTeamMemberPage() {
         className="inline-flex items-center gap-1 text-sm font-semibold text-slate-600 hover:text-nexus-blue-950"
       >
         <ArrowLeft className="h-4 w-4" />
-        Retour à l'équipe Nexus
+        Retour à l&apos;équipe Nexus
       </Link>
 
       <div className="flex items-center gap-3">
@@ -382,7 +382,7 @@ export default function NewTeamMemberPage() {
                   Envoyer une invitation par email
                 </p>
                 <p className="mt-0.5 text-xs text-slate-600">
-                  L'employé reçoit un email avec un lien pour activer son
+                  L&apos;employé reçoit un email avec un lien pour activer son
                   compte et choisir son mot de passe. Recommandé.
                 </p>
               </div>
@@ -407,8 +407,8 @@ export default function NewTeamMemberPage() {
                   Mot de passe temporaire
                 </p>
                 <p className="mt-0.5 text-xs text-slate-600">
-                  Tu génères un mot de passe à donner en personne à l'employé.
-                  Utile si l'email professionnel n'est pas encore prêt.
+                  Tu génères un mot de passe à donner en personne à l&apos;employé.
+                  Utile si l&apos;email professionnel n&apos;est pas encore prêt.
                 </p>
               </div>
             </label>
@@ -451,7 +451,7 @@ export default function NewTeamMemberPage() {
                     </button>
                   </div>
                   <p className="mt-1 text-xs text-slate-500">
-                    L'employé devra changer ce mot de passe à sa première
+                    L&apos;employé devra changer ce mot de passe à sa première
                     connexion.
                   </p>
                 </Field>
@@ -471,7 +471,7 @@ export default function NewTeamMemberPage() {
               <p className="mt-1 text-xs text-rose-800">
                 Cette personne aura les mêmes pouvoirs que toi : créer/supprimer
                 des comptes, valider tous les transferts, voir toutes les
-                données financières. Ne donne ce rôle qu'aux personnes de
+                données financières. Ne donne ce rôle qu&apos;aux personnes de
                 confiance absolue.
               </p>
             </div>
@@ -499,7 +499,7 @@ export default function NewTeamMemberPage() {
             ) : (
               <>
                 <UserPlus className="h-4 w-4" />
-                Créer l'employé
+                Créer l&apos;employé
               </>
             )}
           </button>

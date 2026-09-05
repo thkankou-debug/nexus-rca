@@ -4291,6 +4291,20 @@ export type Database = {
         | "annule"
         | "incomplet"
         | "en_traitement"
+        | "nouvelle_demande"
+        | "qualification"
+        | "documents_demandes"
+        | "dossier_incomplet"
+        | "etude_faisabilite"
+        | "devis_envoye"
+        | "devis_accepte"
+        | "paiement_attente"
+        | "traitement"
+        | "transmis_partenaire"
+        | "decision_recue"
+        | "termine"
+        | "refuse"
+        | "archive"
       expense_category:
         | "fournitures"
         | "transport"
@@ -4506,6 +4520,20 @@ export const Constants = {
         "annule",
         "incomplet",
         "en_traitement",
+        "nouvelle_demande",
+        "qualification",
+        "documents_demandes",
+        "dossier_incomplet",
+        "etude_faisabilite",
+        "devis_envoye",
+        "devis_accepte",
+        "paiement_attente",
+        "traitement",
+        "transmis_partenaire",
+        "decision_recue",
+        "termine",
+        "refuse",
+        "archive",
       ],
       expense_category: [
         "fournitures",

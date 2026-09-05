@@ -147,7 +147,7 @@ export default async function StatsAgentsPage() {
             Performances des agents
           </h1>
           <p className="mt-1 text-slate-600">
-            Suivi opérationnel et classement de l'équipe.
+            Suivi opérationnel et classement de l&apos;équipe.
           </p>
         </div>
       </div>

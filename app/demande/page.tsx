@@ -139,7 +139,7 @@ export default function DemandePage() {
                 </h3>
                 <p className="text-body-sm text-ink-muted">
                   Plus votre description est précise, plus vite nous pourrons
-                  vous proposer une solution adaptée. N'hésitez pas à détailler
+                  vous proposer une solution adaptée. N&apos;hésitez pas à détailler
                   dates, objectifs et contraintes.
                 </p>
               </div>

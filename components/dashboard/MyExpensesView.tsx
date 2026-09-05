@@ -182,7 +182,7 @@ export function MyExpensesView({
         <AlertTriangle className="h-5 w-5 shrink-0 text-blue-600" />
         <div className="text-sm text-blue-900">
           <strong>À savoir :</strong> Tu peux modifier ou supprimer une dépense
-          uniquement tant qu'elle est <strong>en attente</strong>. Une fois
+          uniquement tant qu&apos;elle est <strong>en attente</strong>. Une fois
           validée ou rejetée par le super-admin, elle est verrouillée.
         </div>
       </div>

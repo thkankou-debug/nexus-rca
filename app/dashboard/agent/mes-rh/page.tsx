@@ -87,7 +87,7 @@ export default async function MesRhPage() {
                 Aucun profil employé associé à votre compte.
               </p>
               <p className="mt-1">
-                Contactez votre administrateur pour qu'il rattache votre compte
+                Contactez votre administrateur pour qu&apos;il rattache votre compte
                 à votre fiche employé.
               </p>
             </div>
