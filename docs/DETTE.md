@@ -98,13 +98,9 @@ vérifier quand de vrais comptes `dg`/`daf`/`chef_service`/etc. existeront.
 
 ## A4 — Tableau de bord (05/09/2026)
 
-**1. Choix « démonstration isolée » pris par défaut, pas confirmé explicitement.**
-La présentation d'A4 posait explicitement deux lectures (démo isolée vs
-bascule d'une vraie page) et demandait laquelle. Le GO reçu ne précisait
-pas — construction faite en lecture 1 (démo isolée), par cohérence avec le
-choix explicite de Thierry sur la même question posée pour A3, et parce
-que c'est l'option sans risque. **À confirmer** : si la lecture 2 était
-voulue, cette phase est à refaire sur une vraie page.
+**1. Choix « démonstration isolée » — confirmé par Thierry le 05/09/2026.**
+~~À confirmer...~~ Lecture 1 (démo isolée) explicitement validée après
+coup. La bascule d'une vraie page reste un chantier A5-A7.
 
 **2. Alerte « documents rejetés sans relance » retirée — le concept n'existe pas dans le schéma.**
 Aucune colonne de validation sur `demande_documents`, et
