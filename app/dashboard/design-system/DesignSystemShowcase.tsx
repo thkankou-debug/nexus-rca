@@ -13,9 +13,11 @@ import {
   CalendarCheck,
   Sparkles,
   Settings,
+  ShieldCheck,
 } from "lucide-react";
 import type { Profile } from "@/types";
 import type { AdminNavGroup } from "@/lib/admin-nav";
+import type { ATraiterCounters, PipelineCount, Aujourdhui, Alerte, ActiviteRecente } from "@/lib/dashboard-blocks";
 import {
   AdminShell,
   AdminToaster,
@@ -164,14 +166,29 @@ interface DemandeRow {
 
 const TERMINAL_STATUTS = ["termine", "refuse", "annule", "archive", "complete"];
 
+/** Copie locale de lib/dashboard-blocks.ts (server-only, non importable ici
+ * sans faire fuiter next/headers dans le bundle client) — même logique. */
+function dernierEvenementLabel(activite: ActiviteRecente[]): string {
+  if (activite.length === 0) return "Aucune activité enregistrée pour l'instant.";
+  return `Rien depuis le ${new Date(activite[0].createdAt).toLocaleDateString("fr-FR")}`;
+}
+
 export function DesignSystemShowcase({
   profile,
   effectiveNav,
   demandes,
+  aTraiter,
+  pipeline,
+  aujourdhui,
+  alertes,
 }: {
   profile: Profile;
   effectiveNav: AdminNavGroup[];
   demandes: DemandeRow[];
+  aTraiter: ATraiterCounters;
+  pipeline: PipelineCount[];
+  aujourdhui: Aujourdhui;
+  alertes: Alerte[];
 }) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [sortKey, setSortKey] = useState("date");
@@ -720,6 +737,104 @@ export function DesignSystemShowcase({
               DashboardShell reste la navigation en production jusqu&apos;à bascule section par
               section (A4-A7).
             </p>
+          </section>
+
+          {/* A4 — TABLEAU DE BORD */}
+          <section id="a4-dashboard" className="scroll-mt-20 space-y-6">
+            <h2 className="font-display text-xl font-bold text-ink">
+              A4 — Tableau de bord
+            </h2>
+            <p className="text-body-sm text-ink-muted">
+              Quatre blocs, chacun sur une requête réelle citée dans{" "}
+              <code className="font-mono text-caption">lib/dashboard-blocks.ts</code>. Aucun bloc
+              financier (décision D1), aucune variation en %, aucun score inventé.
+            </p>
+
+            {/* Bloc 1 : À traiter */}
+            <div>
+              <p className="mb-2 text-body-sm font-medium text-ink">1. À traiter</p>
+              {aTraiter.nouvelles + aTraiter.attenteClient + aTraiter.enTraitement + aTraiter.enRetard === 0 ? (
+                <EmptyState icon={Inbox} title="Aucun dossier ne demande d'action aujourd'hui." />
+              ) : (
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                  <StatCard label="Nouvelles" value={aTraiter.nouvelles} icon={Inbox} href="#" />
+                  <StatCard label="Attente client" value={aTraiter.attenteClient} icon={FileText} href="#" />
+                  <StatCard label="En traitement" value={aTraiter.enTraitement} icon={FolderOpen} href="#" />
+                  <StatCard label="En retard" value={aTraiter.enRetard} icon={CalendarCheck} href="#" />
+                </div>
+              )}
+            </div>
+
+            {/* Bloc 2 : Pipeline */}
+            <div>
+              <p className="mb-2 text-body-sm font-medium text-ink">
+                2. Pipeline — répartition réelle par statut, 0 inclus (l&apos;information utile)
+              </p>
+              <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-5">
+                {pipeline.map((p) => (
+                  <div key={p.statut} className="rounded-sm border border-line bg-surface-elevated p-3">
+                    <p className="text-caption text-ink-subtle">{p.statut}</p>
+                    <p className="font-display text-display-sm text-ink [font-variant-numeric:tabular-nums]">{p.count}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Bloc 3 : Aujourd'hui */}
+            <div className="grid gap-4 lg:grid-cols-2">
+              <div>
+                <p className="mb-2 text-body-sm font-medium text-ink">3. Aujourd&apos;hui — rendez-vous</p>
+                {aujourdhui.rdvDuJour.length === 0 ? (
+                  <EmptyState icon={CalendarCheck} title="Aucun rendez-vous aujourd'hui." />
+                ) : (
+                  <ul className="space-y-2">
+                    {aujourdhui.rdvDuJour.map((r) => (
+                      <li key={r.id} className="rounded-sm border border-line bg-surface-elevated p-3 text-body-sm">
+                        {r.rdv_heure} — {r.client_nom} <StatusBadge tone="progress" label={r.statut} />
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <div>
+                <p className="mb-2 text-body-sm font-medium text-ink">Activité récente</p>
+                {aujourdhui.activiteRecente.length === 0 ? (
+                  <EmptyState icon={FileText} title={dernierEvenementLabel(aujourdhui.activiteRecente)} />
+                ) : (
+                  <div className="rounded-sm border border-line bg-surface-elevated p-4">
+                    <Timeline
+                      items={aujourdhui.activiteRecente.map<TimelineItem>((a) => ({
+                        id: a.id,
+                        label: a.label,
+                        timestamp: new Date(a.createdAt).toLocaleString("fr-FR"),
+                        tone: a.type === "paiement" ? "success" : a.type === "statut" ? "progress" : "neutral",
+                      }))}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Bloc 4 : Alertes */}
+            <div>
+              <p className="mb-2 text-body-sm font-medium text-ink">
+                4. Alertes — 3 faits vérifiables (« documents rejetés » retirée, voir
+                lib/dashboard-blocks.ts : aucune donnée ne peut la produire)
+              </p>
+              {alertes.every((a) => a.count === 0) ? (
+                <EmptyState icon={ShieldCheck} title="Aucune alerte." />
+              ) : (
+                <div className="space-y-2">
+                  {alertes
+                    .filter((a) => a.count > 0)
+                    .map((a) => (
+                      <Alert key={a.key} tone="warning" title={a.label}>
+                        {a.count} dossier{a.count > 1 ? "s" : ""} concerné{a.count > 1 ? "s" : ""}
+                      </Alert>
+                    ))}
+                </div>
+              )}
+            </div>
           </section>
         </div>
       </AdminShell>
