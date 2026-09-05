@@ -15,6 +15,7 @@ import {
   Settings,
 } from "lucide-react";
 import type { Profile } from "@/types";
+import type { AdminNavGroup } from "@/lib/admin-nav";
 import {
   AdminShell,
   AdminToaster,
@@ -149,7 +150,29 @@ const FORM_STEPS: FormStep[] = [
 
 const PAGE_SIZE = 5;
 
-export function DesignSystemShowcase({ profile }: { profile: Profile }) {
+interface DemandeRow {
+  id: string;
+  reference: string | null;
+  nom_complet: string;
+  statut: string;
+  urgence: string;
+  traitement_prioritaire: boolean;
+  deadline: string | null;
+  agent_id: string | null;
+  created_at: string;
+}
+
+const TERMINAL_STATUTS = ["termine", "refuse", "annule", "archive", "complete"];
+
+export function DesignSystemShowcase({
+  profile,
+  effectiveNav,
+  demandes,
+}: {
+  profile: Profile;
+  effectiveNav: AdminNavGroup[];
+  demandes: DemandeRow[];
+}) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [sortKey, setSortKey] = useState("date");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
@@ -168,6 +191,66 @@ export function DesignSystemShowcase({ profile }: { profile: Profile }) {
   const [slideOverOpen, setSlideOverOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmDestructiveOpen, setConfirmDestructiveOpen] = useState(false);
+
+  // A3 — module Dossiers unique, vues enregistrées sur donnees reelles.
+  const [dossierView, setDossierView] = useState("boite-reception");
+
+  const dossierViews = useMemo<(SavedView & { rows: DemandeRow[] })[]>(() => {
+    const now = Date.now();
+    const boiteReception = demandes.filter(
+      (d) => d.statut === "nouvelle_demande" && !d.agent_id
+    );
+    const mesDossiers = demandes.filter((d) => d.agent_id === profile.id);
+    const actifs = demandes.filter((d) => !TERMINAL_STATUTS.includes(d.statut));
+    const urgents = actifs.filter(
+      (d) => d.urgence === "critique" || d.traitement_prioritaire
+    );
+    const enRetard = actifs.filter(
+      (d) => d.deadline && new Date(d.deadline).getTime() < now
+    );
+    const termines = demandes.filter((d) => d.statut === "termine" || d.statut === "complete");
+    const archives = demandes.filter((d) => d.statut === "archive");
+
+    return [
+      { id: "boite-reception", label: "Boîte de réception", count: boiteReception.length, rows: boiteReception },
+      { id: "mes-dossiers", label: "Mes dossiers", count: mesDossiers.length, rows: mesDossiers },
+      { id: "actifs", label: "Actifs", count: actifs.length, rows: actifs },
+      { id: "urgents", label: "Urgents", count: urgents.length, rows: urgents },
+      { id: "en-retard", label: "En retard", count: enRetard.length, rows: enRetard },
+      { id: "termines", label: "Terminés", count: termines.length, rows: termines },
+      { id: "archives", label: "Archivés", count: archives.length, rows: archives },
+    ];
+  }, [demandes, profile.id]);
+
+  const activeDossierRows = dossierViews.find((v) => v.id === dossierView)?.rows ?? [];
+
+  const dossierColumns: DataTableColumn<DemandeRow>[] = [
+    { key: "reference", header: "Référence", render: (r) => r.reference ?? "—" },
+    { key: "nom_complet", header: "Client", render: (r) => r.nom_complet },
+    {
+      key: "statut",
+      header: "Statut",
+      render: (r) => <StatusBadge tone="progress" label={r.statut} />,
+    },
+    {
+      key: "urgence",
+      header: "Urgence",
+      render: (r) => (
+        <PriorityBadge
+          level={
+            r.urgence === "critique"
+              ? "urgent"
+              : r.urgence === "elevee"
+                ? "high"
+                : r.urgence === "faible"
+                  ? "low"
+                  : "normal"
+          }
+        />
+      ),
+    },
+    { key: "created_at", header: "Créé le", align: "right", render: (r) => new Date(r.created_at).toLocaleDateString("fr-FR") },
+  ];
 
   const globalSearchResults = useMemo<GlobalSearchResult[]>(() => {
     if (!globalSearchValue) return [];
@@ -565,6 +648,77 @@ export function DesignSystemShowcase({ profile }: { profile: Profile }) {
               Breadcrumb et PageHeader sont visibles en haut de cette page. Sidebar, Topbar,
               UserMenu, NotificationCenter, GlobalSearch et AdminShell composent la mise en page
               de cette vitrine elle-même — c&apos;est leur démonstration en conditions réelles.
+            </p>
+          </section>
+
+          {/* A3 — SHELL D'ADMINISTRATION */}
+          <section id="a3-shell" className="scroll-mt-20 space-y-6">
+            <h2 className="font-display text-xl font-bold text-ink">
+              A3 — Shell d&apos;administration
+            </h2>
+            <p className="text-body-sm text-ink-muted">
+              Navigation calculée côté serveur à partir des permissions effectives de{" "}
+              <strong>{profile.prenom} {profile.nom}</strong> ({profile.role}) — pas un rôle
+              codé en dur. Un module de vague 2 n&apos;apparaît jamais tant que sa phase backend
+              n&apos;est pas livrée (aucun n&apos;est visible ci-dessous, c&apos;est attendu).
+            </p>
+
+            <div>
+              <p className="mb-2 text-body-sm font-medium text-ink">
+                Menu réel pour cette session (getEffectiveNav)
+              </p>
+              <div className="max-w-xs rounded-sm border border-line bg-surface-elevated p-3">
+                {effectiveNav.length === 0 ? (
+                  <p className="px-3 py-6 text-center text-body-sm text-ink-subtle">
+                    Aucun module de vague 1 autorisé pour ce rôle.
+                  </p>
+                ) : (
+                  effectiveNav.map((group) => (
+                    <SidebarGroup key={group.key} label={group.label}>
+                      {group.modules.map((m) => (
+                        <SidebarItem
+                          key={m.key}
+                          icon={<FolderOpen />}
+                          label={m.label}
+                          href={m.href}
+                        />
+                      ))}
+                    </SidebarGroup>
+                  ))
+                )}
+              </div>
+            </div>
+
+            <div>
+              <p className="mb-2 text-body-sm font-medium text-ink">
+                Module « Dossiers » — vues enregistrées, un seul module (pas « demandes reçues »
+                + « dossiers clients »)
+              </p>
+              <SavedViews
+                views={dossierViews}
+                activeId={dossierView}
+                onChange={setDossierView}
+                className="mb-3"
+              />
+              {activeDossierRows.length === 0 ? (
+                <EmptyState
+                  icon={Inbox}
+                  title="Aucun dossier dans cette vue"
+                  description="Chiffre honnête : une vue vide s'affiche vide, jamais un zéro inventé."
+                />
+              ) : (
+                <DataTable
+                  columns={dossierColumns}
+                  rows={activeDossierRows}
+                  getRowId={(r) => r.id}
+                />
+              )}
+            </div>
+
+            <p className="text-caption text-ink-subtle">
+              Construction isolée (A3) — aucune page réelle ne consomme encore ce mécanisme ;
+              DashboardShell reste la navigation en production jusqu&apos;à bascule section par
+              section (A4-A7).
             </p>
           </section>
         </div>
