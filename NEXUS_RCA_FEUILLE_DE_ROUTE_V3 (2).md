@@ -118,7 +118,7 @@ se branche depuis `v3/integration-v3`, pas depuis `main`.
 | P2 | RBAC 9 rôles | ✅ terminée — voir docs/DETTE.md pour les écarts notés | v3/p2-rbac | 05/09 |
 | C0 | Audit CRM et schéma cible de la relation client | ✅ terminée — D7 confirmée par Thierry | v3/c0-audit-crm | 05/09 |
 | P3 | Extension du schéma métier | ✅ terminée — voir docs/DETTE.md | v3/p3-schema-metier | 05/09 |
-| A3 | Shell d'administration | ⬜ | | |
+| A3 | Shell d'administration | ✅ terminée — démo isolée, voir docs/DETTE.md | v3/integration-v3 | 05/09 |
 | A4 | Tableau de bord | ⬜ | | |
 | A5-0 | Audit CRM et consolidation d'identité | ⬜ | | |
 | A5 | CRM — Dossiers et pipeline | ⬜ | | |

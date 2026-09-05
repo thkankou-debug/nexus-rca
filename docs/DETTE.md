@@ -75,6 +75,30 @@ l'appelle encore. Le trigger DB reste la seule capture pour ces actions.
 **À étendre** progressivement, action par action, au fil des phases qui les
 touchent (P6 pour les paiements/factures, A6 pour les fusions client).
 
+---
+
+## A3 — Shell d'administration (05/09/2026)
+
+**1. Construction isolée, aucune page réelle basculée.**
+Confirmé avec Thierry avant exécution : `lib/admin-nav.ts` et la démo sur
+`/dashboard/design-system` ne remplacent aucune route existante.
+`DashboardShell.tsx` (gelé) reste la navigation réelle. **À faire** : la
+bascule section par section, répartie sur A4-A7.
+
+**2. Libellés de permission de la feuille de route pas tous identiques au catalogue P2.**
+Le tableau A3 utilise des libellés informels (`dossier.read.*`,
+`client.read`, `rdv.read`, `rh.read`) qui ne correspondent pas
+littéralement aux permissions seedées en P2 (`dossier.read.own`,
+`client.read.own`, `rdv.read.own`, `rh.user.read`). Mappage documenté en
+tête de `lib/admin-nav.ts`. Sans conséquence aujourd'hui (seul
+`tkankou@gmail.com`, super_admin, contourne toute vérification), mais à
+vérifier quand de vrais comptes `dg`/`daf`/`chef_service`/etc. existeront.
+
+**3. `StatusBadge` du tableau Dossiers utilise une teinte unique (`progress`) pour tous les statuts.**
+Simplification de la démo — pas de mappage statut → teinte comme dans
+`DemandesManager.tsx`/`StatCard.tsx`. **À corriger** si cette table devient
+un vrai composant réutilisé au-delà de la démonstration.
+
 **2. 20 tables du schéma sans aucune UI.**
 Toutes RLS-protégées et prêtes, mais aucune page ne les consomme encore
 (volontaire — P3 est schéma seul). **À construire** : A5 (`taches`,
