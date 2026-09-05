@@ -20,7 +20,7 @@ Si Thierry te dit "améliore le site", **POSE-LUI DES QUESTIONS PRÉCISES** avan
 
 ### ❌ NE JAMAIS modifier sans demande explicite :
 1. **Le logo Nexus** (taille, position, couleur, fichier)
-2. **Les couleurs principales** : `nexus-blue-950` (#0C1C40) et `nexus-orange-500` (#FF6600)
+2. **Les couleurs principales** : `nexus-blue-950` (#02071f) et `nexus-orange-500` (#f97316) — valeurs corrigées le 5 septembre 2026 (confirmées par Thierry, phase A1) ; `#0C1C40`/`#FF6600` restent utilisées dans `app/layout.tsx` (meta theme-color, PWA, favicon) et les emails/PDF, écart connu et non corrigé pour l'instant
 3. **Les polices** : Syne (titres) et Plus Jakarta Sans (corps)
 4. **Les titres des pages services** (voir liste plus bas)
 5. **La structure de routing** (`app/dashboard/agent/`, `app/dashboard/client/`, etc.)
@@ -84,17 +84,19 @@ Si Thierry te dit "améliore le site", **POSE-LUI DES QUESTIONS PRÉCISES** avan
 
 | Usage | Classe Tailwind | Hex |
 |---|---|---|
-| Fond hero principal | `bg-nexus-blue-950` | #0C1C40 |
+| Fond hero principal | `bg-nexus-blue-950` | #02071f |
 | Dégradé hero | `from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950` | navy |
-| Accent boutons/badges | `bg-nexus-orange-500` | #FF6600 |
+| Accent boutons/badges | `bg-nexus-orange-500` | #f97316 |
 | Texte sur navy | `text-white` ou `text-slate-300` | |
 | Texte sur blanc | `text-nexus-blue-950` | |
 | Hover orange | `hover:bg-nexus-orange-600` | |
 
 **INTERDIT** :
 - Introduire de nouvelles couleurs primaires (pas de bleu clair, pas de rouge, pas de violet)
-- Modifier les valeurs `#0C1C40` ou `#FF6600` dans `tailwind.config.ts`
-- Utiliser des couleurs hex en dur (`bg-[#0C1C40]`) au lieu des classes (`bg-nexus-blue-950`)
+- Modifier les valeurs `#02071f` ou `#f97316` dans `tailwind.config.ts`
+- Utiliser des couleurs hex en dur (`bg-[#02071f]`) au lieu des classes (`bg-nexus-blue-950`)
+
+**Admin (A1, 5 septembre 2026)** : le shell d'administration n'appelle jamais une couleur de marque directement — il consomme la couche de tokens sémantiques déjà en place dans `app/globals.css` (`surface`/`surface-elevated`/`surface-sunken`/`surface-overlay`, `ink`/`ink-muted`/`ink-subtle`/`ink-inverted`, `line`/`line-strong`, `brand`/`brand-hover`/`brand-subtle`, gérée en clair/sombre), plus deux ajouts : `focus` (anneau de focus clavier, distinct de `brand` pour préserver la règle « un seul accent orange par écran ») et `status.{neutral,waiting,progress,success,failure,inert}` (six familles de statuts, jamais quinze couleurs). Ne pas recréer un deuxième système de tokens sous d'autres noms.
 
 ### 🔴 RÈGLE — Polices
 
