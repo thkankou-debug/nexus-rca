@@ -62,3 +62,29 @@ Scope volontairement exclu de P2 (confirmé dans la présentation de phase) :
 ils continuent de fonctionner tels quels, les 4 rôles actuels ne changeant
 pas de sens. **À migrer progressivement**, page par page, au fil des phases
 qui les touchent (A3, A5, A6, P6…).
+
+---
+
+## P3 — Extension du schéma métier (05/09/2026)
+
+**1. `logAudit()` branché uniquement sur le changement de statut de dossier.**
+`app/api/demandes/[id]/status/route.ts` écrit dans `audit_log` ; aucune autre
+route sensible (validation de paiement, changement de rôle, suppression) ne
+l'appelle encore. Le trigger DB reste la seule capture pour ces actions.
+**À étendre** progressivement, action par action, au fil des phases qui les
+touchent (P6 pour les paiements/factures, A6 pour les fusions client).
+
+**2. 20 tables du schéma sans aucune UI.**
+Toutes RLS-protégées et prêtes, mais aucune page ne les consomme encore
+(volontaire — P3 est schéma seul). **À construire** : A5 (`taches`,
+`dossier_etapes`, `affectations_hist`, `dossier_partages`), P6 (`devis*`,
+`factures*`, `echeanciers`, `categories_compta`, `caisse_sessions`,
+`commissions`), P8 (`contenus_site`, `faq`, `partenaires`, `temoignages`,
+`pays_destinations`, `bureaux`, `agency_settings`), P11
+(`notification_prefs`).
+
+**3. Permissions P2 pour des ressources qui n'existaient pas encore au moment de leur seed.**
+`role_permissions` a des lignes pour `devis.*`, `facture.*`, `caisse.*`,
+etc. — posées par anticipation en P2, avant que les tables elles-mêmes
+n'existent. Cohérent maintenant que P3 les a créées, mais aucune page ne
+vérifie encore ces permissions (même raison que le point 2).

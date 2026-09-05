@@ -112,7 +112,7 @@ Le RÉCAP indique l'URL de prévisualisation pour que Thierry vérifie en ligne.
 | A2 | Design system | ✅ terminée | v3/a2-design-system | 05/09 |
 | P2 | RBAC 9 rôles | ✅ terminée — voir docs/DETTE.md pour les écarts notés | v3/p2-rbac | 05/09 |
 | C0 | Audit CRM et schéma cible de la relation client | ✅ terminée — D7 confirmée par Thierry | v3/c0-audit-crm | 05/09 |
-| P3 | Extension du schéma métier | ⬜ | | |
+| P3 | Extension du schéma métier | ✅ terminée — voir docs/DETTE.md | v3/p3-schema-metier | 05/09 |
 | A3 | Shell d'administration | ⬜ | | |
 | A4 | Tableau de bord | ⬜ | | |
 | A5-0 | Audit CRM et consolidation d'identité | ⬜ | | |
