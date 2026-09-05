@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { Resend } from "resend";
+import { rateLimitOrNull } from "@/lib/rate-limit";
 
 // ============================================================================
 // API : POST /api/appointments/send-confirmation
@@ -34,6 +35,9 @@ function formatDateLong(dateStr: string): string {
 
 export async function POST(request: NextRequest) {
   console.log("===== [RDV EMAIL] START =====");
+
+  const limited = await rateLimitOrNull(request, "appointments-send-confirmation", { max: 20 });
+  if (limited) return limited;
 
   try {
     const body = await request.json();

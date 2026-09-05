@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { rateLimitOrNull } from "@/lib/rate-limit";
 import { sendWhatsAppMulti } from "@/lib/whatsapp";
 import { tplVisaExpressStaff } from "@/lib/whatsapp-templates";
 
@@ -61,6 +62,9 @@ interface SubmitResult {
 
 export async function POST(request: NextRequest): Promise<NextResponse<SubmitResult>> {
   console.log("===== [VISA_EXPRESS] START =====");
+
+  const limited = await rateLimitOrNull(request, "visa-express");
+  if (limited) return limited;
 
   try {
     const formData = await request.formData();

@@ -148,32 +148,31 @@ function formatDate(dateStr: string): string {
   }
 }
 
+// Migration 034 : ce type reflète le contrat minimal exposé par /payer/[token]
+// (service_role + colonnes publiques uniquement, voir app/payer/[token]/page.tsx).
+// client_email, numero_transaction et verified_at ne font plus partie du
+// payload public — ne pas les réintroduire sans revalider avec docs/RLS_ETAT_REEL.md.
 interface PaymentLink {
-  id: string;
   reference: string;
   client_nom: string;
-  client_email: string;
-  client_telephone: string | null;
   service: string;
   description: string | null;
   montant: number;
   devise: string;
   statut: string;
-  methode_choisie: string | null;
-  numero_transaction: string | null;
-  notes_client: string | null;
-  created_at: string;
   expires_at: string;
-  paid_declared_at: string | null;
-  verified_at: string | null;
 }
 
 interface Props {
   paymentLink: PaymentLink;
   isExpired: boolean;
+  // Optionnel le temps de la transition : la page /payer/[reference], encore
+  // active jusqu'à confirmation de Thierry, n'a pas de jeton et continue de
+  // déclarer par référence (route existante, déjà en service_role depuis 033).
+  token?: string;
 }
 
-export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
+export default function PaymentPageClient({ paymentLink, isExpired, token }: Props) {
   const [step, setStep] = useState<"choose" | "instructions" | "submit" | "success">("choose");
   const [selectedMethod, setSelectedMethod] = useState<string>("");
   const [transactionNumber, setTransactionNumber] = useState("");
@@ -201,7 +200,9 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
 
     try {
       const res = await fetch(
-        `/api/payment-links/${paymentLink.reference}/declare`,
+        token
+          ? `/api/payment-links/t/${token}/declare`
+          : `/api/payment-links/${paymentLink.reference}/declare`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -262,7 +263,7 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
         icon={CheckCircle2}
         iconColor="bg-green-500"
         title="Paiement déjà reçu ✓"
-        description={`Ce paiement a été vérifié et reçu par Nexus le ${formatDate(paymentLink.verified_at || "")}.`}
+        description="Ce paiement a été vérifié et reçu par Nexus."
         bgGradient="from-green-50 to-green-100"
       />
     );
@@ -337,7 +338,7 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
                 </p>
                 <ul className="mt-2 space-y-1 text-sm text-blue-900">
                   <li>1. Notre équipe vérifie votre paiement (sous 1-24h)</li>
-                  <li>2. Vous recevez un email de confirmation à <strong>{paymentLink.client_email}</strong></li>
+                  <li>2. Vous recevez un email de confirmation à l&apos;adresse enregistrée pour ce paiement</li>
                   <li>3. Le reçu officiel Nexus vous est envoyé en PDF</li>
                 </ul>
               </div>
@@ -413,7 +414,6 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
             <p className="mt-0.5 text-sm font-semibold text-nexus-blue-950">
               {paymentLink.client_nom}
             </p>
-            <p className="text-xs text-slate-500">{paymentLink.client_email}</p>
           </div>
 
           {/* CONTENU */}
@@ -821,14 +821,6 @@ function StatusPage({
                       {formatMoney(paymentLink.montant, paymentLink.devise)}
                     </span>
                   </div>
-                  {paymentLink.numero_transaction && (
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">N° transaction</span>
-                      <span className="font-mono text-nexus-blue-950">
-                        {paymentLink.numero_transaction}
-                      </span>
-                    </div>
-                  )}
                 </div>
               </div>
             )}

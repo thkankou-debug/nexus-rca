@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { rateLimitOrNull } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
@@ -45,6 +46,9 @@ export async function POST(
   request: NextRequest
 ): Promise<NextResponse<SubmitResult>> {
   console.log("===== [CONTACT] START =====");
+
+  const limited = await rateLimitOrNull(request, "contact");
+  if (limited) return limited;
 
   try {
     const body = await request.json().catch(() => ({}));

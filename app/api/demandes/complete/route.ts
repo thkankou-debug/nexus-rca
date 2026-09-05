@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { rateLimitOrNull } from "@/lib/rate-limit";
 import {
   DEFAULT_FORM_VALUES_COMPLETE,
   DOCUMENT_CATEGORIES,
@@ -49,6 +50,9 @@ export async function POST(
   request: NextRequest
 ): Promise<NextResponse<SubmitResult>> {
   console.log("===== [DEMANDE_COMPLETE] START =====");
+
+  const limited = await rateLimitOrNull(request, "demandes-complete");
+  if (limited) return limited;
 
   try {
     const formData = await request.formData();
