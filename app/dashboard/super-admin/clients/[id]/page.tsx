@@ -21,6 +21,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
+import { ClientMergeAction } from "@/components/dashboard/ClientMergeAction";
 import type { Demande } from "@/types";
 
 // ============================================================================
@@ -45,6 +46,7 @@ interface Client {
   profile_id: string | null;
   notes: string | null;
   actif: boolean;
+  merged_into_id: string | null;
   created_at: string;
   updated_at: string;
   created_by: string | null;
@@ -223,6 +225,32 @@ export default async function ClientDetailPage({
     messagesData = data || [];
   }
 
+  // A6 lot 3 : détection de doublons (email/téléphone), fusion toujours
+  // proposée à un humain — jamais automatique (voir docs/AUDIT_CRM.md).
+  let survivorInfo: { id: string; nom: string; prenom: string | null } | null = null;
+  let duplicateCandidates: Client[] = [];
+  if (client.merged_into_id) {
+    const { data } = await supabase
+      .from("clients")
+      .select("id, nom, prenom")
+      .eq("id", client.merged_into_id)
+      .single();
+    survivorInfo = data;
+  } else {
+    const orParts: string[] = [];
+    if (client.email) orParts.push(`email.ilike.${client.email}`);
+    if (client.telephone) orParts.push(`telephone.eq.${client.telephone}`);
+    if (orParts.length > 0) {
+      const { data } = await supabase
+        .from("clients")
+        .select("*")
+        .neq("id", client.id)
+        .is("merged_into_id", null)
+        .or(orParts.join(","));
+      duplicateCandidates = (data || []) as Client[];
+    }
+  }
+
   const totalFacture = paymentsData.reduce(
     (sum, p) => sum + Number(p.montant_total || 0),
     0
@@ -345,6 +373,27 @@ export default async function ClientDetailPage({
           )}
         </div>
       </div>
+
+      {survivorInfo && (
+        <div className="mb-8 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+          <p className="text-sm font-semibold text-amber-900">
+            Cette fiche a été fusionnée dans{" "}
+            <Link
+              href={`/dashboard/super-admin/clients/${survivorInfo.id}`}
+              className="underline hover:text-amber-700"
+            >
+              {[survivorInfo.prenom, survivorInfo.nom].filter(Boolean).join(" ") || survivorInfo.nom}
+            </Link>
+            . Les données restent visibles ci-dessous à titre d&apos;historique.
+          </p>
+        </div>
+      )}
+
+      {duplicateCandidates.length > 0 && (
+        <div className="mb-8">
+          <ClientMergeAction survivorId={client.id} candidates={duplicateCandidates} />
+        </div>
+      )}
 
       {/* STATS */}
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

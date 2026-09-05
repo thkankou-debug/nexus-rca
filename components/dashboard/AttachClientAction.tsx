@@ -39,6 +39,7 @@ export function AttachClientAction({
         .from("clients")
         .select("*")
         .or(orParts.join(","))
+        .is("merged_into_id", null)
         .limit(5);
       if (error) throw error;
       setMatches((data || []) as Client[]);

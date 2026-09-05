@@ -212,3 +212,19 @@ préexistant) : la requête utilise `appointment_date`/`appointment_time`/
 un `console.warn`, la page affiche silencieusement "Aucun rendez-vous".
 **À corriger** en dehors d'A6 — hors périmètre de ce lot, non introduit
 par lui.
+
+**4. Fusion (Lot 3) ne réassigne pas `contact_demandes` ni `profile_id`.**
+`contact_demandes` exclue pour la même raison qu'au point 1 (table morte).
+`profile_id` volontairement non réassigné lors d'une fusion : fusionner
+deux fiches `clients` ne doit pas fusionner deux comptes d'authentification
+distincts — ce serait un chantier différent (fusion d'identité), plus
+risqué, non demandé par la feuille de route. Si les deux fiches fusionnées
+ont chacune un `profile_id`, les deux comptes restent utilisables tels
+quels après la fusion. **À trancher** séparément si ce cas se présente
+réellement.
+
+**5. Doublon réel trouvé en vérifiant le Lot 3 : deux fiches `clients` partagent le même téléphone mais sont deux personnes différentes.**
+`Francis` et `Charjane`, même numéro (`5813490474`), emails et
+`profile_id` distincts — coïncidence de données de test, pas un vrai
+doublon. Confirme concrètement la nécessité de la revue humaine avant
+fusion (aucune fusion automatique n'a été faite sur ces deux fiches).

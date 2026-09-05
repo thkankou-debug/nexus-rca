@@ -375,6 +375,11 @@ function ClientCard({
                     Inactif
                   </span>
                 )}
+                {client.merged_into_id && (
+                  <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-700">
+                    Fusionné
+                  </span>
+                )}
               </div>
               <h3 className="mt-1 font-display text-lg font-bold text-nexus-blue-950">
                 {displayName}
