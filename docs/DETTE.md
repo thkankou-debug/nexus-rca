@@ -109,6 +109,22 @@ Aucune colonne de validation sur `demande_documents`, et
 jour un vrai flux de rejet de document est voulu : ajouter la colonne/l'état
 manquant est un travail de schéma, pas de tableau de bord.
 
+---
+
+## A5-0 — Audit CRM et consolidation d'identité (05/09/2026)
+
+**1. Aucun corps de section dans la feuille de route V3 consolidée.**
+Le nom "A5-0" n'apparaît qu'une fois dans tout le document, comme ligne du
+tableau d'avancement (§I.5) — aucun objectif, travaux ou livrable décrit,
+contrairement à toutes les autres phases. Son titre ("Audit CRM et
+consolidation d'identité") recoupe très largement C0 ("Audit CRM et schéma
+cible de la relation client"), dont le §6 (`docs/AUDIT_CRM.md`) couvre
+explicitement la stratégie de dédoublonnage/consolidation d'identité.
+**Décision de Thierry (05/09/2026)** : A5-0 marquée satisfaite par C0,
+aucun travail supplémentaire. **À surveiller** : si un contenu spécifique
+à A5-0 existe dans un document externe non retrouvé, le signaler pour
+combler ce vide avant que la numérotation ne prête à confusion ailleurs.
+
 **3. Seuils d'alerte choisis sans consigne précise de la feuille de route.**
 "Paiements en attente depuis plus de N jours" (N=3) et "dossiers sans agent
 depuis 48h" (le second est donné par la feuille de route, le premier non).
