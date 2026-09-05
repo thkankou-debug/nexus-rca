@@ -305,7 +305,7 @@ export function ClientsManager({
                   ⚠️ Si ce client a des paiements ou des dossiers liés, ils
                   seront orphelinés (mais pas supprimés). Pense à plutôt le
                   marquer comme <strong>inactif</strong> si tu veux préserver
-                  l'historique.
+                  l&apos;historique.
                 </div>
               </div>
             </div>

@@ -104,7 +104,7 @@ export default async function ClientDemandesPage({
             Mes demandes
           </h1>
           <p className="mt-1 text-slate-600">
-            Suivez l'état de tous vos dossiers.
+            Suivez l&apos;état de tous vos dossiers.
           </p>
         </div>
         <div className="flex gap-2">

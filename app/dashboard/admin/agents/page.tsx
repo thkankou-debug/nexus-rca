@@ -115,7 +115,7 @@ export default async function AdminAgentsPage() {
             Agents
           </h1>
           <p className="mt-1 text-slate-600">
-            Performance, charge et activité de l'équipe opérationnelle.
+            Performance, charge et activité de l&apos;équipe opérationnelle.
           </p>
         </div>
       </div>

@@ -123,7 +123,7 @@ export default async function AgentRdvPage() {
         <div className="mb-8">
           <h2 className="mb-4 flex items-center gap-2 font-display text-lg font-bold text-amber-700">
             <Inbox className="h-5 w-5" />
-            File d'attente — RDV non assignés ({unassigned.length})
+            File d&apos;attente — RDV non assignés ({unassigned.length})
           </h2>
           <div className="space-y-3">
             {unassigned.map((rdv) => (
@@ -137,7 +137,7 @@ export default async function AgentRdvPage() {
         <div className="mb-8">
           <h2 className="mb-4 flex items-center gap-2 font-display text-lg font-bold text-nexus-orange-600">
             <Calendar className="h-5 w-5" />
-            Aujourd'hui ({aujourdhui.length})
+            Aujourd&apos;hui ({aujourdhui.length})
           </h2>
           <div className="space-y-3">
             {aujourdhui.map((rdv) => (

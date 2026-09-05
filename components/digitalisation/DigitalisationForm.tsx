@@ -381,7 +381,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-body-lg text-ink-muted">
           Environ 5 minutes. Vos réponses nous permettent de cadrer
-          l'activité, le pack adapté et un calendrier réaliste. Un conseiller
+          l&apos;activité, le pack adapté et un calendrier réaliste. Un conseiller
           revient sous 24 à 48 heures ouvrées.
         </p>
 
@@ -402,7 +402,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
             <ArrowRight className="h-5 w-5" />
           </button>
           <p className="text-caption text-ink-muted">
-            Vous préférez parler à quelqu'un d'abord ?{" "}
+            Vous préférez parler à quelqu&apos;un d&apos;abord ?{" "}
             <Link
               href="/rendez-vous?service=digitalisation"
               className="font-semibold text-brand underline-offset-4 hover:underline"
@@ -681,8 +681,8 @@ function Step2({
         <div className="mt-6">
           <Notice tone="info">
             <strong>Activité récente.</strong> Pour les structures de moins
-            d'un an, nous recommandons de démarrer simple (Essentiel ou Pro)
-            et de faire évoluer l'outil à mesure que l'activité se stabilise.
+            d&apos;un an, nous recommandons de démarrer simple (Essentiel ou Pro)
+            et de faire évoluer l&apos;outil à mesure que l&apos;activité se stabilise.
           </Notice>
         </div>
       )}
@@ -880,7 +880,7 @@ function Step4({
       <div className="mt-6 space-y-3">
         {showShortDelay && (
           <Notice tone="warn">
-            <strong>Délai serré.</strong> Moins d'un mois est tenable pour un
+            <strong>Délai serré.</strong> Moins d&apos;un mois est tenable pour un
             pack Essentiel avec contenus prêts. Pour Pro ou Premium, un
             cadrage senior validera la faisabilité.
           </Notice>
@@ -1286,7 +1286,7 @@ function SuccessScreen({
             onClick={() => router.push("/")}
             className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-line-strong bg-surface-elevated px-6 py-3 text-body-sm font-semibold text-ink transition hover:bg-surface-sunken"
           >
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </button>
         </div>
 

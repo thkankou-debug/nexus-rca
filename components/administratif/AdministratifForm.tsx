@@ -401,7 +401,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
             <ArrowRight className="h-5 w-5" />
           </button>
           <p className="text-caption text-ink-muted">
-            Vous préférez parler à quelqu'un d'abord ?{" "}
+            Vous préférez parler à quelqu&apos;un d&apos;abord ?{" "}
             <Link
               href="/rendez-vous?service=administratif"
               className="font-semibold text-brand underline-offset-4 hover:underline"
@@ -844,7 +844,7 @@ function Step3({
         {!cv && !letter && !translation && !formo && !print && (
           <Notice tone="neutral">
             Aucun détail spécifique requis pour ce type de prestation. Passez à
-            l'étape suivante.
+            l&apos;étape suivante.
           </Notice>
         )}
       </div>
@@ -879,7 +879,7 @@ function Step4({
             Documents que vous pouvez transmettre
           </p>
           <p className="mb-3 text-caption text-ink-muted">
-            Cochez ce que vous avez. Pas grave si vous n'avez rien — nous
+            Cochez ce que vous avez. Pas grave si vous n&apos;avez rien — nous
             cadrerons ensemble.
           </p>
           <div className="grid gap-2 sm:grid-cols-2">
@@ -1341,7 +1341,7 @@ function SuccessScreen({
             onClick={() => router.push("/")}
             className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-line-strong bg-surface-elevated px-6 py-3 text-body-sm font-semibold text-ink transition hover:bg-surface-sunken"
           >
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </button>
         </div>
 

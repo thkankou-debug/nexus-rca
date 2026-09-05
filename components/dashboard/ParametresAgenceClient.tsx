@@ -483,8 +483,8 @@ function IntegrationsTab({ value }: { value: AgencySettings["integrations"] }) {
 
       <div className="rounded-2xl border border-line bg-surface-sunken p-4 text-caption text-ink-muted">
         <strong>Note sécurité.</strong> Les clés (API, tokens) sont gérées exclusivement via les
-        variables d'environnement (<code className="font-mono">.env.local</code> en dev,
-        Vercel env vars en prod). Aucune clé n'est stockée en base de données ni n'est éditable
+        variables d&apos;environnement (<code className="font-mono">.env.local</code> en dev,
+        Vercel env vars en prod). Aucune clé n&apos;est stockée en base de données ni n&apos;est éditable
         depuis cette interface.
       </div>
     </div>

@@ -88,7 +88,7 @@ export default async function MesRhContratPage() {
             <div>
               <p className="font-semibold">Aucun contrat disponible</p>
               <p className="mt-1">
-                Votre contrat n'a pas encore été ajouté par l'administration.
+                Votre contrat n&apos;a pas encore été ajouté par l&apos;administration.
                 Contactez votre administrateur.
               </p>
             </div>

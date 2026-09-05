@@ -42,7 +42,7 @@ export default async function AgentClientsPage() {
             Clients
           </h1>
           <p className="mt-1 text-slate-600">
-            Créez et consultez les fiches clients de l'agence.
+            Créez et consultez les fiches clients de l&apos;agence.
           </p>
         </div>
       </div>

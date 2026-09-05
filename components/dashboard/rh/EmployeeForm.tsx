@@ -191,7 +191,7 @@ export function EmployeeForm({
           {isEdit ? "Modifier l'employé" : "Nouvel employé"}
         </h3>
         <p className="mt-1 text-sm text-slate-500">
-          Toutes les informations marquées d'une astérisque sont obligatoires.
+          Toutes les informations marquées d&apos;une astérisque sont obligatoires.
         </p>
       </div>
 

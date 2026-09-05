@@ -59,7 +59,7 @@ export default async function RolesPage() {
           Gestion des rôles
         </h1>
         <p className="mt-1 text-slate-600">
-          Vue d'ensemble des rôles disponibles et de leurs permissions.
+          Vue d&apos;ensemble des rôles disponibles et de leurs permissions.
         </p>
       </div>
 
@@ -96,7 +96,7 @@ export default async function RolesPage() {
 
       <div className="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-6">
         <p className="text-sm text-amber-900">
-          <strong>Pour changer le rôle d'un utilisateur :</strong> allez dans{" "}
+          <strong>Pour changer le rôle d&apos;un utilisateur :</strong> allez dans{" "}
           <em>Utilisateurs</em> et sélectionnez le nouveau rôle dans le menu déroulant. Les règles RLS Supabase appliquent automatiquement les nouvelles permissions.
         </p>
       </div>

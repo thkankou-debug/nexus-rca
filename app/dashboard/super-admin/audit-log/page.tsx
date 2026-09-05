@@ -281,7 +281,7 @@ export default async function SuperAdminAuditLogPage() {
           </div>
           <div className="rounded-xl bg-white/10 p-3 backdrop-blur">
             <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              Aujourd'hui
+              Aujourd&apos;hui
             </p>
             <p className="mt-1 font-display text-2xl font-bold text-nexus-orange-300">
               {todayCount}

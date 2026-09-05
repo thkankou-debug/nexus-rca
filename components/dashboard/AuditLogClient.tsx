@@ -173,7 +173,7 @@ export function AuditLogClient({ initialEntries }: { initialEntries: AuditEntry[
       <div>
         <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold text-nexus-blue-950">
           <Activity className="h-5 w-5 text-nexus-orange-600" />
-          Vue d'ensemble
+          Vue d&apos;ensemble
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard label="Total entrées" value={stats.total} icon={Activity} accent="blue" />

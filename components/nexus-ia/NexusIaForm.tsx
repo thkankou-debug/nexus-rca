@@ -371,7 +371,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-body-lg text-ink-muted">
           Environ 6 minutes. Vos réponses nous permettent de cadrer le cas
-          d'usage, le périmètre et la faisabilité d'un assistant IA dédié.
+          d&apos;usage, le périmètre et la faisabilité d&apos;un assistant IA dédié.
           Démo + devis sous 48 heures ouvrées.
         </p>
 
@@ -721,7 +721,7 @@ function Step3({
             Canaux de déploiement
           </p>
           <p className="mb-3 text-caption text-ink-muted">
-            Cochez les canaux où l'assistant doit être disponible.
+            Cochez les canaux où l&apos;assistant doit être disponible.
           </p>
           <div className="grid gap-2 sm:grid-cols-2">
             {CANAUX.map((c) => (
@@ -748,16 +748,16 @@ function Step3({
       <div className="mt-6 space-y-3">
         {showSupportN1Hint && (
           <Notice tone="info">
-            <strong>Support de niveau 1.</strong> L'IA traite les questions
+            <strong>Support de niveau 1.</strong> L&apos;IA traite les questions
             répétitives ; les cas non standards basculent vers un humain. La
-            procédure d'escalade sera cadrée ensemble.
+            procédure d&apos;escalade sera cadrée ensemble.
           </Notice>
         )}
         {showSangoHint && (
           <Notice tone="warn">
             <strong>Sango.</strong> Le sango est une langue avec des
-            ressources IA limitées. La qualité d'une IA en sango est
-            moindre qu'en français/anglais. Le cadrage senior validera la
+            ressources IA limitées. La qualité d&apos;une IA en sango est
+            moindre qu&apos;en français/anglais. Le cadrage senior validera la
             faisabilité.
           </Notice>
         )}
@@ -799,7 +799,7 @@ function Step4({
             Sources de contenu disponibles
           </p>
           <p className="mb-3 text-caption text-ink-muted">
-            Cochez ce qui pourra alimenter la connaissance de l'assistant.
+            Cochez ce qui pourra alimenter la connaissance de l&apos;assistant.
           </p>
           <div className="grid gap-2 sm:grid-cols-2">
             {SOURCES_CONTENU_OPTIONS.map((s) => (
@@ -1047,11 +1047,11 @@ function Step5({
         <div className="rounded-3xl border border-line bg-surface-sunken p-6">
           <div className="mb-3 flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-brand" />
-            <h3 className="text-title text-ink">L'IA augmente, ne remplace pas</h3>
+            <h3 className="text-title text-ink">L&apos;IA augmente, ne remplace pas</h3>
           </div>
           <p className="text-body-sm text-ink-muted">
-            L'assistant IA prend en charge les tâches répétitives. Pour les
-            cas sensibles ou complexes, l'escalade vers un humain est
+            L&apos;assistant IA prend en charge les tâches répétitives. Pour les
+            cas sensibles ou complexes, l&apos;escalade vers un humain est
             systématique et clairement visible.
           </p>
         </div>
@@ -1274,7 +1274,7 @@ function SuccessScreen({
         <p className="mt-4 text-body-lg text-ink-muted">
           Merci <strong className="text-ink">{form.nom_complet}</strong>. Un
           conseiller Nexus prépare votre cadrage et une démo personnalisée
-          de l'assistant IA pour <strong className="text-ink">{form.nom_structure}</strong>.
+          de l&apos;assistant IA pour <strong className="text-ink">{form.nom_structure}</strong>.
         </p>
 
         <div className="mx-auto mt-6 inline-flex items-center gap-2 rounded-full border border-line bg-surface-sunken px-4 py-2">
@@ -1302,7 +1302,7 @@ function SuccessScreen({
             onClick={() => router.push("/")}
             className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-line-strong bg-surface-elevated px-6 py-3 text-body-sm font-semibold text-ink transition hover:bg-surface-sunken"
           >
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </button>
         </div>
 

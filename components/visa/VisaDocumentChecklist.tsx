@@ -104,7 +104,7 @@ export function VisaDocumentChecklist() {
       </ul>
 
       <p className="mt-5 text-xs text-slate-500">
-        Vous serez accompagné(e) sur l'intégralité de la liste exacte requise par le
+        Vous serez accompagné(e) sur l&apos;intégralité de la liste exacte requise par le
         consulat ciblé lors du cadrage Nexus.
       </p>
     </div>

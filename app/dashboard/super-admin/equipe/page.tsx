@@ -55,7 +55,7 @@ export default async function EquipeNexusPage() {
               Équipe Nexus
             </h1>
             <p className="mt-1 text-sm text-slate-600">
-              Agents, administrateurs et super-admins de l'agence.
+              Agents, administrateurs et super-admins de l&apos;agence.
             </p>
           </div>
         </div>
@@ -97,7 +97,7 @@ export default async function EquipeNexusPage() {
 
       {/* Bandeau d'info */}
       <div className="mb-6 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
-        <strong>👥 Équipe interne uniquement :</strong> cette page n'affiche que
+        <strong>👥 Équipe interne uniquement :</strong> cette page n&apos;affiche que
         les comptes <strong>agent</strong>, <strong>admin</strong> et{" "}
         <strong>super-admin</strong>. Les comptes clients sont gérés dans la page{" "}
         <Link

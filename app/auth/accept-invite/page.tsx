@@ -285,10 +285,10 @@ export default function AcceptInvitePage() {
           <Lock className="h-8 w-8" />
         </div>
         <h1 className="mt-4 font-display text-2xl font-bold text-nexus-blue-950">
-          Bienvenue dans l'équipe Nexus
+          Bienvenue dans l&apos;équipe Nexus
         </h1>
         <p className="mt-2 text-sm text-slate-600">
-          Crée ton mot de passe pour finaliser l'activation de ton compte.
+          Crée ton mot de passe pour finaliser l&apos;activation de ton compte.
         </p>
       </div>
 
@@ -378,7 +378,7 @@ export default function AcceptInvitePage() {
       </form>
 
       <p className="mt-6 text-center text-xs text-slate-500">
-        En activant ton compte, tu acceptes les conditions d'utilisation
+        En activant ton compte, tu acceptes les conditions d&apos;utilisation
         de Nexus RCA.
       </p>
     </Container>

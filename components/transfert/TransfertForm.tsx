@@ -342,12 +342,12 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
           </div>
         </div>
 
-        <p className="text-overline text-brand">Service transfert d'argent</p>
+        <p className="text-overline text-brand">Service transfert d&apos;argent</p>
         <h2 className="mt-3 font-display text-display-md text-ink sm:text-display-lg">
           Devis de transfert — frais & délai garantis
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-body-lg text-ink-muted">
-          Environ 4 minutes. Vos réponses nous permettent d'établir un devis
+          Environ 4 minutes. Vos réponses nous permettent d&apos;établir un devis
           précis avec le meilleur canal selon votre situation. Un conseiller
           Nexus reprend contact sous 24 heures ouvrées.
         </p>
@@ -369,7 +369,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
             <ArrowRight className="h-5 w-5" />
           </button>
           <p className="text-caption text-ink-muted">
-            Vous préférez parler à quelqu'un d'abord ?{" "}
+            Vous préférez parler à quelqu&apos;un d&apos;abord ?{" "}
             <Link
               href="/rendez-vous?service=transfert"
               className="font-semibold text-brand underline-offset-4 hover:underline"
@@ -602,7 +602,7 @@ function Step1({
 
       <div className="mt-6">
         <Notice tone="neutral">
-          <strong>Information.</strong> Une pièce d'identité valide est
+          <strong>Information.</strong> Une pièce d&apos;identité valide est
           exigée par la réglementation pour toute opération de transfert,
           quel que soit le montant.
         </Notice>
@@ -1264,7 +1264,7 @@ function SuccessScreen({
             onClick={() => router.push("/")}
             className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-line-strong bg-surface-elevated px-6 py-3 text-body-sm font-semibold text-ink transition hover:bg-surface-sunken"
           >
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </button>
         </div>
 

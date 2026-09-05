@@ -73,7 +73,7 @@ export default async function MesRhProfilPage() {
             Mon profil
           </h1>
           <p className="mt-1 text-sm text-slate-600">
-            Informations personnelles enregistrées par l'administration.
+            Informations personnelles enregistrées par l&apos;administration.
           </p>
         </div>
       </div>

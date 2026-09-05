@@ -269,7 +269,7 @@ export default async function ClientPaiementsPage() {
               Aucun paiement enregistré
             </p>
             <p className="mt-1 text-sm text-slate-500">
-              Vos paiements apparaîtront ici dès qu'ils seront enregistrés par
+              Vos paiements apparaîtront ici dès qu&apos;ils seront enregistrés par
               votre agent.
             </p>
             <Link

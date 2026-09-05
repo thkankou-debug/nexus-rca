@@ -312,7 +312,7 @@ export default function NewAppointmentForm({
           Réserver un rendez-vous
         </h1>
         <p className="mt-2 text-slate-600">
-          Choisissez le service, la date et l'heure qui vous conviennent.
+          Choisissez le service, la date et l&apos;heure qui vous conviennent.
         </p>
       </div>
 
@@ -522,7 +522,7 @@ export default function NewAppointmentForm({
                 {!selectedDate ? (
                   <div className="flex h-48 items-center justify-center rounded-xl bg-slate-50 p-4 text-center">
                     <p className="text-sm text-slate-500">
-                      ← Sélectionnez d'abord une date
+                      ← Sélectionnez d&apos;abord une date
                     </p>
                   </div>
                 ) : loadingSlots ? (

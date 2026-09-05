@@ -340,7 +340,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
           Devis de change — taux du jour annoncé avant déplacement
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-body-lg text-ink-muted">
-          Environ 3 minutes. Vos réponses nous permettent d'établir un devis
+          Environ 3 minutes. Vos réponses nous permettent d&apos;établir un devis
           précis avec le taux du jour. Un conseiller Nexus reprend contact
           sous 30 minutes en heures ouvrées.
         </p>
@@ -362,7 +362,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
             <ArrowRight className="h-5 w-5" />
           </button>
           <p className="text-caption text-ink-muted">
-            Vous préférez parler à quelqu'un d'abord ?{" "}
+            Vous préférez parler à quelqu&apos;un d&apos;abord ?{" "}
             <Link
               href="/rendez-vous?service=change"
               className="font-semibold text-brand underline-offset-4 hover:underline"
@@ -570,9 +570,9 @@ function Step1({
 
       <div className="mt-6">
         <Notice tone="neutral">
-          <strong>Information.</strong> Une pièce d'identité est requise au-delà
+          <strong>Information.</strong> Une pièce d&apos;identité est requise au-delà
           du seuil réglementaire applicable. Pour les petites transactions
-          courantes, ce n'est généralement pas exigé.
+          courantes, ce n&apos;est généralement pas exigé.
         </Notice>
       </div>
     </StepCard>
@@ -672,7 +672,7 @@ function Step2({
       <div className="mt-6 space-y-3">
         {showSameDeviseHint && (
           <Notice tone="warn">
-            <strong>Devise identique.</strong> La devise de départ et d'arrivée
+            <strong>Devise identique.</strong> La devise de départ et d&apos;arrivée
             doivent être différentes pour une opération de change.
           </Notice>
         )}
@@ -772,8 +772,8 @@ function Step3({
         )}
         {showSameDayLargeWarning && (
           <Notice tone="warn">
-            <strong>Gros montant + aujourd'hui.</strong> La disponibilité du
-            cash en agence n'est pas toujours immédiate sur ces tranches. Le
+            <strong>Gros montant + aujourd&apos;hui.</strong> La disponibilité du
+            cash en agence n&apos;est pas toujours immédiate sur ces tranches. Le
             conseiller vous confirmera la faisabilité dans la journée.
           </Notice>
         )}
@@ -1127,7 +1127,7 @@ function SuccessScreen({
             onClick={() => router.push("/")}
             className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-line-strong bg-surface-elevated px-6 py-3 text-body-sm font-semibold text-ink transition hover:bg-surface-sunken"
           >
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </button>
         </div>
 

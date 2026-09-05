@@ -55,7 +55,7 @@ export default async function SuperAdminFinancesPage() {
             Tableau de bord financier
           </h1>
           <p className="mt-1 text-slate-600">
-            Vue d'ensemble des encaissements, dépenses et solde net de Nexus RCA.
+            Vue d&apos;ensemble des encaissements, dépenses et solde net de Nexus RCA.
           </p>
         </div>
       </div>
