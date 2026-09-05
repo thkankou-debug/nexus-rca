@@ -104,9 +104,9 @@ Le RÉCAP indique l'URL de prévisualisation pour que Thierry vérifie en ligne.
 |---|---|---|---|---|
 | P0 | Audit du dépôt | ✅ terminée | — | 04/09 |
 | P0.5 | Baseline schéma + RLS | ✅ terminée | — | 05/09 |
-| P1a | Correctif de sécurité immédiat | ⚠️ partielle — verdict `profiles` manquant | — | 05/09 |
-| P1a-bis | Compléter le rendu de P1a | ⬜ à faire | | |
-| P1b | Durcissement sécurité | ⬜ GO donné | | |
+| P1a | Correctif de sécurité immédiat | ✅ terminée | v3/p1b-durcissement | 05/09 |
+| P1a-bis | Compléter le rendu de P1a | ✅ terminée | v3/p1b-durcissement | 05/09 |
+| P1b | Durcissement sécurité | ⚠️ partielle — neutralisation de `/payer/[reference]` (point 5) en attente de confirmation de Thierry | v3/p1b-durcissement | 05/09 |
 | P1c | Outillage et dette technique | ⬜ | | |
 | A1 | Tokens et fondations visuelles | ⬜ *parallélisable* | | |
 | A2 | Design system | ⬜ *parallélisable* | | |
