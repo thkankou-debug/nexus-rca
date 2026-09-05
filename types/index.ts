@@ -1,4 +1,14 @@
-export type UserRole = "super_admin" | "admin" | "agent" | "client";
+export type UserRole =
+  | "super_admin"
+  | "admin"
+  | "dg"
+  | "daf"
+  | "chef_service"
+  | "agent"
+  | "comptable"
+  | "moderateur"
+  | "partenaire"
+  | "client";
 
 export type DemandeStatus =
   | "nouveau"

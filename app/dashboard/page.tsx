@@ -27,7 +27,24 @@ export default async function DashboardRootPage() {
     case "agent":
       redirect("/dashboard/agent");
     case "client":
-    default:
       redirect("/dashboard/client");
   }
+
+  // dg, daf, chef_service, comptable, moderateur, partenaire : aucune section
+  // dédiée pour l'instant (P2 — arrive avec A3). Pas de redirect ici :
+  // rediriger vers une section gardée par rôle créerait une boucle avec le
+  // middleware (voir lib/rbac.ts, requiredPermissionForPath).
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-surface-sunken px-4">
+      <div className="max-w-md rounded-sm border border-line bg-surface-elevated p-8 text-center">
+        <h1 className="font-display text-xl font-bold text-ink">
+          Espace en préparation
+        </h1>
+        <p className="mt-2 text-body-sm text-ink-muted">
+          Aucun tableau de bord n&apos;est encore disponible pour votre rôle.
+          Contactez un administrateur.
+        </p>
+      </div>
+    </div>
+  );
 }

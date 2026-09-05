@@ -1,6 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { homeForRole, minRoleForPath, roleAtLeast } from "@/lib/rbac";
+import { homeForRole, requiredPermissionForPath } from "@/lib/rbac";
 import type { UserRole } from "@/types";
 
 export async function updateSession(request: NextRequest) {
@@ -56,8 +56,8 @@ export async function updateSession(request: NextRequest) {
 
   // 3) Gating par rôle sur les routes RBAC-protégées
   if (user) {
-    const minRole = minRoleForPath(pathname);
-    if (minRole) {
+    const allowedRoles = requiredPermissionForPath(pathname);
+    if (allowedRoles) {
       // Charger le rôle (table profiles). Léger : 1 select indexé par PK.
       const { data: profile } = await supabase
         .from("profiles")
@@ -67,12 +67,12 @@ export async function updateSession(request: NextRequest) {
 
       const userRole = (profile?.role as UserRole | undefined) ?? null;
 
-      // Pas de profil ou rôle insuffisant → redirect vers son home dashboard
-      if (!userRole || !roleAtLeast(userRole, minRole)) {
+      // Pas de profil ou rôle non autorisé → redirect vers son home dashboard
+      if (!userRole || !allowedRoles.includes(userRole)) {
         // API protégée → renvoyer 403 plutôt que rediriger
         if (pathname.startsWith("/api/")) {
           return new NextResponse(
-            JSON.stringify({ error: "Forbidden", required: minRole }),
+            JSON.stringify({ error: "Forbidden", required: allowedRoles }),
             { status: 403, headers: { "content-type": "application/json" } }
           );
         }

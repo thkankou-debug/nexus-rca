@@ -267,6 +267,14 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
       ],
     },
   ],
+  // P2 (RBAC 9 rôles) : aucune section pour ces rôles pour l'instant (arrive
+  // avec A3) — voir la note au-dessus de ROLE_LABELS.
+  dg: [],
+  daf: [],
+  chef_service: [],
+  comptable: [],
+  moderateur: [],
+  partenaire: [],
 };
 
 // Aplatit les groupes en items pour la palette de commandes et autres usages.
@@ -274,11 +282,23 @@ function flattenNav(groups: NavGroup[]): NavItem[] {
   return groups.flatMap((g) => g.items);
 }
 
+// P2 (RBAC 9 rôles) : entrées dg/daf/chef_service/comptable/moderateur/
+// partenaire ajoutées uniquement pour que UserRole (10 valeurs) compile —
+// aucune de ces valeurs n'est routée vers DashboardShell aujourd'hui (aucun
+// compte, aucune section : voir lib/rbac.ts homeForRole/ROUTE_ALLOWED_ROLES).
+// Fichier gelé par CLAUDE.md : ne pas étoffer ces entrées sans demande
+// explicite, le vrai shell pour ces rôles arrive avec A3.
 const ROLE_LABELS: Record<UserRole, string> = {
   client: "Espace client",
   agent: "Espace agent",
   admin: "Espace admin",
   super_admin: "Super admin",
+  dg: "Espace direction générale",
+  daf: "Espace finances",
+  chef_service: "Espace chef de service",
+  comptable: "Espace comptabilité",
+  moderateur: "Espace modération",
+  partenaire: "Espace partenaire",
 };
 
 const ROLE_COLORS: Record<UserRole, string> = {
@@ -286,6 +306,12 @@ const ROLE_COLORS: Record<UserRole, string> = {
   agent: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300",
   admin: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300",
   super_admin: "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300",
+  dg: "bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300",
+  daf: "bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300",
+  chef_service: "bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300",
+  comptable: "bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300",
+  moderateur: "bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300",
+  partenaire: "bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300",
 };
 
 export function DashboardShell({
