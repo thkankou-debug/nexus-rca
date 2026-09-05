@@ -6,7 +6,7 @@
 // inutilement, sauf pour les sous-blocs qui ont besoin d'interactivité.
 // ============================================================================
 
-import { Download, FileText, Hash, MessageCircle } from "lucide-react";
+import { Download, Hash } from "lucide-react";
 import { BackButton } from "@/components/ui/BackButton";
 import { StatusBadge, UrgenceBadge } from "@/components/dashboard/StatCard";
 import { Timeline } from "@/components/demande-detail/Timeline";
@@ -17,6 +17,9 @@ import { RecapAccordion } from "@/components/demande-detail/RecapAccordion";
 import { DossierStaffActions } from "./DossierStaffActions";
 import { StaffNotes } from "./StaffNotes";
 import { StaffHistoryTimeline } from "./StaffHistoryTimeline";
+import { DossierTabs } from "./DossierTabs";
+import { DossierPaiementsTab, type DossierPayment } from "./DossierPaiementsTab";
+import { DossierRendezVousTab, type DossierAppointment } from "./DossierRendezVousTab";
 import { CATEGORIE_META } from "@/lib/demande-categories";
 import { formatDate } from "@/lib/utils";
 import type {
@@ -47,6 +50,10 @@ interface StaffDossierDetailProps {
   } | null;
   /** History déjà chargé pour la Timeline */
   history: Array<{ step: number; created_at: string }>;
+  /** A5 : paiements réels liés (payments.demande_id) — voir docs/DETTE.md */
+  payments: DossierPayment[];
+  /** A5 : rendez-vous du même client (appointments n'a pas de demande_id) */
+  appointments: DossierAppointment[];
 }
 
 export function StaffDossierDetail({
@@ -57,6 +64,8 @@ export function StaffDossierDetail({
   backHref,
   agentInfo,
   history,
+  payments,
+  appointments,
 }: StaffDossierDetailProps) {
   const meta = CATEGORIE_META[categorieSlug];
   const reference = demande.reference || `NX-${demande.id.slice(0, 8).toUpperCase()}`;
@@ -130,43 +139,49 @@ export function StaffDossierDetail({
       </section>
 
       <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
-        {/* Colonne gauche */}
-        <div className="space-y-6 lg:col-span-8">
-          <section>
-            <div className="mb-3 flex items-center gap-2">
-              <FileText className="h-4 w-4 text-nexus-orange-500" />
-              <h2 className="font-display text-lg font-bold text-nexus-blue-950">
-                Documents
-              </h2>
-            </div>
-            <DocumentsManager demandeId={demande.id} canDelete={true} />
-          </section>
-
-          <section id="messages">
-            <div className="mb-3 flex items-center gap-2">
-              <MessageCircle className="h-4 w-4 text-nexus-orange-500" />
-              <h2 className="font-display text-lg font-bold text-nexus-blue-950">
-                Messages
-              </h2>
-            </div>
-            <MessagesList demandeId={demande.id} currentUserId={currentUserId} />
-          </section>
-
-          <section>
-            <div className="mb-3 flex items-center gap-2">
-              <FileText className="h-4 w-4 text-nexus-orange-500" />
-              <h2 className="font-display text-lg font-bold text-nexus-blue-950">
-                Récapitulatif du dossier
-              </h2>
-            </div>
-            <RecapAccordion demande={demande as never} />
-          </section>
+        {/* Colonne gauche — onglets (A5) */}
+        <div className="lg:col-span-8">
+          <DossierTabs
+            tabs={[
+              {
+                id: "resume",
+                label: "Résumé",
+                content: <RecapAccordion demande={demande as never} />,
+              },
+              {
+                id: "documents",
+                label: "Documents",
+                content: <DocumentsManager demandeId={demande.id} canDelete={true} />,
+              },
+              {
+                id: "messages",
+                label: "Messages",
+                content: <MessagesList demandeId={demande.id} currentUserId={currentUserId} />,
+              },
+              {
+                id: "paiements",
+                label: "Paiements",
+                badge: payments.length,
+                content: <DossierPaiementsTab payments={payments} />,
+              },
+              {
+                id: "rdv",
+                label: "Rendez-vous",
+                badge: appointments.length,
+                content: <DossierRendezVousTab appointments={appointments} />,
+              },
+              {
+                id: "historique",
+                label: "Historique",
+                content: <StaffHistoryTimeline demandeId={demande.id} />,
+              },
+            ]}
+          />
         </div>
 
-        {/* Colonne droite */}
+        {/* Colonne droite — persistante (conseiller + notes internes) */}
         <aside className="space-y-4 lg:col-span-4">
           <ConseillerCard agent={agentInfo} demandeRef={reference} />
-          <StaffHistoryTimeline demandeId={demande.id} />
           <StaffNotes demandeId={demande.id} role={role} />
         </aside>
       </div>

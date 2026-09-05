@@ -64,6 +64,7 @@ export default async function SuperAdminDossiersListPage({
         demandes={demandes}
         agents={agents.map((a) => ({ id: a.id, nom: a.nom, prenom: a.prenom }))}
         role={profile.role}
+        currentUserId={profile.id}
         baseDetailHref={`/dashboard/super-admin/dossiers/${params.categorie}`}
       />
     </DashboardShell>

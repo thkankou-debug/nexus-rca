@@ -64,6 +64,7 @@ export default async function AdminDossiersListPage({
         demandes={demandes}
         agents={agents.map((a) => ({ id: a.id, nom: a.nom, prenom: a.prenom }))}
         role={profile.role}
+        currentUserId={profile.id}
         baseDetailHref={`/dashboard/admin/dossiers/${params.categorie}`}
       />
     </DashboardShell>
