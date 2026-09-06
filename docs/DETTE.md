@@ -508,3 +508,27 @@ code** (les 5 fichiers D5 sont migrés) — la dépendance `jspdf` dans
 présenté pour ce lot, à valider explicitement par Thierry). **Non
 vérifié visuellement** — à confirmer par Thierry sur les 3 sorties et
 les 5 pages depuis `/dashboard/super-admin/rapports`.
+
+**8. Numérotation par séquence Postgres — `devis`, `factures`, `payments` (migration 059).**
+`devis`/`factures` (créées en P3, 0 ligne) n'avaient aucun générateur de
+référence : ajouté (`DEV-`/`FAC-YYYY-NNNNNN`), même patron que
+`appointments`/`payment_links` déjà en place. **Décision Thierry
+(06/09/2026)** : "reçu" (`REC-YYYY-NNNNNN`) = le préfixe de
+`payments.reference` pour les **nouveaux** paiements, remplaçant le
+préfixe `PAY-` + suffixe aléatoire (`md5(random())`) — un reçu étant
+concrètement le PDF généré depuis une ligne `payments`
+(`PaymentReceipt.tsx`). Les 3 paiements réels existants gardent leur
+référence `PAY-` actuelle, non renumérotée (`COMMENT ON COLUMN`
+documentant l'écart). Vérifié par insertions de test dans une
+transaction annulée (`ROLLBACK`) : `devis`/`factures`/`payments`
+toujours à 0/0/3 lignes après coup — aucune donnée réelle touchée. Les
+séquences ont avancé de quelques valeurs à cause de ces tests
+(`devis_ref_seq`=5, `factures_ref_seq`=4, `payments_ref_seq`=4) : sans
+conséquence, un trou dans une séquence est normal et attendu (c'est
+tout l'intérêt d'une vraie séquence par rapport à `count(*)+1`).
+`jspdf` n'est plus importé nulle part dans le code depuis le lot 1e —
+la dépendance dans `package.json` pourrait être retirée, **non fait**,
+à valider explicitement par Thierry. Pas de CRUD devis/factures
+construit à ce stade (lots suivants de P6), pas de câblage
+`audit_log` (s'applique aux futures actions de création/édition, pas
+à l'infrastructure de numérotation).
