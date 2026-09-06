@@ -11,6 +11,7 @@ export { agentDocumentFourniEmail } from "./agent-document-fourni";
 export { clientStatutChangeEmail } from "./client-statut-change";
 export { agentMessageClientEmail } from "./agent-message-client";
 export { devisEnvoyeEmail } from "./devis-envoye";
+export { factureValideeEmail } from "./facture-validee";
 
 /** Échappement HTML pour interpolation sûre dans les templates. */
 export function escapeHtml(s: string): string {

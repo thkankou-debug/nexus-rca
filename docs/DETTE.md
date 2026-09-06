@@ -553,3 +553,23 @@ réel, avant d'en généraliser le patron à `factures`/`échéanciers`. Pas de
 portail client sur les devis en V3 (P9 non fait) : `accepte`/`refuse`
 sont enregistrés par le staff qui rapporte la décision transmise par le
 client hors plateforme (téléphone, email), pas une acceptation en ligne.
+
+**10. Lot Factures (06/09/2026) : CRUD, cycle de vie, PDF, pont depuis un devis accepté — `payee` toujours manuelle.**
+Migration 061 : `facture.create` (agent/chef_service/comptable/admin/dg/
+daf) et `facture.cancel` (admin/daf) ajoutées à `role_permissions` —
+`facture.validate` (admin/daf) était déjà seedée en 043b. Séparation des
+tâches : `facture.create` couvre la saisie du brouillon, `facture.validate`
+gère `brouillon → validée` **et** `validée → payée`, `facture.cancel` gère
+`→ annulée` (accessible depuis `brouillon`/`validée`, jamais depuis
+`payée`). La transition `→ payée` est **manuelle** dans ce lot : aucun
+rapprochement automatique avec `payments` — une facture peut donc être
+marquée payée sans qu'une ligne `payments` correspondante existe. **À
+corriger** quand les échéanciers/le rapprochement (reste de P6) seront
+construits : soit dériver `payee` d'un paiement réel enregistré, soit au
+minimum l'exiger comme précondition. Génération de facture depuis un devis
+`accepte` : copie des lignes au moment de la génération (pas de lien vivant
+— une modification ultérieure du devis ne se répercute pas sur la facture
+déjà créée, comportement voulu pour une facture qui doit rester stable une
+fois émise). Email client uniquement à la validation (`validee`), pas à la
+création du brouillon, même logique que `devis.send` pour les devis (voir
+entrée 9). PDF non vérifié visuellement par Thierry.

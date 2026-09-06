@@ -120,6 +120,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
       items: [
         { href: "/dashboard/agent/caisse", label: "Caisse", icon: ShoppingCart },
         { href: "/dashboard/agent/devis", label: "Devis", icon: ClipboardCheck },
+        { href: "/dashboard/agent/factures", label: "Factures", icon: FileBarChart },
         { href: "/dashboard/agent/paiements", label: "Mes paiements", icon: Wallet },
         { href: "/dashboard/agent/transferts", label: "Transferts", icon: Send },
         { href: "/dashboard/agent/depenses", label: "Mes dépenses", icon: Receipt },
@@ -172,6 +173,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
       items: [
         { href: "/dashboard/admin/paiements", label: "Paiements", icon: Wallet },
         { href: "/dashboard/super-admin/devis", label: "Devis", icon: ClipboardCheck },
+        { href: "/dashboard/super-admin/factures", label: "Factures", icon: FileBarChart },
         { href: "/dashboard/admin/rapports", label: "Rapports mensuels", icon: FileBarChart },
       ],
     },
@@ -236,6 +238,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/super-admin/paiements/en-attente", label: "Paiements en attente", icon: Wallet },
         { href: "/dashboard/super-admin/paiements", label: "Tous les paiements", icon: Wallet },
         { href: "/dashboard/super-admin/devis", label: "Devis", icon: ClipboardCheck },
+        { href: "/dashboard/super-admin/factures", label: "Factures", icon: FileBarChart },
         { href: "/dashboard/super-admin/caisse", label: "Caisse rapide", icon: ShoppingCart },
         { href: "/dashboard/super-admin/transferts", label: "Transferts", icon: Send },
         { href: "/dashboard/super-admin/depenses", label: "Dépenses", icon: Receipt },
