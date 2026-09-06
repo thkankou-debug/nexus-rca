@@ -46,6 +46,7 @@ import {
   Sliders,
   Coins,
   Tag,
+  CalendarClock,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -124,6 +125,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/agent/caisse-sessions", label: "Sessions caisse", icon: Wallet },
         { href: "/dashboard/agent/devis", label: "Devis", icon: ClipboardCheck },
         { href: "/dashboard/agent/factures", label: "Factures", icon: FileBarChart },
+        { href: "/dashboard/agent/echeanciers", label: "Échéanciers", icon: CalendarClock },
         { href: "/dashboard/agent/commissions", label: "Mes commissions", icon: Coins },
         { href: "/dashboard/agent/paiements", label: "Mes paiements", icon: Wallet },
         { href: "/dashboard/agent/transferts", label: "Transferts", icon: Send },
@@ -179,6 +181,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/super-admin/devis", label: "Devis", icon: ClipboardCheck },
         { href: "/dashboard/super-admin/factures", label: "Factures", icon: FileBarChart },
         { href: "/dashboard/super-admin/caisse-sessions", label: "Sessions caisse", icon: Wallet },
+        { href: "/dashboard/super-admin/echeanciers", label: "Échéanciers", icon: CalendarClock },
         { href: "/dashboard/super-admin/commissions", label: "Commissions", icon: Coins },
         { href: "/dashboard/super-admin/categories-compta", label: "Catégories comptables", icon: Tag },
         { href: "/dashboard/admin/rapports", label: "Rapports mensuels", icon: FileBarChart },
@@ -248,6 +251,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/super-admin/factures", label: "Factures", icon: FileBarChart },
         { href: "/dashboard/super-admin/caisse", label: "Caisse rapide", icon: ShoppingCart },
         { href: "/dashboard/super-admin/caisse-sessions", label: "Sessions caisse", icon: Wallet },
+        { href: "/dashboard/super-admin/echeanciers", label: "Échéanciers", icon: CalendarClock },
         { href: "/dashboard/super-admin/commissions", label: "Commissions", icon: Coins },
         { href: "/dashboard/super-admin/categories-compta", label: "Catégories comptables", icon: Tag },
         { href: "/dashboard/super-admin/transferts", label: "Transferts", icon: Send },

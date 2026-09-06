@@ -615,3 +615,24 @@ référence encore, cette lot ne branche `categories_compta` à aucune autre
 table : c'est une liste de référence seule, prête pour un futur
 rapprochement dépenses/revenus). Aucun PDF (même raisonnement que les
 sessions caisse, entrée 11).
+
+**13. Lot Échéanciers (06/09/2026) : planification sur facture validée/payée, reste dû dérivé, aucune migration.**
+`echeancier.*` **n'existe pas** dans l'énumération officielle §P2 : traité
+comme un sous-objet de `facture` (même statut que `facture_lignes`, qui n'a
+pas non plus de permission propre). Création d'une échéance gérée par
+`facture.create` (mêmes acteurs que la facture parente) ; marquage "payée"
+par `paiement.record` (admin/comptable/daf) — un agent peut planifier une
+échéance sur son dossier mais pas la marquer payée lui-même, séparation des
+tâches cohérente avec le reste de P6. Aucune migration necessaire (2ᵉ lot
+de P6 dans ce cas, après Sessions caisse) : les deux permissions
+réutilisées étaient déjà seedées pour les bons rôles. Le total des
+échéances d'une facture est plafonné à son montant (calcul du "reste à
+échéancer", vérifié côté serveur à la création). `en_retard` recalculé en
+écriture différée à chaque lecture de la liste (comparaison `due_date` vs
+date du jour), pas par un cron — suffisant tant que l'affichage passe par
+cette route, **à revoir** si un jour un job planifié doit lire ce statut
+sans passer par l'API (rapports automatisés, notifications d'échéance
+proche). Pas de lien automatique avec `payments` : marquer une échéance
+payée n'enregistre aucune ligne `payments` correspondante (même limite que
+la transition `payee` des factures, entrée 10) — **à unifier** si un jour
+le rapprochement complet (dernière tranche de P6) relie les trois.
