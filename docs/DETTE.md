@@ -317,35 +317,31 @@ quand un premier compte agent réel sera créé.
 
 ---
 
-## P6-0 — Convergence des colonnes `payments`, étape 1 et 2 (05/09/2026)
+## P6-0 — Convergence des colonnes `payments`, étapes 1 à 4 (05/09/2026)
 
-**1. `PaymentForm.tsx` (bouton "Nouveau paiement") très probablement cassé depuis le 04/05/2026.**
-Le trigger `payments_check_transition` (présent depuis le schéma de base)
-exige `client_id`, `dossier_id`, `method`, `amount`, `amount_xaf` non nuls
-à l'insertion, sans exception. `PaymentForm.tsx` n'envoie aucun de ces
-champs (schéma français uniquement : `montant_total`, `mode_paiement`,
-`client_record_id`). Les 3 paiements réels portent tous
-`metadata.legacy=true` avec le même `migrated_at` (04/05/2026) — preuve
-d'un backfill ponctuel qui les a protégés *a posteriori*, mais qui ne
-protège pas les nouvelles insertions. **Non testé en écriture** (règle :
-jamais de test d'écriture sur la table la plus sensible sans
-autorisation) — déduit de la lecture du trigger et du formulaire, pas
-vérifié en pratique. **À corriger en P6-0 étape 4** (décision confirmée),
-en même temps que la migration de `PaymentForm.tsx` vers le schéma
-canonique.
+**1. ~~`PaymentForm.tsx` très probablement cassé depuis le 04/05/2026.~~ Corrigé en étape 4, lot 4.1.**
+Le trigger `payments_check_transition` exigeait `client_id`/`dossier_id`
+non nuls à l'insertion, incompatible avec `PaymentForm.tsx` (schéma
+français, aucun des deux champs). **Résolu** : `client_id`/`dossier_id`
+ne sont plus exigés ; `calculate_payment_status()` dérive désormais aussi
+`status`/`amount`/`amount_xaf`/`method` depuis les colonnes françaises, à
+l'écriture. Non testé par une écriture réelle (règle : jamais de test
+d'écriture sur la table la plus sensible sans autorisation explicite) —
+vérifié par lecture du trigger et trace d'exécution manuelle, y compris
+l'ordre d'exécution des triggers (voir point 6). **À confirmer** par
+Thierry en testant une fois le bouton "Nouveau paiement" en conditions
+réelles.
 
-**2. Paiement par lien public (`payment-links/[reference]/verify/route.ts`) ne crée jamais de ligne `payments`.**
-Les 3 tentatives d'insertion ("essai 1/2/3", déjà un correctif bricolé
-documenté dans CLAUDE.md) utilisent toutes une colonne `montant` qui
-n'existe pas sur `payments` (`ERROR 42703`). L'erreur est avalée
-(`console.warn`), le lien est quand même marqué "vérifié". **À corriger
-en P6-0 étape 4** (décision confirmée).
+**2. ~~Paiement par lien public ne crée jamais de ligne `payments`.~~ Corrigé en étape 4, lot 4.2.**
+La colonne `montant` (inexistante) est remplacée par le vrai schéma
+français complet (`montant_total`, `montant_recu`, `mode_paiement`,
+`client_id`, `demande_id`/`dossier_id` quand connus). Le statut
+`"complete"` (également invalide, jamais dans l'enum `payment_status`)
+est retiré — dérivé automatiquement par le trigger du lot 4.1.
 
-**3. `app/dashboard/agent/page.tsx` interroge `payments.montant` — colonne inexistante, même famille de bug.**
-Découvert en marge de l'analyse P6-0. Les widgets "paiements ce mois /
-cette année" du tableau de bord agent affichent toujours 0, quelle que
-soit la réalité. **À corriger en P6-0 étape 4**, en migrant ce fichier
-vers `amount` (canonique) comme les autres consommateurs.
+**3. ~~`app/dashboard/agent/page.tsx` interroge `payments.montant`.~~ Corrigé en étape 4, lot 4.2.**
+3 occurrences (paiements du mois, de l'année, leaderboard) toutes
+corrigées vers `montant_recu`.
 
 **4. `payments_log_event()` ne connaît pas le nouveau statut `partial`.**
 Le `CASE` du trigger qui type l'événement dans `payment_events` ne couvre
@@ -360,3 +356,27 @@ Assumé délibérément : la feuille de route ne demande `NOT NULL` que sur
 `status`/`amount` à cette étape, et ces 3 lignes sont explicitement
 grandfathered (`metadata.legacy=true`). **À traiter en étape 4** si un
 rattachement rétroactif à un client/dossier réel est possible et utile.
+
+**6. Bug trouvé et corrigé pendant l'écriture du lot 4.1 : ordre d'exécution des triggers Postgres.**
+Postgres exécute les triggers `BEFORE` de même type par ordre alphabétique
+de leur nom. `payments_transition_check` (préfixe `p`) s'exécutait avant
+`trg_payments_calculate_status` (préfixe `t`) — il aurait donc toujours vu
+`amount`/`method` vides sur un INSERT et continué de lever une exception,
+rendant le lot 4.1 inopérant sans ce correctif. Renommé en
+`trg_payments_transition_check` pour s'exécuter après. **Leçon** :
+toujours vérifier l'ordre relatif des triggers `BEFORE` sur une même
+table avant d'en ajouter ou modifier un.
+
+**7. `payment_method` complété avec `card`, `other`, `express_union` (lots 4.1-4.2).**
+L'enum partagé entre `mode_paiement` et `method` n'avait pas de
+traduction pour "carte" (autre que `stripe`, trop spécifique au paiement
+en ligne), "autre", ni de valeur du tout pour `express_union` (service
+mobile local RCA, distinct de `western_union` — voir CLAUDE.md, 6
+méthodes officielles). Découvert en préparant la correction du paiement
+par lien public.
+
+**8. `dossier_id` et `demande_id` restent deux colonnes distinctes pointant vers `demandes` — redondance non résolue.**
+Même constat qu'A5 (DETTE #1). Le lot 4.2 renseigne les deux avec la même
+valeur (`paymentLink.demande_id`) plutôt que de trancher laquelle
+supprimer — cette consolidation reste un chantier séparé, plus large que
+P6-0.

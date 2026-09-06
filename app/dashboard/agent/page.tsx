@@ -116,13 +116,13 @@ export default async function AgentDashboardPage() {
 
   const { data: paymentsThisMonth } = await supabase
     .from("payments")
-    .select("montant, devise")
+    .select("montant_recu, devise")
     .eq("created_by", profile.id)
     .gte("created_at", startOfMonth);
 
   const totalPaiementsXAF = (paymentsThisMonth || [])
     .filter((p) => p.devise === "XAF")
-    .reduce((sum, p) => sum + Number(p.montant || 0), 0);
+    .reduce((sum, p) => sum + Number(p.montant_recu || 0), 0);
 
   const totalPaiementsCount = paymentsThisMonth?.length || 0;
 
@@ -140,13 +140,13 @@ export default async function AgentDashboardPage() {
 
   const { data: paymentsThisYear } = await supabase
     .from("payments")
-    .select("montant, devise")
+    .select("montant_recu, devise")
     .eq("created_by", profile.id)
     .gte("created_at", startOfYear);
 
   const totalPaiementsYearXAF = (paymentsThisYear || [])
     .filter((p) => p.devise === "XAF")
-    .reduce((sum, p) => sum + Number(p.montant || 0), 0);
+    .reduce((sum, p) => sum + Number(p.montant_recu || 0), 0);
 
   // Leaderboard
   const { data: allAgents } = await supabase
@@ -173,13 +173,13 @@ export default async function AgentDashboardPage() {
 
       const { data: agentPayments } = await supabase
         .from("payments")
-        .select("montant, devise")
+        .select("montant_recu, devise")
         .eq("created_by", agent.id)
         .gte("created_at", startOfMonth);
 
       const agentPaiementsXAF = (agentPayments || [])
         .filter((p) => p.devise === "XAF")
-        .reduce((sum, p) => sum + Number(p.montant || 0), 0);
+        .reduce((sum, p) => sum + Number(p.montant_recu || 0), 0);
 
       const score =
         (agentRdvCount || 0) * 100 + Math.floor(agentPaiementsXAF / 1000);

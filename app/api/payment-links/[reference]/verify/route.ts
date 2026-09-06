@@ -21,6 +21,17 @@ const METHOD_LABELS: Record<string, string> = {
   stripe_card: "Carte bancaire",
 };
 
+// P6-0 : traduit methode_choisie (payment_links, texte libre) vers
+// mode_paiement (payments, enum payment_method partage avec method).
+const METHODE_CHOISIE_TO_MODE_PAIEMENT: Record<string, string> = {
+  orange_money: "orange_money",
+  mtn_money: "mtn_money",
+  express_union: "express_union",
+  virement: "virement",
+  especes: "especes",
+  stripe_card: "stripe",
+};
+
 // CRITICAL : sanitize text pour pdf-lib WinAnsi
 // Remplace tous les caractères Unicode hors WinAnsi (espaces insécables, etc.)
 function sanitizeForPdf(text: string): string {
@@ -141,15 +152,6 @@ export async function POST(
     try {
       console.log("[PAY-VERIFY] Tentative creation payments...");
 
-      // STRUCTURE MINIMALE - colonnes les plus communes
-      const minimalInsert: Record<string, unknown> = {
-        client_id: paymentLink.client_id,
-        montant: paymentLink.montant,
-        devise: paymentLink.devise,
-        statut: "complete",
-        created_by: profile.id,
-      };
-
       // Notes contiennent toutes les infos auxiliaires
       const notesContent = [
         `Paiement via lien public ${paymentLink.reference}`,
@@ -160,46 +162,41 @@ export async function POST(
         notesStaff ? `Staff: ${notesStaff}` : "",
       ].filter(Boolean).join("\n");
 
-      // Essai 1 : avec colonne 'notes'
-      const { data: data1, error: err1 } = await supabase
+      const montant = Number(paymentLink.montant);
+      const modePaiement =
+        METHODE_CHOISIE_TO_MODE_PAIEMENT[paymentLink.methode_choisie] || "autre";
+
+      // P6-0 : ecrit le schema francais (montant_total/montant_recu/
+      // mode_paiement) - un paiement par lien public est toujours integralement
+      // encaisse en une fois, donc montant_recu = montant_total = montant. Le
+      // trigger calculate_payment_status derive automatiquement status/amount/
+      // amount_xaf/method canoniques a partir de ces colonnes.
+      const { data, error: insertErr } = await supabase
         .from("payments")
-        .insert({ ...minimalInsert, notes: notesContent })
+        .insert({
+          client_id: paymentLink.client_id,
+          demande_id: paymentLink.demande_id,
+          dossier_id: paymentLink.demande_id,
+          client_nom: paymentLink.client_nom,
+          client_email: paymentLink.client_email,
+          client_telephone: paymentLink.client_telephone,
+          service: paymentLink.service,
+          description: notesContent.substring(0, 500),
+          montant_total: montant,
+          montant_recu: montant,
+          devise: paymentLink.devise,
+          mode_paiement: modePaiement,
+          date_paiement: now.toISOString(),
+          created_by: profile.id,
+        })
         .select("id")
         .single();
 
-      if (!err1 && data1) {
-        newPayment = data1;
-        console.log("[PAY-VERIFY] ✅ Payment cree (essai 1):", newPayment?.id);
+      if (!insertErr && data) {
+        newPayment = data;
+        console.log("[PAY-VERIFY] ✅ Payment cree:", newPayment?.id);
       } else {
-        console.warn("[PAY-VERIFY] Essai 1 failed:", err1?.message);
-
-        // Essai 2 : sans 'notes', avec 'description'
-        const { data: data2, error: err2 } = await supabase
-          .from("payments")
-          .insert({ ...minimalInsert, description: notesContent.substring(0, 500) })
-          .select("id")
-          .single();
-
-        if (!err2 && data2) {
-          newPayment = data2;
-          console.log("[PAY-VERIFY] ✅ Payment cree (essai 2):", newPayment?.id);
-        } else {
-          console.warn("[PAY-VERIFY] Essai 2 failed:", err2?.message);
-
-          // Essai 3 : structure ultra-minimale
-          const { data: data3, error: err3 } = await supabase
-            .from("payments")
-            .insert(minimalInsert)
-            .select("id")
-            .single();
-
-          if (!err3 && data3) {
-            newPayment = data3;
-            console.log("[PAY-VERIFY] ✅ Payment cree (essai 3 minimal):", newPayment?.id);
-          } else {
-            console.warn("[PAY-VERIFY] Tous essais payments failed - on continue sans");
-          }
-        }
+        console.error("[PAY-VERIFY] Creation payment failed:", insertErr?.message);
       }
     } catch (e) {
       console.warn("[PAY-VERIFY] Exception payments:", e instanceof Error ? e.message : e);
