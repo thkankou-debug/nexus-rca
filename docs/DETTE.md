@@ -269,3 +269,15 @@ Même situation que le constat A3 #1 (bascule de navigation réelle prévue
 sur A3-A7). **À faire** : ajouter le lien dans `NotificationBell.tsx`
 (pas dans `DashboardShell.tsx` lui-même) ou une entrée de menu quand la
 navigation réelle sera branchée.
+
+**11. Délais moyens et dossiers en retard non construits en Performance CRM (Lot 7).**
+Vérifié avant de coder, pas supposé : `demande_status_history` a 0 ligne
+réelle (aucune transition de statut n'y a jamais été journalisée, malgré
+des changements de statut réels — voir `docs/AUDIT_CRM.md` §4), et
+`demandes.deadline` (colonne P3) n'est renseigné sur aucune des 16
+demandes réelles, aucune route n'y écrivant. Afficher "0 en retard"
+aurait été un faux zéro (§I.6, test 3 — "pas encore mesurable" n'est pas
+un zéro). **À construire** quand `deadline` sera réellement saisi lors de
+la création/qualification d'un dossier (à decider dans une phase
+ultérieure) et/ou quand `demande_status_history` sera réellement
+alimenté (P6 candidat, déjà noté en P3 #1).

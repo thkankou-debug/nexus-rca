@@ -68,11 +68,12 @@ export async function getCategoryCounters(filterAgentId?: string): Promise<
   return counters;
 }
 
-/** Total global : actifs / urgents / non-assignés */
+/** Total global : actifs / urgents / non-assignés / demandes reçues (A6, Performance CRM) */
 export async function getGlobalDossiersStats(filterAgentId?: string): Promise<{
   actifs: number;
   urgents: number;
   nonAssignes: number;
+  demandesRecues: number;
 }> {
   const supabase = createClient();
   let query = supabase
@@ -108,7 +109,52 @@ export async function getGlobalDossiersStats(filterAgentId?: string): Promise<{
     if (!r.agent_id) nonAssignes++;
   });
 
-  return { actifs, urgents, nonAssignes };
+  return { actifs, urgents, nonAssignes, demandesRecues: rows.length };
+}
+
+/**
+ * Revenus par service (A6, Performance CRM) — somme de payments.montant_recu
+ * groupée par payments.service. Réservé admin/super_admin (même restriction
+ * que stats-agents et rapports) : un agent ne voit pas le chiffre d'affaires
+ * global de l'agence.
+ *
+ * Délais moyens et dossiers en retard ne sont volontairement pas construits
+ * ici : demande_status_history est vide (0 ligne réelle) et demandes.deadline
+ * n'est renseigné sur aucune des 16 demandes réelles — aucune requête
+ * honnête ne peut les produire aujourd'hui (voir docs/DETTE.md).
+ */
+export async function getRevenusParService(): Promise<
+  Array<{ service: string; total: number; devise: string; nbPaiements: number }>
+> {
+  const supabase = createClient();
+  const { data } = await supabase
+    .from("payments")
+    .select("service, montant_recu, devise");
+
+  const rows = (data || []) as Array<{
+    service: string | null;
+    montant_recu: number | string | null;
+    devise: string | null;
+  }>;
+
+  const parService = new Map<
+    string,
+    { total: number; devise: string; nbPaiements: number }
+  >();
+
+  rows.forEach((r) => {
+    const service = r.service || "Non précisé";
+    const devise = r.devise || "XAF";
+    const key = `${service}__${devise}`;
+    const existing = parService.get(key) || { total: 0, devise, nbPaiements: 0 };
+    existing.total += Number(r.montant_recu || 0);
+    existing.nbPaiements += 1;
+    parService.set(key, existing);
+  });
+
+  return Array.from(parService.entries())
+    .map(([key, v]) => ({ service: key.split("__")[0], ...v }))
+    .sort((a, b) => b.total - a.total);
 }
 
 /** Liste des dossiers d'une catégorie (avec ou sans filtre agent) */

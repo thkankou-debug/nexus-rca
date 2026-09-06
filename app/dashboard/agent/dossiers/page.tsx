@@ -1,4 +1,4 @@
-import { FolderOpen, AlertTriangle, UserX } from "lucide-react";
+import { FolderOpen, AlertTriangle, UserX, Inbox } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { DossiersIndexGrid } from "@/components/dossiers/DossiersIndexGrid";
@@ -41,6 +41,7 @@ export default async function AgentDossiersIndexPage() {
             actifs={stats.actifs}
             urgents={stats.urgents}
             nonAssignes={stats.nonAssignes}
+            demandesRecues={stats.demandesRecues}
           />
         </div>
       </header>
@@ -58,13 +59,16 @@ function GlobalCounters({
   actifs,
   urgents,
   nonAssignes,
+  demandesRecues,
 }: {
   actifs: number;
   urgents: number;
   nonAssignes: number;
+  demandesRecues: number;
 }) {
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+      <Counter label="Demandes reçues" value={demandesRecues} icon={Inbox} />
       <Counter label="Actifs" value={actifs} icon={FolderOpen} />
       <Counter label="Urgents" value={urgents} icon={AlertTriangle} />
       <Counter label="Non assignés" value={nonAssignes} icon={UserX} />
