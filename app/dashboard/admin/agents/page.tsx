@@ -4,6 +4,7 @@ import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { AgentStats, type AgentStatsRow } from "@/components/dashboard/AgentStats";
+import { getGlobalDossiersStats } from "@/lib/dossiers-server";
 
 export const metadata = {
   title: "Agents | Admin",
@@ -80,6 +81,10 @@ export default async function AdminAgentsPage() {
           ? allDates.reduce((max, d) => (new Date(d) > new Date(max) ? d : max))
           : null;
 
+      // A7 : charge de travail reelle — dossiers actifs actuellement
+      // assignes (snapshot, non affecte par le filtre de periode).
+      const { actifs: dossiers_actifs } = await getGlobalDossiersStats(agent.id);
+
       return {
         id: agent.id,
         nom: agent.nom || "",
@@ -92,6 +97,7 @@ export default async function AdminAgentsPage() {
         depenses_validees,
         nb_depenses: depenses_data.length,
         transferts_inities: transferts_dates.length,
+        dossiers_actifs,
         paiements_dates,
         clients_dates,
         demandes_dates,

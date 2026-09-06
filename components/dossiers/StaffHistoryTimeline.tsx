@@ -2,10 +2,11 @@
 
 // ============================================================================
 // COMPOSANT — Historique enrichi du dossier (staff)
-// Fusionne 3 sources :
+// Fusionne 4 sources :
 //   - demande_status_history (changements d'étape, assignations)
 //   - demande_documents_requests (docs demandés / fournis)
 //   - demande_documents (uploads par dates)
+//   - affectations_hist (changements d'agent, A7)
 // Tri chronologique inversé (récent en haut).
 // ============================================================================
 
@@ -17,13 +18,14 @@ import {
   FileQuestion,
   Loader2,
   Upload,
+  UserCog,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 
 interface HistoryEvent {
   id: string;
-  kind: "status" | "doc_request" | "doc_upload";
+  kind: "status" | "doc_request" | "doc_upload" | "assignment";
   date: string;
   title: string;
   subtitle?: string | null;
@@ -37,7 +39,7 @@ export function StaffHistoryTimeline({ demandeId }: { demandeId: string }) {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const [{ data: statusRows }, { data: reqRows }, { data: docRows }] =
+      const [{ data: statusRows }, { data: reqRows }, { data: docRows }, { data: assignRows }] =
         await Promise.all([
           supabase
             .from("demande_status_history")
@@ -52,6 +54,13 @@ export function StaffHistoryTimeline({ demandeId }: { demandeId: string }) {
           supabase
             .from("demande_documents")
             .select("id, file_name, categorie, created_at, uploaded_by")
+            .eq("demande_id", demandeId)
+            .order("created_at", { ascending: false }),
+          supabase
+            .from("affectations_hist")
+            .select(
+              "id, created_at, reason, previous_agent:profiles!affectations_hist_previous_agent_id_fkey(nom, prenom), new_agent:profiles!affectations_hist_new_agent_id_fkey(nom, prenom)"
+            )
             .eq("demande_id", demandeId)
             .order("created_at", { ascending: false }),
         ]);
@@ -125,6 +134,30 @@ export function StaffHistoryTimeline({ demandeId }: { demandeId: string }) {
         });
       });
 
+      (assignRows || []).forEach((r) => {
+        type AgentRef = { nom?: string | null; prenom?: string | null };
+        const rr = r as {
+          id: string;
+          created_at: string;
+          reason: string | null;
+          previous_agent: AgentRef | AgentRef[] | null;
+          new_agent: AgentRef | AgentRef[] | null;
+        };
+        const prev = Array.isArray(rr.previous_agent) ? rr.previous_agent[0] : rr.previous_agent;
+        const next = Array.isArray(rr.new_agent) ? rr.new_agent[0] : rr.new_agent;
+        const prevName = prev ? [prev.prenom, prev.nom].filter(Boolean).join(" ") : null;
+        const nextName = next ? [next.prenom, next.nom].filter(Boolean).join(" ") : "—";
+        merged.push({
+          id: `a-${rr.id}`,
+          kind: "assignment",
+          date: rr.created_at,
+          title: prevName
+            ? `Réaffecté : ${prevName} → ${nextName}`
+            : `Affecté à ${nextName}`,
+          subtitle: rr.reason,
+        });
+      });
+
       // Tri DESC par date
       merged.sort(
         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
@@ -181,13 +214,17 @@ export function StaffHistoryTimeline({ demandeId }: { demandeId: string }) {
                     ? FileQuestion
                     : e.kind === "doc_upload"
                       ? Upload
-                      : CheckCircle2;
+                      : e.kind === "assignment"
+                        ? UserCog
+                        : CheckCircle2;
               const accent =
                 e.kind === "status"
                   ? "text-nexus-orange-600 bg-nexus-orange-50"
                   : e.kind === "doc_request"
                     ? "text-amber-700 bg-amber-50"
-                    : "text-emerald-700 bg-emerald-50";
+                    : e.kind === "assignment"
+                      ? "text-nexus-blue-700 bg-nexus-blue-50"
+                      : "text-emerald-700 bg-emerald-50";
               return (
                 <li key={e.id} className="flex gap-3">
                   <div

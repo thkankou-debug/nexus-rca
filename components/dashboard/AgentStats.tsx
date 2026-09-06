@@ -42,6 +42,8 @@ export interface AgentStatsRow {
   depenses_validees: number;
   nb_depenses: number;
   transferts_inities: number;
+  /** A7 : charge de travail reelle — dossiers actifs assignes, snapshot */
+  dossiers_actifs: number;
   paiements_dates: { date: string; montant: number; service?: string }[];
   clients_dates: string[];
   demandes_dates: string[];
@@ -879,6 +881,9 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
                   onClick={() => handleSort("depenses")}
                 />
                 <th className="px-3 py-2.5 text-left font-bold text-slate-600">
+                  Charge de travail
+                </th>
+                <th className="px-3 py-2.5 text-left font-bold text-slate-600">
                   Dernière activité
                 </th>
                 <th className="px-3 py-2.5 text-right font-bold text-slate-600 print:hidden"></th>
@@ -973,6 +978,9 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
                       <div className="text-xs text-slate-500">
                         {agent.nb_depenses} dép.
                       </div>
+                    </td>
+                    <td className="px-3 py-3 text-nexus-blue-950">
+                      {agent.dossiers_actifs}
                     </td>
                     <td className="px-3 py-3 text-xs text-slate-500">
                       {formatRelativeDate(agent.derniere_activite)}

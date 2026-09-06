@@ -130,7 +130,7 @@ suivi avait divergé.
 | A5-0 | Audit CRM et consolidation d'identité | ✅ satisfaite par C0 — aucun corps de section propre dans ce document, voir docs/DETTE.md | — | 05/09 |
 | A5 | CRM — Dossiers et pipeline | ✅ terminée — vraies pages, voir docs/DETTE.md | v3/integration-v3 | 05/09 |
 | A6 | CRM — Clients 360, prospects, RDV, communications, tâches | ✅ terminée — 7 lots (fiche 360°, boîte de réception, dédoublonnage, RDV/D3, communications/notes, notifications, performance CRM), voir docs/DETTE.md | v3/integration-v3 | 05/09 |
-| A7 | RH rhabillé | ⬜ | | |
+| A7 | RH rhabillé | ✅ terminée — affectations_hist, tâches liées au dossier, charge de travail réelle ; rhabillage shell et délais moyens RH reportés (décisions Thierry), voir docs/DETTE.md | v3/integration-v3 | 05/09 |
 | P6-0 | Convergence des colonnes `payments` | ⬜ | | |
 | P6 | Finance | ⬜ | | |
 | P8 | CMS et contenus | ⬜ | | |

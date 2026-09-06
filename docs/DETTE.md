@@ -281,3 +281,36 @@ un zéro). **À construire** quand `deadline` sera réellement saisi lors de
 la création/qualification d'un dossier (à decider dans une phase
 ultérieure) et/ou quand `demande_status_history` sera réellement
 alimenté (P6 candidat, déjà noté en P3 #1).
+
+---
+
+## A7 — RH rhabillé (05/09/2026)
+
+**1. Rhabillage dans le nouveau shell reporté, décision confirmée par Thierry.**
+Les 20 pages RH utilisent toutes `DashboardShell.tsx` (gelé). Le nouveau
+shell d'A3 (`lib/admin-nav.ts`) n'a jamais quitté sa démo isolée sur
+`/dashboard/design-system` — aucune page réelle n'a basculé dessus depuis
+A3. Migrer le RH aurait été la première bascule réelle du nouveau shell,
+sur 20 fichiers d'un coup. **À faire** dans une phase séparée, dédiée à
+la bascule de navigation, quand le nouveau shell aura fait ses preuves.
+
+**2. Délais moyens RH non construits, décision confirmée par Thierry.**
+Volumes réels vérifiés avant de coder : 5 employés, 0 congé, 0 fiche de
+paie, 0 tâche d'onboarding, 0 évaluation. Aucun processus RH n'a
+d'historique réel exploitable — un délai moyen aurait été un chiffre sur
+un dénominateur nul (§I.6). **À construire** quand du volume réel
+existera sur au moins un de ces processus.
+
+**3. `taches` limitée aux tâches liées à un dossier (`demande_id`), pas de vue "Mes tâches" transverse.**
+Portée volontairement minimale : onglet "Tâches" sur la fiche dossier
+uniquement. `taches.demande_id` est nullable (une tâche autonome, non
+liée à un dossier, est possible dans le schéma) mais aucune UI ne la
+crée pour l'instant. **À construire** si un besoin de tâches RH
+autonomes (hors dossier) se présente.
+
+**4. Un seul compte staff réel existe (`tkankou@gmail.com`, super_admin) — "Charge de travail" et RLS `taches` non testées sur un vrai agent.**
+Confirmé par requête : aucun compte `agent`/`admin` actif n'existe en
+base à ce jour (même constat que A3 #2). La nouvelle colonne "Charge de
+travail" sur `/dashboard/super-admin/stats-agents` affichera donc 0 pour
+tous tant qu'aucun agent réel n'a de dossier assigné. **À vérifier**
+quand un premier compte agent réel sera créé.

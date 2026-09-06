@@ -20,6 +20,7 @@ import { StaffHistoryTimeline } from "./StaffHistoryTimeline";
 import { DossierTabs } from "./DossierTabs";
 import { DossierPaiementsTab, type DossierPayment } from "./DossierPaiementsTab";
 import { DossierRendezVousTab, type DossierAppointment } from "./DossierRendezVousTab";
+import { DossierTachesTab } from "./DossierTachesTab";
 import { CATEGORIE_META } from "@/lib/demande-categories";
 import { formatDate } from "@/lib/utils";
 import type {
@@ -169,6 +170,11 @@ export function StaffDossierDetail({
                 label: "Rendez-vous",
                 badge: appointments.length,
                 content: <DossierRendezVousTab appointments={appointments} />,
+              },
+              {
+                id: "taches",
+                label: "Tâches",
+                content: <DossierTachesTab demandeId={demande.id} />,
               },
               {
                 id: "historique",

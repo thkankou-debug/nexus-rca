@@ -116,6 +116,8 @@ export async function POST(
       );
     }
 
+    const previousAgentId = demande.agent_id;
+
     // Mise à jour
     const { error: updErr } = await admin
       .from("demandes")
@@ -129,6 +131,13 @@ export async function POST(
         { status: 500 }
       );
     }
+
+    await admin.from("affectations_hist").insert({
+      demande_id: params.id,
+      previous_agent_id: previousAgentId,
+      new_agent_id: newAgentId,
+      changed_by: user.id,
+    });
 
     // Historique
     const actorName =
