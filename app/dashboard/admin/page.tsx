@@ -92,13 +92,13 @@ export default async function AdminDashboardPage() {
       .neq("statut", "complete")
       .order("created_at", { ascending: false })
       .limit(5),
-    // RDV aujourd'hui
+    // RDV aujourd'hui (D3 : appointments est la table canonique, rendez_vous
+    // est obsolète — voir migration 054)
     supabase
-      .from("rendez_vous")
-      .select("id, date_rdv, sujet, statut, client_id")
-      .gte("date_rdv", todayISO)
-      .lt("date_rdv", tomorrowISO)
-      .order("date_rdv", { ascending: true }),
+      .from("appointments")
+      .select("id, rdv_date, rdv_heure, service_type, statut, client_id")
+      .eq("rdv_date", todayISO.split("T")[0])
+      .order("rdv_heure", { ascending: true }),
     // Paiements aujourd'hui
     supabase
       .from("payments")
@@ -398,31 +398,24 @@ export default async function AdminDashboardPage() {
             />
           ) : (
             <ul className="space-y-2">
-              {rdvToday.map((r) => {
-                const date = new Date(r.date_rdv);
-                const heure = date.toLocaleTimeString("fr-FR", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                });
-                return (
-                  <li
-                    key={r.id}
-                    className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50/60 px-4 py-3"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <span className="rounded-lg bg-nexus-orange-100 px-2 py-1 text-[10px] font-bold text-nexus-orange-700 tabular-nums">
-                        {heure}
-                      </span>
-                      <p className="truncate text-sm font-semibold text-nexus-blue-950">
-                        {r.sujet || "RDV"}
-                      </p>
-                    </div>
-                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                      {r.statut}
+              {rdvToday.map((r) => (
+                <li
+                  key={r.id}
+                  className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50/60 px-4 py-3"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="rounded-lg bg-nexus-orange-100 px-2 py-1 text-[10px] font-bold text-nexus-orange-700 tabular-nums">
+                      {r.rdv_heure}
                     </span>
-                  </li>
-                );
-              })}
+                    <p className="truncate text-sm font-semibold text-nexus-blue-950">
+                      {r.service_type || "RDV"}
+                    </p>
+                  </div>
+                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                    {r.statut}
+                  </span>
+                </li>
+              ))}
             </ul>
           )}
         </SectionPanel>

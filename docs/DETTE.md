@@ -204,14 +204,14 @@ dossier plus ancien (avril 2026, statut `termine`, sans agent, sans
 **À traiter** : rattachement manuel ponctuel par Thierry, ou extension
 d'une vue "Non rattachés" si d'autres cas similaires apparaissent.
 
-**3. Page `/dashboard/admin/rdv` interroge des colonnes qui n'existent pas sur `appointment_requests`.**
+**3. ~~Page `/dashboard/admin/rdv` interroge des colonnes qui n'existent pas sur `appointment_requests`.~~ Corrigé au Lot 4.**
 Découvert en vérifiant le périmètre du Lot 2 (non lié à ce lot — défaut
-préexistant) : la requête utilise `appointment_date`/`appointment_time`/
+préexistant) : la requête utilisait `appointment_date`/`appointment_time`/
 `nom_complet`, alors que le schéma réel de `appointment_requests` porte
-`preferred_date`/`preferred_time`/`full_name`. L'erreur est absorbée par
-un `console.warn`, la page affiche silencieusement "Aucun rendez-vous".
-**À corriger** en dehors d'A6 — hors périmètre de ce lot, non introduit
-par lui.
+`preferred_date`/`preferred_time`/`full_name`. L'erreur était absorbée par
+un `console.warn`, la page affichait silencieusement "Aucun rendez-vous".
+**Résolu au Lot 4** : la page lit désormais `appointments` (table
+canonique, D3), mêmes colonnes que `/dashboard/super-admin/rdv`.
 
 **4. Fusion (Lot 3) ne réassigne pas `contact_demandes` ni `profile_id`.**
 `contact_demandes` exclue pour la même raison qu'au point 1 (table morte).
@@ -228,3 +228,18 @@ réellement.
 `profile_id` distincts — coïncidence de données de test, pas un vrai
 doublon. Confirme concrètement la nécessité de la revue humaine avant
 fusion (aucune fusion automatique n'a été faite sur ces deux fiches).
+
+**6. `appointments.demande_id` toujours absent (décision confirmée au Lot 4).**
+Thierry a tranché explicitement (Lot 4) : garder la corrélation approchée
+par `client_id` plutôt qu'ajouter la colonne maintenant. Écart déjà
+documenté deux fois (A5, A6 Lot 1) et revu ici sans changement. **À
+reconsidérer** si le volume de rendez-vous grandit au point que
+l'approximation par client devient trompeuse (plusieurs dossiers actifs
+pour un même client).
+
+**7. `rendez_vous` marquée obsolète, pas supprimée (D3, migration 054).**
+0 ligne, un seul lecteur trouvé dans tout le code (déjà corrigé, point 3
+ci-dessus). Écritures bloquées (policies `INSERT`/`UPDATE` retirées),
+lecture conservée, `COMMENT ON TABLE` posé. **Suppression de la table**
+possible seulement sur autorisation explicite de Thierry (D3) — non
+demandée, non faite ici.
