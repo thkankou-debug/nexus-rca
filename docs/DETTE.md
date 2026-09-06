@@ -314,3 +314,49 @@ base à ce jour (même constat que A3 #2). La nouvelle colonne "Charge de
 travail" sur `/dashboard/super-admin/stats-agents` affichera donc 0 pour
 tous tant qu'aucun agent réel n'a de dossier assigné. **À vérifier**
 quand un premier compte agent réel sera créé.
+
+---
+
+## P6-0 — Convergence des colonnes `payments`, étape 1 et 2 (05/09/2026)
+
+**1. `PaymentForm.tsx` (bouton "Nouveau paiement") très probablement cassé depuis le 04/05/2026.**
+Le trigger `payments_check_transition` (présent depuis le schéma de base)
+exige `client_id`, `dossier_id`, `method`, `amount`, `amount_xaf` non nuls
+à l'insertion, sans exception. `PaymentForm.tsx` n'envoie aucun de ces
+champs (schéma français uniquement : `montant_total`, `mode_paiement`,
+`client_record_id`). Les 3 paiements réels portent tous
+`metadata.legacy=true` avec le même `migrated_at` (04/05/2026) — preuve
+d'un backfill ponctuel qui les a protégés *a posteriori*, mais qui ne
+protège pas les nouvelles insertions. **Non testé en écriture** (règle :
+jamais de test d'écriture sur la table la plus sensible sans
+autorisation) — déduit de la lecture du trigger et du formulaire, pas
+vérifié en pratique. **À corriger en P6-0 étape 4** (décision confirmée),
+en même temps que la migration de `PaymentForm.tsx` vers le schéma
+canonique.
+
+**2. Paiement par lien public (`payment-links/[reference]/verify/route.ts`) ne crée jamais de ligne `payments`.**
+Les 3 tentatives d'insertion ("essai 1/2/3", déjà un correctif bricolé
+documenté dans CLAUDE.md) utilisent toutes une colonne `montant` qui
+n'existe pas sur `payments` (`ERROR 42703`). L'erreur est avalée
+(`console.warn`), le lien est quand même marqué "vérifié". **À corriger
+en P6-0 étape 4** (décision confirmée).
+
+**3. `app/dashboard/agent/page.tsx` interroge `payments.montant` — colonne inexistante, même famille de bug.**
+Découvert en marge de l'analyse P6-0. Les widgets "paiements ce mois /
+cette année" du tableau de bord agent affichent toujours 0, quelle que
+soit la réalité. **À corriger en P6-0 étape 4**, en migrant ce fichier
+vers `amount` (canonique) comme les autres consommateurs.
+
+**4. `payments_log_event()` ne connaît pas le nouveau statut `partial`.**
+Le `CASE` du trigger qui type l'événement dans `payment_events` ne couvre
+que `paid/failed/validated/refunded/voided` ; une transition vers
+`partial` tombe dans la branche `ELSE 'note_updated'` — pas incorrect,
+mais moins précis. Sans conséquence pratique (`payment_events` reste un
+journal d'audit, pas une source de vérité affichée). **À affiner** si le
+détail des transitions vers `partial` devient utile un jour.
+
+**5. `client_id`/`dossier_id` restent NULL sur les 3 paiements réels après le backfill (étape 2).**
+Assumé délibérément : la feuille de route ne demande `NOT NULL` que sur
+`status`/`amount` à cette étape, et ces 3 lignes sont explicitement
+grandfathered (`metadata.legacy=true`). **À traiter en étape 4** si un
+rattachement rétroactif à un client/dossier réel est possible et utile.
