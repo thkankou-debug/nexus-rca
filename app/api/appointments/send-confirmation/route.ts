@@ -251,7 +251,7 @@ function buildEmailHTML(data: {
           <tr>
             <td style="background:#0C1C40;padding:24px 40px;text-align:center;">
               <p style="margin:0 0 8px 0;font-size:14px;font-weight:700;color:#ffffff;">NEXUS RCA — Agence Internationale</p>
-              <p style="margin:0 0 4px 0;font-size:12px;color:#94a3b8;">Relais Sica, vers Hôpital Général, Bangui, RCA</p>
+              <p style="margin:0 0 4px 0;font-size:12px;color:#94a3b8;">Croisement Marabena, Route de l'Aéroport, Bangui, RCA</p>
               <p style="margin:0 0 4px 0;font-size:12px;color:#94a3b8;">+236 73 26 96 92 · contact@nexusrca.com</p>
               <p style="margin:12px 0 0 0;font-size:11px;color:#64748b;">© ${new Date().getFullYear()} Nexus RCA. Tous droits réservés.</p>
             </td>

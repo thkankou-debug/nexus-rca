@@ -30,10 +30,10 @@ const MOCK_SETTINGS: AgencySettings = {
     email_contact: "contact@nexusrca.com",
     email_support: "support@nexusrca.com",
     whatsapp_number: "+1 587 327 6344",
-    adresse: "Relais Sica, vers Hôpital Général",
+    adresse: "Croisement Marabena, Route de l'Aéroport",
     ville: "Bangui",
     pays: "République Centrafricaine",
-    code_postal: "BP 4231",
+    code_postal: "PO.BOX 1204",
   },
   horaires: [
     { jour: "Lundi", ouverture: "08:00", fermeture: "18:00", ferme: false },

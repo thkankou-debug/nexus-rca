@@ -411,7 +411,7 @@ async function generateReceiptPDF(data: {
   const footerY = 80;
   page.drawLine({ start: { x: 50, y: footerY + 50 }, end: { x: width - 50, y: footerY + 50 }, thickness: 1, color: rgb(0.85, 0.87, 0.9) });
   drawSafeText("NEXUS RCA - Agence Internationale", { x: 50, y: footerY + 30, size: 10, font: helveticaBold, color: nexusBlue });
-  drawSafeText("Relais Sica, vers Hopital General, Bangui, Republique Centrafricaine", { x: 50, y: footerY + 15, size: 8, font: helvetica, color: grayDark });
+  drawSafeText("Croisement Marabena, Route de l'Aeroport, PO.BOX 1204, Bangui", { x: 50, y: footerY + 15, size: 8, font: helvetica, color: grayDark });
   drawSafeText("Tel: +236 73 26 96 92  -  Email: contact@nexusrca.com  -  www.nexusrca.com", { x: 50, y: footerY, size: 8, font: helvetica, color: grayDark });
   drawSafeText(`Recu genere le ${data.verifiedAt.toLocaleString("fr-FR")} - Document officiel`, { x: 50, y: footerY - 18, size: 7, font: helvetica, color: grayMid });
 

@@ -106,7 +106,7 @@ const PAYMENT_METHODS = [
     bgColor: "bg-green-50",
     instructions: [
       `Rendez-vous à notre bureau Nexus RCA`,
-      `Adresse : **Relais Sica, vers Hôpital Général, Bangui**`,
+      `Adresse : **Croisement Marabena, Route de l'Aéroport, Bangui**`,
       `Sur rendez-vous : ${NEXUS_PAYMENT_PHONE}`,
       `Mentionnez votre **référence de paiement** à l'accueil`,
       `Vous recevrez un reçu officiel après paiement`,

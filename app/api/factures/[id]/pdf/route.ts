@@ -167,7 +167,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       page,
       height,
       helvetica,
-      "Relais Sica, vers Hopital General, Bangui, Republique Centrafricaine",
+      "Croisement Marabena, Route de l'Aeroport, PO.BOX 1204, Bangui",
       50,
       height - footerY - 15,
       8,

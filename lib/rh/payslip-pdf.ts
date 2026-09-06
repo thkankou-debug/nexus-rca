@@ -368,7 +368,7 @@ export async function buildPayslipPdf(opts: BuildPayslipOptions): Promise<Uint8A
 
   // ─── Footer ──────────────────────────────────────────────────────────────
   drawRect(0, 0, PAGE_W, 50, rgb(0.97, 0.98, 0.99));
-  drawText("Nexus RCA - Relais Sica, vers Hopital General, Bangui, RCA", {
+  drawText("Nexus RCA - Croisement Marabena, Route de l'Aeroport, Bangui, RCA", {
     x: MARGIN_X,
     y: 30,
     size: 8,

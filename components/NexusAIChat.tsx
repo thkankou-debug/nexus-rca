@@ -134,7 +134,7 @@ function generateResponse(input: string): {
         "• Envoyer de l'argent dans le monde entier\n" +
         "• Recevoir un transfert en quelques minutes\n" +
         "• Payer en FCFA ou en devises\n\n" +
-        "Passez directement en agence (Relais Sica, Bangui) avec une pièce d'identité. Pour un transfert important, prévenez-nous par WhatsApp.",
+        "Passez directement en agence (Croisement Marabena, Bangui) avec une pièce d'identité. Pour un transfert important, prévenez-nous par WhatsApp.",
       suggestions: ["Voir l'adresse", "WhatsApp"],
     };
   }
@@ -182,7 +182,7 @@ function generateResponse(input: string): {
   if (/(contact|adresse|téléphone|telephone|whatsapp|horaire|agence)/.test(q)) {
     return {
       text:
-        "📍 Adresse : Relais Sica, vers Hôpital Général, Bangui, RCA\n" +
+        "📍 Adresse : Croisement Marabena, Route de l'Aéroport, Bangui, RCA\n" +
         "📞 WhatsApp : +1 587 327 6344\n\n" +
         "Nous répondons rapidement sur WhatsApp. Passez en agence sans rendez-vous pour un premier contact.",
       suggestions: ["Ouvrir WhatsApp", "Faire une demande en ligne"],

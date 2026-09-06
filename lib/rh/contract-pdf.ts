@@ -201,7 +201,7 @@ export async function buildContractPdf(opts: BuildContractOptions): Promise<Uint
     size: 9,
     color: rgb(0.7, 0.78, 0.9),
   });
-  drawText("Relais Sica, vers Hôpital Général - contact@nexusrca.com", {
+  drawText("Croisement Marabena, Route de l'Aéroport - contact@nexusrca.com", {
     x: MARGIN_X,
     y: PAGE_H - 84,
     size: 8,
@@ -276,7 +276,7 @@ export async function buildContractPdf(opts: BuildContractOptions): Promise<Uint
   });
   cursorY -= 14;
   drawParagraph(
-    "Société à responsabilité limitée de droit centrafricain. Siège social : Relais Sica, vers Hôpital Général, Bangui, République Centrafricaine. Représentée par sa Direction.",
+    "Société à responsabilité limitée de droit centrafricain. Siège social : Croisement Marabena, Route de l'Aéroport, PO.BOX 1204, Bangui, République Centrafricaine. Représentée par sa Direction.",
     { size: 9, color: grayDark }
   );
   cursorY -= 6;

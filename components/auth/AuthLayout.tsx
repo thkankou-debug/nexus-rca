@@ -125,7 +125,7 @@ export function AuthLayout({
 
             {/* Trust signal bas */}
             <p className="hidden text-[11px] uppercase tracking-[0.18em] text-slate-500 lg:block">
-              Bureau Nexus RCA · Bangui · Relais Sica
+              Bureau Nexus RCA · Bangui · Croisement Marabena
             </p>
           </div>
         </aside>

@@ -115,7 +115,7 @@ async function generateReceiptPDF(
   drawText(page, pageHeightPt, helvetica, "Agence Internationale", mm(margin), mm(y + 6), 10, NEXUS_ORANGE);
 
   const rightX = pageWidth - margin;
-  drawText(page, pageHeightPt, helvetica, "Relais Sica, vers Hôpital Général", mm(rightX), mm(y - 2), 8, SLATE_MID, "right");
+  drawText(page, pageHeightPt, helvetica, "Croisement Marabena, Route de l'Aéroport", mm(rightX), mm(y - 2), 8, SLATE_MID, "right");
   drawText(page, pageHeightPt, helvetica, "Bangui, République Centrafricaine", mm(rightX), mm(y + 2), 8, SLATE_MID, "right");
   drawText(page, pageHeightPt, helvetica, "+236 73 26 96 92", mm(rightX), mm(y + 6), 8, SLATE_MID, "right");
   drawText(page, pageHeightPt, helvetica, "contact@nexusrca.com", mm(rightX), mm(y + 10), 8, SLATE_MID, "right");

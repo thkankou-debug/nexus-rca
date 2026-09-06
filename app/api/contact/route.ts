@@ -202,7 +202,7 @@ export async function POST(
             </ul>
             <p style="margin:20px 0 0;font-size:13px;color:#94a3b8;">Mentionnez votre référence <strong style="color:#FF6600;">${escapeHtml(reference)}</strong> lors de tout échange.</p>
           </td></tr>
-          <tr><td style="background:#0C1C40;padding:18px 32px;text-align:center;color:#94a3b8;font-size:12px;">NEXUS RCA · Bangui, République Centrafricaine<br/><span style="color:#64748b;font-size:11px;">Relais Sica, vers Hôpital Général · Sur rendez-vous</span></td></tr>
+          <tr><td style="background:#0C1C40;padding:18px 32px;text-align:center;color:#94a3b8;font-size:12px;">NEXUS RCA · Bangui, République Centrafricaine<br/><span style="color:#64748b;font-size:11px;">Croisement Marabena, Route de l'Aéroport · Sur rendez-vous</span></td></tr>
         </table>
       </body></html>`;
 

@@ -49,7 +49,7 @@ const COMMITMENTS: { label: string; sub: string }[] = [
   { label: "Étude initiale gratuite", sub: "Aucun engagement préalable" },
   { label: "Devis fixé avant ouverture", sub: "Aucune surprise tarifaire" },
   { label: "Filières officielles uniquement", sub: "Traçabilité complète" },
-  { label: "Adresse physique permanente", sub: "Bangui — Relais Sica" },
+  { label: "Adresse physique permanente", sub: "Bangui — Croisement Marabena" },
 ];
 
 export function WhyTrust() {
@@ -163,7 +163,7 @@ export function WhyTrust() {
               </p>
               <p className="mt-4 inline-flex items-center gap-2 text-sm text-nexus-blue-950/70">
                 <MapPin className="h-3.5 w-3.5 text-nexus-orange-600" />
-                Bureau permanent · Bangui, Relais Sica
+                Bureau permanent · Bangui, Croisement Marabena
               </p>
             </div>
 

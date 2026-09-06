@@ -109,7 +109,7 @@ export async function POST(request: Request) {
             </p>
             <hr style="border: none; border-top: 1px solid #E2E8F0; margin: 30px 0;">
             <p style="color: #94A3B8; font-size: 12px; text-align: center;">
-              Nexus RCA · Relais Sica, Bangui, RCA<br>
+              Nexus RCA · Croisement Marabena, Bangui, RCA<br>
               +236 73 26 96 92 · contact@nexusrca.com · www.nexusrca.com
             </p>
           </div>

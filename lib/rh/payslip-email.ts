@@ -83,7 +83,7 @@ function buildHtml(opts: SendPayslipEmailOpts): string {
     <div style="background:#F8FAFC;padding:20px 28px;border:1px solid #E2E8F0;border-top:none;border-radius:0 0 16px 16px;text-align:center;">
       <p style="margin:0;color:#64748B;font-size:11px;line-height:1.5;">
         Une question sur cette fiche ? Contactez votre administration RH.<br>
-        <span style="color:#94A3B8;">Nexus RCA · Relais Sica, Bangui · contact@nexusrca.com</span>
+        <span style="color:#94A3B8;">Nexus RCA · Croisement Marabena, Bangui · contact@nexusrca.com</span>
       </p>
     </div>
   </div>

@@ -129,7 +129,7 @@ Si Thierry te dit "améliore le site", **POSE-LUI DES QUESTIONS PRÉCISES** avan
 - **Hosting** : Vercel auto-deploy depuis `main`
 
 ### Contacts
-- **Adresse** : Relais Sica, vers Hôpital Général, Bangui, RCA
+- **Adresse** : Croisement Marabena, Route de l'Aéroport, PO.BOX 1204, Bangui, RCA
 - **Téléphone RCA** : +236 73 26 96 92 (DEFAULT WhatsApp + Mobile Money)
 - **Téléphone Canada** : +1 587 327 6344
 - **Email** : contact@nexusrca.com
