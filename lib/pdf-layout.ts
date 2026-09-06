@@ -35,6 +35,14 @@ export function sanitizeForPdf(text: string): string {
     .replace(/\u00ca/g, "E") // E accent circonflexe majuscule
     .replace(/\u00c0/g, "A") // A accent grave majuscule
     .replace(/\u00c7/g, "C") // C cedille majuscule
+    // P6, Lot 1e : symboles rencontres dans MonthlyReportGenerator.tsx,
+    // absents jusqu'ici -- corrige aussi retroactivement les references
+    // vides ("\u2014") des lots 1c/1d, jamais couvertes avant ce lot.
+    .replace(/[\u2014\u2013]/g, "-") // tiret cadratin / demi-cadratin
+    .replace(/\u2022/g, "-") // puce
+    .replace(/\u26a0/g, "!") // avertissement
+    .replace(/\u2713/g, "OK") // coche
+    .replace(/\u00b7/g, "-") // point median
     // Filtre tout autre caractere non-ASCII restant
     .replace(/[^\x20-\x7E]/g, "?");
 }

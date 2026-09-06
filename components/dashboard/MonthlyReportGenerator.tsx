@@ -19,7 +19,8 @@ import {
   AlertCircle,
   X,
 } from "lucide-react";
-import jsPDF from "jspdf";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { drawText, drawFilledRect, drawLine, uint8ArrayToBase64, mm } from "@/lib/pdf-layout";
 import { createClient } from "@/lib/supabase/client";
 
 // ============================================================================
@@ -114,72 +115,67 @@ function aggregateByDevise<T extends { devise?: string | null }>(
 // ============================================================================
 // GENERATEUR PDF (5 pages)
 // ============================================================================
-function generateReportPDF(
+async function generateReportPDF(
   summary: MonthSummary,
   monthLabel: string,
   generatedBy: string
-): jsPDF {
-  const doc = new jsPDF({
-    orientation: "portrait",
-    unit: "mm",
-    format: "a4",
-  });
+): Promise<Uint8Array> {
+  const pdfDoc = await PDFDocument.create();
+  const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const helveticaItalic = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
 
   const pageWidth = 210;
   const pageHeight = 297;
   const margin = 15;
+  const pageHeightPt = mm(pageHeight);
 
-  const NEXUS_BLUE: [number, number, number] = [12, 28, 64];
-  const NEXUS_ORANGE: [number, number, number] = [255, 102, 0];
-  const SLATE_DARK: [number, number, number] = [30, 41, 59];
-  const SLATE_MID: [number, number, number] = [100, 116, 139];
-  const SLATE_LIGHT: [number, number, number] = [226, 232, 240];
+  const NEXUS_BLUE = rgb(12 / 255, 28 / 255, 64 / 255);
+  const NEXUS_ORANGE = rgb(255 / 255, 102 / 255, 0 / 255);
+  const SLATE_DARK = rgb(30 / 255, 41 / 255, 59 / 255);
+  const SLATE_MID = rgb(100 / 255, 116 / 255, 139 / 255);
+  const SLATE_LIGHT = rgb(226 / 255, 232 / 255, 240 / 255);
+  const WHITE = rgb(1, 1, 1);
+  const ROW_ALT = rgb(252 / 255, 252 / 255, 253 / 255);
+  const AMBER = rgb(245 / 255, 158 / 255, 11 / 255);
+  const GREEN = rgb(34 / 255, 197 / 255, 94 / 255);
+  const RED = rgb(239 / 255, 68 / 255, 68 / 255);
 
-  // ============================================================
-  // HELPER : header de page commun
-  // ============================================================
+  // pdf-lib n'a pas de "page courante" implicite comme jsPDF : `page` est
+  // reassigne a chaque addPage() et les helpers ci-dessous la referencent
+  // par closure (comme jsPDF le fait avec son objet `doc` mutable).
+  let page = pdfDoc.addPage([mm(pageWidth), pageHeightPt]);
+
   const drawPageHeader = (pageNum: number, totalPages: number) => {
-    // Bandeau orange en haut
-    doc.setFillColor(...NEXUS_ORANGE);
-    doc.rect(0, 0, pageWidth, 5, "F");
+    drawFilledRect(page, pageHeightPt, 0, 0, mm(pageWidth), mm(5), NEXUS_ORANGE);
 
-    // Titre + numero de page
-    doc.setFontSize(9);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(...NEXUS_BLUE);
-    doc.text("NEXUS RCA", margin, 11);
+    drawText(page, pageHeightPt, helveticaBold, "NEXUS RCA", mm(margin), mm(11), 9, NEXUS_BLUE);
+    drawText(page, pageHeightPt, helvetica, `Rapport financier - ${monthLabel}`, mm(pageWidth / 2), mm(11), 9, SLATE_MID, "center");
+    drawText(page, pageHeightPt, helvetica, `Page ${pageNum}/${totalPages}`, mm(pageWidth - margin), mm(11), 9, SLATE_MID, "right");
 
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(...SLATE_MID);
-    doc.text(
-      `Rapport financier - ${monthLabel}`,
-      pageWidth / 2,
-      11,
-      { align: "center" }
-    );
-
-    doc.text(`Page ${pageNum}/${totalPages}`, pageWidth - margin, 11, {
-      align: "right",
-    });
-
-    // Trait sous le header
-    doc.setDrawColor(...SLATE_LIGHT);
-    doc.setLineWidth(0.3);
-    doc.line(margin, 14, pageWidth - margin, 14);
+    drawLine(page, pageHeightPt, mm(margin), mm(pageWidth - margin), mm(14), SLATE_LIGHT, mm(0.3));
   };
 
   const drawPageFooter = () => {
-    doc.setFontSize(7);
-    doc.setFont("helvetica", "italic");
-    doc.setTextColor(...SLATE_MID);
-    doc.text(
+    drawText(
+      page, pageHeightPt, helveticaItalic,
       "Document confidentiel · Nexus RCA · contact@nexusrca.com · +236 73 26 96 92",
-      pageWidth / 2,
-      pageHeight - 10,
-      { align: "center" }
+      mm(pageWidth / 2), mm(pageHeight - 10), 7, SLATE_MID, "center"
     );
-    doc.setFillColor(...NEXUS_ORANGE);
-    doc.rect(0, pageHeight - 4, pageWidth, 4, "F");
+    drawFilledRect(page, pageHeightPt, 0, mm(pageHeight - 4), mm(pageWidth), mm(4), NEXUS_ORANGE);
+  };
+
+  // Boilerplate commun aux ~6 tableaux du rapport : barre d'en-tete bleue
+  // (les libelles de colonnes different par tableau, dessines separement)
+  // et fond zebre des lignes impaires.
+  const drawTableHeaderBar = (topY: number, height = 7) => {
+    drawFilledRect(page, pageHeightPt, mm(margin), mm(topY), mm(pageWidth - 2 * margin), mm(height), NEXUS_BLUE);
+  };
+
+  const drawZebraRowBg = (topY: number, rowIndex: number, height = 7) => {
+    if (rowIndex % 2 === 1) {
+      drawFilledRect(page, pageHeightPt, mm(margin), mm(topY), mm(pageWidth - 2 * margin), mm(height), ROW_ALT);
+    }
   };
 
   const totalPages = 5;
@@ -191,107 +187,75 @@ function generateReportPDF(
   drawPageHeader(pageNum, totalPages);
   let y = 25;
 
-  // Titre principal
-  doc.setFontSize(22);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_BLUE);
-  doc.text("RAPPORT FINANCIER MENSUEL", margin, y);
+  drawText(page, pageHeightPt, helveticaBold, "RAPPORT FINANCIER MENSUEL", mm(margin), mm(y), 22, NEXUS_BLUE);
 
   y += 8;
-  doc.setFontSize(14);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(...NEXUS_ORANGE);
-  doc.text(monthLabel, margin, y);
+  drawText(page, pageHeightPt, helvetica, monthLabel, mm(margin), mm(y), 14, NEXUS_ORANGE);
 
   y += 12;
-  doc.setFontSize(9);
-  doc.setTextColor(...SLATE_MID);
-  doc.text(`Généré le ${new Date().toLocaleString("fr-FR")} par ${generatedBy}`, margin, y);
+  drawText(
+    page, pageHeightPt, helvetica,
+    `Généré le ${new Date().toLocaleString("fr-FR")} par ${generatedBy}`,
+    mm(margin), mm(y), 9, SLATE_MID
+  );
 
   y += 15;
 
-  // Section "Encaissements"
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_ORANGE);
-  doc.text("ENCAISSEMENTS DU MOIS", margin, y);
+  drawText(page, pageHeightPt, helveticaBold, "ENCAISSEMENTS DU MOIS", mm(margin), mm(y), 11, NEXUS_ORANGE);
   y += 7;
 
-  // Tableau encaissements par devise
-  doc.setFontSize(9);
   const allDevises = new Set<string>();
   summary.paiements.forEach((p) => allDevises.add(p.devise));
   summary.caisse.forEach((c) => allDevises.add(c.devise));
   const devises = Array.from(allDevises).sort();
 
   if (devises.length === 0) {
-    doc.setFont("helvetica", "italic");
-    doc.setTextColor(...SLATE_MID);
-    doc.text("Aucun encaissement ce mois", margin, y);
+    drawText(page, pageHeightPt, helveticaItalic, "Aucun encaissement ce mois", mm(margin), mm(y), 9, SLATE_MID);
     y += 8;
   } else {
     devises.forEach((devise) => {
       const paie = summary.paiements.find((p) => p.devise === devise);
       const caisse = summary.caisse.find((c) => c.devise === devise);
-      const totalDevise =
-        (paie?.total || 0) + (caisse?.total || 0);
+      const totalDevise = (paie?.total || 0) + (caisse?.total || 0);
 
-      // Bloc devise
-      doc.setFillColor(252, 252, 253);
-      doc.setDrawColor(...SLATE_LIGHT);
-      doc.roundedRect(margin, y, pageWidth - 2 * margin, 22, 2, 2, "FD");
-
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(10);
-      doc.setTextColor(...NEXUS_BLUE);
-      doc.text(`Total ${devise}`, margin + 5, y + 7);
-      doc.setFontSize(14);
-      doc.setTextColor(...NEXUS_ORANGE);
-      doc.text(formatMoney(totalDevise, devise), pageWidth - margin - 5, y + 7, {
-        align: "right",
-      });
-
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(8);
-      doc.setTextColor(...SLATE_MID);
-      doc.text(
-        `Paiements : ${formatMoney(paie?.total || 0, devise)} (${paie?.count || 0} transactions)`,
-        margin + 5,
-        y + 14
+      // Bloc devise (coins carres, decision Thierry lot 1d -- pas
+      // d'equivalent natif pdf-lib pour roundedRect)
+      drawFilledRect(
+        page, pageHeightPt, mm(margin), mm(y), mm(pageWidth - 2 * margin), mm(22),
+        ROW_ALT, { color: SLATE_LIGHT, width: mm(0.3) }
       );
-      doc.text(
+
+      drawText(page, pageHeightPt, helveticaBold, `Total ${devise}`, mm(margin + 5), mm(y + 7), 10, NEXUS_BLUE);
+      drawText(page, pageHeightPt, helveticaBold, formatMoney(totalDevise, devise), mm(pageWidth - margin - 5), mm(y + 7), 14, NEXUS_ORANGE, "right");
+
+      drawText(
+        page, pageHeightPt, helvetica,
+        `Paiements : ${formatMoney(paie?.total || 0, devise)} (${paie?.count || 0} transactions)`,
+        mm(margin + 5), mm(y + 14), 8, SLATE_MID
+      );
+      drawText(
+        page, pageHeightPt, helvetica,
         `Caisse rapide : ${formatMoney(caisse?.total || 0, devise)} (${caisse?.count || 0} ventes)`,
-        margin + 5,
-        y + 18
+        mm(margin + 5), mm(y + 18), 8, SLATE_MID
       );
 
       y += 26;
     });
   }
 
-  // Section "Dépenses"
   y += 4;
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_ORANGE);
-  doc.text("DÉPENSES DU MOIS", margin, y);
+  drawText(page, pageHeightPt, helveticaBold, "DÉPENSES DU MOIS", mm(margin), mm(y), 11, NEXUS_ORANGE);
   y += 7;
 
   if (summary.depenses.length === 0) {
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(9);
-    doc.setTextColor(...SLATE_MID);
-    doc.text("Aucune dépense validée ce mois", margin, y);
+    drawText(page, pageHeightPt, helveticaItalic, "Aucune dépense validée ce mois", mm(margin), mm(y), 9, SLATE_MID);
     y += 6;
   } else {
     summary.depenses.forEach((d) => {
-      doc.setFontSize(9);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(...SLATE_DARK);
-      doc.text(
+      drawText(
+        page, pageHeightPt, helvetica,
         `${d.devise} : ${formatMoney(d.total, d.devise)} (${d.count} dépenses)`,
-        margin + 5,
-        y
+        mm(margin + 5), mm(y), 9, SLATE_DARK
       );
       y += 5;
     });
@@ -299,31 +263,21 @@ function generateReportPDF(
 
   if (summary.depensesEnAttente.length > 0) {
     y += 2;
-    doc.setFontSize(8);
-    doc.setFont("helvetica", "italic");
-    doc.setTextColor(245, 158, 11);
     summary.depensesEnAttente.forEach((d) => {
-      doc.text(
+      drawText(
+        page, pageHeightPt, helveticaItalic,
         `⚠ En attente de validation : ${formatMoney(d.total, d.devise)} (${d.count})`,
-        margin + 5,
-        y
+        mm(margin + 5), mm(y), 8, AMBER
       );
       y += 4;
     });
   }
 
-  // Section "Solde net"
   y += 6;
-  doc.setFillColor(...NEXUS_BLUE);
-  doc.roundedRect(margin, y, pageWidth - 2 * margin, 30, 3, 3, "F");
+  drawFilledRect(page, pageHeightPt, mm(margin), mm(y), mm(pageWidth - 2 * margin), mm(30), NEXUS_BLUE);
 
-  doc.setFontSize(10);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(255, 255, 255);
-  doc.text("SOLDE NET PAR DEVISE", margin + 5, y + 8);
+  drawText(page, pageHeightPt, helveticaBold, "SOLDE NET PAR DEVISE", mm(margin + 5), mm(y + 8), 10, WHITE);
 
-  doc.setFontSize(8);
-  doc.setFont("helvetica", "normal");
   let soldeY = y + 14;
   devises.forEach((devise) => {
     const paieTotal = summary.paiements.find((p) => p.devise === devise)?.total || 0;
@@ -331,182 +285,113 @@ function generateReportPDF(
     const depenseTotal = summary.depenses.find((d) => d.devise === devise)?.total || 0;
     const solde = paieTotal + caisseTotal - depenseTotal;
 
-    doc.text(`${devise} :`, margin + 5, soldeY);
-    doc.setFont("helvetica", "bold");
-    if (solde >= 0) {
-      doc.setTextColor(34, 197, 94);
-    } else {
-      doc.setTextColor(239, 68, 68);
-    }
-    doc.setFontSize(11);
-    doc.text(formatMoney(solde, devise), margin + 30, soldeY);
-    doc.setFontSize(8);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(255, 255, 255);
+    drawText(page, pageHeightPt, helvetica, `${devise} :`, mm(margin + 5), mm(soldeY), 8, WHITE);
+    drawText(
+      page, pageHeightPt, helveticaBold, formatMoney(solde, devise),
+      mm(margin + 30), mm(soldeY), 11, solde >= 0 ? GREEN : RED
+    );
     soldeY += 5;
   });
 
-  // Stats globales
   y += 36;
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_ORANGE);
-  doc.text("EN UN COUP D'ŒIL", margin, y);
+  drawText(page, pageHeightPt, helveticaBold, "EN UN COUP D'ŒIL", mm(margin), mm(y), 11, NEXUS_ORANGE);
   y += 7;
-
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(...SLATE_DARK);
 
   const totalPaiementsCount = summary.paiements.reduce((s, p) => s + p.count, 0);
   const totalCaisseCount = summary.caisse.reduce((s, c) => s + c.count, 0);
   const totalTransfertsCount = summary.transferts.reduce((s, t) => s + t.count, 0);
   const totalPartiels = summary.partiels.length;
 
-  doc.text(`• ${totalPaiementsCount} paiement(s) clients enregistré(s)`, margin + 3, y);
+  drawText(page, pageHeightPt, helvetica, `• ${totalPaiementsCount} paiement(s) clients enregistré(s)`, mm(margin + 3), mm(y), 9, SLATE_DARK);
   y += 5;
-  doc.text(`• ${totalCaisseCount} vente(s) caisse rapide`, margin + 3, y);
+  drawText(page, pageHeightPt, helvetica, `• ${totalCaisseCount} vente(s) caisse rapide`, mm(margin + 3), mm(y), 9, SLATE_DARK);
   y += 5;
-  doc.text(`• ${totalTransfertsCount} transfert(s) effectué(s)`, margin + 3, y);
+  drawText(page, pageHeightPt, helvetica, `• ${totalTransfertsCount} transfert(s) effectué(s)`, mm(margin + 3), mm(y), 9, SLATE_DARK);
   y += 5;
-  doc.text(`• ${totalPartiels} créance(s) client en cours (paiements partiels)`, margin + 3, y);
+  drawText(page, pageHeightPt, helvetica, `• ${totalPartiels} créance(s) client en cours (paiements partiels)`, mm(margin + 3), mm(y), 9, SLATE_DARK);
 
   drawPageFooter();
 
   // ============================================================
   // PAGE 2 : DETAIL ENCAISSEMENTS
   // ============================================================
-  doc.addPage();
+  page = pdfDoc.addPage([mm(pageWidth), pageHeightPt]);
   pageNum++;
   drawPageHeader(pageNum, totalPages);
   y = 25;
 
-  doc.setFontSize(16);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_BLUE);
-  doc.text("DÉTAIL DES ENCAISSEMENTS", margin, y);
+  drawText(page, pageHeightPt, helveticaBold, "DÉTAIL DES ENCAISSEMENTS", mm(margin), mm(y), 16, NEXUS_BLUE);
   y += 12;
 
-  // Tableau Paiements gros dossiers
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_ORANGE);
-  doc.text("Paiements (gros dossiers)", margin, y);
+  drawText(page, pageHeightPt, helveticaBold, "Paiements (gros dossiers)", mm(margin), mm(y), 11, NEXUS_ORANGE);
   y += 7;
 
   if (summary.paiements.length === 0) {
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(9);
-    doc.setTextColor(...SLATE_MID);
-    doc.text("Aucun paiement ce mois", margin, y);
+    drawText(page, pageHeightPt, helveticaItalic, "Aucun paiement ce mois", mm(margin), mm(y), 9, SLATE_MID);
     y += 8;
   } else {
-    // Header tableau
-    doc.setFillColor(...NEXUS_BLUE);
-    doc.rect(margin, y, pageWidth - 2 * margin, 7, "F");
-    doc.setFontSize(9);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(255, 255, 255);
-    doc.text("Devise", margin + 3, y + 5);
-    doc.text("Total reçu", margin + 50, y + 5);
-    doc.text("Restant à recevoir", margin + 100, y + 5);
-    doc.text("Nb transactions", margin + 150, y + 5);
+    drawTableHeaderBar(y);
+    drawText(page, pageHeightPt, helveticaBold, "Devise", mm(margin + 3), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Total reçu", mm(margin + 50), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Restant à recevoir", mm(margin + 100), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Nb transactions", mm(margin + 150), mm(y + 5), 9, WHITE);
     y += 7;
 
     summary.paiements.forEach((p, i) => {
-      if (i % 2 === 1) {
-        doc.setFillColor(252, 252, 253);
-        doc.rect(margin, y, pageWidth - 2 * margin, 7, "F");
-      }
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
-      doc.setTextColor(...SLATE_DARK);
-      doc.text(p.devise, margin + 3, y + 5);
-      doc.text(formatMoney(p.total, p.devise), margin + 50, y + 5);
-      doc.text(formatMoney(p.restant, p.devise), margin + 100, y + 5);
-      doc.text(String(p.count), margin + 150, y + 5);
+      drawZebraRowBg(y, i);
+      drawText(page, pageHeightPt, helvetica, p.devise, mm(margin + 3), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, formatMoney(p.total, p.devise), mm(margin + 50), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, formatMoney(p.restant, p.devise), mm(margin + 100), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, String(p.count), mm(margin + 150), mm(y + 5), 9, SLATE_DARK);
       y += 7;
     });
   }
 
   y += 8;
 
-  // Tableau Caisse rapide
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_ORANGE);
-  doc.text("Caisse rapide (petits services)", margin, y);
+  drawText(page, pageHeightPt, helveticaBold, "Caisse rapide (petits services)", mm(margin), mm(y), 11, NEXUS_ORANGE);
   y += 7;
 
   if (summary.caisse.length === 0) {
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(9);
-    doc.setTextColor(...SLATE_MID);
-    doc.text("Aucune vente caisse ce mois", margin, y);
+    drawText(page, pageHeightPt, helveticaItalic, "Aucune vente caisse ce mois", mm(margin), mm(y), 9, SLATE_MID);
     y += 8;
   } else {
-    doc.setFillColor(...NEXUS_BLUE);
-    doc.rect(margin, y, pageWidth - 2 * margin, 7, "F");
-    doc.setFontSize(9);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(255, 255, 255);
-    doc.text("Devise", margin + 3, y + 5);
-    doc.text("Total encaissé", margin + 50, y + 5);
-    doc.text("Nb ventes", margin + 130, y + 5);
+    drawTableHeaderBar(y);
+    drawText(page, pageHeightPt, helveticaBold, "Devise", mm(margin + 3), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Total encaissé", mm(margin + 50), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Nb ventes", mm(margin + 130), mm(y + 5), 9, WHITE);
     y += 7;
 
     summary.caisse.forEach((c, i) => {
-      if (i % 2 === 1) {
-        doc.setFillColor(252, 252, 253);
-        doc.rect(margin, y, pageWidth - 2 * margin, 7, "F");
-      }
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
-      doc.setTextColor(...SLATE_DARK);
-      doc.text(c.devise, margin + 3, y + 5);
-      doc.text(formatMoney(c.total, c.devise), margin + 50, y + 5);
-      doc.text(String(c.count), margin + 130, y + 5);
+      drawZebraRowBg(y, i);
+      drawText(page, pageHeightPt, helvetica, c.devise, mm(margin + 3), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, formatMoney(c.total, c.devise), mm(margin + 50), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, String(c.count), mm(margin + 130), mm(y + 5), 9, SLATE_DARK);
       y += 7;
     });
   }
 
-  // Transferts
   y += 8;
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_ORANGE);
-  doc.text("Transferts effectués", margin, y);
+
+  drawText(page, pageHeightPt, helveticaBold, "Transferts effectués", mm(margin), mm(y), 11, NEXUS_ORANGE);
   y += 7;
 
   if (summary.transferts.length === 0) {
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(9);
-    doc.setTextColor(...SLATE_MID);
-    doc.text("Aucun transfert ce mois", margin, y);
+    drawText(page, pageHeightPt, helveticaItalic, "Aucun transfert ce mois", mm(margin), mm(y), 9, SLATE_MID);
   } else {
-    doc.setFillColor(...NEXUS_BLUE);
-    doc.rect(margin, y, pageWidth - 2 * margin, 7, "F");
-    doc.setFontSize(9);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(255, 255, 255);
-    doc.text("Devise", margin + 3, y + 5);
-    doc.text("Montant transféré", margin + 50, y + 5);
-    doc.text("Frais collectés", margin + 110, y + 5);
-    doc.text("Nb", margin + 165, y + 5);
+    drawTableHeaderBar(y);
+    drawText(page, pageHeightPt, helveticaBold, "Devise", mm(margin + 3), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Montant transféré", mm(margin + 50), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Frais collectés", mm(margin + 110), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Nb", mm(margin + 165), mm(y + 5), 9, WHITE);
     y += 7;
 
     summary.transferts.forEach((t, i) => {
-      if (i % 2 === 1) {
-        doc.setFillColor(252, 252, 253);
-        doc.rect(margin, y, pageWidth - 2 * margin, 7, "F");
-      }
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
-      doc.setTextColor(...SLATE_DARK);
-      doc.text(t.devise, margin + 3, y + 5);
-      doc.text(formatMoney(t.total, t.devise), margin + 50, y + 5);
-      doc.text(formatMoney(t.frais, t.devise), margin + 110, y + 5);
-      doc.text(String(t.count), margin + 165, y + 5);
+      drawZebraRowBg(y, i);
+      drawText(page, pageHeightPt, helvetica, t.devise, mm(margin + 3), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, formatMoney(t.total, t.devise), mm(margin + 50), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, formatMoney(t.frais, t.devise), mm(margin + 110), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, String(t.count), mm(margin + 165), mm(y + 5), 9, SLATE_DARK);
       y += 7;
     });
   }
@@ -516,80 +401,50 @@ function generateReportPDF(
   // ============================================================
   // PAGE 3 : DETAIL DEPENSES
   // ============================================================
-  doc.addPage();
+  page = pdfDoc.addPage([mm(pageWidth), pageHeightPt]);
   pageNum++;
   drawPageHeader(pageNum, totalPages);
   y = 25;
 
-  doc.setFontSize(16);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_BLUE);
-  doc.text("DÉTAIL DES DÉPENSES", margin, y);
+  drawText(page, pageHeightPt, helveticaBold, "DÉTAIL DES DÉPENSES", mm(margin), mm(y), 16, NEXUS_BLUE);
   y += 12;
 
-  // Validees
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_ORANGE);
-  doc.text("Dépenses validées", margin, y);
+  drawText(page, pageHeightPt, helveticaBold, "Dépenses validées", mm(margin), mm(y), 11, NEXUS_ORANGE);
   y += 7;
 
   if (summary.depenses.length === 0) {
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(9);
-    doc.setTextColor(...SLATE_MID);
-    doc.text("Aucune dépense validée", margin, y);
+    drawText(page, pageHeightPt, helveticaItalic, "Aucune dépense validée", mm(margin), mm(y), 9, SLATE_MID);
     y += 8;
   } else {
-    doc.setFillColor(...NEXUS_BLUE);
-    doc.rect(margin, y, pageWidth - 2 * margin, 7, "F");
-    doc.setFontSize(9);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(255, 255, 255);
-    doc.text("Devise", margin + 3, y + 5);
-    doc.text("Total dépenses", margin + 50, y + 5);
-    doc.text("Nombre", margin + 130, y + 5);
+    drawTableHeaderBar(y);
+    drawText(page, pageHeightPt, helveticaBold, "Devise", mm(margin + 3), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Total dépenses", mm(margin + 50), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Nombre", mm(margin + 130), mm(y + 5), 9, WHITE);
     y += 7;
 
     summary.depenses.forEach((d, i) => {
-      if (i % 2 === 1) {
-        doc.setFillColor(252, 252, 253);
-        doc.rect(margin, y, pageWidth - 2 * margin, 7, "F");
-      }
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
-      doc.setTextColor(...SLATE_DARK);
-      doc.text(d.devise, margin + 3, y + 5);
-      doc.text(formatMoney(d.total, d.devise), margin + 50, y + 5);
-      doc.text(String(d.count), margin + 130, y + 5);
+      drawZebraRowBg(y, i);
+      drawText(page, pageHeightPt, helvetica, d.devise, mm(margin + 3), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, formatMoney(d.total, d.devise), mm(margin + 50), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, String(d.count), mm(margin + 130), mm(y + 5), 9, SLATE_DARK);
       y += 7;
     });
   }
 
   y += 8;
 
-  // En attente
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(245, 158, 11);
-  doc.text("Dépenses en attente de validation", margin, y);
+  drawText(page, pageHeightPt, helveticaBold, "Dépenses en attente de validation", mm(margin), mm(y), 11, AMBER);
   y += 7;
 
   if (summary.depensesEnAttente.length === 0) {
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(9);
-    doc.setTextColor(...SLATE_MID);
-    doc.text("Aucune dépense en attente", margin, y);
+    drawText(page, pageHeightPt, helveticaItalic, "Aucune dépense en attente", mm(margin), mm(y), 9, SLATE_MID);
     y += 8;
   } else {
     summary.depensesEnAttente.forEach((d) => {
-      doc.setFontSize(9);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(...SLATE_DARK);
-      doc.text(
+      drawText(
+        page, pageHeightPt, helvetica,
         `${d.devise} : ${formatMoney(d.total, d.devise)} sur ${d.count} dépense(s)`,
-        margin + 5,
-        y
+        mm(margin + 5), mm(y), 9, SLATE_DARK
       );
       y += 6;
     });
@@ -600,104 +455,65 @@ function generateReportPDF(
   // ============================================================
   // PAGE 4 : TOP SERVICES + TOP AGENTS
   // ============================================================
-  doc.addPage();
+  page = pdfDoc.addPage([mm(pageWidth), pageHeightPt]);
   pageNum++;
   drawPageHeader(pageNum, totalPages);
   y = 25;
 
-  doc.setFontSize(16);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_BLUE);
-  doc.text("PERFORMANCES DU MOIS", margin, y);
+  drawText(page, pageHeightPt, helveticaBold, "PERFORMANCES DU MOIS", mm(margin), mm(y), 16, NEXUS_BLUE);
   y += 12;
 
-  // Top services caisse
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_ORANGE);
-  doc.text("Top services (caisse rapide)", margin, y);
+  drawText(page, pageHeightPt, helveticaBold, "Top services (caisse rapide)", mm(margin), mm(y), 11, NEXUS_ORANGE);
   y += 7;
 
   if (summary.topServices.length === 0) {
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(9);
-    doc.setTextColor(...SLATE_MID);
-    doc.text("Aucune donnée", margin, y);
+    drawText(page, pageHeightPt, helveticaItalic, "Aucune donnée", mm(margin), mm(y), 9, SLATE_MID);
     y += 8;
   } else {
-    doc.setFillColor(...NEXUS_BLUE);
-    doc.rect(margin, y, pageWidth - 2 * margin, 7, "F");
-    doc.setFontSize(9);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(255, 255, 255);
-    doc.text("#", margin + 3, y + 5);
-    doc.text("Service", margin + 12, y + 5);
-    doc.text("Total", margin + 90, y + 5);
-    doc.text("Nb ventes", margin + 140, y + 5);
-    doc.text("Devise", margin + 175, y + 5);
+    drawTableHeaderBar(y);
+    drawText(page, pageHeightPt, helveticaBold, "#", mm(margin + 3), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Service", mm(margin + 12), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Total", mm(margin + 90), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Nb ventes", mm(margin + 140), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Devise", mm(margin + 175), mm(y + 5), 9, WHITE);
     y += 7;
 
     summary.topServices.slice(0, 10).forEach((s, i) => {
-      if (i % 2 === 1) {
-        doc.setFillColor(252, 252, 253);
-        doc.rect(margin, y, pageWidth - 2 * margin, 7, "F");
-      }
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
-      doc.setTextColor(...SLATE_DARK);
-      doc.text(`${i + 1}`, margin + 3, y + 5);
-      doc.text(SERVICE_LABELS[s.service] || s.service, margin + 12, y + 5);
-      doc.text(formatMoney(s.total, ""), margin + 90, y + 5);
-      doc.text(String(s.count), margin + 140, y + 5);
-      doc.text(s.devise, margin + 175, y + 5);
+      drawZebraRowBg(y, i);
+      drawText(page, pageHeightPt, helvetica, `${i + 1}`, mm(margin + 3), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, SERVICE_LABELS[s.service] || s.service, mm(margin + 12), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, formatMoney(s.total, ""), mm(margin + 90), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, String(s.count), mm(margin + 140), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, s.devise, mm(margin + 175), mm(y + 5), 9, SLATE_DARK);
       y += 7;
     });
   }
 
   y += 8;
 
-  // Top agents
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_ORANGE);
-  doc.text("Top agents (par encaissements)", margin, y);
+  drawText(page, pageHeightPt, helveticaBold, "Top agents (par encaissements)", mm(margin), mm(y), 11, NEXUS_ORANGE);
   y += 7;
 
   if (summary.topAgents.length === 0) {
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(9);
-    doc.setTextColor(...SLATE_MID);
-    doc.text("Aucune donnée", margin, y);
+    drawText(page, pageHeightPt, helveticaItalic, "Aucune donnée", mm(margin), mm(y), 9, SLATE_MID);
   } else {
-    doc.setFillColor(...NEXUS_BLUE);
-    doc.rect(margin, y, pageWidth - 2 * margin, 7, "F");
-    doc.setFontSize(9);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(255, 255, 255);
-    doc.text("#", margin + 3, y + 5);
-    doc.text("Agent", margin + 12, y + 5);
-    doc.text("Paiements", margin + 70, y + 5);
-    doc.text("Caisse", margin + 110, y + 5);
-    doc.text("Total", margin + 145, y + 5);
-    doc.text("Devise", margin + 175, y + 5);
+    drawTableHeaderBar(y);
+    drawText(page, pageHeightPt, helveticaBold, "#", mm(margin + 3), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Agent", mm(margin + 12), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Paiements", mm(margin + 70), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Caisse", mm(margin + 110), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Total", mm(margin + 145), mm(y + 5), 9, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Devise", mm(margin + 175), mm(y + 5), 9, WHITE);
     y += 7;
 
     summary.topAgents.slice(0, 10).forEach((a, i) => {
-      if (i % 2 === 1) {
-        doc.setFillColor(252, 252, 253);
-        doc.rect(margin, y, pageWidth - 2 * margin, 7, "F");
-      }
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
-      doc.setTextColor(...SLATE_DARK);
-      doc.text(`${i + 1}`, margin + 3, y + 5);
-      doc.text(a.nom.substring(0, 28), margin + 12, y + 5);
-      doc.text(formatMoney(a.paiements, ""), margin + 70, y + 5);
-      doc.text(formatMoney(a.caisse, ""), margin + 110, y + 5);
-      doc.setFont("helvetica", "bold");
-      doc.text(formatMoney(a.total, ""), margin + 145, y + 5);
-      doc.setFont("helvetica", "normal");
-      doc.text(a.devise, margin + 175, y + 5);
+      drawZebraRowBg(y, i);
+      drawText(page, pageHeightPt, helvetica, `${i + 1}`, mm(margin + 3), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, a.nom.substring(0, 28), mm(margin + 12), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, formatMoney(a.paiements, ""), mm(margin + 70), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, formatMoney(a.caisse, ""), mm(margin + 110), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helveticaBold, formatMoney(a.total, ""), mm(margin + 145), mm(y + 5), 9, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, a.devise, mm(margin + 175), mm(y + 5), 9, SLATE_DARK);
       y += 7;
     });
   }
@@ -707,93 +523,67 @@ function generateReportPDF(
   // ============================================================
   // PAGE 5 : PAIEMENTS PARTIELS (CREANCES)
   // ============================================================
-  doc.addPage();
+  page = pdfDoc.addPage([mm(pageWidth), pageHeightPt]);
   pageNum++;
   drawPageHeader(pageNum, totalPages);
   y = 25;
 
-  doc.setFontSize(16);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_BLUE);
-  doc.text("CRÉANCES CLIENTS", margin, y);
+  drawText(page, pageHeightPt, helveticaBold, "CRÉANCES CLIENTS", mm(margin), mm(y), 16, NEXUS_BLUE);
 
   y += 6;
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "italic");
-  doc.setTextColor(...SLATE_MID);
-  doc.text("Paiements partiels - montants restant à encaisser", margin, y);
+  drawText(page, pageHeightPt, helveticaItalic, "Paiements partiels - montants restant à encaisser", mm(margin), mm(y), 9, SLATE_MID);
   y += 12;
 
   if (summary.partiels.length === 0) {
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(10);
-    doc.setTextColor(34, 197, 94);
-    doc.text("✓ Aucune créance en cours - tous les paiements sont à jour", margin, y);
+    drawText(page, pageHeightPt, helveticaItalic, "✓ Aucune créance en cours - tous les paiements sont à jour", mm(margin), mm(y), 10, GREEN);
   } else {
-    doc.setFillColor(...NEXUS_BLUE);
-    doc.rect(margin, y, pageWidth - 2 * margin, 7, "F");
-    doc.setFontSize(8);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(255, 255, 255);
-    doc.text("Référence", margin + 3, y + 5);
-    doc.text("Client", margin + 35, y + 5);
-    doc.text("Service", margin + 75, y + 5);
-    doc.text("Total", margin + 115, y + 5);
-    doc.text("Reçu", margin + 145, y + 5);
-    doc.text("Restant", margin + 170, y + 5);
+    drawTableHeaderBar(y);
+    drawText(page, pageHeightPt, helveticaBold, "Référence", mm(margin + 3), mm(y + 5), 8, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Client", mm(margin + 35), mm(y + 5), 8, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Service", mm(margin + 75), mm(y + 5), 8, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Total", mm(margin + 115), mm(y + 5), 8, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Reçu", mm(margin + 145), mm(y + 5), 8, WHITE);
+    drawText(page, pageHeightPt, helveticaBold, "Restant", mm(margin + 170), mm(y + 5), 8, WHITE);
     y += 7;
 
-    let totalRestantParDevise: Record<string, number> = {};
+    const totalRestantParDevise: Record<string, number> = {};
 
     summary.partiels.forEach((p, i) => {
       if (y > pageHeight - 30) {
-        // Nouvelle page si on deborde
+        // Nouvelle page si on deborde. `pageNum` n'est pas incremente ici
+        // (bug preexistant jsPDF, "Page X/5" se repeterait) -- porte tel
+        // quel, voir docs/DETTE.md.
         drawPageFooter();
-        doc.addPage();
+        page = pdfDoc.addPage([mm(pageWidth), pageHeightPt]);
         drawPageHeader(pageNum, totalPages);
         y = 25;
       }
 
-      if (i % 2 === 1) {
-        doc.setFillColor(252, 252, 253);
-        doc.rect(margin, y, pageWidth - 2 * margin, 6, "F");
-      }
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(8);
-      doc.setTextColor(...SLATE_DARK);
-      doc.text((p.reference || "—").substring(0, 16), margin + 3, y + 4);
-      doc.text(p.client_nom.substring(0, 20), margin + 35, y + 4);
-      doc.text(p.service.substring(0, 20), margin + 75, y + 4);
-      doc.text(formatMoney(p.montant_total, ""), margin + 115, y + 4);
-      doc.text(formatMoney(p.montant_recu, ""), margin + 145, y + 4);
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(255, 102, 0);
-      doc.text(formatMoney(p.restant, p.devise), margin + 170, y + 4);
+      drawZebraRowBg(y, i, 6);
+      drawText(page, pageHeightPt, helvetica, (p.reference || "—").substring(0, 16), mm(margin + 3), mm(y + 4), 8, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, p.client_nom.substring(0, 20), mm(margin + 35), mm(y + 4), 8, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, p.service.substring(0, 20), mm(margin + 75), mm(y + 4), 8, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, formatMoney(p.montant_total, ""), mm(margin + 115), mm(y + 4), 8, SLATE_DARK);
+      drawText(page, pageHeightPt, helvetica, formatMoney(p.montant_recu, ""), mm(margin + 145), mm(y + 4), 8, SLATE_DARK);
+      drawText(page, pageHeightPt, helveticaBold, formatMoney(p.restant, p.devise), mm(margin + 170), mm(y + 4), 8, NEXUS_ORANGE);
       y += 6;
 
-      // Cumul par devise
-      if (!totalRestantParDevise[p.devise])
-        totalRestantParDevise[p.devise] = 0;
+      if (!totalRestantParDevise[p.devise]) totalRestantParDevise[p.devise] = 0;
       totalRestantParDevise[p.devise] += p.restant;
     });
 
-    // Total
     y += 4;
-    doc.setFillColor(...NEXUS_ORANGE);
-    doc.rect(margin, y, pageWidth - 2 * margin, 8, "F");
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(10);
-    doc.setTextColor(255, 255, 255);
-    doc.text("TOTAL CRÉANCES", margin + 3, y + 5);
-    let totalText = Object.entries(totalRestantParDevise)
+    drawFilledRect(page, pageHeightPt, mm(margin), mm(y), mm(pageWidth - 2 * margin), mm(8), NEXUS_ORANGE);
+    drawText(page, pageHeightPt, helveticaBold, "TOTAL CRÉANCES", mm(margin + 3), mm(y + 5), 10, WHITE);
+    const totalText = Object.entries(totalRestantParDevise)
       .map(([d, t]) => formatMoney(t, d))
       .join(" + ");
-    doc.text(totalText, pageWidth - margin - 3, y + 5, { align: "right" });
+    drawText(page, pageHeightPt, helveticaBold, totalText, mm(pageWidth - margin - 3), mm(y + 5), 10, WHITE, "right");
   }
 
   drawPageFooter();
 
-  return doc;
+  return pdfDoc.save();
 }
 
 // ============================================================================
@@ -1048,12 +838,20 @@ export function MonthlyReportGenerator({
   // ============================================================
   // ACTIONS PDF
   // ============================================================
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!summary) return;
     setGenerating(true);
     try {
-      const doc = generateReportPDF(summary, monthBounds.label, currentUserName);
-      doc.save(`Rapport_Nexus_${selectedMonth}.pdf`);
+      const bytes = await generateReportPDF(summary, monthBounds.label, currentUserName);
+      const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Rapport_Nexus_${selectedMonth}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
       toast.success("Rapport téléchargé");
     } catch (err) {
       console.error(err);
@@ -1063,12 +861,12 @@ export function MonthlyReportGenerator({
     }
   };
 
-  const handlePrint = () => {
+  const handlePrint = async () => {
     if (!summary) return;
     setGenerating(true);
     try {
-      const doc = generateReportPDF(summary, monthBounds.label, currentUserName);
-      const blob = doc.output("blob");
+      const bytes = await generateReportPDF(summary, monthBounds.label, currentUserName);
+      const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
       const w = window.open(url, "_blank");
       if (w) {
@@ -1091,8 +889,8 @@ export function MonthlyReportGenerator({
     }
     setSendingEmail(true);
     try {
-      const doc = generateReportPDF(summary, monthBounds.label, currentUserName);
-      const base64 = doc.output("datauristring").split(",")[1];
+      const bytes = await generateReportPDF(summary, monthBounds.label, currentUserName);
+      const base64 = uint8ArrayToBase64(bytes);
 
       const response = await fetch("/api/payments/send-receipt", {
         method: "POST",
