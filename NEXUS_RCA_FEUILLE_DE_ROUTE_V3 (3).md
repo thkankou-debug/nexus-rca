@@ -1,4 +1,4 @@
-﻿# NEXUS RCA — FEUILLE DE ROUTE V3
+# NEXUS RCA — FEUILLE DE ROUTE V3
 **Document unique d'exécution. Source de vérité du projet.**
 Version 1.0 · 5 septembre 2026 · Remplace et consolide les 5 amendements précédents
 Décideur : Thierry F. Kankou · Exécutant : Claude Code
@@ -103,6 +103,13 @@ indépendamment de `main`. Réconciliées dans `v3/integration-v3` avant A3
 (voir `docs/DETTE.md`, entrée P2 #1). À partir d'A3, chaque nouvelle phase
 se branche depuis `v3/integration-v3`, pas depuis `main`.
 
+**Note du 05/09/2026 (2)** : cette version (3) du document a été déposée à la
+racine en remplacement de la version (2) ; sa table d'avancement était
+revenue à l'état initial (tout ⬜). Reconstituée ci-dessous à partir des
+commits réels de la version (2) — le contenu des phases (objectifs,
+travaux, D1-D8) est identique entre les deux versions, seule la table de
+suivi avait divergé.
+
 ## I.5 Tableau d'avancement — à tenir à jour dans ce fichier
 
 | Code | Phase | État | Branche | Date |
@@ -122,7 +129,7 @@ se branche depuis `v3/integration-v3`, pas depuis `main`.
 | A4 | Tableau de bord | ✅ terminée — démo isolée, voir docs/DETTE.md | v3/integration-v3 | 05/09 |
 | A5-0 | Audit CRM et consolidation d'identité | ✅ satisfaite par C0 — aucun corps de section propre dans ce document, voir docs/DETTE.md | — | 05/09 |
 | A5 | CRM — Dossiers et pipeline | ✅ terminée — vraies pages, voir docs/DETTE.md | v3/integration-v3 | 05/09 |
-| A6 | CRM — Clients 360, prospects, RDV, communications, tâches | ⬜ | | |
+| A6 | CRM — Clients 360, prospects, RDV, communications, tâches | 🔶 en cours — lots 1-4/6 terminés (fiche 360°, boîte de réception, dédoublonnage, RDV/D3), lot 5 en cours, voir docs/DETTE.md | v3/integration-v3 | 05/09 |
 | A7 | RH rhabillé | ⬜ | | |
 | P6-0 | Convergence des colonnes `payments` | ⬜ | | |
 | P6 | Finance | ⬜ | | |
@@ -173,12 +180,20 @@ Volumes réels : 19 demandes, 20 profils, 9 liens de paiement, 3 paiements, 4 re
 
 **D3 · Rendez-vous.** `appointments` est la table canonique. `rendez_vous` est marquée obsolète sans suppression : inventaire de ses données et de ses consommateurs, migration des données utiles, remplacement progressif des lectures et écritures, blocage des nouvelles écritures après migration. **Suppression seulement après vérification complète et autorisation explicite de Thierry** — donc pas en V3.
 
+**D4 · Animations.** `framer-motion` est maintenu sur les pages publiques qui l'utilisent déjà, **sans extension systématique** à de nouvelles pages. **Interdit dans l'administration** : uniquement les transitions CSS discrètes définies en A1, avec respect de `prefers-reduced-motion`. CLAUDE.md est mis en cohérence en P1c.
+
+**D5 · PDF.** `pdf-lib` est retenu pour les nouveaux documents et pour la convergence de P6. La migration doit **préserver les documents existants** et faire l'objet d'une vérification visuelle : accents, polices embarquées, tableaux, sauts de page. Changer de bibliothèque ne garantit pas à soi seul la qualité Unicode — c'est la vérification qui l'établit.
+
+**D8 · Palette unique sur toute la plateforme.** L'identité bleu nuit / ivoire / or s'applique au site public, à l'administration **et** à l'espace client. L'administration ne conserve pas `nexus-orange-500` comme accent principal. Direction : bleu nuit pour la navigation et les textes principaux · blanc et ivoire pour les surfaces de travail · or pour l'action principale et les accents choisis · **texte bleu nuit sur bouton or** · couleurs sémantiques distinctes pour erreur, avertissement, succès et information.
+
+Le changement passe **par les tokens sémantiques**, jamais par un remplacement global de l'orange. Contrastes mesurés, y compris pour les états actif, survol et focus.
+
+**Même identité partout, mais registres distincts** : l'administration reste sobre, dense et lisible — pas de globe, pas de texture dorée, pas de décor de couverture dans les écrans de gestion.
+
 ### En attente
 
 | # | Question | Bloque | Recommandation |
 |---|---|---|---|
-| D4 | `framer-motion` : interdit par CLAUDE.md, utilisé dans 14 fichiers | P1c | Assumer, mettre à jour CLAUDE.md, l'interdire dans l'administration |
-| D5 | `pdf-lib` ou `jspdf` ? | P6 | `pdf-lib` (Unicode et accents), migration des 5 fichiers `jspdf` en entrée de P6 |
 | D6 | Quelles valeurs de `payment_status` font foi ? L'enum en compte 11, mélangeant deux vocabulaires (voir P6-0 §1) | **P6-0** | Choisir un jeu canonique de 5 à 6 valeurs anglaises, cohérent avec D1 |
 | D7 | **Quelle table est l'entité « personne » canonique ?** Cinq tables décrivent aujourd'hui un être humain : `profiles`, `clients`, `contacts`, `contact_demandes`, `appointment_requests` — plus les champs client dénormalisés dans `demandes`. Une fiche à 360° est impossible tant que ce n'est pas tranché | **C0, et tout le CRM** | `clients` = personne (prospect ou client, avec ou sans compte) ; `profiles` = compte d'authentification, relié par `clients.profile_id` ; tout le reste pointe sur `clients.id`. Voir C0 |
 
@@ -273,23 +288,35 @@ g) Réponse brute de /payer/[token] : ni numero_transaction, ni verified_at,
 3. **Performance des policies** — les 118 `auth_rls_initplan` : `auth.uid()` → `(select auth.uid())`. Ajouter les index sur les 42 clés étrangères non couvertes (purement additif).
 4. **`gen_demande_ref()`** — passer de `MAX(...)+1` à une vraie séquence Postgres, **en conservant le format `DEM-YYYY-NNNNNN`**, séquence initialisée au maximum actuel. Une référence est un identifiant que le client cite au téléphone : le format ne change pas.
 5. **Nettoyage** — supprimer les 3 fichiers `.backup.*`.
-6. **CLAUDE.md** — resynchroniser : numérotation réelle des migrations (018-032, pas 001-017), i18n déjà livré, position tranchée sur framer-motion, et **ajouter la règle 8 de §I.2** (toute migration appliquée est committée).
+6. **CLAUDE.md** — resynchroniser : numérotation réelle des migrations (018-032, pas 001-017), i18n déjà livré, **règle D4 sur les animations** (framer-motion maintenu sur les pages publiques qui l'utilisent déjà, sans extension à de nouvelles pages ; interdit dans l'administration, où seules les transitions CSS de A1 sont admises, avec `prefers-reduced-motion`), et **ajouter la règle 8 de §I.2** (toute migration appliquée est committée).
 
 ---
 
 ## A1 · Tokens et fondations visuelles
 **Préalable** : aucun. **Parallélisable avec P1b/P1c** — aucun contact avec la base ni les permissions.
 
-Couche sémantique de couleurs par-dessus la palette de marque existante. L'administration n'appelle jamais une couleur de marque directement.
+Couche sémantique de couleurs appliquant D8 — bleu nuit, ivoire, or — au site public, à l'administration **et** à l'espace client. Aucun composant n'appelle une couleur de marque directement.
 
 ```
---surface · --surface-raised · --surface-sunken
+--surface            blanc / ivoire — surfaces de travail
+--surface-raised     cartes, tableaux
+--surface-sunken     en-têtes de tableau, zones inertes
 --border · --border-strong
---text-primary (nexus-blue-950) · --text-secondary · --text-muted
---accent (nexus-orange-500) · --focus
+--text-primary       bleu nuit — navigation et textes principaux
+--text-secondary · --text-muted
+--accent             or — action principale
+--on-accent          bleu nuit — libellé sur bouton or, jamais blanc
+--focus              anneau visible, jamais supprimé
+--danger · --warning · --success · --info   sémantiques, distinctes de l'or
 ```
 
-**Règle de rareté de l'accent : une seule action orange par écran.** Un tableau dont chaque ligne porte un bouton orange n'a plus de hiérarchie.
+**Le passage à l'or se fait par les tokens, jamais par un remplacement global de `nexus-orange-500`.** Un `sed` sur la palette casserait les endroits où l'orange porte un sens qui n'est pas « action principale ». Chaque occurrence est requalifiée une par une, vers le token qui correspond à son rôle réel.
+
+**Contrastes mesurés et consignés**, y compris pour les états **actif, survol et focus** : WCAG AA — texte normal ≥ 4,5:1, grand texte ≥ 3:1, composants et focus ≥ 3:1. Un couple qui échoue est corrigé, jamais toléré.
+
+**Registres distincts, identité unique.** L'administration reste sobre, dense et lisible : pas de globe, pas de texture dorée, pas de décor de couverture dans les écrans de gestion. L'or y est rare et fonctionnel.
+
+**Règle de rareté de l'accent : une seule action or par écran.** Un tableau dont chaque ligne porte un bouton or n'a plus de hiérarchie.
 
 **Statuts : six familles, jamais quinze couleurs.** Neutre (nouvelle demande, qualification) · Attente côté client (documents demandés, incomplet, paiement en attente) · En cours côté agence (étude, devis envoyé, traitement, transmis) · Succès (devis accepté, décision reçue, terminé) · Échec (refusé, annulé) · Inerte (archivé). Le badge est un point coloré + libellé en casse normale sur fond neutre, jamais une pastille pleine.
 
@@ -301,7 +328,7 @@ Couche sémantique de couleurs par-dessus la palette de marque existante. L'admi
 
 **Mouvement** — dans l'administration : transitions CSS de 120-150 ms sur les changements d'état déclenchés par l'utilisateur, rien d'autre. Aucune animation d'entrée de page, aucun effet au survol des cartes. `prefers-reduced-motion` respecté.
 
-**Interdits** — dégradés · cartes à ombre douce identiques pour tout contenu · libellés en majuscules espacées · flèche `→` collée aux libellés de boutons · icône décorative dans un carré teinté sur une carte de compteur (le libellé porte déjà l'information) · mode sombre en V3.
+**Interdits** — dégradés · cartes à ombre douce identiques pour tout contenu · libellés en majuscules espacées en or sous le seuil de contraste · flèche `→` collée aux libellés de boutons · icône décorative dans un carré teinté sur une carte de compteur (le libellé porte déjà l'information) · mode sombre en V3.
 
 ---
 
@@ -714,7 +741,9 @@ Devis · factures · reçus · paiements partiels et reste dû · échéanciers 
 
 Numérotation : `DEV-YYYY-NNNNNN`, `FAC-YYYY-NNNNNN`, `REC-YYYY-NNNNNN`, par séquence Postgres avec trigger `BEFORE INSERT` — **jamais** par `count(*)+1`.
 
-Toute opération sensible passe par une permission et laisse une ligne d'`audit_log`. Migration des 5 fichiers `jspdf` vers `pdf-lib` en entrée de phase.
+Toute opération sensible passe par une permission et laisse une ligne d'`audit_log`.
+
+**Migration PDF (D5)** : passage à `pdf-lib` en entrée de phase, pour les 5 fichiers `jspdf`. Les documents déjà générés sont **préservés** — aucun reçu existant n'est régénéré ni écrasé. Vérification visuelle obligatoire avant validation : accents et diacritiques, polices embarquées, tableaux, sauts de page, sur au moins un reçu et une facture réels. Changer de bibliothèque ne garantit pas la qualité Unicode ; c'est la vérification qui l'établit.
 
 ---
 
@@ -723,7 +752,36 @@ Toute opération sensible passe par une permission et laisse une ligne d'`audit_
 
 Le `super_admin` gère sans toucher au code : catégories et services, descriptions, tarifs ou « sur devis », documents demandés, délais indicatifs, étapes de traitement, pays et destinations, FAQ, coordonnées, bureaux, partenaires, témoignages **vérifiés**, textes et appels à l'action du site, activation ou désactivation d'un service.
 
-**Aucun faux partenaire, aucun faux témoignage, aucun logo non autorisé.** Un témoignage n'est publiable que marqué vérifié, avec sa source.
+### Les huit pôles officiels
+
+Visa et mobilité · Digitalisation et technologie · Financement et incubation · Accompagnement business · Réseau international · Études internationales · Assurance et voyage · Services administratifs.
+
+Ils sont administrables dans « Services et tarifs », **associables aux dossiers et filtrables dans le CRM**. Cela **n'ajoute aucune entrée dans la barre latérale** : la navigation reste celle définie en A3, et les pôles sont une dimension de données, pas un niveau de menu.
+
+### Inventaire slug par slug — à présenter avant d'alimenter `services`
+
+Tableau obligatoire, une ligne par page de service existante :
+
+| URL actuelle | Intitulé actuel | Pôle officiel de rattachement | Prestations et formulaires conservés | URL cible | Redirection 301 ? |
+|---|---|---|---|---|---|
+
+**Règles :**
+- **Ne pas forcer sept pages à correspondre artificiellement à huit pôles.** Un pôle regroupe plusieurs prestations ; un pôle peut n'en avoir qu'une ; une page existante peut se scinder.
+- **Aucun service existant ne disparaît** — en particulier billets d'avion, hôtels, assurances et accompagnements spécifiques.
+- **Conserver les URL quand c'est possible.** Toute URL remplacée reçoit une redirection permanente vers la page pertinente, **sans chaîne de redirections** (A → C directement, jamais A → B → C).
+- Les formulaires spécifiques à une prestation sont conservés et rattachés, pas fusionnés dans un formulaire générique.
+
+### Informations institutionnelles
+
+Chaque champ institutionnel porte deux indicateurs indépendants : **`is_verified`** et **`is_published`**. Un champ ne s'affiche que s'il est **renseigné, vérifié et publié** — les trois. Aucune valeur de remplacement inventée, aucune valeur par défaut.
+
+**Toute modification de la valeur d'un champ remet `is_verified` à `false`** : une donnée modifiée est une donnée à revérifier. Le déclenchement se fait par trigger en base, pas par discipline applicative.
+
+Même mécanisme pour les témoignages et les partenaires. **Aucun faux partenaire, aucun faux témoignage, aucun logo non autorisé.**
+
+### Médias
+
+Chaque image conserve sa **provenance** et la **preuve de ses droits d'utilisation**. Pour toute personne identifiable, l'**autorisation écrite** est recueillie avant publication, collaborateurs compris, et référencée dans la fiche du média.
 
 ---
 
@@ -737,13 +795,76 @@ Suivi d'avancement · étapes faites et restantes · téléversement · document
 ---
 
 ## P10 · Site public
-**Préalable** : P8.
+**Préalable** : P8, et la décision D8.
 
-Le vrai chantier est la **factorisation** : 7 pages `services/*` de 1200 à 2272 lignes, chacune avec son `*Form.tsx` de 1200+ lignes, toutes sur le même moule. Un gabarit de page service alimenté par la table `services`, un composant de formulaire configuré par service.
+### Direction visuelle — validée par Thierry le 5 septembre 2026
 
-Puis hiérarchie visuelle, présentation des 8 pôles, appels à l'action, états de chargement et messages d'erreur, navigation mobile, pied de page, SEO, accessibilité, performance. Cible Lighthouse ≥ 90 sur les quatre axes.
+Bleu nuit, ivoire et or · typographie éditoriale (serif de titrage + sans-serif de lecture) · positionnement international centré sur Bangui · présentation sobre des expertises · appels à l'action clairs · **aucun faux chiffre, faux partenaire ni faux témoignage**. Registre : cabinet international, pas startup.
 
-**Ne pas transformer le site en modèle générique de startup.** L'identité reste élégante, institutionnelle, internationale.
+La maquette de page d'accueil fournie fait référence pour la composition, la palette et le ton. Elle est traduite en tokens, pas copiée pixel par pixel.
+
+### Le vrai chantier technique : la factorisation
+
+7 pages `services/*` de 1200 à 2272 lignes, chacune avec son `*Form.tsx` de 1200+ lignes, toutes sur le même moule. Un gabarit de page service alimenté par la table `services` (P8), un composant de formulaire configuré par service. **La grille des expertises de la page d'accueil est alimentée par `services`, jamais écrite en dur** — sinon on réintroduit précisément ce que le CMS existe pour supprimer.
+
+### Exigences officielles — arrêtées par Thierry le 5 septembre 2026
+
+La maquette de page d'accueil est le **design approuvé** de P10. Cette validation ne modifie pas l'ordre des phases et n'autorise pas l'implémentation : les préalables restent applicables. Lors de P10, l'interface est reproduite avec de vrais composants responsives, en appliquant toutes les corrections ci-dessous.
+
+**E1 · Accessibilité — WCAG AA, sans compromis**
+Texte normal ≥ 4,5:1 · texte de grande taille ≥ 3:1 · composants interactifs et états de focus ≥ 3:1.
+L'or est une couleur d'**accent**, jamais une couleur de petit texte. Les petites capitales et mentions secondaires sur bleu nuit passent en **ivoire** si l'or n'atteint pas le seuil. Sur bouton or, le libellé est en **bleu nuit**, pas en blanc. Chaque combinaison est **mesurée et documentée**, jamais validée à l'œil.
+
+**E2 · Un seul appel à l'action**
+Libellé officiel unique : **« Soumettre une demande »**, sur une route unique, utilisé à l'identique dans l'en-tête, la couverture, les pages de service, la navigation mobile et le pied de page. Bouton secondaire de la couverture : **« Découvrir nos expertises »**.
+
+**E3 · Les huit pôles, tous affichés**
+Visa et mobilité · Digitalisation et technologie · Financement et incubation · Accompagnement business · Réseau international · Études internationales · Assurance et voyage · Services administratifs.
+
+Les huit proviennent de la table `services` et du CMS, jamais du code. Champs administrables : `featured` et `ordre_affichage`. Si une version ultérieure n'en met que certains en avant, la page doit annoncer « Expertises mises en avant » et proposer « Voir les huit pôles ». **Pour la livraison V3 : les huit sont affichés.**
+
+*Réconciliation préalable, à faire en P8 :* le dépôt compte **7** pages `services/*`, la maquette en montre **6**, la liste officielle en compte **8**, avec des intitulés qui ne se recouvrent pas exactement (« Stratégie & partenariats » de la maquette face à « Réseau international » et « Accompagnement business » de la liste). Établir la correspondance slug par slug avant d'alimenter `services`, et **poser des redirections 301 pour toute URL de service existante qui changerait** — ces adresses ont pu être partagées et sont indexées.
+
+**E4 · Visuel de couverture**
+L'image fournie est une **référence de composition et de direction artistique uniquement**. Elle ne doit pas être publiée comme photographie institutionnelle.
+
+La version finale privilégie une photographie **réelle, autorisée, de haute qualité** : Bangui, les bureaux de Nexus RCA, l'équipe réelle, ou une situation professionnelle réelle. **Aucune photographie artificielle de collaborateurs, aucun faux bureau, aucune scène laissant croire à une implantation inexistante.**
+
+À défaut de photographie satisfaisante disponible, utiliser temporairement une **composition graphique institutionnelle sobre**, sans prétendre qu'elle représente les bureaux ou l'équipe.
+
+*Point de droit à couvrir :* toute photographie de personnes identifiables suppose leur autorisation écrite, y compris pour les collaborateurs. À réunir avant publication, pas après.
+
+**E5 · Performance**
+Budget imposé : **≤ 250 Ko pour l'image de couverture**, en AVIF avec repli WebP, `srcset` responsive, `priority` sur le LCP, rien d'autre de bloquant au-dessus de la ligne de flottaison. Les visiteurs à Bangui sont en 3G. **Lighthouse ≥ 90 sur les quatre axes est une condition de sortie de phase**, pas un souhait.
+
+**E6 · Zone de sécurité de la couverture**
+Titre et boutons posés sur une image dont le côté droit est chargé : définir une zone de sécurité et un voile dégradé, et prévoir la recomposition sous 1024 px — sur téléphone, l'image passe en arrière-plan atténué ou en bandeau distinct, jamais en fond de texte illisible.
+
+**E7 · Bilingue**
+La composition tolère ±30 % de variation de longueur entre le français et l'anglais sans casser. Le serif retenu couvre correctement les diacritiques français.
+
+**E8 · Crédibilité institutionnelle — données vérifiables uniquement**
+
+Le refus des faux chiffres, faux logos et faux témoignages prive la page de ses béquilles habituelles. Elle gagne sa crédibilité par des éléments réels :
+
+dénomination juridique exacte · forme juridique · numéro RCCM · numéro fiscal si publiable · adresse physique vérifiée · horaires ou conditions de réception · coordonnées professionnelles · interlocuteurs nommés et autorisés · méthode de traitement documentée · engagements de confidentialité · mentions légales et politique de confidentialité.
+
+**Toutes ces données sont administrables depuis le back-office.** Une information non fournie ou non vérifiée **ne s'affiche pas** : chaque champ institutionnel porte `is_verified` et `is_published`, et le rendu exige les trois conditions — renseigné, vérifié, publié. Toute modification de valeur remet `is_verified` à `false`, par trigger en base. Pas de valeur par défaut, pas de texte de remplacement, pas de zone comblée par du contenu inventé. Détail du mécanisme en P8.
+
+### Livrables à présenter avant tout développement de P10
+
+1. Les **ratios de contraste mesurés**, paire par paire, avec le verdict AA.
+2. L'**inventaire des appels à l'action** existants et leur libellé harmonisé sur « Soumettre une demande ».
+3. La **requête CMS** produisant les huit pôles, et la table de correspondance slugs existants → slugs cibles, avec les redirections 301 prévues.
+4. La **liste des informations institutionnelles** disponibles et vérifiées, et celles qui manquent.
+5. La **provenance et les droits d'utilisation** de chaque photographie, autorisations des personnes identifiables incluses.
+6. Les **maquettes desktop et mobile**.
+
+Aucun contenu inventé pour combler une zone vide, à aucun moment de la phase.
+
+### Reste de la phase
+
+Hiérarchie visuelle et lisibilité · harmonisation des espacements, cartes, boutons, icônes · suppression des répétitions · pages détaillées par service · formulaires de demande et de rendez-vous avec états de chargement, confirmations et messages d'erreur clairs · navigation mobile · pied de page et coordonnées · SEO · accessibilité · vérification de tous les liens, redirections et formulaires · contenus administrables depuis le back-office.
 
 ---
 
