@@ -61,6 +61,9 @@ export function drawText(
   page.drawText(safe, { x: drawX, y: pageHeight - topY, size, font, color });
 }
 
+// P6, Lot 1d : border optionnel (equivalent jsPDF roundedRect(..., "FD") sans
+// l'arrondi -- pdf-lib n'a pas de coins arrondis natifs, coins carres retenus
+// par Thierry plutot qu'un chemin SVG non testable visuellement).
 export function drawFilledRect(
   page: PDFPage,
   pageHeight: number,
@@ -68,13 +71,27 @@ export function drawFilledRect(
   topY: number,
   width: number,
   height: number,
-  color: ReturnType<typeof rgb>
+  color: ReturnType<typeof rgb>,
+  border?: { color: ReturnType<typeof rgb>; width: number }
 ) {
-  page.drawRectangle({ x, y: pageHeight - topY - height, width, height, color });
+  page.drawRectangle({
+    x,
+    y: pageHeight - topY - height,
+    width,
+    height,
+    color,
+    ...(border ? { borderColor: border.color, borderWidth: border.width } : {}),
+  });
 }
 
 // P6, Lot 1c : conversion millimetres -> points (format ticket de caisse 80mm).
 export const MM_TO_PT = 2.83465;
+
+// P6, Lot 1d : conversion mm -> points, partagee (evite de dupliquer ce
+// helper d'une ligne dans chaque fichier utilisant un format en mm).
+export function mm(v: number): number {
+  return v * MM_TO_PT;
+}
 
 // P6, Lot 1c : equivalent de jsPDF splitTextToSize() -- decoupe un texte en
 // lignes qui tiennent chacune dans maxWidthPt, par mots entiers.
@@ -119,6 +136,21 @@ export function drawDashedLine(
     color,
     dashArray: [1 * MM_TO_PT, 1 * MM_TO_PT],
   });
+}
+
+// P6, Lot 1d : trait plein (variante non pointillee de drawDashedLine, pour
+// les separateurs classiques comme dans PaymentReceipt.tsx).
+export function drawLine(
+  page: PDFPage,
+  pageHeight: number,
+  x1: number,
+  x2: number,
+  topY: number,
+  color: ReturnType<typeof rgb>,
+  thicknessPt: number = 0.5 * MM_TO_PT
+) {
+  const y = pageHeight - topY;
+  page.drawLine({ start: { x: x1, y }, end: { x: x2, y }, thickness: thicknessPt, color });
 }
 
 // P6, Lot 1c : encodage base64 d'un Uint8Array cote navigateur (equivalent de

@@ -24,7 +24,7 @@ import {
   drawDashedLine,
   wrapText,
   uint8ArrayToBase64,
-  MM_TO_PT,
+  mm,
 } from "@/lib/pdf-layout";
 import { createClient } from "@/lib/supabase/client";
 import { ClientSelector } from "./ClientSelector";
@@ -119,10 +119,6 @@ interface AgentInfo {
 // ============================================================================
 // GENERATEUR TICKET PDF (format ticket de caisse, 80mm de large)
 // ============================================================================
-function mm(v: number): number {
-  return v * MM_TO_PT;
-}
-
 async function generateTicketPDF(
   sale: QuickSale,
   agent?: AgentInfo

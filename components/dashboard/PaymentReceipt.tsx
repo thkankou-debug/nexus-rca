@@ -3,7 +3,15 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { FileDown, Loader2, Printer, Mail, X } from "lucide-react";
-import jsPDF from "jspdf";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import {
+  drawText,
+  drawFilledRect,
+  drawLine,
+  wrapText,
+  uint8ArrayToBase64,
+  mm,
+} from "@/lib/pdf-layout";
 import type {
   Payment,
   PaymentStatusCanonical,
@@ -72,276 +80,170 @@ function formatDateTime(dateStr: string): string {
   }
 }
 
-function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
-  const doc = new jsPDF({
-    orientation: "portrait",
-    unit: "mm",
-    format: "a4",
-  });
+async function generateReceiptPDF(
+  payment: Payment,
+  agent?: AgentInfo
+): Promise<Uint8Array> {
+  const pdfDoc = await PDFDocument.create();
+  const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const helveticaOblique = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
+  const courier = await pdfDoc.embedFont(StandardFonts.Courier);
 
   const pageWidth = 210;
   const pageHeight = 297;
   const margin = 20;
+  const pageHeightPt = mm(pageHeight);
+  const page = pdfDoc.addPage([mm(pageWidth), pageHeightPt]);
+
+  const NEXUS_BLUE = rgb(12 / 255, 28 / 255, 64 / 255);
+  const NEXUS_ORANGE = rgb(255 / 255, 102 / 255, 0 / 255);
+  const SLATE_DARK = rgb(30 / 255, 41 / 255, 59 / 255);
+  const SLATE_MID = rgb(100 / 255, 116 / 255, 139 / 255);
+  const SLATE_LIGHT = rgb(226 / 255, 232 / 255, 240 / 255);
+  const GREEN = rgb(34 / 255, 197 / 255, 94 / 255);
+  const AMBER = rgb(245 / 255, 158 / 255, 11 / 255);
+  const GRAY_BG = rgb(248 / 255, 250 / 255, 252 / 255);
+  const ORANGE_BG = rgb(255 / 255, 247 / 255, 237 / 255);
+
   let y = margin;
 
-  const NEXUS_BLUE: [number, number, number] = [12, 28, 64];
-  const NEXUS_ORANGE: [number, number, number] = [255, 102, 0];
-  const SLATE_DARK: [number, number, number] = [30, 41, 59];
-  const SLATE_MID: [number, number, number] = [100, 116, 139];
-  const SLATE_LIGHT: [number, number, number] = [226, 232, 240];
-
-  doc.setFillColor(...NEXUS_ORANGE);
-  doc.rect(0, 0, pageWidth, 8, "F");
+  drawFilledRect(page, pageHeightPt, 0, 0, mm(pageWidth), mm(8), NEXUS_ORANGE);
 
   y = 25;
-  doc.setFontSize(24);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_BLUE);
-  doc.text("NEXUS RCA", margin, y);
+  drawText(page, pageHeightPt, helveticaBold, "NEXUS RCA", mm(margin), mm(y), 24, NEXUS_BLUE);
+  drawText(page, pageHeightPt, helvetica, "Agence Internationale", mm(margin), mm(y + 6), 10, NEXUS_ORANGE);
 
-  doc.setFontSize(10);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(...NEXUS_ORANGE);
-  doc.text("Agence Internationale", margin, y + 6);
-
-  doc.setFontSize(8);
-  doc.setTextColor(...SLATE_MID);
   const rightX = pageWidth - margin;
-  doc.text("Relais Sica, vers Hôpital Général", rightX, y - 2, { align: "right" });
-  doc.text("Bangui, République Centrafricaine", rightX, y + 2, { align: "right" });
-  doc.text("+236 73 26 96 92", rightX, y + 6, { align: "right" });
-  doc.text("contact@nexusrca.com", rightX, y + 10, { align: "right" });
-  doc.text("www.nexusrca.com", rightX, y + 14, { align: "right" });
+  drawText(page, pageHeightPt, helvetica, "Relais Sica, vers Hôpital Général", mm(rightX), mm(y - 2), 8, SLATE_MID, "right");
+  drawText(page, pageHeightPt, helvetica, "Bangui, République Centrafricaine", mm(rightX), mm(y + 2), 8, SLATE_MID, "right");
+  drawText(page, pageHeightPt, helvetica, "+236 73 26 96 92", mm(rightX), mm(y + 6), 8, SLATE_MID, "right");
+  drawText(page, pageHeightPt, helvetica, "contact@nexusrca.com", mm(rightX), mm(y + 10), 8, SLATE_MID, "right");
+  drawText(page, pageHeightPt, helvetica, "www.nexusrca.com", mm(rightX), mm(y + 14), 8, SLATE_MID, "right");
 
   y += 22;
-  doc.setDrawColor(...SLATE_LIGHT);
-  doc.setLineWidth(0.5);
-  doc.line(margin, y, pageWidth - margin, y);
+  drawLine(page, pageHeightPt, mm(margin), mm(pageWidth - margin), mm(y), SLATE_LIGHT);
 
   y += 12;
-  doc.setFontSize(20);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_BLUE);
-  doc.text("REÇU DE PAIEMENT", pageWidth / 2, y, { align: "center" });
+  drawText(page, pageHeightPt, helveticaBold, "REÇU DE PAIEMENT", mm(pageWidth / 2), mm(y), 20, NEXUS_BLUE, "center");
 
   y += 7;
-  doc.setFontSize(10);
-  doc.setFont("courier", "normal");
-  doc.setTextColor(...SLATE_MID);
-  doc.text(`Référence : ${payment.reference || "—"}`, pageWidth / 2, y, {
-    align: "center",
-  });
+  drawText(page, pageHeightPt, courier, `Référence : ${payment.reference || "—"}`, mm(pageWidth / 2), mm(y), 10, SLATE_MID, "center");
 
   y += 10;
-  doc.setFillColor(248, 250, 252);
-  doc.roundedRect(margin, y, pageWidth - 2 * margin, 18, 2, 2, "F");
+  drawFilledRect(page, pageHeightPt, mm(margin), mm(y), mm(pageWidth - 2 * margin), mm(18), GRAY_BG);
 
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(...SLATE_MID);
-  doc.text("DATE DU PAIEMENT", margin + 5, y + 6);
+  drawText(page, pageHeightPt, helvetica, "DATE DU PAIEMENT", mm(margin + 5), mm(y + 6), 9, SLATE_MID);
+  drawText(page, pageHeightPt, helveticaBold, formatDate(payment.date_paiement), mm(margin + 5), mm(y + 13), 11, SLATE_DARK);
 
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...SLATE_DARK);
-  doc.text(formatDate(payment.date_paiement), margin + 5, y + 13);
+  drawText(page, pageHeightPt, helvetica, "STATUT", mm(pageWidth - margin - 5), mm(y + 6), 9, SLATE_MID, "right");
 
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(...SLATE_MID);
-  doc.text("STATUT", pageWidth - margin - 5, y + 6, { align: "right" });
-
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  if (payment.status === "paid") {
-    doc.setTextColor(34, 197, 94);
-  } else if (payment.status === "partial") {
-    doc.setTextColor(245, 158, 11);
-  } else {
-    doc.setTextColor(...SLATE_DARK);
-  }
-  doc.text(STATUS_LABELS[payment.status], pageWidth - margin - 5, y + 13, {
-    align: "right",
-  });
+  const statusColor =
+    payment.status === "paid" ? GREEN : payment.status === "partial" ? AMBER : SLATE_DARK;
+  drawText(
+    page, pageHeightPt, helveticaBold, STATUS_LABELS[payment.status],
+    mm(pageWidth - margin - 5), mm(y + 13), 11, statusColor, "right"
+  );
 
   y += 25;
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_ORANGE);
-  doc.text("CLIENT", margin, y);
+  drawText(page, pageHeightPt, helveticaBold, "CLIENT", mm(margin), mm(y), 11, NEXUS_ORANGE);
 
   y += 6;
-  doc.setFontSize(13);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...SLATE_DARK);
-  doc.text(payment.client_nom, margin, y);
+  drawText(page, pageHeightPt, helveticaBold, payment.client_nom, mm(margin), mm(y), 13, SLATE_DARK);
 
   y += 6;
-  doc.setFontSize(10);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(...SLATE_MID);
   if (payment.client_email) {
-    doc.text(`Email : ${payment.client_email}`, margin, y);
+    drawText(page, pageHeightPt, helvetica, `Email : ${payment.client_email}`, mm(margin), mm(y), 10, SLATE_MID);
     y += 5;
   }
   if (payment.client_telephone) {
-    doc.text(`Téléphone : ${payment.client_telephone}`, margin, y);
+    drawText(page, pageHeightPt, helvetica, `Téléphone : ${payment.client_telephone}`, mm(margin), mm(y), 10, SLATE_MID);
     y += 5;
   }
 
   y += 5;
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_ORANGE);
-  doc.text("SERVICE FOURNI", margin, y);
+  drawText(page, pageHeightPt, helveticaBold, "SERVICE FOURNI", mm(margin), mm(y), 11, NEXUS_ORANGE);
 
   y += 6;
-  doc.setFontSize(12);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...SLATE_DARK);
-  doc.text(payment.service, margin, y);
+  drawText(page, pageHeightPt, helveticaBold, payment.service, mm(margin), mm(y), 12, SLATE_DARK);
 
   if (payment.description) {
     y += 6;
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(...SLATE_MID);
-    const descLines = doc.splitTextToSize(
-      payment.description,
-      pageWidth - 2 * margin
-    );
-    doc.text(descLines, margin, y);
+    const descLines = wrapText(helvetica, payment.description, mm(pageWidth - 2 * margin), 10);
+    descLines.forEach((line, i) => {
+      drawText(page, pageHeightPt, helvetica, line, mm(margin), mm(y + i * 5), 10, SLATE_MID);
+    });
     y += descLines.length * 5;
   }
 
   y += 10;
   const blockHeight = 45;
 
-  doc.setFillColor(255, 247, 237);
-  doc.setDrawColor(...NEXUS_ORANGE);
-  doc.setLineWidth(0.5);
-  doc.roundedRect(margin, y, pageWidth - 2 * margin, blockHeight, 3, 3, "FD");
-
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(...SLATE_MID);
-  doc.text("MONTANT TOTAL", margin + 8, y + 9);
-
-  doc.setFontSize(13);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...SLATE_DARK);
-  doc.text(
-    formatMoney(Number(payment.montant_total), payment.devise),
-    margin + 8,
-    y + 16
+  drawFilledRect(
+    page, pageHeightPt, mm(margin), mm(y), mm(pageWidth - 2 * margin), mm(blockHeight),
+    ORANGE_BG, { color: NEXUS_ORANGE, width: mm(0.5) }
   );
 
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(...SLATE_MID);
-  doc.text("MONTANT REÇU", margin + 8, y + 25);
+  drawText(page, pageHeightPt, helvetica, "MONTANT TOTAL", mm(margin + 8), mm(y + 9), 9, SLATE_MID);
+  drawText(
+    page, pageHeightPt, helveticaBold,
+    formatMoney(Number(payment.montant_total), payment.devise),
+    mm(margin + 8), mm(y + 16), 13, SLATE_DARK
+  );
 
-  doc.setFontSize(15);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(34, 197, 94);
-  doc.text(
+  drawText(page, pageHeightPt, helvetica, "MONTANT REÇU", mm(margin + 8), mm(y + 25), 9, SLATE_MID);
+  drawText(
+    page, pageHeightPt, helveticaBold,
     formatMoney(Number(payment.montant_recu), payment.devise),
-    margin + 8,
-    y + 33
+    mm(margin + 8), mm(y + 33), 15, GREEN
   );
 
   const restant = Number(payment.montant_total) - Number(payment.montant_recu);
 
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(...SLATE_MID);
-  doc.text("RESTANT À PAYER", pageWidth - margin - 8, y + 9, { align: "right" });
-
-  doc.setFontSize(15);
-  doc.setFont("helvetica", "bold");
-  if (restant > 0) {
-    doc.setTextColor(...NEXUS_ORANGE);
-  } else {
-    doc.setTextColor(34, 197, 94);
-  }
-  doc.text(
+  drawText(page, pageHeightPt, helvetica, "RESTANT À PAYER", mm(pageWidth - margin - 8), mm(y + 9), 9, SLATE_MID, "right");
+  drawText(
+    page, pageHeightPt, helveticaBold,
     formatMoney(Math.max(0, restant), payment.devise),
-    pageWidth - margin - 8,
-    y + 17,
-    { align: "right" }
+    mm(pageWidth - margin - 8), mm(y + 17), 15,
+    restant > 0 ? NEXUS_ORANGE : GREEN, "right"
   );
 
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(...SLATE_MID);
-  doc.text("MODE DE PAIEMENT", pageWidth - margin - 8, y + 28, { align: "right" });
-
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...SLATE_DARK);
-  doc.text(
-    METHOD_LABELS[payment.method],
-    pageWidth - margin - 8,
-    y + 35,
-    { align: "right" }
+  drawText(page, pageHeightPt, helvetica, "MODE DE PAIEMENT", mm(pageWidth - margin - 8), mm(y + 28), 9, SLATE_MID, "right");
+  drawText(
+    page, pageHeightPt, helveticaBold, METHOD_LABELS[payment.method],
+    mm(pageWidth - margin - 8), mm(y + 35), 11, SLATE_DARK, "right"
   );
 
   y += blockHeight + 12;
 
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_ORANGE);
-  doc.text("ENCAISSÉ PAR", margin, y);
+  drawText(page, pageHeightPt, helveticaBold, "ENCAISSÉ PAR", mm(margin), mm(y), 11, NEXUS_ORANGE);
 
   y += 6;
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...SLATE_DARK);
-  if (agent) {
-    const agentName = [agent.prenom, agent.nom].filter(Boolean).join(" ");
-    doc.text(agentName || "Agent Nexus RCA", margin, y);
-  } else {
-    doc.text("Agent Nexus RCA", margin, y);
-  }
+  const agentName = agent ? [agent.prenom, agent.nom].filter(Boolean).join(" ") : "";
+  drawText(page, pageHeightPt, helveticaBold, agentName || "Agent Nexus RCA", mm(margin), mm(y), 11, SLATE_DARK);
 
   y += 5;
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(...SLATE_MID);
-  doc.text(`Le ${formatDateTime(payment.created_at)}`, margin, y);
+  drawText(page, pageHeightPt, helvetica, `Le ${formatDateTime(payment.created_at)}`, mm(margin), mm(y), 9, SLATE_MID);
 
   const footerY = pageHeight - 30;
-  doc.setDrawColor(...SLATE_LIGHT);
-  doc.setLineWidth(0.5);
-  doc.line(margin, footerY, pageWidth - margin, footerY);
+  drawLine(page, pageHeightPt, mm(margin), mm(pageWidth - margin), mm(footerY), SLATE_LIGHT);
 
-  doc.setFontSize(8);
-  doc.setFont("helvetica", "italic");
-  doc.setTextColor(...SLATE_MID);
-  doc.text(
+  drawText(
+    page, pageHeightPt, helveticaOblique,
     "Ce document est un reçu officiel généré par le système Nexus RCA.",
-    pageWidth / 2,
-    footerY + 6,
-    { align: "center" }
+    mm(pageWidth / 2), mm(footerY + 6), 8, SLATE_MID, "center"
   );
-  doc.text(
+  drawText(
+    page, pageHeightPt, helveticaOblique,
     "Pour toute question, contactez-nous au +236 73 26 96 92 ou contact@nexusrca.com",
-    pageWidth / 2,
-    footerY + 11,
-    { align: "center" }
+    mm(pageWidth / 2), mm(footerY + 11), 8, SLATE_MID, "center"
   );
 
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_BLUE);
-  doc.text("Merci de votre confiance !", pageWidth / 2, footerY + 18, {
-    align: "center",
-  });
+  drawText(page, pageHeightPt, helveticaBold, "Merci de votre confiance !", mm(pageWidth / 2), mm(footerY + 18), 9, NEXUS_BLUE, "center");
 
-  doc.setFillColor(...NEXUS_ORANGE);
-  doc.rect(0, pageHeight - 5, pageWidth, 5, "F");
+  drawFilledRect(page, pageHeightPt, 0, mm(pageHeight - 5), mm(pageWidth), mm(5), NEXUS_ORANGE);
 
-  return doc;
+  return pdfDoc.save();
 }
 
 // ============================================================================
@@ -361,14 +263,22 @@ export function ReceiptButtons({
   );
   const [sending, setSending] = useState(false);
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     setGenerating(true);
     try {
-      const doc = generateReceiptPDF(payment, agent);
+      const bytes = await generateReceiptPDF(payment, agent);
+      const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
       const filename = `Recu_${payment.reference || payment.id}_${
         payment.client_nom.replace(/\s+/g, "-")
       }.pdf`;
-      doc.save(filename);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
       toast.success("Reçu téléchargé");
     } catch (error) {
       console.error(error);
@@ -378,11 +288,11 @@ export function ReceiptButtons({
     }
   };
 
-  const handlePrint = () => {
+  const handlePrint = async () => {
     setGenerating(true);
     try {
-      const doc = generateReceiptPDF(payment, agent);
-      const blob = doc.output("blob");
+      const bytes = await generateReceiptPDF(payment, agent);
+      const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
       const printWindow = window.open(url, "_blank");
       if (printWindow) {
@@ -410,11 +320,8 @@ export function ReceiptButtons({
 
     setSending(true);
     try {
-      const doc = generateReceiptPDF(payment, agent);
-      // Convertir en base64 (sans le prefixe data:application/pdf;base64,)
-      const base64 = doc
-        .output("datauristring")
-        .split(",")[1];
+      const bytes = await generateReceiptPDF(payment, agent);
+      const base64 = uint8ArrayToBase64(bytes);
 
       const response = await fetch("/api/payments/send-receipt", {
         method: "POST",
