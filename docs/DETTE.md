@@ -822,3 +822,24 @@ suffisant pour une liste de pays ou une fiche bureau (pas de risque de
 deux tables (aucune autre table ne référence leurs id). Le bureau de
 Bangui inséré en migration 065 apparaît directement dans le nouvel écran
 Bureaux, aucune donnée supplémentaire à saisir.
+
+**14. Lot Informations institutionnelles (06/09/2026) : `agency_settings` réservée super_admin, aucune ligne pré-remplie, aucune migration nécessaire.**
+Écran `/dashboard/super-admin/informations-institutionnelles` réservé
+`super_admin` uniquement (`requireProfile(["super_admin"])`) — cohérent
+avec la RLS déjà en place depuis P3 ("Super admin manages
+agency_settings", migration 046) : même `admin` ne peut qu'y lire, jamais
+y écrire. `agency_settings.valeur` (jsonb) structurée en `{ label, texte }`
+— un enregistrement = un champ institutionnel, avec `is_verified`/
+`is_published` (déjà ajoutées en migration 063). Workflow identique aux
+témoignages/partenaires : créer en brouillon → vérifier → publier,
+publication bloquée côté serveur sans vérification préalable. **0 ligne
+créée par ce lot** (vérifié après coup) : la liste des 11 champs suggérés
+par le texte P10/E8 (dénomination juridique, RCCM, mentions légales...)
+n'est qu'une aide d'interface (`datalist` HTML + bandeau informatif),
+**aucune valeur inventée** — Thierry doit lui-même créer et renseigner
+chaque champ réel, la règle "aucune donnée de remplissage" (§I.2 #5)
+s'applique aussi à des faits juridiques que je n'ai aucune source fiable
+pour deviner (numéro RCCM, numéro fiscal, etc.). `cle` généré
+automatiquement par slugification du libellé à la création (ex.
+"Numéro RCCM" → `numero_rccm`), non modifiable ensuite pour ne pas casser
+un futur lien de lecture publique par clé (P10).

@@ -54,6 +54,7 @@ import {
   Handshake,
   Globe2,
   Building2,
+  Landmark,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -303,6 +304,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/super-admin/partenaires", label: "Partenaires", icon: Handshake },
         { href: "/dashboard/super-admin/pays-destinations", label: "Pays & destinations", icon: Globe2 },
         { href: "/dashboard/super-admin/bureaux", label: "Bureaux", icon: Building2 },
+        { href: "/dashboard/super-admin/informations-institutionnelles", label: "Informations institutionnelles", icon: Landmark },
         { href: "/dashboard/super-admin/audit-log", label: "Audit log", icon: ShieldCheck },
         { href: "/dashboard/super-admin/parametres", label: "Paramètres agence", icon: Settings },
       ],
