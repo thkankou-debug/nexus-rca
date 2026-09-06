@@ -572,3 +572,24 @@ déjà créée, comportement voulu pour une facture qui doit rester stable une
 fois émise). Email client uniquement à la validation (`validee`), pas à la
 création du brouillon, même logique que `devis.send` pour les devis (voir
 entrée 9). PDF **vérifié visuellement par Thierry le 06/09/2026 — OK**.
+
+**11. Lot Caisse — sessions (06/09/2026) : ouverture/clôture, solde théorique dérivé de `quick_sales`, aucune permission à seeder.**
+Premier lot de P6 qui n'a nécessité aucune migration : `caisse.write`
+(agent/admin) et `caisse.close` (daf uniquement, super_admin court-circuite
+toujours) étaient déjà seedées en 043b, exactement conformes à la matrice
+officielle §P2 (`caisse.close` : super_admin + daf, personne d'autre — pas
+même `admin`). Conséquence assumée : un agent qui ouvre sa session ne peut
+pas la clôturer lui-même tant qu'aucun compte `daf` réel n'existe (seul
+`tkankou@gmail.com`, super_admin, le peut aujourd'hui) — même situation que
+A7 #4 (un seul compte staff réel). Solde théorique = fonds initial +
+`quick_sales.montant_total` où `mode_paiement = 'especes'` depuis
+l'ouverture, **même source que la page Caisse existante** qui n'affiche que
+`quick_sales` (voir P6-0 #12) — aucune donnée `payments` mélangée,
+volontairement, pour ne pas contredire cette décision déjà actée. Écart
+(`discrepancy`) calculé et stocké à la clôture, jamais recalculé après
+coup. Pas de rapprochement avec `payments` (paiements par carte/mobile
+money/virement enregistrés en espèces resteraient hors du calcul) : **à
+étendre** si un jour la caisse doit couvrir plus que les ventes rapides.
+Aucun PDF pour ce lot (contrairement à devis/factures) : une clôture de
+session est un contrôle interne, pas un document client — décision
+proportionnée, à revoir si un besoin d'export/impression apparaît.
