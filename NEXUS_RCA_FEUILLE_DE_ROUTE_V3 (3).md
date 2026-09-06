@@ -132,8 +132,8 @@ suivi avait divergé.
 | A6 | CRM — Clients 360, prospects, RDV, communications, tâches | ✅ terminée — 7 lots (fiche 360°, boîte de réception, dédoublonnage, RDV/D3, communications/notes, notifications, performance CRM), voir docs/DETTE.md | v3/integration-v3 | 05/09 |
 | A7 | RH rhabillé | ✅ terminée — affectations_hist, tâches liées au dossier, charge de travail réelle ; rhabillage shell et délais moyens RH reportés (décisions Thierry), voir docs/DETTE.md | v3/integration-v3 | 05/09 |
 | P6-0 | Convergence des colonnes `payments` | ✅ terminée — 5 étapes (analyse, backfill, sync, migration des consommateurs, réconciliation) ; test corrigé en étape 5 (montant_total reste légitime, distinct d'amount), voir docs/DETTE.md | v3/integration-v3 | 05/09 |
-| P6 | Finance | 🟡 quasiment terminée — devis, factures, sessions caisse, catégories comptables/commissions, échéanciers (reste dû), exports CSV et rapprochement financier tous livrés ; PDF devis/factures vérifiés visuellement par Thierry le 06/09 — OK ; **reste** : rapports journaliers et annuels (seul le mensuel existe, antérieur à V3 — chantier à part, voir docs/DETTE.md #14) | v3/integration-v3 | 06/09 |
-| P8 | CMS et contenus | ⬜ | | |
+| P6 | Finance | ✅ close par Thierry (06/09) — devis, factures, sessions caisse, catégories comptables/commissions, échéanciers, exports CSV, rapprochement livrés et testés ; rapports journaliers/annuels non construits (seul le mensuel existe, antérieur à V3) — chantier reporté sciemment, voir docs/DETTE.md #14 | v3/integration-v3 | 06/09 |
+| P8 | CMS et contenus | 🟡 en cours — inventaire slug↔pôle confirmé par Thierry, `services` peuplée (12 lignes réelles), écran "Services et tarifs" livré ; is_verified/is_published ajoutées à agency_settings/temoignages/partenaires ; reste : FAQ, Partenaires, Témoignages, Pays & destinations, Bureaux, Informations institutionnelles, Contenus de page — voir docs/DETTE.md | v3/integration-v3 | 06/09 |
 | P9 | Portail client | ⬜ | | |
 | P10 | Site public | ⬜ | | |
 | P11 | Notifications multicanal | ⬜ | | |

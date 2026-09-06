@@ -48,6 +48,7 @@ import {
   Tag,
   CalendarClock,
   Scale,
+  Layers,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -186,6 +187,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/super-admin/commissions", label: "Commissions", icon: Coins },
         { href: "/dashboard/super-admin/categories-compta", label: "Catégories comptables", icon: Tag },
         { href: "/dashboard/super-admin/rapprochement", label: "Rapprochement financier", icon: Scale },
+        { href: "/dashboard/super-admin/services", label: "Services et tarifs", icon: Layers },
         { href: "/dashboard/admin/rapports", label: "Rapports mensuels", icon: FileBarChart },
       ],
     },
@@ -285,6 +287,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/super-admin/equipe", label: "Équipe Nexus", icon: Briefcase },
         { href: "/dashboard/super-admin/roles", label: "Rôles & permissions", icon: ShieldCheck },
         { href: "/dashboard/super-admin/i18n", label: "Multi-langue", icon: Globe },
+        { href: "/dashboard/super-admin/services", label: "Services et tarifs", icon: Layers },
         { href: "/dashboard/super-admin/audit-log", label: "Audit log", icon: ShieldCheck },
         { href: "/dashboard/super-admin/parametres", label: "Paramètres agence", icon: Settings },
       ],

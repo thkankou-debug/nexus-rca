@@ -666,3 +666,85 @@ data.ts` est structurellement couplé au mois (`monthBoundsFor`,
 l'agrégateur à une plage de dates arbitraire, plus l'UI et la mise en page
 PDF associées — un chantier à part entière, pas une extension mineure de ce
 lot. **Non fait**, à confirmer avec Thierry avant de l'entreprendre.
+
+---
+
+## P8 — CMS et contenus (06/09/2026)
+
+**1. Inventaire réel des pages `/services/*` : 12, pas 7 comme l'affirmait la feuille de route.**
+Vérifié avant toute migration (`ls app/services/`) : administratif,
+assurance, billets, bourses, change, digitalisation, etudes, financement,
+nexus-ia, tcf, transfert, visa. Le chiffre "7" du corps de phase P10/E3
+était obsolète. Table de correspondance slug → pôle officiel présentée et
+confirmée par Thierry (06/09/2026) :
+- `etudes` et `bourses` restent deux services distincts malgré le
+  chevauchement thématique ("Études au Canada" dans les deux) — même pôle
+  Études internationales, aucune fusion, aucune redirection.
+- `billets` → Assurance et voyage ; `change`/`transfert` → Réseau
+  international.
+- `nexus-ia` → catégorie `transverse`, hors des 8 pôles officiels (page
+  transverse, pas un pôle métier).
+- Pôle **Accompagnement business** volontairement sans service à ce jour :
+  aucune des 12 pages réelles n'y correspond. Pas de ligne inventée pour
+  combler — à peupler quand une offre réelle existera pour ce pôle.
+
+**2. `lib/services.ts` (liste statique, consommée par le fallback `/services/[slug]` et probablement la grille d'accueil) omet `assurance` et `etudes` — 10 entrées sur 12 pages réelles.**
+Découvert pendant l'inventaire. Non corrigé dans ce lot : `lib/services.ts`
+reste la source lue par le public en attendant que P10 branche les pages
+publiques sur la table `services` (déjà peuplée, cette phase). **À faire
+en P10** : remplacer `lib/services.ts` par une lecture de `services`,
+supprimant du même coup cet écart.
+
+**3. Écart d'URLs entre CLAUDE.md et les routes réelles, découvert et non corrigé (hors périmètre P8).**
+CLAUDE.md liste `/services/incubateur`, `/services/billet-avion-hotel` et
+`/nexus-ia` comme titres officiels frozen — les routes réelles sont
+`/services/financement`, `/services/billets` et `/services/nexus-ia`. Les
+*titres* correspondent exactement (vérifié texte à l'écran), seules les
+*URLs* de CLAUDE.md sont fausses. **À corriger dans CLAUDE.md** (simple
+mise à jour de documentation, aucune redirection nécessaire puisque les
+URLs réelles n'ont pas changé) — signalé, non fait ici pour rester dans le
+périmètre de la migration de données.
+
+**4. `is_verified`/`is_published` ajoutées à `agency_settings`, `temoignages`, `partenaires` (migration 063) — les trois tables étaient à 0 ligne, aucun backfill à risque.**
+Vérifié avant migration : aucun consommateur public ne lit encore ces
+tables (témoignages/partenaires affichés sur la page d'accueil sont
+actuellement en dur dans les composants — le branchement au CMS est P10).
+`temoignages.verifie`/`temoignages.status` et la policy publique d'origine
+conservés en commentaire "legacy", remplacés par `is_verified`/
+`is_published` comme seule source de vérité pour l'affichage public
+(nouvelle policy). `partenaires` n'avait aucune notion de vérification
+avant P8 — toute donnée future y passera par le nouveau mécanisme dès la
+création (`is_verified`/`is_published` à `false` par défaut).
+
+**5. Trigger de réinitialisation de `is_verified` écrit par table (3 fonctions dédiées), pas un mécanisme générique.**
+Choix délibéré : une fonction générique aurait dû introspecter les colonnes
+pertinentes dynamiquement (fragile, moins lisible). Chaque trigger
+(`reset_agency_settings_verification`, `reset_temoignage_verification`,
+`reset_partenaire_verification`) liste explicitement les colonnes dont la
+modification déclenche la réinitialisation, à l'exclusion de
+`is_verified`/`is_published`/`status` eux-mêmes (éviter qu'un simple
+changement de statut ne déclenche une boucle ou une réinitialisation
+non désirée).
+
+**6. `services` peuplée (12 lignes réelles) mais `documents_requis`, `dossier_etapes`, `pays_destinations`, `bureaux`, `faq`, `partenaires`, `temoignages`, `contenus_site`, `agency_settings` restent à 0 ligne et sans écran d'administration.**
+Ce lot construit uniquement l'écran "Services et tarifs" (le plus
+explicitement demandé, et celui qui débloque le rattachement CRM/filtrage
+mentionné par P8). **À construire** dans des lots suivants, un par un
+(même découpage que P6) : FAQ, Partenaires, Témoignages, Pays &
+destinations, Bureaux, Informations institutionnelles (`agency_settings`
+avec le mécanisme `is_verified`/`is_published`), Contenus de page
+(`contenus_site`, textes et CTA).
+
+**7. `cms.service.write`/`cms.faq.write`/`cms.partenaire.write` seedées ensemble (migration 064) avant que les 3 écrans correspondants n'existent tous.**
+Seule `cms.service.write` est utilisée par ce lot. Même pratique que 043b
+(P2) : anticiper le seed plutôt que fragmenter les migrations de
+permissions phase par phase. `cms.content.write` (déjà seedée en 043b)
+reste pour `contenus_site`, non touchée.
+
+**8. Délai indicatif (`delai_indicatif`) laissé `NULL` sur les 12 services créés.**
+Aucune valeur consolidée et vérifiée n'existe aujourd'hui par service —
+les pages publiques mentionnent des délais ponctuels dans leur copy
+marketing (ex. "e-visa 48-72h selon destination"), pas une valeur unique
+fiable par service. Inventer une valeur aurait violé la règle du chiffre
+honnête (§I.6). Le champ est éditable dans le nouvel écran "Services et
+tarifs" — à renseigner par Thierry quand une valeur fiable existera.
