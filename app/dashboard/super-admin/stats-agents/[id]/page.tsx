@@ -38,7 +38,7 @@ export default async function AgentDetailPage({
       supabase
         .from("payments")
         .select(
-          "id, reference, client_nom, service, montant_recu, devise, statut, date_paiement"
+          "id, reference, client_nom, service, montant_recu, devise, date_paiement"
         )
         .or(`agent_id.eq.${params.id},created_by.eq.${params.id}`)
         .order("date_paiement", { ascending: false }),

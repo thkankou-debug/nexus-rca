@@ -184,7 +184,7 @@ export async function aggregateMonth(
     supabase
       .from("payments")
       .select("reference, client_nom, service, montant_total, montant_recu, devise")
-      .eq("statut", "partiel")
+      .eq("status", "partial")
       .order("created_at", { ascending: false })
       .limit(50),
     supabase.from("profiles").select("id, nom, prenom"),

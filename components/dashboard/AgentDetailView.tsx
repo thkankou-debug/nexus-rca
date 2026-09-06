@@ -35,7 +35,6 @@ export interface AgentDetailData {
     service: string;
     montant_recu: number;
     devise: string;
-    statut: string;
     date_paiement: string;
   }[];
   clients: {

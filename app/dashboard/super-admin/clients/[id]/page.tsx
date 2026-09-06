@@ -70,6 +70,7 @@ interface Payment {
   devise: string;
   date_paiement: string;
   statut: PaymentStatus;
+  status: string;
 }
 
 // ============================================================================
@@ -96,6 +97,7 @@ function getTypeColor(type: ClientType | string): string {
   return "from-blue-500 to-indigo-700";
 }
 
+// P6-0 : accepte les valeurs canoniques (D1) en plus des heritees, avec repli.
 function getPaymentStatusLabel(status: PaymentStatus | string): string {
   const labels: Record<string, string> = {
     non_paye: "Non payé",
@@ -103,6 +105,11 @@ function getPaymentStatusLabel(status: PaymentStatus | string): string {
     paye: "Payé",
     rembourse: "Remboursé",
     annule: "Annulé",
+    pending: "Non payé",
+    partial: "Partiel",
+    paid: "Payé",
+    refunded: "Remboursé",
+    voided: "Annulé",
   };
   return labels[status] || status;
 }
@@ -114,6 +121,11 @@ function getPaymentStatusColor(status: PaymentStatus | string): string {
     paye: "bg-green-100 text-green-700",
     rembourse: "bg-slate-100 text-slate-700",
     annule: "bg-slate-100 text-slate-500",
+    pending: "bg-red-100 text-red-700",
+    partial: "bg-amber-100 text-amber-700",
+    paid: "bg-green-100 text-green-700",
+    refunded: "bg-slate-100 text-slate-700",
+    voided: "bg-slate-100 text-slate-500",
   };
   return colors[status] || "bg-slate-100 text-slate-700";
 }
@@ -471,9 +483,9 @@ export default async function ClientDetailPage({
                       {payment.reference}
                     </span>
                     <span
-                      className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${getPaymentStatusColor(payment.statut)}`}
+                      className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${getPaymentStatusColor(payment.status)}`}
                     >
-                      {getPaymentStatusLabel(payment.statut)}
+                      {getPaymentStatusLabel(payment.status)}
                     </span>
                   </div>
                   <p className="mt-1 text-sm font-semibold text-nexus-blue-950">

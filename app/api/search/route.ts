@@ -48,9 +48,9 @@ type AppointmentRow = {
 type PaymentRow = {
   id: string;
   reference: string | null;
-  montant: number | null;
-  devise: string | null;
-  statut: string | null;
+  amount: number | null;
+  currency: string | null;
+  status: string | null;
 };
 
 type Hit = {
@@ -148,7 +148,7 @@ export async function GET(request: NextRequest) {
     // ─── Payments : reference uniquement ─────────────────────────────────
     let paymentsQuery = supabase
       .from("payments")
-      .select("id, reference, montant, devise, statut")
+      .select("id, reference, amount, currency, status")
       .ilike("reference", pattern)
       .order("created_at", { ascending: false })
       .limit(PER_CATEGORY_LIMIT);
@@ -224,9 +224,9 @@ export async function GET(request: NextRequest) {
         id: p.id,
         title: p.reference || "—",
         subtitle:
-          p.montant != null
-            ? `${p.montant} ${p.devise || ""} · ${p.statut || ""}`.trim()
-            : p.statut || null,
+          p.amount != null
+            ? `${p.amount} ${p.currency || ""} · ${p.status || ""}`.trim()
+            : p.status || null,
         reference: p.reference,
         url: paymentsListUrl,
       })

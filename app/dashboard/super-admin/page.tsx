@@ -135,7 +135,7 @@ export default async function SuperAdminDashboard() {
       .from("payments")
       .select("montant_recu, montant_total")
       .gte("date_paiement", monthStartISO),
-    supabase.from("payments").select("montant_recu, montant_total, statut"),
+    supabase.from("payments").select("montant_recu, montant_total"),
     supabase
       .from("payments")
       .select("montant_recu")
@@ -216,7 +216,7 @@ export default async function SuperAdminDashboard() {
       .select(
         "id, reference, client_nom, montant_total, montant_recu, devise, created_at"
       )
-      .eq("statut", "partiel")
+      .eq("status", "partial")
       .order("created_at", { ascending: false })
       .limit(3),
     supabase

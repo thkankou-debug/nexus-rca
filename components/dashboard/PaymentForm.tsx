@@ -26,6 +26,33 @@ export type PaymentStatus =
   | "rembourse"
   | "annule";
 
+// P6-0 : status/method (canoniques, D1) coexistent avec statut/mode_paiement
+// (herites, ecrits par ce formulaire) -- derives automatiquement en base par
+// calculate_payment_status(). Utilises pour la lecture/l'affichage, jamais
+// pour l'ecriture de ce formulaire.
+export type PaymentStatusCanonical =
+  | "pending"
+  | "partial"
+  | "paid"
+  | "refunded"
+  | "voided"
+  | "validated"
+  | "failed";
+
+export type PaymentMethodCanonical =
+  | "cash"
+  | "bank_transfer"
+  | "card"
+  | "other"
+  | "mobile_money"
+  | "western_union"
+  | "moneygram"
+  | "cheque"
+  | "orange_money"
+  | "mtn_money"
+  | "express_union"
+  | "stripe";
+
 export interface Payment {
   id: string;
   reference: string | null;
@@ -44,6 +71,8 @@ export interface Payment {
   mode_paiement: PaymentMethod;
   date_paiement: string;
   statut: PaymentStatus;
+  status: PaymentStatusCanonical;
+  method: PaymentMethodCanonical;
   preuve_path: string | null;
   preuve_nom: string | null;
   notes_internes: string | null;

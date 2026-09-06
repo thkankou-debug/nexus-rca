@@ -35,46 +35,68 @@ function formatDate(dateStr: string): string {
   }
 }
 
-function getStatusInfo(statut: string): {
+// P6-0 : status (canonique, D1).
+function getStatusInfo(status: string): {
   label: string;
   color: string;
   icon: React.ComponentType<{ className?: string }>;
 } {
-  const lower = (statut || "").toLowerCase();
-  if (lower === "paye" || lower === "payé" || lower === "complete") {
+  if (status === "paid" || status === "validated") {
     return {
       label: "Payé",
       color: "bg-green-100 text-green-700 border-green-200",
       icon: CheckCircle2,
     };
   }
-  if (lower === "partiel") {
+  if (status === "partial") {
     return {
       label: "Partiel",
       color: "bg-amber-100 text-amber-700 border-amber-200",
       icon: Clock,
     };
   }
-  if (lower === "en_attente" || lower === "attente") {
+  if (status === "pending") {
     return {
       label: "En attente",
       color: "bg-blue-100 text-blue-700 border-blue-200",
       icon: Clock,
     };
   }
-  if (lower === "annule" || lower === "annulé") {
+  if (status === "voided" || status === "failed") {
     return {
       label: "Annulé",
       color: "bg-red-100 text-red-700 border-red-200",
       icon: XCircle,
     };
   }
+  if (status === "refunded") {
+    return {
+      label: "Remboursé",
+      color: "bg-slate-100 text-slate-700 border-slate-200",
+      icon: XCircle,
+    };
+  }
   return {
-    label: statut || "—",
+    label: status || "—",
     color: "bg-slate-100 text-slate-700 border-slate-200",
     icon: AlertCircle,
   };
 }
+
+const METHOD_LABELS: Record<string, string> = {
+  cash: "Espèces",
+  bank_transfer: "Virement",
+  card: "Carte",
+  other: "Autre",
+  mobile_money: "Mobile Money",
+  western_union: "Western Union",
+  moneygram: "MoneyGram",
+  cheque: "Chèque",
+  orange_money: "Orange Money",
+  mtn_money: "MTN Mobile Money",
+  express_union: "Express Union",
+  stripe: "Carte (Stripe)",
+};
 
 export default async function ClientPaiementsPage() {
   const profile = await requireProfile([
@@ -116,7 +138,7 @@ export default async function ClientPaiementsPage() {
     return acc;
   }, {});
 
-  const partiels = paiements.filter((p) => p.statut === "partiel");
+  const partiels = paiements.filter((p) => p.status === "partial");
 
   return (
     <DashboardShell profile={profile}>
@@ -282,7 +304,7 @@ export default async function ClientPaiementsPage() {
         ) : (
           <div className="divide-y divide-slate-100">
             {paiements.map((p) => {
-              const status = getStatusInfo(p.statut || "");
+              const status = getStatusInfo(p.status || "");
               const StatusIcon = status.icon;
               const restant =
                 Number(p.montant_total || 0) - Number(p.montant_recu || 0);
@@ -310,7 +332,7 @@ export default async function ClientPaiementsPage() {
                       </p>
                       <p className="text-xs text-slate-500">
                         {formatDate(p.date_paiement)}
-                        {p.mode_paiement && ` · ${p.mode_paiement}`}
+                        {p.method && ` · ${METHOD_LABELS[p.method] || p.method}`}
                       </p>
                     </div>
 

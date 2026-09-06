@@ -142,7 +142,7 @@ export default async function ClientDashboard() {
   const { data: paiementsData } = await supabase
     .from("payments")
     .select(
-      "id, reference, service, montant_total, montant_recu, devise, statut, date_paiement, client_email"
+      "id, reference, service, montant_total, montant_recu, devise, status, date_paiement, client_email"
     )
     .eq("client_email", userEmail)
     .order("date_paiement", { ascending: false })
@@ -184,7 +184,7 @@ export default async function ClientDashboard() {
   const totalPaye = paiements.reduce((s, p) => s + Number(p.montant_recu || 0), 0);
   const totalDu = paiements.reduce((s, p) => s + Number(p.montant_total || 0), 0);
   const totalRestant = Math.max(0, totalDu - totalPaye);
-  const partiels = paiements.filter((p) => p.statut === "partiel");
+  const partiels = paiements.filter((p) => p.status === "partial");
 
   const dossiersEnCours = demandes.filter((d) => isDossierEnCours(d.statut || "")).length;
   const dossiersTermines = demandes.filter((d) => {

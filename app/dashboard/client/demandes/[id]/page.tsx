@@ -105,7 +105,7 @@ export default async function ClientDemandeDetailPage({
   const userEmail = (profile.email || "").toLowerCase().trim();
   const { data: paiements } = await supabase
     .from("payments")
-    .select("id, reference, service, montant_total, montant_recu, devise, statut, date_paiement")
+    .select("id, reference, service, montant_total, montant_recu, devise, date_paiement")
     .eq("client_email", userEmail)
     .order("date_paiement", { ascending: false })
     .limit(10);

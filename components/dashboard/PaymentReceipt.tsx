@@ -4,7 +4,11 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { FileDown, Loader2, Printer, Mail, X } from "lucide-react";
 import jsPDF from "jspdf";
-import type { Payment, PaymentMethod, PaymentStatus } from "./PaymentForm";
+import type {
+  Payment,
+  PaymentStatusCanonical,
+  PaymentMethodCanonical,
+} from "./PaymentForm";
 
 interface AgentInfo {
   id: string;
@@ -12,23 +16,30 @@ interface AgentInfo {
   prenom: string | null;
 }
 
-const METHOD_LABELS: Record<PaymentMethod, string> = {
-  especes: "Espèces",
-  virement: "Virement bancaire",
+// P6-0 : libelles pour payment.method/status (canoniques, D1).
+const METHOD_LABELS: Record<PaymentMethodCanonical, string> = {
+  cash: "Espèces",
+  bank_transfer: "Virement bancaire",
+  card: "Carte bancaire",
+  other: "Autre",
   mobile_money: "Mobile Money",
   western_union: "Western Union",
   moneygram: "MoneyGram",
-  carte: "Carte bancaire",
   cheque: "Chèque",
-  autre: "Autre",
+  orange_money: "Orange Money",
+  mtn_money: "MTN Mobile Money",
+  express_union: "Express Union",
+  stripe: "Carte (Stripe)",
 };
 
-const STATUS_LABELS: Record<PaymentStatus, string> = {
-  non_paye: "Non payé",
-  partiel: "Partiel",
-  paye: "Payé intégralement",
-  rembourse: "Remboursé",
-  annule: "Annulé",
+const STATUS_LABELS: Record<PaymentStatusCanonical, string> = {
+  pending: "Non payé",
+  partial: "Partiel",
+  paid: "Payé intégralement",
+  refunded: "Remboursé",
+  voided: "Annulé",
+  validated: "Validé",
+  failed: "Échoué",
 };
 
 function formatMoney(amount: number, currency = "XAF"): string {
@@ -142,14 +153,14 @@ function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
 
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
-  if (payment.statut === "paye") {
+  if (payment.status === "paid") {
     doc.setTextColor(34, 197, 94);
-  } else if (payment.statut === "partiel") {
+  } else if (payment.status === "partial") {
     doc.setTextColor(245, 158, 11);
   } else {
     doc.setTextColor(...SLATE_DARK);
   }
-  doc.text(STATUS_LABELS[payment.statut], pageWidth - margin - 5, y + 13, {
+  doc.text(STATUS_LABELS[payment.status], pageWidth - margin - 5, y + 13, {
     align: "right",
   });
 
@@ -269,7 +280,7 @@ function generateReceiptPDF(payment: Payment, agent?: AgentInfo): jsPDF {
   doc.setFont("helvetica", "bold");
   doc.setTextColor(...SLATE_DARK);
   doc.text(
-    METHOD_LABELS[payment.mode_paiement],
+    METHOD_LABELS[payment.method],
     pageWidth - margin - 8,
     y + 35,
     { align: "right" }

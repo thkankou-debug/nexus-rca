@@ -380,3 +380,24 @@ Même constat qu'A5 (DETTE #1). Le lot 4.2 renseigne les deux avec la même
 valeur (`paymentLink.demande_id`) plutôt que de trancher laquelle
 supprimer — cette consolidation reste un chantier séparé, plus large que
 P6-0.
+
+**9. Lot 4.3 : ~15 fichiers migrés vers `status`/`method` (canoniques), `montant_total`/`montant_recu`/`devise` non touchés (décision confirmée).**
+`app/api/search/route.ts`, `lib/monthly-report-data.ts`,
+`components/dashboard/{MonthlyReportGenerator,PaymentsManager,
+PaymentReceipt,FinancialDashboard,PaymentForm,AgentDetailView}.tsx`,
+`app/dashboard/{super-admin/stats-agents/[id],super-admin,super-admin/
+clients/[id],client,client/demandes/[id],client/paiements}/page.tsx`.
+Plusieurs lectures de `statut` se sont révélées **mortes** (sélectionnées
+mais jamais affichées) : retirées du `select()` plutôt que renommées,
+notamment dans `MonthlyReportGenerator.tsx`, `AgentDetailView.tsx`,
+`app/dashboard/super-admin/page.tsx` et la page dossier client. Vérifié
+par `grep` exhaustif sur tous les `.from("payments")` du dépôt : aucune
+lecture de `statut`/`mode_paiement` ne subsiste (hors tables distinctes —
+`demandes`, `expenses`, `transferts`, `appointments`, `payment_links`,
+`payslips` ont leurs propres colonnes `statut` homonymes, légitimes,
+non touchées).
+
+**10. Doublon de type `Payment` : `app/dashboard/super-admin/clients/[id]/page.tsx` a sa propre interface locale, distincte de `components/dashboard/PaymentForm.tsx`.**
+Les deux ont été étendues séparément avec `status` (canonique) — pas
+unifiées, pour ne pas élargir le périmètre de P6-0 à une refactorisation
+de types. **À unifier** si un troisième point de duplication apparaît.

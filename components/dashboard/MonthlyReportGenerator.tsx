@@ -843,7 +843,7 @@ export function MonthlyReportGenerator({
       ] = await Promise.all([
         supabase
           .from("payments")
-          .select("montant_recu, montant_total, devise, statut, agent_id, client_nom, service, reference")
+          .select("montant_recu, montant_total, devise, agent_id, client_nom, service, reference")
           .gte("date_paiement", monthBounds.start)
           .lte("date_paiement", monthBounds.end),
         supabase
@@ -873,7 +873,7 @@ export function MonthlyReportGenerator({
         supabase
           .from("payments")
           .select("reference, client_nom, service, montant_total, montant_recu, devise")
-          .eq("statut", "partiel")
+          .eq("status", "partial")
           .order("created_at", { ascending: false })
           .limit(100),
         supabase

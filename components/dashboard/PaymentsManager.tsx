@@ -27,7 +27,8 @@ import {
   PaymentForm,
   type Payment,
   type PaymentStatus,
-  type PaymentMethod,
+  type PaymentStatusCanonical,
+  type PaymentMethodCanonical,
 } from "./PaymentForm";
 import { ReceiptButtons } from "./PaymentReceipt";
 
@@ -53,15 +54,22 @@ const STATUS_COLORS: Record<PaymentStatus, string> = {
   annule: "bg-slate-100 text-slate-500 border-slate-200",
 };
 
-const METHOD_LABELS: Record<PaymentMethod, string> = {
-  especes: "Espèces",
-  virement: "Virement",
+// P6-0 : libelles pour payment.method (canonique, D1) - couvre aussi les
+// methodes venues du paiement par lien public (orange_money/mtn_money/
+// express_union/stripe), absentes du formulaire staff.
+const METHOD_LABELS_CANONICAL: Record<PaymentMethodCanonical, string> = {
+  cash: "Espèces",
+  bank_transfer: "Virement",
+  card: "Carte",
+  other: "Autre",
   mobile_money: "Mobile Money",
   western_union: "Western Union",
   moneygram: "MoneyGram",
-  carte: "Carte",
   cheque: "Chèque",
-  autre: "Autre",
+  orange_money: "Orange Money",
+  mtn_money: "MTN Mobile Money",
+  express_union: "Express Union",
+  stripe: "Carte (Stripe)",
 };
 
 const STATUSES: PaymentStatus[] = [
@@ -71,6 +79,35 @@ const STATUSES: PaymentStatus[] = [
   "rembourse",
   "annule",
 ];
+
+// P6-0 : le filtre UI et les libelles/couleurs restent en francais (labels
+// existants), la comparaison et la lecture se font desormais sur
+// payment.status (canonique, D1).
+const FILTER_TO_CANONICAL: Record<PaymentStatus, PaymentStatusCanonical> = {
+  non_paye: "pending",
+  partiel: "partial",
+  paye: "paid",
+  rembourse: "refunded",
+  annule: "voided",
+};
+
+const CANONICAL_TO_FILTER: Partial<Record<PaymentStatusCanonical, PaymentStatus>> = {
+  pending: "non_paye",
+  partial: "partiel",
+  paid: "paye",
+  refunded: "rembourse",
+  voided: "annule",
+};
+
+function statusLabel(status: PaymentStatusCanonical): string {
+  const key = CANONICAL_TO_FILTER[status];
+  return key ? STATUS_LABELS[key] : status;
+}
+
+function statusColor(status: PaymentStatusCanonical): string {
+  const key = CANONICAL_TO_FILTER[status];
+  return key ? STATUS_COLORS[key] : "bg-slate-100 text-slate-700 border-slate-200";
+}
 
 function formatMoney(amount: number, currency = "XAF"): string {
   return `${amount.toLocaleString("fr-FR")} ${currency}`;
@@ -121,7 +158,8 @@ export function PaymentsManager({
 
   const filtered = useMemo(() => {
     let list = payments;
-    if (filter !== "all") list = list.filter((p) => p.statut === filter);
+    if (filter !== "all")
+      list = list.filter((p) => p.status === FILTER_TO_CANONICAL[filter]);
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter(
@@ -138,11 +176,11 @@ export function PaymentsManager({
   const counts = useMemo(() => {
     return {
       all: payments.length,
-      non_paye: payments.filter((p) => p.statut === "non_paye").length,
-      partiel: payments.filter((p) => p.statut === "partiel").length,
-      paye: payments.filter((p) => p.statut === "paye").length,
-      rembourse: payments.filter((p) => p.statut === "rembourse").length,
-      annule: payments.filter((p) => p.statut === "annule").length,
+      non_paye: payments.filter((p) => p.status === "pending").length,
+      partiel: payments.filter((p) => p.status === "partial").length,
+      paye: payments.filter((p) => p.status === "paid").length,
+      rembourse: payments.filter((p) => p.status === "refunded").length,
+      annule: payments.filter((p) => p.status === "voided").length,
     };
   }, [payments]);
 
@@ -394,10 +432,10 @@ function PaymentCard({
               <span
                 className={cn(
                   "rounded-full border px-2.5 py-0.5 text-xs font-semibold",
-                  STATUS_COLORS[payment.statut]
+                  statusColor(payment.status)
                 )}
               >
-                {STATUS_LABELS[payment.statut]}
+                {statusLabel(payment.status)}
               </span>
               {payment.client_record_id && (
                 <Link
@@ -431,7 +469,7 @@ function PaymentCard({
             <div
               className={cn(
                 "h-full transition-all",
-                payment.statut === "paye"
+                payment.status === "paid"
                   ? "bg-green-500"
                   : "bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600"
               )}
@@ -450,7 +488,7 @@ function PaymentCard({
             <Calendar className="h-3.5 w-3.5" />
             {formatDate(payment.date_paiement)}
           </span>
-          <span>{METHOD_LABELS[payment.mode_paiement]}</span>
+          <span>{METHOD_LABELS_CANONICAL[payment.method]}</span>
           {agentInfo && (
             <span className="inline-flex items-center gap-1">
               <User className="h-3.5 w-3.5" />

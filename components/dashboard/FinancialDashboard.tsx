@@ -20,7 +20,7 @@ import {
 import { cn } from "@/lib/utils";
 import type {
   Payment,
-  PaymentStatus,
+  PaymentStatusCanonical,
 } from "./PaymentForm";
 import {
   type Expense,
@@ -31,20 +31,24 @@ import {
 // ============================================================================
 // LABELS
 // ============================================================================
-const PAYMENT_STATUS_LABELS: Record<PaymentStatus, string> = {
-  non_paye: "Non payé",
-  partiel: "Partiel",
-  paye: "Payé",
-  rembourse: "Remboursé",
-  annule: "Annulé",
+const PAYMENT_STATUS_LABELS: Record<PaymentStatusCanonical, string> = {
+  pending: "Non payé",
+  partial: "Partiel",
+  paid: "Payé",
+  refunded: "Remboursé",
+  voided: "Annulé",
+  validated: "Validé",
+  failed: "Échoué",
 };
 
-const PAYMENT_STATUS_COLORS: Record<PaymentStatus, string> = {
-  non_paye: "bg-red-100 text-red-700",
-  partiel: "bg-amber-100 text-amber-700",
-  paye: "bg-green-100 text-green-700",
-  rembourse: "bg-slate-100 text-slate-700",
-  annule: "bg-slate-100 text-slate-500",
+const PAYMENT_STATUS_COLORS: Record<PaymentStatusCanonical, string> = {
+  pending: "bg-red-100 text-red-700",
+  partial: "bg-amber-100 text-amber-700",
+  paid: "bg-green-100 text-green-700",
+  refunded: "bg-slate-100 text-slate-700",
+  voided: "bg-slate-100 text-slate-500",
+  validated: "bg-blue-100 text-blue-700",
+  failed: "bg-red-100 text-red-700",
 };
 
 const EXPENSE_STATUS_LABELS: Record<ExpenseStatus, string> = {
@@ -137,10 +141,10 @@ export function FinancialDashboard({
     const soldeNet = totalEncaisse - totalDepensesValidees;
 
     const nbPaiementsPartiels = p.filter(
-      (x) => x.statut === "partiel"
+      (x) => x.status === "partial"
     ).length;
     const nbPaiementsImpayes = p.filter(
-      (x) => x.statut === "non_paye"
+      (x) => x.status === "pending"
     ).length;
     const nbDepensesEnAttente = e.filter(
       (x) => x.statut === "en_attente"
@@ -743,10 +747,10 @@ function RecentPaymentRow({ payment }: { payment: Payment }) {
           <span
             className={cn(
               "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
-              PAYMENT_STATUS_COLORS[payment.statut]
+              PAYMENT_STATUS_COLORS[payment.status]
             )}
           >
-            {PAYMENT_STATUS_LABELS[payment.statut]}
+            {PAYMENT_STATUS_LABELS[payment.status]}
           </span>
         </div>
         <p className="truncate text-xs text-slate-500">
