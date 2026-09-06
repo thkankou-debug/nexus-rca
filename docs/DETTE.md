@@ -547,9 +547,8 @@ ajouterait un état ou une vérification supplémentaire, hors périmètre de
 ce lot. Un agent ne peut créer/modifier un devis que sur ses propres
 dossiers (vérifié via `demandes.agent_id`, pas de portée dédiée dans la
 permission). PDF généré côté serveur (`pdf-lib`, patron de
-`payment-links/[reference]/verify/route.ts`) : **non vérifié
-visuellement** par Thierry, à confirmer via le bouton "PDF" sur un devis
-réel, avant d'en généraliser le patron à `factures`/`échéanciers`. Pas de
+`payment-links/[reference]/verify/route.ts`) : **vérifié visuellement par
+Thierry le 06/09/2026 — OK**. Pas de
 portail client sur les devis en V3 (P9 non fait) : `accepte`/`refuse`
 sont enregistrés par le staff qui rapporte la décision transmise par le
 client hors plateforme (téléphone, email), pas une acceptation en ligne.
@@ -572,4 +571,4 @@ minimum l'exiger comme précondition. Génération de facture depuis un devis
 déjà créée, comportement voulu pour une facture qui doit rester stable une
 fois émise). Email client uniquement à la validation (`validee`), pas à la
 création du brouillon, même logique que `devis.send` pour les devis (voir
-entrée 9). PDF non vérifié visuellement par Thierry.
+entrée 9). PDF **vérifié visuellement par Thierry le 06/09/2026 — OK**.
