@@ -53,11 +53,11 @@ export function drawText(
   topY: number,
   size: number,
   color: ReturnType<typeof rgb>,
-  align: "left" | "right" = "left"
+  align: "left" | "right" | "center" = "left"
 ) {
   const safe = sanitizeForPdf(text);
   const width = font.widthOfTextAtSize(safe, size);
-  const drawX = align === "right" ? x - width : x;
+  const drawX = align === "right" ? x - width : align === "center" ? x - width / 2 : x;
   page.drawText(safe, { x: drawX, y: pageHeight - topY, size, font, color });
 }
 
@@ -71,4 +71,64 @@ export function drawFilledRect(
   color: ReturnType<typeof rgb>
 ) {
   page.drawRectangle({ x, y: pageHeight - topY - height, width, height, color });
+}
+
+// P6, Lot 1c : conversion millimetres -> points (format ticket de caisse 80mm).
+export const MM_TO_PT = 2.83465;
+
+// P6, Lot 1c : equivalent de jsPDF splitTextToSize() -- decoupe un texte en
+// lignes qui tiennent chacune dans maxWidthPt, par mots entiers.
+export function wrapText(
+  font: PDFFont,
+  text: string,
+  maxWidthPt: number,
+  size: number
+): string[] {
+  const safe = sanitizeForPdf(text);
+  const words = safe.split(" ");
+  const lines: string[] = [];
+  let current = "";
+
+  for (const word of words) {
+    const candidate = current ? `${current} ${word}` : word;
+    if (font.widthOfTextAtSize(candidate, size) > maxWidthPt && current) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = candidate;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
+}
+
+// P6, Lot 1c : trait pointille (equivalent setLineDashPattern([1,1]) de jsPDF).
+export function drawDashedLine(
+  page: PDFPage,
+  pageHeight: number,
+  x1: number,
+  x2: number,
+  topY: number,
+  color: ReturnType<typeof rgb>
+) {
+  const y = pageHeight - topY;
+  page.drawLine({
+    start: { x: x1, y },
+    end: { x: x2, y },
+    thickness: 0.3 * MM_TO_PT,
+    color,
+    dashArray: [1 * MM_TO_PT, 1 * MM_TO_PT],
+  });
+}
+
+// P6, Lot 1c : encodage base64 d'un Uint8Array cote navigateur (equivalent de
+// jsPDF doc.output("datauristring").split(",")[1]) -- pas de Buffer en client.
+export function uint8ArrayToBase64(bytes: Uint8Array): string {
+  let binary = "";
+  const chunkSize = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    const chunk = bytes.subarray(i, i + chunkSize);
+    binary += String.fromCharCode(...chunk);
+  }
+  return btoa(binary);
 }

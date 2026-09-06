@@ -18,7 +18,14 @@ import {
   Camera,
   Package,
 } from "lucide-react";
-import jsPDF from "jspdf";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import {
+  drawText,
+  drawDashedLine,
+  wrapText,
+  uint8ArrayToBase64,
+  MM_TO_PT,
+} from "@/lib/pdf-layout";
 import { createClient } from "@/lib/supabase/client";
 import { ClientSelector } from "./ClientSelector";
 
@@ -112,55 +119,55 @@ interface AgentInfo {
 // ============================================================================
 // GENERATEUR TICKET PDF (format ticket de caisse, 80mm de large)
 // ============================================================================
-function generateTicketPDF(sale: QuickSale, agent?: AgentInfo): jsPDF {
-  // Format ticket de caisse : 80mm de large, hauteur dynamique
+function mm(v: number): number {
+  return v * MM_TO_PT;
+}
+
+async function generateTicketPDF(
+  sale: QuickSale,
+  agent?: AgentInfo
+): Promise<Uint8Array> {
+  const pdfDoc = await PDFDocument.create();
+  const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const helveticaOblique = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
+  const courier = await pdfDoc.embedFont(StandardFonts.Courier);
+
+  // Format ticket de caisse : 80mm de large, hauteur fixe (comportement d'origine)
   const width = 80;
-  const height = 200; // sera tronque
+  const height = 200;
+  const pageHeight = mm(height);
+  const page = pdfDoc.addPage([mm(width), pageHeight]);
 
-  const doc = new jsPDF({
-    orientation: "portrait",
-    unit: "mm",
-    format: [width, height],
-  });
-
+  const black = rgb(0, 0, 0);
   const margin = 5;
+  const centerX = width / 2;
   let y = 8;
 
   // En-tete
-  doc.setFontSize(14);
-  doc.setFont("helvetica", "bold");
-  doc.text("NEXUS RCA", width / 2, y, { align: "center" });
+  drawText(page, pageHeight, helveticaBold, "NEXUS RCA", mm(centerX), mm(y), 14, black, "center");
 
   y += 5;
-  doc.setFontSize(8);
-  doc.setFont("helvetica", "normal");
-  doc.text("Agence Internationale", width / 2, y, { align: "center" });
+  drawText(page, pageHeight, helvetica, "Agence Internationale", mm(centerX), mm(y), 8, black, "center");
 
   y += 3;
-  doc.text("Bangui, RCA", width / 2, y, { align: "center" });
+  drawText(page, pageHeight, helvetica, "Bangui, RCA", mm(centerX), mm(y), 8, black, "center");
 
   y += 3;
-  doc.text("+236 73 26 96 92", width / 2, y, { align: "center" });
+  drawText(page, pageHeight, helvetica, "+236 73 26 96 92", mm(centerX), mm(y), 8, black, "center");
 
   // Trait
   y += 5;
-  doc.setLineWidth(0.3);
-  doc.setLineDashPattern([1, 1], 0);
-  doc.line(margin, y, width - margin, y);
+  drawDashedLine(page, pageHeight, mm(margin), mm(width - margin), mm(y), black);
 
   // Reference et date
   y += 5;
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "bold");
-  doc.text("TICKET DE CAISSE", width / 2, y, { align: "center" });
+  drawText(page, pageHeight, helveticaBold, "TICKET DE CAISSE", mm(centerX), mm(y), 9, black, "center");
 
   y += 4;
-  doc.setFontSize(7);
-  doc.setFont("courier", "normal");
-  doc.text(sale.reference || "—", width / 2, y, { align: "center" });
+  drawText(page, pageHeight, courier, sale.reference || "—", mm(centerX), mm(y), 7, black, "center");
 
   y += 4;
-  doc.setFont("helvetica", "normal");
   const dateStr = new Date(sale.date_paiement).toLocaleString("fr-FR", {
     day: "2-digit",
     month: "2-digit",
@@ -168,88 +175,94 @@ function generateTicketPDF(sale: QuickSale, agent?: AgentInfo): jsPDF {
     hour: "2-digit",
     minute: "2-digit",
   });
-  doc.text(dateStr, width / 2, y, { align: "center" });
+  drawText(page, pageHeight, helvetica, dateStr, mm(centerX), mm(y), 8, black, "center");
 
   // Trait
   y += 4;
-  doc.line(margin, y, width - margin, y);
+  drawDashedLine(page, pageHeight, mm(margin), mm(width - margin), mm(y), black);
 
   // Client (si renseigne)
   if (sale.client_nom) {
     y += 4;
-    doc.setFontSize(8);
-    doc.setFont("helvetica", "bold");
-    doc.text("Client :", margin, y);
+    drawText(page, pageHeight, helveticaBold, "Client :", mm(margin), mm(y), 8, black);
     y += 3;
-    doc.setFont("helvetica", "normal");
-    doc.text(sale.client_nom, margin, y);
+    drawText(page, pageHeight, helvetica, sale.client_nom, mm(margin), mm(y), 8, black);
 
     y += 3;
-    doc.line(margin, y, width - margin, y);
+    drawDashedLine(page, pageHeight, mm(margin), mm(width - margin), mm(y), black);
   }
 
   // Article
   y += 5;
-  doc.setFontSize(8);
-  doc.setFont("helvetica", "bold");
-  doc.text(SERVICE_LABELS[sale.type_service].toUpperCase(), margin, y);
+  drawText(
+    page,
+    pageHeight,
+    helveticaBold,
+    SERVICE_LABELS[sale.type_service].toUpperCase(),
+    mm(margin),
+    mm(y),
+    8,
+    black
+  );
 
   if (sale.description) {
     y += 3;
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(7);
-    const lines = doc.splitTextToSize(sale.description, width - 2 * margin);
-    doc.text(lines, margin, y);
+    const lines = wrapText(helvetica, sale.description, mm(width - 2 * margin), 7);
+    lines.forEach((line, i) => {
+      drawText(page, pageHeight, helvetica, line, mm(margin), mm(y + i * 3), 7, black);
+    });
     y += lines.length * 3;
   }
 
   y += 4;
-  doc.setFontSize(8);
-  doc.setFont("helvetica", "normal");
-  doc.text(`Qté : ${sale.quantite}`, margin, y);
-  doc.text(
+  drawText(page, pageHeight, helvetica, `Qté : ${sale.quantite}`, mm(margin), mm(y), 8, black);
+  drawText(
+    page,
+    pageHeight,
+    helvetica,
     `${Number(sale.prix_unitaire).toLocaleString("fr-FR")} ${sale.devise}`,
-    width - margin,
-    y,
-    { align: "right" }
+    mm(width - margin),
+    mm(y),
+    8,
+    black,
+    "right"
   );
 
   // Total
   y += 5;
-  doc.line(margin, y, width - margin, y);
+  drawDashedLine(page, pageHeight, mm(margin), mm(width - margin), mm(y), black);
   y += 5;
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.text("TOTAL", margin, y);
-  doc.text(
+  drawText(page, pageHeight, helveticaBold, "TOTAL", mm(margin), mm(y), 11, black);
+  drawText(
+    page,
+    pageHeight,
+    helveticaBold,
     `${Number(sale.montant_total).toLocaleString("fr-FR")} ${sale.devise}`,
-    width - margin,
-    y,
-    { align: "right" }
+    mm(width - margin),
+    mm(y),
+    11,
+    black,
+    "right"
   );
 
   y += 5;
-  doc.setFontSize(7);
-  doc.setFont("helvetica", "normal");
-  doc.text(`Mode : ${PAYMENT_LABELS[sale.mode_paiement]}`, margin, y);
+  drawText(page, pageHeight, helvetica, `Mode : ${PAYMENT_LABELS[sale.mode_paiement]}`, mm(margin), mm(y), 7, black);
 
   if (agent) {
     const agentName = [agent.prenom, agent.nom].filter(Boolean).join(" ");
     y += 3;
-    doc.text(`Agent : ${agentName}`, margin, y);
+    drawText(page, pageHeight, helvetica, `Agent : ${agentName}`, mm(margin), mm(y), 7, black);
   }
 
   // Footer
   y += 6;
-  doc.line(margin, y, width - margin, y);
+  drawDashedLine(page, pageHeight, mm(margin), mm(width - margin), mm(y), black);
   y += 4;
-  doc.setFontSize(7);
-  doc.setFont("helvetica", "italic");
-  doc.text("Merci de votre visite !", width / 2, y, { align: "center" });
+  drawText(page, pageHeight, helveticaOblique, "Merci de votre visite !", mm(centerX), mm(y), 7, black, "center");
   y += 3;
-  doc.text("www.nexusrca.com", width / 2, y, { align: "center" });
+  drawText(page, pageHeight, helveticaOblique, "www.nexusrca.com", mm(centerX), mm(y), 7, black, "center");
 
-  return doc;
+  return pdfDoc.save();
 }
 
 // ============================================================================
@@ -268,10 +281,18 @@ export function QuickSaleReceiptButtons({
   const [emailDest, setEmailDest] = useState(sale.client_email || "");
   const [sending, setSending] = useState(false);
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     try {
-      const doc = generateTicketPDF(sale, agent);
-      doc.save(`Ticket_${sale.reference || sale.id}.pdf`);
+      const bytes = await generateTicketPDF(sale, agent);
+      const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Ticket_${sale.reference || sale.id}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
       toast.success("Ticket téléchargé");
     } catch (error) {
       console.error(error);
@@ -279,10 +300,10 @@ export function QuickSaleReceiptButtons({
     }
   };
 
-  const handlePrint = () => {
+  const handlePrint = async () => {
     try {
-      const doc = generateTicketPDF(sale, agent);
-      const blob = doc.output("blob");
+      const bytes = await generateTicketPDF(sale, agent);
+      const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
       const printWindow = window.open(url, "_blank");
       if (printWindow) {
@@ -303,8 +324,8 @@ export function QuickSaleReceiptButtons({
     }
     setSending(true);
     try {
-      const doc = generateTicketPDF(sale, agent);
-      const base64 = doc.output("datauristring").split(",")[1];
+      const bytes = await generateTicketPDF(sale, agent);
+      const base64 = uint8ArrayToBase64(bytes);
 
       const response = await fetch("/api/payments/send-receipt", {
         method: "POST",
