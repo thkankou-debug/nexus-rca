@@ -8,19 +8,21 @@ import {
   CheckCheck,
   FileText,
   Info,
+  UserCog,
   Wallet,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type NotificationType =
+export type NotificationType =
   | "rdv_new"
   | "demande_assigned"
   | "payment_declared"
   | "demande_urgent"
+  | "rh_period_essai_end"
   | "info";
 
-type Notification = {
+export type Notification = {
   id: string;
   type: NotificationType;
   title: string;
@@ -38,15 +40,16 @@ type ApiResponse = {
 const POLL_INTERVAL_MS = 3000;
 const MAX_BADGE = 99;
 
-const TYPE_ICON: Record<NotificationType, LucideIcon> = {
+export const NOTIFICATION_TYPE_ICON: Record<NotificationType, LucideIcon> = {
   rdv_new: Calendar,
   demande_assigned: FileText,
   payment_declared: Wallet,
   demande_urgent: FileText,
+  rh_period_essai_end: UserCog,
   info: Info,
 };
 
-function relativeTime(iso: string): string {
+export function relativeTime(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
   const min = Math.floor(diff / 60_000);
   if (min < 1) return "à l'instant";
@@ -207,7 +210,7 @@ export function NotificationBell({ className }: { className?: string }) {
               </div>
             )}
             {items.map((n) => {
-              const Icon = TYPE_ICON[n.type] || Info;
+              const Icon = NOTIFICATION_TYPE_ICON[n.type] || Info;
               const isUnread = !n.read_at;
               return (
                 <button

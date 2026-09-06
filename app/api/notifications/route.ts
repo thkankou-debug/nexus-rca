@@ -1,14 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
-const LIMIT = 20;
+const DEFAULT_LIMIT = 20;
+const MAX_LIMIT = 200;
 
 // ─── GET /api/notifications ────────────────────────────────────────────────
-// Retourne les 20 dernières notifications du user courant + le compte
+// Retourne les dernières notifications du user courant (20 par défaut,
+// ?limit= pour la page dédiée qui affiche l'historique complet) + le compte
 // d'éléments non lus.
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const supabase = createClient();
     const {
@@ -18,13 +20,19 @@ export async function GET() {
       return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
     }
 
+    const limitParam = Number(request.nextUrl.searchParams.get("limit"));
+    const limit =
+      Number.isInteger(limitParam) && limitParam > 0
+        ? Math.min(limitParam, MAX_LIMIT)
+        : DEFAULT_LIMIT;
+
     const [listRes, countRes] = await Promise.all([
       supabase
         .from("notifications")
         .select("id, type, title, message, link, read_at, created_at")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
-        .limit(LIMIT),
+        .limit(limit),
       supabase
         .from("notifications")
         .select("*", { count: "exact", head: true })

@@ -259,3 +259,13 @@ sans couche d'abstraction. Non corrigé ici : P11 n'existe pas encore, et
 construire une abstraction de canal sans un deuxième fournisseur réel à
 brancher serait de la sur-ingénierie. **À faire en P11**, au moment où
 SMS/WhatsApp deviennent réels.
+
+**10. Page Notifications (Lot 6) accessible seulement par URL directe, aucun point d'entrée dans l'interface.**
+Décision prise pendant la présentation du Lot 6 : ne pas toucher
+`DashboardShell.tsx` (gelé) pour ajouter un lien "Voir toutes" dans la
+cloche. Les 4 pages (`/dashboard/{client,agent,admin,super-admin}/
+notifications`) existent et fonctionnent mais ne sont reliées à rien.
+Même situation que le constat A3 #1 (bascule de navigation réelle prévue
+sur A3-A7). **À faire** : ajouter le lien dans `NotificationBell.tsx`
+(pas dans `DashboardShell.tsx` lui-même) ou une entrée de menu quand la
+navigation réelle sera branchée.
