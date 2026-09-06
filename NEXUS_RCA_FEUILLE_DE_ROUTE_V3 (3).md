@@ -132,7 +132,7 @@ suivi avait divergé.
 | A6 | CRM — Clients 360, prospects, RDV, communications, tâches | ✅ terminée — 7 lots (fiche 360°, boîte de réception, dédoublonnage, RDV/D3, communications/notes, notifications, performance CRM), voir docs/DETTE.md | v3/integration-v3 | 05/09 |
 | A7 | RH rhabillé | ✅ terminée — affectations_hist, tâches liées au dossier, charge de travail réelle ; rhabillage shell et délais moyens RH reportés (décisions Thierry), voir docs/DETTE.md | v3/integration-v3 | 05/09 |
 | P6-0 | Convergence des colonnes `payments` | ✅ terminée — 5 étapes (analyse, backfill, sync, migration des consommateurs, réconciliation) ; test corrigé en étape 5 (montant_total reste légitime, distinct d'amount), voir docs/DETTE.md | v3/integration-v3 | 05/09 |
-| P6 | Finance | 🟡 en cours — D5 (migration PDF jsPDF → pdf-lib, 5 fichiers) et numérotation par séquence (DEV-/FAC-/REC-) terminées ; lots Devis, Factures et Sessions caisse terminés, PDF devis/factures vérifiés visuellement par Thierry le 06/09 — OK ; reste à faire : catégories comptables et commissions, échéanciers/rapprochement/validation/rapports — voir docs/DETTE.md | v3/integration-v3 | 06/09 |
+| P6 | Finance | 🟡 en cours — D5 (migration PDF jsPDF → pdf-lib, 5 fichiers) et numérotation par séquence (DEV-/FAC-/REC-) terminées ; lots Devis, Factures, Sessions caisse et Catégories comptables/Commissions (saisie manuelle) terminés, PDF devis/factures vérifiés visuellement par Thierry le 06/09 — OK ; reste à faire : échéanciers/rapprochement/validation/rapports — voir docs/DETTE.md | v3/integration-v3 | 06/09 |
 | P8 | CMS et contenus | ⬜ | | |
 | P9 | Portail client | ⬜ | | |
 | P10 | Site public | ⬜ | | |

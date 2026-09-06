@@ -593,3 +593,25 @@ money/virement enregistrés en espèces resteraient hors du calcul) : **à
 Aucun PDF pour ce lot (contrairement à devis/factures) : une clôture de
 session est un contrôle interne, pas un document client — décision
 proportionnée, à revoir si un besoin d'export/impression apparaît.
+
+**12. Lot Catégories comptables + Commissions (06/09/2026) : saisie manuelle confirmée par Thierry, aucune formule automatique.**
+Migration 062 : `commission.read`/`commission.validate` (dans l'énumération
+§P2 mais jamais seedées — 0 ligne avant cette migration) complétées pour
+`admin`/`dg`/`daf`/`comptable` (lecture) et `admin`/`dg`/`daf` (validation).
+`commission.create` **n'existe pas** dans l'énumération officielle
+(seulement read/validate) : ajoutée par nécessité pour `admin`/`daf`, même
+traitement que `devis.create`/`facture.create` avant elle. **Décision
+confirmée par Thierry (06/09/2026)** : pas de calcul automatique par
+pourcentage — le schéma ne porte aucun taux configurable par agent ou
+service, un admin/daf saisit manuellement montant et taux (`rate`, simple
+champ informatif, non recalculé). Cycle de vie `calculee → validee →
+payee`, permission unique `commission.validate` pour les deux transitions
+(même logique que `facture.validate`, voir entrée 10). `categorie_compta.
+write` **non plus dans l'énumération officielle** : traité comme un
+paramétrage proche d'`agency_settings`, réservé `admin` (migration 062).
+Catégories jamais supprimées (seulement actif/inactif) — une catégorie
+pourrait déjà être référencée ailleurs un jour (aucune table ne la
+référence encore, cette lot ne branche `categories_compta` à aucune autre
+table : c'est une liste de référence seule, prête pour un futur
+rapprochement dépenses/revenus). Aucun PDF (même raisonnement que les
+sessions caisse, entrée 11).
