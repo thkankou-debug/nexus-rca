@@ -450,8 +450,24 @@ ajoutées (2ᵉ fichier utilisant le même patron).
 
 **4. Lot 1b (D5) : `AgentStats.tsx` migré de jsPDF vers pdf-lib, en réutilisant `lib/pdf-layout.ts`.**
 Même structure que le lot 1a (bandeau, en-tête, tableau paginé, pied de
-page). 3 fichiers restent à migrer (`PaymentReceipt.tsx` — 93 appels
-jsPDF, `MonthlyReportGenerator.tsx` — 233, `QuickSaleForm.tsx` — 47),
-chacun présenté séparément. **Non vérifié visuellement** — à confirmer
-par Thierry en cliquant sur "Export PDF" depuis
-`/dashboard/super-admin/stats-agents`.
+page). **Non vérifié visuellement** — interrompu par la pause Vercel du
+site en production (05/09/2026) avant que Thierry ait pu tester ; à
+confirmer en cliquant sur "Export PDF" depuis
+`/dashboard/super-admin/stats-agents` dès que le site est de nouveau
+accessible.
+
+**5. Lot 1c (D5) : `QuickSaleForm.tsx` migré de jsPDF vers pdf-lib (47 appels), le plus complexe des 5 fichiers D5.**
+Format spécifique (ticket de caisse 80mm × 200mm, coordonnées en
+millimètres converties en points via `MM_TO_PT`), alignement centré sur
+la quasi-totalité du texte, retour à la ligne manuel (`wrapText`,
+équivalent de `splitTextToSize`), trait pointillé (`drawDashedLine`),
+et 3 sorties distinctes (téléchargement, impression via fenêtre
+`window.open`, email en base64) — contre une seule sortie
+(téléchargement) dans les lots 1a/1b. `lib/pdf-layout.ts` étendu en
+conséquence (`align: "center"`, `wrapText`, `drawDashedLine`,
+`uint8ArrayToBase64`, `MM_TO_PT`), de façon additive — aucune régression
+sur les lots 1a/1b déjà écrits. 2 fichiers restent à migrer
+(`PaymentReceipt.tsx` — 93 appels, `MonthlyReportGenerator.tsx` — 233).
+**Non vérifié visuellement** — à confirmer par Thierry sur les 3
+sorties (bouton "Imprimer", bouton "PDF", bouton "Email") depuis une
+vente rapide existante (`/dashboard/{agent,super-admin}/caisse`).
