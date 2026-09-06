@@ -25,7 +25,8 @@ import {
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import jsPDF from "jspdf";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { drawText, drawFilledRect } from "@/lib/pdf-layout";
 
 // ============================================================================
 // TYPES
@@ -245,55 +246,69 @@ function exportCSV(rows: (AgentStatsRow & { score: number })[], periodLabel: str
   URL.revokeObjectURL(url);
 }
 
-function exportPDF(rows: (AgentStatsRow & { score: number })[], periodLabel: string) {
-  const doc = new jsPDF({
-    orientation: "landscape",
-    unit: "mm",
-    format: "a4",
-  });
+// P6, D5 : migre de jsPDF vers pdf-lib (meme patron que QuickSalesManager.tsx,
+// Lot 1a). Page A4 paysage en points, topY se comporte comme le y de jsPDF
+// (converti au moment de dessiner via drawText/drawFilledRect, lib/pdf-layout.ts).
+const PAGE_WIDTH = 841.89;
+const PAGE_HEIGHT = 595.28;
+const MARGIN = 42;
 
-  const pageWidth = 297;
-  const margin = 15;
-  let y = margin;
+async function exportPDF(rows: (AgentStatsRow & { score: number })[], periodLabel: string) {
+  const pdfDoc = await PDFDocument.create();
+  const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-  const NEXUS_BLUE: [number, number, number] = [12, 28, 64];
-  const NEXUS_ORANGE: [number, number, number] = [255, 102, 0];
-  const SLATE_DARK: [number, number, number] = [30, 41, 59];
-  const SLATE_MID: [number, number, number] = [100, 116, 139];
+  const nexusBlue = rgb(0.047, 0.11, 0.251);
+  const nexusOrange = rgb(1, 0.4, 0);
+  const slateDark = rgb(0.118, 0.161, 0.231);
+  const slateMid = rgb(0.392, 0.455, 0.545);
+  const grayHeaderBg = rgb(0.973, 0.98, 0.988);
+  const grayRowBg = rgb(0.988, 0.988, 0.992);
+  const green = rgb(0.133, 0.773, 0.369);
+
+  let page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
+  let topY = MARGIN;
+
+  const newPage = () => {
+    page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
+    topY = MARGIN;
+  };
 
   // Bandeau header
-  doc.setFillColor(...NEXUS_ORANGE);
-  doc.rect(0, 0, pageWidth, 6, "F");
+  drawFilledRect(page, PAGE_HEIGHT, 0, 0, PAGE_WIDTH, 17, nexusOrange);
 
-  y = 18;
-  doc.setFontSize(18);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...NEXUS_BLUE);
-  doc.text("NEXUS RCA", margin, y);
+  topY = 51;
+  drawText(page, PAGE_HEIGHT, helveticaBold, "NEXUS RCA", MARGIN, topY, 18, nexusBlue);
+  drawText(page, PAGE_HEIGHT, helvetica, "Rapport Performances Agents", MARGIN, topY + 14, 9, slateMid);
 
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(...SLATE_MID);
-  doc.text("Rapport Performances Agents", margin, y + 5);
-
-  doc.setFontSize(8);
-  doc.text(
+  drawText(
+    page,
+    PAGE_HEIGHT,
+    helvetica,
     `Genere le ${new Date().toLocaleString("fr-FR")}`,
-    pageWidth - margin,
-    y - 2,
-    { align: "right" }
+    PAGE_WIDTH - MARGIN,
+    topY - 6,
+    8,
+    slateMid,
+    "right"
   );
-  doc.text(`Periode : ${periodLabel}`, pageWidth - margin, y + 3, {
-    align: "right",
-  });
-  doc.text(`${rows.length} agent${rows.length > 1 ? "s" : ""}`, pageWidth - margin, y + 8, {
-    align: "right",
-  });
+  drawText(page, PAGE_HEIGHT, helvetica, `Periode : ${periodLabel}`, PAGE_WIDTH - MARGIN, topY + 8, 8, slateMid, "right");
+  drawText(
+    page,
+    PAGE_HEIGHT,
+    helvetica,
+    `${rows.length} agent${rows.length > 1 ? "s" : ""}`,
+    PAGE_WIDTH - MARGIN,
+    topY + 22,
+    8,
+    slateMid,
+    "right"
+  );
 
-  y += 18;
+  topY += 51;
 
   // Tableau header
-  const colWidths = [10, 50, 25, 18, 35, 22, 22, 22, 32, 22];
+  const colWidths = [28, 142, 71, 51, 99, 62, 62, 62, 91, 62];
   const headers = [
     "#",
     "Agent",
@@ -307,92 +322,96 @@ function exportPDF(rows: (AgentStatsRow & { score: number })[], periodLabel: str
     "Statut",
   ];
 
-  doc.setFillColor(248, 250, 252);
-  doc.rect(margin, y, pageWidth - 2 * margin, 8, "F");
+  drawFilledRect(page, PAGE_HEIGHT, MARGIN, topY, PAGE_WIDTH - 2 * MARGIN, 23, grayHeaderBg);
 
-  doc.setFontSize(8);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...SLATE_DARK);
-  let x = margin + 2;
+  let x = MARGIN + 6;
   headers.forEach((h, i) => {
-    doc.text(h, x, y + 5);
+    drawText(page, PAGE_HEIGHT, helveticaBold, h, x, topY + 14, 8, slateDark);
     x += colWidths[i];
   });
-  y += 8;
+  topY += 23;
 
   // Tableau lignes
-  doc.setFont("helvetica", "normal");
   rows.forEach((r, i) => {
-    if (y > 190) {
-      doc.addPage();
-      y = margin;
+    if (topY > 538) {
+      newPage();
     }
 
     if (i % 2 === 1) {
-      doc.setFillColor(252, 252, 253);
-      doc.rect(margin, y, pageWidth - 2 * margin, 7, "F");
+      drawFilledRect(page, PAGE_HEIGHT, MARGIN, topY, PAGE_WIDTH - 2 * MARGIN, 20, grayRowBg);
     }
 
     const role = getRoleBadge(r.role);
     const displayName = [r.prenom, r.nom].filter(Boolean).join(" ") || "-";
     const active = isActive(r.derniere_activite);
 
-    x = margin + 2;
-    doc.setTextColor(...SLATE_DARK);
-    doc.text(String(i + 1), x, y + 5);
+    x = MARGIN + 6;
+    const rowTextY = topY + 14;
+    drawText(page, PAGE_HEIGHT, helvetica, String(i + 1), x, rowTextY, 8, slateDark);
     x += colWidths[0];
 
-    doc.setFont("helvetica", "bold");
-    doc.text(displayName.substring(0, 28), x, y + 5);
+    drawText(page, PAGE_HEIGHT, helveticaBold, displayName.substring(0, 28), x, rowTextY, 8, slateDark);
     x += colWidths[1];
 
-    doc.setFont("helvetica", "normal");
-    doc.text(role.label, x, y + 5);
+    drawText(page, PAGE_HEIGHT, helvetica, role.label, x, rowTextY, 8, slateDark);
     x += colWidths[2];
 
-    doc.setFont("helvetica", "bold");
-    doc.text(String(r.score), x, y + 5);
+    drawText(page, PAGE_HEIGHT, helveticaBold, String(r.score), x, rowTextY, 8, slateDark);
     x += colWidths[3];
 
-    doc.setFont("helvetica", "normal");
-    doc.text(formatMoney(r.paiements_encaisses), x, y + 5);
+    drawText(page, PAGE_HEIGHT, helvetica, formatMoney(r.paiements_encaisses), x, rowTextY, 8, slateDark);
     x += colWidths[4];
 
-    doc.text(String(r.clients_crees), x, y + 5);
+    drawText(page, PAGE_HEIGHT, helvetica, String(r.clients_crees), x, rowTextY, 8, slateDark);
     x += colWidths[5];
 
-    doc.text(String(r.demandes_traitees), x, y + 5);
+    drawText(page, PAGE_HEIGHT, helvetica, String(r.demandes_traitees), x, rowTextY, 8, slateDark);
     x += colWidths[6];
 
-    doc.text(String(r.transferts_inities), x, y + 5);
+    drawText(page, PAGE_HEIGHT, helvetica, String(r.transferts_inities), x, rowTextY, 8, slateDark);
     x += colWidths[7];
 
-    doc.text(formatMoney(r.depenses_validees), x, y + 5);
+    drawText(page, PAGE_HEIGHT, helvetica, formatMoney(r.depenses_validees), x, rowTextY, 8, slateDark);
     x += colWidths[8];
 
-    if (active) doc.setTextColor(34, 197, 94);
-    else doc.setTextColor(...SLATE_MID);
-    doc.text(active ? "Actif" : "Inactif", x, y + 5);
+    drawText(page, PAGE_HEIGHT, helvetica, active ? "Actif" : "Inactif", x, rowTextY, 8, active ? green : slateMid);
 
-    y += 7;
+    topY += 20;
   });
 
   // Footer sur derniere page
-  doc.setFontSize(7);
-  doc.setTextColor(...SLATE_MID);
-  doc.text(
+  drawText(
+    page,
+    PAGE_HEIGHT,
+    helvetica,
     "Score = encaissements (40%) + clients (25%) + demandes (20%) + transferts (15%)",
-    margin,
-    200
+    MARGIN,
+    566,
+    7,
+    slateMid
   );
-  doc.text(
+  drawText(
+    page,
+    PAGE_HEIGHT,
+    helvetica,
     "Nexus RCA - Bangui, RCA - contact@nexusrca.com",
-    pageWidth - margin,
-    200,
-    { align: "right" }
+    PAGE_WIDTH - MARGIN,
+    566,
+    7,
+    slateMid,
+    "right"
   );
 
-  doc.save(`Stats_Agents_${new Date().toISOString().split("T")[0]}.pdf`);
+  const bytes = await pdfDoc.save();
+  const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `Stats_Agents_${new Date().toISOString().split("T")[0]}.pdf`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
 
 // ============================================================================

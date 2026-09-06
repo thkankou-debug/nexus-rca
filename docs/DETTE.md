@@ -443,12 +443,15 @@ périmètre P6 (D1 ne demande pas de renuméroter les paiements existants).
 Les nouvelles séquences pour devis/factures/reçus seront construites
 proprement, sans lien avec ce précédent.
 
-**3. Lot 1a (D5, migration PDF) : `QuickSalesManager.tsx` migré de jsPDF vers pdf-lib, en réutilisant le patron déjà éprouvé de `payment-links/[reference]/verify/route.ts`.**
-`sanitizeForPdf()` extraite en utilitaire partagé (`lib/pdf-sanitize.ts`)
-plutôt que dupliquée dans chacun des 5 fichiers de la migration D5.
-4 fichiers restent à migrer (`PaymentReceipt.tsx` — 93 appels jsPDF,
-`MonthlyReportGenerator.tsx` — 233, `AgentStats.tsx` — 34,
-`QuickSaleForm.tsx` — 47), chacun présenté séparément. **Non vérifié
-visuellement** (impossible pour moi d'ouvrir un PDF généré) — à confirmer
-par Thierry en cliquant sur "Export PDF" depuis `/dashboard/{agent,
-super-admin}/caisse` : accents, tableau, pagination.
+**3. Lot 1a (D5, migration PDF) : `QuickSalesManager.tsx` migré de jsPDF vers pdf-lib, en réutilisant le patron déjà éprouvé de `payment-links/[reference]/verify/route.ts`. Vérifié visuellement par Thierry — OK.**
+`sanitizeForPdf()` extraite en utilitaire partagé, renommé
+`lib/pdf-layout.ts` au lot 1b une fois `drawText()`/`drawFilledRect()`
+ajoutées (2ᵉ fichier utilisant le même patron).
+
+**4. Lot 1b (D5) : `AgentStats.tsx` migré de jsPDF vers pdf-lib, en réutilisant `lib/pdf-layout.ts`.**
+Même structure que le lot 1a (bandeau, en-tête, tableau paginé, pied de
+page). 3 fichiers restent à migrer (`PaymentReceipt.tsx` — 93 appels
+jsPDF, `MonthlyReportGenerator.tsx` — 233, `QuickSaleForm.tsx` — 47),
+chacun présenté séparément. **Non vérifié visuellement** — à confirmer
+par Thierry en cliquant sur "Export PDF" depuis
+`/dashboard/super-admin/stats-agents`.

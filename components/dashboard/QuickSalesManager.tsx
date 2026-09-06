@@ -11,8 +11,8 @@ import {
   FileSpreadsheet,
   FileDown,
 } from "lucide-react";
-import { PDFDocument, StandardFonts, rgb, type PDFPage, type PDFFont } from "pdf-lib";
-import { sanitizeForPdf } from "@/lib/pdf-sanitize";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { drawText, drawFilledRect } from "@/lib/pdf-layout";
 import { cn } from "@/lib/utils";
 import {
   QuickSaleForm,
@@ -146,33 +146,6 @@ const PAGE_WIDTH = 841.89;
 const PAGE_HEIGHT = 595.28;
 const MARGIN = 34;
 
-function drawText(
-  page: PDFPage,
-  font: PDFFont,
-  text: string,
-  x: number,
-  topY: number,
-  size: number,
-  color: ReturnType<typeof rgb>,
-  align: "left" | "right" = "left"
-) {
-  const safe = sanitizeForPdf(text);
-  const width = font.widthOfTextAtSize(safe, size);
-  const drawX = align === "right" ? x - width : x;
-  page.drawText(safe, { x: drawX, y: PAGE_HEIGHT - topY, size, font, color });
-}
-
-function drawFilledRect(
-  page: PDFPage,
-  x: number,
-  topY: number,
-  width: number,
-  height: number,
-  color: ReturnType<typeof rgb>
-) {
-  page.drawRectangle({ x, y: PAGE_HEIGHT - topY - height, width, height, color });
-}
-
 async function exportPDF(sales: QuickSale[], agents: AgentInfo[], period: Period) {
   const pdfDoc = await PDFDocument.create();
   const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -193,13 +166,14 @@ async function exportPDF(sales: QuickSale[], agents: AgentInfo[], period: Period
     topY = MARGIN;
   };
 
-  drawFilledRect(page, 0, 0, PAGE_WIDTH, 17, nexusOrange);
+  drawFilledRect(page, PAGE_HEIGHT, 0, 0, PAGE_WIDTH, 17, nexusOrange);
 
   topY = 45;
-  drawText(page, helveticaBold, "NEXUS RCA - Caisse rapide", MARGIN, topY, 16, nexusBlue);
+  drawText(page, PAGE_HEIGHT, helveticaBold, "NEXUS RCA - Caisse rapide", MARGIN, topY, 16, nexusBlue);
 
   drawText(
     page,
+    PAGE_HEIGHT,
     helvetica,
     `Genere le ${new Date().toLocaleString("fr-FR")}`,
     PAGE_WIDTH - MARGIN,
@@ -210,6 +184,7 @@ async function exportPDF(sales: QuickSale[], agents: AgentInfo[], period: Period
   );
   drawText(
     page,
+    PAGE_HEIGHT,
     helvetica,
     `Periode : ${period === "today" ? "Aujourd hui" : period === "week" ? "7 jours" : period === "month" ? "30 jours" : "Tout"}`,
     PAGE_WIDTH - MARGIN,
@@ -221,7 +196,7 @@ async function exportPDF(sales: QuickSale[], agents: AgentInfo[], period: Period
 
   // Total
   const total = sales.reduce((s, x) => s + Number(x.montant_total || 0), 0);
-  drawText(page, helveticaBold, `Total : ${formatMoney(total)}`, MARGIN, topY + 23, 11, nexusBlue);
+  drawText(page, PAGE_HEIGHT, helveticaBold, `Total : ${formatMoney(total)}`, MARGIN, topY + 23, 11, nexusBlue);
 
   topY += 51;
 
@@ -239,11 +214,11 @@ async function exportPDF(sales: QuickSale[], agents: AgentInfo[], period: Period
     "Agent",
   ];
 
-  drawFilledRect(page, MARGIN, topY, PAGE_WIDTH - 2 * MARGIN, 20, grayHeaderBg);
+  drawFilledRect(page, PAGE_HEIGHT, MARGIN, topY, PAGE_WIDTH - 2 * MARGIN, 20, grayHeaderBg);
 
   let x = MARGIN + 6;
   headers.forEach((h, i) => {
-    drawText(page, helveticaBold, h, x, topY + 14, 8, grayDark);
+    drawText(page, PAGE_HEIGHT, helveticaBold, h, x, topY + 14, 8, grayDark);
     x += colWidths[i];
   });
   topY += 22;
@@ -253,7 +228,7 @@ async function exportPDF(sales: QuickSale[], agents: AgentInfo[], period: Period
       newPage();
     }
     if (i % 2 === 1) {
-      drawFilledRect(page, MARGIN, topY, PAGE_WIDTH - 2 * MARGIN, 17, grayRowBg);
+      drawFilledRect(page, PAGE_HEIGHT, MARGIN, topY, PAGE_WIDTH - 2 * MARGIN, 17, grayRowBg);
     }
     const agent = agents.find((a) => a.id === s.agent_id);
     const agentName = agent
@@ -262,10 +237,11 @@ async function exportPDF(sales: QuickSale[], agents: AgentInfo[], period: Period
 
     x = MARGIN + 6;
     const rowTextY = topY + 11;
-    drawText(page, helvetica, (s.reference || "").substring(0, 14), x, rowTextY, 7, grayDark);
+    drawText(page, PAGE_HEIGHT, helvetica, (s.reference || "").substring(0, 14), x, rowTextY, 7, grayDark);
     x += colWidths[0];
     drawText(
       page,
+      PAGE_HEIGHT,
       helvetica,
       new Date(s.date_paiement).toLocaleDateString("fr-FR"),
       x,
@@ -274,19 +250,19 @@ async function exportPDF(sales: QuickSale[], agents: AgentInfo[], period: Period
       grayDark
     );
     x += colWidths[1];
-    drawText(page, helvetica, SERVICE_LABELS[s.type_service], x, rowTextY, 7, grayDark);
+    drawText(page, PAGE_HEIGHT, helvetica, SERVICE_LABELS[s.type_service], x, rowTextY, 7, grayDark);
     x += colWidths[2];
-    drawText(page, helvetica, (s.description || "—").substring(0, 35), x, rowTextY, 7, grayDark);
+    drawText(page, PAGE_HEIGHT, helvetica, (s.description || "—").substring(0, 35), x, rowTextY, 7, grayDark);
     x += colWidths[3];
-    drawText(page, helvetica, String(s.quantite), x, rowTextY, 7, grayDark);
+    drawText(page, PAGE_HEIGHT, helvetica, String(s.quantite), x, rowTextY, 7, grayDark);
     x += colWidths[4];
-    drawText(page, helvetica, formatMoney(s.prix_unitaire, "").trim(), x, rowTextY, 7, grayDark);
+    drawText(page, PAGE_HEIGHT, helvetica, formatMoney(s.prix_unitaire, "").trim(), x, rowTextY, 7, grayDark);
     x += colWidths[5];
-    drawText(page, helveticaBold, formatMoney(s.montant_total, ""), x, rowTextY, 7, grayDark);
+    drawText(page, PAGE_HEIGHT, helveticaBold, formatMoney(s.montant_total, ""), x, rowTextY, 7, grayDark);
     x += colWidths[6];
-    drawText(page, helvetica, PAYMENT_LABELS[s.mode_paiement], x, rowTextY, 7, grayDark);
+    drawText(page, PAGE_HEIGHT, helvetica, PAYMENT_LABELS[s.mode_paiement], x, rowTextY, 7, grayDark);
     x += colWidths[7];
-    drawText(page, helvetica, agentName.substring(0, 15), x, rowTextY, 7, grayDark);
+    drawText(page, PAGE_HEIGHT, helvetica, agentName.substring(0, 15), x, rowTextY, 7, grayDark);
     topY += 17;
   });
 
