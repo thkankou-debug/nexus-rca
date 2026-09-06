@@ -774,3 +774,20 @@ la nouvelle adresse complète — première donnée réelle de cette table,
 prête pour l'écran d'administration Bureaux à venir.
 
 **10. Écart CLAUDE.md non corrigé : URLs `/services/incubateur`/`/services/billet-avion-hotel`/`/nexus-ia` sont fausses (voir aussi P8 #3) — signalé une seconde fois car pertinent au changement d'adresse dans le même fichier.**
+
+**11. Lot Témoignages + Partenaires (06/09/2026) : workflow vérifier → publier, aucune permission dédiée pour les témoignages.**
+`temoignage.*` n'existe pas dans l'énumération §P2 (contrairement à
+`partenaire`, couvert par `cms.partenaire.write`) : traité comme du
+contenu générique, gated par `cms.content.write` (déjà seedée admin/
+moderateur en 043b, aucune migration nécessaire pour ce lot). Règle
+appliquée strictement côté serveur (`PATCH .../[id]`, pas seulement dans
+l'interface) : impossible de passer `is_published=true` si `is_verified`
+n'est pas déjà `true` (ou passé `true` dans la même requête) — sans ce
+garde-fou serveur, l'ordre "vérifier avant de publier" ne serait qu'une
+convention d'interface, contournable par un appel direct à l'API.
+Suppression autorisée sur les deux tables (aucune autre table ne
+référence `temoignages.id`/`partenaires.id`). `logo_url`/`site_url` de
+`partenaires` acceptent une URL en texte libre, saisie par l'admin — pas
+de téléversement de fichier ni de suivi de provenance/droits d'usage
+(section "Médias" du texte P8) dans ce lot : hors périmètre, à construire
+séparément si un vrai flux d'upload de logos devient nécessaire.

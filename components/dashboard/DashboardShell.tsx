@@ -50,6 +50,8 @@ import {
   Scale,
   Layers,
   HelpCircle,
+  MessageSquareQuote,
+  Handshake,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -190,6 +192,8 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/super-admin/rapprochement", label: "Rapprochement financier", icon: Scale },
         { href: "/dashboard/super-admin/services", label: "Services et tarifs", icon: Layers },
         { href: "/dashboard/super-admin/faq", label: "FAQ", icon: HelpCircle },
+        { href: "/dashboard/super-admin/temoignages", label: "Témoignages", icon: MessageSquareQuote },
+        { href: "/dashboard/super-admin/partenaires", label: "Partenaires", icon: Handshake },
         { href: "/dashboard/admin/rapports", label: "Rapports mensuels", icon: FileBarChart },
       ],
     },
@@ -291,6 +295,8 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/super-admin/i18n", label: "Multi-langue", icon: Globe },
         { href: "/dashboard/super-admin/services", label: "Services et tarifs", icon: Layers },
         { href: "/dashboard/super-admin/faq", label: "FAQ", icon: HelpCircle },
+        { href: "/dashboard/super-admin/temoignages", label: "Témoignages", icon: MessageSquareQuote },
+        { href: "/dashboard/super-admin/partenaires", label: "Partenaires", icon: Handshake },
         { href: "/dashboard/super-admin/audit-log", label: "Audit log", icon: ShieldCheck },
         { href: "/dashboard/super-admin/parametres", label: "Paramètres agence", icon: Settings },
       ],
