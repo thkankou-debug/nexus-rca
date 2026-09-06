@@ -456,7 +456,7 @@ confirmer en cliquant sur "Export PDF" depuis
 `/dashboard/super-admin/stats-agents` dès que le site est de nouveau
 accessible.
 
-**5. Lot 1c (D5) : `QuickSaleForm.tsx` migré de jsPDF vers pdf-lib (47 appels), le plus complexe des 5 fichiers D5.**
+**5. Lot 1c (D5) : `QuickSaleForm.tsx` migré de jsPDF vers pdf-lib (47 appels), le plus complexe des 5 fichiers D5 à cette date.**
 Format spécifique (ticket de caisse 80mm × 200mm, coordonnées en
 millimètres converties en points via `MM_TO_PT`), alignement centré sur
 la quasi-totalité du texte, retour à la ligne manuel (`wrapText`,
@@ -466,8 +466,25 @@ et 3 sorties distinctes (téléchargement, impression via fenêtre
 (téléchargement) dans les lots 1a/1b. `lib/pdf-layout.ts` étendu en
 conséquence (`align: "center"`, `wrapText`, `drawDashedLine`,
 `uint8ArrayToBase64`, `MM_TO_PT`), de façon additive — aucune régression
-sur les lots 1a/1b déjà écrits. 2 fichiers restent à migrer
-(`PaymentReceipt.tsx` — 93 appels, `MonthlyReportGenerator.tsx` — 233).
-**Non vérifié visuellement** — à confirmer par Thierry sur les 3
-sorties (bouton "Imprimer", bouton "PDF", bouton "Email") depuis une
-vente rapide existante (`/dashboard/{agent,super-admin}/caisse`).
+sur les lots 1a/1b déjà écrits. **Non vérifié visuellement** — à
+confirmer par Thierry sur les 3 sorties (bouton "Imprimer", bouton
+"PDF", bouton "Email") depuis une vente rapide existante
+(`/dashboard/{agent,super-admin}/caisse`).
+
+**6. Lot 1d (D5) : `PaymentReceipt.tsx` migré de jsPDF vers pdf-lib (93 appels) — reçu envoyé à de vrais clients.**
+pdf-lib n'a pas d'équivalent natif à `roundedRect` de jsPDF (utilisé 2
+fois : encadré date/statut, bloc montants avec bordure). **Décision
+Thierry : coins carrés**, plutôt qu'un chemin SVG non testable
+visuellement avant validation — écart visuel mineur assumé (rayon
+d'origine 2-3mm). Couleurs historiques `#0C1C40`/`#FF6600` conservées
+telles quelles (écart connu documenté dans CLAUDE.md, non touché).
+`lib/pdf-layout.ts` étendu : `drawLine()` (variante pleine de
+`drawDashedLine`), bordure optionnelle sur `drawFilledRect()`, et
+`mm()` promu en export partagé (retiré de `QuickSaleForm.tsx`, qui le
+définissait localement au lot 1c — 3ᵉ fichier à en avoir besoin après
+`PaymentReceipt.tsx`, `MonthlyReportGenerator.tsx` probablement aussi).
+1 fichier reste à migrer (`MonthlyReportGenerator.tsx` — 233 appels,
+le plus gros des 5). **Non vérifié visuellement** — à confirmer par
+Thierry sur les 3 sorties (bouton "Reçu PDF", "Imprimer", "Envoyer par
+email") depuis un paiement existant, avec attention particulière car ce
+document part chez de vrais clients.
