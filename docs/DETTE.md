@@ -488,3 +488,23 @@ le plus gros des 5). **Non vérifié visuellement** — à confirmer par
 Thierry sur les 3 sorties (bouton "Reçu PDF", "Imprimer", "Envoyer par
 email") depuis un paiement existant, avec attention particulière car ce
 document part chez de vrais clients.
+
+**7. Lot 1e (D5) : `MonthlyReportGenerator.tsx` migré de jsPDF vers pdf-lib (233 appels, 5 pages) — dernier fichier D5, migration terminée.**
+`sanitizeForPdf` étendue (`—`/`–`, `•`, `⚠`, `✓`, `·` → équivalents
+ASCII) : ces symboles n'étaient couverts par aucune règle existante et
+tombaient dans le filtre final `[^\x20-\x7E]` → `"?"`. **Corrige aussi
+rétroactivement** les références vides (`"—"`) des lots 1c
+(`QuickSaleForm.tsx`) et 1d (`PaymentReceipt.tsx`), qui affichaient
+`?` au lieu du tiret — trouvé en écrivant ce lot, avant toute
+vérification visuelle des lots précédents. **Bug pré-existant porté
+tel quel** (décision Thierry, pas de correction demandée) : sur la
+page 5 (créances), si le tableau déborde sur une page supplémentaire,
+`pageNum` n'est jamais incrémenté et `totalPages` reste figé à 5 —
+l'en-tête afficherait deux fois "Page 5/5" au lieu de "Page 5/5" puis
+"Page 6/5". Coins carrés sur les 2 blocs arrondis (cohérent avec la
+décision du lot 1d). **`jspdf` n'est plus importé nulle part dans le
+code** (les 5 fichiers D5 sont migrés) — la dépendance `jspdf` dans
+`package.json` pourrait être retirée, **non fait** (hors du plan
+présenté pour ce lot, à valider explicitement par Thierry). **Non
+vérifié visuellement** — à confirmer par Thierry sur les 3 sorties et
+les 5 pages depuis `/dashboard/super-admin/rapports`.
