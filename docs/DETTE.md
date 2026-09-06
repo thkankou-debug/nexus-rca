@@ -527,8 +527,8 @@ séquences ont avancé de quelques valeurs à cause de ces tests
 conséquence, un trou dans une séquence est normal et attendu (c'est
 tout l'intérêt d'une vraie séquence par rapport à `count(*)+1`).
 `jspdf` n'est plus importé nulle part dans le code depuis le lot 1e —
-la dépendance dans `package.json` pourrait être retirée, **non fait**,
-à valider explicitement par Thierry. Pas de CRUD devis/factures
+la dépendance a été retirée de `package.json` sur demande explicite de
+Thierry (06/09/2026), `npm uninstall jspdf` (23 paquets retirés). Pas de CRUD devis/factures
 construit à ce stade (lots suivants de P6), pas de câblage
 `audit_log` (s'applique aux futures actions de création/édition, pas
 à l'infrastructure de numérotation).
