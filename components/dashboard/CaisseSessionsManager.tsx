@@ -11,8 +11,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { Lock, LockOpen, PlusCircle, Wallet, AlertTriangle, X } from "lucide-react";
+import { Lock, LockOpen, PlusCircle, Wallet, AlertTriangle, FileSpreadsheet, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { downloadCsv } from "@/lib/csv-export";
 
 type SessionStatus = "ouverte" | "cloturee";
 
@@ -111,6 +112,34 @@ export function CaisseSessionsManager({
           </div>
         )}
       </div>
+
+      {sessions.length > 0 && (
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={() =>
+              downloadCsv(
+                `Sessions_caisse_${new Date().toISOString().split("T")[0]}.csv`,
+                ["Agent", "Statut", "Ouverte le", "Cloturee le", "Fonds initial", "Solde theorique", "Solde reel", "Ecart"],
+                sessions.map((s) => [
+                  s.profiles ? `${s.profiles.prenom || ""} ${s.profiles.nom}`.trim() : "",
+                  s.status === "ouverte" ? "Ouverte" : "Cloturee",
+                  formatDateTime(s.opened_at),
+                  formatDateTime(s.closed_at),
+                  String(s.opening_balance),
+                  s.expected_balance !== null ? String(s.expected_balance) : "",
+                  s.actual_balance !== null ? String(s.actual_balance) : "",
+                  s.discrepancy !== null ? String(s.discrepancy) : "",
+                ])
+              )
+            }
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          >
+            <FileSpreadsheet className="h-4 w-4" />
+            Export CSV
+          </button>
+        </div>
+      )}
 
       {sessions.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-12 text-center">

@@ -8,9 +8,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { Search, Plus, CalendarClock, CheckCircle2, AlertTriangle, X } from "lucide-react";
+import { Search, Plus, CalendarClock, CheckCircle2, AlertTriangle, FileSpreadsheet, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
+import { downloadCsv } from "@/lib/csv-export";
 
 type EcheancierStatus = "a_venir" | "paye" | "en_retard";
 
@@ -144,14 +145,38 @@ export function EcheanciersManager({
             className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
           />
         </div>
-        <button
-          type="button"
-          onClick={() => setShowForm(true)}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 hover:bg-nexus-orange-600"
-        >
-          <Plus className="h-4 w-4" />
-          Planifier une échéance
-        </button>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() =>
+              downloadCsv(
+                `Echeanciers_${new Date().toISOString().split("T")[0]}.csv`,
+                ["Facture", "Client", "Statut", "Montant", "Devise", "Echeance", "Payee le"],
+                filtered.map((e) => [
+                  e.factures?.reference || "",
+                  e.factures?.demandes?.nom_complet || "",
+                  STATUS_LABELS[e.status],
+                  String(e.amount),
+                  e.factures?.currency || "XAF",
+                  formatDate(e.due_date),
+                  formatDate(e.paid_at),
+                ])
+              )
+            }
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          >
+            <FileSpreadsheet className="h-4 w-4" />
+            Export CSV
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowForm(true)}
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 hover:bg-nexus-orange-600"
+          >
+            <Plus className="h-4 w-4" />
+            Planifier une échéance
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2">

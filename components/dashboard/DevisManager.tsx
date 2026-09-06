@@ -21,10 +21,12 @@ import {
   Clock,
   Trash2,
   Download,
+  FileSpreadsheet,
   X,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
+import { downloadCsv } from "@/lib/csv-export";
 
 type DevisStatus = "brouillon" | "envoye" | "accepte" | "refuse" | "expire";
 
@@ -159,14 +161,40 @@ export function DevisManager({ initialDevis }: { initialDevis: DevisListItem[] }
             className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
           />
         </div>
-        <button
-          type="button"
-          onClick={() => setShowForm(true)}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
-        >
-          <Plus className="h-4 w-4" />
-          Nouveau devis
-        </button>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() =>
+              downloadCsv(
+                `Devis_${new Date().toISOString().split("T")[0]}.csv`,
+                ["Reference", "Statut", "Client", "Service", "Dossier", "Montant", "Devise", "Cree le", "Valable jusqu'au"],
+                filtered.map((d) => [
+                  d.reference || "",
+                  STATUS_LABELS[d.status],
+                  d.demandes?.nom_complet || "",
+                  d.demandes?.service || "",
+                  d.demandes?.reference || "",
+                  String(d.amount),
+                  d.currency,
+                  formatDate(d.created_at),
+                  formatDate(d.valid_until),
+                ])
+              )
+            }
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          >
+            <FileSpreadsheet className="h-4 w-4" />
+            Export CSV
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowForm(true)}
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
+          >
+            <Plus className="h-4 w-4" />
+            Nouveau devis
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2">

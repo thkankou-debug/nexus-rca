@@ -8,9 +8,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { Search, Plus, Banknote, CheckCircle2, Coins, X } from "lucide-react";
+import { Search, Plus, Banknote, CheckCircle2, Coins, FileSpreadsheet, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
+import { downloadCsv } from "@/lib/csv-export";
 
 type CommissionStatus = "calculee" | "validee" | "payee";
 
@@ -150,16 +151,39 @@ export function CommissionsManager({
             className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
           />
         </div>
-        {canCreate && (
+        <div className="flex gap-2">
           <button
             type="button"
-            onClick={() => setShowForm(true)}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 hover:bg-nexus-orange-600"
+            onClick={() =>
+              downloadCsv(
+                `Commissions_${new Date().toISOString().split("T")[0]}.csv`,
+                ["Agent", "Statut", "Dossier", "Montant", "Taux", "Cree le"],
+                filtered.map((c) => [
+                  c.profiles ? `${c.profiles.prenom || ""} ${c.profiles.nom}`.trim() : "",
+                  STATUS_LABELS[c.status],
+                  c.demandes?.reference || "",
+                  String(c.amount),
+                  c.rate !== null ? `${c.rate}%` : "",
+                  formatDate(c.created_at),
+                ])
+              )
+            }
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
           >
-            <Plus className="h-4 w-4" />
-            Nouvelle commission
+            <FileSpreadsheet className="h-4 w-4" />
+            Export CSV
           </button>
-        )}
+          {canCreate && (
+            <button
+              type="button"
+              onClick={() => setShowForm(true)}
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 hover:bg-nexus-orange-600"
+            >
+              <Plus className="h-4 w-4" />
+              Nouvelle commission
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2">

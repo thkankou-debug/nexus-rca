@@ -636,3 +636,33 @@ proche). Pas de lien automatique avec `payments` : marquer une échéance
 payée n'enregistre aucune ligne `payments` correspondante (même limite que
 la transition `payee` des factures, entrée 10) — **à unifier** si un jour
 le rapprochement complet (dernière tranche de P6) relie les trois.
+
+**14. Lot Rapprochement + exports CSV (06/09/2026) : découverte structurelle — `factures` n'a aucune colonne ni FK vers `payments`.**
+Vérifié avant de construire la page `/dashboard/super-admin/rapprochement` :
+`factures` porte `devis_id`, `demande_id`, `client_record_id` — rien vers
+`payments`. Contrairement à `echeanciers.facture_id` (vraie FK, exploitée
+ici), un rapprochement facture ↔ paiement encaissé n'est **pas mesurable**
+aujourd'hui — §I.6 règle 3 appliquée : affiché comme une limite explicite
+dans l'interface, jamais comme un zéro silencieux. Le rapprochement livré
+compare ce qui est mécaniquement vérifiable : factures payées vs total de
+leurs échéances payées (anomalie si incomplet), écarts de sessions de
+caisse clôturées, commissions dues vs payées par agent. **À étendre** si un
+jour `payments.demande_id`/`dossier_id` (déjà repérés non fiables sur les
+paiements réels, voir A5 DETTE #1) sont fiabilisés au point de permettre un
+vrai lien facture ↔ paiement.
+
+Export CSV ajouté aux 5 managers P6 (`Devis`, `Factures`, `Commissions`,
+`Echeanciers`, `CaisseSessions`) via `lib/csv-export.ts`, nouveau et non
+partagé avec l'export CSV déjà existant d'`AgentStats.tsx` (même patron
+BOM+guillemets, dupliqué volontairement pour ne pas toucher un fichier qui
+marche — CLAUDE.md). Exports basés sur la liste déjà chargée et filtrée à
+l'écran : aucune route serveur supplémentaire, aucune permission nouvelle.
+
+**Rapports journaliers et annuels non construits.** Le texte de P6 demande
+"rapports journaliers, mensuels, annuels" — seul le mensuel existe
+(`MonthlyReportGenerator.tsx` + cron, antérieur à V3). `lib/monthly-report-
+data.ts` est structurellement couplé au mois (`monthBoundsFor`,
+`aggregateMonth`) : un rapport journalier/annuel demanderait de généraliser
+l'agrégateur à une plage de dates arbitraire, plus l'UI et la mise en page
+PDF associées — un chantier à part entière, pas une extension mineure de ce
+lot. **Non fait**, à confirmer avec Thierry avant de l'entreprendre.

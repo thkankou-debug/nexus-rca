@@ -47,6 +47,7 @@ import {
   Coins,
   Tag,
   CalendarClock,
+  Scale,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -184,6 +185,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/super-admin/echeanciers", label: "Échéanciers", icon: CalendarClock },
         { href: "/dashboard/super-admin/commissions", label: "Commissions", icon: Coins },
         { href: "/dashboard/super-admin/categories-compta", label: "Catégories comptables", icon: Tag },
+        { href: "/dashboard/super-admin/rapprochement", label: "Rapprochement financier", icon: Scale },
         { href: "/dashboard/admin/rapports", label: "Rapports mensuels", icon: FileBarChart },
       ],
     },
@@ -212,6 +214,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/super-admin/stats-agents", label: "Performances équipe", icon: Trophy },
         { href: "/dashboard/super-admin/rapports", label: "Rapports financiers", icon: FileBarChart },
         { href: "/dashboard/super-admin/rapports-mensuels", label: "Rapports mensuels (CRON)", icon: FileBarChart },
+        { href: "/dashboard/super-admin/rapprochement", label: "Rapprochement financier", icon: Scale },
       ],
     },
     {
