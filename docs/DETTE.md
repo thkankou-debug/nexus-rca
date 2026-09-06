@@ -748,3 +748,29 @@ marketing (ex. "e-visa 48-72h selon destination"), pas une valeur unique
 fiable par service. Inventer une valeur aurait violé la règle du chiffre
 honnête (§I.6). Le champ est éditable dans le nouvel écran "Services et
 tarifs" — à renseigner par Thierry quand une valeur fiable existera.
+
+**9. Changement d'adresse Nexus RCA (06/09/2026) : "Relais Sica, vers Hôpital Général" → "Croisement Marabena, Route de l'Aéroport, PO.BOX 1204", 21 fichiers corrigés.**
+Adresse fournie directement par Thierry. `grep -r "Relais Sica"` a trouvé
+21 fichiers : source unique `lib/contact.ts` (corrigée en premier), plus
+20 duplications en dur — CLAUDE.md, README, 5 templates email (`app/api/
+{contact,payments/send-receipt,appointments/send-confirmation}/route.ts`,
+`lib/rh/payslip-email.ts`), 5 générateurs PDF (`app/api/{devis,factures}/
+[id]/pdf/route.ts`, `app/api/payment-links/[reference]/verify/route.ts`,
+`components/dashboard/PaymentReceipt.tsx`, `lib/rh/{payslip-pdf,contract-
+pdf}.ts` — dont la clause légale "Siège social" du contrat de travail),
+`lib/whatsapp-templates.ts`, `components/{home/WhyTrust,auth/AuthLayout,
+NexusAIChat,payment/PaymentPageClient}.tsx`, `app/dashboard/super-admin/
+parametres/page.tsx` (valeurs par défaut d'un écran non branché à
+`agency_settings`), `messages/{fr,en}.json`. Chaque fichier gardait son
+propre format (avec/sans accents pour les PDF ASCII-safe, texte complet ou
+raccourci selon le contexte) — pas de mécanisme central pour ces 20
+duplications, corrigées une par une. **À corriger structurellement** :
+brancher ces 20 endroits sur `lib/contact.ts` (ou `agency_settings` une
+fois P8 terminé) pour qu'un futur changement d'adresse ne redemande pas
+cette même chasse.
+
+Une ligne réelle ajoutée à `bureaux` (migration 065, 0 ligne avant) avec
+la nouvelle adresse complète — première donnée réelle de cette table,
+prête pour l'écran d'administration Bureaux à venir.
+
+**10. Écart CLAUDE.md non corrigé : URLs `/services/incubateur`/`/services/billet-avion-hotel`/`/nexus-ia` sont fausses (voir aussi P8 #3) — signalé une seconde fois car pertinent au changement d'adresse dans le même fichier.**
