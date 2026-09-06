@@ -28,12 +28,19 @@
   --line: 226 232 240;               /* slate-200 */
   --line-strong: 203 213 225;        /* slate-300 */
 
-  /* Brand sémantique */
-  --brand: 249 115 22;               /* orange-500 */
-  --brand-hover: 234 88 12;          /* orange-600 */
-  --brand-subtle: 255 237 213;       /* orange-100 */
+  /* Brand sémantique — or mat (D8/P10, mesuré le 06/09/2026 : #C9A227 vs
+     navy #02071f = 8,25:1, largement AA). Remplace l'orange comme accent
+     d'action sur tout le site (public, admin, client) — voir docs/DETTE.md. */
+  --brand: 201 162 39;               /* #C9A227 */
+  --brand-hover: 176 141 30;         /* #B08D1E, plus sombre pour le survol */
+  --brand-subtle: 250 240 210;       /* teinte ivoire-or pâle */
 
-  /* Focus clavier — distinct de --brand : l'accent orange reste réservé à
+  /* Texte sur bouton/fond --brand : toujours bleu nuit (D8), jamais blanc,
+     constant en clair comme en sombre — ce n'est pas --ink (qui s'inverse
+     avec le thème), c'est la couleur du texte POSÉ SUR l'or lui-même. */
+  --on-brand: 2 7 31;                 /* #02071F */
+
+  /* Focus clavier — distinct de --brand : l'accent or reste réservé à
      une seule action par écran (A1), l'anneau de focus ne doit pas compter
      comme cet accent. */
   --focus: 59 99 255;                /* nexus-blue-500 */
@@ -66,9 +73,10 @@
   --line: 30 41 59;                  /* slate-800 */
   --line-strong: 51 65 85;           /* slate-700 */
 
-  --brand: 251 146 60;               /* orange-400 — plus lumineux sur sombre */
-  --brand-hover: 249 115 22;
-  --brand-subtle: 67 20 7;
+  --brand: 212 175 55;               /* #D4AF37 — or plus lumineux sur fond sombre */
+  --brand-hover: 201 162 39;          /* #C9A227 */
+  --brand-subtle: 59 46 9;            /* brun-or sourd */
+  --on-brand: 2 7 31;                  /* constant : toujours bleu nuit sur bouton or */
 
   --focus: 96 138 255;               /* nexus-blue-400 — plus lumineux sur sombre */
 

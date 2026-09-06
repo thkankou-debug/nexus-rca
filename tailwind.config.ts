@@ -58,6 +58,10 @@ const config: Config = {
           hover: "rgb(var(--brand-hover) / <alpha-value>)",
           subtle: "rgb(var(--brand-subtle) / <alpha-value>)",
         },
+        // Texte pose sur un fond --brand (bouton or) : toujours bleu nuit,
+        // constant en clair/sombre — distinct de `ink` qui s'inverse avec
+        // le theme (D8 : "texte bleu nuit sur bouton or, jamais blanc").
+        "on-brand": "rgb(var(--on-brand) / <alpha-value>)",
         // A1 — anneau de focus clavier, distinct de brand (voir globals.css)
         focus: "rgb(var(--focus) / <alpha-value>)",
         // A1 — six familles de statuts (admin), jamais quinze couleurs

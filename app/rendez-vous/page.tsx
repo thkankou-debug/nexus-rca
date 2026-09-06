@@ -106,7 +106,7 @@ export default function RendezVousPage() {
                       href="/demande/complet"
                       className="mt-4 inline-flex w-full items-center justify-between rounded-xl border border-white/15 bg-white/[0.04] px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-nexus-orange-400/40 hover:bg-white/[0.07]"
                     >
-                      Ouvrir un dossier
+                      Soumettre une demande
                       <ArrowRight className="h-4 w-4" />
                     </Link>
                   </SidebarCard>

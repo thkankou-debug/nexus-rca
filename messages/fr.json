@@ -32,7 +32,7 @@
     "rendezvous": "Rendez-vous",
     "nexus_connect": "NEXUS CONNECT",
     "login": "Connexion",
-    "open_dossier": "Ouvrir un dossier",
+    "open_dossier": "Soumettre une demande",
     "whatsapp": "WhatsApp",
     "menu": "Menu",
     "mobile_my_space": "Mon espace personnel",
@@ -214,7 +214,7 @@
     "cta_eyebrow": "Prochaine étape",
     "cta_title": "Vous avez un projet ou une démarche ?",
     "cta_subtitle": "Parlons-en. Notre équipe étudie votre situation et revient avec un plan clair, sans engagement.",
-    "cta_primary": "Ouvrir un dossier",
+    "cta_primary": "Soumettre une demande",
     "cta_secondary": "Prendre rendez-vous"
   },
   "ServicesIndex": {

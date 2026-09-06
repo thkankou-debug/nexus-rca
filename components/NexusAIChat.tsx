@@ -392,7 +392,7 @@ export function NexusAIChat() {
                       </div>
                       <div className="min-w-0">
                         <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
-                          Ouvrir un dossier
+                          Soumettre une demande
                         </p>
                         <p className="text-sm font-semibold text-nexus-blue-950 truncate">
                           {m.serviceLabel}

@@ -113,7 +113,7 @@ export default function NexusConnectPage() {
                 className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
               />
               <FilePlus className="h-4 w-4" />
-              Ouvrir un dossier
+              Soumettre une demande
             </Link>
           </div>
         </div>
@@ -213,7 +213,7 @@ export default function NexusConnectPage() {
                 className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/cta:left-[120%] group-hover/cta:opacity-100"
               />
               <FilePlus className="h-4 w-4" />
-              Ouvrir un dossier
+              Soumettre une demande
               <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
             </Link>
             <Link
@@ -602,7 +602,7 @@ export default function NexusConnectPage() {
                     className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 transition-all duration-700 ease-out group-hover/btn:left-[120%] group-hover/btn:opacity-100"
                   />
                   <FilePlus className="h-4 w-4" />
-                  Ouvrir un dossier
+                  Soumettre une demande
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/btn:translate-x-0.5" />
                 </Link>
                 <Link

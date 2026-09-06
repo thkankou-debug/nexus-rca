@@ -110,7 +110,7 @@ export function Navbar() {
                 {link.hasDropdown && servicesOpen && (
                   <div className="absolute left-1/2 top-full -translate-x-1/2 pt-2">
                     <div className="w-[520px] rounded-3xl border border-slate-200 bg-white p-4 shadow-[0_24px_60px_-22px_rgba(12,28,64,0.30)]">
-                      <div className="mb-3 border-b border-slate-200 pb-2 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+                      <div className="mb-3 border-b border-slate-200 pb-2 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-blue-700">
                         {t("services_dropdown_eyebrow")}
                       </div>
                       <div className="grid grid-cols-2 gap-1">
@@ -126,14 +126,14 @@ export function Navbar() {
                                 className={cn(
                                   "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-105",
                                   s.accent === "orange"
-                                    ? "bg-nexus-orange-100 text-nexus-orange-600 dark:bg-orange-500/15 dark:text-orange-300"
+                                    ? "bg-brand-subtle text-nexus-blue-900 dark:bg-brand-subtle dark:text-brand"
                                     : "bg-nexus-blue-100 text-nexus-blue-700 dark:bg-blue-500/15 dark:text-blue-300"
                                 )}
                               >
                                 <Icon className="h-4 w-4" />
                               </div>
                               <div className="min-w-0">
-                                <div className="text-sm font-bold text-nexus-blue-950 group-hover:text-nexus-orange-600">
+                                <div className="text-sm font-bold text-nexus-blue-950 group-hover:text-nexus-blue-700">
                                   {s.title}
                                 </div>
                               </div>
@@ -162,7 +162,7 @@ export function Navbar() {
                   : "border border-white/30 bg-white/10 text-white backdrop-blur hover:border-white/50 hover:bg-white/20"
               )}
             >
-              <Sparkles className="h-4 w-4 text-nexus-orange-400" />
+              <Sparkles className="h-4 w-4 text-brand" />
               {t("nexus_connect")}
             </Link>
 
@@ -171,8 +171,8 @@ export function Navbar() {
               className={cn(
                 "whitespace-nowrap px-3 py-2 text-sm font-bold transition-colors duration-200",
                 scrolled
-                  ? "text-slate-700 hover:text-nexus-orange-600"
-                  : "text-white hover:text-nexus-orange-300"
+                  ? "text-slate-700 hover:text-nexus-blue-700"
+                  : "text-white hover:text-brand"
               )}
             >
               {t("login")}
@@ -180,7 +180,7 @@ export function Navbar() {
 
             <Link
               href="/demande/complet"
-              className="group/cta relative inline-flex items-center gap-1.5 overflow-hidden whitespace-nowrap rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-bold text-white shadow-[0_8px_24px_-8px_rgba(255,102,0,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_12px_30px_-8px_rgba(255,102,0,0.6)]"
+              className="group/cta relative inline-flex items-center gap-1.5 overflow-hidden whitespace-nowrap rounded-full bg-brand px-4 py-2 text-sm font-bold text-on-brand shadow-[0_8px_24px_-8px_rgba(201,162,39,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_12px_30px_-8px_rgba(201,162,39,0.6)]"
             >
               <span
                 aria-hidden
@@ -200,7 +200,7 @@ export function Navbar() {
               className={cn(
                 "relative flex h-11 w-11 items-center justify-center rounded-2xl border transition-all duration-300",
                 scrolled
-                  ? "border-slate-200 bg-white text-nexus-blue-950 shadow-sm hover:border-nexus-orange-300/60 hover:shadow-[0_8px_20px_-8px_rgba(255,102,0,0.3)]"
+                  ? "border-slate-200 bg-white text-nexus-blue-950 shadow-sm hover:border-nexus-blue-300/60 hover:shadow-[0_8px_20px_-8px_rgba(2,7,31,0.25)]"
                   : "border-white/20 bg-white/10 text-white backdrop-blur-md hover:border-white/40 hover:bg-white/15"
               )}
               aria-label={mobileOpen ? t("close_menu") : t("open_menu")}
@@ -261,7 +261,7 @@ export function Navbar() {
             {/* Glows */}
             <div
               aria-hidden
-              className="pointer-events-none absolute -right-20 top-20 h-72 w-72 rounded-full bg-nexus-orange-500/15 blur-[100px]"
+              className="pointer-events-none absolute -right-20 top-20 h-72 w-72 rounded-full bg-brand/15 blur-[100px]"
             />
             <div
               aria-hidden
@@ -270,10 +270,10 @@ export function Navbar() {
 
             <div className="relative mx-auto max-w-md space-y-5 px-5">
               {/* Eyebrow */}
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
                 </span>
                 {t("menu")}
               </span>
@@ -281,13 +281,13 @@ export function Navbar() {
               {/* NEXUS CONNECT highlight card */}
               <Link
                 href="/nexus-connect"
-                className="group relative flex items-center gap-3 overflow-hidden rounded-2xl border border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/15 via-nexus-orange-500/10 to-transparent p-4 shadow-[0_12px_30px_-12px_rgba(255,102,0,0.40)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-nexus-orange-400/60"
+                className="group relative flex items-center gap-3 overflow-hidden rounded-2xl border border-brand/40 bg-gradient-to-br from-brand/15 via-brand/10 to-transparent p-4 shadow-[0_12px_30px_-12px_rgba(201,162,39,0.40)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-brand/60"
               >
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-nexus-orange-500/20 blur-2xl"
+                  className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-brand/20 blur-2xl"
                 />
-                <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)]">
+                <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand to-brand-hover text-on-brand shadow-[0_8px_20px_-8px_rgba(201,162,39,0.5)]">
                   <Sparkles className="h-5 w-5" />
                 </div>
                 <div className="relative flex-1 min-w-0">
@@ -303,7 +303,7 @@ export function Navbar() {
                     {t("mobile_my_space")}
                   </p>
                 </div>
-                <ArrowRight className="relative h-4 w-4 shrink-0 text-nexus-orange-300 transition-transform duration-300 group-hover:translate-x-0.5" />
+                <ArrowRight className="relative h-4 w-4 shrink-0 text-brand transition-transform duration-300 group-hover:translate-x-0.5" />
               </Link>
 
               {/* Liens nav principaux */}
@@ -326,7 +326,7 @@ export function Navbar() {
                           className={cn(
                             "h-4 w-4 shrink-0 transition-all duration-300",
                             active
-                              ? "text-nexus-orange-300 opacity-100"
+                              ? "text-brand opacity-100"
                               : "opacity-0 group-hover:translate-x-0.5 group-hover:opacity-50"
                           )}
                         />
@@ -340,7 +340,7 @@ export function Navbar() {
               <details className="group/srv overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-md">
                 <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-sm font-bold text-white">
                   <span className="inline-flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-brand" />
                     {t("all_services")}
                   </span>
                   <ChevronDown className="h-4 w-4 text-slate-400 transition-transform duration-300 group-open/srv:rotate-180" />
@@ -359,7 +359,7 @@ export function Navbar() {
                             className={cn(
                               "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ring-1 ring-white/10",
                               s.accent === "orange"
-                                ? "bg-nexus-orange-500/15 text-nexus-orange-300"
+                                ? "bg-brand/15 text-brand"
                                 : "bg-nexus-blue-500/15 text-nexus-blue-300"
                             )}
                           >
@@ -368,7 +368,7 @@ export function Navbar() {
                           <span className="flex-1 text-sm font-bold text-slate-200 group-hover/svc:text-white">
                             {s.title}
                           </span>
-                          <ArrowRight className="h-3.5 w-3.5 text-slate-500 transition-transform duration-300 group-hover/svc:translate-x-0.5 group-hover/svc:text-nexus-orange-300" />
+                          <ArrowRight className="h-3.5 w-3.5 text-slate-500 transition-transform duration-300 group-hover/svc:translate-x-0.5 group-hover/svc:text-brand" />
                         </Link>
                       );
                     })}
@@ -380,7 +380,7 @@ export function Navbar() {
               <div className="space-y-2 pt-2">
                 <Link
                   href="/demande/complet"
-                  className="group/cta relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-5 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:bg-nexus-orange-600"
+                  className="group/cta relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-5 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(201,162,39,0.6)] transition-all duration-300 ease-out hover:bg-brand-hover"
                 >
                   <span
                     aria-hidden

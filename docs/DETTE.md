@@ -863,3 +863,83 @@ copié ou deviné dans ce lot (les pages publiques restent alimentées par
 leur code React tel quel jusqu'à ce que P10 les branche sur cette table).
 
 **P8 — CMS et contenus : tous les lots prévus par le texte de la phase sont livrés** (Services et tarifs, FAQ, Témoignages, Partenaires, Pays & destinations, Bureaux, Informations institutionnelles, Contenus de page). Le branchement des pages publiques sur ces tables (remplacer le contenu en dur par une lecture `services`/`contenus_site`/etc.) reste le travail de P10, pas de P8 — P8 construit l'administration, P10 consomme.
+
+---
+
+## P10 — Site public (06/09/2026)
+
+**1. Lot 1 (couleur + CTA) : trois décisions tranchées par Thierry avant tout code.**
+Présentation obligatoire faite avant d'écrire une ligne (règle du §P10),
+deux écarts réels découverts par rapport à la maquette/au texte de la
+feuille de route :
+- A1 avait livré la *structure* des tokens sémantiques (`--brand`, etc.)
+  mais jamais changé leur *valeur* pour le site public — `--brand` restait
+  littéralement l'orange (`249 115 22`), pas l'or que D8/la maquette
+  demandent. **Confirmé par Thierry** : passage à l'or.
+- La maquette elle-même utilise deux libellés de CTA différents ("Présenter
+  mon projet" au hero, "Soumettre une demande" à la navbar), et 6 libellés
+  distincts existaient déjà en usage réel sur les 12 pages `/services/*`
+  (voir grep `hero_cta_primary` dans les namespaces i18n). **Confirmé par
+  Thierry** : harmonisation sur "Soumettre une demande" partout (texte
+  officiel de la feuille de route, pas celui de la maquette).
+- Droits d'usage des 2 photos réelles (`public/team/*.jpg`) : **confirmés
+  obtenus par Thierry** — utilisables pour E4/E8 dans un lot futur.
+- Pas de maquette mobile fournie : Thierry a validé que je dérive la
+  version responsive moi-même à partir de la maquette desktop + des règles
+  E5/E6 déjà écrites, à montrer avant intégration finale (pas fait dans ce
+  lot, qui ne touche que la navbar/hero/footer partagés).
+
+**2. Or mesuré : `#C9A227` (clair) / `#D4AF37` (sombre), contraste texte bleu nuit sur bouton or = 8,25:1 (AA large marge).**
+Calcul WCAG fait avant d'écrire le CSS (formule de luminance relative,
+plusieurs candidats testés). Confirmé aussi : l'or en texte sur fond blanc/
+ivoire tombe à 2,1-2,4:1, sous le seuil AA — **jamais utilisé ainsi**,
+conforme à la règle déjà écrite dans la feuille de route ("l'or est une
+couleur d'accent, jamais une couleur de petit texte"). Nouveau token
+`--on-brand` ajouté (constant, toujours bleu nuit `#02071F`, ne s'inverse
+pas avec le thème clair/sombre contrairement à `ink`) — ce token était
+prévu dans le texte original d'A1 (`--on-accent`) mais n'avait jamais été
+implémenté ; comblé ici sous le nom `on-brand` pour cohérence avec la
+famille `brand`/`brand-hover`/`brand-subtle` déjà en place.
+
+**3. Portée réelle du lot : Navbar, PublicHero, Footer (fond navy partout, donc l'or est sûr partout) — 41 occurrences d'orange requalifiées une par une, aucun remplacement global.**
+Chaque occurrence a été regardée individuellement (pas de `sed`) : les
+textes/liens posés sur fond **blanc** (dropdown des services dans la
+navbar, 3 endroits) ont été requalifiés vers un ton **bleu nuit**, pas
+l'or, parce que l'or en texte sur blanc échoue le contraste AA (point 2).
+Tout ce qui est posé sur fond **navy** (hero, footer, panneau mobile,
+badges, glows décoratifs) est passé à `bg-brand`/`text-brand`/`text-on-
+brand`. Un hover de bouton icône (menu mobile, sur fond blanc en mode
+"scrolled") a été laissé en bleu nuit plutôt qu'en or pour la même raison
+de contraste, avec son ombre associée neutralisée.
+
+**4. CTA harmonisés au-delà de la portée initialement annoncée : nexus-connect, rendez-vous, NexusAIChat, namespace `About`.**
+En vérifiant le rendu réel, j'ai trouvé 5 autres endroits avec l'ancien
+libellé "Ouvrir un dossier" (texte en dur ou clé i18n `About.cta_primary`)
+non prévus dans la présentation initiale (qui ne visait que
+Navbar/Hero/Footer). Corrigés pour ne pas laisser une harmonisation à
+moitié faite — **texte uniquement**, aucune couleur touchée dans ces
+fichiers (hors périmètre couleur de ce lot). `DashboardShell.tsx` conserve
+son "Ouvrir un dossier (formulaire complet)" dans la palette de commandes
+(⌘K) : c'est une entrée d'outillage admin, pas le CTA public visé par la
+règle E2, et le fichier est gelé (CLAUDE.md).
+
+**5. Vérification visuelle incomplète — limite d'outillage, pas un doute sur le code.**
+`chromium-cli`/Playwright non installés dans cet environnement. Tentative
+de vérification par `curl` sur le serveur de dev : le HTML récupéré ne
+contenait aucune balise `<nav>` ni `<svg>` malgré un code 200 et du texte
+français réel — signe d'une particularité de sérialisation RSC/App Router
+avec une requête `curl` brute (pas reproduite avec un vrai navigateur),
+non résolue dans le temps imparti. **`npm run build` (production) a
+réussi** (exit 0) séparément, ce qui valide la syntaxe et la génération
+statique. **À faire par Thierry avant tout lot P10 suivant** : ouvrir la
+preview dans un vrai navigateur et confirmer visuellement que l'or
+s'affiche comme attendu sur la navbar, le hero et le footer, desktop et
+mobile.
+
+**Incident pendant l'exécution : corruption `.next` par exécution concurrente de `build` et `dev`.**
+J'ai lancé `npm run build` et `npm run dev` en parallèle sur le même
+dossier `.next`, provoquant une erreur "Cannot find module './7285.js'"
+(module webpack introuvable) sur le serveur de dev. Non lié au code changé
+— artefact de deux process Next.js écrivant le même répertoire de build en
+même temps. Résolu en arrêtant et relançant `next dev` seul. **Leçon** :
+ne jamais lancer `build` et `dev` simultanément sur le même dépôt.
