@@ -807,3 +807,18 @@ modification — un nouveau logo doit être revérifié avant republication.
 "Médias" du texte P8) : l'admin est seul responsable de vérifier qu'il a
 le droit d'utiliser le logo qu'il téléverse — aucun contrôle technique ne
 l'impose. À construire séparément si ce contrôle devient nécessaire.
+
+**13. Lots Pays & destinations + Bureaux (06/09/2026) : ni l'un ni l'autre n'a de permission dédiée dans l'énumération §P2 — gérés par cms.content.write, aucune migration nécessaire.**
+Même traitement que les témoignages (entrée 11) : `pays_destinations` et
+`bureaux` ne sont pas dans la liste officielle des ressources CMS
+(`cms.service.write`/`cms.content.write`/`cms.faq.write`/
+`cms.partenaire.write`), traités comme du contenu générique. Pas de
+mécanisme `is_verified`/`is_published` sur ces deux tables (contrairement
+à `agency_settings`/`temoignages`/`partenaires`, migration 063) : le texte
+P8 ne les cite pas explicitement dans la liste "témoignages et
+partenaires" qui justifie ce mécanisme — simple `status` actif/inactif,
+suffisant pour une liste de pays ou une fiche bureau (pas de risque de
+"faux partenaire"/"faux témoignage" ici). Suppression autorisée sur les
+deux tables (aucune autre table ne référence leurs id). Le bureau de
+Bangui inséré en migration 065 apparaît directement dans le nouvel écran
+Bureaux, aucune donnée supplémentaire à saisir.
