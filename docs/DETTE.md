@@ -791,3 +791,19 @@ référence `temoignages.id`/`partenaires.id`). `logo_url`/`site_url` de
 de téléversement de fichier ni de suivi de provenance/droits d'usage
 (section "Médias" du texte P8) dans ce lot : hors périmètre, à construire
 séparément si un vrai flux d'upload de logos devient nécessaire.
+
+**12. Upload de logo partenaires (06/09/2026, demande explicite de Thierry) : bucket dédié, pas de suivi de provenance/droits.**
+Migration 066 : bucket `partenaires-logos` (public — logos affichés sur le
+site public, pas de donnée privée — 2 Mo max, PNG/JPEG/WebP/SVG),
+écriture réservée `admin`/`super_admin` via policy storage. Route `/api/
+partenaires/[id]/logo` (POST upload, DELETE suppression) — nécessite un
+partenaire déjà créé (pas d'upload à la volée pendant la création, le
+formulaire de création n'a pas encore d'`id` à ce moment). L'ancien
+fichier est supprimé du bucket après confirmation du nouveau (remplacement
+propre, pas d'accumulation). Écrire dans `logo_url` déclenche le trigger
+de réinitialisation de `is_verified` (migration 063) comme toute autre
+modification — un nouveau logo doit être revérifié avant republication.
+**Toujours pas de suivi de provenance/preuve de droits d'usage** (section
+"Médias" du texte P8) : l'admin est seul responsable de vérifier qu'il a
+le droit d'utiliser le logo qu'il téléverse — aucun contrôle technique ne
+l'impose. À construire séparément si ce contrôle devient nécessaire.

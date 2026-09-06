@@ -90,7 +90,20 @@ export function PartenairesManager({ initialPartenaires }: { initialPartenaires:
           {items.map((p) => (
             <div key={p.id} className="rounded-xl border border-slate-200 bg-white p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="min-w-0 flex-1">
+                <div className="flex min-w-0 flex-1 gap-3">
+                  {p.logo_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={p.logo_url}
+                      alt={`Logo ${p.nom}`}
+                      className="h-12 w-12 shrink-0 rounded-lg border border-slate-200 object-contain p-1"
+                    />
+                  ) : (
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-dashed border-slate-300 text-slate-300">
+                      <Handshake className="h-5 w-5" />
+                    </div>
+                  )}
+                  <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-semibold text-nexus-blue-950">{p.nom}</span>
                     {p.site_url && (
@@ -122,7 +135,7 @@ export function PartenairesManager({ initialPartenaires }: { initialPartenaires:
                     </span>
                   </div>
                   {p.description && <p className="mt-1 text-sm text-slate-600">{p.description}</p>}
-                  {p.logo_url && <p className="mt-1 truncate text-xs text-slate-400">Logo : {p.logo_url}</p>}
+                  </div>
                 </div>
                 <div className="flex shrink-0 flex-wrap gap-2">
                   <button
@@ -194,6 +207,7 @@ export function PartenairesManager({ initialPartenaires }: { initialPartenaires:
             await reload();
             toast.success(editing ? "Partenaire mis à jour" : "Partenaire créé");
           }}
+          onLogoChanged={reload}
         />
       )}
 
@@ -230,16 +244,19 @@ function PartenaireFormModal({
   partenaire,
   onClose,
   onSaved,
+  onLogoChanged,
 }: {
   partenaire: PartenaireItem | null;
   onClose: () => void;
   onSaved: () => void;
+  onLogoChanged: () => void;
 }) {
   const [nom, setNom] = useState(partenaire?.nom || "");
-  const [logoUrl, setLogoUrl] = useState(partenaire?.logo_url || "");
   const [siteUrl, setSiteUrl] = useState(partenaire?.site_url || "");
   const [description, setDescription] = useState(partenaire?.description || "");
+  const [logoUrl, setLogoUrl] = useState(partenaire?.logo_url || null);
   const [saving, setSaving] = useState(false);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
 
   async function handleSubmit() {
     if (!nom.trim()) {
@@ -255,7 +272,6 @@ function PartenaireFormModal({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           nom: nom.trim(),
-          logo_url: logoUrl.trim() || null,
           site_url: siteUrl.trim() || null,
           description: description.trim() || null,
         }),
@@ -268,6 +284,47 @@ function PartenaireFormModal({
       onSaved();
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleLogoSelected(file: File) {
+    if (!partenaire) {
+      toast.error("Crée d'abord le partenaire, puis reviens le modifier pour ajouter son logo");
+      return;
+    }
+    setUploadingLogo(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch(`/api/partenaires/${partenaire.id}/logo`, { method: "POST", body: formData });
+      const json = await res.json();
+      if (!json.success) {
+        toast.error(json.error || "Échec du téléversement");
+        return;
+      }
+      setLogoUrl(json.logo_url);
+      onLogoChanged();
+      toast.success("Logo téléversé");
+    } finally {
+      setUploadingLogo(false);
+    }
+  }
+
+  async function handleLogoRemove() {
+    if (!partenaire) return;
+    setUploadingLogo(true);
+    try {
+      const res = await fetch(`/api/partenaires/${partenaire.id}/logo`, { method: "DELETE" });
+      const json = await res.json();
+      if (!json.success) {
+        toast.error(json.error || "Échec de la suppression du logo");
+        return;
+      }
+      setLogoUrl(null);
+      onLogoChanged();
+      toast.success("Logo retiré");
+    } finally {
+      setUploadingLogo(false);
     }
   }
 
@@ -310,14 +367,50 @@ function PartenaireFormModal({
             />
           </div>
           <div>
-            <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">URL du logo (optionnel)</label>
-            <input
-              type="url"
-              value={logoUrl}
-              onChange={(e) => setLogoUrl(e.target.value)}
-              placeholder="https://..."
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
-            />
+            <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">Logo (optionnel)</label>
+            {!partenaire ? (
+              <p className="mt-1 rounded-xl border border-dashed border-slate-300 bg-slate-50 px-3 py-3 text-xs text-slate-500">
+                Crée d&apos;abord le partenaire, puis clique sur &laquo; Modifier &raquo; pour ajouter son logo.
+              </p>
+            ) : (
+              <div className="mt-1 flex items-center gap-3">
+                {logoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={logoUrl} alt="Logo actuel" className="h-14 w-14 rounded-lg border border-slate-200 object-contain p-1" />
+                ) : (
+                  <div className="flex h-14 w-14 items-center justify-center rounded-lg border border-dashed border-slate-300 text-xs text-slate-400">
+                    Aucun
+                  </div>
+                )}
+                <div className="flex flex-col gap-1.5">
+                  <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50">
+                    {uploadingLogo ? "Envoi..." : logoUrl ? "Remplacer le fichier" : "Choisir un fichier"}
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                      disabled={uploadingLogo}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleLogoSelected(file);
+                        e.target.value = "";
+                      }}
+                      className="hidden"
+                    />
+                  </label>
+                  {logoUrl && (
+                    <button
+                      type="button"
+                      disabled={uploadingLogo}
+                      onClick={handleLogoRemove}
+                      className="text-xs font-semibold text-red-600 hover:underline disabled:opacity-50"
+                    >
+                      Retirer le logo
+                    </button>
+                  )}
+                  <p className="text-[11px] text-slate-400">PNG, JPEG, WebP ou SVG — 2 Mo max</p>
+                </div>
+              </div>
+            )}
           </div>
           <div>
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">Description (optionnel)</label>
