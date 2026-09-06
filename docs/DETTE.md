@@ -532,3 +532,24 @@ Thierry (06/09/2026), `npm uninstall jspdf` (23 paquets retirés). Pas de CRUD d
 construit à ce stade (lots suivants de P6), pas de câblage
 `audit_log` (s'applique aux futures actions de création/édition, pas
 à l'infrastructure de numérotation).
+
+**9. Lot Devis (06/09/2026) : CRUD, cycle de vie, PDF — `devis.validate` toujours non branché.**
+Migration 060 : `devis.create`/`devis.send` ajoutées à `role_permissions`
+pour `agent`/`chef_service`/`admin`/`dg`/`daf` (absentes de l'extrait §P2,
+comme `devis.validate` l'était avant la 043b). Toutes les transitions de
+statut (`brouillon → envoye → accepte/refuse/expire`) passent par
+`devis.send` — `devis.validate` (seedée en 043b pour `admin`/`dg`/`daf`)
+reste non branchée : `devis.status` n'a pas d'état "validé" distinct dans
+le schéma (migration 045), il n'y a donc pas de transition à y accrocher.
+**À trancher** si un jour un contrôle interne avant envoi (ex. montant
+au-delà d'un seuil) doit gater l'envoi séparément de la création —
+ajouterait un état ou une vérification supplémentaire, hors périmètre de
+ce lot. Un agent ne peut créer/modifier un devis que sur ses propres
+dossiers (vérifié via `demandes.agent_id`, pas de portée dédiée dans la
+permission). PDF généré côté serveur (`pdf-lib`, patron de
+`payment-links/[reference]/verify/route.ts`) : **non vérifié
+visuellement** par Thierry, à confirmer via le bouton "PDF" sur un devis
+réel, avant d'en généraliser le patron à `factures`/`échéanciers`. Pas de
+portail client sur les devis en V3 (P9 non fait) : `accepte`/`refuse`
+sont enregistrés par le staff qui rapporte la décision transmise par le
+client hors plateforme (téléphone, email), pas une acceptation en ligne.

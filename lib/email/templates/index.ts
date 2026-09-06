@@ -10,6 +10,7 @@ export { clientDocumentDemandeEmail } from "./client-document-demande";
 export { agentDocumentFourniEmail } from "./agent-document-fourni";
 export { clientStatutChangeEmail } from "./client-statut-change";
 export { agentMessageClientEmail } from "./agent-message-client";
+export { devisEnvoyeEmail } from "./devis-envoye";
 
 /** Échappement HTML pour interpolation sûre dans les templates. */
 export function escapeHtml(s: string): string {
