@@ -843,3 +843,23 @@ pour deviner (numéro RCCM, numéro fiscal, etc.). `cle` généré
 automatiquement par slugification du libellé à la création (ex.
 "Numéro RCCM" → `numero_rccm`), non modifiable ensuite pour ne pas casser
 un futur lien de lecture publique par clé (P10).
+
+**15. Lot Contenus de page (06/09/2026) : dernier lot de P8, pas de workflow vérifier→publier, aucune migration.**
+`contenus_site.contenu` (jsonb) structuré en `{ texte }` — un
+enregistrement = un bloc de texte, regroupé par `section` (une page ou une
+zone du site public = une section, plusieurs blocs). Contrairement aux
+témoignages/partenaires/informations institutionnelles, **pas** de
+mécanisme `is_verified`/`is_published` ici : le texte P8 ne le demande pas
+pour cette table (seuls "témoignages et partenaires" sont cités
+explicitement, et "chaque champ institutionnel" désigne `agency_settings`).
+Un texte de page est un choix éditorial, pas une affirmation vérifiable
+comme un numéro RCCM ou un témoignage client — `cms.content.write`
+(admin/modérateur) suffit, cohérent avec la permission déjà utilisée pour
+cette table dans l'énumération §P2. `cle` non modifiable après création
+(même raison que `agency_settings`, entrée 14) : une future page publique
+qui lit par clé ne doit pas se retrouver avec une clé qui a changé sous
+elle. **0 ligne créée** — écran livré vide, aucun texte du site public
+copié ou deviné dans ce lot (les pages publiques restent alimentées par
+leur code React tel quel jusqu'à ce que P10 les branche sur cette table).
+
+**P8 — CMS et contenus : tous les lots prévus par le texte de la phase sont livrés** (Services et tarifs, FAQ, Témoignages, Partenaires, Pays & destinations, Bureaux, Informations institutionnelles, Contenus de page). Le branchement des pages publiques sur ces tables (remplacer le contenu en dur par une lecture `services`/`contenus_site`/etc.) reste le travail de P10, pas de P8 — P8 construit l'administration, P10 consomme.
