@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
+import { logAudit } from "@/lib/audit";
 
 export const dynamic = "force-dynamic";
 
@@ -132,6 +133,15 @@ export async function POST(
         { status: 500 }
       );
     }
+
+    await logAudit({
+      userId: user.id,
+      userRole: role,
+      action: "message_sent",
+      entityType: "demande_messages",
+      entityId: (message as { id: string }).id,
+      newValue: { demande_id: demandeId, author_name: authorName, content },
+    });
 
     // Notify the other party via Resend (best-effort)
     if (process.env.RESEND_API_KEY) {

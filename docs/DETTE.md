@@ -243,3 +243,19 @@ ci-dessus). Écritures bloquées (policies `INSERT`/`UPDATE` retirées),
 lecture conservée, `COMMENT ON TABLE` posé. **Suppression de la table**
 possible seulement sur autorisation explicite de Thierry (D3) — non
 demandée, non faite ici.
+
+**8. Pièces jointes sur messages/notes reportées (décision confirmée au Lot 5).**
+`demande_messages`/`demande_notes` n'ont aucune colonne ni bucket
+d'attachement. Thierry a tranché : reporter, 0 message et 0 note réels à
+ce jour. Bucket équivalent déjà existant à réutiliser comme modèle
+(`demande-documents`, voir `app/api/demandes/[id]/documents/route.ts`).
+**À construire** quand un besoin réel se présente, probablement avec P11.
+
+**9. Notification client/staff (messages) reste couplée en dur à Resend.**
+La feuille de route demande une "architecture prête pour e-mail, SMS et
+WhatsApp via P11, sans dépendance dure à un fournisseur" — le code actuel
+(`app/api/demandes/[id]/messages/route.ts`) appelle Resend directement,
+sans couche d'abstraction. Non corrigé ici : P11 n'existe pas encore, et
+construire une abstraction de canal sans un deuxième fournisseur réel à
+brancher serait de la sur-ingénierie. **À faire en P11**, au moment où
+SMS/WhatsApp deviennent réels.

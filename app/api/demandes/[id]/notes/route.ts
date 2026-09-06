@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
+import { logAudit } from "@/lib/audit";
 
 export const dynamic = "force-dynamic";
 
@@ -107,6 +108,15 @@ export async function POST(
         { status: 500 }
       );
     }
+
+    await logAudit({
+      userId: user.id,
+      userRole: role,
+      action: "note_created",
+      entityType: "demande_notes",
+      entityId: (note as { id: string }).id,
+      newValue: { demande_id: params.id, author_name: authorName, content },
+    });
 
     return NextResponse.json({
       success: true,
