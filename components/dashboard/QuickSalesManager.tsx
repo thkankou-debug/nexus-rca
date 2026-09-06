@@ -11,7 +11,8 @@ import {
   FileSpreadsheet,
   FileDown,
 } from "lucide-react";
-import jsPDF from "jspdf";
+import { PDFDocument, StandardFonts, rgb, type PDFPage, type PDFFont } from "pdf-lib";
+import { sanitizeForPdf } from "@/lib/pdf-sanitize";
 import { cn } from "@/lib/utils";
 import {
   QuickSaleForm,
@@ -134,51 +135,98 @@ function exportCSV(sales: QuickSale[], agents: AgentInfo[]) {
   URL.revokeObjectURL(url);
 }
 
-function exportPDF(sales: QuickSale[], agents: AgentInfo[], period: Period) {
-  const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
-  const pageWidth = 297;
-  const margin = 12;
-  let y = margin;
+// P6, D5 : migre de jsPDF vers pdf-lib. Page A4 paysage en points
+// (841.89 x 595.28). pdf-lib mesure depuis le bas a gauche (jsPDF depuis
+// le haut a gauche) : on garde une variable topY qui se comporte comme le
+// y de jsPDF (croissant vers le bas), et on convertit uniquement au
+// moment de dessiner (pdfY = PAGE_HEIGHT - topY). sanitizeForPdf()
+// applique systematiquement (formatMoney/toLocaleString injectent des
+// espaces insecables qui font planter pdf-lib en WinAnsi).
+const PAGE_WIDTH = 841.89;
+const PAGE_HEIGHT = 595.28;
+const MARGIN = 34;
 
-  doc.setFillColor(255, 102, 0);
-  doc.rect(0, 0, pageWidth, 6, "F");
+function drawText(
+  page: PDFPage,
+  font: PDFFont,
+  text: string,
+  x: number,
+  topY: number,
+  size: number,
+  color: ReturnType<typeof rgb>,
+  align: "left" | "right" = "left"
+) {
+  const safe = sanitizeForPdf(text);
+  const width = font.widthOfTextAtSize(safe, size);
+  const drawX = align === "right" ? x - width : x;
+  page.drawText(safe, { x: drawX, y: PAGE_HEIGHT - topY, size, font, color });
+}
 
-  y = 16;
-  doc.setFontSize(16);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(12, 28, 64);
-  doc.text("NEXUS RCA - Caisse rapide", margin, y);
+function drawFilledRect(
+  page: PDFPage,
+  x: number,
+  topY: number,
+  width: number,
+  height: number,
+  color: ReturnType<typeof rgb>
+) {
+  page.drawRectangle({ x, y: PAGE_HEIGHT - topY - height, width, height, color });
+}
 
-  doc.setFontSize(8);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(100, 116, 139);
-  doc.text(
+async function exportPDF(sales: QuickSale[], agents: AgentInfo[], period: Period) {
+  const pdfDoc = await PDFDocument.create();
+  const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+  const nexusOrange = rgb(1, 0.4, 0);
+  const nexusBlue = rgb(0.047, 0.11, 0.251);
+  const grayMid = rgb(0.392, 0.455, 0.545);
+  const grayHeaderBg = rgb(0.973, 0.98, 0.988);
+  const grayRowBg = rgb(0.988, 0.988, 0.992);
+  const grayDark = rgb(0.118, 0.161, 0.231);
+
+  let page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
+  let topY = MARGIN;
+
+  const newPage = () => {
+    page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
+    topY = MARGIN;
+  };
+
+  drawFilledRect(page, 0, 0, PAGE_WIDTH, 17, nexusOrange);
+
+  topY = 45;
+  drawText(page, helveticaBold, "NEXUS RCA - Caisse rapide", MARGIN, topY, 16, nexusBlue);
+
+  drawText(
+    page,
+    helvetica,
     `Genere le ${new Date().toLocaleString("fr-FR")}`,
-    pageWidth - margin,
-    y - 2,
-    { align: "right" }
+    PAGE_WIDTH - MARGIN,
+    topY - 6,
+    8,
+    grayMid,
+    "right"
   );
-  doc.text(
+  drawText(
+    page,
+    helvetica,
     `Periode : ${period === "today" ? "Aujourd hui" : period === "week" ? "7 jours" : period === "month" ? "30 jours" : "Tout"}`,
-    pageWidth - margin,
-    y + 3,
-    { align: "right" }
+    PAGE_WIDTH - MARGIN,
+    topY + 8,
+    8,
+    grayMid,
+    "right"
   );
 
   // Total
-  const total = sales.reduce(
-    (s, x) => s + Number(x.montant_total || 0),
-    0
-  );
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(12, 28, 64);
-  doc.text(`Total : ${formatMoney(total)}`, margin, y + 8);
+  const total = sales.reduce((s, x) => s + Number(x.montant_total || 0), 0);
+  drawText(page, helveticaBold, `Total : ${formatMoney(total)}`, MARGIN, topY + 23, 11, nexusBlue);
 
-  y += 18;
+  topY += 51;
 
   // Tableau
-  const colWidths = [22, 28, 30, 60, 18, 25, 28, 25, 35];
+  const colWidths = [62, 79, 85, 170, 51, 71, 79, 71, 99];
   const headers = [
     "Ref.",
     "Date",
@@ -191,63 +239,67 @@ function exportPDF(sales: QuickSale[], agents: AgentInfo[], period: Period) {
     "Agent",
   ];
 
-  doc.setFillColor(248, 250, 252);
-  doc.rect(margin, y, pageWidth - 2 * margin, 7, "F");
+  drawFilledRect(page, MARGIN, topY, PAGE_WIDTH - 2 * MARGIN, 20, grayHeaderBg);
 
-  doc.setFontSize(8);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(30, 41, 59);
-  let x = margin + 2;
+  let x = MARGIN + 6;
   headers.forEach((h, i) => {
-    doc.text(h, x, y + 5);
+    drawText(page, helveticaBold, h, x, topY + 14, 8, grayDark);
     x += colWidths[i];
   });
-  y += 8;
+  topY += 22;
 
-  doc.setFont("helvetica", "normal");
   sales.forEach((s, i) => {
-    if (y > 195) {
-      doc.addPage();
-      y = margin;
+    if (topY > 552) {
+      newPage();
     }
     if (i % 2 === 1) {
-      doc.setFillColor(252, 252, 253);
-      doc.rect(margin, y, pageWidth - 2 * margin, 6, "F");
+      drawFilledRect(page, MARGIN, topY, PAGE_WIDTH - 2 * MARGIN, 17, grayRowBg);
     }
     const agent = agents.find((a) => a.id === s.agent_id);
     const agentName = agent
       ? [agent.prenom?.[0], agent.nom].filter(Boolean).join(". ")
       : "—";
 
-    x = margin + 2;
-    doc.setFontSize(7);
-    doc.text((s.reference || "").substring(0, 14), x, y + 4);
+    x = MARGIN + 6;
+    const rowTextY = topY + 11;
+    drawText(page, helvetica, (s.reference || "").substring(0, 14), x, rowTextY, 7, grayDark);
     x += colWidths[0];
-    doc.text(
+    drawText(
+      page,
+      helvetica,
       new Date(s.date_paiement).toLocaleDateString("fr-FR"),
       x,
-      y + 4
+      rowTextY,
+      7,
+      grayDark
     );
     x += colWidths[1];
-    doc.text(SERVICE_LABELS[s.type_service], x, y + 4);
+    drawText(page, helvetica, SERVICE_LABELS[s.type_service], x, rowTextY, 7, grayDark);
     x += colWidths[2];
-    doc.text((s.description || "—").substring(0, 35), x, y + 4);
+    drawText(page, helvetica, (s.description || "—").substring(0, 35), x, rowTextY, 7, grayDark);
     x += colWidths[3];
-    doc.text(String(s.quantite), x, y + 4);
+    drawText(page, helvetica, String(s.quantite), x, rowTextY, 7, grayDark);
     x += colWidths[4];
-    doc.text(formatMoney(s.prix_unitaire, "").trim(), x, y + 4);
+    drawText(page, helvetica, formatMoney(s.prix_unitaire, "").trim(), x, rowTextY, 7, grayDark);
     x += colWidths[5];
-    doc.setFont("helvetica", "bold");
-    doc.text(formatMoney(s.montant_total, ""), x, y + 4);
-    doc.setFont("helvetica", "normal");
+    drawText(page, helveticaBold, formatMoney(s.montant_total, ""), x, rowTextY, 7, grayDark);
     x += colWidths[6];
-    doc.text(PAYMENT_LABELS[s.mode_paiement], x, y + 4);
+    drawText(page, helvetica, PAYMENT_LABELS[s.mode_paiement], x, rowTextY, 7, grayDark);
     x += colWidths[7];
-    doc.text(agentName.substring(0, 15), x, y + 4);
-    y += 6;
+    drawText(page, helvetica, agentName.substring(0, 15), x, rowTextY, 7, grayDark);
+    topY += 17;
   });
 
-  doc.save(`Caisse_${new Date().toISOString().split("T")[0]}.pdf`);
+  const bytes = await pdfDoc.save();
+  const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `Caisse_${new Date().toISOString().split("T")[0]}.pdf`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
 
 // ============================================================================

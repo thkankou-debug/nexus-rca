@@ -423,3 +423,32 @@ SQL brut (400 000 XAF).
 
 **Clôture P6-0 confirmée par Thierry (05/09/2026)** sur la base du test
 corrigé (point 11) et de la clarification sur "Caisse" (point 12).
+
+---
+
+## P6 — Finance (05/09/2026)
+
+**1. Les 8 tables (`devis`, `devis_lignes`, `factures`, `facture_lignes`, `echeanciers`, `categories_compta`, `caisse_sessions`, `commissions`) existent depuis P3, 0 ligne, aucun trigger, aucune UI.**
+Confirmé par requête avant de proposer un plan. Ce n'est pas une
+extension (comme A6/A7), c'est une construction complète. RLS déjà posée
+(1 à 3 policies par table, conforme à la règle P3 "RLS dans la même
+migration que la table").
+
+**2. `payments.reference` est généré par un hash aléatoire (`md5(random())`), pas par une séquence Postgres.**
+Trouvé en vérifiant le précédent existant avant de construire la
+numérotation `DEV-YYYY-NNNNNN`/`FAC-YYYY-NNNNNN` demandée par P6. Ce
+n'est pas cassé (unique, fonctionne), mais ce n'est pas non plus le
+modèle attendu pour les nouveaux documents. **Non modifié** — hors
+périmètre P6 (D1 ne demande pas de renuméroter les paiements existants).
+Les nouvelles séquences pour devis/factures/reçus seront construites
+proprement, sans lien avec ce précédent.
+
+**3. Lot 1a (D5, migration PDF) : `QuickSalesManager.tsx` migré de jsPDF vers pdf-lib, en réutilisant le patron déjà éprouvé de `payment-links/[reference]/verify/route.ts`.**
+`sanitizeForPdf()` extraite en utilitaire partagé (`lib/pdf-sanitize.ts`)
+plutôt que dupliquée dans chacun des 5 fichiers de la migration D5.
+4 fichiers restent à migrer (`PaymentReceipt.tsx` — 93 appels jsPDF,
+`MonthlyReportGenerator.tsx` — 233, `AgentStats.tsx` — 34,
+`QuickSaleForm.tsx` — 47), chacun présenté séparément. **Non vérifié
+visuellement** (impossible pour moi d'ouvrir un PDF généré) — à confirmer
+par Thierry en cliquant sur "Export PDF" depuis `/dashboard/{agent,
+super-admin}/caisse` : accents, tableau, pagination.

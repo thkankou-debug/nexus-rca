@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { Resend } from "resend";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { sanitizeForPdf } from "@/lib/pdf-sanitize";
 
 // ============================================================================
 // API : POST /api/payment-links/[reference]/verify
@@ -31,40 +32,6 @@ const METHODE_CHOISIE_TO_MODE_PAIEMENT: Record<string, string> = {
   especes: "especes",
   stripe_card: "stripe",
 };
-
-// CRITICAL : sanitize text pour pdf-lib WinAnsi
-// Remplace tous les caractères Unicode hors WinAnsi (espaces insécables, etc.)
-function sanitizeForPdf(text: string): string {
-  if (!text) return "";
-  return text
-    .replace(/\u202f/g, " ")  // espace insécable étroit (le bug)
-    .replace(/\u00a0/g, " ")  // espace insécable normal
-    .replace(/\u2009/g, " ")  // espace fin
-    .replace(/\u200a/g, " ")  // espace très fin
-    .replace(/\u2007/g, " ")  // espace de chiffre
-    .replace(/\u2060/g, "")   // word joiner
-    .replace(/\u00e9/g, "e")  // é → e (helvetica peut, mais sécurité)
-    .replace(/\u00e8/g, "e")  // è → e
-    .replace(/\u00ea/g, "e")  // ê → e
-    .replace(/\u00eb/g, "e")  // ë → e
-    .replace(/\u00e0/g, "a")  // à → a
-    .replace(/\u00e2/g, "a")  // â → a
-    .replace(/\u00ee/g, "i")  // î → i
-    .replace(/\u00ef/g, "i")  // ï → i
-    .replace(/\u00f4/g, "o")  // ô → o
-    .replace(/\u00f6/g, "o")  // ö → o
-    .replace(/\u00f9/g, "u")  // ù → u
-    .replace(/\u00fb/g, "u")  // û → u
-    .replace(/\u00fc/g, "u")  // ü → u
-    .replace(/\u00e7/g, "c")  // ç → c
-    .replace(/\u00c9/g, "E")  // É → E
-    .replace(/\u00c8/g, "E")  // È → E
-    .replace(/\u00ca/g, "E")  // Ê → E
-    .replace(/\u00c0/g, "A")  // À → A
-    .replace(/\u00c7/g, "C")  // Ç → C
-    // Filtre tout autre caractère non-ASCII restant
-    .replace(/[^\x20-\x7E]/g, "?");
-}
 
 function formatMoney(amount: number, currency = "XAF"): string {
   // ATTENTION: toLocaleString("fr-FR") insère des espaces insécables (0x202f)
