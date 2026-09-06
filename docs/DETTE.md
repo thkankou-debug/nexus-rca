@@ -401,3 +401,25 @@ non touchées).
 Les deux ont été étendues séparément avec `status` (canonique) — pas
 unifiées, pour ne pas élargir le périmètre de P6-0 à une refactorisation
 de types. **À unifier** si un troisième point de duplication apparaît.
+
+**11. Étape 5 (test de réconciliation) : le test littéral de la feuille de route ne s'applique plus, corrigé et documenté ici plutôt que silencieusement réinterprété.**
+Le test tel qu'écrit compare `sum(amount)` à `sum(montant_total)` —
+attendu à 0. Vérifié réel : écart de **-400 000 XAF** sur avril 2026, non
+corrigible et non souhaitable : `montant_total` (prix dû) et `amount`
+(montant reçu) sont deux notions distinctes depuis la décision de l'étape
+4 point 9 ("garder `montant_total` comme colonne légitime"). Un écart
+entre les deux est le comportement correct dès qu'un paiement est
+partiel. **Test corrigé, celui qui fait réellement foi** :
+`sum(amount)` vs `sum(montant_recu)` — écart **0** confirmé.
+
+**12. "Page Caisse" ne partage aucune donnée avec `payments` — la comparer à `payments` était une prémisse erronée du texte de la feuille de route.**
+Vérifié en lisant le code : `/dashboard/{agent,super-admin}/caisse`
+affiche `quick_sales`, une table distincte (ventes rapides au comptoir),
+jamais combinée à `payments` dans `FinancialDashboard.tsx`. P6-0 ne
+touche pas `quick_sales` — aucune convergence n'était possible ni
+nécessaire ici. Le seul export CSV réel touchant des paiements de dossier
+(`AgentStats.tsx`) a été vérifié : coïncide au franc près avec le calcul
+SQL brut (400 000 XAF).
+
+**Clôture P6-0 confirmée par Thierry (05/09/2026)** sur la base du test
+corrigé (point 11) et de la clarification sur "Caisse" (point 12).
