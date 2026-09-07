@@ -118,9 +118,9 @@ Le RÉCAP indique l'URL de prévisualisation pour que Thierry vérifie en ligne.
 | A5 | CRM & Dossiers — noyau | ✅ terminée — 11 écarts déjà documentés dans docs/DETTE.md, revérifiés en direct 07/09 (0 compte agent/admin réel, 0 ligne `demande_status_history`, 0/3 paiements avec `demande_id` : chiffres identiques à ceux documentés, aucune dérive), aucun bloquant | v3/integration-v3 | 07/09 |
 | A6 | CRM — fiche client 360°, entrées, RDV, communications | ✅ terminée — 7 lots livrés, 10 écarts déjà documentés (dont un bug réel trouvé et corrigé au Lot 4 : `/dashboard/admin/rdv` interrogeait des colonnes inexistantes), tous confirmés ou tranchés explicitement par Thierry en cours de route | v3/integration-v3 | 07/09 |
 | A7 | RH rhabillé | ✅ terminée — revérifié en direct 07/09 : toujours 0 compte agent réel (cohérent avec le constat documenté), 4 écarts déjà tranchés par Thierry (rhabillage shell reporté, délais moyens non construits faute de volume, tâches limitées au dossier, charge de travail non testée) | v3/integration-v3 | 07/09 |
-| P6-0 | Convergence des colonnes `payments` | ⬜ | | |
-| P6 | Finance | ⬜ | | |
-| P8 | CMS et contenus | ⬜ | | |
+| P6-0 | Convergence des colonnes `payments` | ✅ terminée — revérifié en direct 07/09 : `payments.status`/`amount` (colonnes canoniques D1) 100% renseignées, 0 valeur nulle sur les 3 paiements réels | v3/integration-v3 | 07/09 |
+| P6 | Finance | ✅ close par Thierry le 06/09 (confirmé alors), revérifié en direct 07/09 : `devis`/`factures` réels en base (1 ligne chacun, données de test réelles, pas fictives). Rapports journaliers/annuels toujours non construits (seul le mensuel existe), reporté sciemment — docs/DETTE.md #14 | v3/integration-v3 | 07/09 |
+| P8 | CMS et contenus | ✅ terminée — revérifié en direct 07/09 : `services` = 14 lignes réelles (12 du seed initial + 2 ajoutées le 07/09 pour les pôles homepage), cohérent avec l'historique | v3/integration-v3 | 07/09 |
 | P9 | Portail client | ⬜ | | |
 | P10 | Site public | ⬜ | | |
 | P11 | Notifications multicanal | ⬜ | | |
