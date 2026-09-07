@@ -973,3 +973,40 @@ carte Visa) **non touchées** dans ce lot — hors périmètre du lot 2
 (contenu, pas couleur) et probablement incompatible avec la règle "une
 seule action or par écran" si les 8 tons devenaient tous dorés — à statuer
 séparément si une recoloration de cette grille est un jour demandée.
+
+**7. Rejet et mise de côté de la suite du chantier homepage (07/09/2026) — voir `NEXUS_RCA_P10_NON_CONFORMITE.md` à la racine.**
+Après le lot 2 ci-dessus, une session suivante a poursuivi P10 (nouvelle
+navbar, hero 2 colonnes, TrustBar, pages Ressources, globe illustré) sans
+qu'un GO explicite n'ait été redonné pour cette suite précise. Thierry a
+rejeté le résultat le 07/09 : couleurs trop saturées (jaune vif, bleu roi)
+au lieu de l'or patiné/bleu nuit sourd attendu, visuel de couverture
+(globe illustré) catégoriquement refusé, police du titre non conforme,
+CTA "Présenter mon projet" en couverture alors que la décision E2 fixe
+"Soumettre une demande" partout.
+
+**Décision : ce travail est mis de côté, pas corrigé.** Conservé sur la
+branche `p10-rejete-2026-09-07` (jamais fusionnée) pour référence. La
+table de suivi (§I.5) reflète cet état. Le site public ne sera repris
+qu'après :
+1. un ré-échantillonnage réel des couleurs depuis la maquette approuvée
+   (valeurs hexadécimales relevées directement sur l'image, pas choisies
+   "à l'œil" ni recalculées par script — c'était l'erreur du lot 1 de ce
+   même chantier, voir entrée P10 #2 ci-dessus : l'or "mesuré" avait été
+   *calculé* pour un contraste AA, jamais *échantillonné* sur la maquette,
+   d'où l'écart de teinte constaté),
+2. une décision de Thierry (pas de l'exécutant) sur la voie visuelle de
+   couverture : photo réelle autorisée, composition graphique
+   institutionnelle sans photo, ou photo sous licence sur sujet non
+   représentatif — jamais un globe illustré ni une mise en scène de bureau
+   inventée.
+
+**Correction factuelle apportée à `NEXUS_RCA_P10_NON_CONFORMITE.md`** :
+le document recommande de reprendre la boucle à partir de P1a-bis : à la
+vérification du tableau §I.5, P1a-bis, P1b, P1c, A1 et A2 sont déjà
+marquées "terminée" (05/09/2026). Le vrai manque n'est pas l'absence de
+ces phases mais le fait que la *structure* des tokens A1 (`--brand`,
+`--surface`, etc.) a été livrée sans que ses *valeurs* pour le site
+public aient jamais été formellement réchantillonnées sur la maquette
+approuvée ni présentées à validation — d'où la dérive de teinte. La
+correction porte donc sur les valeurs de tokens A1, pas sur un rejeu
+complet de P1a-bis→A2.
