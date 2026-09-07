@@ -1010,3 +1010,13 @@ public aient jamais été formellement réchantillonnées sur la maquette
 approuvée ni présentées à validation — d'où la dérive de teinte. La
 correction porte donc sur les valeurs de tokens A1, pas sur un rejeu
 complet de P1a-bis→A2.
+
+## P1c — Revérification (07/09/2026)
+
+**1. 32 clés étrangères sans index couvrant, sur les 42 corrigées en P1c d'origine.**
+Vérifié en direct par requête sur `pg_constraint`/`pg_index` : le correctif
+initial (index sur 42 FK) a bien fonctionné, mais des tables créées par
+des phases postérieures (P3, P6, P8) n'ont jamais reçu leurs propres
+index de clé étrangère. Dette purement additive (aucune régression,
+aucun risque), reportée sciemment sur décision de Thierry (07/09) — à
+traiter dans un lot dédié performance/dette technique, pas avant A1.
