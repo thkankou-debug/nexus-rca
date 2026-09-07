@@ -49,29 +49,19 @@ export function IdentityStatement() {
         className="pointer-events-none absolute inset-0 opacity-[0.55]"
         style={DOT_GRID_DARK}
       />
-      {/* Grand orb central rayonnant */}
+      {/* Glow discret unique (effets lumineux réduits — retour Thierry 06/09/2026) */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[44rem] w-[44rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/14 blur-[160px]"
-      />
-      {/* Blob top-right (orange) */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/12 blur-[140px]"
-      />
-      {/* Blob bottom-left (bleu) */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -bottom-32 -left-32 h-[36rem] w-[36rem] rounded-full bg-nexus-blue-500/18 blur-[140px]"
+        className="pointer-events-none absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-brand/8 blur-[140px]"
       />
       {/* Lignes lumineuses haut + bas */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/30 to-transparent"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/30 to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/20 to-transparent"
       />
 
       <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
@@ -80,7 +70,7 @@ export function IdentityStatement() {
           {/* COLONNE GAUCHE — texte éditorial fort                       */}
           {/* ═══════════════════════════════════════════════════════════ */}
           <div className="lg:col-span-6">
-            <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+            <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
               <Sparkles className="h-3 w-3" />
               Identité Nexus RCA
             </span>
@@ -88,12 +78,12 @@ export function IdentityStatement() {
             <h2 className="mt-6 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-[3.6rem] xl:text-6xl">
               Le{" "}
               <span className="relative inline-block">
-                <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-brand-hover via-brand to-brand-hover bg-clip-text text-transparent">
                   pont stratégique
                 </span>
                 <span
                   aria-hidden
-                  className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                 />
               </span>{" "}
               entre l&rsquo;Afrique et l&rsquo;international.
@@ -117,9 +107,9 @@ export function IdentityStatement() {
                 return (
                   <li
                     key={p.label}
-                    className="group/chip inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-md transition-all duration-200 hover:border-nexus-orange-400/40 hover:bg-white/[0.07] hover:text-white"
+                    className="group/chip inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-md transition-all duration-200 hover:border-brand/40 hover:bg-white/[0.07] hover:text-white"
                   >
-                    <Icon className="h-3 w-3 text-nexus-orange-300 transition-transform duration-300 group-hover/chip:scale-110" />
+                    <Icon className="h-3 w-3 text-brand transition-transform duration-300 group-hover/chip:scale-110" />
                     {p.label}
                   </li>
                 );
@@ -128,7 +118,7 @@ export function IdentityStatement() {
 
             {/* Trust line */}
             <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-white/65 backdrop-blur-md">
-              <MapPin className="h-3 w-3 text-nexus-orange-300" />
+              <MapPin className="h-3 w-3 text-brand" />
               Bangui · Europe · Canada
             </div>
           </div>
@@ -140,14 +130,14 @@ export function IdentityStatement() {
             {/* Halo externe — couche profondeur */}
             <div
               aria-hidden
-              className="pointer-events-none absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-nexus-orange-500/20 via-nexus-orange-500/8 to-nexus-blue-500/15 opacity-80 blur-3xl"
+              className="pointer-events-none absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-brand/12 via-brand/6 to-nexus-blue-500/15 opacity-80 blur-3xl"
             />
 
-            <div className="relative overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/[0.07] via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(255,102,0,0.30)] sm:p-8">
+            <div className="relative overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/[0.07] via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(212,175,55,0.30)] sm:p-8">
               {/* Glow décoratif interne */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-nexus-orange-500/25 blur-3xl"
+                className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-brand/15 blur-3xl"
               />
               <div
                 aria-hidden
@@ -155,21 +145,21 @@ export function IdentityStatement() {
               />
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-300/60 to-transparent"
+                className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-brand/50 to-transparent"
               />
 
               <div className="relative">
                 {/* Mini eyebrow */}
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                     <span className="relative flex h-1.5 w-1.5">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
                     </span>
                     Réseau actif
                   </span>
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500/30 to-nexus-orange-700/20 ring-1 ring-nexus-orange-400/30">
-                    <Network className="h-4 w-4 text-nexus-orange-300" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand/30 to-brand-hover/20 ring-1 ring-brand/30">
+                    <Network className="h-4 w-4 text-brand" />
                   </div>
                 </div>
 
@@ -183,9 +173,9 @@ export function IdentityStatement() {
                   >
                     <defs>
                       <radialGradient id="hub-glow-id" cx="50%" cy="50%" r="50%">
-                        <stop offset="0%" stopColor="#fb923c" stopOpacity="0.7" />
-                        <stop offset="60%" stopColor="#f97316" stopOpacity="0.2" />
-                        <stop offset="100%" stopColor="#f97316" stopOpacity="0" />
+                        <stop offset="0%" stopColor="#e8c766" stopOpacity="0.7" />
+                        <stop offset="60%" stopColor="#d4af37" stopOpacity="0.2" />
+                        <stop offset="100%" stopColor="#d4af37" stopOpacity="0" />
                       </radialGradient>
                       <radialGradient
                         id="point-glow-id"
@@ -193,8 +183,8 @@ export function IdentityStatement() {
                         cy="50%"
                         r="50%"
                       >
-                        <stop offset="0%" stopColor="#fdba74" stopOpacity="0.6" />
-                        <stop offset="80%" stopColor="#f97316" stopOpacity="0" />
+                        <stop offset="0%" stopColor="#f3dfa0" stopOpacity="0.6" />
+                        <stop offset="80%" stopColor="#d4af37" stopOpacity="0" />
                       </radialGradient>
                       <linearGradient
                         id="route-grad-id"
@@ -203,8 +193,8 @@ export function IdentityStatement() {
                         x2="1"
                         y2="0"
                       >
-                        <stop offset="0%" stopColor="#f97316" stopOpacity="0.6" />
-                        <stop offset="100%" stopColor="#fb923c" stopOpacity="0.15" />
+                        <stop offset="0%" stopColor="#d4af37" stopOpacity="0.6" />
+                        <stop offset="100%" stopColor="#e8c766" stopOpacity="0.15" />
                       </linearGradient>
                       <filter
                         id="soft-glow-id"
@@ -280,7 +270,7 @@ export function IdentityStatement() {
                               transformOrigin: `${p.x}px ${p.y}px`,
                             }}
                           />
-                          <circle cx={p.x} cy={p.y} r="4" fill="#fdba74" />
+                          <circle cx={p.x} cy={p.y} r="4" fill="#f3dfa0" />
                           <circle cx={p.x} cy={p.y} r="1.6" fill="#fff7ed" />
                         </g>
                       ))}
@@ -303,7 +293,7 @@ export function IdentityStatement() {
                         cx={HUB.x}
                         cy={HUB.y}
                         r="9"
-                        fill="#f97316"
+                        fill="#d4af37"
                         stroke="#fff7ed"
                         strokeWidth="2"
                       />
@@ -368,7 +358,7 @@ export function IdentityStatement() {
                         fontSize="10"
                         fontWeight="700"
                         letterSpacing="1.8"
-                        fill="#fdba74"
+                        fill="#f3dfa0"
                       >
                         BANGUI · RCA
                       </text>
@@ -395,7 +385,7 @@ function MiniKpi({ value, label }: { value: string; label: string }) {
   return (
     <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3 text-center backdrop-blur-md">
       <p className="font-display text-lg font-bold leading-none text-white sm:text-xl">
-        <span className="bg-gradient-to-r from-nexus-orange-300 to-nexus-orange-500 bg-clip-text text-transparent">
+        <span className="bg-gradient-to-r from-brand-hover to-brand bg-clip-text text-transparent">
           {value}
         </span>
       </p>

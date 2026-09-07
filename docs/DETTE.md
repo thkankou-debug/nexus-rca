@@ -973,3 +973,147 @@ carte Visa) **non touchées** dans ce lot — hors périmètre du lot 2
 (contenu, pas couleur) et probablement incompatible avec la règle "une
 seule action or par écran" si les 8 tons devenaient tous dorés — à statuer
 séparément si une recoloration de cette grille est un jour demandée.
+
+**7. Refonte homepage sur `maquette-site-public.png` (06/09/2026) : périmètre validé par 3 séries de questions avant tout code, exécuté en 4 lots (3-6).**
+Thierry a demandé une reproduction fidèle de la maquette déposée à la
+racine du dépôt en attendant la photo réelle du hero. Trois clarifications
+obtenues avant d'écrire une ligne (règle §I.1) :
+- Grille des 8 piliers : **garder les 8** (pas les 6 de la maquette),
+  réhabillée au style visuel de la maquette — la maquette n'est donc pas
+  reproduite au pixel près sur ce point, décision explicite de Thierry.
+- Nav "Ressources" : vérification en base (`execute_sql`) **avant** de
+  coder a montré que FAQ/pays_destinations/temoignages/partenaires sont
+  toutes à 0 ligne — corrigé une question déjà posée à tort ("les données
+  existent déjà") avant de construire quoi que ce soit. Décision retenue :
+  construire les 3 pages publiques maintenant avec état vide explicite
+  ("en cours de publication" + CTA WhatsApp), jamais de contenu inventé.
+- Hero : copy/structure maintenant, visuel réel (photo + globe) en attente
+  — remplacé par un panneau dégradé navy/or provisoire, même structure de
+  grille conservée pour l'intégration future.
+
+**8. Lot 3 : `TopUtilityBar` opt-in via prop `Navbar({ showTopBar })`, pas un changement global.**
+33 fichiers utilisent `<Navbar />`. Plutôt que de modifier le composant
+partagé pour tout le monde (risque de régression sur les 12 pages
+`/services/*`, `/contact`, `/a-propos`, etc.), le prop `showTopBar` est
+`false` par défaut : seule `app/page.tsx` l'active. Le hero homepage
+(`Hero.tsx`, usage unique confirmé par grep) a son padding-top ajusté en
+conséquence (`sm:pt-32 lg:pt-40`) ; aucune autre page n'est affectée.
+Nav "Notre méthode" pointe vers `/#methode`, ancre ajoutée sur la section
+`HowItWorks` existante (contenu déjà pertinent : 4 phases de méthode),
+aucun nouveau contenu créé pour cette ancre.
+
+**9. Lot 3bis : dropdown "Ressources" rendu à part, hors du tableau `NAV_LINKS` générique.**
+`NAV_LINKS` alimente à la fois le menu desktop et la liste mobile ; y
+inclure "Ressources" aurait produit un lien mort en mobile (pas de
+sous-menu générique pour les entrées `hasDropdown` côté mobile — seul
+"Services" a un bloc `<details>` dédié, codé à la main). Même traitement
+appliqué à "Ressources" : `<li>` desktop avec hover-panel + `<details>`
+mobile dédié, tous deux listant `RESOURCE_LINKS` (FAQ, Pays &
+destinations, Partenaires).
+
+**10. Lot 6 : `ServicesGrid.tsx` — le bento de l'entrée #6 ci-dessus est remplacé, pas conservé.**
+Le style bento (carte héros + cartes signature + cartes simples, 8 tons
+chromatiques) ne correspond pas à la section "Une expertise intégrée" de
+la maquette (liste 2 colonnes, icônes discrètes, fond blanc). Remplacé
+par une mise en page liste : photo Bangui (provisoire, même logique que
+le hero) + 8 lignes icône/titre/description sur 2 colonnes. Les données
+(`getPiliers`, `PILIERS_FALLBACK`, 6 piliers branchés sur `services`
+depuis le lot 2 de la session précédente) sont **inchangées** — seule la
+présentation change. Les 8 tons chromatiques sont conservés mais
+appliqués uniquement à la couleur de l'icône (plus de blocs pleins), ton
+`orange` requalifié `text-brand` pour rester cohérent avec la palette or
+P10 lot 1 sans regénérer une nouvelle couleur.
+
+**11. Image partenaires : hostname Supabase Storage ajouté à `next.config.js` (`remotePatterns`).**
+`app/partenaires/page.tsx` utilise `next/image` pour les logos
+(`logo_url`, alimenté par l'upload déjà existant en admin depuis P8). Sans
+cet ajout, la première image uploadée aurait cassé en production (erreur
+Next.js "hostname non configuré"), alors que la table est vide aujourd'hui
+et que le bug ne se serait révélé qu'au premier partenaire publié.
+
+**12. Correction majeure (07/09/2026) : Thierry a rejeté le premier rendu de la homepage ("ne ressemble pas à la maquette, sinon revert immédiat") — refonte visuelle complète en une session, sans nouvelle validation intermédiaire vu l'urgence.**
+Périmètre corrigé, avec un exemple concret par point :
+- **Logo** : ancien monogramme abstrait orange/rouge remplacé par le
+  logo institutionnel (N or + "NEXUS RCA" bleu nuit + "Agence
+  internationale") dans `components/ui/Logo.tsx` — **écart assumé au
+  gel CLAUDE.md du logo**, changement demandé explicitement et par écrit
+  par Thierry, donc conforme à la clause d'exception du fichier lui-même
+  ("sauf demande explicite"). Composant partagé par 33 fichiers +
+  DashboardShell : effet de bord assumé, pas caché.
+- **Structure homepage** : `TrustMarquee`/`IdentityStatement` (2 blocs
+  navy pré-existants) étaient intercalés entre la barre de confiance et
+  la grille des 8 piliers, cassant l'enchaînement de la maquette (hero →
+  confiance → expertises, consécutifs). Réordonné dans `app/page.tsx` ;
+  contenu de ces 2 blocs conservé à l'identique, seule la position change.
+- **Navbar** : passage à une navbar blanche dès le chargement sur la home
+  uniquement (nouveau prop `alwaysSolid`, opt-in, les 32 autres pages
+  gardent le comportement transparent-puis-blanc existant). Nav réduite à
+  Services/Notre méthode/À propos/Ressources/Contact/Espace
+  client/CTA unique — "Accueil", "Nexus IA" et "Rendez-vous" retirés des
+  pills (ils avaient déjà un lien fonctionnel dans le footer, vérifié
+  avant suppression, donc aucune fonctionnalité perdue). "NEXUS CONNECT"
+  + "Connexion" fusionnés en un seul lien "Espace client" → `/nexus-connect`
+  (qui contient déjà 3 CTA vers `/login`).
+- **Couleur** : au-delà du lot 1 (Navbar/Hero/Footer), extension du
+  passage à l'or à `TrustMarquee.tsx`, `IdentityStatement.tsx` et
+  `HowItWorks.tsx` (39 occurrences `nexus-orange-*` + hex bruts
+  `#f97316`/`#fb923c`/`#fdba74` convertis) parce que ces 3 sections sont
+  immédiatement visibles au scroll suivant la homepage corrigée — sans
+  ça, l'incohérence visuelle aurait été aussi flagrante que le problème
+  initial. **Hors périmètre, non touché** : WhyTrust, TravelCTA,
+  Testimonials, NextSteps, FinalCTA (plus bas dans la page, pas
+  immédiatement adjacents). Au passage, contraste corrigé sur l'icône de
+  `HowItWorks.tsx` (`text-white` sur fond or plein → `text-on-brand`,
+  cohérent avec la règle de contraste posée en lot 1) et une dernière
+  trace d'orange dans `LocaleToggle.tsx` (hover state, fond blanc).
+  Blobs de glow réduits dans `IdentityStatement.tsx` (3 blobs 36-44rem →
+  1 seul 28rem) pour répondre à "effets lumineux excessifs".
+- **Hero** : restructuré en 2 colonnes éditoriales (texte serif à gauche,
+  réseau international à droite), titre en police serif système
+  (`Georgia, Cambria, "Times New Roman", Times, serif` — ajouté à
+  `tailwind.config.ts` comme nouvelle clé `serif`, **aucun fichier de
+  police importé**, polices déjà installées nativement sur Windows,
+  vérifié via `System.Drawing.Text.InstalledFontCollection`). Le
+  "rectangle sombre vide" initial (accepté comme provisoire par Thierry
+  la veille) a finalement été jugé inacceptable une fois vu en contexte
+  — remplacé par un vrai composant SVG (Bangui hub + Europe/Amériques/
+  Moyen-Orient/Asie + routes dorées + repère "dossiers" en pictogramme,
+  pas une photo) : aucune photo, aucun collaborateur, aucun bureau
+  inventé, conforme à l'interdiction explicite de Thierry.
+- **8 expertises** : les 2 pôles qui n'avaient aucune ligne `services`
+  ("Accompagnement business", "Réseau international") ont chacun reçu
+  une vraie ligne CMS (migration `067_p10_homepage_poles_business_reseau.sql`,
+  texte repris mot pour mot de ce qui était déjà publié — rien d'inventé).
+  Les 8 piliers viennent maintenant tous du CMS pour titre/description.
+  **Limite assumée et documentée, pas cachée** : l'ordre d'affichage des
+  8 pôles reste une séquence fixe dans `ServicesGrid.tsx`
+  (`PILIER_ORDER`), pas piloté par un champ d'ordre par pôle en base — le
+  `ordre_affichage` existant sert au catalogue complet `/services` (12
+  lignes) et donnerait un ordre différent de celui demandé par Thierry si
+  réutilisé tel quel pour ce regroupement par pôle. Icônes recolorées en
+  bleu nuit uniforme (`ICON_COLOR`), plus de tons multicolores
+  (sky/violet/emerald/amber/teal).
+- **Bug mobile réel trouvé et corrigé en cours de route** : le sous-titre
+  "Agence internationale" du nouveau logo, seul, suffisait à faire
+  déborder la barre de navigation sur petit écran (masqué sous `sm:` via
+  `hidden sm:inline`). Barre mobile simplifiée à Logo + hamburger
+  uniquement ; langue et thème déplacés dans le panneau du menu mobile
+  (déjà existant) plutôt que dans la barre du haut.
+- **Incident outillage (pas un bug produit)** : un `npm run build` a été
+  lancé en arrière-plan pendant que `npm run dev` tournait, reproduisant
+  exactement l'incident déjà documenté plus haut (P10 lot 1) —
+  `.next` corrompu, erreur `__webpack_modules__[moduleId] is not a
+  function`. Corrigé par suppression de `.next` et redémarrage propre de
+  `dev` seul. **Limite non résolue et assumée** : même après ce nettoyage,
+  la capture d'écran automatisée (Chrome headless, plusieurs modes testés,
+  y compris une fenêtre de navigateur réelle non-headless) à 390px de
+  large affiche un rendu incohérent avec le HTML/CSS servi (vérifié
+  correct par inspection directe du DOM et des règles CSS compilées) —
+  élément présent et bien stylé côté serveur, absent à l'écran côté
+  capture. Diagnostic approfondi (CDP, `--dump-dom`, comparaison de
+  tailles de fenêtre, fenêtre Chrome réelle redimensionnée) sans cause
+  concluante trouvée côté code ; traité comme une limite de l'outil de
+  capture dans cet environnement, pas comme une preuve d'un bug réel.
+  Vérification mobile réelle (téléphone ou navigateur redimensionné)
+  laissée à Thierry pour trancher — voir demande dans le message de
+  clôture de ce lot.

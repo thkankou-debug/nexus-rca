@@ -2,6 +2,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { Hero } from "@/components/Hero";
+import { TrustBar } from "@/components/home/TrustBar";
 import { TrustMarquee } from "@/components/TrustMarquee";
 import { ServicesGrid } from "@/components/ServicesGrid";
 import { HowItWorks } from "@/components/HowItWorks";
@@ -15,12 +16,13 @@ import { NextSteps } from "@/components/home/NextSteps";
 export default function HomePage() {
   return (
     <>
-      <Navbar />
+      <Navbar showTopBar alwaysSolid />
       <main>
         <Hero />
+        <TrustBar />
+        <ServicesGrid />
         <TrustMarquee />
         <IdentityStatement />
-        <ServicesGrid />
         <HowItWorks />
         <WhyTrust />
         <TravelCTA />

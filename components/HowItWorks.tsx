@@ -41,20 +41,23 @@ const PHASES: Phase[] = [
 
 export function HowItWorks() {
   return (
-    <section className="relative overflow-hidden bg-[#070C1A] py-24 sm:py-28 lg:py-32">
+    <section
+      id="methode"
+      className="relative scroll-mt-24 overflow-hidden bg-[#070C1A] py-24 sm:py-28 lg:py-32"
+    >
       {/* === Mesh diagonal très subtil (pas de grain qui salit les textes) === */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-50"
         style={{
           backgroundImage:
-            "linear-gradient(135deg, rgba(255,102,0,0.05) 0%, transparent 35%, transparent 65%, rgba(56,80,160,0.07) 100%)",
+            "linear-gradient(135deg, rgba(212,175,55,0.05) 0%, transparent 35%, transparent 65%, rgba(56,80,160,0.07) 100%)",
         }}
       />
       {/* === Orbes ambiantes lumineuses === */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-32 top-0 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
+        className="pointer-events-none absolute -left-32 top-0 h-[28rem] w-[28rem] rounded-full bg-brand/12 blur-[120px]"
       />
       <div
         aria-hidden
@@ -63,20 +66,20 @@ export function HowItWorks() {
       {/* === Hairline top === */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
       />
 
       <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
         {/* === Header éditorial === */}
         <div className="mx-auto mb-16 max-w-3xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.24em] text-nexus-orange-300">
-            <span className="h-1 w-1 rounded-full bg-nexus-orange-400" />
+          <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.24em] text-brand">
+            <span className="h-1 w-1 rounded-full bg-brand" />
             Méthodologie
           </span>
           <h2 className="mt-5 font-display text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-4xl lg:text-5xl">
             Quatre phases.
             <br />
-            <span className="text-nexus-orange-400">Une trajectoire instruite.</span>
+            <span className="text-brand">Une trajectoire instruite.</span>
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-200 sm:text-lg">
             Nexus n&apos;improvise pas un mandat. Mobilité internationale,
@@ -94,12 +97,12 @@ export function HowItWorks() {
               return (
                 <article
                   key={phase.num}
-                  className="group relative overflow-hidden rounded-3xl border border-white/15 bg-[#101A38] p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.7)] transition-all duration-500 hover:-translate-y-1 hover:border-nexus-orange-400/60 hover:bg-[#142146] hover:shadow-[0_40px_70px_-20px_rgba(255,102,0,0.45)] sm:p-7"
+                  className="group relative overflow-hidden rounded-3xl border border-white/15 bg-[#101A38] p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.7)] transition-all duration-500 hover:-translate-y-1 hover:border-brand/50 hover:bg-[#142146] hover:shadow-[0_40px_70px_-20px_rgba(212,175,55,0.35)] sm:p-7"
                 >
                   {/* Numéro fantôme XXL */}
                   <span
                     aria-hidden
-                    className="pointer-events-none absolute -right-3 -top-3 select-none font-display text-[7rem] font-black leading-none tracking-tighter text-white/[0.07] transition-all duration-500 group-hover:text-nexus-orange-400/[0.18]"
+                    className="pointer-events-none absolute -right-3 -top-3 select-none font-display text-[7rem] font-black leading-none tracking-tighter text-white/[0.07] transition-all duration-500 group-hover:text-brand/[0.18]"
                   >
                     {phase.num}
                   </span>
@@ -107,7 +110,7 @@ export function HowItWorks() {
                   {/* Glow corner hover */}
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-nexus-orange-500/0 blur-3xl transition-all duration-700 group-hover:bg-nexus-orange-500/35"
+                    className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-brand/0 blur-3xl transition-all duration-700 group-hover:bg-brand/25"
                   />
 
                   <div className="relative">
@@ -115,20 +118,20 @@ export function HowItWorks() {
                     <div className="relative inline-flex">
                       <div
                         aria-hidden
-                        className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 blur-md opacity-70 transition-opacity duration-500 group-hover:opacity-100"
+                        className="absolute inset-0 rounded-2xl bg-brand/40 blur-md opacity-70 transition-opacity duration-500 group-hover:opacity-100"
                       />
-                      <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_24px_-8px_rgba(255,102,0,0.7)] ring-1 ring-white/15">
+                      <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-brand-hover text-on-brand shadow-[0_8px_24px_-8px_rgba(212,175,55,0.6)] ring-1 ring-white/15">
                         <Icon className="h-5 w-5" />
                       </div>
                     </div>
 
                     {/* Numéro orange XL */}
-                    <p className="mt-6 font-display text-4xl font-black tabular-nums leading-none text-nexus-orange-500">
+                    <p className="mt-6 font-display text-4xl font-black tabular-nums leading-none text-brand">
                       {phase.num}
                     </p>
 
                     {/* Eyebrow */}
-                    <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.24em] text-nexus-orange-300">
+                    <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.24em] text-brand">
                       {phase.eyebrow}
                     </p>
 
@@ -140,7 +143,7 @@ export function HowItWorks() {
                     {/* Hairline */}
                     <div
                       aria-hidden
-                      className="my-4 h-px w-12 bg-gradient-to-r from-nexus-orange-400 to-transparent"
+                      className="my-4 h-px w-12 bg-gradient-to-r from-brand to-transparent"
                     />
 
                     {/* Description — slate-200 (plus contrasté que slate-300) */}

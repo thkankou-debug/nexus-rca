@@ -1,36 +1,46 @@
 {
   "Hero": {
-    "eyebrow": "International Agency · Bangui",
-    "title_start": "Support that turns ",
-    "title_accent": "your projects",
-    "title_end": " into reality.",
-    "subtitle": "Administrative formalities, international projects, partnerships and financing. Structured, reliable support focused on tangible results.",
-    "cta_primary": "Submit a request",
-    "cta_secondary": "Book an appointment",
-    "trust_free": "Free first contact",
-    "trust_24h": "Reply within 24 h",
-    "trust_confidential": "100% confidential",
-    "stat1_value": "10+",
-    "stat1_label": "Expert services",
-    "stat2_value": "24 h",
-    "stat2_label": "Response time",
-    "stat3_value": "2",
-    "stat3_label": "International offices",
-    "stat3_hint": "Bangui · Canada"
+    "eyebrow": "International agency · Bangui",
+    "title_line1": "From Bangui to the world,",
+    "title_line2": "we structure your ambitions.",
+    "subtitle": "International mobility, studies, financing, partnerships and digital transformation — rigorous, confidential, results-driven support.",
+    "cta_primary": "Present my project",
+    "cta_secondary": "Discover our expertise",
+    "tagline1": "Talent",
+    "tagline2": "Opportunities",
+    "tagline3": "Lasting impact",
+    "side_tagline": "Bridges to a world of possibilities"
   },
   "LocaleToggle": {
     "switch_to_en": "EN",
     "switch_to_fr": "FR",
     "current_label": "Language"
   },
+  "TopBar": {
+    "location": "Bangui · Central African Republic"
+  },
+  "TrustBar": {
+    "item1_title": "Confidential initial review",
+    "item1_desc": "A thorough, secure analysis of your situation.",
+    "item2_title": "Documented method",
+    "item2_desc": "Structured, transparent support at every step.",
+    "item3_title": "A dedicated point of contact",
+    "item3_desc": "A direct, ongoing relationship by your side."
+  },
   "Navbar": {
     "home": "Home",
     "services": "Services",
+    "method": "Our method",
     "nexus_ia": "Nexus AI 🤖",
     "about": "About",
+    "resources": "Resources",
+    "resources_faq": "FAQ",
+    "resources_pays": "Countries & destinations",
+    "resources_partenaires": "Partners",
     "contact": "Contact",
     "rendezvous": "Appointment",
     "nexus_connect": "NEXUS CONNECT",
+    "client_area": "Client area",
     "login": "Sign in",
     "open_dossier": "Submit a request",
     "whatsapp": "WhatsApp",

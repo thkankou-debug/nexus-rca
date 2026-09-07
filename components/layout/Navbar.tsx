@@ -10,13 +10,18 @@ import {
   ChevronDown,
   MessageCircle,
   FilePlus,
-  Sparkles,
   ArrowRight,
+  HelpCircle,
+  Globe2,
+  Handshake,
+  UserRound,
+  type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { Button } from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { LocaleToggle } from "@/components/layout/LocaleToggle";
+import { TopUtilityBar } from "@/components/layout/TopUtilityBar";
 import { SERVICES } from "@/lib/services";
 import { cn, whatsappLink } from "@/lib/utils";
 
@@ -26,13 +31,31 @@ interface NavLink {
   hasDropdown?: boolean;
 }
 
-const NAV_LINKS: NavLink[] = [
-  { href: "/", labelKey: "home" },
+// Nav principale desktop/mobile réduite à l'essentiel (structure maquette) :
+// Accueil (le logo suffit), Nexus IA et Rendez-vous restent fonctionnels
+// mais via le footer (déjà en place, voir Footer.tsx) plutôt qu'en pill ici.
+const NAV_LINKS_MAIN: NavLink[] = [
   { href: "/services", labelKey: "services", hasDropdown: true },
-  { href: "/services/nexus-ia", labelKey: "nexus_ia" },
+  { href: "/#methode", labelKey: "method" },
   { href: "/a-propos", labelKey: "about" },
-  { href: "/contact", labelKey: "contact" },
-  { href: "/rendez-vous", labelKey: "rendezvous" },
+];
+
+const NAV_LINKS_END: NavLink[] = [{ href: "/contact", labelKey: "contact" }];
+
+// Liens du menu complet (desktop + mobile), Ressources exclu : son dropdown
+// est rendu à part (desktop hover-panel + accordéon mobile dédié).
+const NAV_LINKS: NavLink[] = [...NAV_LINKS_MAIN, ...NAV_LINKS_END];
+
+interface ResourceLink {
+  href: string;
+  labelKey: string;
+  icon: LucideIcon;
+}
+
+const RESOURCE_LINKS: ResourceLink[] = [
+  { href: "/faq", labelKey: "resources_faq", icon: HelpCircle },
+  { href: "/pays-destinations", labelKey: "resources_pays", icon: Globe2 },
+  { href: "/partenaires", labelKey: "resources_partenaires", icon: Handshake },
 ];
 
 const DOT_GRID_DARK: React.CSSProperties = {
@@ -41,12 +64,23 @@ const DOT_GRID_DARK: React.CSSProperties = {
   backgroundSize: "28px 28px",
 };
 
-export function Navbar() {
+interface NavbarProps {
+  /** Affiche la bande localisation + FR|EN au-dessus du menu (home uniquement pour l'instant). */
+  showTopBar?: boolean;
+  /** Navbar blanche dès le chargement, plutôt que transparente jusqu'au scroll (home uniquement, structure maquette). */
+  alwaysSolid?: boolean;
+}
+
+export function Navbar({ showTopBar = false, alwaysSolid = false }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
   const pathname = usePathname();
   const t = useTranslations("Navbar");
+  // "solid" pilote tout le style desktop/mobile (fond blanc, textes sombres) :
+  // vrai si on a scrollé OU si la page force une navbar blanche dès le départ.
+  const solid = alwaysSolid || scrolled;
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -58,6 +92,7 @@ export function Navbar() {
   useEffect(() => {
     setMobileOpen(false);
     setServicesOpen(false);
+    setResourcesOpen(false);
   }, [pathname]);
 
   // Verrouille le scroll body quand menu mobile ouvert
@@ -74,20 +109,22 @@ export function Navbar() {
 
   return (
     <>
+      {showTopBar && <TopUtilityBar />}
       <header
         className={cn(
           "fixed left-0 right-0 top-0 z-50 transition-all duration-300",
-          scrolled
+          showTopBar && "sm:top-9",
+          solid
             ? "border-b border-slate-200/80 bg-white/80 shadow-[0_8px_24px_-12px_rgba(12,28,64,0.12)] backdrop-blur-xl"
             : "bg-transparent"
         )}
       >
         <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 lg:px-8">
-          <Logo variant={scrolled ? "dark" : "light"} />
+          <Logo variant={solid ? "dark" : "light"} />
 
           {/* Desktop nav — liens principaux */}
           <ul className="hidden items-center gap-0.5 lg:flex xl:gap-1">
-            {NAV_LINKS.map((link) => (
+            {NAV_LINKS_MAIN.map((link) => (
               <li
                 key={link.href}
                 className="relative"
@@ -98,7 +135,7 @@ export function Navbar() {
                   href={link.href}
                   className={cn(
                     "inline-flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-sm font-bold transition-colors xl:px-4",
-                    scrolled
+                    solid
                       ? "text-slate-700 hover:bg-slate-100 hover:text-nexus-blue-950"
                       : "text-white hover:bg-white/10"
                   )}
@@ -146,36 +183,88 @@ export function Navbar() {
                 )}
               </li>
             ))}
+
+            {/* Ressources — dropdown dédié (FAQ, Pays & destinations, Partenaires) */}
+            <li
+              className="relative"
+              onMouseEnter={() => setResourcesOpen(true)}
+              onMouseLeave={() => setResourcesOpen(false)}
+            >
+              <button
+                type="button"
+                className={cn(
+                  "inline-flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-sm font-bold transition-colors xl:px-4",
+                  solid
+                    ? "text-slate-700 hover:bg-slate-100 hover:text-nexus-blue-950"
+                    : "text-white hover:bg-white/10"
+                )}
+              >
+                {t("resources")}
+                <ChevronDown className="h-3.5 w-3.5" />
+              </button>
+
+              {resourcesOpen && (
+                <div className="absolute left-1/2 top-full -translate-x-1/2 pt-2">
+                  <div className="w-64 rounded-3xl border border-slate-200 bg-white p-3 shadow-[0_24px_60px_-22px_rgba(12,28,64,0.30)]">
+                    {RESOURCE_LINKS.map((r) => {
+                      const Icon = r.icon;
+                      return (
+                        <Link
+                          key={r.href}
+                          href={r.href}
+                          className="group flex items-center gap-3 rounded-2xl p-2.5 transition-all duration-300 hover:bg-slate-50"
+                        >
+                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-nexus-blue-100 text-nexus-blue-700 transition-transform duration-300 group-hover:scale-105">
+                            <Icon className="h-4 w-4" />
+                          </div>
+                          <div className="text-sm font-bold text-nexus-blue-950 group-hover:text-nexus-blue-700">
+                            {t(r.labelKey)}
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </li>
+
+            {NAV_LINKS_END.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className={cn(
+                    "inline-flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-sm font-bold transition-colors xl:px-4",
+                    solid
+                      ? "text-slate-700 hover:bg-slate-100 hover:text-nexus-blue-950"
+                      : "text-white hover:bg-white/10"
+                  )}
+                >
+                  {t(link.labelKey)}
+                </Link>
+              </li>
+            ))}
           </ul>
 
-          {/* Desktop nav — actions à droite */}
-          <div className="hidden items-center gap-1 lg:flex xl:gap-2">
-            <LocaleToggle variant={scrolled ? "ink" : "light"} compact />
-            <ThemeToggle variant={scrolled ? "ink" : "light"} />
+          {/* Desktop nav — actions à droite : Espace client + un seul CTA */}
+          <div className="hidden items-center gap-1 lg:flex xl:gap-3">
+            {!showTopBar && (
+              <>
+                <LocaleToggle variant={solid ? "ink" : "light"} compact />
+                <ThemeToggle variant={solid ? "ink" : "light"} />
+              </>
+            )}
 
             <Link
               href="/nexus-connect"
               className={cn(
-                "group inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-sm font-bold transition-all duration-300 xl:px-4",
-                scrolled
-                  ? "bg-gradient-to-r from-nexus-blue-950 to-nexus-blue-800 text-white shadow-[0_8px_20px_-8px_rgba(12,28,64,0.4)] hover:-translate-y-0.5 hover:shadow-[0_12px_28px_-8px_rgba(12,28,64,0.5)]"
-                  : "border border-white/30 bg-white/10 text-white backdrop-blur hover:border-white/50 hover:bg-white/20"
-              )}
-            >
-              <Sparkles className="h-4 w-4 text-brand" />
-              {t("nexus_connect")}
-            </Link>
-
-            <Link
-              href="/login"
-              className={cn(
-                "whitespace-nowrap px-3 py-2 text-sm font-bold transition-colors duration-200",
-                scrolled
+                "inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-sm font-bold transition-colors duration-200",
+                solid
                   ? "text-slate-700 hover:text-nexus-blue-700"
                   : "text-white hover:text-brand"
               )}
             >
-              {t("login")}
+              <UserRound className="h-4 w-4" />
+              {t("client_area")}
             </Link>
 
             <Link
@@ -191,15 +280,13 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Mobile actions Premium tech */}
+          {/* Mobile actions — logo + hamburger uniquement (langue/thème dans le panneau, sinon la barre déborde sur petit écran) */}
           <div className="flex items-center gap-2 lg:hidden">
-            <LocaleToggle variant={scrolled ? "ink" : "light"} compact />
-            <ThemeToggle variant={scrolled ? "ink" : "light"} />
             <button
               onClick={() => setMobileOpen((v) => !v)}
               className={cn(
                 "relative flex h-11 w-11 items-center justify-center rounded-2xl border transition-all duration-300",
-                scrolled
+                solid
                   ? "border-slate-200 bg-white text-nexus-blue-950 shadow-sm hover:border-nexus-blue-300/60 hover:shadow-[0_8px_20px_-8px_rgba(2,7,31,0.25)]"
                   : "border-white/20 bg-white/10 text-white backdrop-blur-md hover:border-white/40 hover:bg-white/15"
               )}
@@ -269,14 +356,20 @@ export function Navbar() {
             />
 
             <div className="relative mx-auto max-w-md space-y-5 px-5">
-              {/* Eyebrow */}
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
+              {/* Eyebrow + langue/thème (déplacés ici depuis la barre du haut) */}
+              <div className="flex items-center justify-between gap-3">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
+                  </span>
+                  {t("menu")}
                 </span>
-                {t("menu")}
-              </span>
+                <div className="flex items-center gap-2">
+                  <LocaleToggle variant="light" compact />
+                  <ThemeToggle variant="light" />
+                </div>
+              </div>
 
               {/* NEXUS CONNECT highlight card */}
               <Link
@@ -288,17 +381,12 @@ export function Navbar() {
                   className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-brand/20 blur-2xl"
                 />
                 <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand to-brand-hover text-on-brand shadow-[0_8px_20px_-8px_rgba(201,162,39,0.5)]">
-                  <Sparkles className="h-5 w-5" />
+                  <UserRound className="h-5 w-5" />
                 </div>
                 <div className="relative flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="font-display text-sm font-bold text-white">
-                      {t("nexus_connect")}
-                    </p>
-                    <span className="rounded-full bg-white/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white/90">
-                      {t("premium_badge")}
-                    </span>
-                  </div>
+                  <p className="font-display text-sm font-bold text-white">
+                    {t("client_area")}
+                  </p>
                   <p className="mt-0.5 text-xs text-slate-300">
                     {t("mobile_my_space")}
                   </p>
@@ -376,6 +464,39 @@ export function Navbar() {
                 </div>
               </details>
 
+              {/* Section ressources collapse */}
+              <details className="group/res overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-md">
+                <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-sm font-bold text-white">
+                  <span className="inline-flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+                    {t("resources")}
+                  </span>
+                  <ChevronDown className="h-4 w-4 text-slate-400 transition-transform duration-300 group-open/res:rotate-180" />
+                </summary>
+                <div className="border-t border-white/10 p-2">
+                  <div className="grid grid-cols-1 gap-1">
+                    {RESOURCE_LINKS.map((r) => {
+                      const Icon = r.icon;
+                      return (
+                        <Link
+                          key={r.href}
+                          href={r.href}
+                          className="group/svc flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors duration-200 hover:bg-white/5"
+                        >
+                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-nexus-blue-500/15 text-nexus-blue-300 ring-1 ring-white/10">
+                            <Icon className="h-4 w-4" />
+                          </div>
+                          <span className="flex-1 text-sm font-bold text-slate-200 group-hover/svc:text-white">
+                            {t(r.labelKey)}
+                          </span>
+                          <ArrowRight className="h-3.5 w-3.5 text-slate-500 transition-transform duration-300 group-hover/svc:translate-x-0.5 group-hover/svc:text-brand" />
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              </details>
+
               {/* CTA primary */}
               <div className="space-y-2 pt-2">
                 <Link
@@ -391,25 +512,17 @@ export function Navbar() {
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
                 </Link>
 
-                <div className="grid grid-cols-2 gap-2">
-                  <Link
-                    href="/login"
-                    className="inline-flex items-center justify-center rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:border-white/40 hover:bg-white/10"
-                  >
-                    {t("login")}
-                  </Link>
-                  <a
-                    href={whatsappLink(
-                      "Bonjour Nexus, j'aimerais un renseignement."
-                    )}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center justify-center gap-1.5 rounded-2xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm font-bold text-emerald-300 backdrop-blur-md transition-all duration-300 hover:border-emerald-400/50 hover:bg-emerald-500/15"
-                  >
-                    <MessageCircle className="h-4 w-4" />
-                    {t("whatsapp")}
-                  </a>
-                </div>
+                <a
+                  href={whatsappLink(
+                    "Bonjour Nexus, j'aimerais un renseignement."
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex w-full items-center justify-center gap-1.5 rounded-2xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm font-bold text-emerald-300 backdrop-blur-md transition-all duration-300 hover:border-emerald-400/50 hover:bg-emerald-500/15"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  {t("whatsapp")}
+                </a>
               </div>
 
               {/* Footer info */}

@@ -39,7 +39,7 @@ export function LocaleToggle({ variant = "ink", compact = false }: Props) {
       className={cn(
         "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition-all duration-300",
         variant === "ink"
-          ? "border-slate-200 bg-white text-slate-700 hover:border-nexus-orange-300/60 hover:text-nexus-orange-600"
+          ? "border-slate-200 bg-white text-slate-700 hover:border-brand/60 hover:text-nexus-blue-800"
           : "border-white/20 bg-white/5 text-white backdrop-blur-md hover:border-white/40 hover:bg-white/10",
         compact && "px-2.5 py-1"
       )}

@@ -77,6 +77,10 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-plus-jakarta)", "system-ui", "sans-serif"],
         display: ["var(--font-syne)", "system-ui", "sans-serif"],
+        // Serif institutionnelle (titre hero homepage, demande explicite de
+        // Thierry, retour maquette 06/09/2026) — police système uniquement,
+        // aucun nouveau fichier de police importé.
+        serif: ["Georgia", "Cambria", "Times New Roman", "Times", "serif"],
       },
       // Échelle typographique cabinet/institutionnel — réduite vs v1, sobre
       // v2 : ~20% plus petit sur les display, letter-spacing détendu pour

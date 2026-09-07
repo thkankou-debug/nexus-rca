@@ -1,36 +1,46 @@
 {
   "Hero": {
-    "eyebrow": "Agence Internationale · Bangui",
-    "title_start": "L'accompagnement qui transforme ",
-    "title_accent": "vos projets",
-    "title_end": " en réalité.",
-    "subtitle": "Démarches administratives, projets internationaux, partenariats et financement. Un accompagnement structuré, fiable et axé sur des résultats concrets.",
-    "cta_primary": "Soumettre une demande",
-    "cta_secondary": "Prendre rendez-vous",
-    "trust_free": "Premier contact gratuit",
-    "trust_24h": "Réponse sous 24 h",
-    "trust_confidential": "100% confidentiel",
-    "stat1_value": "10+",
-    "stat1_label": "Services experts",
-    "stat2_value": "24 h",
-    "stat2_label": "Délai de réponse",
-    "stat3_value": "2",
-    "stat3_label": "Pôles internationaux",
-    "stat3_hint": "Bangui · Canada"
+    "eyebrow": "Agence internationale · Bangui",
+    "title_line1": "De Bangui au monde,",
+    "title_line2": "nous structurons vos ambitions.",
+    "subtitle": "Mobilité internationale, études, financement, partenariats et transformation digitale — un accompagnement rigoureux, confidentiel et orienté résultats.",
+    "cta_primary": "Présenter mon projet",
+    "cta_secondary": "Découvrir nos expertises",
+    "tagline1": "Talents",
+    "tagline2": "Opportunités",
+    "tagline3": "Impact durable",
+    "side_tagline": "Des passerelles pour un monde de possibilités"
   },
   "LocaleToggle": {
     "switch_to_en": "EN",
     "switch_to_fr": "FR",
     "current_label": "Langue"
   },
+  "TopBar": {
+    "location": "Bangui · République Centrafricaine"
+  },
+  "TrustBar": {
+    "item1_title": "Étude initiale confidentielle",
+    "item1_desc": "Une analyse approfondie et sécurisée de votre situation.",
+    "item2_title": "Méthode documentée",
+    "item2_desc": "Un accompagnement structuré et transparent.",
+    "item3_title": "Un interlocuteur dédié",
+    "item3_desc": "Une relation directe et continue à vos côtés."
+  },
   "Navbar": {
     "home": "Accueil",
     "services": "Services",
+    "method": "Notre méthode",
     "nexus_ia": "Nexus IA 🤖",
     "about": "À propos",
+    "resources": "Ressources",
+    "resources_faq": "FAQ",
+    "resources_pays": "Pays & destinations",
+    "resources_partenaires": "Partenaires",
     "contact": "Contact",
     "rendezvous": "Rendez-vous",
     "nexus_connect": "NEXUS CONNECT",
+    "client_area": "Espace client",
     "login": "Connexion",
     "open_dossier": "Soumettre une demande",
     "whatsapp": "WhatsApp",
