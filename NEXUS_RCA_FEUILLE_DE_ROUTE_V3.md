@@ -113,11 +113,11 @@ Le RÉCAP indique l'URL de prévisualisation pour que Thierry vérifie en ligne.
 | P2 | RBAC 9 rôles | ✅ terminée — revérifiée en direct 07/09 : `role_permissions` seedée (8 rôles explicites + super_admin bypass + client par RLS), `hasPermission()`/`assertPermission()` réels, adoption 30 fichiers API migrés / 25 encore sur `requireProfile` (migration progressive assumée) ; 6 écarts déjà documentés dans docs/DETTE.md, aucun bloquant | v3/integration-v3 | 07/09 |
 | C0 | Audit CRM et schéma cible de la relation client | ✅ terminée — phase de plan/décision (D7), pas de code propre : `clients` = personne, `profiles` = compte auth relié par `clients.profile_id`. Vérifié en direct 07/09 : la colonne `profile_id` existe réellement sur `clients`, confirmant que le plan a été exécuté en P3, pas resté théorique | v3/integration-v3 | 07/09 |
 | P3 | Extension du schéma métier | ✅ terminée — vérifié en direct 07/09 : les 21 tables prévues existent réellement (services, devis, factures, taches, etc.), RLS activée sur toutes (échantillon vérifié). Écart déjà documenté : `logAudit()` branché uniquement sur le changement de statut de dossier, pas encore étendu aux paiements/fusions (docs/DETTE.md) | v3/integration-v3 | 07/09 |
-| A3 | Shell d'administration | ⬜ | | |
-| A4 | Tableau de bord | ⬜ | | |
-| A5 | CRM & Dossiers — noyau | ⬜ | | |
-| A6 | CRM — fiche client 360°, entrées, RDV, communications | ⬜ | | |
-| A7 | RH rhabillé | ⬜ | | |
+| A3 | Shell d'administration | ✅ terminée — démo isolée confirmée par Thierry (construction volontairement séparée de `DashboardShell.tsx`, gelé), `lib/admin-nav.ts` réel (131 lignes) et validé en ligne via `/dashboard/design-system` le 07/09. Écart documenté : bascule des vraies pages reportée à A4-A7, libellés de permission du tableau A3 pas tous identiques au catalogue P2 (mappage documenté, sans conséquence tant que seul super_admin existe) | v3/integration-v3 | 07/09 |
+| A4 | Tableau de bord | ✅ terminée — démo isolée confirmée par Thierry, `lib/dashboard-blocks.ts` réel (222 lignes), validé en ligne le 07/09. Écart documenté : alerte "documents rejetés" retirée (l'état n'existe pas dans le schéma), bascule d'une vraie page reportée à A5-A7 | v3/integration-v3 | 07/09 |
+| A5 | CRM & Dossiers — noyau | ✅ terminée — 11 écarts déjà documentés dans docs/DETTE.md, revérifiés en direct 07/09 (0 compte agent/admin réel, 0 ligne `demande_status_history`, 0/3 paiements avec `demande_id` : chiffres identiques à ceux documentés, aucune dérive), aucun bloquant | v3/integration-v3 | 07/09 |
+| A6 | CRM — fiche client 360°, entrées, RDV, communications | ✅ terminée — 7 lots livrés, 10 écarts déjà documentés (dont un bug réel trouvé et corrigé au Lot 4 : `/dashboard/admin/rdv` interrogeait des colonnes inexistantes), tous confirmés ou tranchés explicitement par Thierry en cours de route | v3/integration-v3 | 07/09 |
+| A7 | RH rhabillé | ✅ terminée — revérifié en direct 07/09 : toujours 0 compte agent réel (cohérent avec le constat documenté), 4 écarts déjà tranchés par Thierry (rhabillage shell reporté, délais moyens non construits faute de volume, tâches limitées au dossier, charge de travail non testée) | v3/integration-v3 | 07/09 |
 | P6-0 | Convergence des colonnes `payments` | ⬜ | | |
 | P6 | Finance | ⬜ | | |
 | P8 | CMS et contenus | ⬜ | | |
