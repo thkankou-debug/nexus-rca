@@ -108,7 +108,7 @@ Le RÉCAP indique l'URL de prévisualisation pour que Thierry vérifie en ligne.
 | P1a-bis | Compléter le rendu de P1a | ✅ terminée — auto-élévation confirmée possible avant correctif, 20 profils contrôlés, aucun abus ; policy UPDATE `payment_links` avant/après en texte intégral rendue 07/09 | — | 07/09 |
 | P1b | Durcissement sécurité | ✅ terminée — tests a-e, g réels collés 07/09 ; test f (déclaration bout en bout) non exécuté en direct (mutation réelle, à faire sur demande explicite) ; renvoi des URLs clients confirmé par Thierry 07/09 | v3/p1b-durcissement | 07/09 |
 | P1c | Outillage et dette technique | ✅ terminée — revérifiée en direct 07/09 (lint 0 erreur, tsc 0 erreur, types générés non manuels, RLS 100% policies enveloppées `(select auth.xxx())`, `gen_demande_ref()` sur séquence, 0 fichier `.backup.*`, CLAUDE.md resynchronisé) ; dette notée : 32 FK sans index couvrant (tables ajoutées par P3/P6/P8 après le correctif initial), voir docs/DETTE.md | v3/p1c-outillage | 07/09 |
-| A1 | Tokens et fondations visuelles | ⬜ *parallélisable* | | |
+| A1 | Tokens et fondations visuelles | ✅ terminée — `--brand`/`--brand-hover`/`--brand-subtle`/`--on-brand` mis à jour (or `#B99760`, navy `#021030`, échantillonnés + validés 07/09) ; 4 sémantiques génériques ajoutées (`--danger`/`--warning`/`--success`/`--info`, warning rouge-orangé distinct de l'or) ; contrastes mesurés ≥ AA. Hors périmètre de ce lot (noté, pas oublié) : surfaces ivoire vs blanc, gris secondaire dérivé pour le site public, états actif/désactivé du brand — voir docs/DETTE.md | v3/integration-v3 | 07/09 |
 | A2 | Design system | ⬜ *parallélisable* | | |
 | P2 | RBAC 9 rôles | ⬜ | | |
 | C0 | Audit CRM et schéma cible de la relation client | ⬜ | | |

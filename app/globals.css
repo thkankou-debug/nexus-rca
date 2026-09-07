@@ -28,17 +28,20 @@
   --line: 226 232 240;               /* slate-200 */
   --line-strong: 203 213 225;        /* slate-300 */
 
-  /* Brand sémantique — or mat (D8/P10, mesuré le 06/09/2026 : #C9A227 vs
-     navy #02071f = 8,25:1, largement AA). Remplace l'orange comme accent
-     d'action sur tout le site (public, admin, client) — voir docs/DETTE.md. */
-  --brand: 201 162 39;               /* #C9A227 */
-  --brand-hover: 176 141 30;         /* #B08D1E, plus sombre pour le survol */
-  --brand-subtle: 250 240 210;       /* teinte ivoire-or pâle */
+  /* Brand sémantique — or échantillonné sur la maquette approuvée
+     (06/09/2026), corrigé et validé par Thierry le 07/09/2026 : un seul or
+     dans toute la plateforme, prélevé sur un aplat large (le bouton), pas
+     sur du texte ni une photo. Voir NEXUS_RCA_A1_TOKENS_VALIDATION.md. */
+  --brand: 185 151 96;               /* #B99760 */
+  --brand-hover: 163 133 74;         /* #A3854A, plus sombre pour le survol */
+  --brand-subtle: 241 234 223;       /* #F1EADF — teinte ivoire-or pâle, dérivée */
 
   /* Texte sur bouton/fond --brand : toujours bleu nuit (D8), jamais blanc,
      constant en clair comme en sombre — ce n'est pas --ink (qui s'inverse
-     avec le thème), c'est la couleur du texte POSÉ SUR l'or lui-même. */
-  --on-brand: 2 7 31;                 /* #02071F */
+     avec le thème), c'est la couleur du texte POSÉ SUR l'or lui-même.
+     #021030 = nexus-navy, validé le 07/09/2026 (échantillonné sur le texte
+     de la maquette, pas sur une photo) — 6,84:1 sur --brand. */
+  --on-brand: 2 16 48;                /* #021030 */
 
   /* Focus clavier — distinct de --brand : l'accent or reste réservé à
      une seule action par écran (A1), l'anneau de focus ne doit pas compter
@@ -53,6 +56,18 @@
   --status-success: 16 185 129;      /* emerald-500 — devis accepté, terminé */
   --status-failure: 239 68 68;       /* red-500 — refusé, annulé */
   --status-inert: 148 163 184;       /* slate-400 — archivé, plus washed-out que neutral */
+
+  /* Sémantiques génériques (alertes, toasts) — distinctes des 6 statuts
+     ci-dessus (badges de cycle de vie d'une demande). --warning est
+     volontairement rouge-orangé et nettement plus saturé que --brand : un
+     ambre classique aurait été confondu avec l'accent or "action
+     principale" (option 1, tranchée par Thierry le 07/09/2026). Contrastes
+     mesurés : danger 4,83:1, warning 5,18:1, success/info repris des
+     statuts déjà mesurés — tous ≥ AA sur fond clair. */
+  --danger: 220 38 38;                /* #DC2626 */
+  --warning: 194 65 12;               /* #C2410C */
+  --success: 16 185 129;              /* #10B981, identique à --status-success */
+  --info: 59 130 246;                 /* #3B82F6, identique à --status-progress */
 
   /* Effets */
   --grain-opacity: 0.08;
@@ -73,10 +88,10 @@
   --line: 30 41 59;                  /* slate-800 */
   --line-strong: 51 65 85;           /* slate-700 */
 
-  --brand: 212 175 55;               /* #D4AF37 — or plus lumineux sur fond sombre */
-  --brand-hover: 201 162 39;          /* #C9A227 */
-  --brand-subtle: 59 46 9;            /* brun-or sourd */
-  --on-brand: 2 7 31;                  /* constant : toujours bleu nuit sur bouton or */
+  --brand: 185 151 96;               /* #B99760 — un seul or, identique au clair (07/09/2026) */
+  --brand-hover: 163 133 74;          /* #A3854A */
+  --brand-subtle: 59 46 9;            /* brun-or sourd, adapté fond sombre */
+  --on-brand: 2 16 48;                 /* #021030 — constant : toujours bleu nuit sur bouton or */
 
   --focus: 96 138 255;               /* nexus-blue-400 — plus lumineux sur sombre */
 
@@ -86,6 +101,11 @@
   --status-success: 52 211 153;      /* emerald-400 */
   --status-failure: 248 113 113;     /* red-400 */
   --status-inert: 100 116 139;       /* slate-500 — plus washed-out que neutral sur fond sombre */
+
+  --danger: 248 113 113;              /* #F87171, identique à --status-failure */
+  --warning: 251 146 60;              /* #FB923C — rouge-orangé lumineux, distinct de l'or sur fond sombre (7,15:1) */
+  --success: 52 211 153;              /* #34D399, identique à --status-success */
+  --info: 96 165 250;                 /* #60A5FA, identique à --status-progress */
 
   --grain-opacity: 0.05;
   --grain-blend: soft-light;

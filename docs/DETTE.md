@@ -1020,3 +1020,39 @@ des phases postérieures (P3, P6, P8) n'ont jamais reçu leurs propres
 index de clé étrangère. Dette purement additive (aucune régression,
 aucun risque), reportée sciemment sur décision de Thierry (07/09) — à
 traiter dans un lot dédié performance/dette technique, pas avant A1.
+
+## A1 — Tokens couleur, valeurs réechantillonnées (07/09/2026)
+
+**1. Or/navy passés de "calculé pour un contraste AA" à "échantillonné puis validé".**
+Le lot 1 de P10 (06/09) avait *calculé* un or (`#C9A227`/`#D4AF37`) pour
+respecter un ratio de contraste, sans jamais le comparer à la maquette
+approuvée — d'où la dérive de teinte qui a fait rejeter P10. Corrigé :
+`--brand`/`--brand-hover`/`--brand-subtle`/`--on-brand` portent maintenant
+`#B99760` (or, échantillonné sur le bouton de la maquette, un aplat large)
+et `#021030` (navy, échantillonné sur le texte). Un seul or dans toute la
+plateforme, clair et sombre confondus — voir
+`NEXUS_RCA_A1_TOKENS_VALIDATION.md` pour la méthode complète et les 4
+corrections apportées à l'échantillonnage initial (échelle navy dérivée
+et non prélevée sur photo, gris secondaire dérivé et non prélevé, un seul
+or, états/sémantiques manquants).
+
+**2. `--danger`/`--warning`/`--success`/`--info` ajoutés — n'existaient pas avant.**
+Distincts des 6 `--status-*` (badges de cycle de vie d'une demande,
+déjà en place) : ce sont des sémantiques génériques pour alertes/toasts.
+`--warning` est un rouge-orangé (`#C2410C` clair / `#FB923C` sombre),
+volontairement éloigné de l'or — décision de Thierry (option 1, 07/09) :
+un ambre classique se confondrait avec l'accent or "action principale".
+Contrastes mesurés : danger 4,83:1, warning 5,18:1 sur fond clair ; les
+deux passent AA. `--success`/`--info` reprennent les valeurs déjà
+mesurées de `--status-success`/`--status-progress` plutôt que d'inventer
+une 4ᵉ nuance de vert/bleu sans raison.
+
+**3. Explicitement hors périmètre de ce lot, pas oublié :**
+- Passage des surfaces `--surface`/`--surface-elevated` de blanc à ivoire
+  (changement visuel large sur tout l'admin, pas demandé dans le GO de
+  ce lot).
+- Gris secondaire dérivé de la famille navy pour le texte du site public
+  (calculé et vérifié ≥ AA pendant ce lot — `#525E7A`, 5,85:1 sur ivoire —
+  mais pas encore câblé dans un token, le site public utilise des classes
+  Tailwind littérales `text-slate-*`, pas la couche sémantique `--ink`).
+- États actif/désactivé de `--brand` (seul le survol existe pour l'instant).

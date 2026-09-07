@@ -73,6 +73,14 @@ const config: Config = {
           failure: "rgb(var(--status-failure) / <alpha-value>)",
           inert: "rgb(var(--status-inert) / <alpha-value>)",
         },
+        // A1 (07/09/2026) — sémantiques génériques d'alerte (toasts,
+        // bannières), distinctes des 6 statuts ci-dessus (badges de cycle
+        // de vie). warning volontairement rouge-orangé, pas ambre : un
+        // ambre serait confondu avec l'accent or (voir globals.css).
+        danger: "rgb(var(--danger) / <alpha-value>)",
+        warning: "rgb(var(--warning) / <alpha-value>)",
+        success: "rgb(var(--success) / <alpha-value>)",
+        info: "rgb(var(--info) / <alpha-value>)",
       },
       fontFamily: {
         sans: ["var(--font-plus-jakarta)", "system-ui", "sans-serif"],
