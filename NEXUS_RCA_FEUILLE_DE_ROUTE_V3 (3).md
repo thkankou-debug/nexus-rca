@@ -135,7 +135,7 @@ suivi avait divergé.
 | P6 | Finance | ✅ close par Thierry (06/09) — devis, factures, sessions caisse, catégories comptables/commissions, échéanciers, exports CSV, rapprochement livrés et testés ; rapports journaliers/annuels non construits (seul le mensuel existe, antérieur à V3) — chantier reporté sciemment, voir docs/DETTE.md #14 | v3/integration-v3 | 06/09 |
 | P8 | CMS et contenus | ✅ terminée — 8 écrans livrés (Services et tarifs, FAQ, Témoignages, Partenaires + upload logo, Pays & destinations, Bureaux, Informations institutionnelles, Contenus de page) ; `services` peuplée (12 lignes réelles) ; nouvelle adresse Bangui (Croisement Marabena) corrigée dans 21 fichiers + bureau réel en base ; branchement des pages publiques sur ces tables = P10, pas P8 — voir docs/DETTE.md | v3/integration-v3 | 06/09 |
 | P9 | Portail client | ⬜ | | |
-| P10 | Site public | 🟡 en cours — Lot 1 (or mesuré #C9A227, token `on-brand`, CTA harmonisé sur "Soumettre une demande") livré sur Navbar/PublicHero/Footer + 5 pages annexes ; vérification visuelle par Thierry en attente (limite d'outillage curl/RSC) ; reste : factorisation des 12 pages services, grille des 8 pôles, E4-E8 — voir docs/DETTE.md | v3/integration-v3 | 06/09 |
+| P10 | Site public | 🟡 en cours — Lot 1 (or mesuré, CTA harmonisé, confirmé visuellement par Thierry) et Lot 2 (grille des 8 piliers branchée sur `services` pour 6/8 cartes, 2 restent en dur à trancher) livrés ; reste : factorisation des 12 pages services, E4 (photo couverture), E5 (perf), E6 (zone sécurité), E7 (bilingue) — voir docs/DETTE.md | v3/integration-v3 | 06/09 |
 | P11 | Notifications multicanal | ⬜ | | |
 | P12 | Durcissement final | ⬜ | | |
 

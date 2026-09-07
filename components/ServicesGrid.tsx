@@ -11,6 +11,7 @@ import {
   Sparkles,
   type LucideIcon,
 } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
 
 // ─── ServicesGrid — Écosystème Nexus ────────────────────────────────────────
 // Bento : 1 hero card (Visa) + 7 cards compactes premium.
@@ -39,7 +40,23 @@ type Pilier = {
   tags: [string, string];
 };
 
-const PILIERS = {
+// Piliers dont le titre/description/lien viennent de `services` (P8) —
+// slug réel de la table. "business" et "reseau" restent en dur : le
+// premier n'a aucun service réel derrière lui à ce jour (pôle
+// "Accompagnement business" volontairement vide, voir docs/DETTE.md),
+// le second décrit la présence de bureaux, pas un service — ni l'un ni
+// l'autre ne correspond à une ligne `services` existante (décision
+// confirmée par Thierry le 06/09/2026, P10 lot 2).
+const PILIER_SLUGS: Record<string, string> = {
+  visa: "visa",
+  digital: "digitalisation",
+  financement: "financement",
+  etudes: "etudes",
+  assurance: "assurance",
+  admin: "administratif",
+};
+
+const PILIERS_FALLBACK = {
   visa: {
     id: "visa",
     title: "Visa & mobilité",
@@ -121,6 +138,48 @@ const PILIERS = {
     tags: ["Légalisations", "Attestations"] as [string, string],
   },
 } satisfies Record<string, Pilier>;
+
+/**
+ * Construit les 8 piliers : titre/description/lien dynamiques depuis
+ * `services` pour les 6 qui ont une ligne réelle, valeurs en dur
+ * conservées pour "business"/"reseau" (voir commentaire ci-dessus) et
+ * pour tout ce que le repli d'erreur réseau/DB impose. Icône, ton,
+ * tags et position bento restent des choix de design (P10 lot 2,
+ * confirmé par Thierry) — jamais éditables depuis le CMS.
+ */
+async function getPiliers(): Promise<Record<string, Pilier>> {
+  const piliers: Record<string, Pilier> = { ...PILIERS_FALLBACK };
+
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from("services")
+      .select("slug, nom, description")
+      .in("slug", Object.values(PILIER_SLUGS));
+
+    if (error) {
+      console.error("[SERVICES_GRID] chargement services:", error.message);
+      return piliers;
+    }
+
+    const bySlug = new Map((data || []).map((s) => [s.slug, s]));
+    for (const [pilierId, slug] of Object.entries(PILIER_SLUGS)) {
+      const service = bySlug.get(slug);
+      if (service?.nom) {
+        piliers[pilierId] = {
+          ...piliers[pilierId],
+          title: service.nom,
+          description: service.description || piliers[pilierId].description,
+          href: `/services/${slug}`,
+        };
+      }
+    }
+  } catch (err) {
+    console.error("[SERVICES_GRID] exception:", err);
+  }
+
+  return piliers;
+}
 
 // Map ton chromatique → classes (subtil, pas dominant)
 const TONE_STYLES: Record<
@@ -212,7 +271,9 @@ const DOT_GRID_DARK: React.CSSProperties = {
   backgroundSize: "28px 28px",
 };
 
-export function ServicesGrid() {
+export async function ServicesGrid() {
+  const PILIERS = await getPiliers();
+
   return (
     <section
       id="services"

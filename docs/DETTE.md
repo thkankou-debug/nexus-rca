@@ -943,3 +943,33 @@ dossier `.next`, provoquant une erreur "Cannot find module './7285.js'"
 — artefact de deux process Next.js écrivant le même répertoire de build en
 même temps. Résolu en arrêtant et relançant `next dev` seul. **Leçon** :
 ne jamais lancer `build` et `dev` simultanément sur le même dépôt.
+
+**6. Lot 2 : grille des 8 piliers (`ServicesGrid.tsx`) branchée sur `services` pour le contenu, mise en page/icônes/tons/tags restent en dur — décision confirmée par Thierry.**
+`ServicesGrid.tsx` est un bento-layout bespoke (1 carte héros + 2
+verticales + 2 horizontales + 3 simples), pas une simple liste : icône,
+couleur de ton (8 tons distincts, "anti-uniformité" voulue), tags et
+position bento sont des choix de design absents du schéma `services`
+(nom, catégorie, description, tarif, délai, statut, ordre). Décision :
+titre/description/lien dynamiques pour les 6 piliers qui ont une ligne
+réelle (`visa`, `digitalisation`, `financement`, `etudes`, `assurance`,
+`administratif` — requête par `slug`, pas par `categorie`, pour éviter
+tout problème de correspondance de chaîne accentuée), reste (icône, ton,
+tags, position) figé dans le composant.
+
+**Deux piliers restent en dur, sans ligne `services` correspondante :**
+"Accompagnement business" (le pôle officiel est vide, aucune page réelle
+ne lui correspond, voir P8 DETTE #1) et "Réseau international" (décrit la
+présence de bureaux Bangui/Europe/Canada, un sujet différent des services
+réels `change`/`transfert` que P8 a rattachés à ce pôle). **Ni l'un ni
+l'autre n'est un "faux contenu"** — ce sont des affirmations déjà
+existantes avant ce lot, non vérifiées ni remises en cause ici. **À
+trancher dans un lot séparé** : soit créer un vrai service "Accompagnement
+business", soit remplacer la carte "Réseau international" par les
+services `change`/`transfert` réels, soit assumer ces deux cartes comme
+du contenu institutionnel distinct des piliers-services.
+
+Couleurs de `ServicesGrid.tsx` (8 tons, dont un `orange` explicite pour la
+carte Visa) **non touchées** dans ce lot — hors périmètre du lot 2
+(contenu, pas couleur) et probablement incompatible avec la règle "une
+seule action or par écran" si les 8 tons devenaient tous dorés — à statuer
+séparément si une recoloration de cette grille est un jour demandée.
