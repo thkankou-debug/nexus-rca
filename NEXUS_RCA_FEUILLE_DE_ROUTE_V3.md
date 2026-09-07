@@ -1,6 +1,6 @@
 # NEXUS RCA — FEUILLE DE ROUTE V3
 **Document unique d'exécution. Source de vérité du projet.**
-Version 1.0 · 5 septembre 2026 · Remplace et consolide les 5 amendements précédents
+Version 1.1 · 5 septembre 2026 · Consolide les amendements 1 à 5 et les décisions D1 à D8
 Décideur : Thierry F. Kankou · Exécutant : Claude Code
 
 ---
@@ -52,14 +52,14 @@ Décideur : Thierry F. Kankou · Exécutant : Claude Code
 | 2 | Aucune donnée existante supprimée |
 | 3 | Aucune variable d'environnement de production modifiée sans autorisation écrite |
 | 4 | Aucun nombre affiché sans requête réelle derrière (§I.6) |
-| 5 | Aucune donnée d'exemple, de démonstration ou de remplissage, même temporaire |
+| 5 | Aucune donnée d'exemple, de démonstration ou de remplissage, même temporaire. **Exception unique et écrite** : la page `/dashboard/design-system`, réservée au `super_admin`, peut utiliser des données illustratives pour présenter les composants — elles ne sortent jamais de ce fichier, ne touchent aucune table, et la page est retirée en P12. Aucune autre exception ne se déclare elle-même : une exception non écrite ici n'existe pas |
 | 6 | Aucune permission garantie par le seul masquage d'un élément d'interface |
 | 7 | Toute nouvelle table : RLS activée dans la même migration que sa création |
 | 8 | Toute migration appliquée en base est committée en fichier `.sql` dans le même mouvement — c'est la pratique inverse qui a produit le trou 001-017 |
 | 9 | Fichiers complets, jamais de fragments |
 | 10 | Réponses en français, numérotées, sans emphase superflue |
 | 11 | Une entrée de menu qui ne mène pas à une page fonctionnelle n'existe pas |
-| 12 | Aucune page au-delà de 400 lignes après la livraison du design system |
+| 12 | Aucune page au-delà de 400 lignes après la livraison du design system. Seule exception : la vitrine `/dashboard/design-system`, qui est une galerie et non une page de produit — si elle dépasse, elle se découpe par famille de composants plutôt que de rester monolithique |
 
 ## I.3 Barrière de qualité — la vraie garantie anti-régression
 
@@ -98,44 +98,31 @@ Push    : en fin de phase, après la barrière de qualité, jamais avant
 ```
 Le RÉCAP indique l'URL de prévisualisation pour que Thierry vérifie en ligne.
 
-**Note du 05/09/2026** : les branches de phase P0.5-P3/A1/A2 avaient divergé
-indépendamment de `main`. Réconciliées dans `v3/integration-v3` avant A3
-(voir `docs/DETTE.md`, entrée P2 #1). À partir d'A3, chaque nouvelle phase
-se branche depuis `v3/integration-v3`, pas depuis `main`.
-
-**Note du 05/09/2026 (2)** : cette version (3) du document a été déposée à la
-racine en remplacement de la version (2) ; sa table d'avancement était
-revenue à l'état initial (tout ⬜). Reconstituée ci-dessous à partir des
-commits réels de la version (2) — le contenu des phases (objectifs,
-travaux, D1-D8) est identique entre les deux versions, seule la table de
-suivi avait divergé.
-
 ## I.5 Tableau d'avancement — à tenir à jour dans ce fichier
 
 | Code | Phase | État | Branche | Date |
 |---|---|---|---|---|
 | P0 | Audit du dépôt | ✅ terminée | — | 04/09 |
 | P0.5 | Baseline schéma + RLS | ✅ terminée | — | 05/09 |
-| P1a | Correctif de sécurité immédiat | ✅ terminée | — | 05/09 |
-| P1a-bis | Compléter le rendu de P1a | ✅ terminée | — | 05/09 |
-| P1b | Durcissement sécurité | ✅ terminée | v3/p1b-durcissement | 05/09 |
-| P1c | Outillage et dette technique | ✅ terminée | v3/p1c-outillage | 05/09 |
-| A1 | Tokens et fondations visuelles | ✅ terminée | v3/a1-tokens | 05/09 |
-| A2 | Design system | ✅ terminée | v3/a2-design-system | 05/09 |
-| P2 | RBAC 9 rôles | ✅ terminée — voir docs/DETTE.md pour les écarts notés | v3/p2-rbac | 05/09 |
-| C0 | Audit CRM et schéma cible de la relation client | ✅ terminée — D7 confirmée par Thierry | v3/c0-audit-crm | 05/09 |
-| P3 | Extension du schéma métier | ✅ terminée — voir docs/DETTE.md | v3/p3-schema-metier | 05/09 |
-| A3 | Shell d'administration | ✅ terminée — démo isolée, voir docs/DETTE.md | v3/integration-v3 | 05/09 |
-| A4 | Tableau de bord | ✅ terminée — démo isolée, voir docs/DETTE.md | v3/integration-v3 | 05/09 |
-| A5-0 | Audit CRM et consolidation d'identité | ✅ satisfaite par C0 — aucun corps de section propre dans ce document, voir docs/DETTE.md | — | 05/09 |
-| A5 | CRM — Dossiers et pipeline | ✅ terminée — vraies pages, voir docs/DETTE.md | v3/integration-v3 | 05/09 |
-| A6 | CRM — Clients 360, prospects, RDV, communications, tâches | ✅ terminée — 7 lots (fiche 360°, boîte de réception, dédoublonnage, RDV/D3, communications/notes, notifications, performance CRM), voir docs/DETTE.md | v3/integration-v3 | 05/09 |
-| A7 | RH rhabillé | ✅ terminée — affectations_hist, tâches liées au dossier, charge de travail réelle ; rhabillage shell et délais moyens RH reportés (décisions Thierry), voir docs/DETTE.md | v3/integration-v3 | 05/09 |
-| P6-0 | Convergence des colonnes `payments` | ✅ terminée — 5 étapes (analyse, backfill, sync, migration des consommateurs, réconciliation) ; test corrigé en étape 5 (montant_total reste légitime, distinct d'amount), voir docs/DETTE.md | v3/integration-v3 | 05/09 |
-| P6 | Finance | ✅ close par Thierry (06/09) — devis, factures, sessions caisse, catégories comptables/commissions, échéanciers, exports CSV, rapprochement livrés et testés ; rapports journaliers/annuels non construits (seul le mensuel existe, antérieur à V3) — chantier reporté sciemment, voir docs/DETTE.md #14 | v3/integration-v3 | 06/09 |
-| P8 | CMS et contenus | ✅ terminée — 8 écrans livrés (Services et tarifs, FAQ, Témoignages, Partenaires + upload logo, Pays & destinations, Bureaux, Informations institutionnelles, Contenus de page) ; `services` peuplée (12 lignes réelles) ; nouvelle adresse Bangui (Croisement Marabena) corrigée dans 21 fichiers + bureau réel en base ; branchement des pages publiques sur ces tables = P10, pas P8 — voir docs/DETTE.md | v3/integration-v3 | 06/09 |
+| P1a | Correctif de sécurité immédiat | ✅ terminée — verdict `profiles` rendu 07/09 : trigger `trg_profiles_prevent_role_self_elevation` vérifié en direct, bloque tout changement de `role` sauf `super_admin`/`service_role` | — | 07/09 |
+| P1a-bis | Compléter le rendu de P1a | ✅ terminée — auto-élévation confirmée possible avant correctif, 20 profils contrôlés, aucun abus ; policy UPDATE `payment_links` avant/après en texte intégral rendue 07/09 | — | 07/09 |
+| P1b | Durcissement sécurité | ✅ terminée — tests a-e, g réels collés 07/09 ; test f (déclaration bout en bout) non exécuté en direct (mutation réelle, à faire sur demande explicite) ; renvoi des URLs clients confirmé par Thierry 07/09 | v3/p1b-durcissement | 07/09 |
+| P1c | Outillage et dette technique | ⬜ | | |
+| A1 | Tokens et fondations visuelles | ⬜ *parallélisable* | | |
+| A2 | Design system | ⬜ *parallélisable* | | |
+| P2 | RBAC 9 rôles | ⬜ | | |
+| C0 | Audit CRM et schéma cible de la relation client | ⬜ | | |
+| P3 | Extension du schéma métier | ⬜ | | |
+| A3 | Shell d'administration | ⬜ | | |
+| A4 | Tableau de bord | ⬜ | | |
+| A5 | CRM & Dossiers — noyau | ⬜ | | |
+| A6 | CRM — fiche client 360°, entrées, RDV, communications | ⬜ | | |
+| A7 | RH rhabillé | ⬜ | | |
+| P6-0 | Convergence des colonnes `payments` | ⬜ | | |
+| P6 | Finance | ⬜ | | |
+| P8 | CMS et contenus | ⬜ | | |
 | P9 | Portail client | ⬜ | | |
-| P10 | Site public | 🔴 mise de côté par Thierry (07/09) — Lot 1 et 2 ci-dessous restent valides (or mesuré AA, grille 8 piliers/`services`) ; la suite (navbar, hero, TrustBar, pages Ressources) a été rejetée pour non-conformité à la maquette (couleurs, visuel de couverture, typo) et n'a pas été fusionnée — conservée sur `p10-rejete-2026-09-07` pour référence, voir `NEXUS_RCA_P10_NON_CONFORMITE.md` et docs/DETTE.md #7. Reprise conditionnée à : rééchantillonnage réel des couleurs A1 depuis la maquette + décision de Thierry sur la voie visuelle de couverture. Interdiction de retoucher le site public avant ces deux préalables | v3/integration-v3 | 07/09 |
+| P10 | Site public | ⬜ | | |
 | P11 | Notifications multicanal | ⬜ | | |
 | P12 | Durcissement final | ⬜ | | |
 
@@ -284,7 +271,7 @@ g) Réponse brute de /payer/[token] : ni numero_transaction, ni verified_at,
 
 1. **ESLint** — configuration Strict, puis correction des erreurs. Le critère « lint = 0 » devient enfin vérifiable.
 2. **Types TypeScript** — régénérer via `generate_typescript_types` du connecteur Supabase les 12 tables sans type, dont `payments`. **Jamais à la main** : un type écrit à la main dérive dès la migration suivante. Corriger aussi `Demande.client_record_id` (absente) et `Contact` (9 colonnes manquantes).
-   *Si la décision n°1 (colonnes de `payments`) n'est pas tranchée, générer quand même — les doublons apparaîtront tels quels et documenteront le problème.*
+   *D1 est tranchée mais D6 (les valeurs de l'enum) ne l'est pas : générer quand même. Les colonnes en double apparaîtront telles quelles dans les types et documenteront le problème jusqu'à P6-0.*
 3. **Performance des policies** — les 118 `auth_rls_initplan` : `auth.uid()` → `(select auth.uid())`. Ajouter les index sur les 42 clés étrangères non couvertes (purement additif).
 4. **`gen_demande_ref()`** — passer de `MAX(...)+1` à une vraie séquence Postgres, **en conservant le format `DEM-YYYY-NNNNNN`**, séquence initialisée au maximum actuel. Une référence est un identifiant que le client cite au téléphone : le format ne change pas.
 5. **Nettoyage** — supprimer les 3 fichiers `.backup.*`.
@@ -320,7 +307,10 @@ Couche sémantique de couleurs appliquant D8 — bleu nuit, ivoire, or — au si
 
 **Statuts : six familles, jamais quinze couleurs.** Neutre (nouvelle demande, qualification) · Attente côté client (documents demandés, incomplet, paiement en attente) · En cours côté agence (étude, devis envoyé, traitement, transmis) · Succès (devis accepté, décision reçue, terminé) · Échec (refusé, annulé) · Inerte (archivé). Le badge est un point coloré + libellé en casse normale sur fond neutre, jamais une pastille pleine.
 
-**Typographie** — une seule famille, chiffres tabulaires obligatoires (`font-variant-numeric: tabular-nums`), sans quoi les colonnes de montants ne s'alignent pas. Échelle : 12 / 13 / 14 / 16 / 20 / 24 / 30. Graisse 600 maximum.
+**Typographie** — deux systèmes, une même échelle.
+*Administration et espace client* : une seule famille sans-serif, sobre et lisible en petit corps.
+*Site public* : serif éditorial de titrage + sans-serif de lecture, conformément à la direction validée en P10. Le serif ne descend jamais dans l'administration.
+Dans les deux cas : **chiffres tabulaires obligatoires** (`font-variant-numeric: tabular-nums`), sans quoi les colonnes de montants ne s'alignent pas. Échelle : 12 / 13 / 14 / 16 / 20 / 24 / 30, graisse 600 maximum en administration. Le serif retenu doit couvrir correctement les diacritiques français.
 
 **Espacement** — échelle de 4 px. Lignes de tableau : 44 px en confortable, 36 px en compact, choix mémorisé par utilisateur.
 
@@ -486,7 +476,11 @@ Aucune écriture, aucune migration, aucune fusion. C'est un audit et une proposi
 | Notifications | `notifications` | RÉUTILISER |
 | Profils | `profiles` | ÉTENDRE : `service_id`, `availability_status`, `is_active` |
 
-**À créer (20, pas 40)** : `services` · `documents_requis` · `dossier_etapes` · `dossier_partages` · `taches` · `affectations_hist` · `devis` · `devis_lignes` · `factures` · `facture_lignes` · `echeanciers` · `categories_compta` · `caisse_sessions` · `commissions` · `contenus_site` · `faq` · `partenaires` · `temoignages` · `pays_destinations` · `bureaux` · `notification_prefs` · `audit_log` · `agency_settings`.
+**À créer (23 tables)** : `services` · `documents_requis` · `dossier_etapes` · `dossier_partages` · `taches` · `affectations_hist` · `devis` · `devis_lignes` · `factures` · `facture_lignes` · `echeanciers` · `categories_compta` · `caisse_sessions` · `commissions` · `contenus_site` · `faq` · `partenaires` · `temoignages` · `pays_destinations` · `bureaux` · `notification_prefs` · `audit_log` · `agency_settings`.
+
+### Consolidation de l'entité personne — exécution du schéma cible de C0
+
+C0 produit le plan, P3 l'exécute, en migrations additives : backfill de `demandes.client_record_id` vers `clients` · rattachement des canaux d'entrée (`contacts`, `contact_demandes`, `appointment_requests`) à une fiche `clients` · extension de `clients` pour porter l'origine du contact et l'état prospect/client · trace de fusion pour le dédoublonnage d'A6. **Aucune fusion automatique, aucune suppression, aucune table `dossiers`.**
 
 **Nomenclature** : on garde le vocabulaire du dépôt (`demandes`, `payments`, `appointments`), pas celui du blueprint. Un plan ne renomme pas une base en production.
 
@@ -572,7 +566,7 @@ Barre latérale 240 px, repliable à 64 px (icônes, libellé au survol), logo, 
 ---
 
 ## A4 · Tableau de bord
-**Préalable** : A3. **Le bloc financier est bloqué par la décision n°1.**
+**Préalable** : A3. **Le bloc financier est bloqué par D1 et n'arrive qu'après P6-0.**
 
 Quatre blocs. Pas douze. Chacun avec sa source réelle et son état vide rédigé.
 
@@ -595,7 +589,9 @@ Vide : « Aucun dossier ne demande d'action aujourd'hui. » — pas quatre zéro
 
 **4. Alertes** — uniquement des faits vérifiables, chacun cliquable : dossiers hors délai, paiements en attente depuis plus de N jours, documents rejetés sans relance, dossiers sans agent depuis 48 h. Vide : « Aucune alerte. » sans couleur d'alarme.
 
-**Ne pas construire** : blocs financiers (décision n°1), scores de performance et de satisfaction (aucune source ne peut exister), courbe 30 jours (sous ~100 dossiers c'est un graphique de bruit), badges de santé système, citation décorative.
+**Ne pas construire** : blocs financiers (D1 — ils arrivent après P6-0), scores de performance et de satisfaction (aucune source ne peut exister), courbe 30 jours (sous ~100 dossiers c'est un graphique de bruit), badges de santé système, citation décorative.
+
+**Vocabulaire des statuts** : les valeurs employées dans cette requête sont indicatives. La liste faisant foi est celle de la machine à états de P3, et les valeurs réellement présentes dans l'enum `demande_status`. Aligner les trois avant d'écrire la requête, et n'en garder qu'une seule écriture dans tout le code.
 
 **Vérification avant de rendre** : pour chaque nombre visible, citer la requête qui le produit. Si elle ne peut pas être citée, le nombre est retiré.
 
@@ -821,7 +817,7 @@ Libellé officiel unique : **« Soumettre une demande »**, sur une route unique
 **E3 · Les huit pôles, tous affichés**
 Visa et mobilité · Digitalisation et technologie · Financement et incubation · Accompagnement business · Réseau international · Études internationales · Assurance et voyage · Services administratifs.
 
-Les huit proviennent de la table `services` et du CMS, jamais du code. Champs administrables : `featured` et `ordre_affichage`. Si une version ultérieure n'en met que certains en avant, la page doit annoncer « Expertises mises en avant » et proposer « Voir les huit pôles ». **Pour la livraison V3 : les huit sont affichés.**
+Les huit proviennent de la table `services` et du CMS, jamais du code. Champs administrables : **`is_featured`** et **`display_order`** — nomenclature anglaise, conforme à la règle issue de D1 et cohérente avec `is_verified` / `is_published`. Si une version ultérieure n'en met que certains en avant, la page doit annoncer « Expertises mises en avant » et proposer « Voir les huit pôles ». **Pour la livraison V3 : les huit sont affichés.**
 
 *Réconciliation préalable, à faire en P8 :* le dépôt compte **7** pages `services/*`, la maquette en montre **6**, la liste officielle en compte **8**, avec des intitulés qui ne se recouvrent pas exactement (« Stratégie & partenariats » de la maquette face à « Réseau international » et « Accompagnement business » de la liste). Établir la correspondance slug par slug avant d'alimenter `services`, et **poser des redirections 301 pour toute URL de service existante qui changerait** — ces adresses ont pu être partagées et sont indexées.
 
