@@ -1056,3 +1056,57 @@ une 4ᵉ nuance de vert/bleu sans raison.
   mais pas encore câblé dans un token, le site public utilise des classes
   Tailwind littérales `text-slate-*`, pas la couche sémantique `--ink`).
 - États actif/désactivé de `--brand` (seul le survol existe pour l'instant).
+
+## P9 — Audit de confidentialité du portail client (07/09/2026)
+
+**1. Diagnostic fonctionnel : 4 manques réels sur les 13 points attendus, pas un portail entier.**
+Lecture complète des pages `/dashboard/client/*` existantes. Fonctionnent
+réellement : suivi d'avancement (`Timeline`, `demande_status_history`),
+téléversement + documents manquants (`DocumentsManager.tsx`, upload/
+téléchargement/suppression réels), suivi des paiements, rendez-vous,
+échange conseiller (messages + WhatsApp), notifications, protection IDOR
+en code. **Manquent réellement** : consultation/acceptation d'un devis
+(aucune UI, aucune route client), factures/reçus téléchargeables par le
+client (texte "Reçus disponibles" décoratif, aucun lien), documents
+officiels délivrés par l'agence (le bouton PDF actuel produit un
+récapitulatif de dossier, pas une attestation), demandes de correction
+structurées (traité hors système par WhatsApp aujourd'hui).
+
+**2. Bug réel trouvé par l'audit, pas dans la liste de départ : `payments.client_id` NULL empêchait un vrai client de voir ses propres paiements.**
+La policy RLS `payments_select` n'autorise un client qu'via
+`client_id = auth.uid()` (`payments.client_id` référence `profiles.id`,
+vérifié par la contrainte FK). Le code des pages client filtre pourtant
+par `client_email`, une colonne que cette policy ne connaît pas — RLS
+s'applique indépendamment du filtre de la requête et bloquait la ligne
+avant même que le filtre par e-mail n'ait un effet. Sur les 3 paiements
+réels, 1 avait un e-mail correspondant à un profil existant
+(`bfkankou@gmail.com`) mais `client_id` jamais renseigné.
+**Corrigé** : migration 068, backfill idempotent (email → profil existant
+uniquement, jamais un lien inventé). Les 2 paiements restants sans
+`client_id` n'ont aucun profil correspondant (personne n'a de compte pour
+ces e-mails) — `client_id` reste `NULL` à raison, aucune fuite ni bug là.
+Même vérification faite sur `payment_links` (policy identique) : 2 lignes
+sans `client_id`, aucune n'a de profil correspondant non plus — rien à
+corriger, la route de création (`app/api/payment-links/create/route.ts`)
+fait déjà la recherche par e-mail correctement pour tout nouveau lien.
+
+**3. Points vérifiés sûrs par l'audit (pas supposés) :**
+- `select("*")` sur 4 pages client (`demandes`, `demandes/[id]`,
+  `page.tsx`, `paiements`) : aucune fuite aujourd'hui, chaque champ
+  traversant une frontière `"use client"` est nommé explicitement.
+  Pattern fragile à long terme (même motif que la fuite `payment_links`
+  de P1b) — à resserrer en `select("colonnes précises")` si ces pages
+  sont retouchées, pas fait ici (hors périmètre du bug signalé).
+- `demande_notes` : RLS confirmée `admin`/`super_admin` uniquement, sur
+  toutes les commandes — protection base, pas seulement applicative.
+- `app/api/demandes/[id]/{documents,messages}` : `service_role` utilisé
+  mais avec un contrôle de propriété réel en code, qui bloque
+  effectivement la réponse (`if (!access.ok)` / `if (!isStaff && !isOwner)`).
+- `demandes` : RLS (`client_id = auth.uid()` ou e-mail) redondante avec le
+  contrôle en code — défense en profondeur réelle, pas juste applicative.
+
+**4. Prérequis confirmé pour construire "consultation/acceptation d'un devis" (pas un bug, la fonctionnalité n'existe pas encore) :**
+`devis` n'a aujourd'hui qu'une policy `is_staff` — aucun accès client.
+`client_record_id` (vers `clients`, cohérent avec D7) est bien renseigné
+sur le devis réel existant. La policy à écrire lors de la construction de
+cette fonctionnalité : jointure `clients.profile_id = auth.uid()`.
