@@ -53,12 +53,12 @@ export function Hero() {
       {/* Orb central rayonnant */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[40rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/15 blur-[140px]"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[40rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/15 blur-[140px]"
       />
-      {/* Blob top-right (orange) */}
+      {/* Blob top-right (or) */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/10 blur-[120px]"
+        className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-brand/10 blur-[120px]"
       />
       {/* Blob bottom-left (bleu) */}
       <div
@@ -69,15 +69,15 @@ export function Hero() {
       {/* Bordure inférieure éclairée */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
       />
 
       <div className="relative mx-auto max-w-5xl text-center">
         {/* Eyebrow badge avec pulse dot orange */}
-        <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md transition-all duration-300 hover:border-nexus-orange-500/50 hover:bg-nexus-orange-500/15">
+        <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md transition-all duration-300 hover:border-brand/50 hover:bg-brand/15">
           <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
           </span>
           {t("eyebrow")}
         </span>
@@ -86,12 +86,12 @@ export function Hero() {
         <h1 className="mt-6 font-display text-3xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
           {t("title_start")}
           <span className="relative inline-block">
-            <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+            <span className="text-brand">
               {t("title_accent")}
             </span>
             <span
               aria-hidden
-              className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+              className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
             />
           </span>
           {t("title_end")}
@@ -106,7 +106,7 @@ export function Hero() {
         <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:justify-center">
           <Link
             href="/demande/complet"
-            className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_10px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+            className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_10px_30px_-10px_rgba(201,162,39,0.5)] outline-none transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(201,162,39,0.6)] focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-nexus-blue-950"
           >
             <span
               aria-hidden
@@ -134,7 +134,7 @@ export function Hero() {
                 key={trust.label}
                 className="inline-flex items-center gap-1.5 transition-colors duration-200 hover:text-white/85"
               >
-                <Icon className="h-3 w-3 text-nexus-orange-300" />
+                <Icon className="h-3 w-3 text-brand" />
                 {trust.label}
               </span>
             );
@@ -148,19 +148,17 @@ export function Hero() {
               key={stat.label}
               className={`group/stat relative overflow-hidden rounded-2xl border bg-white/[0.04] px-5 py-4 backdrop-blur-md ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/[0.07] ${
                 stat.highlight
-                  ? "border-nexus-orange-400/30 hover:border-nexus-orange-400/60"
+                  ? "border-brand/30 hover:border-brand/60"
                   : "border-white/10 hover:border-white/25"
               }`}
             >
               <div
                 aria-hidden
-                className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover/stat:bg-nexus-orange-500/20"
+                className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover/stat:bg-brand/20"
               />
               <div className="relative">
                 <p className="font-display text-2xl font-bold leading-none text-white sm:text-3xl">
-                  <span className="bg-gradient-to-r from-nexus-orange-300 to-nexus-orange-500 bg-clip-text text-transparent">
-                    {stat.value}
-                  </span>
+                  <span className="text-brand">{stat.value}</span>
                 </p>
                 <p className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
                   {stat.label}

@@ -17,6 +17,16 @@
   --surface-elevated: 255 255 255;   /* cards */
   --surface-sunken: 248 250 252;     /* inputs, sub-blocs */
   --surface-overlay: 255 255 255;    /* modals, popovers */
+  /* Surface ivoire (D8, site public) — #F5F3F0, valeur du jeu de palette
+     déjà validé par Thierry (07/09/2026), pas une teinte inventée pour ce
+     token. Comblait un vide explicitement laissé ouvert en A1
+     (docs/DETTE.md : "surfaces ivoire vs blanc ... pour le site public").
+     Contrastes mesurés (07/09/2026) : texte navy dessus 18,01:1, ink-muted
+     6,84:1 — tous deux ≥ AA. L'or reste interdit en texte/icône fine
+     dessus (2,48:1, échec même au seuil composant ≥3:1) : uniquement en
+     fond de bouton plein (texte navy dessus), jamais en avant-plan ici.
+     Blanc sur ivoire est quasi invisible (1,11:1) : ne jamais superposer. */
+  --surface-ivory: 245 243 240;       /* #F5F3F0 */
 
   /* Ink (texte) */
   --ink: 15 23 42;                   /* slate-900 */
@@ -79,6 +89,9 @@
   --surface-elevated: 5 15 61;       /* nexus-blue-900 */
   --surface-sunken: 4 11 47;
   --surface-overlay: 10 26 107;      /* nexus-blue-800 */
+  /* Symétrie structurelle uniquement — le mode sombre n'est pas livré en
+     V3 (interdit, A1). Réutilise --brand-subtle sombre déjà défini. */
+  --surface-ivory: 59 46 9;
 
   --ink: 241 245 249;                /* slate-100 */
   --ink-muted: 148 163 184;          /* slate-400 */

@@ -42,6 +42,10 @@ const config: Config = {
           elevated: "rgb(var(--surface-elevated) / <alpha-value>)",
           sunken: "rgb(var(--surface-sunken) / <alpha-value>)",
           overlay: "rgb(var(--surface-overlay) / <alpha-value>)",
+          // D8/P10 — surface ivoire du site public (#F5F3F0), distincte
+          // du blanc. Jamais de texte or ni blanc dessus (contrastes
+          // insuffisants, voir globals.css).
+          ivory: "rgb(var(--surface-ivory) / <alpha-value>)",
         },
         ink: {
           DEFAULT: "rgb(var(--ink) / <alpha-value>)",
