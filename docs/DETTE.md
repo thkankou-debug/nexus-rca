@@ -1108,6 +1108,30 @@ M2 tranché : pas d'image pour l'instant, fond navy sobre — aucun
 composant de couverture à construire, le hero mobile reste sur son
 dégradé navy existant.
 
+**M11 — proposition de dessin présentée (08/09/2026), rien intégré.**
+Vérifié avant de dessiner : aucun fichier logo réel n'existe dans le
+dépôt (`public/`) — le seul "logo" est le composant codé
+`components/ui/Logo.tsx` (carré à lignes croisées + dégradé navy→orange
++ pastille orange). Le monogramme "N" visible dans
+`maquette-site-public.png` n'a jamais été construit comme un fichier
+réel, seulement illustré sur la maquette de référence. Thierry confirme
+(question posée) : "le logo existant" = le glyphe codé actuel, pas le
+monogramme de la maquette — aucun nouveau dessin à inventer, juste un
+recolorage vectoriel fidèle.
+
+Proposition publiée en Artifact (3 variantes SVG, tailles 24/32/40px,
+contrastes mesurés par paire) : sur fond navy (glyphe or sur navy
+`#021030`, texte "NEXUS" ivoire/"RCA" or), sur fond clair (glyphe navy
+sur or, texte navy uniquement), monochrome (une encre, pastille
+retirée). Écart volontaire documenté dans l'artifact : "RCA" ne peut pas
+rester or sur fond clair (2,48:1, échec du seuil AA déjà mesuré en A1)
+— passé en navy, distingué par la taille plutôt que la couleur.
+
+**Rien n'est encore intégré à `Logo.tsx` ni ailleurs** : M11 exige
+explicitement une validation avant tout code ("aucune version
+intermédiaire ne part en production"). En attente du retour de Thierry
+sur l'artifact avant d'écrire quoi que ce soit.
+
 ## P1c — Revérification (07/09/2026)
 
 **1. 32 clés étrangères sans index couvrant, sur les 42 corrigées en P1c d'origine.**
