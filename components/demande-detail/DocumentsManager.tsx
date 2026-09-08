@@ -57,15 +57,18 @@ function formatSize(bytes: number): string {
 export function DocumentsManager({
   demandeId,
   canDelete,
+  isStaff = false,
 }: {
   demandeId: string;
   canDelete: boolean;
+  isStaff?: boolean;
 }) {
   const supabase = createClient();
   const [docs, setDocs] = useState<Doc[] | null>(null);
   const [requests, setRequests] = useState<DocRequest[] | null>(null);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [resolvingId, setResolvingId] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
 
   const refresh = async () => {
@@ -102,6 +105,32 @@ export function DocumentsManager({
       toast.error("Téléchargement impossible");
     } finally {
       setDownloadingId(null);
+    }
+  };
+
+  const handleResolveRequest = async (r: DocRequest, statut: "fourni" | "annule") => {
+    const label = statut === "fourni" ? "marquer résolue" : "annuler";
+    if (!confirm(`Confirmer : ${label} la demande "${r.type_document}" ?`)) return;
+    setResolvingId(r.id);
+    try {
+      const res = await fetch(
+        `/api/demandes/${demandeId}/documents-requests/${r.id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ statut }),
+        }
+      );
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Action impossible");
+      }
+      toast.success(statut === "fourni" ? "Demande marquée résolue" : "Demande annulée");
+      await refresh();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Action impossible");
+    } finally {
+      setResolvingId(null);
     }
   };
 
@@ -235,13 +264,35 @@ export function DocumentsManager({
                         ✓ Fourni
                       </span>
                     ) : (
-                      <button
-                        type="button"
-                        onClick={() => setShowAddModal(true)}
-                        className="shrink-0 rounded-md bg-nexus-orange-500 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white hover:bg-nexus-orange-600"
-                      >
-                        Téléverser
-                      </button>
+                      <div className="flex shrink-0 flex-col items-end gap-1">
+                        <button
+                          type="button"
+                          onClick={() => setShowAddModal(true)}
+                          className="rounded-md bg-nexus-orange-500 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white hover:bg-nexus-orange-600"
+                        >
+                          Téléverser
+                        </button>
+                        {isStaff && (
+                          <div className="flex gap-1">
+                            <button
+                              type="button"
+                              onClick={() => handleResolveRequest(r, "fourni")}
+                              disabled={resolvingId === r.id}
+                              className="rounded-md border border-green-200 bg-white px-2 py-0.5 text-[10px] font-semibold text-green-700 hover:bg-green-50 disabled:opacity-50"
+                            >
+                              Résolu
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleResolveRequest(r, "annule")}
+                              disabled={resolvingId === r.id}
+                              className="rounded-md border border-slate-200 bg-white px-2 py-0.5 text-[10px] font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+                            >
+                              Annuler
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     )}
                   </div>
                 </li>

@@ -152,7 +152,13 @@ export function StaffDossierDetail({
               {
                 id: "documents",
                 label: "Documents",
-                content: <DocumentsManager demandeId={demande.id} canDelete={true} />,
+                content: (
+                  <DocumentsManager
+                    demandeId={demande.id}
+                    canDelete={true}
+                    isStaff={true}
+                  />
+                ),
               },
               {
                 id: "messages",
