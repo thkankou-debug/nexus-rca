@@ -1209,3 +1209,29 @@ appel direct à l'API (en contournant l'absence de bouton) est refusé
 403 — pas seulement caché côté interface.
 
 `tsc`/`lint`/`build` : 0 erreur.
+
+**9. Lot 4 livré : clôture manuelle d'une demande de correction sans document (07/09/2026), P9 terminée.**
+Investigation avant code (correction d'une estimation antérieure "0 code
+nécessaire") : `demande_documents_requests` couvrait déjà la création
+d'une demande de correction en texte libre (`RequestDocumentModal.tsx` →
+`POST /api/demandes/[id]/documents-requests`, `type_document` en saisie
+libre avec suggestions, pas un select fermé) et son affichage au client
+(`DocumentsManager.tsx`, auto-résolution si un document correspondant est
+téléversé). **Manquait réellement** : aucun moyen de refermer une demande
+non résolue par un nouveau document (ex. correction traitée par téléphone
+ou WhatsApp) — ni bouton, ni route API, seule une modification directe en
+base pouvait la sortir de "en_attente".
+
+Corrigé : `PATCH /api/demandes/[id]/documents-requests/[requestId]`
+(staff uniquement, vérifié côté serveur par le rôle réel, pas par
+l'absence de bouton), limité aux transitions `en_attente` → `fourni` ou
+`annule` (409 si la demande est déjà refermée, 404 si `requestId` n'
+appartient pas au `demande_id` fourni). Aucune nouvelle table, aucune
+nouvelle colonne — réutilise le CHECK `('en_attente','fourni','annule')`
+déjà en place. Boutons "Résolu"/"Annuler" ajoutés dans
+`DocumentsManager.tsx`, visibles uniquement si `isStaff` (nouveau prop,
+`false` par défaut côté client, `true` passé explicitement par
+`StaffDossierDetail.tsx`).
+
+`tsc`/`lint`/`build` : 0 erreur. **P9 (Portail client) est maintenant
+terminée** — les 13 points attendus sont couverts.

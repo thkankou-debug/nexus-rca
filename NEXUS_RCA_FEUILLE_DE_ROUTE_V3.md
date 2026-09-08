@@ -121,7 +121,7 @@ Le RÉCAP indique l'URL de prévisualisation pour que Thierry vérifie en ligne.
 | P6-0 | Convergence des colonnes `payments` | ✅ terminée — revérifié en direct 07/09 : `payments.status`/`amount` (colonnes canoniques D1) 100% renseignées, 0 valeur nulle sur les 3 paiements réels | v3/integration-v3 | 07/09 |
 | P6 | Finance | ✅ close par Thierry le 06/09 (confirmé alors), revérifié en direct 07/09 : `devis`/`factures` réels en base (1 ligne chacun, données de test réelles, pas fictives). Rapports journaliers/annuels toujours non construits (seul le mensuel existe), reporté sciemment — docs/DETTE.md #14 | v3/integration-v3 | 07/09 |
 | P8 | CMS et contenus | ✅ terminée — revérifié en direct 07/09 : `services` = 14 lignes réelles (12 du seed initial + 2 ajoutées le 07/09 pour les pôles homepage), cohérent avec l'historique | v3/integration-v3 | 07/09 |
-| P9 | Portail client | 🟡 en cours — Lots 0 à 3 livrés 07/09 (IDOR devis/factures, consultation/acceptation devis, factures + reçus téléchargeables, documents officiels via `uploaded_by_role`). Reste : Lot 4 (corrections structurées) — probablement 0 code, `demande_documents_requests` existant suffit déjà, confirmation à obtenir — voir docs/DETTE.md | v3/integration-v3 | 07/09 |
+| P9 | Portail client | ✅ terminée — Lots 0 à 4 livrés 07/09 (IDOR devis/factures, consultation/acceptation devis, factures + reçus téléchargeables, documents officiels via `uploaded_by_role`, clôture manuelle des demandes de correction sans document via `PATCH .../documents-requests/[requestId]`). Les 13 points attendus de P9 sont couverts — voir docs/DETTE.md | v3/integration-v3 | 07/09 |
 | P10 | Site public | ⬜ | | |
 | P11 | Notifications multicanal | ⬜ | | |
 | P12 | Durcissement final | ⬜ | | |
