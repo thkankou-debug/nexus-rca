@@ -1088,6 +1088,26 @@ M2 (direction visuelle de la couverture) reste l'unique blocage réel
 avant de construire le visuel du hero mobile — sans réponse de Thierry,
 aucune image n'est ajoutée (E4, "aucun contenu inventé").
 
+**Décisions reçues et exécutées (08/09/2026) : bascule retirée, bug plus profond trouvé et corrigé au passage.**
+`ThemeToggle` retiré de la Navbar publique (desktop + mobile), composant
+supprimé (seul consommateur). En vérifiant sa suppression, découverte
+d'un mécanisme plus large et non lié à ce bouton : `app/layout.tsx`
+appliquait `.dark` sur `<html>` via un script "no-flash" lisant la
+préférence système du visiteur, **sur toutes les pages, y compris
+publiques**, indépendamment de tout bouton visible. Impact réel et
+immédiat sur le travail du jour : `bg-surface-ivory` (clair `#F5F3F0`,
+sombre brun `#3B2E09`) combiné à du texte navy fixe rendait les cartes
+de prestations d'`accompagnement-business`/`reseau-international`
+illisibles pour tout visiteur avec le mode sombre système activé.
+Corrigé : le script est limité à `location.pathname.startsWith('/dashboard')`
+— comportement de `DashboardShell.tsx` (admin) inchangé, site public
+neutralisé. `lib/theme.ts` conservé tel quel (toujours consommé par
+l'admin, hors décision du jour qui ne portait que sur le public).
+
+M2 tranché : pas d'image pour l'instant, fond navy sobre — aucun
+composant de couverture à construire, le hero mobile reste sur son
+dégradé navy existant.
+
 ## P1c — Revérification (07/09/2026)
 
 **1. 32 clés étrangères sans index couvrant, sur les 42 corrigées en P1c d'origine.**
