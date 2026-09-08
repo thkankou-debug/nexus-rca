@@ -106,7 +106,7 @@ export function Hero() {
         <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:justify-center">
           <Link
             href="/demande/complet"
-            className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_10px_30px_-10px_rgba(201,162,39,0.5)] outline-none transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(201,162,39,0.6)] focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-nexus-blue-950"
+            className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_10px_30px_-10px_rgba(185,151,96,0.5)] outline-none transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.6)] focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-nexus-blue-950"
           >
             <span
               aria-hidden

@@ -180,7 +180,7 @@ export function Navbar() {
 
             <Link
               href="/demande/complet"
-              className="group/cta relative inline-flex items-center gap-1.5 overflow-hidden whitespace-nowrap rounded-full bg-brand px-4 py-2 text-sm font-bold text-on-brand shadow-[0_8px_24px_-8px_rgba(201,162,39,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_12px_30px_-8px_rgba(201,162,39,0.6)]"
+              className="group/cta relative inline-flex items-center gap-1.5 overflow-hidden whitespace-nowrap rounded-full bg-brand px-4 py-2 text-sm font-bold text-on-brand shadow-[0_8px_24px_-8px_rgba(185,151,96,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_12px_30px_-8px_rgba(185,151,96,0.6)]"
             >
               <span
                 aria-hidden
@@ -281,13 +281,13 @@ export function Navbar() {
               {/* NEXUS CONNECT highlight card */}
               <Link
                 href="/nexus-connect"
-                className="group relative flex items-center gap-3 overflow-hidden rounded-2xl border border-brand/40 bg-gradient-to-br from-brand/15 via-brand/10 to-transparent p-4 shadow-[0_12px_30px_-12px_rgba(201,162,39,0.40)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-brand/60"
+                className="group relative flex items-center gap-3 overflow-hidden rounded-2xl border border-brand/40 bg-gradient-to-br from-brand/15 via-brand/10 to-transparent p-4 shadow-[0_12px_30px_-12px_rgba(185,151,96,0.40)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-brand/60"
               >
                 <div
                   aria-hidden
                   className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-brand/20 blur-2xl"
                 />
-                <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand to-brand-hover text-on-brand shadow-[0_8px_20px_-8px_rgba(201,162,39,0.5)]">
+                <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand to-brand-hover text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)]">
                   <Sparkles className="h-5 w-5" />
                 </div>
                 <div className="relative flex-1 min-w-0">
@@ -380,7 +380,7 @@ export function Navbar() {
               <div className="space-y-2 pt-2">
                 <Link
                   href="/demande/complet"
-                  className="group/cta relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-5 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(201,162,39,0.6)] transition-all duration-300 ease-out hover:bg-brand-hover"
+                  className="group/cta relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-5 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 ease-out hover:bg-brand-hover"
                 >
                   <span
                     aria-hidden

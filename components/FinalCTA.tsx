@@ -23,14 +23,14 @@ export function FinalCTA() {
       >
         <defs>
           <linearGradient id="conv-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="rgba(201,162,39,0)" />
-            <stop offset="50%" stopColor="rgba(201,162,39,0.6)" />
-            <stop offset="100%" stopColor="rgba(201,162,39,0)" />
+            <stop offset="0%" stopColor="rgba(185,151,96,0)" />
+            <stop offset="50%" stopColor="rgba(185,151,96,0.6)" />
+            <stop offset="100%" stopColor="rgba(185,151,96,0)" />
           </linearGradient>
           <linearGradient id="conv-grad-2" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="rgba(201,162,39,0)" />
-            <stop offset="50%" stopColor="rgba(201,162,39,0.5)" />
-            <stop offset="100%" stopColor="rgba(201,162,39,0)" />
+            <stop offset="0%" stopColor="rgba(185,151,96,0)" />
+            <stop offset="50%" stopColor="rgba(185,151,96,0.5)" />
+            <stop offset="100%" stopColor="rgba(185,151,96,0)" />
           </linearGradient>
           <linearGradient id="conv-grad-3" x1="0%" y1="100%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="rgba(99,102,241,0)" />
@@ -113,7 +113,7 @@ export function FinalCTA() {
         <div className="mt-10 flex justify-center">
           <Link
             href="/demande/complet"
-            className="group/cta relative inline-flex items-center justify-center gap-2.5 overflow-hidden rounded-2xl bg-brand px-8 py-4 text-base font-bold text-on-brand shadow-[0_15px_40px_-10px_rgba(201,162,39,0.6)] outline-none transition-all duration-300 hover:-translate-y-1 hover:bg-brand-hover hover:shadow-[0_25px_55px_-12px_rgba(201,162,39,0.7)] focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-nexus-blue-950 sm:text-lg"
+            className="group/cta relative inline-flex items-center justify-center gap-2.5 overflow-hidden rounded-2xl bg-brand px-8 py-4 text-base font-bold text-on-brand shadow-[0_15px_40px_-10px_rgba(185,151,96,0.6)] outline-none transition-all duration-300 hover:-translate-y-1 hover:bg-brand-hover hover:shadow-[0_25px_55px_-12px_rgba(185,151,96,0.7)] focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-nexus-blue-950 sm:text-lg"
           >
             <span
               aria-hidden
