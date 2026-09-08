@@ -122,7 +122,7 @@ Le RÉCAP indique l'URL de prévisualisation pour que Thierry vérifie en ligne.
 | P6 | Finance | ✅ close par Thierry le 06/09 (confirmé alors), revérifié en direct 07/09 : `devis`/`factures` réels en base (1 ligne chacun, données de test réelles, pas fictives). Rapports journaliers/annuels toujours non construits (seul le mensuel existe), reporté sciemment — docs/DETTE.md #14 | v3/integration-v3 | 07/09 |
 | P8 | CMS et contenus | ✅ terminée — revérifié en direct 07/09 : `services` = 14 lignes réelles (12 du seed initial + 2 ajoutées le 07/09 pour les pôles homepage), cohérent avec l'historique | v3/integration-v3 | 07/09 |
 | P9 | Portail client | ✅ terminée — Lots 0 à 4 livrés 07/09 (IDOR devis/factures, consultation/acceptation devis, factures + reçus téléchargeables, documents officiels via `uploaded_by_role`, clôture manuelle des demandes de correction sans document via `PATCH .../documents-requests/[requestId]`). Les 13 points attendus de P9 sont couverts — voir docs/DETTE.md | v3/integration-v3 | 07/09 |
-| P10 | Site public | ⬜ | | |
+| P10 | Site public | 🟡 en cours — Étape 1 (livrables de validation E1-E4) livrée 07/09 : contrastes mesurés, migration 072 (`is_featured`/`display_order`), audit CTA réel, réconciliation des 8 pôles. Reste : décisions de Thierry sur E2/E3/E5-E8 et maquette mobile, puis développement — voir docs/P10_LIVRABLES.md | v3/integration-v3 | 07/09 |
 | P11 | Notifications multicanal | ⬜ | | |
 | P12 | Durcissement final | ⬜ | | |
 
