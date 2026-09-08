@@ -345,6 +345,13 @@ export default async function ClientDemandeDetailPage({
               </div>
               <div className="space-y-2 p-4">
                 <Link
+                  href="/dashboard/client/devis"
+                  className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-nexus-orange-300 hover:bg-nexus-orange-50"
+                >
+                  <FileText className="h-3.5 w-3.5 text-nexus-orange-500" />
+                  Mes devis
+                </Link>
+                <Link
                   href="/dashboard/client/rdv/nouveau"
                   className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-nexus-orange-300 hover:bg-nexus-orange-50"
                 >

@@ -1124,3 +1124,31 @@ la base que le compte client réel (`yatolamarie04@gmail.com`, lié au
 devis existant via `clients.profile_id`) continue de passer le contrôle
 — aucune régression sur le seul cas réel existant. `tsc`/`lint`/`build` :
 0 erreur.
+
+**6. Lot 1 livré : consultation et acceptation d'un devis par le client (07/09/2026).**
+Migration 069 : policies `SELECT` client sur `devis`/`devis_lignes`
+(jointure `client_record_id → clients.profile_id = auth.uid()`, cohérente
+avec D7 et avec le Lot 0). Même faille IDOR que le Lot 0 trouvée et
+corrigée au passage sur `GET /api/devis/[id]` (aucun contrôle client
+avant ce lot). Nouvelle route `POST /api/devis/[id]/accept`, distincte de
+`/api/devis/[id]/status` (réservée staff, `assertPermission("devis.send")`,
+rapporte une décision transmise hors ligne) : réservée au rôle `client`,
+vérifie la propriété, refuse hors statut "envoye", et fige un instantané
+(montant, devise, lignes triées) dans `audit_log` avec IP et user-agent —
+pas un simple booléen. La protection contre une modification silencieuse
+après acceptation existait déjà : `PATCH /api/devis/[id]` refuse toute
+édition hors statut "brouillon" (donc "envoye" et "accepté" sont déjà
+couverts, aucun changement nécessaire).
+
+Page `/dashboard/client/devis` non reliée à `DashboardShell.tsx` (gelé) —
+même situation déjà documentée en A6 #10 (notifications) : lien ajouté
+depuis la fiche dossier existante (`demandes/[id]/page.tsx`, bloc
+"Actions"), pas de nouvelle entrée de menu.
+
+**Non testé de bout en bout, documenté plutôt que caché** : le seul devis
+réel de la base est encore au statut "brouillon" (jamais transmis) — il
+n'apparaît donc pas sur les pages client (comportement voulu). Impossible
+de tester l'acceptation en conditions réelles sans faire passer ce devis
+en "envoye", ce qui modifierait une donnée réelle sans qu'on me l'ait
+demandé. Logique vérifiée par lecture de code + policies RLS confirmées
+en base, pas par un parcours utilisateur complet.
