@@ -1,6 +1,6 @@
 # NEXUS RCA — FEUILLE DE ROUTE V3
 **Document unique d'exécution. Source de vérité du projet.**
-Version 1.2 · 8 septembre 2026 · Consolide les amendements 1 à 6 (dont M1-M10, exigences mobiles P10) et les décisions D1 à D8
+Version 1.3 · 8 septembre 2026 · Consolide les amendements 1 à 7 (dont M1-M13, exigences mobiles et logo P10) et les décisions D1 à D8
 Décideur : Thierry F. Kankou · Exécutant : Claude Code
 
 ---
@@ -839,6 +839,44 @@ La maquette de page d'accueil fournie fait référence pour la composition, la p
 **Sobriété.** Pas de textes secondaires minuscules, pas de boutons excessivement arrondis, pas d'accumulation de cadres, badges et ornements. La confiance vient de la composition, de la clarté des services et des informations vérifiées.
 
 *Note 08/09 : la maquette mobile présentée le 07/09 (Artifact, cadre d'iPhone simulé, trois cercles Europe/Bangui/Canada) enfreint M2 et M10 telles qu'arrêtées ci-dessus — elle n'est pas approuvée, ne pas la reprendre telle quelle. Voir docs/DETTE.md, section P10.*
+
+**M11 · Logo.** Le logo existant est conservé — aucun nouveau monogramme n'est introduit, ni dans les maquettes ni dans le code. **Il est décliné en version bleu nuit et or pour tous les usages à l'écran** (décision du 8 septembre 2026) : le dégradé orangé disparaît de l'interface, l'orange ne subsiste nulle part.
+
+Exigences de la déclinaison :
+- **Format vectoriel** (SVG), pas un rendu bitmap du logo actuel recoloré — un recolorage d'image se voit et vieillit mal.
+- **Trois variantes minimum** : sur fond bleu nuit (marque en or et ivoire), sur fond clair (marque en bleu nuit, accent or), et une variante monochrome pour les usages contraints — favicon, PDF, tampon, impression noir et blanc.
+- **Lisibilité à petite taille** vérifiée à 24, 32 et 40 px de haut : c'est la taille réelle dans un en-tête mobile. Un symbole qui perd son dessin à 24 px est à simplifier.
+- **Contrastes mesurés** pour chaque variante sur son fond, comme tout le reste.
+- Le fichier d'origine est conservé et versionné ; la déclinaison ne le remplace pas, elle s'ajoute.
+
+**Point d'attention :** la déclinaison est un travail de dessin, pas de code. Elle est présentée à Thierry pour validation avant d'être intégrée, et aucune version intermédiaire ne part en production.
+
+**M12 · Déploiement du logo sur toute la plateforme.** Le remplacement est global. Inventaire à établir et à cocher un par un — les trois derniers sont ceux qu'on oublie systématiquement :
+
+| Support | Format requis |
+|---|---|
+| En-tête public, administration, espace client | SVG |
+| Favicon | SVG + ICO de repli, testé en onglet clair et sombre |
+| Icônes PWA (`manifest.json`) et `apple-touch-icon` | PNG, toutes les tailles déclarées |
+| Image de partage Open Graph et Twitter | PNG — c'est la vignette qui s'affiche quand un lien est envoyé par WhatsApp |
+| Gabarits d'e-mail (Resend) | PNG hébergé en absolu, avec `alt` — beaucoup de clients de messagerie bloquent les images |
+| Documents PDF | voir M13 |
+| Écran de chargement PWA, page 404, page de maintenance | SVG |
+
+Aucun ancien fichier n'est supprimé : les nouveaux s'ajoutent, les références basculent, la suppression vient en P12 une fois qu'aucun chemin n'y renvoie plus.
+
+**M13 · En-tête de document unique pour tous les PDF.** Le logo doit figurer sur les devis, factures, reçus, contrats, fiches de paie et documents RH.
+
+**Un seul composant d'en-tête, pas un logo copié dans chaque générateur.** Il est alimenté par `agency_settings` et rend : le logo, la dénomination juridique, la forme juridique, le RCCM, le numéro fiscal, l'adresse et les coordonnées — c'est-à-dire les mentions que D8/E8 rendent déjà administrables, et que la réglementation OHADA impose de toute façon sur une facture. Un logo seul sur une facture sans mentions légales est un document plus joli mais toujours irrégulier : autant traiter les deux d'un coup.
+
+Conséquences techniques :
+- `pdf-lib` n'embarque pas de SVG directement : prévoir un export PNG haute résolution du logo, ou le tracer en primitives vectorielles. À arbitrer en entrée de P6.
+- Prévoir la **variante monochrome** : beaucoup de documents seront imprimés en noir et blanc à Bangui.
+- Le pied de page porte la pagination et les mentions légales, et il est solidaire du même composant.
+
+**Les documents déjà émis ne sont jamais régénérés.** Un reçu ou une fiche de paie réédité avec une autre identité visuelle crée un doute sur son authenticité. Les nouveaux documents portent le nouvel en-tête ; les anciens restent tels qu'ils ont été délivrés. C'est la même règle que D5.
+
+**Séquencement.** Les documents financiers (devis, factures, reçus) relèvent de P6. Les documents RH — fiches de paie, contrats, attestations — existent déjà et sont modifiés en A7, sans toucher aux fiches passées. Le composant d'en-tête est écrit une fois, en entrée de P6, et réutilisé par A7.
 
 ### Exigences officielles — arrêtées par Thierry le 5 septembre 2026
 
