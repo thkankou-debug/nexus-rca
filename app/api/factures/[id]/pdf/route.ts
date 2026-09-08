@@ -42,7 +42,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     const { data: facture } = await admin
       .from("factures")
       .select(
-        "id, reference, status, amount, currency, due_date, created_at, demandes(nom_complet, email, service, agent_id), facture_lignes(description, quantity, unit_price, amount, ordre)"
+        "id, reference, status, amount, currency, due_date, created_at, client_record_id, clients(profile_id), demandes(nom_complet, email, service, agent_id), facture_lignes(description, quantity, unit_price, amount, ordre)"
       )
       .eq("id", params.id)
       .single();
@@ -58,12 +58,24 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       currency: string;
       due_date: string | null;
       created_at: string;
+      client_record_id: string | null;
+      clients: { profile_id: string | null } | null;
       demandes: { nom_complet: string; email: string; service: string; agent_id: string | null } | null;
       facture_lignes: { description: string; quantity: number; unit_price: number; amount: number; ordre: number }[];
     };
 
+    const isStaff = role === "admin" || role === "super_admin";
     if (role === "agent" && factureRow.demandes?.agent_id !== user.id) {
       return NextResponse.json({ success: false, error: "Accès refusé" }, { status: 403 });
+    }
+    // Client : IDOR — un client ne peut télécharger que la facture liée à sa
+    // propre fiche `clients` (client_record_id -> clients.profile_id).
+    // Absent de tout contrôle avant ce correctif : n'importe quel client
+    // authentifié pouvait récupérer la facture de n'importe qui.
+    if (!isStaff && role !== "agent") {
+      if (factureRow.clients?.profile_id !== user.id) {
+        return NextResponse.json({ success: false, error: "Accès refusé" }, { status: 403 });
+      }
     }
 
     const pdfDoc = await PDFDocument.create();

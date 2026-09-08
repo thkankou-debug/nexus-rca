@@ -1110,3 +1110,17 @@ fait déjà la recherche par e-mail correctement pour tout nouveau lien.
 `client_record_id` (vers `clients`, cohérent avec D7) est bien renseigné
 sur le devis réel existant. La policy à écrire lors de la construction de
 cette fonctionnalité : jointure `clients.profile_id = auth.uid()`.
+
+**5. IDOR réelle trouvée et corrigée (Lot 0, 07/09/2026) : `/api/devis/[id]/pdf` et `/api/factures/[id]/pdf` n'avaient aucun contrôle pour le rôle `client`.**
+Trouvée en préparant le Lot 1 de P9 (accès devis pour le client), pas en
+cherchant une faille spécifiquement. Les deux routes ne restreignaient
+que le rôle `agent` (à ses dossiers assignés) ; un `client` authentifié
+pouvait télécharger le devis ou la facture de n'importe qui en devinant
+un UUID — aucune vérification de propriété du tout pour ce rôle.
+**Corrigé** : ajout de la jointure `client_record_id → clients.profile_id
+= auth.uid()`, refus 403 sinon, pour tout rôle qui n'est ni staff
+(`admin`/`super_admin`) ni `agent` (déjà couvert). Vérifié en direct sur
+la base que le compte client réel (`yatolamarie04@gmail.com`, lié au
+devis existant via `clients.profile_id`) continue de passer le contrôle
+— aucune régression sur le seul cas réel existant. `tsc`/`lint`/`build` :
+0 erreur.

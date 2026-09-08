@@ -43,7 +43,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     const { data: devis } = await admin
       .from("devis")
       .select(
-        "id, reference, status, amount, currency, valid_until, created_at, demandes(nom_complet, email, service, agent_id), devis_lignes(description, quantity, unit_price, amount, ordre)"
+        "id, reference, status, amount, currency, valid_until, created_at, client_record_id, clients(profile_id), demandes(nom_complet, email, service, agent_id), devis_lignes(description, quantity, unit_price, amount, ordre)"
       )
       .eq("id", params.id)
       .single();
@@ -59,12 +59,24 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       currency: string;
       valid_until: string | null;
       created_at: string;
+      client_record_id: string | null;
+      clients: { profile_id: string | null } | null;
       demandes: { nom_complet: string; email: string; service: string; agent_id: string | null } | null;
       devis_lignes: { description: string; quantity: number; unit_price: number; amount: number; ordre: number }[];
     };
 
+    const isStaff = role === "admin" || role === "super_admin";
     if (role === "agent" && devisRow.demandes?.agent_id !== user.id) {
       return NextResponse.json({ success: false, error: "Accès refusé" }, { status: 403 });
+    }
+    // Client : IDOR — un client ne peut télécharger que le devis lié à sa
+    // propre fiche `clients` (client_record_id -> clients.profile_id).
+    // Absent de tout contrôle avant ce correctif : n'importe quel client
+    // authentifié pouvait récupérer le devis de n'importe qui.
+    if (!isStaff && role !== "agent") {
+      if (devisRow.clients?.profile_id !== user.id) {
+        return NextResponse.json({ success: false, error: "Accès refusé" }, { status: 403 });
+      }
     }
 
     const pdfDoc = await PDFDocument.create();
