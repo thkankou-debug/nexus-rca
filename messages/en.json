@@ -1730,5 +1730,35 @@
     "cta_final_foot2": "Written report",
     "cta_final_foot3": "Reply within 72h",
     "cta_final_foot4": "Full confidentiality"
+  },
+
+  "ServiceAccompagnementBusiness": {
+    "eyebrow": "Business advisory",
+    "title_start": "Strategy and business development: ",
+    "title_accent": "from vision to action",
+    "intro_1": "Nexus RCA supports you in defining and implementing your business strategy. We help you clarify your ambitions, set your priorities, and build an action plan suited to the realities of your market.",
+    "intro_2": "Our human, personalized approach involves your teams at every stage to align your vision, objectives, and actions. From planning to implementation follow-up, we help you adjust your decisions, strengthen your autonomy, and measure the progress made.",
+    "prestations_title": "Our services",
+    "presta_1": "Strategic diagnosis and clarification of objectives",
+    "presta_2": "Strategic planning and definition of priorities",
+    "presta_3": "Development of action plans and implementation support",
+    "presta_4": "Business development strategy",
+    "presta_5": "Team mobilization around shared objectives",
+    "presta_6": "Results monitoring and adjustment of actions",
+    "cta_primary": "Submit a request"
+  },
+
+  "ServiceReseauInternational": {
+    "eyebrow": "International network",
+    "title_start": "Support between ",
+    "title_accent": "Bangui, Europe and Canada",
+    "intro_1": "Nexus RCA draws on its relationships between Bangui, Europe and Canada to facilitate professional introductions, partner searches, and the coordination of cross-border projects, based on the agency's actual capabilities.",
+    "prestations_title": "Our services",
+    "presta_1": "Professional introductions between the three regions",
+    "presta_2": "Partner search and qualification",
+    "presta_3": "Cross-border project coordination",
+    "context_title": "Why this network matters",
+    "context_body": "International investment and cooperation drive innovation through R&D and the adoption of advanced technologies, diversify supply and export chains to strengthen industry resilience, and improve productivity by developing a highly skilled workforce.",
+    "cta_primary": "Submit a request"
   }
 }

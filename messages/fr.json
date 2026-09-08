@@ -1730,5 +1730,35 @@
     "cta_final_foot2": "Bilan écrit",
     "cta_final_foot3": "Réponse sous 72h",
     "cta_final_foot4": "Confidentialité absolue"
+  },
+
+  "ServiceAccompagnementBusiness": {
+    "eyebrow": "Accompagnement business",
+    "title_start": "Stratégie et développement des affaires : ",
+    "title_accent": "de la vision à l'action",
+    "intro_1": "Nexus RCA vous accompagne dans la définition et la mise en œuvre de votre stratégie d'affaires. Nous vous aidons à clarifier vos ambitions, à établir vos priorités et à construire un plan d'action adapté aux réalités de votre marché.",
+    "intro_2": "Notre approche humaine et personnalisée associe vos équipes à chaque étape pour aligner votre vision, vos objectifs et vos actions. De la planification au suivi de la mise en œuvre, nous vous accompagnons pour ajuster vos décisions, renforcer votre autonomie et mesurer les progrès accomplis.",
+    "prestations_title": "Nos prestations",
+    "presta_1": "Diagnostic stratégique et clarification des objectifs",
+    "presta_2": "Planification stratégique et définition des priorités",
+    "presta_3": "Élaboration de plans d'action et accompagnement à leur mise en œuvre",
+    "presta_4": "Stratégie de développement des affaires",
+    "presta_5": "Mobilisation des équipes autour des objectifs",
+    "presta_6": "Suivi des résultats et ajustement des actions",
+    "cta_primary": "Soumettre une demande"
+  },
+
+  "ServiceReseauInternational": {
+    "eyebrow": "Réseau international",
+    "title_start": "Un accompagnement entre ",
+    "title_accent": "Bangui, l'Europe et le Canada",
+    "intro_1": "Nexus RCA met à profit ses relations entre Bangui, l'Europe et le Canada pour faciliter la mise en relation professionnelle, la recherche de partenaires et la coordination de projets transfrontaliers, selon les capacités réelles de l'agence.",
+    "prestations_title": "Nos prestations",
+    "presta_1": "Mise en relation professionnelle entre les trois zones",
+    "presta_2": "Recherche et qualification de partenaires",
+    "presta_3": "Coordination de projets transfrontaliers",
+    "context_title": "Pourquoi ce réseau compte",
+    "context_body": "L'investissement et la coopération internationaux stimulent l'innovation par la R&D et l'intégration de technologies de pointe, diversifient les chaînes d'approvisionnement et d'exportation pour renforcer la résilience des industries, et améliorent la productivité en formant une main-d'œuvre qualifiée.",
+    "cta_primary": "Soumettre une demande"
   }
 }

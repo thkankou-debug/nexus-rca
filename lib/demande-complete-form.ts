@@ -37,6 +37,8 @@ export const SERVICES_COMPLETS = [
   "Incubateur & Financement",
   "Recouvrement de documents",
   "Transferts d'argent",
+  "Accompagnement business",
+  "Réseau international",
   "Autre service administratif",
 ] as const;
 export type ServiceComplet = (typeof SERVICES_COMPLETS)[number];
@@ -97,6 +99,21 @@ export const CATEGORIES_PAR_SERVICE: Record<ServiceComplet, string[]> = {
     "Transfert international sortant",
     "Change de devises",
     "Mobile Money",
+    "Autre",
+  ],
+  "Accompagnement business": [
+    "Diagnostic stratégique et clarification des objectifs",
+    "Planification stratégique et définition des priorités",
+    "Élaboration de plans d'action et accompagnement à leur mise en œuvre",
+    "Stratégie de développement des affaires",
+    "Mobilisation des équipes autour des objectifs",
+    "Suivi des résultats et ajustement des actions",
+    "Autre",
+  ],
+  "Réseau international": [
+    "Mise en relation professionnelle",
+    "Recherche et qualification de partenaires",
+    "Coordination de projets transfrontaliers",
     "Autre",
   ],
   "Autre service administratif": [
