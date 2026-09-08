@@ -1057,6 +1057,47 @@ une 4ᵉ nuance de vert/bleu sans raison.
   Tailwind littérales `text-slate-*`, pas la couche sémantique `--ink`).
 - États actif/désactivé de `--brand` (seul le survol existe pour l'instant).
 
+**4. Complément du 07/09/2026 : surface ivoire du site public créée, migration or terminée sur `Hero.tsx`/`FinalCTA.tsx`.**
+Demandé explicitement par Thierry au titre d'A1 (pas de P10), en réponse
+au rapport `docs/P10_LIVRABLES.md`. `--surface-ivory` (`#F5F3F0`, valeur
+du jeu de palette déjà validé par Thierry, pas une teinte inventée pour
+ce token) ajoutée dans `globals.css` et `tailwind.config.ts`
+(`surface.ivory`). Comble le point ci-dessus ("surfaces ivoire vs blanc
+... site public"), le point admin reste hors périmètre. Contrastes
+mesurés : navy dessus 18,01:1, ink-muted 6,84:1 (OK) ; or dessus 2,48:1
+(échec — l'or reste interdit en texte/icône sur ivoire, uniquement en
+fond de bouton plein).
+
+`Hero.tsx` et `FinalCTA.tsx` : tous les `nexus-orange-*` requalifiés un
+par un vers `bg-brand`/`text-brand`/`border-brand` (Navbar.tsx/Footer.tsx
+l'étaient déjà depuis un lot antérieur, Hero/FinalCTA étaient restés en
+retard). Boutons CTA principaux : `bg-brand`/`text-on-brand` (6,84:1),
+`hover:bg-brand-hover` (5,37:1), `focus-visible:ring-focus` avec
+`ring-offset-2` sur `nexus-blue-950` (anneau seul seul sur l'or : 1,73:1,
+insuffisant — d'où l'offset vers le fond navy de la section, 4,19:1, qui
+résout le problème). `FinalCTA.tsx` : libellé "Soumettre mon dossier" →
+"Soumettre une demande" (E2), même route `/demande/complet` que les
+autres CTA principaux.
+
+**5. Bug réel trouvé en finissant la migration, pas cherché : `rgba(201,162,39,*)` (l'or *rejeté* `#C9A227`) encore écrit en dur dans des `box-shadow`/SVG de `Navbar.tsx` (4 occurrences) et `PublicHero.tsx` (utilisé par 13 pages publiques).**
+La correction du 07/09 (entrée #1 ci-dessus) avait remplacé la valeur
+dans `globals.css`/`tailwind.config.ts` et toutes les classes `bg-brand`/
+`text-brand`, mais pas les chaînes `rgba(...)` codées en dur dans les
+effets de lueur — invisibles à un grep sur `bg-brand`. J'ai reproduit
+cette même valeur fausse par copie dans `Hero.tsx`/`FinalCTA.tsx` avant
+de m'en apercevoir. Corrigé partout vers `rgba(185,151,96,*)` (`#B99760`,
+la valeur validée) ; grep de contrôle sur `201,\s*162,\s*39`, `C9A227` et
+`D4AF37` : 0 occurrence restante dans tout le dépôt. Profité du même
+passage pour ajouter le `focus-visible` manquant sur le CTA de
+`PublicHero.tsx` (même traitement que `Hero.tsx`/`FinalCTA.tsx`), absent
+sur les 13 pages qui l'utilisent jusqu'ici.
+
+`tsc`/`lint`/`build` : 0 erreur sur les deux commits. Pas de vérification
+visuelle en navigateur possible dans cet environnement (aucun outil
+d'automatisation navigateur disponible) — vérification faite par calcul
+WCAG sur les valeurs réelles utilisées dans le code, et par lecture du
+HTML rendu (`curl` sur le serveur de développement), pas à l'œil.
+
 ## P9 — Audit de confidentialité du portail client (07/09/2026)
 
 **1. Diagnostic fonctionnel : 4 manques réels sur les 13 points attendus, pas un portail entier.**
