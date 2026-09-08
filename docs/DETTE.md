@@ -1056,6 +1056,38 @@ Ne pas réutiliser cette maquette telle quelle pour le hero mobile réel —
 nouvelle proposition à construire conforme à M1-M10, voir
 NEXUS_RCA_FEUILLE_DE_ROUTE_V3.md, section P10.
 
+**M6/M7/M8 livrés (08/09/2026), M2 toujours bloqué.**
+Sélecteur de langue porté à 44×44 px minimum (M6). Formulaire public
+générique (`DemandeFormComplete.tsx`) : tous les champs passaient en
+`text-sm` (14px), sous le seuil qui déclenche le zoom automatique de
+Safari iOS au focus — corrigé en `text-base` (16px) sur les quatre
+composants de champ partagés, `inputMode`/`autoComplete` déduits du
+type, champ téléphone qui ne déclarait pas `type="tel"` corrigé (M7/M8).
+Header public fixe (`Navbar.tsx`) : `pt-[env(safe-area-inset-top)]`
+ajouté — `viewport-fit=cover` était déjà posé dans `app/layout.tsx` mais
+rien ne compensait l'encoche sur un header `fixed top-0`.
+
+Déjà conformes, vérifiés sans modification : `Hero.tsx` n'utilise ni
+`h-screen` ni `100vh` (M8) ; sauvegarde automatique en `localStorage` du
+formulaire de demande déjà en place (M7, "erreur réseau n'efface jamais
+la saisie") ; ratio de longueur FR/EN du titre du hero (56 vs 48
+caractères, ratio 1,17) et du sous-titre dans la tolérance ±30 % (M9).
+
+**Trouvé en vérifiant M6, pas cherché : un vrai bouton de bascule
+clair/sombre (`ThemeToggle.tsx`) est exposé sur la Navbar publique**
+(desktop et mobile), seul endroit où il est utilisé dans tout le dépôt.
+Il fonctionne réellement (classe `.dark` posée sur `<html>`, tokens
+`--surface`/`--ink` basculent). C'est une contradiction directe avec
+l'interdit explicite d'A1 : *"Interdits — ... mode sombre en V3"*.
+**Non retiré ici** : c'est une fonctionnalité déjà utilisable par de
+vrais visiteurs, la retirer est une décision de Thierry, pas une
+correction de bug silencieuse — voir aussi la règle de prudence
+production de CLAUDE.md.
+
+M2 (direction visuelle de la couverture) reste l'unique blocage réel
+avant de construire le visuel du hero mobile — sans réponse de Thierry,
+aucune image n'est ajoutée (E4, "aucun contenu inventé").
+
 ## P1c — Revérification (07/09/2026)
 
 **1. 32 clés étrangères sans index couvrant, sur les 42 corrigées en P1c d'origine.**
