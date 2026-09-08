@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -84,6 +84,8 @@ export type Database = {
         Row: {
           cle: string
           id: string
+          is_published: boolean
+          is_verified: boolean
           updated_at: string
           updated_by: string | null
           valeur: Json
@@ -91,6 +93,8 @@ export type Database = {
         Insert: {
           cle: string
           id?: string
+          is_published?: boolean
+          is_verified?: boolean
           updated_at?: string
           updated_by?: string | null
           valeur?: Json
@@ -98,6 +102,8 @@ export type Database = {
         Update: {
           cle?: string
           id?: string
+          is_published?: boolean
+          is_verified?: boolean
           updated_at?: string
           updated_by?: string | null
           valeur?: Json
@@ -119,6 +125,7 @@ export type Database = {
           appointment_object: string
           assigned_to: string | null
           city: string
+          client_record_id: string | null
           consent_accuracy: boolean
           consent_contact: boolean
           consent_validation: boolean
@@ -151,6 +158,7 @@ export type Database = {
           appointment_object: string
           assigned_to?: string | null
           city: string
+          client_record_id?: string | null
           consent_accuracy?: boolean
           consent_contact?: boolean
           consent_validation?: boolean
@@ -183,6 +191,7 @@ export type Database = {
           appointment_object?: string
           assigned_to?: string | null
           city?: string
+          client_record_id?: string | null
           consent_accuracy?: boolean
           consent_contact?: boolean
           consent_validation?: boolean
@@ -215,6 +224,13 @@ export type Database = {
             columns: ["assigned_to"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointment_requests_client_record_id_fkey"
+            columns: ["client_record_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
             referencedColumns: ["id"]
           },
         ]
@@ -497,6 +513,7 @@ export type Database = {
           created_by: string | null
           email: string | null
           id: string
+          merged_into_id: string | null
           nom: string
           notes: string | null
           numero_identification: string | null
@@ -518,6 +535,7 @@ export type Database = {
           created_by?: string | null
           email?: string | null
           id?: string
+          merged_into_id?: string | null
           nom: string
           notes?: string | null
           numero_identification?: string | null
@@ -539,6 +557,7 @@ export type Database = {
           created_by?: string | null
           email?: string | null
           id?: string
+          merged_into_id?: string | null
           nom?: string
           notes?: string | null
           numero_identification?: string | null
@@ -559,6 +578,13 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clients_merged_into_id_fkey"
+            columns: ["merged_into_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
             referencedColumns: ["id"]
           },
           {
@@ -761,6 +787,7 @@ export type Database = {
       }
       contacts: {
         Row: {
+          client_record_id: string | null
           created_at: string
           email: string
           id: string
@@ -780,6 +807,7 @@ export type Database = {
           user_agent: string | null
         }
         Insert: {
+          client_record_id?: string | null
           created_at?: string
           email: string
           id?: string
@@ -799,6 +827,7 @@ export type Database = {
           user_agent?: string | null
         }
         Update: {
+          client_record_id?: string | null
           created_at?: string
           email?: string
           id?: string
@@ -818,6 +847,13 @@ export type Database = {
           user_agent?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "contacts_client_record_id_fkey"
+            columns: ["client_record_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "contacts_processed_by_fkey"
             columns: ["processed_by"]
@@ -876,6 +912,7 @@ export type Database = {
           mime_type: string
           storage_path: string
           uploaded_by: string | null
+          uploaded_by_role: string | null
         }
         Insert: {
           categorie?: string | null
@@ -887,6 +924,7 @@ export type Database = {
           mime_type: string
           storage_path: string
           uploaded_by?: string | null
+          uploaded_by_role?: string | null
         }
         Update: {
           categorie?: string | null
@@ -898,6 +936,7 @@ export type Database = {
           mime_type?: string
           storage_path?: string
           uploaded_by?: string | null
+          uploaded_by_role?: string | null
         }
         Relationships: [
           {
@@ -2662,6 +2701,8 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          is_published: boolean
+          is_verified: boolean
           logo_url: string | null
           nom: string
           ordre_affichage: number
@@ -2673,6 +2714,8 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          is_published?: boolean
+          is_verified?: boolean
           logo_url?: string | null
           nom: string
           ordre_affichage?: number
@@ -2684,6 +2727,8 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          is_published?: boolean
+          is_verified?: boolean
           logo_url?: string | null
           nom?: string
           ordre_affichage?: number
@@ -2898,7 +2943,7 @@ export type Database = {
       payments: {
         Row: {
           agent_id: string | null
-          amount: number | null
+          amount: number
           amount_xaf: number | null
           cash_receipt_no: string | null
           client_email: string | null
@@ -2927,7 +2972,7 @@ export type Database = {
           preuve_path: string | null
           reference: string | null
           service: string
-          status: Database["public"]["Enums"]["payment_status"] | null
+          status: Database["public"]["Enums"]["payment_status"]
           statut: Database["public"]["Enums"]["payment_status"]
           stripe_payment_id: string | null
           stripe_session_id: string | null
@@ -2938,7 +2983,7 @@ export type Database = {
         }
         Insert: {
           agent_id?: string | null
-          amount?: number | null
+          amount: number
           amount_xaf?: number | null
           cash_receipt_no?: string | null
           client_email?: string | null
@@ -2967,7 +3012,7 @@ export type Database = {
           preuve_path?: string | null
           reference?: string | null
           service: string
-          status?: Database["public"]["Enums"]["payment_status"] | null
+          status: Database["public"]["Enums"]["payment_status"]
           statut?: Database["public"]["Enums"]["payment_status"]
           stripe_payment_id?: string | null
           stripe_session_id?: string | null
@@ -2978,7 +3023,7 @@ export type Database = {
         }
         Update: {
           agent_id?: string | null
-          amount?: number | null
+          amount?: number
           amount_xaf?: number | null
           cash_receipt_no?: string | null
           client_email?: string | null
@@ -3007,7 +3052,7 @@ export type Database = {
           preuve_path?: string | null
           reference?: string | null
           service?: string
-          status?: Database["public"]["Enums"]["payment_status"] | null
+          status?: Database["public"]["Enums"]["payment_status"]
           statut?: Database["public"]["Enums"]["payment_status"]
           stripe_payment_id?: string | null
           stripe_session_id?: string | null
@@ -3684,7 +3729,9 @@ export type Database = {
           delai_indicatif: string | null
           description: string | null
           devise: string
+          display_order: number | null
           id: string
+          is_featured: boolean
           nom: string
           ordre_affichage: number
           slug: string
@@ -3699,7 +3746,9 @@ export type Database = {
           delai_indicatif?: string | null
           description?: string | null
           devise?: string
+          display_order?: number | null
           id?: string
+          is_featured?: boolean
           nom: string
           ordre_affichage?: number
           slug: string
@@ -3714,7 +3763,9 @@ export type Database = {
           delai_indicatif?: string | null
           description?: string | null
           devise?: string
+          display_order?: number | null
           id?: string
+          is_featured?: boolean
           nom?: string
           ordre_affichage?: number
           slug?: string
@@ -3836,6 +3887,8 @@ export type Database = {
           contenu: string
           created_at: string
           id: string
+          is_published: boolean
+          is_verified: boolean
           note: number | null
           source: string | null
           status: string
@@ -3848,6 +3901,8 @@ export type Database = {
           contenu: string
           created_at?: string
           id?: string
+          is_published?: boolean
+          is_verified?: boolean
           note?: number | null
           source?: string | null
           status?: string
@@ -3860,6 +3915,8 @@ export type Database = {
           contenu?: string
           created_at?: string
           id?: string
+          is_published?: boolean
+          is_verified?: boolean
           note?: number | null
           source?: string | null
           status?: string
@@ -4336,6 +4393,9 @@ export type Database = {
         | "mtn_money"
         | "cash"
         | "bank_transfer"
+        | "card"
+        | "other"
+        | "express_union"
       payment_status:
         | "non_paye"
         | "partiel"
@@ -4348,6 +4408,7 @@ export type Database = {
         | "validated"
         | "refunded"
         | "voided"
+        | "partial"
       quick_service_type:
         | "photocopie"
         | "impression"
@@ -4567,6 +4628,9 @@ export const Constants = {
         "mtn_money",
         "cash",
         "bank_transfer",
+        "card",
+        "other",
+        "express_union",
       ],
       payment_status: [
         "non_paye",
@@ -4580,6 +4644,7 @@ export const Constants = {
         "validated",
         "refunded",
         "voided",
+        "partial",
       ],
       quick_service_type: [
         "photocopie",
