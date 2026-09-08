@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { Button } from "@/components/ui/Button";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { LocaleToggle } from "@/components/layout/LocaleToggle";
 import { SERVICES } from "@/lib/services";
 import { cn, whatsappLink } from "@/lib/utils";
@@ -154,7 +153,6 @@ export function Navbar() {
           {/* Desktop nav — actions à droite */}
           <div className="hidden items-center gap-1 lg:flex xl:gap-2">
             <LocaleToggle variant={scrolled ? "ink" : "light"} compact />
-            <ThemeToggle variant={scrolled ? "ink" : "light"} />
 
             <Link
               href="/nexus-connect"
@@ -197,7 +195,6 @@ export function Navbar() {
           {/* Mobile actions Premium tech */}
           <div className="flex items-center gap-2 lg:hidden">
             <LocaleToggle variant={scrolled ? "ink" : "light"} compact />
-            <ThemeToggle variant={scrolled ? "ink" : "light"} />
             <button
               onClick={() => setMobileOpen((v) => !v)}
               className={cn(
