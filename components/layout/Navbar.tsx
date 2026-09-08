@@ -76,7 +76,10 @@ export function Navbar() {
     <>
       <header
         className={cn(
-          "fixed left-0 right-0 top-0 z-50 transition-all duration-300",
+          // M8 — pt-[env(...)] : sur les appareils a encoche (viewport-fit
+          // cover, app/layout.tsx), un header fixe top-0 sans cette marge
+          // se retrouve partiellement sous l'encoche/la barre de statut.
+          "fixed left-0 right-0 top-0 z-50 pt-[env(safe-area-inset-top)] transition-all duration-300",
           scrolled
             ? "border-b border-slate-200/80 bg-white/80 shadow-[0_8px_24px_-12px_rgba(12,28,64,0.12)] backdrop-blur-xl"
             : "bg-transparent"

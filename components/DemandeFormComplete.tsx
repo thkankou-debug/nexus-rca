@@ -500,6 +500,7 @@ export function DemandeFormComplete() {
                   dataField="telephone"
                 >
                   <PremiumInput
+                    type="tel"
                     value={form.telephone}
                     onChange={(v) => update("telephone", v)}
                     placeholder="+236 ..."
@@ -1081,6 +1082,20 @@ function FormField({
   );
 }
 
+// M8 — inputmode/autocomplete deduits du type, pour le clavier mobile
+// adapte et l'autoremplissage. font-size 16px obligatoire (text-base) :
+// en dessous, Safari iOS zoome automatiquement sur le champ au focus.
+const INPUT_MODE_BY_TYPE: Record<string, string> = {
+  email: "email",
+  tel: "tel",
+  number: "numeric",
+  url: "url",
+};
+const AUTOCOMPLETE_BY_TYPE: Record<string, string> = {
+  email: "email",
+  tel: "tel",
+};
+
 function PremiumInput({
   value,
   onChange,
@@ -1095,10 +1110,12 @@ function PremiumInput({
   return (
     <input
       type={type}
+      inputMode={INPUT_MODE_BY_TYPE[type] as React.HTMLAttributes<HTMLInputElement>["inputMode"]}
+      autoComplete={AUTOCOMPLETE_BY_TYPE[type]}
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 px-4 py-2.5 text-sm text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-nexus-orange-500/30 [color-scheme:dark]"
+      className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 px-4 py-2.5 text-base text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-nexus-orange-500/30 [color-scheme:dark]"
     />
   );
 }
@@ -1129,7 +1146,7 @@ function PasswordField({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           autoComplete="new-password"
-          className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 py-2.5 pl-4 pr-11 text-sm text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-nexus-orange-500/30 [color-scheme:dark]"
+          className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 py-2.5 pl-4 pr-11 text-base text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-nexus-orange-500/30 [color-scheme:dark]"
         />
         <button
           type="button"
@@ -1238,7 +1255,7 @@ function PremiumTextarea({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       rows={rows}
-      className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 px-4 py-3 text-sm leading-relaxed text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-nexus-orange-500/30"
+      className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 px-4 py-3 text-base leading-relaxed text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-nexus-orange-500/30"
     />
   );
 }
@@ -1261,7 +1278,7 @@ function PremiumSelect({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       disabled={disabled}
-      className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 px-4 py-2.5 text-sm text-white backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-nexus-orange-500/30 disabled:opacity-50 [color-scheme:dark]"
+      className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 px-4 py-2.5 text-base text-white backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-nexus-orange-500/30 disabled:opacity-50 [color-scheme:dark]"
     >
       {options.map((o) => (
         <option key={o} value={o} className="bg-nexus-blue-950 text-white">
