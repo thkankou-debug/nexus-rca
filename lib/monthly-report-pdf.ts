@@ -43,7 +43,11 @@ export async function buildMonthlyReportPdf(summary: MonthSummary): Promise<Uint
   const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
   const nexusBlue = rgb(0.047, 0.11, 0.251); // #0C1C40
-  const nexusOrange = rgb(1, 0.4, 0); // #FF6600
+  // M12-bis (08/09) : l'orange ne subsiste sur aucun PDF (seul le logo le
+  // conserve). Or en remplissage/filet ; les montants "en attente" passent
+  // sur le token semantique --warning (A1), jamais un orange local.
+  const nexusGold = rgb(0.725, 0.592, 0.376); // #B99760
+  const nexusWarning = rgb(0.761, 0.255, 0.047); // #C2410C
   const grayDark = rgb(0.15, 0.2, 0.3);
   const grayMid = rgb(0.4, 0.45, 0.5);
   const grayLight = rgb(0.85, 0.87, 0.9);
@@ -95,7 +99,7 @@ export async function buildMonthlyReportPdf(summary: MonthSummary): Promise<Uint
 
   // ─── Header navy ───────────────────────────────────────────────────────
   drawRect(0, PAGE_H - 130, PAGE_W, 130, nexusBlue);
-  drawRect(0, PAGE_H - 130, 6, 130, nexusOrange);
+  drawRect(0, PAGE_H - 130, 6, 130, nexusGold);
 
   drawText("NEXUS RCA", {
     x: MARGIN_X,
@@ -182,7 +186,7 @@ export async function buildMonthlyReportPdf(summary: MonthSummary): Promise<Uint
     const y = cursorY - row * (tileH + 5) - tileH;
 
     drawRect(x, y, tileW, tileH, grayLight);
-    drawRect(x, y + tileH - 3, tileW, 3, nexusOrange);
+    drawRect(x, y + tileH - 3, tileW, 3, nexusGold);
     drawText(t.label.toUpperCase(), {
       x: x + 8,
       y: y + tileH - 14,
@@ -203,7 +207,7 @@ export async function buildMonthlyReportPdf(summary: MonthSummary): Promise<Uint
   // ─── Helper section ────────────────────────────────────────────────────
   const sectionTitle = (title: string) => {
     newPageIfNeeded(40);
-    drawRect(MARGIN_X, cursorY - 4, 4, 16, nexusOrange);
+    drawRect(MARGIN_X, cursorY - 4, 4, 16, nexusGold);
     drawText(title, {
       x: MARGIN_X + 10,
       y: cursorY,
@@ -235,7 +239,7 @@ export async function buildMonthlyReportPdf(summary: MonthSummary): Promise<Uint
       newPageIfNeeded(16);
       drawText(p.devise, { x: MARGIN_X + 10, y: cursorY, size: 10, color: grayDark });
       drawText(formatMoney(p.total, p.devise), { x: MARGIN_X + 110, y: cursorY, size: 10, color: grayDark });
-      drawText(formatMoney(p.restant, p.devise), { x: MARGIN_X + 230, y: cursorY, size: 10, color: nexusOrange });
+      drawText(formatMoney(p.restant, p.devise), { x: MARGIN_X + 230, y: cursorY, size: 10, color: nexusWarning });
       drawText(String(p.count), { x: MARGIN_X + 400, y: cursorY, size: 10, color: grayDark });
       cursorY -= 14;
     }
@@ -283,7 +287,7 @@ export async function buildMonthlyReportPdf(summary: MonthSummary): Promise<Uint
     for (const d of summary.depensesEnAttente) {
       newPageIfNeeded(14);
       drawText(`${d.devise} : ${formatMoney(d.total, d.devise)}  (${d.count})`, {
-        x: MARGIN_X + 20, y: cursorY, size: 10, color: nexusOrange,
+        x: MARGIN_X + 20, y: cursorY, size: 10, color: nexusWarning,
       });
       cursorY -= 14;
     }
@@ -344,7 +348,7 @@ export async function buildMonthlyReportPdf(summary: MonthSummary): Promise<Uint
       const client = (p.client_nom || "Client inconnu").slice(0, 22);
       drawText(`${ref}  ${client}`, { x: MARGIN_X + 10, y: cursorY, size: 9, color: grayDark });
       drawText(formatMoney(p.montant_restant, p.devise), {
-        x: MARGIN_X + 380, y: cursorY, size: 9, font: helveticaBold, color: nexusOrange,
+        x: MARGIN_X + 380, y: cursorY, size: 9, font: helveticaBold, color: nexusWarning,
       });
       cursorY -= 13;
     }

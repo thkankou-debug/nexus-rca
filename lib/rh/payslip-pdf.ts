@@ -75,7 +75,10 @@ export async function buildPayslipPdf(opts: BuildPayslipOptions): Promise<Uint8A
   const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
   const nexusBlue = rgb(0.047, 0.11, 0.251);
-  const nexusOrange = rgb(1, 0.4, 0);
+  // M12-bis (08/09) : l'orange ne subsiste sur aucun PDF (seul le logo le
+  // conserve). Or en remplissage uniquement ; le texte reste toujours en
+  // bleu nuit, jamais en or (meme regle de contraste qu'a l'ecran, A1).
+  const nexusGold = rgb(0.725, 0.592, 0.376);
   const grayDark = rgb(0.15, 0.2, 0.3);
   const grayMid = rgb(0.4, 0.45, 0.5);
   const grayLight = rgb(0.85, 0.87, 0.9);
@@ -119,7 +122,7 @@ export async function buildPayslipPdf(opts: BuildPayslipOptions): Promise<Uint8A
 
   // ─── Header navy ───────────────────────────────────────────────────────
   drawRect(0, PAGE_H - 130, PAGE_W, 130, nexusBlue);
-  drawRect(0, PAGE_H - 130, 6, 130, nexusOrange);
+  drawRect(0, PAGE_H - 130, 6, 130, nexusGold);
 
   drawText("NEXUS RCA", {
     x: MARGIN_X,
@@ -166,7 +169,7 @@ export async function buildPayslipPdf(opts: BuildPayslipOptions): Promise<Uint8A
     y,
     size: 9,
     font: helveticaBold,
-    color: nexusOrange,
+    color: nexusBlue,
   });
   y -= 18;
 
@@ -215,7 +218,7 @@ export async function buildPayslipPdf(opts: BuildPayslipOptions): Promise<Uint8A
     y: y - 14,
     size: 9,
     font: helveticaBold,
-    color: nexusOrange,
+    color: nexusBlue,
   });
   drawText(
     `Du ${formatDate(payslip.periode_debut)} au ${formatDate(payslip.periode_fin)}`,
@@ -236,7 +239,7 @@ export async function buildPayslipPdf(opts: BuildPayslipOptions): Promise<Uint8A
     y,
     size: 9,
     font: helveticaBold,
-    color: nexusOrange,
+    color: nexusBlue,
   });
   y -= 14;
 
@@ -325,7 +328,7 @@ export async function buildPayslipPdf(opts: BuildPayslipOptions): Promise<Uint8A
       y,
       size: 9,
       font: helveticaBold,
-      color: nexusOrange,
+      color: nexusBlue,
     });
     y -= 14;
 
@@ -338,20 +341,20 @@ export async function buildPayslipPdf(opts: BuildPayslipOptions): Promise<Uint8A
 
   // ─── Net à payer ─────────────────────────────────────────────────────────
   y -= 14;
-  drawRect(MARGIN_X, y - 36, PAGE_W - 2 * MARGIN_X, 36, nexusOrange);
+  drawRect(MARGIN_X, y - 36, PAGE_W - 2 * MARGIN_X, 36, nexusGold);
   drawText("NET A PAYER", {
     x: MARGIN_X + 12,
     y: y - 24,
     size: 13,
     font: helveticaBold,
-    color: white,
+    color: nexusBlue,
   });
   drawText(formatMoney(payslip.salaire_net), {
     x: PAGE_W - MARGIN_X - 160,
     y: y - 24,
     size: 14,
     font: helveticaBold,
-    color: white,
+    color: nexusBlue,
   });
   y -= 50;
 

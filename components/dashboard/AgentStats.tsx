@@ -259,7 +259,9 @@ async function exportPDF(rows: (AgentStatsRow & { score: number })[], periodLabe
   const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
   const nexusBlue = rgb(0.047, 0.11, 0.251);
-  const nexusOrange = rgb(1, 0.4, 0);
+  // M12-bis (08/09) : bandeau plein -> or (remplissage), l'orange ne
+  // subsiste sur aucun PDF (seul le logo le conserve).
+  const nexusGold = rgb(0.725, 0.592, 0.376);
   const slateDark = rgb(0.118, 0.161, 0.231);
   const slateMid = rgb(0.392, 0.455, 0.545);
   const grayHeaderBg = rgb(0.973, 0.98, 0.988);
@@ -275,7 +277,7 @@ async function exportPDF(rows: (AgentStatsRow & { score: number })[], periodLabe
   };
 
   // Bandeau header
-  drawFilledRect(page, PAGE_HEIGHT, 0, 0, PAGE_WIDTH, 17, nexusOrange);
+  drawFilledRect(page, PAGE_HEIGHT, 0, 0, PAGE_WIDTH, 17, nexusGold);
 
   topY = 51;
   drawText(page, PAGE_HEIGHT, helveticaBold, "NEXUS RCA", MARGIN, topY, 18, nexusBlue);

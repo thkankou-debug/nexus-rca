@@ -97,22 +97,26 @@ async function generateReceiptPDF(
   const page = pdfDoc.addPage([mm(pageWidth), pageHeightPt]);
 
   const NEXUS_BLUE = rgb(12 / 255, 28 / 255, 64 / 255);
-  const NEXUS_ORANGE = rgb(255 / 255, 102 / 255, 0 / 255);
+  // M12-bis (08/09) : l'orange ne subsiste sur aucun PDF (seul le logo le
+  // conserve). Or en remplissage/filet ; le texte reste en bleu nuit ;
+  // "restant" et statut "partiel" passent sur le token semantique
+  // --warning de A1, qui remplace aussi l'ancien AMBER local.
+  const NEXUS_GOLD = rgb(185 / 255, 151 / 255, 96 / 255);
+  const NEXUS_WARNING = rgb(194 / 255, 65 / 255, 12 / 255);
   const SLATE_DARK = rgb(30 / 255, 41 / 255, 59 / 255);
   const SLATE_MID = rgb(100 / 255, 116 / 255, 139 / 255);
   const SLATE_LIGHT = rgb(226 / 255, 232 / 255, 240 / 255);
   const GREEN = rgb(34 / 255, 197 / 255, 94 / 255);
-  const AMBER = rgb(245 / 255, 158 / 255, 11 / 255);
   const GRAY_BG = rgb(248 / 255, 250 / 255, 252 / 255);
-  const ORANGE_BG = rgb(255 / 255, 247 / 255, 237 / 255);
+  const IVORY_BG = rgb(245 / 255, 243 / 255, 240 / 255);
 
   let y = margin;
 
-  drawFilledRect(page, pageHeightPt, 0, 0, mm(pageWidth), mm(8), NEXUS_ORANGE);
+  drawFilledRect(page, pageHeightPt, 0, 0, mm(pageWidth), mm(8), NEXUS_GOLD);
 
   y = 25;
   drawText(page, pageHeightPt, helveticaBold, "NEXUS RCA", mm(margin), mm(y), 24, NEXUS_BLUE);
-  drawText(page, pageHeightPt, helvetica, "Agence Internationale", mm(margin), mm(y + 6), 10, NEXUS_ORANGE);
+  drawText(page, pageHeightPt, helvetica, "Agence Internationale", mm(margin), mm(y + 6), 10, NEXUS_BLUE);
 
   const rightX = pageWidth - margin;
   drawText(page, pageHeightPt, helvetica, "Croisement Marabena, Route de l'Aéroport", mm(rightX), mm(y - 2), 8, SLATE_MID, "right");
@@ -139,14 +143,14 @@ async function generateReceiptPDF(
   drawText(page, pageHeightPt, helvetica, "STATUT", mm(pageWidth - margin - 5), mm(y + 6), 9, SLATE_MID, "right");
 
   const statusColor =
-    payment.status === "paid" ? GREEN : payment.status === "partial" ? AMBER : SLATE_DARK;
+    payment.status === "paid" ? GREEN : payment.status === "partial" ? NEXUS_WARNING : SLATE_DARK;
   drawText(
     page, pageHeightPt, helveticaBold, STATUS_LABELS[payment.status],
     mm(pageWidth - margin - 5), mm(y + 13), 11, statusColor, "right"
   );
 
   y += 25;
-  drawText(page, pageHeightPt, helveticaBold, "CLIENT", mm(margin), mm(y), 11, NEXUS_ORANGE);
+  drawText(page, pageHeightPt, helveticaBold, "CLIENT", mm(margin), mm(y), 11, NEXUS_BLUE);
 
   y += 6;
   drawText(page, pageHeightPt, helveticaBold, payment.client_nom, mm(margin), mm(y), 13, SLATE_DARK);
@@ -162,7 +166,7 @@ async function generateReceiptPDF(
   }
 
   y += 5;
-  drawText(page, pageHeightPt, helveticaBold, "SERVICE FOURNI", mm(margin), mm(y), 11, NEXUS_ORANGE);
+  drawText(page, pageHeightPt, helveticaBold, "SERVICE FOURNI", mm(margin), mm(y), 11, NEXUS_BLUE);
 
   y += 6;
   drawText(page, pageHeightPt, helveticaBold, payment.service, mm(margin), mm(y), 12, SLATE_DARK);
@@ -181,7 +185,7 @@ async function generateReceiptPDF(
 
   drawFilledRect(
     page, pageHeightPt, mm(margin), mm(y), mm(pageWidth - 2 * margin), mm(blockHeight),
-    ORANGE_BG, { color: NEXUS_ORANGE, width: mm(0.5) }
+    IVORY_BG, { color: NEXUS_GOLD, width: mm(0.5) }
   );
 
   drawText(page, pageHeightPt, helvetica, "MONTANT TOTAL", mm(margin + 8), mm(y + 9), 9, SLATE_MID);
@@ -205,7 +209,7 @@ async function generateReceiptPDF(
     page, pageHeightPt, helveticaBold,
     formatMoney(Math.max(0, restant), payment.devise),
     mm(pageWidth - margin - 8), mm(y + 17), 15,
-    restant > 0 ? NEXUS_ORANGE : GREEN, "right"
+    restant > 0 ? NEXUS_WARNING : GREEN, "right"
   );
 
   drawText(page, pageHeightPt, helvetica, "MODE DE PAIEMENT", mm(pageWidth - margin - 8), mm(y + 28), 9, SLATE_MID, "right");
@@ -216,7 +220,7 @@ async function generateReceiptPDF(
 
   y += blockHeight + 12;
 
-  drawText(page, pageHeightPt, helveticaBold, "ENCAISSÉ PAR", mm(margin), mm(y), 11, NEXUS_ORANGE);
+  drawText(page, pageHeightPt, helveticaBold, "ENCAISSÉ PAR", mm(margin), mm(y), 11, NEXUS_BLUE);
 
   y += 6;
   const agentName = agent ? [agent.prenom, agent.nom].filter(Boolean).join(" ") : "";
@@ -241,7 +245,7 @@ async function generateReceiptPDF(
 
   drawText(page, pageHeightPt, helveticaBold, "Merci de votre confiance !", mm(pageWidth / 2), mm(footerY + 18), 9, NEXUS_BLUE, "center");
 
-  drawFilledRect(page, pageHeightPt, 0, mm(pageHeight - 5), mm(pageWidth), mm(5), NEXUS_ORANGE);
+  drawFilledRect(page, pageHeightPt, 0, mm(pageHeight - 5), mm(pageWidth), mm(5), NEXUS_GOLD);
 
   return pdfDoc.save();
 }

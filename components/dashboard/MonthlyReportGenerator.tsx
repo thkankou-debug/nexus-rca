@@ -131,13 +131,18 @@ async function generateReportPDF(
   const pageHeightPt = mm(pageHeight);
 
   const NEXUS_BLUE = rgb(12 / 255, 28 / 255, 64 / 255);
-  const NEXUS_ORANGE = rgb(255 / 255, 102 / 255, 0 / 255);
+  // M12-bis (08/09) : l'orange ne subsiste sur aucun PDF (seul le logo le
+  // conserve). Or en remplissage/filet ; les montants "en attente" passent
+  // sur le token semantique --warning de A1 (#C2410C), qui remplace aussi
+  // l'ancien AMBER local (#F59E0B) - une seule source pour "en attente",
+  // pas deux ambres differents entre ce fichier et lib/monthly-report-pdf.ts.
+  const NEXUS_GOLD = rgb(185 / 255, 151 / 255, 96 / 255);
+  const NEXUS_WARNING = rgb(194 / 255, 65 / 255, 12 / 255);
   const SLATE_DARK = rgb(30 / 255, 41 / 255, 59 / 255);
   const SLATE_MID = rgb(100 / 255, 116 / 255, 139 / 255);
   const SLATE_LIGHT = rgb(226 / 255, 232 / 255, 240 / 255);
   const WHITE = rgb(1, 1, 1);
   const ROW_ALT = rgb(252 / 255, 252 / 255, 253 / 255);
-  const AMBER = rgb(245 / 255, 158 / 255, 11 / 255);
   const GREEN = rgb(34 / 255, 197 / 255, 94 / 255);
   const RED = rgb(239 / 255, 68 / 255, 68 / 255);
 
@@ -147,7 +152,7 @@ async function generateReportPDF(
   let page = pdfDoc.addPage([mm(pageWidth), pageHeightPt]);
 
   const drawPageHeader = (pageNum: number, totalPages: number) => {
-    drawFilledRect(page, pageHeightPt, 0, 0, mm(pageWidth), mm(5), NEXUS_ORANGE);
+    drawFilledRect(page, pageHeightPt, 0, 0, mm(pageWidth), mm(5), NEXUS_GOLD);
 
     drawText(page, pageHeightPt, helveticaBold, "NEXUS RCA", mm(margin), mm(11), 9, NEXUS_BLUE);
     drawText(page, pageHeightPt, helvetica, `Rapport financier - ${monthLabel}`, mm(pageWidth / 2), mm(11), 9, SLATE_MID, "center");
@@ -162,7 +167,7 @@ async function generateReportPDF(
       "Document confidentiel · Nexus RCA · contact@nexusrca.com · +236 73 26 96 92",
       mm(pageWidth / 2), mm(pageHeight - 10), 7, SLATE_MID, "center"
     );
-    drawFilledRect(page, pageHeightPt, 0, mm(pageHeight - 4), mm(pageWidth), mm(4), NEXUS_ORANGE);
+    drawFilledRect(page, pageHeightPt, 0, mm(pageHeight - 4), mm(pageWidth), mm(4), NEXUS_GOLD);
   };
 
   // Boilerplate commun aux ~6 tableaux du rapport : barre d'en-tete bleue
@@ -190,7 +195,7 @@ async function generateReportPDF(
   drawText(page, pageHeightPt, helveticaBold, "RAPPORT FINANCIER MENSUEL", mm(margin), mm(y), 22, NEXUS_BLUE);
 
   y += 8;
-  drawText(page, pageHeightPt, helvetica, monthLabel, mm(margin), mm(y), 14, NEXUS_ORANGE);
+  drawText(page, pageHeightPt, helvetica, monthLabel, mm(margin), mm(y), 14, NEXUS_BLUE);
 
   y += 12;
   drawText(
@@ -201,7 +206,7 @@ async function generateReportPDF(
 
   y += 15;
 
-  drawText(page, pageHeightPt, helveticaBold, "ENCAISSEMENTS DU MOIS", mm(margin), mm(y), 11, NEXUS_ORANGE);
+  drawText(page, pageHeightPt, helveticaBold, "ENCAISSEMENTS DU MOIS", mm(margin), mm(y), 11, NEXUS_BLUE);
   y += 7;
 
   const allDevises = new Set<string>();
@@ -226,7 +231,7 @@ async function generateReportPDF(
       );
 
       drawText(page, pageHeightPt, helveticaBold, `Total ${devise}`, mm(margin + 5), mm(y + 7), 10, NEXUS_BLUE);
-      drawText(page, pageHeightPt, helveticaBold, formatMoney(totalDevise, devise), mm(pageWidth - margin - 5), mm(y + 7), 14, NEXUS_ORANGE, "right");
+      drawText(page, pageHeightPt, helveticaBold, formatMoney(totalDevise, devise), mm(pageWidth - margin - 5), mm(y + 7), 14, NEXUS_BLUE, "right");
 
       drawText(
         page, pageHeightPt, helvetica,
@@ -244,7 +249,7 @@ async function generateReportPDF(
   }
 
   y += 4;
-  drawText(page, pageHeightPt, helveticaBold, "DÉPENSES DU MOIS", mm(margin), mm(y), 11, NEXUS_ORANGE);
+  drawText(page, pageHeightPt, helveticaBold, "DÉPENSES DU MOIS", mm(margin), mm(y), 11, NEXUS_BLUE);
   y += 7;
 
   if (summary.depenses.length === 0) {
@@ -267,7 +272,7 @@ async function generateReportPDF(
       drawText(
         page, pageHeightPt, helveticaItalic,
         `⚠ En attente de validation : ${formatMoney(d.total, d.devise)} (${d.count})`,
-        mm(margin + 5), mm(y), 8, AMBER
+        mm(margin + 5), mm(y), 8, NEXUS_WARNING
       );
       y += 4;
     });
@@ -294,7 +299,7 @@ async function generateReportPDF(
   });
 
   y += 36;
-  drawText(page, pageHeightPt, helveticaBold, "EN UN COUP D'ŒIL", mm(margin), mm(y), 11, NEXUS_ORANGE);
+  drawText(page, pageHeightPt, helveticaBold, "EN UN COUP D'ŒIL", mm(margin), mm(y), 11, NEXUS_BLUE);
   y += 7;
 
   const totalPaiementsCount = summary.paiements.reduce((s, p) => s + p.count, 0);
@@ -323,7 +328,7 @@ async function generateReportPDF(
   drawText(page, pageHeightPt, helveticaBold, "DÉTAIL DES ENCAISSEMENTS", mm(margin), mm(y), 16, NEXUS_BLUE);
   y += 12;
 
-  drawText(page, pageHeightPt, helveticaBold, "Paiements (gros dossiers)", mm(margin), mm(y), 11, NEXUS_ORANGE);
+  drawText(page, pageHeightPt, helveticaBold, "Paiements (gros dossiers)", mm(margin), mm(y), 11, NEXUS_BLUE);
   y += 7;
 
   if (summary.paiements.length === 0) {
@@ -349,7 +354,7 @@ async function generateReportPDF(
 
   y += 8;
 
-  drawText(page, pageHeightPt, helveticaBold, "Caisse rapide (petits services)", mm(margin), mm(y), 11, NEXUS_ORANGE);
+  drawText(page, pageHeightPt, helveticaBold, "Caisse rapide (petits services)", mm(margin), mm(y), 11, NEXUS_BLUE);
   y += 7;
 
   if (summary.caisse.length === 0) {
@@ -373,7 +378,7 @@ async function generateReportPDF(
 
   y += 8;
 
-  drawText(page, pageHeightPt, helveticaBold, "Transferts effectués", mm(margin), mm(y), 11, NEXUS_ORANGE);
+  drawText(page, pageHeightPt, helveticaBold, "Transferts effectués", mm(margin), mm(y), 11, NEXUS_BLUE);
   y += 7;
 
   if (summary.transferts.length === 0) {
@@ -409,7 +414,7 @@ async function generateReportPDF(
   drawText(page, pageHeightPt, helveticaBold, "DÉTAIL DES DÉPENSES", mm(margin), mm(y), 16, NEXUS_BLUE);
   y += 12;
 
-  drawText(page, pageHeightPt, helveticaBold, "Dépenses validées", mm(margin), mm(y), 11, NEXUS_ORANGE);
+  drawText(page, pageHeightPt, helveticaBold, "Dépenses validées", mm(margin), mm(y), 11, NEXUS_BLUE);
   y += 7;
 
   if (summary.depenses.length === 0) {
@@ -433,7 +438,7 @@ async function generateReportPDF(
 
   y += 8;
 
-  drawText(page, pageHeightPt, helveticaBold, "Dépenses en attente de validation", mm(margin), mm(y), 11, AMBER);
+  drawText(page, pageHeightPt, helveticaBold, "Dépenses en attente de validation", mm(margin), mm(y), 11, NEXUS_WARNING);
   y += 7;
 
   if (summary.depensesEnAttente.length === 0) {
@@ -463,7 +468,7 @@ async function generateReportPDF(
   drawText(page, pageHeightPt, helveticaBold, "PERFORMANCES DU MOIS", mm(margin), mm(y), 16, NEXUS_BLUE);
   y += 12;
 
-  drawText(page, pageHeightPt, helveticaBold, "Top services (caisse rapide)", mm(margin), mm(y), 11, NEXUS_ORANGE);
+  drawText(page, pageHeightPt, helveticaBold, "Top services (caisse rapide)", mm(margin), mm(y), 11, NEXUS_BLUE);
   y += 7;
 
   if (summary.topServices.length === 0) {
@@ -491,7 +496,7 @@ async function generateReportPDF(
 
   y += 8;
 
-  drawText(page, pageHeightPt, helveticaBold, "Top agents (par encaissements)", mm(margin), mm(y), 11, NEXUS_ORANGE);
+  drawText(page, pageHeightPt, helveticaBold, "Top agents (par encaissements)", mm(margin), mm(y), 11, NEXUS_BLUE);
   y += 7;
 
   if (summary.topAgents.length === 0) {
@@ -565,7 +570,7 @@ async function generateReportPDF(
       drawText(page, pageHeightPt, helvetica, p.service.substring(0, 20), mm(margin + 75), mm(y + 4), 8, SLATE_DARK);
       drawText(page, pageHeightPt, helvetica, formatMoney(p.montant_total, ""), mm(margin + 115), mm(y + 4), 8, SLATE_DARK);
       drawText(page, pageHeightPt, helvetica, formatMoney(p.montant_recu, ""), mm(margin + 145), mm(y + 4), 8, SLATE_DARK);
-      drawText(page, pageHeightPt, helveticaBold, formatMoney(p.restant, p.devise), mm(margin + 170), mm(y + 4), 8, NEXUS_ORANGE);
+      drawText(page, pageHeightPt, helveticaBold, formatMoney(p.restant, p.devise), mm(margin + 170), mm(y + 4), 8, NEXUS_WARNING);
       y += 6;
 
       if (!totalRestantParDevise[p.devise]) totalRestantParDevise[p.devise] = 0;
@@ -573,7 +578,7 @@ async function generateReportPDF(
     });
 
     y += 4;
-    drawFilledRect(page, pageHeightPt, mm(margin), mm(y), mm(pageWidth - 2 * margin), mm(8), NEXUS_ORANGE);
+    drawFilledRect(page, pageHeightPt, mm(margin), mm(y), mm(pageWidth - 2 * margin), mm(8), NEXUS_WARNING);
     drawText(page, pageHeightPt, helveticaBold, "TOTAL CRÉANCES", mm(margin + 3), mm(y + 5), 10, WHITE);
     const totalText = Object.entries(totalRestantParDevise)
       .map(([d, t]) => formatMoney(t, d))

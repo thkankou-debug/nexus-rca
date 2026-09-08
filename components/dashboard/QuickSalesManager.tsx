@@ -151,7 +151,9 @@ async function exportPDF(sales: QuickSale[], agents: AgentInfo[], period: Period
   const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-  const nexusOrange = rgb(1, 0.4, 0);
+  // M12-bis (08/09) : l'orange ne subsiste sur aucun PDF, seul le logo le
+  // conserve. Bandeau plein -> or (remplissage), jamais du texte (A1).
+  const nexusGold = rgb(0.725, 0.592, 0.376);
   const nexusBlue = rgb(0.047, 0.11, 0.251);
   const grayMid = rgb(0.392, 0.455, 0.545);
   const grayHeaderBg = rgb(0.973, 0.98, 0.988);
@@ -166,7 +168,7 @@ async function exportPDF(sales: QuickSale[], agents: AgentInfo[], period: Period
     topY = MARGIN;
   };
 
-  drawFilledRect(page, PAGE_HEIGHT, 0, 0, PAGE_WIDTH, 17, nexusOrange);
+  drawFilledRect(page, PAGE_HEIGHT, 0, 0, PAGE_WIDTH, 17, nexusGold);
 
   topY = 45;
   drawText(page, PAGE_HEIGHT, helveticaBold, "NEXUS RCA - Caisse rapide", MARGIN, topY, 16, nexusBlue);
