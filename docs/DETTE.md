@@ -1011,6 +1011,51 @@ approuvée ni présentées à validation — d'où la dérive de teinte. La
 correction porte donc sur les valeurs de tokens A1, pas sur un rejeu
 complet de P1a-bis→A2.
 
+**Complément du 07/09/2026 — Étape 1 (E1-E4) livrée puis E3 exécuté.**
+`docs/P10_LIVRABLES.md` : contrastes mesurés, audit CTA réel, migration
+072 (`is_featured`/`display_order`). Pages `accompagnement-business` et
+`reseau-international` livrées avec du contenu réel validé par Thierry,
+aucun texte inventé — les 8 pôles officiels ont maintenant tous une
+page. Premier élément du gabarit factorisé que P10 réclamait :
+`components/services/ServiceBody.tsx` (paragraphes + liste de
+prestations), réutilisé par les deux pages au lieu d'un `*Form.tsx` dédié
+de 1200+ lignes par service — anti-pattern déjà identifié sur les 12
+pages existantes, volontairement non touchées dans ce lot (chantier
+séparé, plus large).
+
+Découverte en construisant : le CTA de chaque page ne pointe pas vers un
+nouveau formulaire, mais vers le formulaire générique déjà existant
+`/demande/complet?service=...`, qui acceptait déjà ce paramètre sans
+modification. `lib/demande-complete-form.ts` avait une troisième
+taxonomie de services, codée en dur (`SERVICES_COMPLETS`, 7 entrées),
+distincte à la fois de la table `services` (8 pôles, P8) et des dossiers
+`app/services/*` (12 pages). Complété (ajout de 2 entrées + leurs
+catégories, reprises mot pour mot du contenu validé), rien retiré.
+Reste en dette : cette taxonomie à 3 endroits distincts n'est pas
+résolue architecturalement, seulement complétée au point nécessaire.
+
+Migration 073 : `description` des 2 lignes `services` mises à jour pour
+rester cohérentes avec le contenu des pages. `tsc`/`lint`/`build` : 0
+erreur. Vérifié en direct (`curl` sur le serveur de développement) : les
+deux pages répondent 200 et affichent le contenu réel attendu.
+
+**Rejet de la maquette mobile du hero, amendement M1-M10 (08/09/2026).**
+La maquette présentée le 07/09 (Artifact HTML, cadre d'iPhone simulé,
+trois cercles "Europe / Bangui / Canada" reliés par des traits pour
+représenter le réseau international) n'est pas approuvée :
+1. M2 — les trois cercles suggèrent une implantation (bureau ou
+   représentation) en Europe et au Canada qui n'est pas confirmée,
+   exactement ce que la consigne donnée pour le contenu de la page
+   `reseau-international` interdisait déjà pour le texte (pas pour le
+   visuel — l'incohérence n'avait pas été vue).
+2. M10 — un cadre d'iPhone simulé sur un artifact desktop n'est pas une
+   vérification mobile recevable : il faut une URL consultable sur un
+   téléphone réel, testée à 360/390/430 px, dans les deux langues, avec
+   Lighthouse en profil mobile.
+Ne pas réutiliser cette maquette telle quelle pour le hero mobile réel —
+nouvelle proposition à construire conforme à M1-M10, voir
+NEXUS_RCA_FEUILLE_DE_ROUTE_V3.md, section P10.
+
 ## P1c — Revérification (07/09/2026)
 
 **1. 32 clés étrangères sans index couvrant, sur les 42 corrigées en P1c d'origine.**
@@ -1097,44 +1142,6 @@ visuelle en navigateur possible dans cet environnement (aucun outil
 d'automatisation navigateur disponible) — vérification faite par calcul
 WCAG sur les valeurs réelles utilisées dans le code, et par lecture du
 HTML rendu (`curl` sur le serveur de développement), pas à l'œil.
-
-**6. Pages `accompagnement-business` et `reseau-international` livrées (07/09/2026) — les 8 pôles officiels ont maintenant tous une page.**
-Contenu fourni et validé par Thierry, aucun texte inventé. Premier
-élément du gabarit factorisé que P10 réclamait :
-`components/services/ServiceBody.tsx` (paragraphes + liste de
-prestations), réutilisé par les deux pages au lieu d'un `*Form.tsx` dédié
-de 1200+ lignes par service — anti-pattern déjà identifié sur les 12
-pages existantes, volontairement **non touchées** dans ce lot (chantier
-séparé, plus large).
-
-Découverte en construisant : le CTA de chaque page ne pointe pas vers un
-nouveau formulaire, mais vers le formulaire générique déjà existant
-`/demande/complet?service=...`, qui acceptait déjà ce paramètre sans
-modification. `lib/demande-complete-form.ts` avait une **troisième
-taxonomie de services**, codée en dur (`SERVICES_COMPLETS`, 7 entrées),
-distincte à la fois de la table `services` (8 pôles, P8) et des dossiers
-`app/services/*` (12 pages) — "Réseau international" n'y existait pas du
-tout, "Accompagnement business" n'existait que comme sous-catégorie
-d'"Incubateur & Financement". Complété (ajout des 2 entrées + leurs
-catégories, reprises mot pour mot du contenu validé), rien retiré.
-**Reste en dette** : cette taxonomie à 3 endroits distincts (table CMS,
-routes, formulaire générique) n'est pas résolue architecturalement,
-seulement complétée au point nécessaire — un futur nettoyage pourrait la
-faire dériver de la table `services` plutôt que de la dupliquer une
-troisième fois.
-
-`reseau-international` respecte la contrainte explicite de Thierry :
-aucune mention de "bureaux", aucun statut d'implantation attribué à
-Bangui/Europe/Canada, aucune adresse, aucune répartition géographique
-des prestations inventée — uniquement les capacités réelles décrites.
-
-Migration 073 : `description` des 2 lignes `services` (existantes depuis
-P8) mises à jour pour rester cohérentes avec le contenu des pages —
-aucun schéma modifié.
-
-`tsc`/`lint`/`build` : 0 erreur. Vérifié en direct (`curl` sur le
-serveur de développement) : les deux pages répondent 200 et affichent le
-contenu réel attendu.
 
 ## P9 — Audit de confidentialité du portail client (07/09/2026)
 

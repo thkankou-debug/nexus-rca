@@ -1,6 +1,6 @@
 # NEXUS RCA — FEUILLE DE ROUTE V3
 **Document unique d'exécution. Source de vérité du projet.**
-Version 1.1 · 5 septembre 2026 · Consolide les amendements 1 à 5 et les décisions D1 à D8
+Version 1.2 · 8 septembre 2026 · Consolide les amendements 1 à 6 (dont M1-M10, exigences mobiles P10) et les décisions D1 à D8
 Décideur : Thierry F. Kankou · Exécutant : Claude Code
 
 ---
@@ -122,7 +122,7 @@ Le RÉCAP indique l'URL de prévisualisation pour que Thierry vérifie en ligne.
 | P6 | Finance | ✅ close par Thierry le 06/09 (confirmé alors), revérifié en direct 07/09 : `devis`/`factures` réels en base (1 ligne chacun, données de test réelles, pas fictives). Rapports journaliers/annuels toujours non construits (seul le mensuel existe), reporté sciemment — docs/DETTE.md #14 | v3/integration-v3 | 07/09 |
 | P8 | CMS et contenus | ✅ terminée — revérifié en direct 07/09 : `services` = 14 lignes réelles (12 du seed initial + 2 ajoutées le 07/09 pour les pôles homepage), cohérent avec l'historique | v3/integration-v3 | 07/09 |
 | P9 | Portail client | ✅ terminée — Lots 0 à 4 livrés 07/09 (IDOR devis/factures, consultation/acceptation devis, factures + reçus téléchargeables, documents officiels via `uploaded_by_role`, clôture manuelle des demandes de correction sans document via `PATCH .../documents-requests/[requestId]`). Les 13 points attendus de P9 sont couverts — voir docs/DETTE.md | v3/integration-v3 | 07/09 |
-| P10 | Site public | 🟡 en cours — Étape 1 (E1-E4) livrée ; E1/E2 exécutés sous A1 ; E3 terminé : pages `accompagnement-business` et `reseau-international` livrées 07/09 (contenu réel validé), les 8 pôles officiels ont maintenant tous une page. Maquette mobile du hero présentée (Artifact), en attente de validation avant intégration code. Reste : E5/E7/E8 (données institutionnelles, bloqué sur Thierry), harmonisation visuelle des 12 pages existantes (hors périmètre de ce lot) — voir docs/P10_LIVRABLES.md | v3/integration-v3 | 07/09 |
+| P10 | Site public | 🟡 en cours — Étape 1 (E1-E4) livrée ; E1/E2 exécutés sous A1 ; E3 terminé (8 pôles, tous avec une page réelle). Amendement 08/09 : exigences mobiles M1-M10 ajoutées — **la maquette mobile du 07/09 est rejetée** (cercles Europe/Bangui/Canada suggérant une implantation non confirmée, cadre d'iPhone simulé au lieu d'une URL réelle). Reste : hero mobile réel conforme M1-M10, E5/E7/E8 (données institutionnelles, bloqué sur Thierry), harmonisation des 12 pages existantes — voir docs/P10_LIVRABLES.md et docs/DETTE.md | v3/integration-v3 | 08/09 |
 | P11 | Notifications multicanal | ⬜ | | |
 | P12 | Durcissement final | ⬜ | | |
 
@@ -300,6 +300,8 @@ Couche sémantique de couleurs appliquant D8 — bleu nuit, ivoire, or — au si
 **Le passage à l'or se fait par les tokens, jamais par un remplacement global de `nexus-orange-500`.** Un `sed` sur la palette casserait les endroits où l'orange porte un sens qui n'est pas « action principale ». Chaque occurrence est requalifiée une par une, vers le token qui correspond à son rôle réel.
 
 **Contrastes mesurés et consignés**, y compris pour les états **actif, survol et focus** : WCAG AA — texte normal ≥ 4,5:1, grand texte ≥ 3:1, composants et focus ≥ 3:1. Un couple qui échoue est corrigé, jamais toléré.
+
+**L'or n'est jamais du texte sur fond clair** (amendement 08/09). `#B99760` sur blanc ou sur ivoire tourne autour de 2,4:1 : l'échec est structurel, pas corrigible par une nuance — un or assez sombre pour passer AA sur blanc n'est plus un or. Sur surface claire, l'or est un **remplissage ou un filet**, et le texte qu'il porte est en bleu nuit. Sur fond bleu nuit, l'or peut être du texte, en grand corps, ratio mesuré. Aucune exception. *Vérifié en direct le 07/09 : `#B99760` sur `#F5F3F0` (ivoire) = 2,48:1, échec confirmé — voir docs/DETTE.md, section A1.*
 
 **Registres distincts, identité unique.** L'administration reste sobre, dense et lisible : pas de globe, pas de texture dorée, pas de décor de couverture dans les écrans de gestion. L'or y est rare et fonctionnel.
 
@@ -748,6 +750,12 @@ Toute opération sensible passe par une permission et laisse une ligne d'`audit_
 
 Le `super_admin` gère sans toucher au code : catégories et services, descriptions, tarifs ou « sur devis », documents demandés, délais indicatifs, étapes de traitement, pays et destinations, FAQ, coordonnées, bureaux, partenaires, témoignages **vérifiés**, textes et appels à l'action du site, activation ou désactivation d'un service.
 
+### Point d'état au 7 septembre (amendement 08/09)
+
+La table `services` **existe déjà** en base (14 lignes, P8 initial). La migration **072** y a ajouté `is_featured` et `display_order` — **précision factuelle** : posée en présentant explicitement « PHASE P10 — Étape 1 » (livrables E1-E4, `docs/P10_LIVRABLES.md`) et exécutée après le GO donné par Thierry le 07/09, pas hors séquence. Elle reste additive et sans danger, conservée, et réattribuée ici à P8 pour la cohérence du journal des migrations.
+
+Le dépôt compte aujourd'hui **12** dossiers `app/services/*` (vérifié en direct le 07/09), pas 7 comme l'estimation initiale de P0 : les 8 pôles officiels ont depuis reçu chacun leur page (`accompagnement-business` et `reseau-international` livrées le 07/09 avec du contenu réel validé par Thierry — voir le tableau §I.5, ligne P10, et docs/DETTE.md section P10).
+
 ### Les huit pôles officiels
 
 Visa et mobilité · Digitalisation et technologie · Financement et incubation · Accompagnement business · Réseau international · Études internationales · Assurance et voyage · Services administratifs.
@@ -802,6 +810,35 @@ La maquette de page d'accueil fournie fait référence pour la composition, la p
 ### Le vrai chantier technique : la factorisation
 
 7 pages `services/*` de 1200 à 2272 lignes, chacune avec son `*Form.tsx` de 1200+ lignes, toutes sur le même moule. Un gabarit de page service alimenté par la table `services` (P8), un composant de formulaire configuré par service. **La grille des expertises de la page d'accueil est alimentée par `services`, jamais écrite en dur** — sinon on réintroduit précisément ce que le CMS existe pour supprimer.
+
+### Exigences mobiles — arrêtées le 8 septembre 2026
+
+**Le mobile est la version de référence du site public.** Elle est maquettée et validée avant la version bureau, qui en découle.
+
+**M1 · Hero recomposé pour le téléphone.** En-tête compact avec le vrai logo, un menu clairement identifiable et l'accès aux langues · titre éditorial dont la taille et les césures s'adaptent à chaque largeur · introduction courte disant concrètement ce que Nexus apporte · « Soumettre une demande » repérable et atteignable tôt · « Découvrir nos expertises » visiblement secondaire · un véritable visuel institutionnel cadré pour le mobile.
+**Ne pas figer la hauteur du hero** pour tout faire tenir dans un écran. Lecture fluide et action rapidement accessible priment sur le « tout visible sans défiler », qui produit du texte tassé et du contenu coupé.
+
+**M2 · Le visuel.** Illustration institutionnelle soignée ou photographie réelle autorisée. Une image statique bien composée donne de la profondeur sans scène 3D. Si un globe est conservé, il doit être correctement dessiné et cadré, Bangui bien positionnée. **Les connexions internationales ne doivent suggérer aucun bureau ni partenariat non confirmé** — trois cercles « Europe – Bangui – Canada » affirment une implantation qui n'est pas établie. **Aucune image produite jusqu'ici n'est approuvée par défaut.**
+
+**M3 · Art direction de l'image, pas simple mise à l'échelle.** Le cadrage mobile est un recadrage distinct, servi par `<picture>`, pas la version bureau réduite. Budget de 250 Ko maintenu, mesuré sur la variante mobile.
+
+**M4 · Sur mobile, le texte ne se pose pas sur la photographie.** Bandes distinctes plutôt que superposition : c'est la seule façon de garantir la lisibilité sur toutes les largeurs sans voile qui écrase l'image.
+
+**M5 · Page entière, pas seulement le premier écran.** Navigation, hero, engagements vérifiables, huit pôles, méthode, contact, pied de page. Chaque pôle porte son intitulé, une description utile et un accès clair à sa page, avec une illustration qui aide à le distinguer. **Les huit sont accessibles sans carrousel obligatoire ni cartes inutilement hautes** — une liste dense et cliquable est préférable à huit grandes cartes empilées.
+
+**M6 · Interactions.** Cibles tactiles de 44 × 44 px minimum, **y compris le sélecteur de langue**, trop souvent réduit à deux mots minuscules. Vérifier l'ouverture et la fermeture du menu, le changement de langue, l'accès à l'espace client.
+
+**M7 · Formulaires.** Libellés visibles · claviers adaptés (`inputmode`, `autocomplete`) · erreurs compréhensibles · confirmation explicite · téléversement simple depuis la caméra ou les fichiers · **une erreur réseau n'efface jamais la saisie** (brouillon local) · aucun bouton fixe ne masque un champ, un message ou le clavier. La règle du CTA permanent s'applique dans l'en-tête, jamais en barre flottante au-dessus d'un formulaire.
+
+**M8 · Pièges iOS et Android à traiter explicitement.** Champs de saisie à `font-size` ≥ 16 px, faute de quoi Safari iOS zoome automatiquement à la mise au point · `dvh` plutôt que `vh` pour éviter le saut de mise en page à l'apparition de la barre d'adresse · `safe-area-inset` respecté sur les appareils à encoche · pas de `100vh` sur le hero.
+
+**M9 · Bilingue vérifié sur mobile.** Le français est sensiblement plus long que l'anglais : les titres et les libellés de boutons sont testés dans les deux langues à chaque largeur. Une césure acceptable en français ne l'est pas forcément en anglais, et inversement.
+
+**M10 · Prévisualisation réellement vérifiable.** Une **URL consultable depuis un téléphone**, pas un cadre d'iPhone simulé sur écran d'ordinateur. Largeurs 360, 390 et 430 px, en français et en anglais, menu ouvert et parcours de formulaire compris. Contrastes vérifiés **dans le code**, jamais sur une photographie d'écran — une photo d'écran ne permet de mesurer ni une couleur ni un ratio. Absence de défilement horizontal, comportement au zoom du texte, essais sur Safari iOS et Chrome Android, en **distinguant les appareils réels des simulations**. Lighthouse mesuré en profil mobile.
+
+**Sobriété.** Pas de textes secondaires minuscules, pas de boutons excessivement arrondis, pas d'accumulation de cadres, badges et ornements. La confiance vient de la composition, de la clarté des services et des informations vérifiées.
+
+*Note 08/09 : la maquette mobile présentée le 07/09 (Artifact, cadre d'iPhone simulé, trois cercles Europe/Bangui/Canada) enfreint M2 et M10 telles qu'arrêtées ci-dessus — elle n'est pas approuvée, ne pas la reprendre telle quelle. Voir docs/DETTE.md, section P10.*
 
 ### Exigences officielles — arrêtées par Thierry le 5 septembre 2026
 
