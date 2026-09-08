@@ -1184,3 +1184,28 @@ la fiche dossier existante, même précédent que le Lot 1 (pas de
 modification de `DashboardShell.tsx`).
 
 `tsc`/`lint`/`build` : 0 erreur.
+
+**8. Lot 3 livré : documents officiels délivrés par l'agence (07/09/2026).**
+Migration 071 : colonne `demande_documents.uploaded_by_role` ('client' |
+'agence'), décision de Thierry — pas de 5ᵉ mécanisme/table. Backfill
+honnête : l'unique document existant a été vérifié (uploadé par un
+`super_admin`) et marqué 'agence', pas supposé 'client' par défaut.
+
+La valeur est posée par `POST /api/demandes/[id]/documents` d'après le
+**rôle réel de l'appelant au moment de l'upload**, jamais fournie par le
+client — aucun champ du formulaire ne la contrôle, impossible à
+falsifier depuis le portail client. Comme `DocumentsManager.tsx` est déjà
+utilisé sur une page accessible à `agent`/`admin`/`super_admin` (pas
+seulement `client`), un membre du staff qui uploade un document depuis
+cette même page produit automatiquement un document "officiel" — aucune
+nouvelle interface d'upload à construire pour le staff.
+
+Affichage : nouvelle section "Documents officiels de Nexus RCA" séparée
+des pièces fournies par le client ("Mes documents"), téléchargement
+seul, **aucun bouton de suppression** pour ce type. Contrôle posé aussi
+côté serveur (`DELETE /api/demandes/[id]/documents`) : un rôle `client`
+qui tenterait de supprimer un document `uploaded_by_role = 'agence'` par
+appel direct à l'API (en contournant l'absence de bouton) est refusé
+403 — pas seulement caché côté interface.
+
+`tsc`/`lint`/`build` : 0 erreur.

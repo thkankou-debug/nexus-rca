@@ -30,6 +30,7 @@ type Doc = {
   mime_type: string;
   categorie: string | null;
   created_at: string;
+  uploaded_by_role: "client" | "agence" | null;
 };
 
 type DocRequest = {
@@ -71,7 +72,7 @@ export function DocumentsManager({
     const [{ data: docsData }, { data: reqsData }] = await Promise.all([
       supabase
         .from("demande_documents")
-        .select("id, storage_path, file_name, file_size_bytes, mime_type, categorie, created_at")
+        .select("id, storage_path, file_name, file_size_bytes, mime_type, categorie, created_at, uploaded_by_role")
         .eq("demande_id", demandeId)
         .order("created_at", { ascending: false }),
       supabase
@@ -125,9 +126,16 @@ export function DocumentsManager({
     }
   };
 
-  // Group docs by categorie
+  // Documents officiels (délivrés par l'agence) séparés des pièces fournies
+  // par le client — P9 Lot 3. Un document sans uploaded_by_role (ancien,
+  // avant la migration 071) est traité comme "client", comportement
+  // identique à avant ce lot.
+  const officiels = (docs || []).filter((d) => d.uploaded_by_role === "agence");
+  const fournis = (docs || []).filter((d) => d.uploaded_by_role !== "agence");
+
+  // Group docs by categorie (uniquement les pièces fournies par le client)
   const docsByCategorie = new Map<string, Doc[]>();
-  (docs || []).forEach((d) => {
+  fournis.forEach((d) => {
     const cat = d.categorie || "documents_complementaires";
     const list = docsByCategorie.get(cat) || [];
     list.push(d);
@@ -136,6 +144,55 @@ export function DocumentsManager({
 
   return (
     <div className="space-y-4">
+      {/* === Documents officiels délivrés par l'agence (P9 Lot 3) === */}
+      {officiels.length > 0 && (
+        <div className="rounded-2xl border-2 border-nexus-blue-200 bg-nexus-blue-50/40 p-5 shadow-sm">
+          <div className="mb-3 flex items-center gap-2">
+            <FileText className="h-4 w-4 text-nexus-blue-700" />
+            <h3 className="font-display text-sm font-bold text-nexus-blue-950">
+              Documents officiels de Nexus RCA
+            </h3>
+          </div>
+          <ul className="space-y-1.5">
+            {officiels.map((d) => {
+              const Icon = iconFor(d.mime_type);
+              return (
+                <li
+                  key={d.id}
+                  className="flex items-center gap-3 rounded-md border border-nexus-blue-100 bg-white px-3 py-2"
+                >
+                  <Icon className="h-4 w-4 shrink-0 text-nexus-blue-700" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-xs font-semibold text-nexus-blue-950">
+                      {d.file_name}
+                    </p>
+                    <p className="text-[10px] text-slate-500">
+                      {formatSize(d.file_size_bytes)} ·{" "}
+                      {new Date(d.created_at).toLocaleDateString("fr-FR")}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleDownload(d)}
+                    disabled={downloadingId === d.id}
+                    className="rounded-md border border-slate-200 bg-white p-1.5 text-slate-600 transition hover:bg-slate-50 disabled:opacity-50"
+                    aria-label="Télécharger"
+                  >
+                    {downloadingId === d.id ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Download className="h-3.5 w-3.5" />
+                    )}
+                  </button>
+                  {/* Pas de suppression ici : un document officiel ne se
+                      supprime pas depuis le portail client. */}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
       {/* === D2 — Documents demandés par le conseiller === */}
       {requests && requests.length > 0 && (
         <div className="rounded-2xl border-2 border-nexus-orange-300 bg-nexus-orange-50/40 p-5 shadow-sm">
@@ -199,7 +256,12 @@ export function DocumentsManager({
         </div>
       )}
 
-      {/* === D1 — Documents fournis par catégorie === */}
+      {/* === D1 — Documents fournis par catégorie (le client) === */}
+      {fournis.length > 0 && (
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+          Mes documents
+        </p>
+      )}
       <div className="space-y-3">
         {DOCUMENT_CATEGORIES.map((cat) => {
           const list = docsByCategorie.get(cat.value) || [];

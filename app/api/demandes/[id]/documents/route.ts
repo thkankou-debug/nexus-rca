@@ -133,11 +133,18 @@ export async function POST(
       );
     }
 
+    // uploaded_by_role dérivé du rôle réel de l'appelant, jamais du corps de
+    // la requête (P9, Lot 3) : un client ne peut pas se faire passer pour
+    // l'agence en falsifiant ce champ, il n'existe même pas côté client.
+    const actorRole = (profile as { role: string }).role;
+    const uploadedByRole = actorRole === "client" ? "client" : "agence";
+
     const { data: doc, error: insErr } = await admin
       .from("demande_documents")
       .insert({
         demande_id: params.id,
         uploaded_by: user.id,
+        uploaded_by_role: uploadedByRole,
         storage_path: path,
         file_name: file.name,
         file_size_bytes: file.size,
@@ -235,7 +242,7 @@ export async function DELETE(
     const admin = getAdminClient();
     const { data: doc } = await admin
       .from("demande_documents")
-      .select("id, storage_path, demande_id, uploaded_by")
+      .select("id, storage_path, demande_id, uploaded_by, uploaded_by_role")
       .eq("id", docId)
       .single();
 
@@ -243,6 +250,21 @@ export async function DELETE(
       return NextResponse.json(
         { success: false, error: "Document introuvable" },
         { status: 404 }
+      );
+    }
+
+    const docRole = (profile as { role: string }).role;
+    const isStaffRole = docRole !== "client";
+    // Un document officiel (délivré par l'agence) ne se supprime jamais
+    // depuis le portail client — même contrôle que l'absence de bouton
+    // dans DocumentsManager.tsx, mais posé côté serveur (P9 Lot 3).
+    if (
+      (doc as { uploaded_by_role: string | null }).uploaded_by_role === "agence" &&
+      !isStaffRole
+    ) {
+      return NextResponse.json(
+        { success: false, error: "Un document officiel ne peut pas être supprimé" },
+        { status: 403 }
       );
     }
 
