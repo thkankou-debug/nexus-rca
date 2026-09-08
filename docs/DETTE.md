@@ -1188,6 +1188,40 @@ Périmètre exact (fichiers, remplacement bandeau/texte, vérification
 niveaux de gris) à présenter à Thierry avant d'écrire, comme demandé
 explicitement par le document.
 
+**M12-bis livré (08/09/2026) : les 7 fichiers recolorés, aucun remplacement global.**
+Règle appliquée occurrence par occurrence : bandeaux/filets/fonds pleins
+→ or (`#B99760`) ; libellés de section et montants mis en avant → bleu
+nuit (`#02071F`), jamais l'or en texte ; `ORANGE_BG`
+(`PaymentReceipt.tsx`) → ivoire (`#F5F3F0`) avec bordure or.
+
+**Trouvé en traitant les cas "restant"/"en attente", pas cherché
+spécifiquement : deux ambres locaux différents coexistaient déjà**
+(`AMBER = rgb(245/255,158/255,11/255)` = `#F59E0B`) dans
+`MonthlyReportGenerator.tsx` et `PaymentReceipt.tsx`, utilisés pour le
+statut "partiel" et les dépenses en attente — un choix antérieur à A1,
+jamais aligné sur son token `--warning`. Les deux, plus les usages
+orange équivalents de `lib/monthly-report-pdf.ts` (aucun ambre là,
+orange direct), convergent maintenant vers une seule valeur :
+`NEXUS_WARNING = rgb(194/255,65/255,12/255)` (`#C2410C`, le `--warning`
+exact de A1), plutôt que de garder deux "en attente" visuellement
+différents entre deux documents.
+
+Hors périmètre, vérifié et non touché : le logo (seule exception à
+l'orange, M11) ; les 5 routes `pdf-lib` de P9 (déjà conformes) ;
+l'interface admin autour du bouton "générer le PDF" (classes Tailwind
+`nexus-orange-*` sur les écrans React, pas sur le document dessiné —
+chantier séparé, déjà documenté ailleurs).
+
+`tsc`/`lint`/`build` : 0 erreur. **Vérification visuelle non faite dans
+cet environnement** — générer un PDF réel de chaque type suppose des
+données en base et un contexte authentifié (session agent/admin) que je
+n'ai pas ici. Les substitutions sont mécaniques (valeurs `rgb()`
+uniquement, aucune logique touchée) et vérifiées une par une par lecture
+de code, mais **Thierry doit générer un exemplaire réel de chaque
+document** (fiche de paie, contrat, rapport mensuel, reçu caisse rapide,
+reçu de paiement, fiche agent) pour la confirmation visuelle finale —
+lisibilité, et rendu en niveaux de gris pour les documents photocopiés.
+
 ## P1c — Revérification (07/09/2026)
 
 **1. 32 clés étrangères sans index couvrant, sur les 42 corrigées en P1c d'origine.**
