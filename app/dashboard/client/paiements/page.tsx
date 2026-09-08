@@ -7,6 +7,7 @@ import {
   AlertCircle,
   XCircle,
   TrendingUp,
+  Download,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
@@ -349,6 +350,17 @@ export default async function ClientPaiementsPage() {
                         <p className="mt-1 inline-block rounded-full bg-nexus-orange-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-nexus-orange-700">
                           Reste : {formatMoney(restant, p.devise || "XAF")}
                         </p>
+                      )}
+                      {["paid", "validated", "partial"].includes(p.status || "") && (
+                        <a
+                          href={`/api/payments/${p.id}/receipt`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-nexus-blue-700 hover:text-nexus-blue-950"
+                        >
+                          <Download className="h-3 w-3" />
+                          Reçu PDF
+                        </a>
                       )}
                     </div>
                   </div>

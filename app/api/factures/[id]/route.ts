@@ -38,7 +38,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     const { data: facture } = await admin
       .from("factures")
       .select(
-        "id, reference, status, amount, currency, due_date, validated_at, created_by, demande_id, devis_id, client_record_id, created_at, demandes(id, reference, nom_complet, service, agent_id), facture_lignes(id, description, quantity, unit_price, amount, ordre)"
+        "id, reference, status, amount, currency, due_date, validated_at, created_by, demande_id, devis_id, client_record_id, created_at, clients(profile_id), demandes(id, reference, nom_complet, service, agent_id), facture_lignes(id, description, quantity, unit_price, amount, ordre)"
       )
       .eq("id", params.id)
       .single();
@@ -47,8 +47,17 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ success: false, error: "Facture introuvable" }, { status: 404 });
     }
 
-    const dossier = (facture as unknown as { demandes: { agent_id: string | null } | null }).demandes;
+    const factureTyped = facture as unknown as {
+      demandes: { agent_id: string | null } | null;
+      clients: { profile_id: string | null } | null;
+    };
+    const dossier = factureTyped.demandes;
+    const isStaff = role === "admin" || role === "super_admin";
     if (role === "agent" && dossier?.agent_id !== user.id) {
+      return NextResponse.json({ success: false, error: "Accès refusé" }, { status: 403 });
+    }
+    // Client : IDOR — même contrôle que /api/factures/[id]/pdf (voir docs/DETTE.md).
+    if (!isStaff && role !== "agent" && factureTyped.clients?.profile_id !== user.id) {
       return NextResponse.json({ success: false, error: "Accès refusé" }, { status: 403 });
     }
 

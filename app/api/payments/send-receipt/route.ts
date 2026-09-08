@@ -27,6 +27,17 @@ export async function POST(request: Request) {
       );
     }
 
+    // Réservé au staff : ce endpoint envoie un e-mail à une adresse
+    // arbitraire (recipient_email) — un client ne doit pas pouvoir
+    // l'utiliser pour renvoyer le reçu de quelqu'un d'autre vers sa propre
+    // boîte. Le téléchargement self-service passe par
+    // /api/payments/[id]/receipt (P9, ownership vérifiée par paiement).
+    const { data: actor } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+    const role = (actor as { role?: string } | null)?.role || "";
+    if (role !== "agent" && role !== "admin" && role !== "super_admin") {
+      return NextResponse.json({ error: "Réservé au staff" }, { status: 403 });
+    }
+
     const body = (await request.json()) as SendReceiptBody;
     if (!body.payment_id || !body.pdf_base64) {
       return NextResponse.json(

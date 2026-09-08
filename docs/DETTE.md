@@ -1152,3 +1152,35 @@ de tester l'acceptation en conditions réelles sans faire passer ce devis
 en "envoye", ce qui modifierait une donnée réelle sans qu'on me l'ait
 demandé. Logique vérifiée par lecture de code + policies RLS confirmées
 en base, pas par un parcours utilisateur complet.
+
+**7. Lot 2 livré : factures et reçus téléchargeables par le client (07/09/2026).**
+Migration 070 : policies `SELECT` client sur `factures`/`facture_lignes`
+(même schéma que devis, migration 069). Même IDOR trouvée et corrigée
+sur `GET /api/factures/[id]` (aucun contrôle client avant ce lot).
+
+Nouvelle route `GET /api/payments/[id]/receipt` : génère le reçu à la
+demande (pdf-lib, même patron que les routes devis/factures), aucun
+fichier stocké, vérifie la propriété (`payments.client_id` **ou**
+`clients.profile_id` — les deux colonnes coexistent, voir entrée #2
+ci-dessus) avant de générer quoi que ce soit. Remplace, pour le
+téléchargement self-service, le flux existant qui ne fait qu'envoyer un
+PDF déjà généré par e-mail (`send-receipt/route.ts`, conservé pour le
+staff, inchangé sauf durcissement ci-dessous).
+
+**Durcissement trouvé au passage, hors périmètre initial du lot mais adjacent et à faible risque** :
+`POST /api/payments/send-receipt` n'avait **aucun contrôle de rôle** —
+n'importe quel utilisateur authentifié (y compris un client) pouvait
+faire envoyer, par le compte Resend de Nexus, le reçu de n'importe quel
+paiement vers **n'importe quelle adresse e-mail** (`recipient_email` est
+un paramètre libre du corps de la requête). Restreint au staff
+(`agent`/`admin`/`super_admin`) — le téléchargement self-service du
+client passe maintenant par la nouvelle route ci-dessus, qui n'envoie
+rien par e-mail et n'accepte pas de destinataire arbitraire.
+
+Pages `/dashboard/client/factures` (liste) et `/factures/[id]` (détail +
+PDF), lien "Reçu PDF" ajouté par ligne sur `/dashboard/client/paiements`
+(statuts `paid`/`validated`/`partial` uniquement). Liens ajoutés depuis
+la fiche dossier existante, même précédent que le Lot 1 (pas de
+modification de `DashboardShell.tsx`).
+
+`tsc`/`lint`/`build` : 0 erreur.
