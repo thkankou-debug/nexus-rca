@@ -1,6 +1,6 @@
 # NEXUS RCA — FEUILLE DE ROUTE V3
 **Document unique d'exécution. Source de vérité du projet.**
-Version 1.3 · 8 septembre 2026 · Consolide les amendements 1 à 7 (dont M1-M13, exigences mobiles et logo P10) et les décisions D1 à D8
+Version 1.4 · 8 septembre 2026 · Consolide les amendements 1 à 8 (M11 corrigé : logo inchangé ; M12/M12-bis : orange retiré des PDF) et les décisions D1 à D8
 Décideur : Thierry F. Kankou · Exécutant : Claude Code
 
 ---
@@ -122,7 +122,7 @@ Le RÉCAP indique l'URL de prévisualisation pour que Thierry vérifie en ligne.
 | P6 | Finance | ✅ close par Thierry le 06/09 (confirmé alors), revérifié en direct 07/09 : `devis`/`factures` réels en base (1 ligne chacun, données de test réelles, pas fictives). Rapports journaliers/annuels toujours non construits (seul le mensuel existe), reporté sciemment — docs/DETTE.md #14 | v3/integration-v3 | 07/09 |
 | P8 | CMS et contenus | ✅ terminée — revérifié en direct 07/09 : `services` = 14 lignes réelles (12 du seed initial + 2 ajoutées le 07/09 pour les pôles homepage), cohérent avec l'historique | v3/integration-v3 | 07/09 |
 | P9 | Portail client | ✅ terminée — Lots 0 à 4 livrés 07/09 (IDOR devis/factures, consultation/acceptation devis, factures + reçus téléchargeables, documents officiels via `uploaded_by_role`, clôture manuelle des demandes de correction sans document via `PATCH .../documents-requests/[requestId]`). Les 13 points attendus de P9 sont couverts — voir docs/DETTE.md | v3/integration-v3 | 07/09 |
-| P10 | Site public | 🟡 en cours — Étape 1 (E1-E4) livrée ; E1/E2 sous A1 ; E3 terminé (8 pôles). Amendement 08/09 (M1-M13) : maquette mobile du 07/09 rejetée ; M6/M7/M8 livrés ; bascule sombre retirée + bug mode sombre public corrigé. M2 tranché (pas d'image pour l'instant). **M11 (logo navy/or) : proposition de 3 variantes SVG présentée en Artifact, en attente de validation avant tout code** — voir docs/DETTE.md. M12 (déploiement logo plateforme) et M13 (en-tête PDF unique, séquencé P6→A7) : pas commencés, dépendent de M11. Reste aussi : M9 (device réel), E5/E7/E8, harmonisation des 12 pages — voir docs/P10_LIVRABLES.md et docs/DETTE.md | v3/integration-v3 | 08/09 |
+| P10 | Site public | 🟡 en cours — Étape 1 (E1-E4) livrée ; E1/E2 sous A1 ; E3 terminé (8 pôles). Amendement 08/09 : maquette mobile du 07/09 rejetée ; M6/M7/M8 livrés ; bascule sombre retirée + bug mode sombre public corrigé. M2 tranché (pas d'image). **M11 corrigé : logo inchangé** (la proposition de recolorage présentée en Artifact est annulée, rien n'a été intégré). **M12-bis en cours : retrait de l'orange des PDF** (7 fichiers identifiés en direct, inventaire dans docs/DETTE.md, périmètre à présenter avant écriture). Reste : composant d'en-tête PDF (P6/A7), M9 (device réel), E5/E7/E8, harmonisation des 12 pages — voir docs/P10_LIVRABLES.md et docs/DETTE.md | v3/integration-v3 | 08/09 |
 | P11 | Notifications multicanal | ⬜ | | |
 | P12 | Durcissement final | ⬜ | | |
 
@@ -840,43 +840,36 @@ La maquette de page d'accueil fournie fait référence pour la composition, la p
 
 *Note 08/09 : la maquette mobile présentée le 07/09 (Artifact, cadre d'iPhone simulé, trois cercles Europe/Bangui/Canada) enfreint M2 et M10 telles qu'arrêtées ci-dessus — elle n'est pas approuvée, ne pas la reprendre telle quelle. Voir docs/DETTE.md, section P10.*
 
-**M11 · Logo.** Le logo existant est conservé — aucun nouveau monogramme n'est introduit, ni dans les maquettes ni dans le code. **Il est décliné en version bleu nuit et or pour tous les usages à l'écran** (décision du 8 septembre 2026) : le dégradé orangé disparaît de l'interface, l'orange ne subsiste nulle part.
+**M11 · Logo — inchangé (correction du 8 septembre, annule la version précédente du même jour).** Le logo existant est conservé **tel quel**. Aucun nouveau monogramme, aucun recolorage, aucune variante à produire. Les fichiers actuels restent les fichiers de référence.
 
-Exigences de la déclinaison :
-- **Format vectoriel** (SVG), pas un rendu bitmap du logo actuel recoloré — un recolorage d'image se voit et vieillit mal.
-- **Trois variantes minimum** : sur fond bleu nuit (marque en or et ivoire), sur fond clair (marque en bleu nuit, accent or), et une variante monochrome pour les usages contraints — favicon, PDF, tampon, impression noir et blanc.
-- **Lisibilité à petite taille** vérifiée à 24, 32 et 40 px de haut : c'est la taille réelle dans un en-tête mobile. Un symbole qui perd son dessin à 24 px est à simplifier.
-- **Contrastes mesurés** pour chaque variante sur son fond, comme tout le reste.
-- Le fichier d'origine est conservé et versionné ; la déclinaison ne le remplace pas, elle s'ajoute.
+**Conséquence assumée :** le dégradé orangé du logo est la **seule occurrence d'orange** de la plateforme. Il ne se propage nulle part — aucun bouton, aucun badge, aucun lien, aucun graphique ne reprend cette teinte. L'accent reste l'or `#B99760`, sans exception. Un logo qui porte ses propres couleurs est un cas courant et parfaitement tenable, à condition que rien d'autre ne les emprunte.
 
-**Point d'attention :** la déclinaison est un travail de dessin, pas de code. Elle est présentée à Thierry pour validation avant d'être intégrée, et aucune version intermédiaire ne part en production.
+**M12 · Le logo sur les documents PDF.** Le logo actuel figure sur les devis, factures, reçus, contrats, fiches de paie et documents RH.
 
-**M12 · Déploiement du logo sur toute la plateforme.** Le remplacement est global. Inventaire à établir et à cocher un par un — les trois derniers sont ceux qu'on oublie systématiquement :
+**M12-bis · Les PDF passent à la palette Nexus.** Les générateurs de documents utilisent aujourd'hui de l'orange dans leur mise en forme. D8 s'applique aux documents comme au reste : **l'orange disparaît de tous les PDF**. Seul le logo conserve ses couleurs propres, intact.
 
-| Support | Format requis |
-|---|---|
-| En-tête public, administration, espace client | SVG |
-| Favicon | SVG + ICO de repli, testé en onglet clair et sombre |
-| Icônes PWA (`manifest.json`) et `apple-touch-icon` | PNG, toutes les tailles déclarées |
-| Image de partage Open Graph et Twitter | PNG — c'est la vignette qui s'affiche quand un lien est envoyé par WhatsApp |
-| Gabarits d'e-mail (Resend) | PNG hébergé en absolu, avec `alt` — beaucoup de clients de messagerie bloquent les images |
-| Documents PDF | voir M13 |
-| Écran de chargement PWA, page 404, page de maintenance | SVG |
+Ce qui change dans chaque document : filets et séparateurs · fonds d'en-tête de tableau · totaux et montants mis en avant · badges de statut · bordures et encadrés · couleurs de graphiques s'il y en a · filet de pied de page. Tout passe en bleu nuit, ivoire et or.
 
-Aucun ancien fichier n'est supprimé : les nouveaux s'ajoutent, les références basculent, la suppression vient en P12 une fois qu'aucun chemin n'y renvoie plus.
+Règles d'application, propres à l'imprimé :
+- **L'or n'est pas du texte sur fond blanc**, en PDF comme à l'écran — le ratio est le même et le papier ne pardonne pas davantage. Le texte est en bleu nuit ; l'or sert de remplissage, de filet ou de fond de cellule.
+- **Vérifier le rendu en niveaux de gris.** Beaucoup de ces documents seront photocopiés à Bangui. L'or doit rester distinguable du bleu nuit une fois converti : si deux éléments deviennent le même gris, la hiérarchie disparaît.
+- **Une seule source de couleurs pour les fichiers concernés** — un module de thème de document, pas un jeu de constantes recopiées dans chacun. C'est ce qui a produit la dispersion actuelle de l'orange.
+- Les couleurs sémantiques d'un document (échu, payé, en attente) viennent des tokens `--danger` / `--success` / `--warning` de A1, jamais d'un orange local.
 
-**M13 · En-tête de document unique pour tous les PDF.** Le logo doit figurer sur les devis, factures, reçus, contrats, fiches de paie et documents RH.
+**Les documents déjà émis ne sont pas régénérés.** Les nouveaux documents portent la nouvelle palette ; les anciens restent tels qu'ils ont été délivrés.
 
-**Un seul composant d'en-tête, pas un logo copié dans chaque générateur.** Il est alimenté par `agency_settings` et rend : le logo, la dénomination juridique, la forme juridique, le RCCM, le numéro fiscal, l'adresse et les coordonnées — c'est-à-dire les mentions que D8/E8 rendent déjà administrables, et que la réglementation OHADA impose de toute façon sur une facture. Un logo seul sur une facture sans mentions légales est un document plus joli mais toujours irrégulier : autant traiter les deux d'un coup.
+**Séquencement.** Ce passage est une application de tokens, pas du travail de P6 : il peut être fait comme finition de A1, au même titre que la bascule de `Hero.tsx` et `FinalCTA.tsx`. Le composant d'en-tête avec les mentions légales, lui, reste en entrée de P6. **Inventorier d'abord les fichiers et l'endroit exact où l'orange est défini**, puis présenter le périmètre avant d'écrire.
 
-Conséquences techniques :
-- `pdf-lib` n'embarque pas de SVG directement : prévoir un export PNG haute résolution du logo, ou le tracer en primitives vectorielles. À arbitrer en entrée de P6.
-- Prévoir la **variante monochrome** : beaucoup de documents seront imprimés en noir et blanc à Bangui.
-- Le pied de page porte la pagination et les mentions légales, et il est solidaire du même composant.
+**Un seul composant d'en-tête, pas un logo copié dans chaque générateur.** Il est alimenté par `agency_settings` et rend le logo **avec** la dénomination juridique, la forme juridique, le RCCM, le numéro fiscal, l'adresse et les coordonnées — les mentions que E8 rend déjà administrables et que la réglementation OHADA impose sur une facture. Traiter les deux ensemble évite d'y revenir.
 
-**Les documents déjà émis ne sont jamais régénérés.** Un reçu ou une fiche de paie réédité avec une autre identité visuelle crée un doute sur son authenticité. Les nouveaux documents portent le nouvel en-tête ; les anciens restent tels qu'ils ont été délivrés. C'est la même règle que D5.
+Contraintes techniques :
+- `pdf-lib` n'embarque pas de SVG directement : prévoir un export PNG haute résolution du logo actuel, à arbitrer en entrée de P6.
+- Vérifier le rendu du logo actuel en **impression noir et blanc** : un dégradé vire souvent au gris uniforme. Si le symbole devient illisible, la réponse est un traitement à l'impression, pas une refonte du logo.
+- Le pied de page porte la pagination et les mentions légales, solidaire du même composant.
 
-**Séquencement.** Les documents financiers (devis, factures, reçus) relèvent de P6. Les documents RH — fiches de paie, contrats, attestations — existent déjà et sont modifiés en A7, sans toucher aux fiches passées. Le composant d'en-tête est écrit une fois, en entrée de P6, et réutilisé par A7.
+**Les documents déjà émis ne sont jamais régénérés** — un reçu ou une fiche de paie réédité différemment crée un doute sur son authenticité. Même règle que D5.
+
+**Séquencement.** Composant d'en-tête écrit une fois en entrée de P6 pour les documents financiers, réutilisé en A7 pour les documents RH, sans toucher aux pièces passées.
 
 ### Exigences officielles — arrêtées par Thierry le 5 septembre 2026
 

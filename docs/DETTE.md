@@ -1132,6 +1132,62 @@ explicitement une validation avant tout code ("aucune version
 intermédiaire ne part en production"). En attente du retour de Thierry
 sur l'artifact avant d'écrire quoi que ce soit.
 
+**M11 annulé le même jour (08/09/2026) : le logo reste inchangé, orange compris.**
+Thierry revient sur la décision ci-dessus dans le même mouvement : "le
+logo existant est conservé tel quel ... annule la déclinaison bleu nuit
+et or envisagée plus tôt le même jour." La proposition de 3 variantes
+SVG présentée en Artifact est donc **caduque** — elle n'avait de toute
+façon jamais été intégrée au code (aucun commit ne l'a touchée),
+conformément à la règle "présentée pour validation avant tout code" :
+le garde-fou a fonctionné comme prévu, rien à défaire.
+
+Conséquence explicite et nouvelle : le dégradé orange du logo devient la
+**seule** occurrence d'orange tolérée sur toute la plateforme — ce qui
+ouvre un chantier réel ailleurs, voir entrée suivante (M12-bis, PDF).
+
+**M12-bis — inventaire réel de l'orange dans les documents PDF (08/09/2026), avant tout code.**
+La feuille de route parle de "six" générateurs. Vérifié en direct par
+grep sur `rgb(1, 0.4, 0)` (= `#FF6600`, `nexusOrange`/`NEXUS_ORANGE`) :
+**7 fichiers**, pas 6, définissent chacun leur propre constante locale
+identique — exactement la dispersion que le document dénonce (aucun
+module de thème partagé, `lib/pdf-layout.ts` ne contient que des
+helpers de dessin, aucune couleur) :
+
+1. `lib/rh/payslip-pdf.ts` (fiche de paie)
+2. `lib/rh/contract-pdf.ts` (contrat)
+3. `lib/monthly-report-pdf.ts` (rapport mensuel)
+4. `components/dashboard/QuickSalesManager.tsx` (reçu caisse rapide)
+5. `components/dashboard/PaymentReceipt.tsx` (reçu de paiement — a aussi
+   `ORANGE_BG`, un fond de cellule orange clair, pas seulement du texte)
+6. `components/dashboard/MonthlyReportGenerator.tsx` (rapport mensuel,
+   fichier UI distinct de #3)
+7. `components/dashboard/AgentStats.tsx` (fiche agent)
+
+**Hors périmètre, vérifié et volontairement non touché** : les 5 routes
+API pdf-lib construites pendant P9 (`devis/[id]/pdf`,
+`factures/[id]/pdf`, `payments/[id]/receipt`, `demandes/[id]/pdf`,
+`payment-links/[reference]/verify`) n'utilisent déjà aucun orange — bâties
+après la correction A1, elles sont déjà conformes. Les classes Tailwind
+`nexus-orange-*` visibles dans ces mêmes fichiers React (boutons,
+badges de l'écran admin autour du bouton "générer le PDF") ne sont
+**pas** dans le périmètre de M12-bis, qui porte sur le *document
+dessiné*, pas sur l'interface d'administration qui l'entoure — cette
+dernière reste un chantier séparé, déjà connu (admin pas encore
+migré vers les tokens or, hors décision du jour).
+
+Chaque fichier utilise l'orange pour deux rôles distincts, à
+requalifier séparément (jamais un remplacement global) :
+- **Barres/filets/fonds de cellule pleins** (bandeau d'en-tête, filet de
+  pied de page, fond `ORANGE_BG`) → candidats à l'or (remplissage,
+  autorisé par la règle A1 "l'or n'est jamais du texte").
+- **Texte** (libellés de section "CLIENT"/"SERVICE FOURNI", montants mis
+  en avant, totaux) → bleu nuit obligatoire, jamais l'or (même règle
+  2,4:1 qu'à l'écran, un PDF ne pardonne pas plus qu'un navigateur).
+
+Périmètre exact (fichiers, remplacement bandeau/texte, vérification
+niveaux de gris) à présenter à Thierry avant d'écrire, comme demandé
+explicitement par le document.
+
 ## P1c — Revérification (07/09/2026)
 
 **1. 32 clés étrangères sans index couvrant, sur les 42 corrigées en P1c d'origine.**
