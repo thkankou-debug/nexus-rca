@@ -121,10 +121,16 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* No-flash dark mode: applique la classe avant le premier paint */}
+        {/* No-flash dark mode : uniquement sous /dashboard (lib/theme.ts,
+            DashboardShell.tsx). Le site public n'a pas de mode sombre en
+            V3 (interdit explicite, A1) — sans ce garde-fou, la preference
+            systeme d'un visiteur applique quand meme .dark sur <html>,
+            partout, y compris sur les pages publiques qui n'ont jamais
+            ete concues pour ce theme (trouve le 08/09 : cartes
+            bg-surface-ivory illisibles, texte navy sur fond sombre). */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var s=localStorage.getItem('nexus-theme');var m=window.matchMedia('(prefers-color-scheme: dark)').matches;var d=s==='dark'||((s==='system'||s===null||s==='')&&m);document.documentElement.classList.toggle('dark',d);}catch(e){}})();`,
+            __html: `(function(){try{if(!location.pathname.startsWith('/dashboard'))return;var s=localStorage.getItem('nexus-theme');var m=window.matchMedia('(prefers-color-scheme: dark)').matches;var d=s==='dark'||((s==='system'||s===null||s==='')&&m);document.documentElement.classList.toggle('dark',d);}catch(e){}})();`,
           }}
         />
         {/* Meta tags PWA additionnels iOS */}
