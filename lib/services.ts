@@ -22,7 +22,6 @@ export interface Service {
   icon: LucideIcon;
   features: string[];
   accent: "blue" | "orange";
-  image: string;
 }
 
 export const SERVICES: Service[] = [
@@ -43,8 +42,6 @@ export const SERVICES: Service[] = [
       "Partage des résultats avec les porteurs",
     ],
     accent: "blue",
-    image:
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
   },
   {
     id: "2",
@@ -63,8 +60,6 @@ export const SERVICES: Service[] = [
       "Assistance entretien consulaire",
     ],
     accent: "orange",
-    image:
-      "https://images.unsplash.com/photo-1569974498991-d3c12a504f95?auto=format&fit=crop&w=1200&q=80",
   },
   {
     id: "3",
@@ -83,8 +78,6 @@ export const SERVICES: Service[] = [
       "Ressources numériques illimitées",
     ],
     accent: "blue",
-    image:
-      "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1200&q=80",
   },
   {
     id: "4",
@@ -103,8 +96,6 @@ export const SERVICES: Service[] = [
       "CAQ + permis d'études",
     ],
     accent: "orange",
-    image:
-      "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=80",
   },
   {
     id: "5",
@@ -123,8 +114,6 @@ export const SERVICES: Service[] = [
       "Impression, scan, reliure",
     ],
     accent: "blue",
-    image:
-      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80",
   },
   {
     id: "6",
@@ -143,8 +132,6 @@ export const SERVICES: Service[] = [
       "Assistance voyage 24/7 (WhatsApp)",
     ],
     accent: "orange",
-    image:
-      "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=80",
   },
   {
     id: "7",
@@ -163,8 +150,6 @@ export const SERVICES: Service[] = [
       "Disponibilité en agence à Bangui",
     ],
     accent: "blue",
-    image:
-      "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&w=1200&q=80",
   },
   {
     id: "8",
@@ -183,8 +168,6 @@ export const SERVICES: Service[] = [
       "Paiement en FCFA ou devises",
     ],
     accent: "orange",
-    image:
-      "https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?auto=format&fit=crop&w=1200&q=80",
   },
   {
     id: "9",
@@ -203,8 +186,6 @@ export const SERVICES: Service[] = [
       "Transfert vers un conseiller humain si besoin",
     ],
     accent: "blue",
-    image:
-      "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80",
   },
   {
     id: "10",
@@ -223,8 +204,6 @@ export const SERVICES: Service[] = [
       "3 packs adaptés : Essentiel, Pro, Premium",
     ],
     accent: "orange",
-    image:
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
   },
 ];
 

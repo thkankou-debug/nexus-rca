@@ -41,12 +41,14 @@ type Pilier = {
 };
 
 // Piliers dont le titre/description/lien viennent de `services` (P8) —
-// slug réel de la table. "business" et "reseau" restent en dur : le
-// premier n'a aucun service réel derrière lui à ce jour (pôle
-// "Accompagnement business" volontairement vide, voir docs/DETTE.md),
-// le second décrit la présence de bureaux, pas un service — ni l'un ni
-// l'autre ne correspond à une ligne `services` existante (décision
-// confirmée par Thierry le 06/09/2026, P10 lot 2).
+// slug réel de la table. "business" et "reseau" restent en dur ici
+// (texte identique à celui déjà validé sur leurs pages dédiées,
+// /services/accompagnement-business et /services/reseau-international,
+// livrées le 07/09/2026) plutôt que rebranchés sur `services` : ce sont
+// les 2 seuls pôles à liens/tons de conception fixes (P10 lot 2), pas
+// une dette — mais les liens pointent maintenant vers leurs vraies
+// pages (corrigé le 08/09, ils pointaient encore vers /services/
+// financement et /a-propos).
 const PILIER_SLUGS: Record<string, string> = {
   visa: "visa",
   digital: "digitalisation",
@@ -93,7 +95,7 @@ const PILIERS_FALLBACK = {
     description:
       "Stratégie, partenariats, entrée de marché. Pour entrepreneurs et entreprises ambitieuses.",
     icon: Briefcase,
-    href: "/services/financement",
+    href: "/services/accompagnement-business",
     tone: "navy" as Tone,
     tags: ["Stratégie", "Partenariats"] as [string, string],
   },
@@ -101,11 +103,11 @@ const PILIERS_FALLBACK = {
     id: "reseau",
     title: "Réseau international",
     description:
-      "Trois pôles actifs : Bangui (siège), Europe, Canada. Une équipe, une méthode, partout.",
+      "Mise en relation professionnelle, recherche de partenaires et coordination de projets entre Bangui, l'Europe et le Canada.",
     icon: Network,
-    href: "/a-propos",
+    href: "/services/reseau-international",
     tone: "world" as Tone,
-    tags: ["3 continents", "10+ services"] as [string, string],
+    tags: ["Mise en relation", "Coordination"] as [string, string],
   },
   etudes: {
     id: "etudes",
@@ -194,12 +196,12 @@ const TONE_STYLES: Record<
   }
 > = {
   orange: {
-    iconBg: "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700",
-    iconColor: "text-white",
-    glowHover: "group-hover:bg-nexus-orange-500/20",
-    accent: "text-nexus-orange-300",
-    borderHover: "hover:border-nexus-orange-400/50",
-    tagBg: "bg-nexus-orange-500/10 text-nexus-orange-200 border-nexus-orange-400/30",
+    iconBg: "bg-brand",
+    iconColor: "text-on-brand",
+    glowHover: "group-hover:bg-brand/20",
+    accent: "text-brand",
+    borderHover: "hover:border-brand/50",
+    tagBg: "bg-brand/10 text-brand border-brand/30",
   },
   tech: {
     iconBg:
@@ -286,7 +288,7 @@ export async function ServicesGrid() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-32 top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/12 blur-[140px]"
+        className="pointer-events-none absolute -right-32 top-32 h-[36rem] w-[36rem] rounded-full bg-brand/12 blur-[140px]"
       />
       <div
         aria-hidden
@@ -294,22 +296,19 @@ export async function ServicesGrid() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/30 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/30 to-transparent"
       />
 
       <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
         {/* Header */}
         <div className="mx-auto max-w-3xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+          <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
             <Sparkles className="h-3 w-3" />
             Notre écosystème
           </span>
           <h2 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl">
             Huit piliers d&rsquo;accompagnement,{" "}
-            <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
-              un seul interlocuteur
-            </span>
-            .
+            <span className="text-brand">un seul interlocuteur</span>.
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
             De la première démarche à l&rsquo;activation internationale.
@@ -353,7 +352,7 @@ export async function ServicesGrid() {
         <div className="mt-12 flex justify-center">
           <Link
             href="/services"
-            className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl border border-white/15 bg-white/[0.05] px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-nexus-orange-400/40 hover:bg-white/[0.08]"
+            className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl border border-white/15 bg-white/[0.05] px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-brand/40 hover:bg-white/[0.08]"
           >
             Voir le détail des services
             <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
@@ -374,11 +373,11 @@ function HeroCard({ pilier }: { pilier: Pilier }) {
   return (
     <Link
       href={pilier.href}
-      className="group relative overflow-hidden rounded-3xl border border-nexus-orange-400/30 bg-gradient-to-br from-nexus-orange-500/12 via-white/[0.05] to-white/[0.02] ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_28px_60px_-24px_rgba(255,102,0,0.30)] transition-all duration-500 hover:-translate-y-1 hover:border-nexus-orange-400/60 sm:col-span-2 lg:col-span-7 lg:row-span-2"
+      className="group relative overflow-hidden rounded-3xl border border-brand/30 bg-gradient-to-br from-brand/12 via-white/[0.05] to-white/[0.02] ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_28px_60px_-24px_rgba(185,151,96,0.30)] transition-all duration-500 hover:-translate-y-1 hover:border-brand/60 sm:col-span-2 lg:col-span-7 lg:row-span-2"
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-nexus-orange-500/30 blur-3xl"
+        className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-brand/30 blur-3xl"
       />
       <div
         aria-hidden
@@ -386,16 +385,16 @@ function HeroCard({ pilier }: { pilier: Pilier }) {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-300/60 to-transparent"
+        className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
       />
 
       <div className="relative flex h-full flex-col p-7 sm:p-8 lg:p-10">
         <div className="flex items-start justify-between gap-4">
-          <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+          <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
             Pilier signature
           </span>
           <div
-            className={`flex h-14 w-14 items-center justify-center rounded-2xl ${tone.iconBg} ${tone.iconColor} shadow-[0_10px_28px_-10px_rgba(255,102,0,0.7)] ring-1 ring-white/15 transition-transform duration-300 group-hover:scale-105`}
+            className={`flex h-14 w-14 items-center justify-center rounded-2xl ${tone.iconBg} ${tone.iconColor} shadow-[0_10px_28px_-10px_rgba(185,151,96,0.7)] ring-1 ring-white/15 transition-transform duration-300 group-hover:scale-105`}
           >
             <Icon className="h-7 w-7" />
           </div>
@@ -417,7 +416,7 @@ function HeroCard({ pilier }: { pilier: Pilier }) {
           <KpiPill value="e-Visa" label="50+ pays" />
         </div>
 
-        <div className="mt-7 inline-flex items-center gap-2 self-start text-sm font-bold text-nexus-orange-300 transition-colors group-hover:text-nexus-orange-200">
+        <div className="mt-7 inline-flex items-center gap-2 self-start text-sm font-bold text-brand transition-colors group-hover:text-brand-hover">
           Découvrir
           <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-1" />
         </div>
@@ -459,7 +458,7 @@ function CompactSignatureCard({
     >
       <div
         aria-hidden
-        className={`pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-3xl transition-all duration-500 ${tone.glowHover}`}
+        className={`pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-3xl transition-all duration-500 ${tone.glowHover}`}
       />
       <div className="relative flex h-full flex-col">
         {/* Header — icône + eyebrow */}
@@ -530,7 +529,7 @@ function CompactSignatureWide({
     >
       <div
         aria-hidden
-        className={`pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-nexus-orange-500/0 blur-3xl transition-all duration-500 ${tone.glowHover}`}
+        className={`pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-brand/0 blur-3xl transition-all duration-500 ${tone.glowHover}`}
       />
       <div className="relative flex items-start gap-5">
         <div
@@ -625,7 +624,7 @@ function CompactSimpleCard({
           ))}
         </div>
 
-        <div className="mt-3 inline-flex items-center gap-1 self-start text-xs font-semibold text-white/85 transition-colors group-hover:text-nexus-orange-200">
+        <div className="mt-3 inline-flex items-center gap-1 self-start text-xs font-semibold text-white/85 transition-colors group-hover:text-brand">
           Découvrir
           <ArrowRight className="h-3 w-3 transition-transform duration-300 ease-out group-hover:translate-x-0.5" />
         </div>
