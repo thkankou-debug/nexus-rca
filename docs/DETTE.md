@@ -1487,3 +1487,85 @@ déjà en place. Boutons "Résolu"/"Annuler" ajoutés dans
 
 `tsc`/`lint`/`build` : 0 erreur. **P9 (Portail client) est maintenant
 terminée** — les 13 points attendus sont couverts.
+
+---
+
+## Audit d'avancement — réponse aux compléments (08/09/2026)
+
+`NEXUS_RCA_AUDIT_AVANCEMENT_COMPLEMENTS.md` déposé le 08/09 : un
+complément à une "commande d'audit" de Thierry que je n'ai **pas
+reçue** — seul le complément a été déposé. Je ne peux donc pas produire
+le rapport structuré en 11 points qu'il présuppose. J'ai en revanche
+vérifié, avec preuve documentaire (chemin de fichier, requête réelle,
+sortie collée), les points self-contained du complément lui-même.
+
+**Section B — hypothèse confirmée : le shell A3 (`AdminShell`) n'est raccordé à aucune vraie page.**
+`components/admin/ui/AdminShell.tsx` existe réellement (39 composants
+dans `components/admin/ui/`, conforme au périmètre A2). Vérifié par
+grep sur tout `app/` et `components/` : ses seuls importeurs sont
+`app/dashboard/design-system/DesignSystemShowcase.tsx` (la vitrine) et
+des fichiers internes à `components/admin/ui/` lui-même (`index.ts`,
+`Toast.tsx`). **Aucune des 140 pages réelles sous `app/dashboard/**`**
+ne l'importe — vérifié explicitement sur `app/dashboard/super-admin/
+page.tsx` (probablement la page de la capture de Thierry) : elle
+importe `DashboardShell` (l'ancien shell, gelé), pas `AdminShell`.
+
+Ce n'est pas une découverte nouvelle : mes propres entrées de ce
+fichier pour A3/A4/A5-A7 documentaient déjà "démo isolée confirmée par
+Thierry" et "bascule des vraies pages reportée". La capture d'écran
+rend ce même fait, déjà écrit noir sur blanc dans le tableau
+d'avancement, visible et concret d'une façon que le tableau ne rendait
+pas. Catégorie exacte du complément (section E) : **"fait, à
+raccorder"** pour A1/A2 (composants réels, jamais importés par une
+vraie page) — pas "jamais commencé", et surtout pas un cas qui
+justifierait de tout refaire.
+
+**Section C.1 — confirmé : rien de la V3 n'est en production.**
+`git log origin/main -3` : dernier commit du 08/05/2026
+(`ec32424f52433ceac1bfafa666b1d7d376375c81`), `git merge-base
+origin/main HEAD` retourne ce même SHA — `main` n'a reçu aucun commit
+depuis, tout le travail V3 (P0 à ce jour) vit exclusivement sur
+`v3/integration-v3`. Confirmé côté hébergeur : `vercel.get_project`
+montre `www.nexusrca.com` alias sur le déploiement de production lié à
+`main`, distinct des URLs de prévisualisation `nexus-rca-git-v3-
+integration-v3-*.vercel.app` utilisées tout au long de cette session.
+**Aucun écran jugé non conforme par Thierry n'est vu par un client
+réel** — seulement par lui, en prévisualisation.
+
+**Section C.2 — numérotation des migrations : 6 migrations réelles jamais committées, dont une de cette session.**
+Comparaison directe entre `supabase_migrations.schema_migrations`
+(base) et les fichiers `.sql` du dépôt :
+- `003a/003b/003c/003d_payments_*` (04/05/2026) : construisent la
+  structure `payments.status/amount/method` + `payment_events` +
+  `stripe_webhook_log` que toute cette session traite comme
+  "l'existant" — **appartiennent en réalité au trou 001-017**, et
+  étaient récupérables (texte exact tiré de la base), contrairement à
+  ce que CLAUDE.md laissait supposer ("perdues"). Récupérées et
+  committées ce jour.
+- `042_contact_demandes` (11/05/2026) : crée `contact_demandes`, une
+  des 5 tables "personne" de l'audit D7/C0 — jamais signalée comme
+  migration manquante jusqu'ici. Récupérée et committée.
+- `067_p10_homepage_poles_business_reseau` (07/09/2026, 01h58) :
+  **violation de la règle 8 commise pendant cette session-ci**, pas une
+  dette héritée. C'est cette migration qui avait déjà créé les lignes
+  `accompagnement-business`/`reseau-international` trouvées
+  "préexistantes" lors de mon propre audit P9/P10 du 07/09 — je les
+  avais alors attribuées à tort au seed initial de P8, sans vérifier
+  quelle migration les avait réellement posées. Récupérée et committée.
+- `032_categorisation_specialites` : la base stocke ce nom sans le
+  préfixe numérique (`categorisation_specialites`) ; le fichier local
+  `032_categorisation_specialites.sql` existe et correspond au bon
+  contenu — écart de nommage uniquement, pas un fichier manquant.
+
+Les 6 fichiers recréés portent le texte SQL exact récupéré depuis
+`supabase_migrations.schema_migrations.statements`, non reconstruit,
+non ré-appliqués (déjà vivants en production Supabase — cette
+opération est purement documentaire).
+
+**Ce qui reste non vérifiable dans cet environnement**, conformément à
+la section A.1 du complément : toute conformité *visuelle* (couleurs à
+l'écran, mise en page) ne peut être établie que par lecture de code et
+par les captures de Thierry — jamais par moi directement, faute de
+navigateur. Chaque affirmation ci-dessus s'appuie sur un chemin de
+fichier, une requête réelle ou une sortie de commande citée, jamais sur
+un compte-rendu antérieur.
