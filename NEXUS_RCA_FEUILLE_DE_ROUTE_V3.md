@@ -1,7 +1,15 @@
 # NEXUS RCA — FEUILLE DE ROUTE V3
-**Document unique d'exécution. Source de vérité du projet.**
+**Document unique d'exécution. Source de vérité du projet — historique P0 à P9.**
 Version 1.5 · 8 septembre 2026 · Tableau §I.5 corrigé par l'audit d'avancement du 08/09 (docs/AUDIT_AVANCEMENT_V3.md) ; consolide les amendements 1 à 8 et les décisions D1 à D8
 Décideur : Thierry F. Kankou · Exécutant : Claude Code
+
+> **⚠️ À partir du 09/09/2026** : pour tout ce qui n'est pas déjà marqué
+> terminé dans le tableau §I.5, la référence d'exécution est
+> `NEXUS_RCA_SPECIFICATION_COMPLETE.md` (16 lots L1-L16, décisions
+> définitives #1-#12). Ce fichier-ci reste l'historique figé de ce qui a
+> été livré et audité (P0-P9). Les deux documents revendiquaient chacun
+> le statut de "source de vérité unique" — tranché ainsi avec Thierry le
+> 09/09 plutôt que de fusionner 16 lots dans le tableau existant.
 
 ---
 

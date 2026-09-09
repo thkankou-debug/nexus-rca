@@ -10,7 +10,7 @@ import { FileText } from "lucide-react";
 export const metadata = {
   title: "Réseau international | Nexus RCA — Bangui",
   description:
-    "Mise en relation professionnelle, recherche de partenaires et coordination de projets transfrontaliers entre Bangui, l'Europe et le Canada.",
+    "Bangui (siège), Canada (bureau) et Europe (représentation) : mise en relation professionnelle et coordination de projets transfrontaliers entre nos trois zones.",
 };
 
 const DEMANDE_HREF = `/demande/complet?service=${encodeURIComponent(

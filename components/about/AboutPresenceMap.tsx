@@ -65,7 +65,7 @@ export function AboutPresenceMap() {
             viewBox="0 0 1000 460"
             className="relative w-full"
             role="img"
-            aria-label="Carte mondiale stylisée — présence Nexus Bangui Europe Canada"
+            aria-label="Carte mondiale stylisée — présence Nexus : Bangui (siège), Canada (bureau), Europe (représentation)"
           >
             <defs>
               <radialGradient id="about-hub-glow" cx="50%" cy="50%" r="50%">

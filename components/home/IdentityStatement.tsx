@@ -129,7 +129,7 @@ export function IdentityStatement() {
             {/* Trust line */}
             <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-white/65 backdrop-blur-md">
               <MapPin className="h-3 w-3 text-nexus-orange-300" />
-              Bangui · Europe · Canada
+              Bangui (siège) · Canada (bureau) · Europe (représentation)
             </div>
           </div>
 
@@ -179,7 +179,7 @@ export function IdentityStatement() {
                     viewBox="0 0 500 320"
                     className="w-full"
                     role="img"
-                    aria-label="Réseau Nexus : Bangui · Europe · Canada"
+                    aria-label="Réseau Nexus : Bangui (siège), Canada (bureau), Europe (représentation)"
                   >
                     <defs>
                       <radialGradient id="hub-glow-id" cx="50%" cy="50%" r="50%">

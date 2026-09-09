@@ -103,7 +103,7 @@ const PILIERS_FALLBACK = {
     id: "reseau",
     title: "Réseau international",
     description:
-      "Mise en relation professionnelle, recherche de partenaires et coordination de projets entre Bangui, l'Europe et le Canada.",
+      "Bangui (siège), Canada (bureau) et Europe (représentation) : mise en relation professionnelle et coordination de projets entre nos trois zones.",
     icon: Network,
     href: "/services/reseau-international",
     tone: "world" as Tone,

@@ -1627,3 +1627,41 @@ catégorie 11c).
 serveur de développement) : les deux liens corrigés et le nouveau texte
 du pilier "reseau" sont bien présents dans le HTML rendu de la page
 d'accueil.
+
+---
+
+## L1 (minimal) — Formulation de présence internationale (09/09/2026)
+
+`NEXUS_RCA_SPECIFICATION_COMPLETE.md` (déposé le 08/09, revendique de
+remplacer la feuille de route pour tout ce qu'il couvre) fixe en
+Décision #7 une formulation explicite de présence :
+**"Bangui (siège) · Canada (bureau) · Europe (représentation)"**,
+remplaçant la prudence antérieure ("ne pas affirmer de statut
+d'implantation", point C2 de l'audit du 08/09). Thierry a validé cette
+formulation explicitement — ce n'est plus une affirmation inventée.
+
+**Décision de traitement du document** : la feuille de route
+(`NEXUS_RCA_FEUILLE_DE_ROUTE_V3.md`) reste l'historique figé de P0-P9 ;
+`NEXUS_RCA_SPECIFICATION_COMPLETE.md` devient la référence pour tout le
+reste (L1-L16), plutôt que de fusionner ses 16 lots dans le tableau
+§I.5 existant. Note de renvoi ajoutée en tête de la feuille de route.
+
+**Périmètre de ce lot (L1 minimal, pas L1 complet)** : Thierry a choisi
+de ne pas exécuter dans la foulée la Décision #6 (suppression de
+`lib/services.ts`, bascule des 6 consommateurs — dont `Navbar.tsx`,
+présent sur 100% des pages — vers une lecture directe de la table
+`services` en base). Ce point est **hors périmètre**, reporté à un lot
+séparé, présenté et testé à part. Seule la formulation de présence a
+été traitée ici.
+
+**Fichiers modifiés** (texte/`aria-label` uniquement, aucune logique
+touchée) :
+- `components/home/IdentityStatement.tsx` (badge visible + `aria-label` SVG)
+- `app/a-propos/page.tsx` (badge visible)
+- `components/about/AboutPresenceMap.tsx` (`aria-label` SVG)
+- `components/ServicesGrid.tsx` (description du pilier "reseau")
+- `app/services/reseau-international/page.tsx` (meta description)
+
+Grep de contrôle `Bangui · Europe · Canada` → 0 résultat après coup.
+`tsc`/`lint`/`build` : 0 erreur (2 warnings pré-existants sans rapport,
+`PeriodReviewsView.tsx`/`ReviewDetailView.tsx`, `react-hooks/exhaustive-deps`).

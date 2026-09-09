@@ -560,7 +560,7 @@ export default function AProposPage() {
               <span className="h-1 w-1 rounded-full bg-white/20" />
               <span className="flex items-center gap-1.5">
                 <MapPin className="h-3.5 w-3.5 text-nexus-orange-300" />
-                Bangui · Europe · Canada
+                Bangui (siège) · Canada (bureau) · Europe (représentation)
               </span>
             </div>
           </div>
