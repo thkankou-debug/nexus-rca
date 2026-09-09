@@ -1569,3 +1569,61 @@ par les captures de Thierry — jamais par moi directement, faute de
 navigateur. Chaque affirmation ci-dessus s'appuie sur un chemin de
 fichier, une requête réelle ou une sortie de commande citée, jamais sur
 un compte-rendu antérieur.
+
+---
+
+## Rattrapage post-audit — `ServicesGrid.tsx`, `ServiceCard.tsx`, `lib/services.ts` (08/09/2026)
+
+Première correction du plan de rattrapage (catégorie 11a) de
+`docs/AUDIT_AVANCEMENT_V3.md`, exécutée sur GO explicite après un choix
+entre cette option et P1b (test f) — Thierry a choisi celle-ci pour son
+impact visible immédiat.
+
+**`lib/services.ts`** : retrait du champ `image` sur les 10 entrées
+(URLs `images.unsplash.com`, jamais rendues — confirmé par grep sur
+`.image` dans `app/`+`components/`, 0 résultat, donc suppression sans
+impact visuel). Titres, descriptions et `features` conservés à
+l'identique : contenu produit réel, pas reformulé.
+
+**`components/ui/ServiceCard.tsx`** (cartes de `/services`) : tout
+l'orange requalifié vers les tokens or (icône, glow permanent, pastille
+d'indicateur, soulignement du titre, flèche CTA, bordure/ombre au
+survol). Contrastes mesurés avant d'écrire : `brand` sur navy
+`#050F3D` = 6,71:1, `brand-hover` sur le même navy = 5,26:1 — les deux
+≥ AA.
+
+**`components/ServicesGrid.tsx`** (grille de la page d'accueil, la plus
+visible du site) :
+- `Tone "orange"` et tous les éléments décoratifs de section (badge
+  "Notre écosystème", dégradé du titre, glows de fond, CTA de fin de
+  section, carte héros "Visa" — bordure/glow/badge/icône/lien
+  "Découvrir") requalifiés un par un vers l'or.
+- **Liens corrigés** : le pilier "business" pointait vers
+  `/services/financement`, "reseau" vers `/a-propos` — **les vraies
+  pages livrées le 07/09 (`/services/accompagnement-business`,
+  `/services/reseau-international`) n'étaient jamais liées depuis la
+  page d'accueil**, trouvé en traitant ce lot, pas cherché
+  spécifiquement.
+- **Texte du pilier "reseau" corrigé** : retire "Trois pôles actifs :
+  Bangui (siège), Europe, Canada" (l'affirmation d'implantation non
+  confirmée signalée au point C2 de l'audit), remplacé par le texte
+  déjà rédigé et validé pour la vraie page ("mise en relation
+  professionnelle, recherche de partenaires et coordination de projets
+  entre Bangui, l'Europe et le Canada").
+- Commentaire de code au-dessus de `PILIER_SLUGS` mis à jour : il
+  affirmait encore que les pôles "business"/"reseau" n'avaient "aucun
+  service réel derrière eux", alors que leurs pages existent depuis le
+  07/09 — corrigé pour refléter l'état réel.
+
+**Hors périmètre, non touché** : `Navbar.tsx`/`Footer.tsx` (déjà sur les
+tokens or), `DemandeForm.tsx` (pas de rendu de couleur), `app/services/
+[slug]/page.tsx` (route inatteignable en pratique — les 10 slugs de
+`lib/services.ts` ont tous une page spécifique qui prend priorité,
+jamais vérifié avant ce jour). Les 12 pages `services/*` individuelles
+restent le plus gros chantier non commencé (`docs/AUDIT_AVANCEMENT_V3.md`,
+catégorie 11c).
+
+`tsc`/`lint`/`build` : 0 erreur. Vérifié en direct (`curl` sur le
+serveur de développement) : les deux liens corrigés et le nouveau texte
+du pilier "reseau" sont bien présents dans le HTML rendu de la page
+d'accueil.

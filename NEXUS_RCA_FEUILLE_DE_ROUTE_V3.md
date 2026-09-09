@@ -112,7 +112,7 @@ Ce tableau remplace la version précédente ("✅ terminée" pour A2/A3/A4/A6/A7
 | P1a-bis | Compléter le rendu de P1a | **TV** — auto-élévation confirmée possible avant correctif, 20 profils contrôlés, aucun abus | 07/09 |
 | P1b | Durcissement sécurité | **P** — test (f), déclaration de bout en bout, jamais exécuté ; confirmation du renvoi des URLs clients en attente | 07/09 |
 | P1c | Outillage et dette technique | **TV** | 07/09 |
-| A1 | Tokens et fondations visuelles | **P** — tokens définis et appliqués sur 5 fichiers publics + 7 générateurs PDF. **5 103 occurrences de `nexus-orange` subsistent dans 248 fichiers** : la bascule est faite à ~1 % | 07/09 |
+| A1 | Tokens et fondations visuelles | **P** — tokens appliqués sur 8 fichiers publics (+`ServicesGrid.tsx`/`ServiceCard.tsx`/`lib/services.ts` corrigés 08/09) + 7 générateurs PDF. Occurrences `nexus-orange` restantes non recomptées depuis les 5 103 du 08/09 (audit), mais les 12 pages `services/*` individuelles (le plus gros volume) n'ont toujours pas été touchées | 08/09 |
 | A2 | Design system | **DNR** — 39 composants réels, utilisés uniquement par la vitrine `/dashboard/design-system` | 07/09 |
 | A3 | Shell d'administration | **DNR** — `AdminShell` existe, importé par 0 des 140 pages `app/dashboard/**` | 07/09 |
 | A4 | Tableau de bord | **VNC** — `PilotageHero` contredit les règles A1 (dégradés, animation en boucle, ombres décoratives). À reprendre, pas à raccorder | 07/09 |
@@ -126,7 +126,7 @@ Ce tableau remplace la version précédente ("✅ terminée" pour A2/A3/A4/A6/A7
 | P6 | Finance | **P** — rapports journaliers et annuels non construits | 06/09 |
 | P8 | CMS et contenus | **P** — `services` peuplée (14 lignes), mais **quatre taxonomies de services coexistent** | 06/09 |
 | P9 | Portail client | **TV** — lots 0 à 4, RLS vérifiées, IDOR corrigées | 07/09 |
-| P10 | Site public | **P** — `ServicesGrid.tsx` et `lib/services.ts` jamais traités ; 12 pages `services/*` non migrées | 07/09 |
+| P10 | Site public | **P** — `ServicesGrid.tsx`/`ServiceCard.tsx`/`lib/services.ts` corrigés 08/09 (orange retiré, liens business/reseau réparés, photos Unsplash retirées) ; 12 pages `services/*` toujours non migrées, plus gros chantier restant | 08/09 |
 | P11 | Notifications multicanal | **NC** | — |
 | P12 | Durcissement final | **NC** | — |
 
