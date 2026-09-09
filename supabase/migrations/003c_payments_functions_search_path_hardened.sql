@@ -1,6 +1,10 @@
+-- NE JAMAIS REJOUER SUR UNE BASE EXISTANTE.
 -- Recupere le 08/09/2026 depuis supabase_migrations.schema_migrations
 -- (version 20260504220657) : applique en base le 04/05/2026, jamais
--- committe en fichier .sql jusqu'ici. Texte exact, non reconstruit.
+-- committe en fichier .sql jusqu'ici. Texte exact tire de statements en
+-- base (pas une reconstruction par introspection comme
+-- 000_schema_baseline.sql), fourni ici pour tracabilite historique
+-- uniquement.
 
 -- Phase 5 step C : durcissement sécu — fixer search_path des 3 fonctions
 -- ajoutées par 003b. Mitigation du warning function_search_path_mutable.

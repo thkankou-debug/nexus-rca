@@ -1,6 +1,10 @@
+-- NE JAMAIS REJOUER SUR UNE BASE EXISTANTE.
 -- Recupere le 08/09/2026 depuis supabase_migrations.schema_migrations
 -- (version 20260511220546) : applique en base le 11/05/2026, jamais
--- committe en fichier .sql jusqu'ici. Texte exact, non reconstruit.
+-- committe en fichier .sql jusqu'ici. Texte exact tire de statements en
+-- base (pas une reconstruction par introspection comme
+-- 000_schema_baseline.sql), fourni ici pour tracabilite historique
+-- uniquement.
 
 CREATE TABLE IF NOT EXISTS public.contact_demandes (
   id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),

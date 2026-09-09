@@ -1,3 +1,4 @@
+-- NE JAMAIS REJOUER SUR UNE BASE EXISTANTE.
 -- Recupere le 08/09/2026 depuis supabase_migrations.schema_migrations
 -- (version 20260907015806, nom "p10_homepage_poles_business_reseau") :
 -- appliquee en base le 07/09/2026 a 01h58, jamais committee en fichier
@@ -6,7 +7,9 @@
 -- migration qui avait deja cree les lignes `accompagnement-business` et
 -- `reseau-international` trouvees "preexistantes" lors de l'audit P9/P10
 -- du 07/09 -- je les avais alors attribuees a tort au seed initial de P8.
--- Texte exact recupere depuis la base, non reconstruit.
+-- Texte exact tire de statements en base (pas une reconstruction par
+-- introspection comme 000_schema_baseline.sql), fourni ici pour
+-- tracabilite historique uniquement.
 
 -- ============================================================================
 -- 067 — P10 : ajoute 2 lignes `services` pour les poles "Accompagnement
