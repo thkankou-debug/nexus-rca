@@ -1,6 +1,6 @@
 # NEXUS RCA — FEUILLE DE ROUTE V3
 **Document unique d'exécution. Source de vérité du projet.**
-Version 1.4 · 8 septembre 2026 · Consolide les amendements 1 à 8 (M11 corrigé : logo inchangé ; M12/M12-bis : orange retiré des PDF) et les décisions D1 à D8
+Version 1.5 · 8 septembre 2026 · Tableau §I.5 corrigé par l'audit d'avancement du 08/09 (docs/AUDIT_AVANCEMENT_V3.md) ; consolide les amendements 1 à 8 et les décisions D1 à D8
 Décideur : Thierry F. Kankou · Exécutant : Claude Code
 
 ---
@@ -98,33 +98,41 @@ Push    : en fin de phase, après la barrière de qualité, jamais avant
 ```
 Le RÉCAP indique l'URL de prévisualisation pour que Thierry vérifie en ligne.
 
-## I.5 Tableau d'avancement — à tenir à jour dans ce fichier
+## I.5 Tableau d'avancement — état réel, corrigé par l'audit du 08/09/2026
 
-| Code | Phase | État | Branche | Date |
-|---|---|---|---|---|
-| P0 | Audit du dépôt | ✅ terminée | — | 04/09 |
-| P0.5 | Baseline schéma + RLS | ✅ terminée | — | 05/09 |
-| P1a | Correctif de sécurité immédiat | ✅ terminée — verdict `profiles` rendu 07/09 : trigger `trg_profiles_prevent_role_self_elevation` vérifié en direct, bloque tout changement de `role` sauf `super_admin`/`service_role` | — | 07/09 |
-| P1a-bis | Compléter le rendu de P1a | ✅ terminée — auto-élévation confirmée possible avant correctif, 20 profils contrôlés, aucun abus ; policy UPDATE `payment_links` avant/après en texte intégral rendue 07/09 | — | 07/09 |
-| P1b | Durcissement sécurité | ✅ terminée — tests a-e, g réels collés 07/09 ; test f (déclaration bout en bout) non exécuté en direct (mutation réelle, à faire sur demande explicite) ; renvoi des URLs clients confirmé par Thierry 07/09 | v3/p1b-durcissement | 07/09 |
-| P1c | Outillage et dette technique | ✅ terminée — revérifiée en direct 07/09 (lint 0 erreur, tsc 0 erreur, types générés non manuels, RLS 100% policies enveloppées `(select auth.xxx())`, `gen_demande_ref()` sur séquence, 0 fichier `.backup.*`, CLAUDE.md resynchronisé) ; dette notée : 32 FK sans index couvrant (tables ajoutées par P3/P6/P8 après le correctif initial), voir docs/DETTE.md | v3/p1c-outillage | 07/09 |
-| A1 | Tokens et fondations visuelles | ✅ terminée — `--brand`/`--brand-hover`/`--brand-subtle`/`--on-brand` (or `#B99760`, navy `#021030`, échantillonnés + validés 07/09) ; 4 sémantiques génériques (`--danger`/`--warning`/`--success`/`--info`) ; `--surface-ivory` (`#F5F3F0`) ajoutée 07/09 (comble le point "ivoire site public") ; migration or terminée sur `Hero.tsx`/`FinalCTA.tsx`/`PublicHero.tsx` (états normal/survol/focus vérifiés) ; bug réel corrigé au passage : rgba figée sur l'or rejeté `#C9A227` dans `Navbar.tsx`/`PublicHero.tsx`. Contrastes mesurés ≥ AA. Hors périmètre : surfaces ivoire admin, gris secondaire public, états actif/désactivé du brand — voir docs/DETTE.md | v3/integration-v3 | 07/09 |
-| A2 | Design system | ✅ terminée — vitrine `/dashboard/design-system` (843 lignes, 39 composants, réservée `super_admin`) validée en ligne par Thierry le 07/09 : accent or `#B99760` conforme, structure/données/affichage/saisie/retour vérifiés, densité sobre sans dégradé ni globe, anneau de focus distinct de l'or | v3/integration-v3 | 07/09 |
-| P2 | RBAC 9 rôles | ✅ terminée — revérifiée en direct 07/09 : `role_permissions` seedée (8 rôles explicites + super_admin bypass + client par RLS), `hasPermission()`/`assertPermission()` réels, adoption 30 fichiers API migrés / 25 encore sur `requireProfile` (migration progressive assumée) ; 6 écarts déjà documentés dans docs/DETTE.md, aucun bloquant | v3/integration-v3 | 07/09 |
-| C0 | Audit CRM et schéma cible de la relation client | ✅ terminée — phase de plan/décision (D7), pas de code propre : `clients` = personne, `profiles` = compte auth relié par `clients.profile_id`. Vérifié en direct 07/09 : la colonne `profile_id` existe réellement sur `clients`, confirmant que le plan a été exécuté en P3, pas resté théorique | v3/integration-v3 | 07/09 |
-| P3 | Extension du schéma métier | ✅ terminée — vérifié en direct 07/09 : les 21 tables prévues existent réellement (services, devis, factures, taches, etc.), RLS activée sur toutes (échantillon vérifié). Écart déjà documenté : `logAudit()` branché uniquement sur le changement de statut de dossier, pas encore étendu aux paiements/fusions (docs/DETTE.md) | v3/integration-v3 | 07/09 |
-| A3 | Shell d'administration | ✅ terminée — démo isolée confirmée par Thierry (construction volontairement séparée de `DashboardShell.tsx`, gelé), `lib/admin-nav.ts` réel (131 lignes) et validé en ligne via `/dashboard/design-system` le 07/09. Écart documenté : bascule des vraies pages reportée à A4-A7, libellés de permission du tableau A3 pas tous identiques au catalogue P2 (mappage documenté, sans conséquence tant que seul super_admin existe) | v3/integration-v3 | 07/09 |
-| A4 | Tableau de bord | ✅ terminée — démo isolée confirmée par Thierry, `lib/dashboard-blocks.ts` réel (222 lignes), validé en ligne le 07/09. Écart documenté : alerte "documents rejetés" retirée (l'état n'existe pas dans le schéma), bascule d'une vraie page reportée à A5-A7 | v3/integration-v3 | 07/09 |
-| A5 | CRM & Dossiers — noyau | ✅ terminée — 11 écarts déjà documentés dans docs/DETTE.md, revérifiés en direct 07/09 (0 compte agent/admin réel, 0 ligne `demande_status_history`, 0/3 paiements avec `demande_id` : chiffres identiques à ceux documentés, aucune dérive), aucun bloquant | v3/integration-v3 | 07/09 |
-| A6 | CRM — fiche client 360°, entrées, RDV, communications | ✅ terminée — 7 lots livrés, 10 écarts déjà documentés (dont un bug réel trouvé et corrigé au Lot 4 : `/dashboard/admin/rdv` interrogeait des colonnes inexistantes), tous confirmés ou tranchés explicitement par Thierry en cours de route | v3/integration-v3 | 07/09 |
-| A7 | RH rhabillé | ✅ terminée — revérifié en direct 07/09 : toujours 0 compte agent réel (cohérent avec le constat documenté), 4 écarts déjà tranchés par Thierry (rhabillage shell reporté, délais moyens non construits faute de volume, tâches limitées au dossier, charge de travail non testée) | v3/integration-v3 | 07/09 |
-| P6-0 | Convergence des colonnes `payments` | ✅ terminée — revérifié en direct 07/09 : `payments.status`/`amount` (colonnes canoniques D1) 100% renseignées, 0 valeur nulle sur les 3 paiements réels | v3/integration-v3 | 07/09 |
-| P6 | Finance | ✅ close par Thierry le 06/09 (confirmé alors), revérifié en direct 07/09 : `devis`/`factures` réels en base (1 ligne chacun, données de test réelles, pas fictives). Rapports journaliers/annuels toujours non construits (seul le mensuel existe), reporté sciemment — docs/DETTE.md #14 | v3/integration-v3 | 07/09 |
-| P8 | CMS et contenus | ✅ terminée — revérifié en direct 07/09 : `services` = 14 lignes réelles (12 du seed initial + 2 ajoutées le 07/09 pour les pôles homepage), cohérent avec l'historique | v3/integration-v3 | 07/09 |
-| P9 | Portail client | ✅ terminée — Lots 0 à 4 livrés 07/09 (IDOR devis/factures, consultation/acceptation devis, factures + reçus téléchargeables, documents officiels via `uploaded_by_role`, clôture manuelle des demandes de correction sans document via `PATCH .../documents-requests/[requestId]`). Les 13 points attendus de P9 sont couverts — voir docs/DETTE.md | v3/integration-v3 | 07/09 |
-| P10 | Site public | 🟡 en cours — Étape 1 (E1-E4) livrée ; E1/E2 sous A1 ; E3 terminé (8 pôles). Amendement 08/09 : maquette mobile du 07/09 rejetée ; M6/M7/M8 livrés ; bascule sombre retirée + bug mode sombre public corrigé. M2 tranché (pas d'image). M11 corrigé : logo inchangé (proposition Artifact annulée, rien intégré). **M12-bis livré : orange retiré des 7 générateurs PDF réels** (bandeaux → or, texte → navy, "en attente"/"partiel" → token `--warning`, deux ambres locaux divergents unifiés) — vérification visuelle sur documents réels à faire par Thierry, voir docs/DETTE.md. Reste : composant d'en-tête PDF (P6/A7), M9 (device réel), E5/E7/E8, harmonisation des 12 pages — voir docs/P10_LIVRABLES.md et docs/DETTE.md | v3/integration-v3 | 08/09 |
-| P11 | Notifications multicanal | ⬜ | | |
-| P12 | Durcissement final | ⬜ | | |
+Codes : **TV** terminée et validée · **P** partielle · **DNR** déployée mais non raccordée · **VNC** visible mais non conforme · **NC** non commencée.
+
+Ce tableau remplace la version précédente ("✅ terminée" pour A2/A3/A4/A6/A7), qui confondait "code réel écrit" et "raccordé à une vraie page". Détail complet des preuves : `docs/AUDIT_AVANCEMENT_V3.md`.
+
+| Code | Phase | État réel | Date |
+|---|---|---|---|
+| P0 | Audit du dépôt | **TV** — comptages partiellement obsolètes (7 pages services annoncées, 14 réelles) | 04/09 |
+| P0.5 | Baseline schéma + RLS | **TV** | 05/09 |
+| P1a | Correctif de sécurité immédiat | **TV** — trigger anti-élévation vérifié en base | 05/09 |
+| P1a-bis | Compléter le rendu de P1a | **TV** — auto-élévation confirmée possible avant correctif, 20 profils contrôlés, aucun abus | 07/09 |
+| P1b | Durcissement sécurité | **P** — test (f), déclaration de bout en bout, jamais exécuté ; confirmation du renvoi des URLs clients en attente | 07/09 |
+| P1c | Outillage et dette technique | **TV** | 07/09 |
+| A1 | Tokens et fondations visuelles | **P** — tokens définis et appliqués sur 5 fichiers publics + 7 générateurs PDF. **5 103 occurrences de `nexus-orange` subsistent dans 248 fichiers** : la bascule est faite à ~1 % | 07/09 |
+| A2 | Design system | **DNR** — 39 composants réels, utilisés uniquement par la vitrine `/dashboard/design-system` | 07/09 |
+| A3 | Shell d'administration | **DNR** — `AdminShell` existe, importé par 0 des 140 pages `app/dashboard/**` | 07/09 |
+| A4 | Tableau de bord | **VNC** — `PilotageHero` contredit les règles A1 (dégradés, animation en boucle, ombres décoratives). À reprendre, pas à raccorder | 07/09 |
+| P2 | RBAC 9 rôles | **P** — `role_permissions` seedée, `assertPermission()` réel, 30 des 55 fichiers API migrés | 05/09 |
+| C0 | Audit CRM et schéma cible | **P** — cinq tables « personne » toujours actives | 05/09 |
+| P3 | Extension du schéma métier | **P** | 05/09 |
+| A5 | CRM & Dossiers — noyau | **P** — code réel, volume de données quasi nul, non testable sans compte agent | 05/09 |
+| A6 | CRM — fiche client 360° | **DNR** — métier réel et fonctionnel, shell non raccordé | 05/09 |
+| A7 | RH rhabillé | **DNR** — module RH fonctionnel, le « rhabillage » dépend d'A3 | 05/09 |
+| P6-0 | Convergence des colonnes `payments` | **TV** — *correction historique : la structure `status`/`amount` datait de `003a-d` (04/05/2026), P6-0 a fait converger les consommateurs, pas créé la structure* | 05/09 |
+| P6 | Finance | **P** — rapports journaliers et annuels non construits | 06/09 |
+| P8 | CMS et contenus | **P** — `services` peuplée (14 lignes), mais **quatre taxonomies de services coexistent** | 06/09 |
+| P9 | Portail client | **TV** — lots 0 à 4, RLS vérifiées, IDOR corrigées | 07/09 |
+| P10 | Site public | **P** — `ServicesGrid.tsx` et `lib/services.ts` jamais traités ; 12 pages `services/*` non migrées | 07/09 |
+| P11 | Notifications multicanal | **NC** | — |
+| P12 | Durcissement final | **NC** | — |
+
+**Aucun pourcentage global.** Les phases n'ont ni le même poids ni la même durée.
+
+**Où vérifier :** `nexus-rca-git-v3-integration-v3-thkankou-debugs-projects.vercel.app`. Jamais `www.nexusrca.com`, figé sur `main` depuis le 08/05/2026 — **aucun commit V3 n'est en production.**
 
 ## I.6 La règle du chiffre honnête
 
