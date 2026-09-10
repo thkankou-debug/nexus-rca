@@ -31,6 +31,7 @@ const ROLE_RANK: Record<UserRole, number> = {
   partenaire: 0,
   daf: 2,
   dg: 2,
+  accueil_caisse: 1,
 };
 
 export const ROLES: UserRole[] = [
@@ -43,6 +44,7 @@ export const ROLES: UserRole[] = [
   "comptable",
   "moderateur",
   "partenaire",
+  "accueil_caisse",
   "client",
 ];
 
@@ -96,12 +98,13 @@ export type Action =
 // Convention : `manage` ≡ tous droits (lecture/écriture/suppression). On le résout
 // dans `can()` plutôt que de l'expanser ici, pour rester lisible.
 
-// P2 (RBAC 9 rôles) : les 6 nouveaux rôles n'ont aucune entrée dans cette
-// MATRIX (conservée en doublon, non modifiée dans son contenu d'origine) —
-// leurs permissions vivent exclusivement dans la table role_permissions
-// (has_permission()/assertPermission(), voir lib/permissions.ts).
+// P2 (RBAC 9 rôles) + accueil_caisse (NEXUS_RCA_DASHBOARD_ADMINISTRATION.md) :
+// aucun de ces rôles n'a d'entrée dans cette MATRIX (conservée en doublon,
+// non modifiée dans son contenu d'origine) — leurs permissions vivent
+// exclusivement dans la table role_permissions (has_permission()/
+// assertPermission(), voir lib/permissions.ts).
 const NO_NEW_ROLE_ACCESS: Record<
-  "dg" | "daf" | "chef_service" | "comptable" | "moderateur" | "partenaire",
+  "dg" | "daf" | "chef_service" | "comptable" | "moderateur" | "partenaire" | "accueil_caisse",
   Action[]
 > = {
   dg: [],
@@ -110,6 +113,7 @@ const NO_NEW_ROLE_ACCESS: Record<
   comptable: [],
   moderateur: [],
   partenaire: [],
+  accueil_caisse: [],
 };
 
 const MATRIX: Record<Resource, Record<UserRole, Action[]>> = {
@@ -361,6 +365,7 @@ export const ROLE_LABELS_FR: Record<UserRole, string> = {
   comptable: "Comptable",
   moderateur: "Modérateur",
   partenaire: "Partenaire",
+  accueil_caisse: "Accueil et caisse",
   client: "Client",
 };
 
@@ -374,5 +379,6 @@ export const ROLE_LABELS_SHORT: Record<UserRole, string> = {
   comptable: "Comptable",
   moderateur: "Modérateur",
   partenaire: "Partenaire",
+  accueil_caisse: "Accueil & caisse",
   client: "Client",
 };

@@ -28,6 +28,7 @@ export type UserRole =
   | "comptable"
   | "moderateur"
   | "partenaire"
+  | "accueil_caisse"
   | "client";
 
 // Valeurs 2026-04 (018-032), conservees telles quelles — aucun dossier reel

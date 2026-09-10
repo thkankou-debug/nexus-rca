@@ -312,14 +312,16 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
       ],
     },
   ],
-  // P2 (RBAC 9 rôles) : aucune section pour ces rôles pour l'instant (arrive
-  // avec A3) — voir la note au-dessus de ROLE_LABELS.
+  // P2 (RBAC 9 rôles) + accueil_caisse (NEXUS_RCA_DASHBOARD_ADMINISTRATION.md,
+  // 10/09) : aucune section pour ces rôles pour l'instant (arrive avec A3 /
+  // ModuleAdminShell) — voir la note au-dessus de ROLE_LABELS.
   dg: [],
   daf: [],
   chef_service: [],
   comptable: [],
   moderateur: [],
   partenaire: [],
+  accueil_caisse: [],
 };
 
 // Aplatit les groupes en items pour la palette de commandes et autres usages.
@@ -344,6 +346,7 @@ const ROLE_LABELS: Record<UserRole, string> = {
   comptable: "Espace comptabilité",
   moderateur: "Espace modération",
   partenaire: "Espace partenaire",
+  accueil_caisse: "Espace accueil et caisse",
 };
 
 const ROLE_COLORS: Record<UserRole, string> = {
@@ -357,6 +360,7 @@ const ROLE_COLORS: Record<UserRole, string> = {
   comptable: "bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300",
   moderateur: "bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300",
   partenaire: "bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300",
+  accueil_caisse: "bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300",
 };
 
 export function DashboardShell({

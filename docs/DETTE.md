@@ -2291,3 +2291,57 @@ autres pages en attente de raccordement complet (A3-A7).
 nouveau shell (20 RH + 9 Mes RH). **Non vérifié visuellement** — à
 confirmer par Thierry avec `tkankou@gmail.com` sur `/dashboard/super-admin/
 rh` et `test.agent@nexusrca.test` sur `/dashboard/agent/mes-rh`.
+
+---
+
+## Rôle `accueil_caisse` (10/09/2026)
+
+Fichiers déposés : `NEXUS_RCA_DASHBOARD_ADMINISTRATION.md` (complète
+`NEXUS_RCA_SPECIFICATION_COMPLETE.md`, ne le remplace pas) + 5 maquettes.
+Étape 1 de l'ordre de construction (Partie 5) — prérequis à l'Espace
+Accueil & Caisse (étape 4), pas encore construit.
+
+**1. L'ordre de construction du document confirme le travail déjà fait.**
+Étapes 2 (Dossiers unique), 3 (Clients unique), 7 (RH raccordé) = L3, L4,
+L7 de cette session. Rien à défaire. La coquille "Systenus" signalée dans
+la maquette n'existe pas dans le code réel (`lib/admin-nav.ts` a déjà
+"Système") — sans objet.
+
+**2. Migrations 077 (enum) + 078 (permissions), séparées comme 043a/043b.**
+`ALTER TYPE user_role ADD VALUE 'accueil_caisse'` commise seule d'abord
+(Postgres refuse d'utiliser une valeur d'enum dans la transaction qui l'a
+créée), puis les 13 permissions du §3.5 du document insérées dans
+`role_permissions`. Plusieurs sont des chaînes nouvelles, sans mapping
+vers le catalogue existant (`client.update.contact` distinct de
+`client.update` déjà utilisée par admin/agent pour une mise à jour
+complète ; `dossier.orient` distinct de `dossier.assign` ; `dossier.read.
+limited` distinct de `.own/.service/.all/.partage` ; `rdv.read`/`client.
+read` sans suffixe de portée contrairement aux autres rôles) — reprises
+telles quelles du document, aucune convention inventée. Refus explicites
+(`paiement.validate`, `caisse.close`, etc.) : aucune ligne à insérer,
+l'absence suffit déjà avec `has_permission()`.
+
+**3. `types/index.ts` : `UserRole` étendu à 10 valeurs — a cassé 22 `Record<UserRole, ...>` exhaustifs ailleurs dans le code.**
+Trouvé par `tsc`, pas anticipé avant d'écrire : `lib/rbac.ts` (fichier RBAC
+pré-P2, 19 occurrences) et `components/dashboard/DashboardShell.tsx` (3
+occurrences, fichier **gelé par CLAUDE.md**) exigent une entrée par rôle
+dans plusieurs `Record<UserRole, X>`. Corrigé en suivant exactement le
+patron déjà établi lors de l'ajout des 6 rôles P2 (`NO_NEW_ROLE_ACCESS`
+dans `lib/rbac.ts`, entrées `[]`/libellé générique dans `DashboardShell.tsx`)
+— `accueil_caisse` n'est routé nulle part dans `DashboardShell` aujourd'hui,
+comme les 6 rôles P2 avant lui. Modification mécanique de `DashboardShell.tsx`
+(gelé) limitée à l'ajout d'une clé manquante pour satisfaire l'exhaustivité
+TypeScript, aucun changement de comportement ni de contenu existant.
+
+**4. Hors périmètre de cette étape, volontairement.**
+Aucun écran, aucune chaîne de validation caisse (déclaré → à valider →
+encaissé), aucune modification RLS, aucun compte `TEST_accueil_caisse`.
+L'Espace Accueil & Caisse complet (étape 4 du document) reste un chantier
+à part entière — la caisse actuelle n'a qu'un flux ouverture→clôture
+directe (`app/api/caisse-sessions/[id]/close/route.ts`), pas la chaîne en
+deux temps (soumission caissière → validation DAF/admin) que le document
+demande.
+
+**5. Test : 0 erreur après correction des 22 Records exhaustifs.**
+`tsc`/`lint`/`build` (cache vidé) : 0 erreur. Aucune route nouvelle, aucun
+compte réel affecté (`accueil_caisse` n'existe encore sur aucun profil).
