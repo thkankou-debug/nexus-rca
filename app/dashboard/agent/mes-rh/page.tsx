@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import type { Employee } from "@/types";
 
@@ -59,7 +58,7 @@ export default async function MesRhPage() {
 
   if (!employee) {
     return (
-      <DashboardShell profile={profile}>
+      <>
         <BackButton
           fallbackHref="/dashboard/agent"
           label="Retour au tableau de bord"
@@ -93,14 +92,14 @@ export default async function MesRhPage() {
             </div>
           </div>
         </div>
-      </DashboardShell>
+      </>
     );
   }
 
   const emp = employee as Employee;
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/agent"
         label="Retour au tableau de bord"
@@ -164,7 +163,7 @@ export default async function MesRhPage() {
           description="Tous mes documents RH (diplômes, pièces…)."
         />
       </div>
-    </DashboardShell>
+    </>
   );
 }
 

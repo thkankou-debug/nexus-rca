@@ -1,5 +1,4 @@
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { ReviewDetailView } from "@/components/dashboard/rh/ReviewDetailView";
 
@@ -17,12 +16,12 @@ export default async function SuperAdminReviewDetailPage({
   const profile = await requireProfile(["super_admin"]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin/rh/evaluations"
         label="Retour aux évaluations"
       />
       <ReviewDetailView reviewId={params.reviewId} mode="admin" />
-    </DashboardShell>
+    </>
   );
 }

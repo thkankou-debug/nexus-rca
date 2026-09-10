@@ -25,7 +25,6 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 
 export const metadata = {
@@ -449,7 +448,7 @@ export default async function RhOverviewPage() {
     nbSansProfile;
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin"
         label="Retour au tableau de bord"
@@ -873,7 +872,7 @@ export default async function RhOverviewPage() {
           )}
         </div>
       </section>
-    </DashboardShell>
+    </>
   );
 }
 

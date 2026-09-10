@@ -1,6 +1,5 @@
 import { Users } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { EmployeesListView } from "@/components/dashboard/rh/EmployeesListView";
 
@@ -13,7 +12,7 @@ export const dynamic = "force-dynamic";
 export default async function EmployesListPage() {
   const profile = await requireProfile(["super_admin"]);
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/super-admin/rh" label="Retour RH" />
 
       <div className="mb-6 flex items-center gap-3">
@@ -31,6 +30,6 @@ export default async function EmployesListPage() {
       </div>
 
       <EmployeesListView basePath="/dashboard/super-admin/rh" />
-    </DashboardShell>
+    </>
   );
 }

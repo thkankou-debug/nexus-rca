@@ -1,6 +1,5 @@
 import { requireProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import {
   Users,
@@ -193,7 +192,7 @@ export default async function StatistiquesRhPage() {
   const maxMonth = Math.max(1, ...trendData);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/super-admin/rh" label="Retour RH" />
 
       {/* Hero compact */}
@@ -424,7 +423,7 @@ export default async function StatistiquesRhPage() {
           )}
         </div>
       </section>
-    </DashboardShell>
+    </>
   );
 }
 

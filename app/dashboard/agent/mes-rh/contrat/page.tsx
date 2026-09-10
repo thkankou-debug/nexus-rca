@@ -1,7 +1,6 @@
 import { FileText, AlertTriangle } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { DownloadButton } from "@/components/dashboard/rh/DownloadButton";
 import type { Employee, HrDocument } from "@/types";
@@ -57,7 +56,7 @@ export default async function MesRhContratPage() {
   }
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/agent/mes-rh" label="Retour" />
 
       <div className="mb-6 flex items-center gap-3">
@@ -141,6 +140,6 @@ export default async function MesRhContratPage() {
           </div>
         </div>
       )}
-    </DashboardShell>
+    </>
   );
 }

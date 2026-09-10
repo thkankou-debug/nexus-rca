@@ -1,5 +1,4 @@
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { PayslipsListView } from "@/components/dashboard/rh/PayslipsListView";
 
@@ -9,7 +8,7 @@ export default async function SuperAdminPayslipsAValiderPage() {
   const profile = await requireProfile(["super_admin"]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin/rh/paie"
         label="Retour aux fiches"
@@ -31,6 +30,6 @@ export default async function SuperAdminPayslipsAValiderPage() {
         basePath="/dashboard/super-admin/rh"
         defaultStatutFilter="en_attente_validation"
       />
-    </DashboardShell>
+    </>
   );
 }

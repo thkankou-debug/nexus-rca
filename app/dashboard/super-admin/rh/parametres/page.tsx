@@ -1,5 +1,4 @@
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { RhSettingsManager } from "@/components/dashboard/rh/RhSettingsManager";
 
@@ -9,7 +8,7 @@ export default async function RhSettingsPage() {
   const profile = await requireProfile(["super_admin"]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin/rh"
         label="Retour à l'aperçu RH"
@@ -27,6 +26,6 @@ export default async function RhSettingsPage() {
         </p>
       </div>
       <RhSettingsManager />
-    </DashboardShell>
+    </>
   );
 }

@@ -2227,3 +2227,67 @@ rapports` compile avec les 3 sélecteurs de période. **Non vérifié
 visuellement** — à confirmer par Thierry : générer un rapport journalier
 et un rapport annuel, vérifier que le PDF affiche le bon libellé de
 période et des montants cohérents.
+
+---
+
+## L7 — RH rhabillé dans le shell unique (10/09/2026)
+
+Périmètre confirmé par le texte du roadmap lui-même : *"confirme existing
+module is kept, rhabillé dans le shell unique, **pas réécrit**"* — aucune
+fusion agent/super-admin (les deux servent des besoins réellement
+différents : gestion RH complète vs. libre-service employé), juste le
+shell (`DashboardShell` → `ModuleAdminShell`) sur les 29 pages existantes
+(20 sous `/dashboard/super-admin/rh/`, 9 sous `/dashboard/agent/mes-rh/`).
+
+**1. Deux `layout.tsx` créés plutôt que 29 pages modifiées une par une pour le shell.**
+`app/dashboard/super-admin/rh/layout.tsx` et `app/dashboard/agent/mes-rh/
+layout.tsx` portent chacun `requireProfile()` + `getEffectiveNav()` +
+`ModuleAdminShell` une seule fois — Next.js App Router les applique à
+toutes les pages du sous-arbre. Chaque page garde son propre
+`requireProfile()` (nécessaire à ses propres requêtes utilisant
+`profile.id`/`profile.role`) : la vérification s'exécute donc deux fois
+par page chargée (layout + page) — redondant, pas cassé, accepté pour ne
+pas risquer de retirer une dépendance à `profile` dans une page.
+
+**2. Vérifié avant d'écrire : les 20 pages RH sont TOUTES `requireProfile(["super_admin"])`, pas `["super_admin", "admin"]` comme le seed `role_permissions` le suggérerait.**
+`role_permissions` a `rh.user.read`/`rh.user.update` pour `admin` — mais
+aucune des 20 pages ne l'autorise réellement. Écart de catalogue
+préexistant (même famille que le trou `dossier.read.all` d'admin en L3,
+mais dans l'autre sens : la permission existe, le gate de page est plus
+strict qu'elle). **Non corrigé** : hors périmètre "pas réécrit" de ce lot,
+signalé pour référence future.
+
+**3. Retrait mécanique de `<DashboardShell profile={profile}>...</DashboardShell>` remplacé par des fragments `<>...</>`, pas une suppression pure.**
+Un premier essai en supprimant purement les balises a cassé la validité
+JSX (`return (` ne peut envelopper plusieurs enfants sans un seul élément
+racine) — détecté avant de lancer `tsc`, corrigé en repartant de l'état
+git d'origine (`git checkout`) et en remplaçant par des fragments plutôt
+qu'en supprimant. Script (`sed`, capture de l'indentation existante)
+appliqué identiquement aux 29 fichiers ; certains (`conges`, `onboarding`,
+`page.tsx` racine, `profil`) ont deux occurrences de `DashboardShell`
+(branche "profil employé introuvable" + retour principal) — le script,
+non ancré à une seule occurrence par fichier, a géré les deux
+correctement.
+
+**4. `lib/admin-nav.ts` : hrefs "rh" et "employes-acces" pointent vers les routes existantes, pas de nouvelles routes créées.**
+Contrairement à L3-L5 (nouvelles routes `/dashboard/{module}`), ce lot ne
+crée aucune page — `href: "/dashboard/super-admin/rh"` et
+`"/dashboard/super-admin/rh/employes"` remplacent les ancres de démo
+`#organisation-rh`/`#organisation-employes`. Barre latérale réelle : 4
+entrées désormais (Dossiers, Clients, Rendez-vous, RH — visible
+uniquement pour super_admin/admin selon `has_permission`, mais rappel du
+point 2 : admin a la permission au niveau nav, pas au niveau page, donc
+verrait l'entrée puis se ferait refuser l'accès en cliquant — écart
+préexistant, pas introduit ici).
+
+**5. "Mes RH" n'a pas d'entrée dans la barre latérale.**
+`ADMIN_NAV_STRUCTURE` n'a jamais eu de module "Mes RH" pour l'agent (la
+structure de nav actuelle vise les rôles de gestion) — non ajouté ici,
+resterait accessible par URL directe uniquement, comme documenté pour les
+autres pages en attente de raccordement complet (A3-A7).
+
+**6. Test : même limite que tous les lots précédents (pas de navigateur).**
+`tsc`/`lint`/`build` (cache vidé) : 0 erreur, 29 routes compilées avec le
+nouveau shell (20 RH + 9 Mes RH). **Non vérifié visuellement** — à
+confirmer par Thierry avec `tkankou@gmail.com` sur `/dashboard/super-admin/
+rh` et `test.agent@nexusrca.test` sur `/dashboard/agent/mes-rh`.

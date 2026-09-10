@@ -1,5 +1,4 @@
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { CompanyDocumentsManager } from "@/components/dashboard/rh/CompanyDocumentsManager";
 
@@ -13,7 +12,7 @@ export default async function CompanyDocumentsPage() {
   const profile = await requireProfile(["super_admin"]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/super-admin/rh" label="Retour RH" />
 
       <div className="mb-8">
@@ -30,6 +29,6 @@ export default async function CompanyDocumentsPage() {
       </div>
 
       <CompanyDocumentsManager canManage={profile.role === "super_admin"} />
-    </DashboardShell>
+    </>
   );
 }

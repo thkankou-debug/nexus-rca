@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { TaskItem } from "@/components/dashboard/rh/OnboardingDetailView";
 import { formatDateShort } from "@/components/dashboard/rh/format";
@@ -57,7 +56,7 @@ export default async function MyOnboardingPage() {
 
   if (!employee) {
     return (
-      <DashboardShell profile={profile}>
+      <>
         <BackButton
           fallbackHref="/dashboard/agent/mes-rh"
           label="Retour à mon espace RH"
@@ -72,7 +71,7 @@ export default async function MyOnboardingPage() {
             </p>
           </div>
         </div>
-      </DashboardShell>
+      </>
     );
   }
 
@@ -89,7 +88,7 @@ export default async function MyOnboardingPage() {
 
   if (!onboarding) {
     return (
-      <DashboardShell profile={profile}>
+      <>
         <BackButton
           fallbackHref="/dashboard/agent/mes-rh"
           label="Retour à mon espace RH"
@@ -105,7 +104,7 @@ export default async function MyOnboardingPage() {
             vous. Contactez votre administrateur.
           </p>
         </div>
-      </DashboardShell>
+      </>
     );
   }
 
@@ -133,7 +132,7 @@ export default async function MyOnboardingPage() {
     .onboarding_templates?.name;
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/agent/mes-rh"
         label="Retour à mon espace RH"
@@ -251,7 +250,7 @@ export default async function MyOnboardingPage() {
           })
         )}
       </div>
-    </DashboardShell>
+    </>
   );
 }
 

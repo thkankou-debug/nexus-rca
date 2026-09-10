@@ -1,5 +1,4 @@
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { PeriodReviewsView } from "@/components/dashboard/rh/PeriodReviewsView";
 
@@ -17,7 +16,7 @@ export default async function SuperAdminPeriodPage({
   const profile = await requireProfile(["super_admin"]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin/rh/evaluations"
         label="Retour aux évaluations"
@@ -26,6 +25,6 @@ export default async function SuperAdminPeriodPage({
         basePath="/dashboard/super-admin/rh"
         periodId={params.periodId}
       />
-    </DashboardShell>
+    </>
   );
 }

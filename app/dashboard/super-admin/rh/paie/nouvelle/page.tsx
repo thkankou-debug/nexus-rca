@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { Plus } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { NewPayslipClient } from "@/components/dashboard/rh/NewPayslipClient";
 
@@ -14,7 +13,7 @@ export const dynamic = "force-dynamic";
 export default async function NouvelleFichePaiePage() {
   const profile = await requireProfile(["super_admin"]);
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin/rh/paie"
         label="Retour à la liste"
@@ -38,6 +37,6 @@ export default async function NouvelleFichePaiePage() {
       <Suspense fallback={null}>
         <NewPayslipClient basePath="/dashboard/super-admin/rh" />
       </Suspense>
-    </DashboardShell>
+    </>
   );
 }

@@ -1,7 +1,6 @@
 import { UserCircle, Info } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import type { Employee } from "@/types";
 
@@ -49,19 +48,19 @@ export default async function MesRhProfilPage() {
 
   if (!employee) {
     return (
-      <DashboardShell profile={profile}>
+      <>
         <BackButton fallbackHref="/dashboard/agent/mes-rh" label="Retour" />
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6 text-sm text-amber-900">
           Aucun profil employé associé à votre compte.
         </div>
-      </DashboardShell>
+      </>
     );
   }
 
   const emp = employee as Employee;
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/agent/mes-rh" label="Retour" />
 
       <div className="mb-6 flex items-center gap-3">
@@ -107,7 +106,7 @@ export default async function MesRhProfilPage() {
           Pour modifier ces informations, contactez votre administrateur.
         </p>
       </div>
-    </DashboardShell>
+    </>
   );
 }
 

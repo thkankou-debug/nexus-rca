@@ -1,6 +1,5 @@
 import { UserPlus } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { NewEmployeeClient } from "@/components/dashboard/rh/NewEmployeeClient";
 
@@ -13,7 +12,7 @@ export const dynamic = "force-dynamic";
 export default async function NouvelEmployePage() {
   const profile = await requireProfile(["super_admin"]);
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin/rh/employes"
         label="Retour à la liste"
@@ -37,6 +36,6 @@ export default async function NouvelEmployePage() {
         basePath="/dashboard/super-admin/rh"
         canSeeNotes
       />
-    </DashboardShell>
+    </>
   );
 }

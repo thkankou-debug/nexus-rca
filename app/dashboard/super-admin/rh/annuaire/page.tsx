@@ -1,6 +1,5 @@
 import { requireProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { AnnuaireView } from "@/components/dashboard/rh/AnnuaireView";
 import type { Employee } from "@/types";
@@ -43,7 +42,7 @@ export default async function AnnuairePage() {
     ancMoy === null ? "—" : `${ancMoy.toFixed(1)} an${ancMoy >= 2 ? "s" : ""}`;
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/super-admin/rh" label="Retour RH" />
 
       {/* Hero compact */}
@@ -82,6 +81,6 @@ export default async function AnnuairePage() {
         employees={employees}
         basePath="/dashboard/super-admin/rh"
       />
-    </DashboardShell>
+    </>
   );
 }

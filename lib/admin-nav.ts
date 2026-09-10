@@ -70,8 +70,8 @@ export const ADMIN_NAV_STRUCTURE: AdminNavGroup[] = [
     key: "organisation",
     label: "Organisation",
     modules: [
-      { key: "rh", label: "Ressources humaines", permission: "rh.user.read", table: "module RH", wave: 1, href: "#organisation-rh" },
-      { key: "employes-acces", label: "Employés et accès", permission: "rh.user.read", table: "profiles", wave: 1, href: "#organisation-employes" },
+      { key: "rh", label: "Ressources humaines", permission: "rh.user.read", table: "module RH", wave: 1, href: "/dashboard/super-admin/rh" },
+      { key: "employes-acces", label: "Employés et accès", permission: "rh.user.read", table: "profiles", wave: 1, href: "/dashboard/super-admin/rh/employes" },
       { key: "partenaires", label: "Partenaires", permission: "cms.partenaire.write", table: "partenaires", wave: 2, href: "#organisation-partenaires" },
     ],
   },
