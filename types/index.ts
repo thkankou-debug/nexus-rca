@@ -81,6 +81,8 @@ export interface Profile {
   // Colonnes ajoutées par migration 047 (P3)
   service_id: string | null;
   availability_status: "disponible" | "occupe" | "absent";
+  // Colonne ajoutée par migration 074 (L2)
+  is_test: boolean;
 }
 
 export type CategorieDossierSlug =

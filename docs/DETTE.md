@@ -1784,3 +1784,120 @@ de test. Résolue par la Décision #9 de `NEXUS_RCA_SPECIFICATION_COMPLETE.md`
 puis par le brief L2 lui-même — pas de nouvelle confirmation demandée, la
 décision était déjà écrite noir sur blanc dans un document que Thierry a
 déposé lui-même.
+
+**11. Jeu de données de test (point 8) : les 3 dossiers sont tous assignés à `TEST_agent`, pas 1 non assigné + 2 assignés comme documenté dans `docs/COMPTES_TEST.md`.**
+Découvert en vérifiant la portée `agent_id` pendant L3 Étape 2a : le dossier
+"nouvelle_demande" (censé être non assigné) porte en réalité `agent_id =
+TEST_agent`. Écart mineur de saisie au moment du seed SQL direct (L2),
+sans conséquence sur la portée testée (les 3 restent visibles dans "Mes
+dossiers" de TEST_agent) — juste le scénario "dossier en réception, non
+assigné" qui n'est pas couvert par le jeu de données actuel. **À corriger**
+si un jour ce scénario précis doit être testé : `UPDATE demandes SET
+agent_id = NULL WHERE id = 'cb4244f4-fb72-4cf1-9bc3-32a196eaf779'`.
+
+---
+
+## L3 Étape 2a — Module Dossiers unique, squelette + liste réelle (09/09/2026)
+
+Exécution de `BRIEF_L2_L3_POUR_CLAUDE_CODE.md`, lot L3, Étape 1 (inventaire)
++ Étape 2a (sous-lot présenté et validé séparément, le périmètre complet de
+l'Étape 2 étant trop large pour un seul GO).
+
+**1. Inventaire réel (Étape 1) : les 3 versions par rôle sont déjà quasi identiques.**
+14 pages lues/diffées (`demandes`, `dossiers`, `dossiers/[categorie]`,
+`dossiers/[categorie]/[id]`, `dossiers/[categorie]/[id]/assigner`) sur les 3
+espaces `agent`/`admin`/`super-admin`. Écarts réels trouvés (pas juste le
+gate de rôle) : `canDelete` sur la liste demandes (admin+) ;
+`RevenusParServiceCard` sur le hub (super_admin seulement) ; filtrage par
+spécialités sur le hub (agent seulement) ; page `assigner` absente pour
+agent. Le reste (liste `[categorie]`, fiche `[id]`) est identique à 100%
+hors gate de rôle et hrefs — confirmé par `diff` direct, pas supposé.
+
+**2. Aucune route API `demandes/*` n'utilise `assertPermission()`/`role_permissions` (P2 jamais branché ici).**
+Les 6 routes (`assign`, `status`, `notes`, `taches`, `documents`,
+`messages`) vérifient toutes le rôle en dur (`role !== "admin" && role !==
+"super_admin"`, etc.), sur le vocabulaire à 4 rôles pré-P2. Conséquence :
+`dg`/`daf`/`chef_service`/`comptable`/`moderateur`/`partenaire` n'ont accès
+à aucune de ces actions aujourd'hui, quoi que dise `role_permissions`. `notes`
+exclut même `agent` (seul admin/super_admin peuvent noter) — **décision de
+Thierry (09/09)** : ouvrir aux agents sur leurs propres dossiers, à faire
+dans le sous-lot qui construira la fiche (notes non construites en 2a).
+**Non corrigé dans ce sous-lot** : 2a réutilise `assign`/`status` tels
+quels, sans toucher à leur logique d'autorisation — periode limitée à
+`admin`/`super_admin` pour assigner, `agent`/`admin`/`super_admin` pour le
+statut, comme aujourd'hui.
+
+**3. RLS de `demandes` : aucune portée `own`/`service`/`all`/`partage` réellement appliquée en base.**
+Trouvé en lisant les policies avant d'écrire la page : la policy SELECT
+`"Staff can view all demandes"` s'appuie sur `is_staff(uid)`, qui inclut 8
+des 9 rôles (tout sauf `partenaire`) et donne un accès total à toutes les
+demandes — aucune restriction par `agent_id`/`service_id` au niveau RLS.
+`role_permissions` promet `dossier.read.own` (agent) / `.service`
+(chef_service) / `.all` (dg, daf) mais rien ne l'applique en base
+aujourd'hui. **Décision de Thierry (09/09)** : filtrage appliqué côté
+application uniquement pour ce sous-lot (`lib/dossiers-server.ts`,
+`getAllDossiersForRole()`), sans toucher au RLS partagé par les pages
+existantes — un durcissement RLS réel reste un chantier séparé, plus large
+et plus risqué (impacterait toutes les pages `demandes`/`dossiers`
+existantes), à présenter à part.
+
+**4. `role_permissions` n'a aucune ligne pour `admin` sur `dossier.read.*`.**
+Vérifié en base avant d'écrire le filtre : `admin` a `assign`/`create`/
+`status.change`/`update` mais aucun `dossier.read.own|service|all`. Traité
+comme `dossier.read.all` par convention dans `getAllDossiersForRole()`
+(cohérent avec le RLS actuel qui donne déjà un accès total à admin) —
+**écart de séance signalé, pas corrigé** : `role_permissions` mériterait une
+ligne explicite `admin` → `dossier.read.all` pour que le catalogue reflète
+la réalité.
+
+**5. `comptable`/`moderateur` : liste vide dans le nouveau module, pas un accès par défaut.**
+Aucune permission `dossier.read.*` n'existe pour ces deux rôles dans
+`role_permissions` (jamais seedée par P2, sur aucune ressource `dossier.*`).
+`getAllDossiersForRole()` retourne `[]` explicitement plutôt que de leur
+donner un accès non écrit nulle part — message dédié affiché sur la page
+plutôt qu'une liste vide silencieuse (règle §I.6).
+
+**6. `DossiersListClient.tsx` réutilisé tel quel — déjà quasi le "module unique" que Étape 2 demande.**
+Ce composant partagé (déjà utilisé par les 3 anciennes pages
+`[categorie]/page.tsx`) a déjà : vues enregistrées (Réception/Mes
+dossiers/Urgents/En retard/Tous), recherche, filtre statut/agent, tri,
+sélection multiple, actions de masse (affecter/changer statut via les
+routes API existantes), export CSV, bascule liste/Kanban. Seul ajout fait
+ici : prop `canViewDetail` (défaut `true`, rétrocompatible avec les 3 pages
+existantes) pour masquer "Voir"/"Assigner" par ligne pour les rôles sans
+fiche dédiée aujourd'hui (`dg`/`daf`/`chef_service`/`comptable`/
+`moderateur`/`partenaire`) — les actions de masse restent disponibles pour
+eux malgré l'absence de fiche.
+
+**7. `is_test` du profil consultant, pas seulement des lignes lues.**
+Trouvé en vérifiant par SQL direct avant de considérer le sous-lot terminé :
+avec un filtre `is_test=false` inconditionnel, `TEST_agent` n'aurait vu
+**aucun** dossier en se connectant à `/dashboard/dossiers` — y compris ses
+3 propres dossiers de test créés en L2. Corrigé : `getAllDossiersForRole()`
+n'exclut les lignes `is_test=true` que si le profil consultant lui-même a
+`is_test=false`. Un compte réel ne voit jamais de donnée de test ; un
+compte TEST_ voit les siennes dans son propre périmètre (`agent_id`/
+`service_id`), jamais celui d'un autre compte réel. `types/index.ts` :
+`Profile.is_test` ajouté (colonne réelle depuis la migration 074, jamais
+répercutée dans le type TypeScript avant ce jour).
+
+**8. Pas de fiche pour 6 des 9 rôles — pas de lien mort, action différée.**
+`/dashboard/{agent,admin,super-admin}/dossiers/[categorie]/[id]` sont les
+seules fiches existantes. `dg`/`daf`/`chef_service`/`comptable`/
+`moderateur`/`partenaire` n'ont aucune fiche à ce jour — plutôt que
+d'élargir le gate `requireProfile` d'une page existante (hors périmètre
+présenté pour 2a, touche 3 pages en place), `canViewDetail=false` masque
+juste le lien pour ces rôles. **À faire dans le sous-lot fiche** (Étape 2
+suivante) : construire `/dashboard/dossiers/[categorie]/[id]` unique,
+alors seul un `canViewDetail` universel sera nécessaire.
+
+**9. Test réalisé sans navigateur — limite explicite, pas une vérification maquillée.**
+`tsc`/`lint`/`build` (cache vidé) : 0 erreur. Requête non authentifiée sur
+`/dashboard/dossiers` → redirection 307 propre vers `/login` (pas de 500).
+Portées `own`/`service`/`partage`/`is_test` vérifiées par simulation SQL
+directe (mêmes filtres que le code), pas par rendu réel de la page
+authentifiée — aucun outil navigateur disponible dans cet environnement.
+**Non vérifié visuellement** : à confirmer par Thierry en se connectant
+avec `test.agent@nexusrca.test` et `test.chefservice@nexusrca.test` sur
+`/dashboard/dossiers` (pas encore lié dans la navigation — accès direct par
+URL uniquement, comme les autres pages A3-A7 en attente de raccordement).

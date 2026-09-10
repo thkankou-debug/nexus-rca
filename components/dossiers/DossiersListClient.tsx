@@ -69,6 +69,7 @@ export function DossiersListClient({
   role,
   currentUserId,
   baseDetailHref,
+  canViewDetail = true,
 }: {
   demandes: Demande[];
   agents: AgentLite[];
@@ -77,6 +78,12 @@ export function DossiersListClient({
   currentUserId: string;
   /** Préfixe URL vers le détail dossier (sans le /id final). Ex: /dashboard/agent/dossiers/visa */
   baseDetailHref: string;
+  /**
+   * Faux pour les rôles qui n'ont pas encore de page fiche dédiée (L3 Étape 2a :
+   * dg/daf/chef_service/comptable/partenaire) — masque "Voir"/"Assigner" par
+   * ligne, les actions de masse (statut/affectation) restent disponibles.
+   */
+  canViewDetail?: boolean;
 }) {
   const [viewMode, setViewMode] = useState<"liste" | "kanban">("liste");
   const [activeView, setActiveView] = useState<SavedViewId>("tous");
@@ -570,13 +577,15 @@ export function DossiersListClient({
                         Non assigné
                       </span>
                     )}
-                    <Link
-                      href={detailHref}
-                      className="inline-flex items-center gap-1 rounded-lg bg-nexus-blue-950 px-3 py-1.5 text-[11px] font-bold text-white hover:bg-nexus-blue-900"
-                    >
-                      Voir <ArrowRight className="h-3 w-3" />
-                    </Link>
-                    {canAssign && !d.agent_id && (
+                    {canViewDetail && (
+                      <Link
+                        href={detailHref}
+                        className="inline-flex items-center gap-1 rounded-lg bg-nexus-blue-950 px-3 py-1.5 text-[11px] font-bold text-white hover:bg-nexus-blue-900"
+                      >
+                        Voir <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    )}
+                    {canViewDetail && canAssign && !d.agent_id && (
                       <Link
                         href={`${detailHref}/assigner`}
                         className="inline-flex items-center gap-1 rounded-lg border border-nexus-orange-300 bg-white px-3 py-1.5 text-[11px] font-bold text-nexus-orange-700 hover:bg-nexus-orange-50"

@@ -179,6 +179,78 @@ export async function getDossiersByCategorie(
   return (data || []) as Demande[];
 }
 
+/**
+ * Tous les dossiers (toutes catégories), scopés par rôle — module unique L3.
+ *
+ * Le RLS de `demandes` ("Staff can view all demandes") ne distingue pas les
+ * portées own/service/all/partage promises par role_permissions (P2) : tout
+ * rôle staff voit tout au niveau base. Ce filtre est donc appliqué ici, côté
+ * application, en attendant un durcissement RLS séparé (voir docs/DETTE.md,
+ * L3 Étape 2a) — pas une régression sur les pages existantes, qui ne
+ * changent pas de comportement.
+ *
+ * `comptable`/`moderateur` n'ont aujourd'hui aucune permission `dossier.read.*`
+ * dans le catalogue P2 : liste vide plutôt qu'un accès par défaut non écrit
+ * nulle part.
+ *
+ * `is_test` du profil consultant détermine le filtre `is_test` des lignes :
+ * un compte TEST_ (L2) doit voir ses propres dossiers de test dans son
+ * propre périmètre (own/service) pour être réellement testable — la requête
+ * reste bornée à son `agent_id`/`service_id`, donc ça ne fait fuiter aucune
+ * donnée de test dans le périmètre d'un autre compte réel. Un compte réel
+ * (is_test=false) ne voit jamais de donnée de test.
+ */
+export async function getAllDossiersForRole(profile: {
+  id: string;
+  role: string;
+  service_id?: string | null;
+  is_test?: boolean;
+}): Promise<Demande[]> {
+  const supabase = createClient();
+  const includeTestRows = Boolean(profile.is_test);
+
+  if (profile.role === "partenaire") {
+    const { data: shares } = await supabase
+      .from("dossier_partages")
+      .select("demande_id")
+      .eq("partenaire_id", profile.id);
+    const ids = (shares || []).map((s) => (s as { demande_id: string }).demande_id);
+    if (ids.length === 0) return [];
+    let shareQuery = supabase
+      .from("demandes")
+      .select("*")
+      .in("id", ids)
+      .order("created_at", { ascending: false });
+    if (!includeTestRows) shareQuery = shareQuery.eq("is_test", false);
+    const { data } = await shareQuery;
+    return (data || []) as Demande[];
+  }
+
+  let query = supabase
+    .from("demandes")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (!includeTestRows) query = query.eq("is_test", false);
+
+  if (profile.role === "chef_service") {
+    if (!profile.service_id) return [];
+    query = query.eq("service_id", profile.service_id);
+  } else if (profile.role === "agent") {
+    query = query.eq("agent_id", profile.id);
+  } else if (
+    profile.role !== "super_admin" &&
+    profile.role !== "admin" &&
+    profile.role !== "dg" &&
+    profile.role !== "daf"
+  ) {
+    // comptable, moderateur : aucune permission dossier.read.* seedée (P2)
+    return [];
+  }
+
+  const { data } = await query;
+  return (data || []) as Demande[];
+}
+
 /** Tous les agents actifs (pour les dropdowns / pages assigner) */
 export async function getActiveAgents(): Promise<
   Array<{
