@@ -1901,3 +1901,49 @@ authentifiée — aucun outil navigateur disponible dans cet environnement.
 avec `test.agent@nexusrca.test` et `test.chefservice@nexusrca.test` sur
 `/dashboard/dossiers` (pas encore lié dans la navigation — accès direct par
 URL uniquement, comme les autres pages A3-A7 en attente de raccordement).
+
+---
+
+## L3 Étape 2b — Fiche dossier unique (09/09/2026)
+
+**1. `StaffDossierDetail.tsx` réutilisé tel quel — la fiche à onglets existait déjà (A5/A6).**
+`/dashboard/dossiers/[id]/page.tsx` (pas `[categorie]/[id]` : `categorie_dossier`
+est déjà une colonne de `demandes`, dérivée via `isCategorieDossier()` avec
+repli sur `"autres"` plutôt que répétée dans l'URL — simplification permise
+par l'unification). Portée d'accès direct par id : même logique que
+`getAllDossiersForRole()` (2a), réappliquée ici en garde de page
+(`agent_id`/`service_id`/`dossier_partages` selon le rôle) puisque le RLS
+`demandes` ne la porte toujours pas.
+
+**2. Migration 075 : nouvelle policy RLS `agent_own_dossier_notes` sur `demande_notes`, additive.**
+Trouvé en lisant `StaffNotes.tsx` avant de le modifier : son propre
+commentaire disait "Notes internes (admin/super_admin only)... **Non
+visible par client / agent**" — un choix de conception explicite, pas un
+oubli, contrairement à ce que je pensais en 2a. La décision de Thierry
+("ouvrir à l'agent sur ses propres dossiers") demandait donc trois
+changements, pas deux : la policy RLS (`admin_super_admin_all_notes`
+existante non touchée, nouvelle policy `ALL` bornée à `agent_id = auth.uid()`
+sur la demande parente), la route API (`app/api/demandes/[id]/notes/route.ts`
+— gate élargi + vérification d'appartenance côté serveur en plus du RLS,
+défense en profondeur), et `StaffNotes.tsx` (gate UI + texte "Non visible
+par client / agent" → "Non visible par le client"). Le client n'a toujours
+aucun accès (aucune policy ne le couvre).
+
+**3. Page `assigner` unifiée construite en plus (pas dans le périmètre présenté), pour éviter un lien mort.**
+`DossiersListClient.tsx` (2a) génère un lien `{detailHref}/assigner` par
+ligne pour `canAssign` (admin/super_admin). Une fois `baseDetailHref`
+unifié vers `/dashboard/dossiers`, ce lien pointait vers une route
+inexistante. `/dashboard/dossiers/[id]/assigner/page.tsx` ajouté, même
+patron que les 2 anciennes pages (`admin`/`super-admin`), même restriction
+de rôle (`admin`, `super_admin` — aucun changement de permission).
+
+**4. `baseDetailHref` de la liste (2a) simplifié : `/dashboard/dossiers` pour tous les rôles avec permission.**
+Remplace le mapping `EXISTING_DETAIL_ROLE_SLUG` (qui ne couvrait
+qu'agent/admin/super_admin) — `canViewDetail` devient simplement `role !==
+"comptable" && role !== "moderateur"`, cohérent avec le fait que la fiche
+unique n'a plus besoin d'une page par rôle.
+
+**5. Test : même limite que 2a (pas de navigateur).**
+`tsc`/`lint`/`build` (cache vidé) : 0 erreur, 3 routes compilées
+(`/dashboard/dossiers/[id]`, `/dashboard/dossiers/[id]/assigner`).
+**Non vérifié visuellement** — même remarque qu'en 2a.

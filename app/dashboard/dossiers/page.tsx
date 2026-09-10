@@ -10,18 +10,12 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-// L3 Étape 2a : page unique, pas encore raccordée à AdminShell (Étape 3) ni
-// aux anciennes pages /dashboard/{agent,admin,super-admin}/dossiers, qui
+// L3 Étape 2a/2b : page unique, pas encore raccordée à AdminShell (Étape 3)
+// ni aux anciennes pages /dashboard/{agent,admin,super-admin}/dossiers, qui
 // restent en place jusqu'à validation (Étape 4). "Voir"/"Assigner" par ligne
-// pointent vers la fiche existante pour agent/admin/super_admin (seuls rôles
-// à en avoir une aujourd'hui) ; les autres rôles gardent les actions de
-// masse (statut, affectation) sans lien de détail.
-const EXISTING_DETAIL_ROLE_SLUG: Record<string, string> = {
-  agent: "agent",
-  admin: "admin",
-  super_admin: "super-admin",
-};
-
+// pointent vers la fiche unique /dashboard/dossiers/[id] (Étape 2b) pour
+// tout rôle ayant une permission dossier.read.* — comptable/moderateur
+// exclus (aucune permission seedée, message dédié plus bas).
 export default async function DossiersUniquePage() {
   const profile = await requireProfile([
     "super_admin",
@@ -40,11 +34,9 @@ export default async function DossiersUniquePage() {
     getActiveAgents(),
   ]);
 
-  const detailRoleSlug = EXISTING_DETAIL_ROLE_SLUG[profile.role];
-  const canViewDetail = Boolean(detailRoleSlug);
-  const baseDetailHref = canViewDetail
-    ? `/dashboard/${detailRoleSlug}/dossiers`
-    : "";
+  const canViewDetail =
+    profile.role !== "comptable" && profile.role !== "moderateur";
+  const baseDetailHref = "/dashboard/dossiers";
 
   return (
     <DashboardShell profile={profile}>

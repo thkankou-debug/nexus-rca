@@ -1,9 +1,10 @@
 "use client";
 
 // ============================================================================
-// COMPOSANT — Notes internes (admin/super_admin only)
-// Append-only : on n'édite pas, on n'efface pas. Visible UNIQUEMENT par
-// admin/super_admin (RLS DB + check côté UI).
+// COMPOSANT — Notes internes (admin/super_admin sur tous les dossiers ;
+// agent sur ses propres dossiers — L3 Étape 2b, migration 075)
+// Append-only : on n'édite pas, on n'efface pas. Jamais visible par le
+// client (RLS DB + check côté UI).
 // ============================================================================
 
 import { useEffect, useState } from "react";
@@ -30,7 +31,7 @@ export function StaffNotes({
   role: UserRole;
 }) {
   const supabase = createClient();
-  const allowed = role === "admin" || role === "super_admin";
+  const allowed = role === "admin" || role === "super_admin" || role === "agent";
   const [notes, setNotes] = useState<Note[] | null>(null);
   const [content, setContent] = useState("");
   const [sending, setSending] = useState(false);
@@ -105,7 +106,7 @@ export function StaffNotes({
         </p>
         <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-slate-600">
           <Lock className="h-2.5 w-2.5" />
-          Non visible par client / agent
+          Non visible par le client
         </span>
       </div>
 
@@ -114,7 +115,7 @@ export function StaffNotes({
           value={content}
           onChange={(e) => setContent(e.target.value.slice(0, MAX))}
           rows={2}
-          placeholder="Note pour les autres administrateurs (interne)…"
+          placeholder="Note interne pour l'équipe (jamais visible du client)…"
           className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-nexus-blue-950 focus:border-nexus-blue-700 focus:outline-none focus:ring-1 focus:ring-nexus-blue-700/30"
         />
         <div className="flex items-center justify-between">
