@@ -53,7 +53,7 @@ export const ADMIN_NAV_STRUCTURE: AdminNavGroup[] = [
     modules: [
       { key: "dossiers", label: "Dossiers", permission: "dossier.read.own", table: "demandes", wave: 1, href: "/dashboard/dossiers" },
       { key: "clients", label: "Clients", permission: "client.read.own", table: "clients, profiles", wave: 1, href: "/dashboard/clients" },
-      { key: "rdv", label: "Rendez-vous", permission: "rdv.read.own", table: "appointments", wave: 1, href: "#activite-rdv" },
+      { key: "rdv", label: "Rendez-vous", permission: "rdv.read.own", table: "appointments", wave: 1, href: "/dashboard/rdv" },
       { key: "taches", label: "Tâches", permission: "tache.read", table: "taches", wave: 2, href: "#activite-taches" },
     ],
   },

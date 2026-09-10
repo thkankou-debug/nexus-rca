@@ -2111,3 +2111,61 @@ compilent avec `AdminShell`, les 3 routes Dossiers compilent toujours à
 l'identique après le renommage du shell partagé. **Non vérifié
 visuellement** — à confirmer par Thierry : la barre latérale doit
 maintenant afficher deux entrées, "Dossiers" et "Clients".
+
+---
+
+## L5-1 — Module Rendez-vous unique (09/09/2026)
+
+**1. Périmètre réduit à Rendez-vous seul, décision de Thierry (09/09).**
+"Tâches" et "Communications" (les deux autres volets du L5 du brief) ne
+sont pas des unifications — aucune duplication à fusionner. Les tâches ne
+vivent qu'à l'intérieur de la fiche dossier (`DossierTachesTab`, déjà dans
+le module Dossiers unifié) : une vue "Mes tâches" transverse serait une
+construction neuve (déjà noté comme dette en A7). La messagerie est
+désactivée dans les 3 espaces avec ce commentaire trouvé dans le code :
+*"pour éviter que des utilisateurs envoient des messages dans le mock
+client-side qui disparaissent après refresh. Implémentation backend
+prévue en Feature 6."* Rien à unifier, juste une coquille vide × 3 —
+reporté, décision de construire "Feature 6" (table + API + Realtime) non
+prise ici.
+
+**2. Bonne nouvelle trouvée en vérifiant le RLS avant d'écrire : `appointments` scope déjà correctement par rôle.**
+Contrairement à `demandes`/`clients` (RLS `is_staff()` = accès total pour
+tout rôle staff), la policy SELECT `"Agents see assigned appointments"`
+applique déjà `agent_id = auth.uid() OR admin/super_admin` — aucun filtre
+`own`/`all` à reproduire côté application dans `lib/rdv-server.ts`, aucun
+chantier RLS séparé à documenter cette fois. `dg`/`daf`/`chef_service`/
+`comptable`/`moderateur`/`partenaire` : déjà exclus par le RLS lui-même
+(pas de ligne retournée), cohérent avec l'absence de `rdv.read.*` pour eux.
+
+**3. Les 3 anciennes pages sont plus divergentes qu'en L3/L4 — la version admin est un lot à part, pas un mix agent/super-admin.**
+`/dashboard/admin/rdv` (178 lignes) est une troisième implémentation
+distincte : calendrier en lecture seule (30 jours passés + 90 à venir), sans
+aucune action, avec un lien de sortie explicite dans le code : *"Pour la
+gestion fine des rendez-vous (création, annulation, redispatch), voir la
+page super-admin."* Admin a pourtant déjà `rdv.read.all`/`rdv.update`/
+`rdv.create` — la version simplifiée n'était donc pas une limite de
+permission, juste une page moins aboutie. Le module unique donne à admin
+les mêmes actions qu'à super_admin (`isSuperAdmin` passé pour les deux),
+pas la version calendrier lecture seule.
+
+**4. `AppointmentActions.tsx` et l'API `/api/appointments/[id]/action` déjà entièrement génériques — aucune modification nécessaire.**
+Une seule route gère confirm/cancel/complete/assign/reopen/mark_absent
+avec la bonne logique d'autorisation déjà en place (agent auto-assignation
+sur RDV non assigné ou déjà sien, admin/super_admin sans restriction,
+`reopen` réservé admin+). Réutilisés tels quels dans `RdvListClient.tsx`
+via les mêmes props `canTake`/`isSuperAdmin`/`agentId` que les anciennes
+pages.
+
+**5. Aucune fiche détail séparée à construire.**
+Toutes les actions se font en ligne depuis la liste — contrairement à
+Dossiers/Clients, il n'y a pas de sous-lot "fiche" pour Rendez-vous.
+
+**6. Test : même limite que L3/L4 (pas de navigateur).**
+`tsc`/`lint`/`build` (cache vidé) : 0 erreur, `/dashboard/rdv` compile
+avec `AdminShell` (3 entrées désormais dans la barre latérale : Dossiers,
+Clients, Rendez-vous). Les 3 anciennes pages compilent toujours à
+l'identique. **Non vérifié visuellement** — à confirmer par Thierry avec
+`test.agent@nexusrca.test` (doit voir son RDV de test + pouvoir "Prendre"
+un RDV non assigné) et un compte admin/super_admin (doit voir tous les
+RDV + pouvoir assigner).
