@@ -44,14 +44,12 @@ Sur le lien `PAY-LINK-2026-000012` (100 XAF), serveur de développement local :
    `statut: "paiement_declare"`, `skipped: "is_test"` (aucun email réel émis,
    confirmé).
 3. **Seconde déclaration** avec un numéro de transaction différent → **BUG
-   TROUVÉ, pas un faux positif** : la route accepte la seconde déclaration
-   (200, `success: true`) et **écrase silencieusement** `numero_transaction`
-   et `paid_declared_at` de la première. La route
-   (`app/api/payment-links/t/[token]/declare/route.ts`) ne refuse que les
-   statuts `verifie`/`annule`, jamais `paiement_declare` lui-même — donc un
-   client peut redéclarer indéfiniment tant que le staff n'a pas vérifié,
-   en remplaçant le numéro de transaction que le staff s'apprête à
-   contrôler. C'est exactement le comportement que ce test (en suspens
-   depuis le 7 septembre) était censé vérifier — non corrigé ici, hors
-   périmètre du lot L2 tel que présenté (création des comptes de test),
-   signalé à Thierry pour décision. Voir `docs/DETTE.md`.
+   TROUVÉ, pas un faux positif** : la route acceptait la seconde déclaration
+   (200, `success: true`) et **écrasait silencieusement**
+   `numero_transaction` et `paid_declared_at` de la première.
+4. **Corrigé le 09/09/2026** (validation explicite de Thierry) : la route
+   (`app/api/payment-links/t/[token]/declare/route.ts`) refuse désormais
+   (400) toute déclaration quand `statut === "paiement_declare"`. Rejoué
+   après correction sur le même lien (réinitialisé à `en_attente`) :
+   1ère déclaration acceptée, 2e refusée (400), `numero_transaction`
+   toujours celui de la 1ère en base. Voir `docs/DETTE.md`.

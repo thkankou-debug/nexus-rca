@@ -90,6 +90,18 @@ export async function POST(
     if (paymentLink.statut === "annule") {
       return NextResponse.json({ error: "Annulé" }, { status: 400 });
     }
+    // Refus si déjà déclaré : sans ce garde-fou, une seconde déclaration
+    // écrase silencieusement le numéro de transaction que le staff est en
+    // train de vérifier (trouvé par le test (f) de L2, docs/COMPTES_TEST.md).
+    if (paymentLink.statut === "paiement_declare") {
+      return NextResponse.json(
+        {
+          error:
+            "Ce paiement a déjà été déclaré et est en attente de vérification par notre équipe. Contactez-nous si vous devez corriger votre déclaration.",
+        },
+        { status: 400 }
+      );
+    }
 
     const now = new Date();
     if (now > new Date(paymentLink.expires_at)) {

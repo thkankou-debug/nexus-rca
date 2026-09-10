@@ -1758,22 +1758,25 @@ pour exercer les portées `.service`) + `TEST_client` (profil + fiche
 1 `demande_notes` — tous `is_test = true`, tous rattachés à Test Client /
 Test Agent, pôle Visa & e-Visa (service réel, cohérent avec le point 7).
 
-**9. BUG TROUVÉ par le test (f), non corrigé ici — `payment-links/t/[token]/declare` accepte une redéclaration illimitée.**
-Test exécuté en local (serveur de dev, port 3002) sur le lien TEST_ à
-100 XAF : affichage par jeton OK, première déclaration OK (`skipped: "is_test"`,
+**9. BUG TROUVÉ par le test (f), corrigé le 09/09 sur validation explicite de Thierry — `payment-links/t/[token]/declare` acceptait une redéclaration illimitée.**
+Test exécuté en local (serveur de dev) sur le lien TEST_ à 100 XAF :
+affichage par jeton OK, première déclaration OK (`skipped: "is_test"`,
 aucun email réel confirmé), **seconde déclaration avec un numéro de
 transaction différent acceptée par la route** (200, `success: true`),
 écrasant silencieusement `numero_transaction`/`paid_declared_at` de la
-première déclaration. La route ne refuse que les statuts `verifie`/`annule`
-— jamais `paiement_declare` lui-même. Un client peut donc redéclarer autant
-de fois qu'il veut tant que le staff n'a pas vérifié, remplaçant le numéro de
-transaction que le staff s'apprête à contrôler. C'est exactement le
-comportement que ce test (en suspens depuis le 07/09, référencé "test (f)"
-dans P1b) devait vérifier — trouvé, pas fabriqué. **Non corrigé** : hors
-périmètre du lot L2 tel que présenté à Thierry (créer des comptes de test,
-pas corriger le workflow paiement). Correctif proposé pour un lot séparé :
-refuser (400) toute déclaration quand `statut === "paiement_declare"`, avec
-un message invitant à contacter le staff plutôt qu'à redéclarer.
+première déclaration. La route ne refusait que les statuts `verifie`/`annule`
+— jamais `paiement_declare` lui-même. Un client pouvait donc redéclarer
+autant de fois qu'il voulait tant que le staff n'avait pas vérifié,
+remplaçant le numéro de transaction que le staff s'apprêtait à contrôler.
+C'est exactement le comportement que ce test (en suspens depuis le 07/09,
+référencé "test (f)" dans P1b) devait vérifier — trouvé, pas fabriqué.
+**Corrigé** : nouveau garde-fou refusant (400) toute déclaration quand
+`statut === "paiement_declare"`, message invitant à contacter le staff.
+Rejoué sur le lien TEST_ après correction (réinitialisé à `en_attente` via
+SQL direct pour le test) : 1ère déclaration acceptée (`TEST-TX-A`), 2e
+refusée (400), `numero_transaction` en base toujours `TEST-TX-A` — confirmé
+non écrasé. `tsc`/`lint`/`build` repassés en entier après le correctif, 0
+erreur.
 
 **10. `docs/AUDIT_AVANCEMENT_V3.md` — la question "comptes de test" qu'il posait est résolue.**
 L'audit du 08/09 demandait une décision à Thierry avant de créer des comptes
