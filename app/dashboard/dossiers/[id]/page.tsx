@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { requireProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { getEffectiveNav } from "@/lib/admin-nav";
+import { DossiersAdminShell } from "@/components/dossiers/DossiersAdminShell";
 import { StaffDossierDetail } from "@/components/dossiers/StaffDossierDetail";
 import { isCategorieDossier } from "@/lib/demande-categories";
 import type { Demande } from "@/types";
@@ -90,8 +91,19 @@ export default async function DossierUniquePage({
         .order("rdv_date", { ascending: false })
     : { data: [] };
 
+  const effectiveNav = await getEffectiveNav();
+
   return (
-    <DashboardShell profile={profile}>
+    <DossiersAdminShell
+      profile={profile}
+      effectiveNav={effectiveNav}
+      breadcrumb={[
+        { label: "Dashboard", href: "/dashboard" },
+        { label: "Dossiers", href: "/dashboard/dossiers" },
+        { label: demande.reference || demande.id.slice(0, 8).toUpperCase() },
+      ]}
+      showHeader={false}
+    >
       <StaffDossierDetail
         demande={demande}
         currentUserId={profile.id}
@@ -103,6 +115,6 @@ export default async function DossierUniquePage({
         payments={paymentsRows ?? []}
         appointments={appointmentsRows ?? []}
       />
-    </DashboardShell>
+    </DossiersAdminShell>
   );
 }

@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { requireProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { getEffectiveNav } from "@/lib/admin-nav";
+import { DossiersAdminShell } from "@/components/dossiers/DossiersAdminShell";
 import { AssignAgentPageClient } from "@/components/dossiers/AssignAgentPageClient";
 import { isCategorieDossier } from "@/lib/demande-categories";
 
@@ -35,9 +36,20 @@ export default async function DossierUniqueAssignerPage({
   const categorieSlug = isCategorieDossier(rawCategorie) ? rawCategorie : "autres";
 
   const detailHref = `/dashboard/dossiers/${params.id}`;
+  const effectiveNav = await getEffectiveNav();
 
   return (
-    <DashboardShell profile={profile}>
+    <DossiersAdminShell
+      profile={profile}
+      effectiveNav={effectiveNav}
+      breadcrumb={[
+        { label: "Dashboard", href: "/dashboard" },
+        { label: "Dossiers", href: "/dashboard/dossiers" },
+        { label: demande.reference || demande.id.slice(0, 8).toUpperCase(), href: detailHref },
+        { label: "Assigner" },
+      ]}
+      showHeader={false}
+    >
       <div className="rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-600">
         <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
           Assignation
@@ -58,6 +70,6 @@ export default async function DossierUniqueAssignerPage({
         categorieSlug={categorieSlug}
         detailHref={detailHref}
       />
-    </DashboardShell>
+    </DossiersAdminShell>
   );
 }

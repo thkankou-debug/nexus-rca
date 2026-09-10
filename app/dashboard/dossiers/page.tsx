@@ -1,6 +1,6 @@
-import { FolderOpen } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { getEffectiveNav } from "@/lib/admin-nav";
+import { DossiersAdminShell } from "@/components/dossiers/DossiersAdminShell";
 import { DossiersListClient } from "@/components/dossiers/DossiersListClient";
 import { getActiveAgents, getAllDossiersForRole } from "@/lib/dossiers-server";
 
@@ -10,11 +10,11 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-// L3 Étape 2a/2b : page unique, pas encore raccordée à AdminShell (Étape 3)
-// ni aux anciennes pages /dashboard/{agent,admin,super-admin}/dossiers, qui
-// restent en place jusqu'à validation (Étape 4). "Voir"/"Assigner" par ligne
-// pointent vers la fiche unique /dashboard/dossiers/[id] (Étape 2b) pour
-// tout rôle ayant une permission dossier.read.* — comptable/moderateur
+// L3 Étape 3 : raccordée à AdminShell (premier module réel, voir
+// docs/DETTE.md). Les anciennes pages /dashboard/{agent,admin,super-admin}/
+// dossiers restent en place jusqu'à validation (Étape 4). "Voir"/"Assigner"
+// par ligne pointent vers la fiche unique /dashboard/dossiers/[id] (Étape 2b)
+// pour tout rôle ayant une permission dossier.read.* — comptable/moderateur
 // exclus (aucune permission seedée, message dédié plus bas).
 export default async function DossiersUniquePage() {
   const profile = await requireProfile([
@@ -29,9 +29,10 @@ export default async function DossiersUniquePage() {
     "partenaire",
   ]);
 
-  const [demandes, agents] = await Promise.all([
+  const [demandes, agents, effectiveNav] = await Promise.all([
     getAllDossiersForRole(profile),
     getActiveAgents(),
+    getEffectiveNav(),
   ]);
 
   const canViewDetail =
@@ -39,25 +40,13 @@ export default async function DossiersUniquePage() {
   const baseDetailHref = "/dashboard/dossiers";
 
   return (
-    <DashboardShell profile={profile}>
-      <header className="mb-6 flex items-center gap-4">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-nexus-orange-100">
-          <FolderOpen className="h-7 w-7 text-nexus-orange-600" />
-        </div>
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
-            Module unique — L3
-          </p>
-          <h1 className="font-display text-3xl font-bold text-nexus-blue-950">
-            Dossiers
-          </h1>
-          <p className="mt-1 text-sm text-slate-600">
-            {demandes.length} dossier{demandes.length > 1 ? "s" : ""} dans votre
-            périmètre.
-          </p>
-        </div>
-      </header>
-
+    <DossiersAdminShell
+      profile={profile}
+      effectiveNav={effectiveNav}
+      breadcrumb={[{ label: "Dashboard", href: "/dashboard" }, { label: "Dossiers" }]}
+      title="Dossiers"
+      description={`${demandes.length} dossier${demandes.length > 1 ? "s" : ""} dans votre périmètre.`}
+    >
       {(profile.role === "comptable" || profile.role === "moderateur") && (
         <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
           Aucune permission de lecture de dossiers n&rsquo;est encore définie
@@ -80,6 +69,6 @@ export default async function DossiersUniquePage() {
         baseDetailHref={baseDetailHref}
         canViewDetail={canViewDetail}
       />
-    </DashboardShell>
+    </DossiersAdminShell>
   );
 }

@@ -1947,3 +1947,69 @@ unique n'a plus besoin d'une page par rôle.
 `tsc`/`lint`/`build` (cache vidé) : 0 erreur, 3 routes compilées
 (`/dashboard/dossiers/[id]`, `/dashboard/dossiers/[id]/assigner`).
 **Non vérifié visuellement** — même remarque qu'en 2a.
+
+---
+
+## L3 Étape 3 — Raccordement AdminShell (09/09/2026)
+
+Premier branchement réel de `AdminShell`/`lib/admin-nav.ts` (A2/A3) depuis
+leur construction — jusqu'ici isolés sur `/dashboard/design-system` (voir
+DETTE A3 #1). Les 3 pages du module Dossiers basculent de `DashboardShell`
+à un nouveau composant `components/dossiers/DossiersAdminShell.tsx`.
+
+**1. Migration 076 : `dossier.read.all` ajoutée pour `admin` dans `role_permissions`.**
+Trouvé en câblant `getEffectiveNav()` (qui appelle la vraie fonction RPC
+`has_permission()`) : `admin` n'avait aucune ligne `dossier.read.*` (déjà
+signalé en 2a #4). Sans correctif, le nouveau menu réel n'aurait jamais
+affiché "Dossiers" pour admin, alors que le RLS actuel lui donne déjà un
+accès total. **Décision de Thierry (09/09)** : corriger maintenant.
+Additif, `ON CONFLICT DO NOTHING`.
+
+**2. `has_permission()` ne sait élargir que `.own → .service → .all`, pas `.partage` — `partenaire` ne verra jamais "Dossiers" dans le menu réel.**
+Vérifié en lisant le corps SQL de la fonction avant d'écrire quoi que ce
+soit : `partenaire` a `dossier.read.partage` (portée légitime, distincte de
+la hiérarphie own/service/all), mais le module de navigation vérifie
+`dossier.read.own` et la fonction ne considère `.partage` comme couvrant
+rien. Conséquence : `partenaire` continue d'accéder à `/dashboard/dossiers`
+par URL directe (garde de page, Étape 2a/2b) mais ne verra pas l'entrée
+dans la barre latérale une fois le menu réel affiché. **Non corrigé** :
+toucherait `has_permission()`, utilisée par tout le système de permissions,
+hors périmètre de ce sous-lot. À reprendre si `partenaire` doit un jour
+avoir une vraie navigation (probablement en généralisant le module de nav à
+vérifier "une permission `dossier.read.*` quelconque" plutôt qu'une portée
+précise).
+
+**3. `lib/admin-nav.ts` : href du module "dossiers" changé de `#activite-dossiers` à `/dashboard/dossiers`.**
+Seul changement dans `ADMIN_NAV_STRUCTURE` — les 17 autres modules restent
+des ancres de démo (leurs pages n'existent pas encore). Effet de bord
+positif vérifié : le panneau "Menu réel pour cette session" de
+`/dashboard/design-system` rendait déjà ce module avec un vrai `SidebarItem`
+— son lien "Dossiers" devient donc fonctionnel au lieu de défiler la page,
+sans aucune modification de cette page.
+
+**4. Nouveau composant `DossiersAdminShell.tsx` : filtre les modules non migrés, pas de fausse UI.**
+Reprend `effectiveNav`, retire tout module dont le `href` commence encore
+par `#` ("une entrée qui ne mène nulle part n'existe pas", brief L3 Étape 3)
+— aujourd'hui, seul "Dossiers" reste. Menu utilisateur réel (nom/email du
+profil, déconnexion réelle via `supabase.auth.signOut()`, même patron que
+`DashboardShell.tsx`). **Volontairement absents** : recherche globale et
+centre de notifications — les composants de démo (`GlobalSearch`,
+`NotificationCenter`) existent mais n'ont aucune source de données réelle ;
+les brancher sur de fausses données aurait été une UI décorative non
+fonctionnelle, contraire à la règle du chiffre honnête appliquée ici à
+l'interface plutôt qu'aux chiffres.
+
+**5. `showHeader` ajouté à `DossiersAdminShell` pour éviter un double en-tête.**
+La fiche (`StaffDossierDetail`) et la page d'assignation ont déjà leur
+propre en-tête riche (bandeau navy avec référence/statut pour la fiche,
+bloc contextuel pour l'assignation) — `showHeader={false}` sur ces deux
+pages n'affiche que le fil d'ariane, pas de `PageHeader` générique
+par-dessus. La liste (`/dashboard/dossiers`) garde `showHeader={true}`,
+n'ayant pas d'en-tête propre.
+
+**6. Test : même limite que 2a/2b (pas de navigateur).**
+`tsc`/`lint`/`build` (cache vidé) : 0 erreur, les 3 routes du module
+Dossiers compilent avec `AdminShell`. Les 6 anciennes pages
+`/dashboard/{agent,admin,super-admin}/dossiers/...` compilent toujours à
+l'identique (non touchées). **Non vérifié visuellement** — même remarque
+que 2a/2b, à confirmer par Thierry.
