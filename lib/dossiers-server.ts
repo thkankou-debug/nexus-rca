@@ -21,9 +21,10 @@ export async function getCategoryCounters(filterAgentId?: string): Promise<
   >
 > {
   const supabase = createClient();
-  let query = supabase
-    .from("demandes")
-    .select("categorie_dossier, statut, urgence, traitement_prioritaire");
+  let query = 
+    supabase
+      .from("demandes")
+      .select("categorie_dossier, statut, urgence, traitement_prioritaire").eq("is_test", false);
 
   if (filterAgentId) {
     query = query.eq("agent_id", filterAgentId);
@@ -76,9 +77,10 @@ export async function getGlobalDossiersStats(filterAgentId?: string): Promise<{
   demandesRecues: number;
 }> {
   const supabase = createClient();
-  let query = supabase
-    .from("demandes")
-    .select("statut, urgence, traitement_prioritaire, agent_id");
+  let query = 
+    supabase
+      .from("demandes")
+      .select("statut, urgence, traitement_prioritaire, agent_id").eq("is_test", false);
 
   if (filterAgentId) {
     query = query.eq("agent_id", filterAgentId);
@@ -127,9 +129,8 @@ export async function getRevenusParService(): Promise<
   Array<{ service: string; total: number; devise: string; nbPaiements: number }>
 > {
   const supabase = createClient();
-  const { data } = await supabase
-    .from("payments")
-    .select("service, montant_recu, devise");
+  const { data } = await 
+    supabase.from("payments").select("service, montant_recu, devise").eq("is_test", false);
 
   const rows = (data || []) as Array<{
     service: string | null;
@@ -163,11 +164,12 @@ export async function getDossiersByCategorie(
   filterAgentId?: string
 ): Promise<Demande[]> {
   const supabase = createClient();
-  let query = supabase
-    .from("demandes")
-    .select("*")
-    .eq("categorie_dossier", categorie)
-    .order("created_at", { ascending: false });
+  let query = 
+    supabase
+      .from("demandes")
+      .select("*")
+      .eq("categorie_dossier", categorie)
+      .order("created_at", { ascending: false }).eq("is_test", false);
 
   if (filterAgentId) {
     query = query.eq("agent_id", filterAgentId);
@@ -189,12 +191,13 @@ export async function getActiveAgents(): Promise<
   }>
 > {
   const supabase = createClient();
-  const { data } = await supabase
-    .from("profiles")
-    .select("id, nom, prenom, email, poste, specialites")
-    .eq("role", "agent")
-    .eq("actif", true)
-    .order("nom", { ascending: true });
+  const { data } = await 
+    supabase
+      .from("profiles")
+      .select("id, nom, prenom, email, poste, specialites")
+      .eq("role", "agent")
+      .eq("actif", true)
+      .order("nom", { ascending: true }).eq("is_test", false);
   return (data || []) as Array<{
     id: string;
     nom: string;

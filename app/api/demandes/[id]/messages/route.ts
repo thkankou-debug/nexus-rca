@@ -77,7 +77,7 @@ export async function POST(
     // Verify access
     const { data: demande } = await admin
       .from("demandes")
-      .select("id, reference, client_id, agent_id, email, nom_complet")
+      .select("id, reference, client_id, agent_id, email, nom_complet, is_test")
       .eq("id", demandeId)
       .single();
 
@@ -144,7 +144,8 @@ export async function POST(
     });
 
     // Notify the other party via Resend (best-effort)
-    if (process.env.RESEND_API_KEY) {
+    // L2 : jamais d'email reel pour un dossier TEST_
+    if (!(demande as { is_test?: boolean }).is_test && process.env.RESEND_API_KEY) {
       try {
         const resend = new Resend(process.env.RESEND_API_KEY);
         const siteUrl =

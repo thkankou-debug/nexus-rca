@@ -68,6 +68,15 @@ export async function POST(request: Request) {
       );
     }
 
+    // L2 : jamais d'email reel pour un paiement TEST_
+    if (payment.is_test) {
+      return NextResponse.json({
+        success: true,
+        skipped: "is_test",
+        message: "Paiement de test : aucun email envoyé.",
+      });
+    }
+
     // Verifier la cle API Resend
     const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {

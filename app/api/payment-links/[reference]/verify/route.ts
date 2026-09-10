@@ -155,6 +155,7 @@ export async function POST(
           mode_paiement: modePaiement,
           date_paiement: now.toISOString(),
           created_by: profile.id,
+          is_test: paymentLink.is_test,
         })
         .select("id")
         .single();
@@ -222,7 +223,9 @@ export async function POST(
     let emailError: unknown = null;
     let fromUsed: string | null = null;
 
-    if (!process.env.RESEND_API_KEY) {
+    if (paymentLink.is_test) {
+      console.log("[PAY-VERIFY] Lien de test — email non envoyé.");
+    } else if (!process.env.RESEND_API_KEY) {
       console.error("[PAY-VERIFY] ❌ RESEND_API_KEY manquante");
     } else {
       console.log("[PAY-VERIFY] EMAIL START -> ", paymentLink.client_email);

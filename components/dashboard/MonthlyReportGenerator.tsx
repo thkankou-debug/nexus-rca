@@ -636,28 +636,31 @@ export function MonthlyReportGenerator({
         partielsRes,
         agentsRes,
       ] = await Promise.all([
-        supabase
-          .from("payments")
-          .select("montant_recu, montant_total, devise, agent_id, client_nom, service, reference")
-          .gte("date_paiement", monthBounds.start)
-          .lte("date_paiement", monthBounds.end),
+        
+          supabase
+            .from("payments")
+            .select("montant_recu, montant_total, devise, agent_id, client_nom, service, reference")
+            .gte("date_paiement", monthBounds.start)
+            .lte("date_paiement", monthBounds.end).eq("is_test", false),
         supabase
           .from("quick_sales")
           .select("montant_total, devise, type_service, agent_id, quantite")
           .gte("date_paiement", monthBounds.start)
           .lte("date_paiement", monthBounds.end),
-        supabase
-          .from("expenses")
-          .select("montant, devise, statut")
-          .eq("statut", "valide")
-          .gte("date_depense", monthBounds.start)
-          .lte("date_depense", monthBounds.end),
-        supabase
-          .from("expenses")
-          .select("montant, devise")
-          .eq("statut", "en_attente")
-          .gte("date_depense", monthBounds.start)
-          .lte("date_depense", monthBounds.end),
+        
+          supabase
+            .from("expenses")
+            .select("montant, devise, statut")
+            .eq("statut", "valide")
+            .gte("date_depense", monthBounds.start)
+            .lte("date_depense", monthBounds.end).eq("is_test", false),
+        
+          supabase
+            .from("expenses")
+            .select("montant, devise")
+            .eq("statut", "en_attente")
+            .gte("date_depense", monthBounds.start)
+            .lte("date_depense", monthBounds.end).eq("is_test", false),
         supabase
           .from("transferts")
           .select("montant_envoye, frais_transfert, devise, statut")
@@ -665,15 +668,14 @@ export function MonthlyReportGenerator({
           .gte("created_at", monthBounds.start)
           .lte("created_at", monthBounds.end),
         // Paiements partiels (toutes périodes - créances en cours)
-        supabase
-          .from("payments")
-          .select("reference, client_nom, service, montant_total, montant_recu, devise")
-          .eq("status", "partial")
-          .order("created_at", { ascending: false })
-          .limit(100),
-        supabase
-          .from("profiles")
-          .select("id, nom, prenom"),
+        
+          supabase
+            .from("payments")
+            .select("reference, client_nom, service, montant_total, montant_recu, devise")
+            .eq("status", "partial")
+            .order("created_at", { ascending: false })
+            .limit(100).eq("is_test", false),
+        supabase.from("profiles").select("id, nom, prenom").eq("is_test", false),
       ]);
 
       const paiementsData = paiementsRes.data || [];

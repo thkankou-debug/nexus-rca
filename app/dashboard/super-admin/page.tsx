@@ -127,25 +127,28 @@ export default async function SuperAdminDashboard() {
     payslipsPendingDetailsRes,
     payslipsValidatedMonthRes,
   ] = await Promise.all([
+    
+      supabase
+        .from("payments")
+        .select("montant_recu, montant_total")
+        .gte("date_paiement", todayISO).eq("is_test", false),
+    
+      supabase
+        .from("payments")
+        .select("montant_recu, montant_total")
+        .gte("date_paiement", monthStartISO).eq("is_test", false),
+    supabase.from("payments").select("montant_recu, montant_total").eq("is_test", false),
+    
+      supabase
+        .from("payments")
+        .select("montant_recu")
+        .gte("date_paiement", prevMonthStartISO)
+        .lt("date_paiement", monthStartISO).eq("is_test", false),
     supabase
-      .from("payments")
-      .select("montant_recu, montant_total")
+      .from("quick_sales")
+      .select("montant_total")
       .gte("date_paiement", todayISO),
     supabase
-      .from("payments")
-      .select("montant_recu, montant_total")
-      .gte("date_paiement", monthStartISO),
-    supabase.from("payments").select("montant_recu, montant_total"),
-    supabase
-      .from("payments")
-      .select("montant_recu")
-      .gte("date_paiement", prevMonthStartISO)
-      .lt("date_paiement", monthStartISO),
-    supabase
-      .from("quick_sales")
-      .select("montant_total")
-      .gte("date_paiement", todayISO),
-    supabase
       .from("quick_sales")
       .select("montant_total")
       .gte("date_paiement", monthStartISO),
@@ -154,55 +157,63 @@ export default async function SuperAdminDashboard() {
       .select("montant_total")
       .gte("date_paiement", prevMonthStartISO)
       .lt("date_paiement", monthStartISO),
-    supabase.from("expenses").select("montant").eq("statut", "en_attente"),
-    supabase
-      .from("expenses")
-      .select("montant")
-      .eq("statut", "valide")
-      .gte("date_depense", monthStartISO),
+    
+      supabase.from("expenses").select("montant").eq("statut", "en_attente").eq("is_test", false),
+    
+      supabase
+        .from("expenses")
+        .select("montant")
+        .eq("statut", "valide")
+        .gte("date_depense", monthStartISO).eq("is_test", false),
     // P3 (migration 049a/049b) : "nouveau"/"en_cours"/"en_traitement" ont
     // été réassignés vers la nouvelle machine à états — plus aucun dossier
     // réel ne les porte (voir docs/AUDIT_CRM.md). Requêtes mises à jour pour
     // ne pas afficher des zéros silencieux.
-    supabase
-      .from("demandes")
-      .select("id", { count: "exact", head: true })
-      .eq("statut", "nouvelle_demande"),
-    supabase
-      .from("demandes")
-      .select("id", { count: "exact", head: true })
-      .in("statut", ["traitement", "qualification", "documents_demandes"]),
-    supabase
-      .from("demandes")
-      .select("id, objet, service, statut, created_at")
-      .in("statut", ["nouvelle_demande", "traitement", "qualification"])
-      .order("created_at", { ascending: false })
-      .limit(5),
-    supabase
-      .from("appointments")
-      .select("id, nom, prenom, service, date_heure")
-      .gte("date_heure", todayISO)
-      .lt(
-        "date_heure",
-        new Date(today.getTime() + 24 * 60 * 60 * 1000).toISOString()
-      )
-      .order("date_heure"),
+    
+      supabase
+        .from("demandes")
+        .select("id", { count: "exact", head: true })
+        .eq("statut", "nouvelle_demande").eq("is_test", false),
+    
+      supabase
+        .from("demandes")
+        .select("id", { count: "exact", head: true })
+        .in("statut", ["traitement", "qualification", "documents_demandes"]).eq("is_test", false),
+    
+      supabase
+        .from("demandes")
+        .select("id, objet, service, statut, created_at")
+        .in("statut", ["nouvelle_demande", "traitement", "qualification"])
+        .order("created_at", { ascending: false })
+        .limit(5).eq("is_test", false),
+    
+      supabase
+        .from("appointments")
+        .select("id, nom, prenom, service, date_heure")
+        .gte("date_heure", todayISO)
+        .lt(
+          "date_heure",
+          new Date(today.getTime() + 24 * 60 * 60 * 1000).toISOString()
+        )
+        .order("date_heure").eq("is_test", false),
     supabase
       .from("transferts")
       .select("id", { count: "exact", head: true })
       .eq("statut", "en_attente"),
-    supabase.from("clients").select("id", { count: "exact", head: true }),
-    supabase
-      .from("profiles")
-      .select("id", { count: "exact", head: true })
-      .in("role", ["agent", "admin", "super_admin"])
-      .eq("actif", true),
-    supabase
-      .from("payments")
-      .select("created_at, agent_id")
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .single(),
+    
+      supabase.from("clients").select("id", { count: "exact", head: true }).eq("is_test", false),
+    
+      supabase
+        .from("profiles")
+        .select("id", { count: "exact", head: true })
+        .in("role", ["agent", "admin", "super_admin"])
+        .eq("actif", true).eq("is_test", false),
+    
+      supabase
+        .from("payments")
+        .select("created_at, agent_id")
+        .order("created_at", { ascending: false })
+        .limit(1).eq("is_test", false).single(),
     supabase
       .from("transferts")
       .select(
@@ -211,39 +222,45 @@ export default async function SuperAdminDashboard() {
       .eq("statut", "en_attente")
       .order("created_at", { ascending: false })
       .limit(3),
-    supabase
-      .from("payments")
-      .select(
-        "id, reference, client_nom, montant_total, montant_recu, devise, created_at"
-      )
-      .eq("status", "partial")
-      .order("created_at", { ascending: false })
-      .limit(3),
-    supabase
-      .from("payments")
-      .select("date_paiement, montant_recu")
-      .gte("date_paiement", sevenDaysAgoISO),
+    
+      supabase
+        .from("payments")
+        .select(
+          "id, reference, client_nom, montant_total, montant_recu, devise, created_at"
+        )
+        .eq("status", "partial")
+        .order("created_at", { ascending: false })
+        .limit(3).eq("is_test", false),
+    
+      supabase
+        .from("payments")
+        .select("date_paiement, montant_recu")
+        .gte("date_paiement", sevenDaysAgoISO).eq("is_test", false),
     supabase
       .from("quick_sales")
       .select("date_paiement, montant_total")
       .gte("date_paiement", sevenDaysAgoISO),
-    supabase
-      .from("demandes")
-      .select("created_at")
-      .gte("created_at", sevenDaysAgoISO),
-    supabase
-      .from("appointments")
-      .select("date_heure")
-      .gte("date_heure", sevenDaysAgoISO),
-    supabase
-      .from("expenses")
-      .select("date_depense, montant")
-      .eq("statut", "valide")
-      .gte("date_depense", sevenDaysAgoISO),
-    supabase
-      .from("employees")
-      .select("id, salaire_base", { count: "exact" })
-      .eq("statut", "actif"),
+    
+      supabase
+        .from("demandes")
+        .select("created_at")
+        .gte("created_at", sevenDaysAgoISO).eq("is_test", false),
+    
+      supabase
+        .from("appointments")
+        .select("date_heure")
+        .gte("date_heure", sevenDaysAgoISO).eq("is_test", false),
+    
+      supabase
+        .from("expenses")
+        .select("date_depense, montant")
+        .eq("statut", "valide")
+        .gte("date_depense", sevenDaysAgoISO).eq("is_test", false),
+    
+      supabase
+        .from("employees")
+        .select("id, salaire_base", { count: "exact" })
+        .eq("statut", "actif").eq("is_test", false),
     supabase
       .from("payslips")
       .select("id", { count: "exact", head: true })

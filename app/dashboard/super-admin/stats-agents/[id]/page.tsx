@@ -35,23 +35,26 @@ export default async function AgentDetailPage({
   // Charger ses donnees
   const [paiementsRes, clientsRes, demandesRes, transfertsRes, depensesRes] =
     await Promise.all([
-      supabase
-        .from("payments")
-        .select(
-          "id, reference, client_nom, service, montant_recu, devise, date_paiement"
-        )
-        .or(`agent_id.eq.${params.id},created_by.eq.${params.id}`)
-        .order("date_paiement", { ascending: false }),
-      supabase
-        .from("clients")
-        .select("id, reference, nom, prenom, type, created_at")
-        .eq("created_by", params.id)
-        .order("created_at", { ascending: false }),
-      supabase
-        .from("demandes")
-        .select("id, objet, service, statut, created_at")
-        .or(`created_by.eq.${params.id},agent_id.eq.${params.id}`)
-        .order("created_at", { ascending: false }),
+      
+        supabase
+          .from("payments")
+          .select(
+            "id, reference, client_nom, service, montant_recu, devise, date_paiement"
+          )
+          .or(`agent_id.eq.${params.id},created_by.eq.${params.id}`)
+          .order("date_paiement", { ascending: false }).eq("is_test", false),
+      
+        supabase
+          .from("clients")
+          .select("id, reference, nom, prenom, type, created_at")
+          .eq("created_by", params.id)
+          .order("created_at", { ascending: false }).eq("is_test", false),
+      
+        supabase
+          .from("demandes")
+          .select("id, objet, service, statut, created_at")
+          .or(`created_by.eq.${params.id},agent_id.eq.${params.id}`)
+          .order("created_at", { ascending: false }).eq("is_test", false),
       supabase
         .from("transferts")
         .select(
@@ -59,11 +62,12 @@ export default async function AgentDetailPage({
         )
         .or(`agent_id.eq.${params.id},created_by.eq.${params.id}`)
         .order("created_at", { ascending: false }),
-      supabase
-        .from("expenses")
-        .select("id, reference, motif, montant, devise, statut, date_depense")
-        .eq("created_by", params.id)
-        .order("date_depense", { ascending: false }),
+      
+        supabase
+          .from("expenses")
+          .select("id, reference, motif, montant, devise, statut, date_depense")
+          .eq("created_by", params.id)
+          .order("date_depense", { ascending: false }).eq("is_test", false),
     ]);
 
   const data: AgentDetailData = {

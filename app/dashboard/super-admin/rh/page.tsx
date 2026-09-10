@@ -150,9 +150,10 @@ export default async function RhOverviewPage() {
     templatesCountRes,
     leavePeriodsRes,
   ] = await Promise.all([
-    supabase
-      .from("employees")
-      .select("id, statut, salaire_base, date_embauche, profile_id"),
+    
+      supabase
+        .from("employees")
+        .select("id, statut, salaire_base, date_embauche, profile_id").eq("is_test", false),
     supabase
       .from("payslips")
       .select("id, statut", { count: "exact", head: true })
@@ -195,8 +196,8 @@ export default async function RhOverviewPage() {
       .select("id, employee_id, nom, uploaded_by, created_at")
       .order("created_at", { ascending: false })
       .limit(5),
-    supabase.from("profiles").select("id, nom, prenom, email"),
-    supabase.from("employees").select("id, nom_complet"),
+    supabase.from("profiles").select("id, nom, prenom, email").eq("is_test", false),
+    supabase.from("employees").select("id, nom_complet").eq("is_test", false),
     supabase
       .from("leave_requests")
       .select("id", { count: "exact", head: true })

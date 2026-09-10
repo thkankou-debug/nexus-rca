@@ -70,6 +70,12 @@ export async function POST(request: NextRequest) {
 
     console.log("[RDV EMAIL] RDV trouvé:", appointment.reference, "→", appointment.client_email);
 
+    // L2 : jamais d'email reel pour un RDV TEST_
+    if (appointment.is_test) {
+      console.log("[RDV EMAIL] RDV de test — email non envoyé.");
+      return NextResponse.json({ success: true, skipped: "is_test", email_sent: false });
+    }
+
     // ========================================================================
     // VÉRIFICATION CONFIG RESEND
     // ========================================================================

@@ -1665,3 +1665,119 @@ touchée) :
 Grep de contrôle `Bangui · Europe · Canada` → 0 résultat après coup.
 `tsc`/`lint`/`build` : 0 erreur (2 warnings pré-existants sans rapport,
 `PeriodReviewsView.tsx`/`ReviewDetailView.tsx`, `react-hooks/exhaustive-deps`).
+
+---
+
+## L2 — Comptes de test (09/09/2026)
+
+Exécution complète de `BRIEF_L2_L3_POUR_CLAUDE_CODE.md`, lot L2. Détail des
+comptes/dataset dans `docs/COMPTES_TEST.md`.
+
+**1. Migration `074_l2_is_test_flag.sql` — `is_test` sur 8 tables + index partiels.**
+Additif, `NOT NULL DEFAULT false`, aucune valeur existante modifiée. Appliquée
+en base via MCP puis committée dans le même mouvement (règle 8 respectée,
+contrairement à l'incident `067` documenté plus haut).
+
+**2. `lib/exclude-test-data.ts` — le helper générique `excludeTestRows()` a été essayé puis abandonné (TS2589).**
+Première version : une fonction générique `excludeTestRows<T>(query, includeTest)`
+appliquant `.eq("is_test", false)`. `tsc --noEmit` passait avec un cache
+incrémental présent, mais `npm run build` (qui repart d'un état propre)
+échouait sur `Type instantiation is excessively deep and possibly infinite`
+(TS2589) — d'abord sur `lib/monthly-report-data.ts`, puis, après avoir
+exempté ce seul fichier, sur `lib/dashboard-blocks.ts` avec un cache vidé.
+Essayé avec plusieurs formes de contrainte générique (dont une très
+permissive, `eq: (...args: any[]) => any`) : même résultat, ce n'est pas la
+contrainte qui pose problème mais l'inférence de `T` lui-même à partir d'un
+query builder Postgrest très profondément générique. Un typage `any` pur
+évite TS2589 mais casse le typage en aval (`noImplicitAny` sur les callbacks
+`.map`/`.reduce`/`.filter` suivants) — pire, pas mieux. **Décision : pas de
+helper générique du tout.** `lib/exclude-test-data.ts` ne garde que
+`canIncludeTestData()` (fonction simple, aucun générique) ; chaque requête
+d'agrégation ajoute `.eq("is_test", false)` inline. Un script de codemod
+(bracket-matching, jeté après usage) a fait la conversion sur les fichiers
+déjà écrits avec le helper, pour ne pas retaper 60 call-sites à la main.
+**Leçon pour la suite** : ne jamais valider un helper générique enveloppant
+un query builder Supabase sur la seule foi de `tsc --noEmit` — toujours
+vérifier avec `npm run build` après un cache vidé (`rm tsconfig.tsbuildinfo`),
+c'est le seul test qui reproduit l'échec de façon fiable.
+
+**3. Points d'agrégation filtrés — liste réelle, pas exhaustive par construction.**
+`app/dashboard/super-admin/page.tsx` (19 requêtes), `app/dashboard/agent/page.tsx`
+(7), `app/dashboard/super-admin/rh/page.tsx` (3), `app/dashboard/super-admin/
+paiements/en-attente/page.tsx` (1, avec interrupteur `?includeTest=1`),
+`lib/monthly-report-data.ts` (12, inline), `lib/dossiers-server.ts` (5),
+`lib/dashboard-blocks.ts` (7), `app/dashboard/super-admin/stats-agents/page.tsx`
+(6), `app/dashboard/super-admin/stats-agents/[id]/page.tsx` (4),
+`components/dashboard/MonthlyReportGenerator.tsx` (4 — duplique
+`lib/monthly-report-data.ts`, doublon déjà noté ailleurs, non résolu ici).
+`app/dashboard/super-admin/rapprochement/page.tsx` vérifié : ne touche à
+aucune des 8 tables (factures/échéanciers/commissions/caisse), rien à faire.
+`quick_sales`/`transferts`/`payslips` hors périmètre (pas de colonne `is_test`,
+non demandées par le brief). **À surveiller** : d'autres points d'agrégation
+existent probablement ailleurs (pages non auditées dans ce lot) — pas de
+prétention à l'exhaustivité, seulement à l'honnêteté sur ce qui a été vérifié.
+
+**4. Interrupteur "Afficher les données de test" — un seul écran de référence.**
+Implémenté en profondeur sur `/dashboard/super-admin/paiements/en-attente`
+(lien togglant `?includeTest=1`, visible seulement `role === "super_admin"`,
+non mémorisé). **Non répliqué sur tous les écrans** — pattern à copier au fil
+de l'eau plutôt que fait en masse ce lot-ci (risque de dupliquer un mauvais
+patron avant qu'il ait fait ses preuves sur un seul écran réel).
+
+**5. 12 points d'envoi Resend recensés, 5 réellement gardés sur `is_test`.**
+Gardés : `payments/send-receipt`, `appointments/send-confirmation`,
+`payment-links/[reference]/verify` (2 tentatives dans le même bloc),
+`payment-links/t/[token]/declare`, `demandes/[id]/messages`. **Volontairement
+non gardés** (documenté, pas oublié) : `contact`, `demandes/complete`,
+`visa/express`, `assurance/devis` — formulaires publics écrivant dans des
+tables sans colonne `is_test`, jamais utilisés par un flux TEST_ ;
+`stripe-webhook` — Stripe désactivé (CLAUDE.md), aucun webhook TEST_ ne peut
+se déclencher ; `cron/monthly-report` — le rapport lit déjà des données
+filtrées en amont (`lib/monthly-report-data.ts`), rien à garder côté email ;
+`team/create-member` — jamais appelée pour créer un compte TEST_ (script
+dédié, voir point 7).
+
+**6. `payment_links.is_test` propagé au `payments` créé à la vérification.**
+Découvert en lisant `app/api/payment-links/[reference]/verify/route.ts` avant
+de toucher au fichier : sans ce report, un paiement issu de la vérification
+d'un lien TEST_ aurait été un vrai paiement (`is_test = false`) dans les
+statistiques. `is_test: paymentLink.is_test` ajouté à l'insertion.
+
+**7. `scripts/create-test-accounts.js` — JS simple, pas TS (aucun `ts-node`/`tsx` en devDependency).**
+Réutilise le patron déjà validé de `app/api/team/create-member/route.ts`
+(`auth.admin.createUser` + upsert `profiles`). Domaine `@nexusrca.test`
+(RFC 2606). Idempotent par email. Mots de passe générés affichés une seule
+fois en sortie de script, jamais committés. 10 comptes créés le 09/09/2026 :
+9 rôles (`chef_service`/`agent` rattachés au service réel "Visa & e-Visa"
+pour exercer les portées `.service`) + `TEST_client` (profil + fiche
+`clients` liée via `profile_id`).
+
+**8. Jeu de données de test créé par SQL direct (MCP), pas par script.**
+3 `demandes` (nouvelle/en retard/en attente documents), 1 `appointments`,
+1 `payment_links` à 100 XAF, 1 `expenses` en attente, 1 `demande_messages` +
+1 `demande_notes` — tous `is_test = true`, tous rattachés à Test Client /
+Test Agent, pôle Visa & e-Visa (service réel, cohérent avec le point 7).
+
+**9. BUG TROUVÉ par le test (f), non corrigé ici — `payment-links/t/[token]/declare` accepte une redéclaration illimitée.**
+Test exécuté en local (serveur de dev, port 3002) sur le lien TEST_ à
+100 XAF : affichage par jeton OK, première déclaration OK (`skipped: "is_test"`,
+aucun email réel confirmé), **seconde déclaration avec un numéro de
+transaction différent acceptée par la route** (200, `success: true`),
+écrasant silencieusement `numero_transaction`/`paid_declared_at` de la
+première déclaration. La route ne refuse que les statuts `verifie`/`annule`
+— jamais `paiement_declare` lui-même. Un client peut donc redéclarer autant
+de fois qu'il veut tant que le staff n'a pas vérifié, remplaçant le numéro de
+transaction que le staff s'apprête à contrôler. C'est exactement le
+comportement que ce test (en suspens depuis le 07/09, référencé "test (f)"
+dans P1b) devait vérifier — trouvé, pas fabriqué. **Non corrigé** : hors
+périmètre du lot L2 tel que présenté à Thierry (créer des comptes de test,
+pas corriger le workflow paiement). Correctif proposé pour un lot séparé :
+refuser (400) toute déclaration quand `statut === "paiement_declare"`, avec
+un message invitant à contacter le staff plutôt qu'à redéclarer.
+
+**10. `docs/AUDIT_AVANCEMENT_V3.md` — la question "comptes de test" qu'il posait est résolue.**
+L'audit du 08/09 demandait une décision à Thierry avant de créer des comptes
+de test. Résolue par la Décision #9 de `NEXUS_RCA_SPECIFICATION_COMPLETE.md`
+puis par le brief L2 lui-même — pas de nouvelle confirmation demandée, la
+décision était déjà écrite noir sur blanc dans un document que Thierry a
+déposé lui-même.

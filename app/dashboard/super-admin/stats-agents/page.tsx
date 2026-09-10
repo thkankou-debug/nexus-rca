@@ -17,11 +17,12 @@ export default async function StatsAgentsPage() {
   const supabase = createClient();
 
   // 1. Agents
-  const { data: agentsData } = await supabase
-    .from("profiles")
-    .select("id, nom, prenom, role")
-    .in("role", ["agent", "admin", "super_admin"])
-    .eq("actif", true);
+  const { data: agentsData } = await 
+    supabase
+      .from("profiles")
+      .select("id, nom, prenom, role")
+      .in("role", ["agent", "admin", "super_admin"])
+      .eq("actif", true).eq("is_test", false);
 
   const agents = agentsData || [];
 
@@ -29,10 +30,11 @@ export default async function StatsAgentsPage() {
   const stats: AgentStatsRow[] = await Promise.all(
     agents.map(async (agent) => {
       // Paiements
-      const { data: paymentsData } = await supabase
-        .from("payments")
-        .select("montant_recu, date_paiement, created_at")
-        .or(`agent_id.eq.${agent.id},created_by.eq.${agent.id}`);
+      const { data: paymentsData } = await 
+        supabase
+          .from("payments")
+          .select("montant_recu, date_paiement, created_at")
+          .or(`agent_id.eq.${agent.id},created_by.eq.${agent.id}`).eq("is_test", false);
 
       const paiements_dates = (paymentsData || []).map((p) => ({
         date: p.date_paiement || p.created_at,
@@ -40,26 +42,26 @@ export default async function StatsAgentsPage() {
       }));
 
       // Clients
-      const { data: clientsData } = await supabase
-        .from("clients")
-        .select("created_at")
-        .eq("created_by", agent.id);
+      const { data: clientsData } = await 
+        supabase.from("clients").select("created_at").eq("created_by", agent.id).eq("is_test", false);
 
       const clients_dates = (clientsData || []).map((c) => c.created_at);
 
       // Demandes
-      const { data: demandesData } = await supabase
-        .from("demandes")
-        .select("created_at")
-        .or(`created_by.eq.${agent.id},agent_id.eq.${agent.id}`);
+      const { data: demandesData } = await 
+        supabase
+          .from("demandes")
+          .select("created_at")
+          .or(`created_by.eq.${agent.id},agent_id.eq.${agent.id}`).eq("is_test", false);
 
       const demandes_dates = (demandesData || []).map((d) => d.created_at);
 
       // Depenses
-      const { data: depensesData } = await supabase
-        .from("expenses")
-        .select("date_depense, created_at, montant, statut")
-        .eq("created_by", agent.id);
+      const { data: depensesData } = await 
+        supabase
+          .from("expenses")
+          .select("date_depense, created_at, montant, statut")
+          .eq("created_by", agent.id).eq("is_test", false);
 
       const depenses_data = (depensesData || []).map((d) => ({
         date: d.date_depense || d.created_at,

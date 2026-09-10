@@ -135,6 +135,14 @@ export async function aggregateMonth(
   const { start, end } = bounds;
 
   // Toutes les requêtes en parallèle.
+  //
+  // Filtre is_test appliqué en `.eq("is_test", false)` inline ici (pas via
+  // excludeTestRows()) : ce fichier passe `supabase: SupabaseLike` (alias
+  // ReturnType<typeof getAdminSupabase>) à travers Promise.all — router cette
+  // valeur précise par la fonction générique excludeTestRows() fait exploser
+  // l'instanciation de type de TypeScript (TS2589), reproductible même avec
+  // un generique très permissif. Même filtre, même colonne, exception locale
+  // documentée plutôt qu'un `any` qui aurait cassé le typage de tout le fichier.
   const [
     paiementsRes,
     caisseRes,
@@ -155,6 +163,7 @@ export async function aggregateMonth(
     supabase
       .from("payments")
       .select("montant_recu, montant_total, devise, agent_id")
+      .eq("is_test", false)
       .gte("date_paiement", start)
       .lte("date_paiement", end),
     supabase
@@ -166,12 +175,14 @@ export async function aggregateMonth(
       .from("expenses")
       .select("montant, devise")
       .eq("statut", "valide")
+      .eq("is_test", false)
       .gte("date_depense", start)
       .lte("date_depense", end),
     supabase
       .from("expenses")
       .select("montant, devise")
       .eq("statut", "en_attente")
+      .eq("is_test", false)
       .gte("date_depense", start)
       .lte("date_depense", end),
     supabase
@@ -185,34 +196,40 @@ export async function aggregateMonth(
       .from("payments")
       .select("reference, client_nom, service, montant_total, montant_recu, devise")
       .eq("status", "partial")
+      .eq("is_test", false)
       .order("created_at", { ascending: false })
       .limit(50),
-    supabase.from("profiles").select("id, nom, prenom"),
+    supabase.from("profiles").select("id, nom, prenom").eq("is_test", false),
     supabase
       .from("demandes")
       .select("id", { count: "exact", head: true })
+      .eq("is_test", false)
       .gte("created_at", start)
       .lte("created_at", end),
     supabase
       .from("demandes")
       .select("id", { count: "exact", head: true })
       .in("statut", ["complete", "termine"])
+      .eq("is_test", false)
       .gte("updated_at", start)
       .lte("updated_at", end),
     supabase
       .from("clients")
       .select("id", { count: "exact", head: true })
+      .eq("is_test", false)
       .gte("created_at", start)
       .lte("created_at", end),
     supabase
       .from("appointments")
       .select("id", { count: "exact", head: true })
+      .eq("is_test", false)
       .gte("created_at", start)
       .lte("created_at", end),
     supabase
       .from("appointments")
       .select("id", { count: "exact", head: true })
       .eq("statut", "termine")
+      .eq("is_test", false)
       .gte("created_at", start)
       .lte("created_at", end),
     // Pour le top agents (RDV terminés / agent)
@@ -220,12 +237,14 @@ export async function aggregateMonth(
       .from("appointments")
       .select("agent_id")
       .eq("statut", "termine")
+      .eq("is_test", false)
       .gte("created_at", start)
       .lte("created_at", end),
     // Paiements / agent (XAF only pour le top)
     supabase
       .from("payments")
       .select("created_by, montant_recu, devise")
+      .eq("is_test", false)
       .gte("date_paiement", start)
       .lte("date_paiement", end),
     // Caisse / agent (XAF only pour le top)

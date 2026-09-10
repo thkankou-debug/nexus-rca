@@ -42,9 +42,8 @@ export interface ATraiterCounters {
  */
 export async function getATraiter(): Promise<ATraiterCounters> {
   const supabase = createClient();
-  const { data } = await supabase
-    .from("demandes")
-    .select("statut, agent_id, deadline");
+  const { data } = await 
+    supabase.from("demandes").select("statut, agent_id, deadline").eq("is_test", false);
 
   const rows = data ?? [];
   const now = Date.now();
@@ -95,7 +94,8 @@ const PIPELINE_STATUTS = [
  */
 export async function getPipeline(): Promise<PipelineCount[]> {
   const supabase = createClient();
-  const { data } = await supabase.from("demandes").select("statut");
+  const { data } = await 
+    supabase.from("demandes").select("statut").eq("is_test", false);
   const rows = data ?? [];
 
   const counts = new Map(PIPELINE_STATUTS.map((s) => [s, 0]));
@@ -135,13 +135,16 @@ export async function getAujourdhui(): Promise<Aujourdhui> {
   const todayIso = new Date().toISOString().slice(0, 10);
 
   const [rdvRes, demandesRes, historyRes, paymentsRes] = await Promise.all([
-    supabase
-      .from("appointments")
-      .select("id, reference, client_nom, rdv_heure, statut")
-      .eq("rdv_date", todayIso),
-    supabase.from("demandes").select("id, nom_complet, created_at").order("created_at", { ascending: false }).limit(15),
+    
+      supabase
+        .from("appointments")
+        .select("id, reference, client_nom, rdv_heure, statut")
+        .eq("rdv_date", todayIso).eq("is_test", false),
+    
+      supabase.from("demandes").select("id, nom_complet, created_at").order("created_at", { ascending: false }).limit(15).eq("is_test", false),
     supabase.from("demande_status_history").select("id, step_label, created_at").order("created_at", { ascending: false }).limit(15),
-    supabase.from("payments").select("id, reference, created_at").order("created_at", { ascending: false }).limit(15),
+    
+      supabase.from("payments").select("id, reference, created_at").order("created_at", { ascending: false }).limit(15).eq("is_test", false),
   ]);
 
   const activite: ActiviteRecente[] = [
@@ -195,8 +198,9 @@ export async function getAlertes(): Promise<Alerte[]> {
   const seuilAgent = now - SANS_AGENT_SEUIL_HEURES * 60 * 60 * 1000;
 
   const [demandesRes, paymentsRes] = await Promise.all([
-    supabase.from("demandes").select("statut, agent_id, deadline, created_at"),
-    supabase.from("payments").select("status, created_at"),
+    
+      supabase.from("demandes").select("statut, agent_id, deadline, created_at").eq("is_test", false),
+    supabase.from("payments").select("status, created_at").eq("is_test", false),
   ]);
 
   const demandes = demandesRes.data ?? [];

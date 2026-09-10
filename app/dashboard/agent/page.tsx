@@ -101,24 +101,27 @@ export default async function AgentDashboardPage() {
   const startOfYear = getStartOfYear();
 
   // Stats personnelles
-  const { count: rdvThisMonth } = await supabase
-    .from("appointments")
-    .select("*", { count: "exact", head: true })
-    .eq("agent_id", profile.id)
-    .gte("created_at", startOfMonth);
+  const { count: rdvThisMonth } = await 
+    supabase
+      .from("appointments")
+      .select("*", { count: "exact", head: true })
+      .eq("agent_id", profile.id)
+      .gte("created_at", startOfMonth).eq("is_test", false);
 
-  const { count: rdvCompleted } = await supabase
-    .from("appointments")
-    .select("*", { count: "exact", head: true })
-    .eq("agent_id", profile.id)
-    .eq("statut", "termine")
-    .gte("created_at", startOfMonth);
+  const { count: rdvCompleted } = await 
+    supabase
+      .from("appointments")
+      .select("*", { count: "exact", head: true })
+      .eq("agent_id", profile.id)
+      .eq("statut", "termine")
+      .gte("created_at", startOfMonth).eq("is_test", false);
 
-  const { data: paymentsThisMonth } = await supabase
-    .from("payments")
-    .select("montant_recu, devise")
-    .eq("created_by", profile.id)
-    .gte("created_at", startOfMonth);
+  const { data: paymentsThisMonth } = await 
+    supabase
+      .from("payments")
+      .select("montant_recu, devise")
+      .eq("created_by", profile.id)
+      .gte("created_at", startOfMonth).eq("is_test", false);
 
   const totalPaiementsXAF = (paymentsThisMonth || [])
     .filter((p) => p.devise === "XAF")
@@ -126,33 +129,37 @@ export default async function AgentDashboardPage() {
 
   const totalPaiementsCount = paymentsThisMonth?.length || 0;
 
-  const { count: demandesThisMonth } = await supabase
-    .from("demandes")
-    .select("*", { count: "exact", head: true })
-    .eq("agent_id", profile.id)
-    .gte("created_at", startOfMonth);
+  const { count: demandesThisMonth } = await 
+    supabase
+      .from("demandes")
+      .select("*", { count: "exact", head: true })
+      .eq("agent_id", profile.id)
+      .gte("created_at", startOfMonth).eq("is_test", false);
 
-  const { count: rdvThisYear } = await supabase
-    .from("appointments")
-    .select("*", { count: "exact", head: true })
-    .eq("agent_id", profile.id)
-    .gte("created_at", startOfYear);
+  const { count: rdvThisYear } = await 
+    supabase
+      .from("appointments")
+      .select("*", { count: "exact", head: true })
+      .eq("agent_id", profile.id)
+      .gte("created_at", startOfYear).eq("is_test", false);
 
-  const { data: paymentsThisYear } = await supabase
-    .from("payments")
-    .select("montant_recu, devise")
-    .eq("created_by", profile.id)
-    .gte("created_at", startOfYear);
+  const { data: paymentsThisYear } = await 
+    supabase
+      .from("payments")
+      .select("montant_recu, devise")
+      .eq("created_by", profile.id)
+      .gte("created_at", startOfYear).eq("is_test", false);
 
   const totalPaiementsYearXAF = (paymentsThisYear || [])
     .filter((p) => p.devise === "XAF")
     .reduce((sum, p) => sum + Number(p.montant_recu || 0), 0);
 
   // Leaderboard
-  const { data: allAgents } = await supabase
-    .from("profiles")
-    .select("id, prenom, nom, poste, role")
-    .in("role", ["agent", "admin", "super_admin"]);
+  const { data: allAgents } = await 
+    supabase
+      .from("profiles")
+      .select("id, prenom, nom, poste, role")
+      .in("role", ["agent", "admin", "super_admin"]).eq("is_test", false);
 
   const agents = (allAgents || []) as Array<{
     id: string;
@@ -164,18 +171,20 @@ export default async function AgentDashboardPage() {
 
   const leaderboardData: AgentScore[] = await Promise.all(
     agents.map(async (agent) => {
-      const { count: agentRdvCount } = await supabase
-        .from("appointments")
-        .select("*", { count: "exact", head: true })
-        .eq("agent_id", agent.id)
-        .eq("statut", "termine")
-        .gte("created_at", startOfMonth);
+      const { count: agentRdvCount } = await 
+        supabase
+          .from("appointments")
+          .select("*", { count: "exact", head: true })
+          .eq("agent_id", agent.id)
+          .eq("statut", "termine")
+          .gte("created_at", startOfMonth).eq("is_test", false);
 
-      const { data: agentPayments } = await supabase
-        .from("payments")
-        .select("montant_recu, devise")
-        .eq("created_by", agent.id)
-        .gte("created_at", startOfMonth);
+      const { data: agentPayments } = await 
+        supabase
+          .from("payments")
+          .select("montant_recu, devise")
+          .eq("created_by", agent.id)
+          .gte("created_at", startOfMonth).eq("is_test", false);
 
       const agentPaiementsXAF = (agentPayments || [])
         .filter((p) => p.devise === "XAF")

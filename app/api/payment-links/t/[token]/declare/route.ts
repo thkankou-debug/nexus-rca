@@ -138,6 +138,17 @@ export async function POST(
     let staffEmailSent = false;
     let clientEmailSent = false;
 
+    // L2 : jamais d'email reel pour un lien TEST_
+    if (paymentLink.is_test) {
+      console.log("[PAY-DECLARE-TOKEN] Lien de test — emails non envoyés.");
+      return NextResponse.json({
+        success: true,
+        reference,
+        statut: "paiement_declare",
+        skipped: "is_test",
+      });
+    }
+
     if (!process.env.RESEND_API_KEY) {
       console.error("[PAY-DECLARE-TOKEN] ❌ RESEND_API_KEY manquante");
       return NextResponse.json({
