@@ -439,7 +439,7 @@ function PaymentCard({
               </span>
               {payment.client_record_id && (
                 <Link
-                  href={`/dashboard/super-admin/clients/${payment.client_record_id}`}
+                  href={`/dashboard/clients/${payment.client_record_id}`}
                   className="inline-flex items-center gap-1 rounded-full bg-nexus-blue-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-nexus-blue-700 transition hover:bg-nexus-blue-200"
                 >
                   <UserCircle className="h-3 w-3" />

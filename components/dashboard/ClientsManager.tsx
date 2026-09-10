@@ -417,7 +417,7 @@ function ClientCard({
 
         <div className="mt-4 flex flex-wrap gap-2 border-t border-slate-100 pt-4">
           <Link
-            href={`/dashboard/super-admin/clients/${client.id}`}
+            href={`/dashboard/clients/${client.id}`}
             className="inline-flex items-center gap-1.5 rounded-full bg-nexus-blue-950 px-3 py-1.5 text-xs font-semibold text-white hover:bg-nexus-blue-900"
           >
             <Eye className="h-3.5 w-3.5" />

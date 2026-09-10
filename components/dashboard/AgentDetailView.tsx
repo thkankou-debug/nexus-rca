@@ -387,7 +387,7 @@ export function AgentDetailView({ data }: { data: AgentDetailData }) {
               return (
                 <Link
                   key={c.id}
-                  href={`/dashboard/super-admin/clients/${c.id}`}
+                  href={`/dashboard/clients/${c.id}`}
                   className="flex items-center gap-3 p-3 transition hover:bg-slate-50"
                 >
                   <div className="min-w-0 flex-1">

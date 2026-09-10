@@ -2013,3 +2013,70 @@ Dossiers compilent avec `AdminShell`. Les 6 anciennes pages
 `/dashboard/{agent,admin,super-admin}/dossiers/...` compilent toujours à
 l'identique (non touchées). **Non vérifié visuellement** — même remarque
 que 2a/2b, à confirmer par Thierry.
+
+---
+
+## L4-1 — Module Clients unique, squelette + liste + fiche (09/09/2026)
+
+Inventaire + premier sous-lot, même patron que L3.
+
+**1. Bug trouvé (pas fabriqué) : la fiche client était inaccessible à l'agent.**
+`ClientsManager.tsx` (composant partagé par les 3 anciennes listes) code en
+dur le lien de chaque ligne vers `/dashboard/super-admin/clients/{id}` —
+quel que soit le rôle affichant la liste. La seule fiche existante était
+gardée `requireProfile(["super_admin", "admin"])`. Un agent qui cliquait
+"Voir la fiche" depuis `/dashboard/agent/clients` était donc silencieusement
+renvoyé vers `/dashboard`. Corrigé par l'unification elle-même : la nouvelle
+fiche `/dashboard/clients/[id]` accepte `agent` (portée `own`, voir point 3),
+et 4 autres consommateurs du même lien en dur (`AgentDetailView.tsx`,
+`PaymentsManager.tsx`, `AttachClientAction.tsx`, `app/api/search/route.ts`)
+mis à jour au passage — trouvés par grep, pas par accident.
+
+**2. RLS de `clients` : même défaut que `demandes` (L3 point 3).**
+`is_staff(uid)` donne un accès total en lecture à agent/admin/super_admin,
+aucune portée `own` appliquée en base. Filtrage fait côté application
+(`lib/clients-server.ts`, `getAllClientsForRole()`), RLS non touché — même
+décision qu'en L3, pour les mêmes raisons (chantier séparé, plus risqué).
+
+**3. Portée `agent` = `clients.created_by`, seule permission P2 existante.**
+`role_permissions` a `agent → client.read.own` mais `clients` n'a pas de
+colonne `agent_id` comme `demandes` — `created_by` est la seule colonne
+plausible pour cette portée. `admin`/`super_admin` ont déjà `client.read.all`
+(pas de trou comme pour `dossier.read.*` en L3 — rien à corriger ici).
+`dg`/`daf`/`chef_service`/`comptable`/`moderateur`/`partenaire` : aucune
+permission `client.read.*` — liste vide, même règle qu'en L3.
+
+**4. Fusion de doublons (`ClientMergeAction`) : gate ajouté qui n'existait pas avant.**
+Trouvé en lisant l'ancienne page avant de la copier : le bloc de fusion
+s'affichait dès que `duplicateCandidates.length > 0`, sans condition de
+rôle dans le JSX (la route API `/api/clients/[id]/merge`, elle, refuse déjà
+correctement tout rôle hors admin/super_admin — vérifié dans son code
+avant d'écrire). Un agent avec accès à la fiche (portée `own`, point 3)
+aurait donc vu un bouton de fusion voué à échouer en silence côté serveur.
+`canMerge` ajouté dans la nouvelle page : calcul de `duplicateCandidates`
+et rendu de `ClientMergeAction` conditionnés à `admin`/`super_admin`,
+cohérent avec ce que l'API autorise déjà.
+
+**5. Liens internes de la fiche mis à jour, un lien "Voir tous" retiré plutôt que faux.**
+"Dossiers & demandes" pointe désormais vers le module unique L3
+(`/dashboard/dossiers/{id}`) — amélioration réelle, pas juste un
+renommage. "Historique des paiements" n'a plus de lien "Voir tous"
+(pointait vers `/dashboard/super-admin/paiements`, invalide pour un agent
+consultant sa propre fiche) : retiré plutôt que remplacé par un lien
+possiblement faux — les paiements ne sont pas encore unifiés (candidat
+pour un futur lot Finance).
+
+**6. `types/client-types.ts` et l'ancienne page super-admin : `is_test` ajouté aux deux.**
+Même oubli que `Profile` avant L3 Étape 2a — colonne réelle depuis la
+migration 074, jamais répercutée dans le type. Ajouter `is_test` au type
+partagé a cassé la compilation de l'ancienne page super-admin (qui définit
+sa propre interface `Client` locale, passée à `ClientMergeAction` qui,
+elle, attend le type partagé) — corrigé en synchronisant les deux
+définitions plutôt qu'en revenant sur l'ajout.
+
+**7. Test : même limite que L3 (pas de navigateur).**
+`tsc`/`lint`/`build` (cache vidé) : 0 erreur, 2 routes compilées
+(`/dashboard/clients`, `/dashboard/clients/[id]`). Les 4 anciennes pages
+clients compilent toujours à l'identique. **Non vérifié visuellement** —
+à confirmer par Thierry avec `test.agent@nexusrca.test` (doit voir 1 fiche
+client de test) et `tkankou@gmail.com` (doit voir tous les clients réels).

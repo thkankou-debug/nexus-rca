@@ -22,43 +22,23 @@ import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { ClientMergeAction } from "@/components/dashboard/ClientMergeAction";
+import type { Client } from "@/types/client-types";
 import type { Demande } from "@/types";
 
 // ============================================================================
-// TYPES (autonome - pas d'import externe)
+// L4-1 : fiche client unique. Adaptée de
+// app/dashboard/super-admin/clients/[id]/page.tsx (seule fiche existante
+// avant ce jour, réservée admin/super_admin) — corrige au passage un bug
+// trouvé pendant l'inventaire : ClientsManager.tsx pointait tous les rôles
+// vers cette page super-admin-only, donc un agent qui cliquait "Voir la
+// fiche" depuis /dashboard/agent/clients était silencieusement redirigé
+// vers /dashboard (requireProfile refusait). Portée agent = own
+// (clients.created_by), seule permission P2 existante pour ce rôle.
+// dg/daf/chef_service/comptable/moderateur/partenaire : aucune permission
+// client.read.* — non ajoutés au gate, pas d'accès inventé.
 // ============================================================================
-type ClientType = "particulier" | "entreprise" | "institution";
 
-interface Client {
-  id: string;
-  reference: string | null;
-  type: ClientType;
-  nom: string;
-  prenom: string | null;
-  raison_sociale: string | null;
-  numero_identification: string | null;
-  email: string | null;
-  telephone: string | null;
-  telephone_2: string | null;
-  adresse: string | null;
-  ville: string | null;
-  pays: string | null;
-  profile_id: string | null;
-  notes: string | null;
-  actif: boolean;
-  merged_into_id: string | null;
-  created_at: string;
-  updated_at: string;
-  created_by: string | null;
-  is_test: boolean;
-}
-
-type PaymentStatus =
-  | "non_paye"
-  | "partiel"
-  | "paye"
-  | "rembourse"
-  | "annule";
+type PaymentStatus = "non_paye" | "partiel" | "paye" | "rembourse" | "annule";
 
 interface Payment {
   id: string;
@@ -74,10 +54,7 @@ interface Payment {
   status: string;
 }
 
-// ============================================================================
-// CONSTANTES (defensives - pas de undefined possible)
-// ============================================================================
-function getTypeLabel(type: ClientType | string): string {
+function getTypeLabel(type: string): string {
   const labels: Record<string, string> = {
     particulier: "Particulier",
     entreprise: "Entreprise",
@@ -86,20 +63,19 @@ function getTypeLabel(type: ClientType | string): string {
   return labels[type] || "Client";
 }
 
-function getTypeIcon(type: ClientType | string) {
+function getTypeIcon(type: string) {
   if (type === "entreprise") return Building2;
   if (type === "institution") return Landmark;
   return User;
 }
 
-function getTypeColor(type: ClientType | string): string {
+function getTypeColor(type: string): string {
   if (type === "entreprise") return "from-purple-500 to-purple-700";
   if (type === "institution") return "from-emerald-500 to-emerald-700";
   return "from-blue-500 to-indigo-700";
 }
 
-// P6-0 : accepte les valeurs canoniques (D1) en plus des heritees, avec repli.
-function getPaymentStatusLabel(status: PaymentStatus | string): string {
+function getPaymentStatusLabel(status: string): string {
   const labels: Record<string, string> = {
     non_paye: "Non payé",
     partiel: "Partiel",
@@ -115,7 +91,7 @@ function getPaymentStatusLabel(status: PaymentStatus | string): string {
   return labels[status] || status;
 }
 
-function getPaymentStatusColor(status: PaymentStatus | string): string {
+function getPaymentStatusColor(status: string): string {
   const colors: Record<string, string> = {
     non_paye: "bg-red-100 text-red-700",
     partiel: "bg-amber-100 text-amber-700",
@@ -155,20 +131,17 @@ function getDisplayName(client: Client): string {
 }
 
 export const metadata = {
-  title: "Fiche client | Super Admin",
+  title: "Fiche client | Nexus RCA",
 };
 
 export const dynamic = "force-dynamic";
 
-// ============================================================================
-// PAGE
-// ============================================================================
-export default async function ClientDetailPage({
+export default async function ClientUniqueDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const profile = await requireProfile(["super_admin", "admin"]);
+  const profile = await requireProfile(["super_admin", "admin", "agent"]);
   const supabase = createClient();
 
   const { data: clientData } = await supabase
@@ -180,10 +153,12 @@ export default async function ClientDetailPage({
   if (!clientData) notFound();
   const client = clientData as Client;
 
-  // A6 lot 1 : liaison directe par client_record_id (P3) — remplace le
-  // rapprochement par email/téléphone. "Une liaison directe par ID arrivera
-  // dans la prochaine mise à jour" (commentaire laissé dans ce fichier avant
-  // A6) : c'est fait.
+  if (profile.role === "agent" && client.created_by !== profile.id) {
+    notFound();
+  }
+
+  const canMerge = profile.role === "admin" || profile.role === "super_admin";
+
   const { data: paymentsRows } = await supabase
     .from("payments")
     .select("*")
@@ -198,9 +173,6 @@ export default async function ClientDetailPage({
     .order("created_at", { ascending: false });
   const demandesData = (demandesRows || []) as Demande[];
 
-  // Rendez-vous : appointments.client_id référence profiles.id, pas
-  // clients.id — nécessite client.profile_id (peuplé par le trigger P3
-  // uniquement pour les clients ayant un compte).
   let rdvData: Array<{
     id: string;
     reference: string | null;
@@ -218,8 +190,6 @@ export default async function ClientDetailPage({
     rdvData = data || [];
   }
 
-  // Communications récentes : messages des dossiers du client, tous
-  // regroupés (demande_messages est par dossier, pas par client).
   const demandeIds = demandesData.map((d) => d.id);
   let messagesData: Array<{
     id: string;
@@ -238,29 +208,29 @@ export default async function ClientDetailPage({
     messagesData = data || [];
   }
 
-  // A6 lot 3 : détection de doublons (email/téléphone), fusion toujours
-  // proposée à un humain — jamais automatique (voir docs/AUDIT_CRM.md).
   let survivorInfo: { id: string; nom: string; prenom: string | null } | null = null;
   let duplicateCandidates: Client[] = [];
-  if (client.merged_into_id) {
-    const { data } = await supabase
-      .from("clients")
-      .select("id, nom, prenom")
-      .eq("id", client.merged_into_id)
-      .single();
-    survivorInfo = data;
-  } else {
-    const orParts: string[] = [];
-    if (client.email) orParts.push(`email.ilike.${client.email}`);
-    if (client.telephone) orParts.push(`telephone.eq.${client.telephone}`);
-    if (orParts.length > 0) {
+  if (canMerge) {
+    if (client.merged_into_id) {
       const { data } = await supabase
         .from("clients")
-        .select("*")
-        .neq("id", client.id)
-        .is("merged_into_id", null)
-        .or(orParts.join(","));
-      duplicateCandidates = (data || []) as Client[];
+        .select("id, nom, prenom")
+        .eq("id", client.merged_into_id)
+        .single();
+      survivorInfo = data;
+    } else {
+      const orParts: string[] = [];
+      if (client.email) orParts.push(`email.ilike.${client.email}`);
+      if (client.telephone) orParts.push(`telephone.eq.${client.telephone}`);
+      if (orParts.length > 0) {
+        const { data } = await supabase
+          .from("clients")
+          .select("*")
+          .neq("id", client.id)
+          .is("merged_into_id", null)
+          .or(orParts.join(","));
+        duplicateCandidates = (data || []) as Client[];
+      }
     }
   }
 
@@ -281,10 +251,7 @@ export default async function ClientDetailPage({
 
   return (
     <DashboardShell profile={profile}>
-      <BackButton
-        fallbackHref="/dashboard/super-admin/clients"
-        label="Retour aux clients"
-      />
+      <BackButton fallbackHref="/dashboard/clients" label="Retour aux clients" />
 
       {/* HEADER */}
       <div className="mb-8">
@@ -366,7 +333,7 @@ export default async function ClientDetailPage({
             </div>
 
             <Link
-              href="/dashboard/super-admin/clients"
+              href="/dashboard/clients"
               className="inline-flex shrink-0 items-center gap-2 rounded-full border border-nexus-blue-200 bg-nexus-blue-50 px-4 py-2 text-sm font-semibold text-nexus-blue-700 hover:bg-nexus-blue-100"
             >
               <Edit3 className="h-4 w-4" />
@@ -392,7 +359,7 @@ export default async function ClientDetailPage({
           <p className="text-sm font-semibold text-amber-900">
             Cette fiche a été fusionnée dans{" "}
             <Link
-              href={`/dashboard/super-admin/clients/${survivorInfo.id}`}
+              href={`/dashboard/clients/${survivorInfo.id}`}
               className="underline hover:text-amber-700"
             >
               {[survivorInfo.prenom, survivorInfo.nom].filter(Boolean).join(" ") || survivorInfo.nom}
@@ -402,7 +369,7 @@ export default async function ClientDetailPage({
         </div>
       )}
 
-      {duplicateCandidates.length > 0 && (
+      {canMerge && duplicateCandidates.length > 0 && (
         <div className="mb-8">
           <ClientMergeAction survivorId={client.id} candidates={duplicateCandidates} />
         </div>
@@ -410,18 +377,8 @@ export default async function ClientDetailPage({
 
       {/* STATS */}
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatBlock
-          icon={FileText}
-          label="Dossiers"
-          value={nbDossiers.toString()}
-          accent="blue"
-        />
-        <StatBlock
-          icon={Wallet}
-          label="Paiements"
-          value={nbPaiements.toString()}
-          accent="orange"
-        />
+        <StatBlock icon={FileText} label="Dossiers" value={nbDossiers.toString()} accent="blue" />
+        <StatBlock icon={Wallet} label="Paiements" value={nbPaiements.toString()} accent="orange" />
         <StatBlock
           icon={CheckCircle2}
           label="Total encaissé"
@@ -448,13 +405,6 @@ export default async function ClientDetailPage({
               {nbPaiements}
             </span>
           </div>
-          <Link
-            href="/dashboard/super-admin/paiements"
-            className="inline-flex items-center gap-1 text-xs font-semibold text-nexus-orange-600 hover:text-nexus-orange-700"
-          >
-            Voir tous
-            <ArrowRight className="h-3 w-3" />
-          </Link>
         </div>
 
         {paymentsData.length === 0 ? (
@@ -463,21 +413,11 @@ export default async function ClientDetailPage({
             <p className="mt-3 text-sm text-slate-500">
               Aucun paiement enregistré pour ce client.
             </p>
-            <Link
-              href="/dashboard/super-admin/paiements"
-              className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-nexus-orange-600 hover:text-nexus-orange-700"
-            >
-              Enregistrer un paiement
-              <ArrowRight className="h-3 w-3" />
-            </Link>
           </div>
         ) : (
           <div className="divide-y divide-slate-100">
             {paymentsData.map((payment) => (
-              <div
-                key={payment.id}
-                className="flex items-center gap-4 p-4 transition hover:bg-slate-50"
-              >
+              <div key={payment.id} className="flex items-center gap-4 p-4 transition hover:bg-slate-50">
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-mono text-xs font-bold text-nexus-blue-700">
@@ -499,19 +439,11 @@ export default async function ClientDetailPage({
                 </div>
                 <div className="text-right">
                   <p className="font-bold text-nexus-blue-950">
-                    {formatMoney(
-                      Number(payment.montant_recu),
-                      payment.devise
-                    )}
+                    {formatMoney(Number(payment.montant_recu), payment.devise)}
                   </p>
-                  {Number(payment.montant_recu) <
-                    Number(payment.montant_total) && (
+                  {Number(payment.montant_recu) < Number(payment.montant_total) && (
                     <p className="text-xs text-slate-500">
-                      sur{" "}
-                      {formatMoney(
-                        Number(payment.montant_total),
-                        payment.devise
-                      )}
+                      sur {formatMoney(Number(payment.montant_total), payment.devise)}
                     </p>
                   )}
                 </div>
@@ -522,7 +454,7 @@ export default async function ClientDetailPage({
       </div>
 
       {/* HISTORIQUE DOSSIERS */}
-      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="mb-8 rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="flex items-center justify-between border-b border-slate-200 p-5">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-nexus-blue-700" />
@@ -534,7 +466,7 @@ export default async function ClientDetailPage({
             </span>
           </div>
           <Link
-            href="/dashboard/super-admin/demandes"
+            href="/dashboard/dossiers"
             className="inline-flex items-center gap-1 text-xs font-semibold text-nexus-blue-700 hover:text-nexus-blue-900"
           >
             Voir tous
@@ -554,7 +486,7 @@ export default async function ClientDetailPage({
             {demandesData.map((demande) => (
               <Link
                 key={demande.id}
-                href={`/dashboard/super-admin/demandes/${demande.id}`}
+                href={`/dashboard/dossiers/${demande.id}`}
                 className="flex items-center gap-4 p-4 transition hover:bg-slate-50"
               >
                 <div className="min-w-0 flex-1">
@@ -595,13 +527,6 @@ export default async function ClientDetailPage({
               {rdvData.length}
             </span>
           </div>
-          <Link
-            href="/dashboard/super-admin/rdv"
-            className="inline-flex items-center gap-1 text-xs font-semibold text-nexus-blue-700 hover:text-nexus-blue-900"
-          >
-            Voir tous
-            <ArrowRight className="h-3 w-3" />
-          </Link>
         </div>
 
         {rdvData.length === 0 ? (
@@ -666,7 +591,7 @@ export default async function ClientDetailPage({
             {messagesData.map((message) => (
               <Link
                 key={message.id}
-                href={`/dashboard/super-admin/demandes/${message.demande_id}`}
+                href={`/dashboard/dossiers/${message.demande_id}`}
                 className="flex items-start gap-3 p-4 transition hover:bg-slate-50"
               >
                 <div className="min-w-0 flex-1">
@@ -691,9 +616,6 @@ export default async function ClientDetailPage({
   );
 }
 
-// ============================================================================
-// SOUS-COMPOSANTS
-// ============================================================================
 function ContactRow({
   icon: Icon,
   label,

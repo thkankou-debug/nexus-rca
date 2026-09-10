@@ -174,11 +174,10 @@ export async function GET(request: NextRequest) {
     if (paymentsRes.error)
       console.error("[GLOBAL_SEARCH] payments error:", paymentsRes.error.message);
 
-    // URLs : page détail si elle existe, sinon page liste du rôle.
-    const clientUrl = (id: string) =>
-      role === "super_admin"
-        ? `/dashboard/super-admin/clients/${id}`
-        : `/dashboard/${rp}/clients`;
+    // L4 : fiche unique, accessible depuis tout role ayant une permission
+    // client.read.* (agent sur ses propres clients, admin/super_admin sur
+    // tous) — plus besoin de distinguer par role ici.
+    const clientUrl = (id: string) => `/dashboard/clients/${id}`;
     const demandesListUrl = `/dashboard/${rp}/demandes`;
     const appointmentsListUrl = `/dashboard/${rp}/rdv`;
     const paymentsListUrl = `/dashboard/${rp}/paiements`;

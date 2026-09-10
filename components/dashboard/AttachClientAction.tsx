@@ -93,7 +93,7 @@ export function AttachClientAction({
   if (clientRecordId) {
     return (
       <Link
-        href={`/dashboard/super-admin/clients/${clientRecordId}`}
+        href={`/dashboard/clients/${clientRecordId}`}
         className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 transition-colors hover:bg-emerald-100"
       >
         <Link2 className="h-3.5 w-3.5" />
