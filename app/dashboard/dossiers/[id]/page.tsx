@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { requireProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getEffectiveNav } from "@/lib/admin-nav";
-import { DossiersAdminShell } from "@/components/dossiers/DossiersAdminShell";
+import { ModuleAdminShell } from "@/components/admin/ui/ModuleAdminShell";
 import { StaffDossierDetail } from "@/components/dossiers/StaffDossierDetail";
 import { isCategorieDossier } from "@/lib/demande-categories";
 import type { Demande } from "@/types";
@@ -94,7 +94,7 @@ export default async function DossierUniquePage({
   const effectiveNav = await getEffectiveNav();
 
   return (
-    <DossiersAdminShell
+    <ModuleAdminShell
       profile={profile}
       effectiveNav={effectiveNav}
       breadcrumb={[
@@ -115,6 +115,6 @@ export default async function DossierUniquePage({
         payments={paymentsRows ?? []}
         appointments={appointmentsRows ?? []}
       />
-    </DossiersAdminShell>
+    </ModuleAdminShell>
   );
 }

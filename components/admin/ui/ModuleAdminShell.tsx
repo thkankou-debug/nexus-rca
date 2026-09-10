@@ -1,10 +1,12 @@
 "use client";
 
 // L3 Étape 3 — premier raccordement réel de AdminShell (A2/A3), jamais
-// branché avant ce jour (voir docs/DETTE.md, A3 #1). Seule l'entrée
-// "Dossiers" apparaît : "une entrée qui ne mène nulle part n'existe pas"
-// (BRIEF_L2_L3_POUR_CLAUDE_CODE.md, Étape 3) — tout module dont le href est
-// encore une ancre de démo (#...) est filtré, pas grisé.
+// branché avant ce jour (voir docs/DETTE.md, A3 #1). Généralisé en L4-2
+// (renommé depuis components/dossiers/DossiersAdminShell.tsx) pour être
+// partagé par tous les modules unifiés (Dossiers, Clients, et les suivants)
+// plutôt que dupliqué à chaque lot. Seuls les modules dont le href est un
+// vrai chemin (pas une ancre de démo #...) apparaissent : "une entrée qui ne
+// mène nulle part n'existe pas" (BRIEF_L2_L3_POUR_CLAUDE_CODE.md, Étape 3).
 //
 // Pas de recherche globale ni de centre de notifications ici : les deux
 // exigeraient une vraie source de données (index de recherche, notifications
@@ -21,7 +23,7 @@ import { createClient } from "@/lib/supabase/client";
 import type { AdminNavGroup } from "@/lib/admin-nav";
 import type { Profile } from "@/types";
 
-export function DossiersAdminShell({
+export function ModuleAdminShell({
   profile,
   effectiveNav,
   breadcrumb,

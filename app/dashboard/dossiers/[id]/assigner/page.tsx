@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { requireProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getEffectiveNav } from "@/lib/admin-nav";
-import { DossiersAdminShell } from "@/components/dossiers/DossiersAdminShell";
+import { ModuleAdminShell } from "@/components/admin/ui/ModuleAdminShell";
 import { AssignAgentPageClient } from "@/components/dossiers/AssignAgentPageClient";
 import { isCategorieDossier } from "@/lib/demande-categories";
 
@@ -39,7 +39,7 @@ export default async function DossierUniqueAssignerPage({
   const effectiveNav = await getEffectiveNav();
 
   return (
-    <DossiersAdminShell
+    <ModuleAdminShell
       profile={profile}
       effectiveNav={effectiveNav}
       breadcrumb={[
@@ -70,6 +70,6 @@ export default async function DossierUniqueAssignerPage({
         categorieSlug={categorieSlug}
         detailHref={detailHref}
       />
-    </DossiersAdminShell>
+    </ModuleAdminShell>
   );
 }

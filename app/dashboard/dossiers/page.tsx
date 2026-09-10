@@ -1,6 +1,6 @@
 import { requireProfile } from "@/lib/auth";
 import { getEffectiveNav } from "@/lib/admin-nav";
-import { DossiersAdminShell } from "@/components/dossiers/DossiersAdminShell";
+import { ModuleAdminShell } from "@/components/admin/ui/ModuleAdminShell";
 import { DossiersListClient } from "@/components/dossiers/DossiersListClient";
 import { getActiveAgents, getAllDossiersForRole } from "@/lib/dossiers-server";
 
@@ -40,7 +40,7 @@ export default async function DossiersUniquePage() {
   const baseDetailHref = "/dashboard/dossiers";
 
   return (
-    <DossiersAdminShell
+    <ModuleAdminShell
       profile={profile}
       effectiveNav={effectiveNav}
       breadcrumb={[{ label: "Dashboard", href: "/dashboard" }, { label: "Dossiers" }]}
@@ -69,6 +69,6 @@ export default async function DossiersUniquePage() {
         baseDetailHref={baseDetailHref}
         canViewDetail={canViewDetail}
       />
-    </DossiersAdminShell>
+    </ModuleAdminShell>
   );
 }

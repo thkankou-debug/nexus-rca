@@ -2080,3 +2080,34 @@ définitions plutôt qu'en revenant sur l'ajout.
 clients compilent toujours à l'identique. **Non vérifié visuellement** —
 à confirmer par Thierry avec `test.agent@nexusrca.test` (doit voir 1 fiche
 client de test) et `tkankou@gmail.com` (doit voir tous les clients réels).
+
+---
+
+## L4-2 — Raccordement AdminShell pour Clients + généralisation du shell (09/09/2026)
+
+**1. `DossiersAdminShell.tsx` renommé `ModuleAdminShell.tsx`, déplacé vers `components/admin/ui/`.**
+Le composant était déjà 100% générique (aucune logique propre aux dossiers)
+— seul son nom et son dossier (`components/dossiers/`) suggéraient le
+contraire. Renommé plutôt que dupliqué pour L4, afin de ne pas recréer le
+même shell à chaque module unifié (L5-L16 le réutiliseront tel quel).
+Comportement strictement identique, vérifié par build : les 3 routes
+Dossiers déjà en place (`/dashboard/dossiers`, `[id]`, `[id]/assigner`)
+compilent à l'identique après le renommage.
+
+**2. `lib/admin-nav.ts` : href du module "clients" changé de `#activite-clients` à `/dashboard/clients`.**
+Même geste qu'en L3 Étape 3 pour "dossiers". Aucun trou de permission cette
+fois (contrairement à `dossier.read.*` pour admin) : `admin` a déjà
+`client.read.all` seedé depuis P2, `has_permission("client.read.own")`
+l'élargit correctement (`.own → .all`). Rien à corriger.
+
+**3. Pages Clients basculées sur `ModuleAdminShell` — `BackButton` retiré, remplacé par le fil d'ariane.**
+Même patron que la fiche Dossiers (L3 Étape 3 point 5) : la fiche client a
+déjà son propre en-tête riche (bandeau avec nom/type/contact), donc
+`showHeader={false}`, seul le fil d'ariane est affiché par-dessus.
+
+**4. Test : même limite que L3/L4-1 (pas de navigateur).**
+`tsc`/`lint`/`build` (cache vidé) : 0 erreur, les 2 routes Clients
+compilent avec `AdminShell`, les 3 routes Dossiers compilent toujours à
+l'identique après le renommage du shell partagé. **Non vérifié
+visuellement** — à confirmer par Thierry : la barre latérale doit
+maintenant afficher deux entrées, "Dossiers" et "Clients".

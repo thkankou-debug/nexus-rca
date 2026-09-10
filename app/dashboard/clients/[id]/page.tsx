@@ -19,8 +19,8 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
-import { BackButton } from "@/components/ui/BackButton";
+import { getEffectiveNav } from "@/lib/admin-nav";
+import { ModuleAdminShell } from "@/components/admin/ui/ModuleAdminShell";
 import { ClientMergeAction } from "@/components/dashboard/ClientMergeAction";
 import type { Client } from "@/types/client-types";
 import type { Demande } from "@/types";
@@ -248,11 +248,19 @@ export default async function ClientUniqueDetailPage({
 
   const Icon = getTypeIcon(client.type);
   const displayName = getDisplayName(client);
+  const effectiveNav = await getEffectiveNav();
 
   return (
-    <DashboardShell profile={profile}>
-      <BackButton fallbackHref="/dashboard/clients" label="Retour aux clients" />
-
+    <ModuleAdminShell
+      profile={profile}
+      effectiveNav={effectiveNav}
+      breadcrumb={[
+        { label: "Dashboard", href: "/dashboard" },
+        { label: "Clients", href: "/dashboard/clients" },
+        { label: displayName },
+      ]}
+      showHeader={false}
+    >
       {/* HEADER */}
       <div className="mb-8">
         <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
@@ -612,7 +620,7 @@ export default async function ClientUniqueDetailPage({
           </div>
         )}
       </div>
-    </DashboardShell>
+    </ModuleAdminShell>
   );
 }
 
