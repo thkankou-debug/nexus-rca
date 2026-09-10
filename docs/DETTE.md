@@ -2345,3 +2345,66 @@ demande.
 **5. Test : 0 erreur après correction des 22 Records exhaustifs.**
 `tsc`/`lint`/`build` (cache vidé) : 0 erreur. Aucune route nouvelle, aucun
 compte réel affecté (`accueil_caisse` n'existe encore sur aucun profil).
+
+---
+
+## Chaîne de validation caisse — soumission/clôture (10/09/2026)
+
+Espace Accueil & Caisse, sous-lot "Session de caisse" (avant le Comptoir
+POS, ordre imposé par le document). 2 routes API, aucun écran.
+
+**1. Migration 079 trouvée en testant, pas anticipée — la présentation initiale de ce lot était fausse sur ce point.**
+J'avais annoncé "pas de migration de schéma nécessaire — colonne texte
+libre" avant d'écrire. Faux : `caisse_sessions_status_check` limitait déjà
+`status` à `('ouverte', 'cloturee')` — trouvé en simulant la chaîne par
+transaction SQL (`BEGIN ... ROLLBACK`) avant d'écrire le code applicatif,
+pas après un échec en production. Migration 079 ajoutée : `status` accepte
+désormais aussi `'a_cloturer'`. Erreur signalée explicitement plutôt que
+corrigée en silence.
+
+**2. `lib/caisse-server.ts` : calcul du solde théorique extrait, une seule source pour `/submit` et `/close`.**
+Le calcul (`opening_balance` + somme des `quick_sales` en espèces depuis
+l'ouverture) existait déjà dans `close`. Extrait tel quel dans
+`computeExpectedBalance()` plutôt que dupliqué dans la nouvelle route
+`/submit` — les deux étapes de la chaîne doivent produire le même nombre
+pour le même état, une divergence de calcul entre les deux serait un bug
+silencieux.
+
+**3. Nouvelle route `POST /api/caisse-sessions/[id]/submit` — permission `caisse.reconcile.submit`, réservée à la caissière propriétaire de la session.**
+Vérifie `agent_id === user.id` (une caissière ne soumet que sa propre
+session — contrairement à `close`, où admin/daf agissent sur la session
+de quelqu'un d'autre par nature). Statut `ouverte` → `a_cloturer` : calcule
+`expected_balance`/`discrepancy`, stocke `actual_balance`/`notes`, ne
+touche pas `closed_at`.
+
+**4. Route existante `/close` modifiée — changement de comportement réel, pas additif, sur une table financière.**
+N'accepte plus `ouverte` directement : exige `a_cloturer` (déjà soumise).
+Recalcule `expected_balance` côté serveur pour vérification (ne fait pas
+confiance à ce que `/submit` a stocké) avant de clôturer. Toujours réservée
+`caisse.close` (super_admin/daf) — aucun changement de qui peut clôturer,
+seulement de la condition préalable.
+
+**5. `POST /api/caisse-sessions` (ouverture) élargie pour accepter `caisse.session.open` en plus de `caisse.write`.**
+Sans ce changement, `accueil_caisse` n'aurait pas pu ouvrir sa propre
+session (seule `caisse.write`, jamais accordée à ce rôle, gardait la route)
+— la chaîne entière lui aurait été inaccessible dès la première étape.
+Décision prise en écrivant, pas dans la présentation initiale du lot :
+signalée ici plutôt que silencieuse. Même route pour les deux permissions,
+pas de troisième endpoint dupliqué pour la même action.
+
+**6. Vérifié par transaction SQL annulée (`ROLLBACK`), pas par un vrai compte de test.**
+`caisse_sessions` n'a pas de colonne `is_test` (absente de la migration
+074 qui couvrait 8 tables, pas celle-ci) — impossible d'y laisser une
+ligne de test permanente sans fausser un futur rapprochement réel. Chaîne
+complète simulée (`ouverte` → `a_cloturer` → `cloturee`) dans une
+transaction explicitement annulée avec `TEST_agent` comme `agent_id` :
+succès aux 3 étapes, confirmé `count(*) = 0` après le `ROLLBACK`. Les
+permissions elles-mêmes (`caisse.reconcile.submit`, `caisse.close`,
+ownership check) sont vérifiées par lecture de code, pas par appel HTTP
+authentifié réel — même limite que tous les lots précédents (pas de
+navigateur, pas de mécanisme simple pour obtenir un cookie de session
+Supabase valide depuis ce script).
+
+**7. Test : `tsc`/`lint`/`build` (cache vidé) : 0 erreur.**
+Aucun écran construit dans ce sous-lot — Comptoir POS et Ma journée de
+caisse restent à faire.

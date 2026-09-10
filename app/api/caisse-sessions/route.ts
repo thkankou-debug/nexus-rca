@@ -10,7 +10,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
-import { assertPermission, ForbiddenError } from "@/lib/permissions";
+import { hasPermission, ForbiddenError } from "@/lib/permissions";
 import { logAudit } from "@/lib/audit";
 
 export const dynamic = "force-dynamic";
@@ -67,7 +67,13 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    await assertPermission("caisse.write");
+    // Espace Accueil & Caisse (10/09/2026) : accueil_caisse ouvre sa session
+    // via caisse.session.open, distincte de caisse.write (agent/admin) —
+    // même route, deux permissions possibles plutôt qu'une troisième route
+    // dupliquée pour la même action.
+    if (!(await hasPermission("caisse.write")) && !(await hasPermission("caisse.session.open"))) {
+      throw new ForbiddenError("Permission 'caisse.write' ou 'caisse.session.open' requise");
+    }
 
     const supabase = createClient();
     const {

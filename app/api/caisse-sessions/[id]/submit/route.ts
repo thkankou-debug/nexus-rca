@@ -1,13 +1,10 @@
 // ============================================================================
-// API ROUTE — POST /api/caisse-sessions/:id/close
-// P6, lot Caisse + Espace Accueil & Caisse (NEXUS_RCA_DASHBOARD_ADMINISTRATION.md,
-// §3.3/§4.3, 10/09/2026) : clôture réservée aux sessions déjà "a_cloturer"
-// (soumises via /submit) — une session "ouverte" ne peut plus être clôturée
-// directement, elle doit d'abord passer par la soumission de la caissière.
-// Solde théorique recalculé côté serveur pour vérification (jamais confié
-// au client). Permission 'caisse.close' — séparation des tâches (§P2,
-// matrice officielle) : seuls super_admin et daf peuvent clôturer, y
-// compris une session soumise par un agent ou un accueil_caisse.
+// API ROUTE — POST /api/caisse-sessions/:id/submit
+// Espace Accueil & Caisse (NEXUS_RCA_DASHBOARD_ADMINISTRATION.md, §3.3/§4.3).
+// Première moitié de la chaîne de validation : la caissière soumet son
+// comptage de fin de journée, le serveur calcule le solde théorique et
+// l'écart — statut -> "a_cloturer". Elle ne clôture pas ; la validation
+// finale appartient à /close (permission caisse.close, DAF/admin).
 // ============================================================================
 
 import { NextRequest, NextResponse } from "next/server";
@@ -28,14 +25,14 @@ function getAdminClient() {
   });
 }
 
-interface CloseBody {
+interface SubmitBody {
   actual_balance: number;
   notes?: string;
 }
 
 export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    await assertPermission("caisse.close");
+    await assertPermission("caisse.reconcile.submit");
 
     const supabase = createClient();
     const {
@@ -48,7 +45,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     const { data: actor } = await supabase.from("profiles").select("role").eq("id", user.id).single();
     const role = (actor as { role?: string } | null)?.role || "";
 
-    const body = (await request.json().catch(() => null)) as CloseBody | null;
+    const body = (await request.json().catch(() => null)) as SubmitBody | null;
     if (!body || !Number.isFinite(body.actual_balance) || body.actual_balance < 0) {
       return NextResponse.json({ success: false, error: "actual_balance requis (nombre >= 0)" }, { status: 400 });
     }
@@ -64,13 +61,27 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       return NextResponse.json({ success: false, error: "Session introuvable" }, { status: 404 });
     }
 
-    const sessionRow = session as { id: string; agent_id: string; opened_at: string; opening_balance: number; status: string };
-    if (sessionRow.status === "cloturee") {
-      return NextResponse.json({ success: false, error: "Cette session est déjà clôturée" }, { status: 400 });
-    }
-    if (sessionRow.status !== "a_cloturer") {
+    const sessionRow = session as {
+      id: string;
+      agent_id: string;
+      opened_at: string;
+      opening_balance: number;
+      status: string;
+    };
+
+    // Une caissière ne soumet que sa propre session (une exception admin/
+    // super_admin n'est pas nécessaire ici : ce sont eux qui valident/closent,
+    // pas eux qui soumettent).
+    if (sessionRow.agent_id !== user.id) {
       return NextResponse.json(
-        { success: false, error: "Cette session doit d'abord être soumise (rapprochement) avant clôture" },
+        { success: false, error: "Vous ne pouvez soumettre que votre propre session" },
+        { status: 403 }
+      );
+    }
+
+    if (sessionRow.status !== "ouverte") {
+      return NextResponse.json(
+        { success: false, error: "Cette session n'est pas ouverte (déjà soumise ou clôturée)" },
         { status: 400 }
       );
     }
@@ -86,8 +97,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     const { error: updateError } = await admin
       .from("caisse_sessions")
       .update({
-        status: "cloturee",
-        closed_at: new Date().toISOString(),
+        status: "a_cloturer",
         expected_balance: expectedBalance,
         actual_balance: body.actual_balance,
         discrepancy,
@@ -96,14 +106,14 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       .eq("id", params.id);
 
     if (updateError) {
-      console.error("[CAISSE_SESSIONS] close error:", updateError.message);
+      console.error("[CAISSE_SESSIONS] submit error:", updateError.message);
       return NextResponse.json({ success: false, error: updateError.message }, { status: 500 });
     }
 
     await logAudit({
       userId: user.id,
       userRole: role,
-      action: "caisse_session.cloturee",
+      action: "caisse_session.soumise",
       entityType: "caisse_sessions",
       entityId: params.id,
       newValue: { expected_balance: expectedBalance, actual_balance: body.actual_balance, discrepancy },
@@ -114,7 +124,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     if (err instanceof ForbiddenError) {
       return NextResponse.json({ success: false, error: err.message }, { status: err.status });
     }
-    console.error("[CAISSE_SESSIONS] CLOSE EXCEPTION:", err);
+    console.error("[CAISSE_SESSIONS] SUBMIT EXCEPTION:", err);
     const message = err instanceof Error ? err.message : "Erreur inconnue";
     return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
