@@ -34,7 +34,7 @@ export default async function RapportsPage() {
             Rapports financiers
           </h1>
           <p className="mt-1 text-sm text-slate-600">
-            Génère un rapport mensuel complet pour ta banque, ton comptable, tes investisseurs.
+            Génère un rapport (jour, mois ou année) complet pour ta banque, ton comptable, tes investisseurs.
           </p>
         </div>
       </div>

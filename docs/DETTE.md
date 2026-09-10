@@ -2169,3 +2169,61 @@ l'identique. **Non vérifié visuellement** — à confirmer par Thierry avec
 `test.agent@nexusrca.test` (doit voir son RDV de test + pouvoir "Prendre"
 un RDV non assigné) et un compte admin/super_admin (doit voir tous les
 RDV + pouvoir assigner).
+
+---
+
+## L6 (lecture étroite) — Rapports journaliers/annuels (09/09/2026)
+
+Périmètre réduit à combler le trou documenté ("rapports journaliers,
+mensuels, annuels" demandés par P6, seul le mensuel construit) — décision
+de Thierry (09/09) de ne pas attaquer les 9 sous-modules Finance en une
+unification complète type L3-L5, périmètre trop large et trop risqué
+(argent réel déjà envoyé à de vrais clients) pour un seul lot.
+
+**1. Moins de travail que redouté : `aggregateMonth()`/`buildMonthlyReportPdf()` étaient déjà génériques.**
+Vérifié avant d'écrire : ces deux fonctions ne consomment que
+`bounds.{start,end,label}`, sans rien qui suppose "un mois" spécifiquement.
+Aucun moteur d'agrégation à réécrire — juste des bornes de dates
+différentes à calculer et une sélection de période à ajouter à l'UI.
+
+**2. Découverte en cours de route : une TROISIÈME duplication de la génération PDF, jamais documentée avant ce jour.**
+`components/dashboard/MonthlyReportGenerator.tsx` a sa propre fonction
+`generateReportPDF()` (pdf-lib côté navigateur), distincte de
+`lib/monthly-report-pdf.ts` (`buildMonthlyReportPdf`, probablement utilisée
+par le cron) — en plus de la duplication déjà connue de la couche
+d'agrégation (`lib/monthly-report-data.ts` vs la logique client de ce même
+composant). Trois implémentations du même rapport financier au total.
+**Non consolidé ici** : périmètre de ce lot = ajouter jour/année à
+l'existant, pas fusionner les 3 implémentations — chantier à part,
+signalé pour une décision future.
+
+**3. `getDayBounds()`/`getYearBounds()` ajoutées, même forme que `getMonthBounds()` existante.**
+Sélecteur Jour/Mois/Année ajouté dans `MonthlyReportGenerator.tsx` (bouton
+à 3 états + champ adapté : `<input type="date">` pour jour, liste
+déroulante des 24 derniers mois pour mois — inchangée —, liste des 5
+dernières années pour année). Le reste du flux (chargement des données,
+aperçu, téléchargement PDF, impression, envoi par email) fonctionne sans
+modification — vérifié en lisant chaque point d'usage de `monthBounds`/
+`selectedMonth` avant de les généraliser (`periodSlug` remplace
+`selectedMonth` dans les noms de fichier et l'ID factice de l'API email).
+
+**4. Cron non touché, décision volontaire.**
+`app/api/cron/monthly-report/route.ts` reste strictement mensuel
+automatique. Ajouter un cron journalier enverrait un email chaque jour —
+décision de fond distincte, pas une extension du générateur à la demande.
+Seul le générateur interactif (`/dashboard/super-admin/rapports`) gagne
+les 2 nouvelles périodes.
+
+**5. "Reste des écarts P6" non traité dans ce lot.**
+Les écarts déjà documentés (facture → payée manuelle sans lien `payments`
+garanti, `factures` sans FK vers `payments`, `payments.demande_id`/
+`dossier_id` redondants) restent des limites connues, explicites dans
+l'interface (§I.6), pas des faux zéros. Décision de Thierry : ne pas les
+attaquer au hasard dans ce lot, statuer sur chacun séparément si besoin.
+
+**6. Test : même limite que les lots précédents (pas de navigateur).**
+`tsc`/`lint`/`build` (cache vidé) : 0 erreur, `/dashboard/super-admin/
+rapports` compile avec les 3 sélecteurs de période. **Non vérifié
+visuellement** — à confirmer par Thierry : générer un rapport journalier
+et un rapport annuel, vérifier que le PDF affiche le bon libellé de
+période et des montants cohérents.

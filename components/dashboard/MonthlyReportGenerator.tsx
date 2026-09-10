@@ -94,6 +94,37 @@ function getMonthBounds(yearMonth: string): { start: string; end: string; label:
   };
 }
 
+// L6 : rapport journalier — même forme {start,end,label} que getMonthBounds,
+// aggregateMonth()/generateReportPDF() ne savent rien de "mois" spécifiquement.
+function getDayBounds(isoDate: string): { start: string; end: string; label: string } {
+  // isoDate format : "2026-09-09"
+  const [year, month, day] = isoDate.split("-").map(Number);
+  const start = new Date(year, month - 1, day, 0, 0, 0);
+  const end = new Date(year, month - 1, day, 23, 59, 59);
+  const label = start.toLocaleDateString("fr-FR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  return {
+    start: start.toISOString(),
+    end: end.toISOString(),
+    label: label.charAt(0).toUpperCase() + label.slice(1),
+  };
+}
+
+// L6 : rapport annuel — même remarque.
+function getYearBounds(yearStr: string): { start: string; end: string; label: string } {
+  const year = Number(yearStr);
+  const start = new Date(year, 0, 1, 0, 0, 0);
+  const end = new Date(year, 11, 31, 23, 59, 59);
+  return {
+    start: start.toISOString(),
+    end: end.toISOString(),
+    label: `Année ${year}`,
+  };
+}
+
 function aggregateByDevise<T extends { devise?: string | null }>(
   rows: T[],
   getValue: (row: T) => number
@@ -608,8 +639,17 @@ export function MonthlyReportGenerator({
     d.setMonth(d.getMonth() - 1);
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
   };
+  const getDefaultDay = () => {
+    const d = new Date();
+    d.setDate(d.getDate() - 1); // hier, comme le mois par defaut = mois precedent
+    return d.toISOString().split("T")[0];
+  };
 
+  // L6 : Jour / Mois / Année — un seul générateur, pas 3 pages séparées.
+  const [periodType, setPeriodType] = useState<"jour" | "mois" | "annee">("mois");
   const [selectedMonth, setSelectedMonth] = useState(getDefaultMonth());
+  const [selectedDay, setSelectedDay] = useState(getDefaultDay());
+  const [selectedYear, setSelectedYear] = useState(String(new Date().getFullYear() - 1));
   const [loading, setLoading] = useState(false);
   const [summary, setSummary] = useState<MonthSummary | null>(null);
   const [generating, setGenerating] = useState(false);
@@ -617,7 +657,15 @@ export function MonthlyReportGenerator({
   const [emailDest, setEmailDest] = useState("");
   const [sendingEmail, setSendingEmail] = useState(false);
 
-  const monthBounds = useMemo(() => getMonthBounds(selectedMonth), [selectedMonth]);
+  const monthBounds = useMemo(() => {
+    if (periodType === "jour") return getDayBounds(selectedDay);
+    if (periodType === "annee") return getYearBounds(selectedYear);
+    return getMonthBounds(selectedMonth);
+  }, [periodType, selectedDay, selectedMonth, selectedYear]);
+
+  // Identifiant compact de la période active, pour noms de fichier / IDs.
+  const periodSlug =
+    periodType === "jour" ? selectedDay : periodType === "annee" ? selectedYear : selectedMonth;
 
   // ============================================================
   // CHARGER LES DONNEES DU MOIS
@@ -836,11 +884,11 @@ export function MonthlyReportGenerator({
     }
   };
 
-  // Charger automatiquement quand le mois change
+  // Charger automatiquement quand la période change
   useEffect(() => {
     loadMonthData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedMonth]);
+  }, [periodType, selectedDay, selectedMonth, selectedYear]);
 
   // ============================================================
   // ACTIONS PDF
@@ -854,7 +902,7 @@ export function MonthlyReportGenerator({
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `Rapport_Nexus_${selectedMonth}.pdf`;
+      link.download = `Rapport_Nexus_${periodSlug}.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -903,7 +951,7 @@ export function MonthlyReportGenerator({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          payment_id: `report-${selectedMonth}`, // ID factice pour l API
+          payment_id: `report-${periodSlug}`, // ID factice pour l API
           recipient_email: emailDest.trim(),
           pdf_base64: base64,
         }),
@@ -942,6 +990,12 @@ export function MonthlyReportGenerator({
     return options;
   }, []);
 
+  // L6 : 5 dernières années (l'année en cours + 4 précédentes).
+  const yearOptions = useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    return Array.from({ length: 5 }, (_, i) => String(currentYear - i));
+  }, []);
+
   // ============================================================
   // CALCULS APERCU
   // ============================================================
@@ -974,24 +1028,67 @@ export function MonthlyReportGenerator({
 
   return (
     <div className="space-y-6">
-      {/* SELECTEUR DE MOIS */}
+      {/* SELECTEUR DE PERIODE (L6 : jour / mois / année) */}
       <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div className="flex-1">
             <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">
-              Mois du rapport
+              Période du rapport
             </label>
-            <select
-              value={selectedMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-nexus-blue-950 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30 sm:max-w-xs"
-            >
-              {monthOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <div className="inline-flex rounded-xl border border-slate-200 bg-slate-50 p-1">
+                {(["jour", "mois", "annee"] as const).map((p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => setPeriodType(p)}
+                    className={`rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition ${
+                      periodType === p
+                        ? "bg-white text-nexus-orange-600 shadow-sm"
+                        : "text-slate-500 hover:text-slate-700"
+                    }`}
+                  >
+                    {p === "jour" ? "Jour" : p === "mois" ? "Mois" : "Année"}
+                  </button>
+                ))}
+              </div>
+
+              {periodType === "jour" && (
+                <input
+                  type="date"
+                  value={selectedDay}
+                  onChange={(e) => setSelectedDay(e.target.value)}
+                  max={new Date().toISOString().split("T")[0]}
+                  className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-nexus-blue-950 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                />
+              )}
+              {periodType === "mois" && (
+                <select
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-nexus-blue-950 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30 sm:max-w-xs"
+                >
+                  {monthOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              )}
+              {periodType === "annee" && (
+                <select
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(e.target.value)}
+                  className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-nexus-blue-950 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                >
+                  {yearOptions.map((y) => (
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
           </div>
 
           <div className="flex flex-wrap gap-2">
