@@ -2,20 +2,23 @@
 
 // ============================================================================
 // COMPOSANT — CaisseSessionsManager
-// P6, lot Caisse. Ouverture/clôture de sessions de caisse (solde théorique,
-// solde réel, écart). La clôture nécessite la permission 'caisse.close'
-// (super_admin/daf uniquement, séparation des tâches §P2) : un agent qui
-// n'a que 'caisse.write' peut ouvrir sa session mais recevra un 403 s'il
-// tente de la clôturer lui-même — comportement voulu.
+// P6, lot Caisse + Espace Accueil & Caisse (NEXUS_RCA_DASHBOARD_ADMINISTRATION.md,
+// §3.3/§4.3, 10/09/2026). Chaîne à deux temps : la titulaire de la session
+// (agent/accueil_caisse) SOUMET son rapprochement (statut -> "a_cloturer",
+// route /submit) ; seule une personne avec la permission 'caisse.close'
+// (super_admin/daf, séparation des tâches §P2) VALIDE et clôture ensuite
+// (route /close). Une session "ouverte" ne peut plus être clôturée
+// directement — corrige une régression où l'ancien bouton unique
+// "Clôturer ma session" appelait /close sans passer par /submit.
 // ============================================================================
 
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { Lock, LockOpen, PlusCircle, Wallet, AlertTriangle, FileSpreadsheet, X } from "lucide-react";
+import { Lock, LockOpen, PlusCircle, Wallet, AlertTriangle, FileSpreadsheet, X, ClipboardCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { downloadCsv } from "@/lib/csv-export";
 
-type SessionStatus = "ouverte" | "cloturee";
+type SessionStatus = "ouverte" | "a_cloturer" | "cloturee";
 
 export interface CaisseSessionListItem {
   id: string;
@@ -48,18 +51,29 @@ function formatDateTime(dateStr: string | null): string {
 export function CaisseSessionsManager({
   initialSessions,
   currentUserId,
+  canClose = false,
 }: {
   initialSessions: CaisseSessionListItem[];
   currentUserId: string;
+  canClose?: boolean;
 }) {
   const [sessions, setSessions] = useState<CaisseSessionListItem[]>(initialSessions);
   const [showOpenForm, setShowOpenForm] = useState(false);
-  const [closingSession, setClosingSession] = useState<CaisseSessionListItem | null>(null);
-  const [opening, setOpening] = useState(false);
+  const [reconcileTarget, setReconcileTarget] = useState<{ session: CaisseSessionListItem; mode: "submit" | "close" } | null>(
+    null
+  );
 
   const ownOpenSession = useMemo(
     () => sessions.find((s) => s.agent_id === currentUserId && s.status === "ouverte"),
     [sessions, currentUserId]
+  );
+  const ownPendingSession = useMemo(
+    () => sessions.find((s) => s.agent_id === currentUserId && s.status === "a_cloturer"),
+    [sessions, currentUserId]
+  );
+  const pendingValidation = useMemo(
+    () => (canClose ? sessions.filter((s) => s.status === "a_cloturer") : []),
+    [sessions, canClose]
   );
 
   async function reload() {
@@ -86,12 +100,24 @@ export function CaisseSessionsManager({
             </div>
             <button
               type="button"
-              onClick={() => setClosingSession(ownOpenSession)}
+              onClick={() => setReconcileTarget({ session: ownOpenSession, mode: "submit" })}
               className="inline-flex items-center gap-2 rounded-full bg-nexus-blue-950 px-5 py-2.5 text-sm font-semibold text-white hover:bg-nexus-blue-900"
             >
-              <Lock className="h-4 w-4" />
-              Clôturer ma session
+              <ClipboardCheck className="h-4 w-4" />
+              Soumettre le rapprochement
             </button>
+          </div>
+        ) : ownPendingSession ? (
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
+              <Lock className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-slate-600">Rapprochement soumis</p>
+              <p className="font-display text-lg font-bold text-nexus-blue-950">
+                En attente de validation par le DAF / l&apos;admin
+              </p>
+            </div>
           </div>
         ) : (
           <div className="flex flex-wrap items-center justify-between gap-4">
@@ -113,6 +139,40 @@ export function CaisseSessionsManager({
         )}
       </div>
 
+      {canClose && pendingValidation.length > 0 && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
+          <p className="text-sm font-semibold text-amber-800">
+            {pendingValidation.length} session{pendingValidation.length > 1 ? "s" : ""} en attente de validation
+          </p>
+          <div className="mt-3 space-y-2">
+            {pendingValidation.map((s) => (
+              <div
+                key={s.id}
+                className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-100 bg-white px-4 py-3"
+              >
+                <div>
+                  <p className="text-sm font-semibold text-nexus-blue-950">
+                    {s.profiles ? `${s.profiles.prenom || ""} ${s.profiles.nom}`.trim() : "Agent"}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    Théorique {formatMoney(s.expected_balance)} · Compté {formatMoney(s.actual_balance)}
+                    {s.discrepancy !== null && Math.abs(s.discrepancy) > 0 && ` · Écart ${formatMoney(s.discrepancy)}`}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setReconcileTarget({ session: s, mode: "close" })}
+                  className="inline-flex items-center gap-2 rounded-full bg-nexus-blue-950 px-4 py-2 text-xs font-semibold text-white hover:bg-nexus-blue-900"
+                >
+                  <Lock className="h-3.5 w-3.5" />
+                  Valider et clôturer
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {sessions.length > 0 && (
         <div className="flex justify-end">
           <button
@@ -123,7 +183,7 @@ export function CaisseSessionsManager({
                 ["Agent", "Statut", "Ouverte le", "Cloturee le", "Fonds initial", "Solde theorique", "Solde reel", "Ecart"],
                 sessions.map((s) => [
                   s.profiles ? `${s.profiles.prenom || ""} ${s.profiles.nom}`.trim() : "",
-                  s.status === "ouverte" ? "Ouverte" : "Cloturee",
+                  s.status === "ouverte" ? "Ouverte" : s.status === "a_cloturer" ? "A valider" : "Cloturee",
                   formatDateTime(s.opened_at),
                   formatDateTime(s.closed_at),
                   String(s.opening_balance),
@@ -165,14 +225,16 @@ export function CaisseSessionsManager({
         />
       )}
 
-      {closingSession && (
-        <CloseSessionModal
-          session={closingSession}
-          onClose={() => setClosingSession(null)}
-          onClosed={async () => {
-            setClosingSession(null);
+      {reconcileTarget && (
+        <ReconcileSessionModal
+          session={reconcileTarget.session}
+          mode={reconcileTarget.mode}
+          onClose={() => setReconcileTarget(null)}
+          onDone={async () => {
+            const wasClose = reconcileTarget.mode === "close";
+            setReconcileTarget(null);
             await reload();
-            toast.success("Session clôturée");
+            toast.success(wasClose ? "Session clôturée" : "Rapprochement soumis");
           }}
         />
       )}
@@ -181,7 +243,14 @@ export function CaisseSessionsManager({
 }
 
 function SessionCard({ session }: { session: CaisseSessionListItem }) {
-  const isOpen = session.status === "ouverte";
+  const statusLabel =
+    session.status === "ouverte" ? "Ouverte" : session.status === "a_cloturer" ? "À valider" : "Clôturée";
+  const statusClass =
+    session.status === "ouverte"
+      ? "bg-blue-100 text-blue-700 border-blue-200"
+      : session.status === "a_cloturer"
+      ? "bg-amber-100 text-amber-700 border-amber-200"
+      : "bg-slate-100 text-slate-700 border-slate-200";
   const discrepancy = session.discrepancy;
   const hasDiscrepancy = discrepancy !== null && Math.abs(discrepancy) > 0;
 
@@ -191,13 +260,8 @@ function SessionCard({ session }: { session: CaisseSessionListItem }) {
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span
-                className={cn(
-                  "rounded-full border px-2.5 py-0.5 text-xs font-semibold",
-                  isOpen ? "bg-blue-100 text-blue-700 border-blue-200" : "bg-slate-100 text-slate-700 border-slate-200"
-                )}
-              >
-                {isOpen ? "Ouverte" : "Clôturée"}
+              <span className={cn("rounded-full border px-2.5 py-0.5 text-xs font-semibold", statusClass)}>
+                {statusLabel}
               </span>
               {session.profiles && (
                 <span className="text-sm font-semibold text-nexus-blue-950">
@@ -315,22 +379,26 @@ function OpenSessionModal({ onClose, onOpened }: { onClose: () => void; onOpened
   );
 }
 
-function CloseSessionModal({
+function ReconcileSessionModal({
   session,
+  mode,
   onClose,
-  onClosed,
+  onDone,
 }: {
   session: CaisseSessionListItem;
+  mode: "submit" | "close";
   onClose: () => void;
-  onClosed: () => void;
+  onDone: () => void;
 }) {
-  const [liveExpected, setLiveExpected] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [actualBalance, setActualBalance] = useState(0);
-  const [notes, setNotes] = useState("");
+  const isClose = mode === "close";
+  const [liveExpected, setLiveExpected] = useState<number | null>(isClose ? session.expected_balance : null);
+  const [loading, setLoading] = useState(!isClose);
+  const [actualBalance, setActualBalance] = useState(isClose ? session.actual_balance ?? 0 : 0);
+  const [notes, setNotes] = useState(isClose ? session.notes || "" : "");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
+    if (isClose) return; // deja soumis par la caissiere, pas de recalcul live
     (async () => {
       const res = await fetch(`/api/caisse-sessions/${session.id}`);
       const json = await res.json();
@@ -347,17 +415,17 @@ function CloseSessionModal({
     }
     setSaving(true);
     try {
-      const res = await fetch(`/api/caisse-sessions/${session.id}/close`, {
+      const res = await fetch(`/api/caisse-sessions/${session.id}/${mode}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ actual_balance: actualBalance, notes: notes || undefined }),
       });
       const json = await res.json();
       if (!json.success) {
-        toast.error(json.error || "Échec de la clôture");
+        toast.error(json.error || (isClose ? "Échec de la clôture" : "Échec de la soumission"));
         return;
       }
-      onClosed();
+      onDone();
     } finally {
       setSaving(false);
     }
@@ -367,14 +435,24 @@ function CloseSessionModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
       <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl" onClick={(ev) => ev.stopPropagation()}>
         <div className="flex items-center justify-between">
-          <h3 className="font-display text-lg font-bold text-nexus-blue-950">Clôturer la session</h3>
+          <h3 className="font-display text-lg font-bold text-nexus-blue-950">
+            {isClose ? "Valider et clôturer la session" : "Soumettre le rapprochement"}
+          </h3>
           <button type="button" onClick={onClose} className="rounded-full p-1 text-slate-400 hover:bg-slate-100">
             <X className="h-5 w-5" />
           </button>
         </div>
 
+        {isClose && session.profiles && (
+          <p className="mt-2 text-sm text-slate-600">
+            Session de {session.profiles.prenom || ""} {session.profiles.nom}
+          </p>
+        )}
+
         <div className="mt-4 rounded-xl bg-slate-50 px-4 py-3">
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Solde théorique (calculé)</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            Solde théorique {isClose ? "(soumis)" : "(calculé)"}
+          </p>
           <p className="mt-1 font-display text-xl font-bold text-nexus-blue-950">
             {loading ? "Calcul..." : formatMoney(liveExpected)}
           </p>
@@ -393,7 +471,9 @@ function CloseSessionModal({
         </div>
 
         <div className="mt-4">
-          <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">Notes (optionnel)</label>
+          <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            {isClose ? "Note de validation (optionnel)" : "Notes (optionnel)"}
+          </label>
           <textarea
             rows={2}
             value={notes}
@@ -417,7 +497,7 @@ function CloseSessionModal({
             onClick={handleSubmit}
             className="rounded-full bg-nexus-blue-950 px-5 py-2 text-sm font-semibold text-white hover:bg-nexus-blue-900 disabled:opacity-50"
           >
-            {saving ? "Clôture..." : "Clôturer"}
+            {saving ? "Envoi..." : isClose ? "Valider et clôturer" : "Soumettre"}
           </button>
         </div>
       </div>

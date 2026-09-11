@@ -1,6 +1,7 @@
 import { Wallet } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
+import { hasPermission } from "@/lib/permissions";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { CaisseSessionsManager, type CaisseSessionListItem } from "@/components/dashboard/CaisseSessionsManager";
@@ -24,6 +25,7 @@ export default async function SuperAdminCaisseSessionsPage() {
 
   if (error) console.error("[SUPER_ADMIN_CAISSE_SESSIONS] chargement:", error.message);
   const sessions = (data as unknown as CaisseSessionListItem[]) || [];
+  const canClose = await hasPermission("caisse.close");
 
   return (
     <DashboardShell profile={profile}>
@@ -39,7 +41,7 @@ export default async function SuperAdminCaisseSessionsPage() {
         </div>
       </div>
 
-      <CaisseSessionsManager initialSessions={sessions} currentUserId={profile.id} />
+      <CaisseSessionsManager initialSessions={sessions} currentUserId={profile.id} canClose={canClose} />
     </DashboardShell>
   );
 }
