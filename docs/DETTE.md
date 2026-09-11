@@ -2408,3 +2408,29 @@ Supabase valide depuis ce script).
 **7. Test : `tsc`/`lint`/`build` (cache vidé) : 0 erreur.**
 Aucun écran construit dans ce sous-lot — Comptoir POS et Ma journée de
 caisse restent à faire.
+
+**8. Régression trouvée et corrigée avant de construire l'écran "Ma journée de caisse" : `CaisseSessionsManager.tsx` appelait `/close` directement depuis une session `ouverte`.**
+Ce composant existait déjà (partagé par `/dashboard/agent/caisse-sessions`
+et `/dashboard/super-admin/caisse-sessions`, même duplication "own/all" que
+Dossiers/Clients/RDV avant leur unification en L3-L5) et son unique bouton
+"Clôturer ma session" appelait `POST /close` sans jamais passer par
+`/submit` — cassé par le point 4 ci-dessus dès son déploiement, avant que
+qui que ce soit ait pu s'en servir (site en préproduction sur
+`v3/integration-v3`, jamais en production). Trouvé en lisant le composant
+existant avant d'écrire un nouvel écran, pas signalé par un test automatisé.
+**Corrigé** : le bouton devient "Soumettre le rapprochement" (appelle
+`/submit`) pour la titulaire de la session ; un badge "en attente de
+validation" s'affiche pendant `a_cloturer` ; un nouveau panneau "sessions à
+valider" liste toutes les sessions `a_cloturer` avec un bouton "Valider et
+clôturer" (`/close`), visible seulement pour qui a la permission
+`caisse.close` — nouveau prop `canClose`, calculé côté serveur via
+`hasPermission("caisse.close")` dans les deux pages consommatrices.
+`SessionStatus` et l'affichage (`SessionCard`, export CSV) étendus au 3ᵉ
+état. Le composant reste dupliqué entre les deux pages (non unifié dans ce
+correctif, périmètre volontairement limité à la régression) — **à unifier**
+en même temps que la construction de l'écran "Ma journée de caisse"
+(mockup `POS ECRAN (2).png`), cohérent avec le principe "modules uniques"
+déjà appliqué à Dossiers/Clients/RDV. Test : `tsc`/`lint`/`build` : 0
+erreur. **Non vérifié visuellement** — à confirmer par Thierry : ouvrir une
+session, soumettre le rapprochement, puis (avec un compte super_admin/daf)
+la valider et la clôturer depuis `/dashboard/super-admin/caisse-sessions`.
