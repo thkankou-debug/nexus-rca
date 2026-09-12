@@ -60,6 +60,9 @@ const ACCOUNTS = [
   { role: "comptable", prenom: "Test", nom: "Comptable" },
   { role: "moderateur", prenom: "Test", nom: "Moderateur" },
   { role: "partenaire", prenom: "Test", nom: "Partenaire" },
+  // Espace Accueil & Caisse (11/09/2026) — role cree apres le lot L2,
+  // ajoute ici pour tester le Poste de reception / Comptoir POS.
+  { role: "accueil_caisse", prenom: "Test", nom: "AccueilCaisse" },
   { role: "client", prenom: "Test", nom: "Client" },
 ];
 

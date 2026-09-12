@@ -16,6 +16,7 @@
 | comptable | test.comptable@nexusrca.test | — | 09/09/2026 |
 | moderateur | test.moderateur@nexusrca.test | — | 09/09/2026 |
 | partenaire | test.partenaire@nexusrca.test | — | 09/09/2026 |
+| accueil_caisse | test.accueilcaisse@nexusrca.test | — | 11/09/2026 |
 | client | test.client@nexusrca.test | — | 09/09/2026 |
 
 ## Jeu de données de test associé (tout `is_test = true`)
