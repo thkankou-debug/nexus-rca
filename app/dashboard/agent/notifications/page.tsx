@@ -1,6 +1,5 @@
 import { Bell } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { NotificationsManager } from "@/components/dashboard/NotificationsManager";
 
@@ -14,7 +13,7 @@ export default async function AgentNotificationsPage() {
   const profile = await requireProfile(["agent", "admin", "super_admin"]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/agent"
         label="Retour au tableau de bord"
@@ -35,6 +34,6 @@ export default async function AgentNotificationsPage() {
       </div>
 
       <NotificationsManager />
-    </DashboardShell>
+    </>
   );
 }

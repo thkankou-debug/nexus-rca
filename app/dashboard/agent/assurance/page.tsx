@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ShieldCheck, ExternalLink, AlertCircle, Inbox } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import {
   COVERAGE_LABELS,
@@ -67,7 +66,7 @@ export default async function AgentAssurancePage() {
   };
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/agent"
         label="Retour au tableau de bord"
@@ -230,7 +229,7 @@ export default async function AgentAssurancePage() {
           </div>
         </div>
       )}
-    </DashboardShell>
+    </>
   );
 }
 

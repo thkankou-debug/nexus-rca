@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { requireProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { StaffDossierDetail } from "@/components/dossiers/StaffDossierDetail";
 import { isCategorieDossier } from "@/lib/demande-categories";
 import type { Demande } from "@/types";
@@ -62,7 +61,7 @@ export default async function AgentDossierDetailPage({
     : { data: [] };
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <StaffDossierDetail
         demande={demande}
         currentUserId={profile.id}
@@ -74,6 +73,6 @@ export default async function AgentDossierDetailPage({
         payments={paymentsRows ?? []}
         appointments={appointmentsRows ?? []}
       />
-    </DashboardShell>
+    </>
   );
 }

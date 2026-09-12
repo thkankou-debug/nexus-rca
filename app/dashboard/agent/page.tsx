@@ -16,7 +16,6 @@ import {
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { DashboardHero } from "@/components/dashboard/DashboardHero";
 import { AgentAvatar } from "@/components/dashboard/AgentAvatar";
 import { Sparkline } from "@/components/ui/Sparkline";
@@ -231,7 +230,7 @@ export default async function AgentDashboardPage() {
   const initials = (profile.prenom?.[0] ?? "") + (profile.nom?.[0] ?? "");
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       {/* HERO PREMIUM (composant partagé) */}
       <DashboardHero
         initials={initials.toUpperCase() || "A"}
@@ -514,7 +513,7 @@ export default async function AgentDashboardPage() {
           </div>
         )}
       </div>
-    </DashboardShell>
+    </>
   );
 }
 

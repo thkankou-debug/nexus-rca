@@ -1,7 +1,6 @@
 import { Receipt } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { MyExpensesView } from "@/components/dashboard/MyExpensesView";
 import type { Expense } from "@/components/dashboard/ExpenseForm";
@@ -32,7 +31,7 @@ export default async function AgentExpensesPage() {
   const employeeNom = `${profile.prenom || ""} ${profile.nom}`.trim();
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref={`/dashboard/${profile.role.replace("_", "-")}`}
         label="Retour au tableau de bord"
@@ -57,6 +56,6 @@ export default async function AgentExpensesPage() {
         currentUserId={profile.id}
         currentUserName={employeeNom}
       />
-    </DashboardShell>
+    </>
   );
 }

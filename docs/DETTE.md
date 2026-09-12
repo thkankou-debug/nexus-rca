@@ -2948,3 +2948,19 @@ Non exécutés : R11/R14 (remboursements/affectations — AR-04), R03
 
 **Tests du lot : tsc/lint/build 0 erreur ; preuves HTTP R02/R05/R07/R22
 sur build de production local ; état du compte test restauré.**
+
+---
+
+## Rhabillage de l'espace agent (12/09/2026, GO Thierry) — 11/11 espaces
+
+Même patron que L7 (RH) : « rhabillé, pas réécrit ». Un seul
+`app/dashboard/agent/layout.tsx` porte ModuleAdminShell (barre navy, logo,
+recherche, notifications, breadcrumb « Espace agent ») ; les 21 pages
+perdent leur `<DashboardShell>` par remplacement en fragments — AUCUN
+contenu de page modifié. `mes-rh/layout.tsx` (qui portait déjà le shell
+depuis L7) devient un simple garde de rôle agent pour éviter le double
+shell. Vérifié sur build de production local par requêtes authentifiées :
+/dashboard/agent, /agent/rdv et /agent/mes-rh/conges rendent le nouveau
+shell (bg-sidebar présent, un seul shell). DashboardShell.tsx (gelé) reste
+utilisé par les espaces admin/super-admin/client classiques — inchangé.
+tsc/build 0 erreur.

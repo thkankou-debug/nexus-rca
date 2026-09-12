@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft, MessageCircle, Wrench } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 
 export const metadata = {
   title: "Messagerie | Agent",
@@ -18,7 +17,7 @@ export default async function AgentMessageriePage() {
   const profile = await requireProfile(["agent", "admin", "super_admin"]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <div className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-6 shadow-xl sm:p-8">
         <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-nexus-orange-500/20 blur-3xl" />
         <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-nexus-orange-500/10 blur-3xl" />
@@ -56,6 +55,6 @@ export default async function AgentMessageriePage() {
           Retour au tableau de bord
         </Link>
       </div>
-    </DashboardShell>
+    </>
   );
 }

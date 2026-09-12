@@ -1,7 +1,6 @@
 import { ShoppingCart } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { QuickSalesManager } from "@/components/dashboard/QuickSalesManager";
 import type { QuickSale } from "@/components/dashboard/QuickSaleForm";
@@ -38,7 +37,7 @@ export default async function AgentCaissePage() {
   }));
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/agent"
         label="Retour au tableau de bord"
@@ -65,6 +64,6 @@ export default async function AgentCaissePage() {
         showAgentColumn={false}
         showStats={false}
       />
-    </DashboardShell>
+    </>
   );
 }

@@ -1,7 +1,6 @@
 import { CalendarClock } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { EcheanciersManager, type EcheancierListItem } from "@/components/dashboard/EcheanciersManager";
 
@@ -32,7 +31,7 @@ export default async function AgentEcheanciersPage() {
   }
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/agent" label="Retour au tableau de bord" />
 
       <div className="mb-8 flex items-center gap-3">
@@ -46,6 +45,6 @@ export default async function AgentEcheanciersPage() {
       </div>
 
       <EcheanciersManager initialEcheanciers={echeanciers} canMarkPaid={false} />
-    </DashboardShell>
+    </>
   );
 }

@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { cn } from "@/lib/utils";
 import { AppointmentActions } from "@/components/dashboard/AppointmentActions";
 
@@ -97,7 +96,7 @@ export default async function AgentRdvPage() {
   );
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <div className="mb-6 flex items-center gap-3">
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-lg">
           <Calendar className="h-6 w-6" />
@@ -184,7 +183,7 @@ export default async function AgentRdvPage() {
           </p>
         </div>
       )}
-    </DashboardShell>
+    </>
   );
 }
 

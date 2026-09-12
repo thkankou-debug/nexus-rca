@@ -1,7 +1,6 @@
 import { FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { DevisManager, type DevisListItem } from "@/components/dashboard/DevisManager";
 
@@ -35,7 +34,7 @@ export default async function AgentDevisPage() {
   }
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/agent" label="Retour au tableau de bord" />
 
       <div className="mb-8 flex items-center gap-3">
@@ -49,6 +48,6 @@ export default async function AgentDevisPage() {
       </div>
 
       <DevisManager initialDevis={devis} />
-    </DashboardShell>
+    </>
   );
 }

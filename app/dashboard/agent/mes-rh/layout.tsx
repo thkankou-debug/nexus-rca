@@ -1,26 +1,14 @@
 import { requireProfile } from "@/lib/auth";
-import { getEffectiveNav } from "@/lib/admin-nav";
-import { ModuleAdminShell } from "@/components/admin/ui/ModuleAdminShell";
 
-// L7 : "Mes RH" (libre-service agent) rhabillé dans le même shell que le RH
-// management — pas de fusion des deux (besoins réellement différents,
-// "pas réécrit"). Les 9 pages sont toutes réservées agent.
+// L7 posait ici ModuleAdminShell ; depuis le rhabillage complet de l'espace
+// agent (12/09/2026), le shell vit dans app/dashboard/agent/layout.tsx —
+// ce layout ne garde que la restriction de rôle (Mes RH = agent uniquement,
+// comme avant), sans double shell.
 export default async function MesRhLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const profile = await requireProfile(["agent"]);
-  const effectiveNav = await getEffectiveNav();
-
-  return (
-    <ModuleAdminShell
-      profile={profile}
-      effectiveNav={effectiveNav}
-      breadcrumb={[{ label: "Dashboard", href: "/dashboard" }, { label: "Mes RH" }]}
-      showHeader={false}
-    >
-      {children}
-    </ModuleAdminShell>
-  );
+  await requireProfile(["agent"]);
+  return <>{children}</>;
 }

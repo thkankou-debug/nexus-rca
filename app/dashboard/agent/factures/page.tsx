@@ -1,7 +1,6 @@
 import { FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { FacturesManager, type FactureListItem } from "@/components/dashboard/FacturesManager";
 
@@ -32,7 +31,7 @@ export default async function AgentFacturesPage() {
   }
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/agent" label="Retour au tableau de bord" />
 
       <div className="mb-8 flex items-center gap-3">
@@ -46,6 +45,6 @@ export default async function AgentFacturesPage() {
       </div>
 
       <FacturesManager initialFactures={factures} />
-    </DashboardShell>
+    </>
   );
 }
