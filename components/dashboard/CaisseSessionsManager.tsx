@@ -14,9 +14,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { Lock, LockOpen, PlusCircle, Wallet, AlertTriangle, FileSpreadsheet, X, ClipboardCheck } from "lucide-react";
+import { Lock, LockOpen, PlusCircle, Wallet, AlertTriangle, FileSpreadsheet, X, ClipboardCheck, ReceiptText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { downloadCsv } from "@/lib/csv-export";
+import { SERVICE_LABELS, type QuickServiceType } from "@/components/dashboard/QuickSaleForm";
 
 type SessionStatus = "ouverte" | "a_cloturer" | "cloturee";
 
@@ -33,6 +34,19 @@ export interface CaisseSessionListItem {
   notes: string | null;
   profiles: { nom: string; prenom: string | null } | null;
 }
+
+interface CaisseMovement {
+  id: string;
+  type_service: QuickServiceType;
+  description: string | null;
+  montant_total: number;
+  devise: string;
+  mode_paiement: string;
+  client_nom: string | null;
+  created_at: string;
+}
+
+const DENOMINATIONS = [10000, 5000, 2000, 1000, 500] as const;
 
 function formatMoney(amount: number | null): string {
   if (amount === null) return "—";
@@ -62,6 +76,7 @@ export function CaisseSessionsManager({
   const [reconcileTarget, setReconcileTarget] = useState<{ session: CaisseSessionListItem; mode: "submit" | "close" } | null>(
     null
   );
+  const [movements, setMovements] = useState<CaisseMovement[]>([]);
 
   const ownOpenSession = useMemo(
     () => sessions.find((s) => s.agent_id === currentUserId && s.status === "ouverte"),
@@ -71,6 +86,7 @@ export function CaisseSessionsManager({
     () => sessions.find((s) => s.agent_id === currentUserId && s.status === "a_cloturer"),
     [sessions, currentUserId]
   );
+  const ownActiveSession = ownOpenSession || ownPendingSession;
   const pendingValidation = useMemo(
     () => (canClose ? sessions.filter((s) => s.status === "a_cloturer") : []),
     [sessions, canClose]
@@ -81,6 +97,18 @@ export function CaisseSessionsManager({
     const json = await res.json();
     if (json.success) setSessions(json.sessions);
   }
+
+  useEffect(() => {
+    if (!ownActiveSession) {
+      setMovements([]);
+      return;
+    }
+    (async () => {
+      const res = await fetch(`/api/caisse-sessions/${ownActiveSession.id}`);
+      const json = await res.json();
+      if (json.success) setMovements(json.movements || []);
+    })();
+  }, [ownActiveSession]);
 
   return (
     <div className="space-y-6">
@@ -138,6 +166,42 @@ export function CaisseSessionsManager({
           </div>
         )}
       </div>
+
+      {ownActiveSession && (
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-2">
+            <ReceiptText className="h-4 w-4 text-slate-500" />
+            <p className="text-sm font-semibold text-nexus-blue-950">Journal des mouvements</p>
+          </div>
+          {movements.length === 0 ? (
+            <p className="mt-3 text-sm text-slate-500">Aucune vente enregistrée depuis l&apos;ouverture.</p>
+          ) : (
+            <div className="mt-3 space-y-2">
+              {movements.map((m) => (
+                <div
+                  key={m.id}
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-100 bg-slate-50 px-3 py-2"
+                >
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-nexus-blue-950">
+                      {SERVICE_LABELS[m.type_service]}
+                      {m.description && <span className="font-normal text-slate-500"> · {m.description}</span>}
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      {formatDateTime(m.created_at)}
+                      {m.client_nom && ` · ${m.client_nom}`}
+                      {m.mode_paiement !== "especes" && ` · ${m.mode_paiement}`}
+                    </p>
+                  </div>
+                  <p className="font-display text-sm font-bold text-nexus-blue-950">
+                    {formatMoney(m.montant_total)}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {canClose && pendingValidation.length > 0 && (
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
@@ -394,8 +458,15 @@ function ReconcileSessionModal({
   const [liveExpected, setLiveExpected] = useState<number | null>(isClose ? session.expected_balance : null);
   const [loading, setLoading] = useState(!isClose);
   const [actualBalance, setActualBalance] = useState(isClose ? session.actual_balance ?? 0 : 0);
+  const [denomCounts, setDenomCounts] = useState<Record<number, number>>(
+    Object.fromEntries(DENOMINATIONS.map((d) => [d, 0]))
+  );
+  const [pieces, setPieces] = useState(0);
   const [notes, setNotes] = useState(isClose ? session.notes || "" : "");
   const [saving, setSaving] = useState(false);
+
+  const denomTotal = DENOMINATIONS.reduce((sum, d) => sum + d * (denomCounts[d] || 0), 0) + pieces;
+  const finalActualBalance = isClose ? actualBalance : denomTotal;
 
   useEffect(() => {
     if (isClose) return; // deja soumis par la caissiere, pas de recalcul live
@@ -409,16 +480,22 @@ function ReconcileSessionModal({
   }, []);
 
   async function handleSubmit() {
-    if (!Number.isFinite(actualBalance) || actualBalance < 0) {
+    if (!Number.isFinite(finalActualBalance) || finalActualBalance < 0) {
       toast.error("Le solde réel doit être un nombre positif");
       return;
     }
     setSaving(true);
     try {
+      const breakdown = isClose
+        ? undefined
+        : `Coupures : ${DENOMINATIONS.map((d) => `${d.toLocaleString("fr-FR")}x${denomCounts[d] || 0}`).join(
+            ", "
+          )}, pièces ${pieces.toLocaleString("fr-FR")} XAF`;
+      const finalNotes = breakdown ? [breakdown, notes.trim()].filter(Boolean).join(" — ") : notes || undefined;
       const res = await fetch(`/api/caisse-sessions/${session.id}/${mode}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ actual_balance: actualBalance, notes: notes || undefined }),
+        body: JSON.stringify({ actual_balance: finalActualBalance, notes: finalNotes }),
       });
       const json = await res.json();
       if (!json.success) {
@@ -459,16 +536,52 @@ function ReconcileSessionModal({
           <p className="mt-1 text-xs text-slate-500">Fonds initial + ventes en espèces depuis l&apos;ouverture</p>
         </div>
 
-        <div className="mt-4">
-          <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">Solde réel compté (XAF)</label>
-          <input
-            type="number"
-            min={0}
-            value={actualBalance}
-            onChange={(e) => setActualBalance(Number(e.target.value))}
-            className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
-          />
-        </div>
+        {isClose ? (
+          <div className="mt-4">
+            <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">Solde réel compté (XAF)</label>
+            <input
+              type="number"
+              min={0}
+              value={actualBalance}
+              onChange={(e) => setActualBalance(Number(e.target.value))}
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+            />
+          </div>
+        ) : (
+          <div className="mt-4">
+            <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              Rapprochement par coupures
+            </label>
+            <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {DENOMINATIONS.map((d) => (
+                <div key={d}>
+                  <label className="text-[11px] font-semibold text-slate-500">{d.toLocaleString("fr-FR")} XAF</label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={denomCounts[d] || 0}
+                    onChange={(e) => setDenomCounts((prev) => ({ ...prev, [d]: Math.max(0, Number(e.target.value)) }))}
+                    className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                  />
+                </div>
+              ))}
+              <div>
+                <label className="text-[11px] font-semibold text-slate-500">Pièces (XAF)</label>
+                <input
+                  type="number"
+                  min={0}
+                  value={pieces}
+                  onChange={(e) => setPieces(Math.max(0, Number(e.target.value)))}
+                  className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                />
+              </div>
+            </div>
+            <div className="mt-3 flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Total compté</span>
+              <span className="font-display text-base font-bold text-nexus-blue-950">{formatMoney(denomTotal)}</span>
+            </div>
+          </div>
+        )}
 
         <div className="mt-4">
           <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">

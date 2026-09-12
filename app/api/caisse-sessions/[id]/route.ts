@@ -1,9 +1,13 @@
 // ============================================================================
 // API ROUTE — GET /api/caisse-sessions/:id
-// P6, lot Caisse. Détail d'une session + solde théorique calculé en direct
+// P6, lot Caisse + Espace Accueil & Caisse ("Ma journée de caisse",
+// 11/09/2026). Détail d'une session + solde théorique calculé en direct
 // tant qu'elle est ouverte (opening_balance + ventes rapides en espèces
 // depuis l'ouverture — même source que la page Caisse existante, qui
-// n'affiche que `quick_sales`, voir docs/DETTE.md P6-0 #12).
+// n'affiche que `quick_sales`, voir docs/DETTE.md P6-0 #12) + le journal des
+// mouvements (toutes les ventes rapides de l'agent depuis l'ouverture,
+// espèces ou non — le journal montre l'activité complète, seul le solde
+// théorique ne compte que les espèces).
 // ============================================================================
 
 import { NextRequest, NextResponse } from "next/server";
@@ -49,6 +53,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       id: string;
       agent_id: string;
       opened_at: string;
+      closed_at: string | null;
       status: string;
       opening_balance: number;
     };
@@ -69,7 +74,23 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       liveExpectedBalance = sessionRow.opening_balance + total;
     }
 
-    return NextResponse.json({ success: true, session, live_expected_balance: liveExpectedBalance });
+    let movementsQuery = admin
+      .from("quick_sales")
+      .select("id, type_service, description, montant_total, devise, mode_paiement, client_nom, created_at")
+      .eq("agent_id", sessionRow.agent_id)
+      .gte("created_at", sessionRow.opened_at)
+      .order("created_at", { ascending: false });
+    if (sessionRow.closed_at) {
+      movementsQuery = movementsQuery.lte("created_at", sessionRow.closed_at);
+    }
+    const { data: movements } = await movementsQuery;
+
+    return NextResponse.json({
+      success: true,
+      session,
+      live_expected_balance: liveExpectedBalance,
+      movements: movements || [],
+    });
   } catch (err) {
     console.error("[CAISSE_SESSIONS] GET/:id EXCEPTION:", err);
     const message = err instanceof Error ? err.message : "Erreur inconnue";
