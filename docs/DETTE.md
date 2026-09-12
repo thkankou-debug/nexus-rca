@@ -2458,3 +2458,107 @@ explicite de Thierry) — dette inchangée par rapport au point 8. Test :
 `tsc`/`lint`/`build` : 0 erreur. **Non vérifié visuellement** — à confirmer
 par Thierry : ouvrir une session, faire une vente rapide (le journal doit
 l'afficher), puis soumettre le rapprochement en renseignant des coupures.
+
+---
+
+## Espace Accueil & Caisse — écrans (11/09/2026)
+
+Exécution des 5 maquettes déposées à la racine (`ACCEUIL .png`,
+`POS ECRAN 1.png`, `POS ECRAN (2).png`, `POS ECRAN (3).png`,
+`SUPER-ADMIN.png`) selon l'ordre de construction du document (Partie 5).
+`POS ECRAN (2)` était déjà couverte (lot du 11/09 au matin). Nouveau dans ce
+lot : espace `/dashboard/accueil` (Poste de réception, Comptoir POS, Clients,
+Fiche client de réception, Session de caisse) + `/dashboard/vue-ensemble`.
+
+**1. `is_staff()` volontairement NON élargi à `accueil_caisse` — lectures via service-role gardées.**
+La RLS (clients, demandes, quick_sales…) repose sur `is_staff()`, qui ne
+couvre pas `accueil_caisse`. L'élargir aurait ouvert d'un coup TOUTES les
+tables gardées par `is_staff` au rôle le plus exposé de l'agence — contraire
+au « accès limité aux informations nécessaires » (§3.4). À la place : pages
+gardées par `requireProfile(["accueil_caisse","admin","super_admin"])` +
+routes API `assertPermission()` + client service-role (même patron que
+`/api/caisse-sessions`). Champs sensibles jamais sélectionnés
+(`clients.notes`, `demandes.notes_internes`). **À revoir** si un jour une
+vraie portée RLS `accueil_caisse` est écrite (le document demande la RLS,
+la garantie actuelle est applicative — même écart assumé que L3/L4).
+
+**2. Migration 080 : `quick_sales.demande_id` (additive), appliquée via MCP et committée dans le même mouvement.**
+Cas « rattaché à un dossier » du POS (§3.2 étape 3) sans écrire dans
+`payments` (table la plus sensible, jamais touchée par ce lot — précédent
+P6-0). Vérifiée par insertion en transaction annulée : FK OK, 0 résidu,
+les 10 ventes réelles inchangées.
+
+**3. Le POS écrit dans `quick_sales`, pas dans `payments` — la chaîne « déclaré → à valider → encaissé » de §4.3 n'est PAS construite.**
+Un ticket = une ligne `quick_sales` par prestation (`type_service='autre'`,
+description = nom du service, mode espèces/mobile_money/carte). Les
+paiements électroniques exigent une référence de confirmation vérifiée
+(bloquant côté serveur, tracée dans `notes_internes` + `audit_log`) — la
+règle « un Mobile Money annoncé n'est pas un Mobile Money reçu » est donc
+appliquée à l'encaissement, mais sans les statuts `payments` déclaré/validé/
+encaissé, qui appartiennent aux espaces DAF/Comptable (étape 5 de la
+Partie 5, non construite). **Paiement partiel** de la maquette non construit
+non plus (exige factures liées au POS). **À construire en étape 5.**
+
+**4. Catalogue POS = table `services` telle quelle — « Impression & scan » et « Frais de tiers » non inventés.**
+Les 14 services actifs réels alimentent le catalogue (tous `sur_devis` :
+prix saisi par la caissière, mention affichée). Le document (§3.2) demande
+que « Impression & scan » existe comme ligne de `services` et que « Frais de
+tiers » soit une catégorie hors chiffre d'affaires : décisions de données
+produit, **à trancher par Thierry** (créer les lignes/le pôle « Services de
+proximité » dans l'écran Services et tarifs, et définir la catégorie
+comptable des débours) — rien inséré en base ici.
+
+**5. « Accueil des clients » (onglets À accueillir / à orienter de la maquette ACCEUIL) : pas de table de visites — remplacé par « Dossiers à orienter ».**
+Aucune table ne trace les visites physiques. Plutôt qu'une UI décorative,
+le Poste de réception liste les dossiers réels sans agent en statut d'entrée.
+De fait, le trigger existant `assign_demande_to_agent` auto-affecte à
+l'insertion (la liste ne se peuple que s'il n'y a aucun agent actif) —
+comportement pré-existant conservé, c'est littéralement « l'affectation
+selon les règles du service » (§3.2). **À trancher** si un registre de
+visites réel est voulu un jour (nouvelle table).
+
+**6. Fiche client de réception : « Historique de réception » = passages en caisse réels (`quick_sales`), « Situation des paiements » calculée sur ce qui est mesurable.**
+Facturé = `factures` validées/payées du `client_record_id` ; Réglé =
+`payments.montant_recu` via `clients.profile_id` (quand il existe) +
+encaissements comptoir ; Reste = max(0, différence). Sources affichées en
+pied de bloc. Documents : état « Reçu » constant — aucun concept de
+validation de document dans le schéma (A4 #2), le téléversement/demande de
+pièce depuis cette fiche n'est PAS construit (les routes documents existantes
+sont gardées agent/admin ; les étendre à accueil_caisse = chantier séparé,
+permissions `document.upload`/`document.request` déjà seedées). **À
+construire** avec le flux documents de réception.
+
+**7. Vue d'ensemble (`/dashboard/vue-ensemble`) : sentinelle `__admin__` dans `lib/admin-nav.ts`, alertes limitées au mesurable.**
+Réservée super_admin/admin (§2.1/2.2) — pas `__staff__`, un chef_service/dg
+a son propre écran d'accueil (non construit). Le href de démo
+`#pilotage-vue-ensemble` devient une vraie page. « Échéances dépassées » et
+« Documents à vérifier » de la maquette NON affichés (faux zéros :
+`deadline` jamais renseignée — A6 #11 —, pas d'état de validation de
+document — A4 #2). Alertes réelles : paiements déclarés à examiner
+(`payment_links.statut='paiement_declare'`), dossiers sans agent.
+« Répartition par étape » : mapping des 21 statuts vers les 6 étapes du
+document, documenté dans la page.
+
+**8. Petites retouches de fichiers partagés (mécaniques, listées) :**
+`lib/rbac.ts` (préfixes `/dashboard/accueil` + `/api/accueil` dans
+ROUTE_ALLOWED_ROLES, `homeForRole` → `/dashboard/accueil`),
+`app/dashboard/page.tsx` (redirect `accueil_caisse`),
+`app/api/caisse-sessions/route.ts` + `[id]/route.ts` (portée
+`accueil_caisse` alignée sur `agent` : uniquement ses propres sessions —
+sans quoi le rôle voyait TOUTES les sessions via le GET),
+`lib/admin-nav.ts` (sentinelle `__admin__` + vraie route Vue d'ensemble).
+`DashboardShell.tsx` (gelé) non touché. La modale « Nouveau client » du POS
+est partagée (`components/accueil/NewClientModal.tsx`) avec la page Clients.
+`/dashboard/accueil/session` réutilise `CaisseSessionsManager` tel quel
+(3ᵉ page consommatrice — la dette « composant dupliqué agent/super-admin »
+du point 8 du lot précédent reste inchangée).
+
+**9. Test : `tsc` 0 erreur, `next lint` 0 erreur sur les nouveaux fichiers, `next build` succès (toutes les routes présentes).**
+`[SERVICES_GRID] exception` visible pendant le build : pré-existant
+(composant inchangé, page `/` déjà dynamique), pas une régression.
+**Non vérifié visuellement** — à confirmer par Thierry : créer un compte
+`TEST_accueil_caisse` (aucun profil n'a encore ce rôle), se connecter →
+atterrissage sur `/dashboard/accueil`, ouvrir la caisse, encaisser un ticket
+au POS (espèces puis mobile money avec référence), vérifier le reçu 80 mm,
+le journal des mouvements, la soumission du rapprochement, puis valider la
+session avec le super admin ; enfin ouvrir `/dashboard/vue-ensemble`.
