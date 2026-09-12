@@ -58,6 +58,17 @@
      comme cet accent. */
   --focus: 59 99 255;                /* nexus-blue-500 */
 
+  /* Barre latérale d'administration — bleu nuit FIXE, identique en clair
+     et en sombre (maquettes NEXUS_RCA_DASHBOARD_ADMINISTRATION : la barre
+     latérale est toujours navy, le contenu suit le thème). Extension du
+     même système de tokens (comme --focus), pas un deuxième système. */
+  --sidebar-surface: 2 7 31;         /* nexus-blue-950 */
+  --sidebar-surface-raised: 8 18 66; /* survol / actif */
+  --sidebar-ink: 226 232 240;        /* slate-200 */
+  --sidebar-ink-muted: 148 163 184;  /* slate-400 */
+  --sidebar-ink-subtle: 100 116 139; /* slate-500 — labels de groupes */
+  --sidebar-line: 27 37 75;          /* séparateurs sur navy */
+
   /* Statuts — six familles, jamais quinze couleurs (A1). Un point coloré
      + libellé sur fond neutre, jamais une pastille pleine. */
   --status-neutral: 100 116 139;     /* slate-500 — nouvelle demande, qualification */

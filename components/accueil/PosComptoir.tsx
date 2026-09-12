@@ -218,6 +218,34 @@ export function PosComptoir({
     ]);
   }
 
+  // Caisse tout usage (demande Thierry, 11/09/2026) : encaisser un service
+  // Nexus RCA qui n'est pas (encore) une ligne du catalogue — libellé libre,
+  // même circuit quick_sales/session que le reste du ticket.
+  const [freeLabel, setFreeLabel] = useState("");
+  const [freePrice, setFreePrice] = useState("");
+  const [showFreeForm, setShowFreeForm] = useState(false);
+
+  function addFreeLine() {
+    const prix = parseFloat(freePrice);
+    if (!freeLabel.trim() || !Number.isFinite(prix) || prix <= 0) {
+      toast.error("Libellé et montant requis pour un encaissement libre");
+      return;
+    }
+    setLines((prev) => [
+      ...prev,
+      {
+        key: `libre-${Date.now()}`,
+        service_slug: "libre",
+        label: freeLabel.trim(),
+        quantite: 1,
+        prix_unitaire: prix,
+      },
+    ]);
+    setFreeLabel("");
+    setFreePrice("");
+    setShowFreeForm(false);
+  }
+
   function updateLine(key: string, patch: Partial<TicketLine>) {
     setLines((prev) => prev.map((l) => (l.key === key ? { ...l, ...patch } : l)));
   }
@@ -532,8 +560,63 @@ export function PosComptoir({
               </p>
             )}
           </div>
+          {/* Caisse tout usage : encaissement libre */}
+          <div className="mt-4 border-t border-line pt-4">
+            {showFreeForm ? (
+              <div className="flex flex-wrap items-end gap-2">
+                <label className="min-w-[200px] flex-1">
+                  <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                    Libellé du service encaissé
+                  </span>
+                  <input
+                    type="text"
+                    value={freeLabel}
+                    onChange={(e) => setFreeLabel(e.target.value)}
+                    placeholder="Ex : légalisation de document, frais consulaires…"
+                    className={cn(inputClass, "mt-1")}
+                    autoFocus
+                  />
+                </label>
+                <label className="w-36">
+                  <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                    Montant FCFA
+                  </span>
+                  <input
+                    type="number"
+                    min={0}
+                    value={freePrice}
+                    onChange={(e) => setFreePrice(e.target.value)}
+                    className={cn(inputClass, "mt-1")}
+                  />
+                </label>
+                <button
+                  type="button"
+                  onClick={addFreeLine}
+                  className="rounded-sm border border-line px-4 py-2 text-body-sm font-semibold text-ink hover:border-line-strong"
+                >
+                  Ajouter au ticket
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowFreeForm(false)}
+                  className="rounded-sm px-2 py-2 text-body-sm text-ink-muted hover:text-ink"
+                >
+                  Annuler
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setShowFreeForm(true)}
+                className="inline-flex items-center gap-2 rounded-sm border border-dashed border-line px-4 py-2.5 text-body-sm font-semibold text-ink-muted hover:border-line-strong hover:text-ink"
+              >
+                + Encaissement libre — autre service Nexus RCA
+              </button>
+            )}
+          </div>
           <p className="mt-3 text-caption text-ink-muted">
-            Tarifs issus du catalogue · Devis selon prestation
+            Tarifs issus du catalogue · Devis selon prestation · L&rsquo;encaissement libre couvre
+            tout service hors plateforme.
           </p>
         </section>
 

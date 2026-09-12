@@ -15,6 +15,7 @@
 import { useRouter, usePathname } from "next/navigation";
 import { FolderOpen } from "lucide-react";
 import { AdminShell } from "@/components/admin/ui/AdminShell";
+import { BrandMark } from "@/components/admin/ui/BrandMark";
 import { SidebarGroup, SidebarItem } from "@/components/admin/ui/SidebarGroup";
 import { UserMenu } from "@/components/admin/ui/UserMenu";
 import { Breadcrumb, type BreadcrumbItem } from "@/components/admin/ui/Breadcrumb";
@@ -61,7 +62,19 @@ export function ModuleAdminShell({
   return (
     <AdminShell
       sidebarHeader={
-        <p className="font-display text-title font-bold text-ink">Nexus Admin</p>
+        <BrandMark
+          espace={
+            {
+              super_admin: "Administration",
+              admin: "Administration",
+              dg: "Direction générale",
+              daf: "Finance & trésorerie",
+              comptable: "Comptabilité",
+              chef_service: "Responsable de service",
+              agent: "Espace agent",
+            }[profile.role as string] ?? "Administration"
+          }
+        />
       }
       sidebarContent={
         <>

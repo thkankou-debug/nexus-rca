@@ -16,13 +16,13 @@ export function PageHeader({
   className,
 }: PageHeaderProps) {
   return (
-    <div className={cn("flex flex-col gap-3 border-b border-line pb-5", className)}>
+    <div className={cn("flex flex-col gap-3 border-b border-line pb-6", className)}>
       {breadcrumb}
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="font-display text-2xl font-bold text-ink">{title}</h1>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="max-w-2xl">
+          <h1 className="font-display text-display-sm text-ink">{title}</h1>
           {description && (
-            <p className="mt-1 text-body-sm text-ink-muted">{description}</p>
+            <p className="mt-1.5 text-body text-ink-muted">{description}</p>
           )}
         </div>
         {actions && <div className="flex items-center gap-2">{actions}</div>}

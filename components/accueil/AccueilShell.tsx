@@ -15,6 +15,7 @@
 import { useRouter, usePathname } from "next/navigation";
 import { Home, Users, ShoppingCart, Wallet } from "lucide-react";
 import { AdminShell } from "@/components/admin/ui/AdminShell";
+import { BrandMark } from "@/components/admin/ui/BrandMark";
 import { SidebarGroup, SidebarItem } from "@/components/admin/ui/SidebarGroup";
 import { UserMenu } from "@/components/admin/ui/UserMenu";
 import { Breadcrumb, type BreadcrumbItem } from "@/components/admin/ui/Breadcrumb";
@@ -68,12 +69,7 @@ export function AccueilShell({
 
   return (
     <AdminShell
-      sidebarHeader={
-        <div>
-          <p className="font-display text-title font-bold text-ink">Nexus RCA</p>
-          <p className="text-caption text-ink-muted">Accueil &amp; caisse</p>
-        </div>
-      }
+      sidebarHeader={<BrandMark espace="Accueil & caisse" />}
       sidebarContent={
         <>
           {NAV.map((group) => (

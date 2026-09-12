@@ -1,16 +1,21 @@
 "use client";
 
 // ============================================================================
-// NOUVEAU CLIENT — modale de création minimale (Espace Accueil & Caisse,
-// §3.2 étape Client). Partagée entre le Comptoir POS et la page Clients.
-// La détection de similitude est faite côté serveur (409 + candidats) :
-// jamais de création silencieuse quand des fiches proches existent.
+// NOUVEAU CLIENT — modale de création (Espace Accueil & Caisse, §3.2 étape
+// Client). Partagée entre le Comptoir POS et la page Clients.
+// - Détection de similitude côté serveur (409 + candidats) : jamais de
+//   création silencieuse quand des fiches proches existent.
+// - Les services NEXUS RCA sont listés et accessibles dès la création
+//   (demande Thierry, 11/09/2026) : choisir un « service demandé » ouvre
+//   et oriente immédiatement un dossier pour le nouveau client
+//   (POST /api/accueil/dossiers — dossier.create).
 // ============================================================================
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/client";
 
 export interface AccueilClient {
   id: string;
@@ -46,9 +51,34 @@ export function NewClientModal({
   >([]);
   const [saving, setSaving] = useState(false);
 
+  // Services NEXUS RCA (table `services`, lecture publique des actifs) —
+  // groupés par pôle pour le choix « service demandé ».
+  const [services, setServices] = useState<{ id: string; nom: string; categorie: string }[]>([]);
+  const [serviceDemande, setServiceDemande] = useState("");
+  const [motif, setMotif] = useState("");
+
+  useEffect(() => {
+    const supabase = createClient();
+    (async () => {
+      const { data } = await supabase
+        .from("services")
+        .select("id, nom, categorie")
+        .eq("status", "actif")
+        .order("ordre_affichage", { ascending: true })
+        .order("nom", { ascending: true });
+      setServices((data || []) as { id: string; nom: string; categorie: string }[]);
+    })();
+  }, []);
+
+  const categories = Array.from(new Set(services.map((s) => s.categorie)));
+
   async function submit(force: boolean) {
     if (!form.nom.trim()) {
       toast.error("Le nom est requis");
+      return;
+    }
+    if (serviceDemande && !motif.trim()) {
+      toast.error("Précisez le motif de la demande pour ouvrir le dossier");
       return;
     }
     setSaving(true);
@@ -67,7 +97,31 @@ export function NewClientModal({
         toast.error(json.error || "Échec de la création");
         return;
       }
-      toast.success("Fiche client créée");
+
+      // Ouverture + orientation immédiates si un service est demandé.
+      if (serviceDemande) {
+        const dossierRes = await fetch("/api/accueil/dossiers", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            client_record_id: json.client.id,
+            service: serviceDemande,
+            motif: motif.trim(),
+          }),
+        });
+        const dossierJson = await dossierRes.json();
+        if (dossierJson.success) {
+          toast.success(
+            `Fiche créée · dossier ${dossierJson.dossier.reference || ""} ouvert (${serviceDemande})`
+          );
+        } else {
+          toast.error(
+            `Fiche créée, mais l'ouverture du dossier a échoué : ${dossierJson.error || "erreur"}`
+          );
+        }
+      } else {
+        toast.success("Fiche client créée");
+      }
       onCreated(json.client);
     } finally {
       setSaving(false);
@@ -80,7 +134,7 @@ export function NewClientModal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-sm border border-line bg-surface-elevated p-6"
+        className="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-sm border border-line bg-surface-elevated p-6"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
@@ -135,6 +189,46 @@ export function NewClientModal({
               className={cn(inputClass, "mt-1")}
             />
           </label>
+        </div>
+
+        {/* Services NEXUS RCA — ouverture de dossier immédiate (optionnel) */}
+        <div className="mt-5 rounded-sm border border-line bg-surface p-4">
+          <p className="text-body-sm font-semibold text-ink">Service demandé (optionnel)</p>
+          <p className="mt-0.5 text-caption text-ink-muted">
+            Choisir un service ouvre et oriente immédiatement un dossier pour ce client.
+          </p>
+          <select
+            value={serviceDemande}
+            onChange={(e) => setServiceDemande(e.target.value)}
+            className={cn(inputClass, "mt-3")}
+          >
+            <option value="">Aucun — fiche client seule</option>
+            {categories.map((cat) => (
+              <optgroup key={cat} label={cat}>
+                {services
+                  .filter((s) => s.categorie === cat)
+                  .map((s) => (
+                    <option key={s.id} value={s.nom}>
+                      {s.nom}
+                    </option>
+                  ))}
+              </optgroup>
+            ))}
+          </select>
+          {serviceDemande && (
+            <label className="mt-3 block">
+              <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                Motif de la demande *
+              </span>
+              <input
+                type="text"
+                value={motif}
+                onChange={(e) => setMotif(e.target.value)}
+                placeholder="Ex : visa Schengen court séjour, admission universitaire…"
+                className={cn(inputClass, "mt-1")}
+              />
+            </label>
+          )}
         </div>
 
         {duplicates.length > 0 && (

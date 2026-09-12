@@ -2702,3 +2702,46 @@ rattachés au service (appointments n'a pas de service_id).
 **Non vérifié visuellement** — à confirmer par Thierry avec
 test.dg@nexusrca.test (Pilotage) et test.chefservice@nexusrca.test
 (Mon service, rattaché au service Visa & e-Visa).
+
+---
+
+## Refonte visuelle institutionnelle + caisse tout usage (11/09/2026)
+
+Retour de Thierry après vérification des étapes 5/6 : rendu jugé « banal,
+comme un simple formulaire » — refus explicite. Réponse : rehausser le
+SOCLE partagé (un seul chantier, tous les espaces en héritent), pas
+re-décorer écran par écran.
+
+**1. Barre latérale bleu nuit fixe + logo NEXUS RCA sur chaque espace.**
+Tokens `--sidebar-*` ajoutés à `globals.css`/`tailwind.config.ts` —
+extension du système A1 (comme `--focus` avant eux), pas un deuxième
+système : navy constant clair/sombre, conforme aux 5 maquettes.
+`Sidebar`/`SidebarGroup`/`SidebarItem` restylés (actif = fond relevé +
+filet or à gauche + icône or). Nouveau `BrandMark` (logo officiel
+`public/icones/icon-96.png` + wordmark NEXUS RCA + libellé de l'espace) en
+tête de la barre de TOUS les shells : ModuleAdminShell (libellé par rôle :
+Administration / Direction générale / Finance & trésorerie / Comptabilité /
+Responsable de service / Espace agent) et AccueilShell (Accueil & caisse).
+`PageHeader` : titre Syne `text-display-sm`, description `text-body`.
+Aucune couleur en dur, aucune nouvelle ressource graphique.
+
+**2. Caisse tout usage au Comptoir POS.**
+Bouton « Encaissement libre — autre service Nexus RCA » sous le catalogue :
+libellé libre + montant, même circuit quick_sales/session/reçu 80 mm que le
+reste du ticket (la route POS acceptait déjà des lignes arbitraires). Perme
+d'encaisser les services hors plateforme sans les inventer en base.
+
+**3. Services NEXUS RCA listés à la création d'un client.**
+`NewClientModal` : sélecteur « Service demandé » groupé par pôle (table
+`services`, lecture publique des actifs) + motif ; si renseigné, la fiche
+est créée PUIS un dossier est ouvert et orienté immédiatement
+(POST /api/accueil/dossiers, affectation auto par les règles du service).
+Optionnel — fiche seule toujours possible.
+
+**4. Test : `tsc` 0 erreur, `next build` succès ; rendu vérifié par requête
+authentifiée sur le build de production** (logo, `bg-sidebar`, nouveaux
+en-têtes présents dans le HTML servi). **Non vérifié visuellement** — la
+qualité perçue est précisément l'objet du retour de Thierry : à valider
+par lui sur la préversion, écran par écran. Si le niveau ne suffit pas
+encore, le chantier suivant est écran par écran (densité, tableaux,
+graphiques) — à cadrer avec lui.

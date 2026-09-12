@@ -68,6 +68,16 @@ const config: Config = {
         "on-brand": "rgb(var(--on-brand) / <alpha-value>)",
         // A1 — anneau de focus clavier, distinct de brand (voir globals.css)
         focus: "rgb(var(--focus) / <alpha-value>)",
+        // Barre latérale d'administration — bleu nuit fixe (maquettes
+        // Dashboard Administration), extension du même système de tokens.
+        sidebar: {
+          DEFAULT: "rgb(var(--sidebar-surface) / <alpha-value>)",
+          raised: "rgb(var(--sidebar-surface-raised) / <alpha-value>)",
+          ink: "rgb(var(--sidebar-ink) / <alpha-value>)",
+          "ink-muted": "rgb(var(--sidebar-ink-muted) / <alpha-value>)",
+          "ink-subtle": "rgb(var(--sidebar-ink-subtle) / <alpha-value>)",
+          line: "rgb(var(--sidebar-line) / <alpha-value>)",
+        },
         // A1 — six familles de statuts (admin), jamais quinze couleurs
         status: {
           neutral: "rgb(var(--status-neutral) / <alpha-value>)",
