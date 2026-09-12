@@ -2434,3 +2434,27 @@ déjà appliqué à Dossiers/Clients/RDV. Test : `tsc`/`lint`/`build` : 0
 erreur. **Non vérifié visuellement** — à confirmer par Thierry : ouvrir une
 session, soumettre le rapprochement, puis (avec un compte super_admin/daf)
 la valider et la clôturer depuis `/dashboard/super-admin/caisse-sessions`.
+
+**9. Écran "Ma journée de caisse" (11/09/2026) — périmètre "complet sur les pages existantes" (pas d'unification de route), confirmé par Thierry.**
+Deux ajouts sur les pages `/dashboard/{agent,super-admin}/caisse-sessions`
+déjà corrigées au point 8 : (a) `GET /api/caisse-sessions/[id]` renvoie
+désormais aussi un `movements[]` — toutes les ventes rapides (`quick_sales`)
+de l'agent depuis l'ouverture de sa session (espèces ou non, pour donner
+une vue complète de l'activité — seul le solde théorique ne compte que les
+espèces, inchangé) ; affiché en direct dans un nouveau panneau "Journal des
+mouvements" tant qu'une session est ouverte ou en attente de validation.
+(b) La modale de soumission (caissière) remplace la saisie libre du solde
+réel par un rapprochement par coupures (10000/5000/2000/1000/500 + pièces,
+mockup `POS ECRAN (2).png`) — le total est calculé côté client et envoyé
+comme `actual_balance` habituel, le détail des coupures est concaténé en
+tête des notes (`"Coupures : 10000x2, ..., pièces 850 XAF — <notes
+libres>"`) : **aucune migration de schéma**, décision volontaire pour ne
+pas ajouter de colonnes dédiées pour un détail qui n'a besoin d'être qu'une
+trace lisible, pas une donnée requêtable. La modale de validation
+(DAF/admin) reste inchangée — elle réutilise le total déjà soumis, pas de
+recomptage par coupures à cette étape. Composant toujours dupliqué entre
+les deux pages agent/super-admin (non unifié dans ce lot, décision
+explicite de Thierry) — dette inchangée par rapport au point 8. Test :
+`tsc`/`lint`/`build` : 0 erreur. **Non vérifié visuellement** — à confirmer
+par Thierry : ouvrir une session, faire une vente rapide (le journal doit
+l'afficher), puis soumettre le rapprochement en renseignant des coupures.
