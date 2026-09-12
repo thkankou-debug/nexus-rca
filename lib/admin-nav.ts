@@ -65,6 +65,11 @@ export const ADMIN_NAV_STRUCTURE: AdminNavGroup[] = [
     key: "finances",
     label: "Finances",
     modules: [
+      // Étape 5 (Espaces DAF et Comptable) : deux vraies pages, permissions
+      // de la chaîne §4.3 — paiement.validate (daf) et paiement.reconcile
+      // (comptable/admin/daf, migration 081). super_admin passe toujours.
+      { key: "tresorerie", label: "Trésorerie", permission: "paiement.validate", table: "payments, expenses, caisse_sessions", wave: 1, href: "/dashboard/tresorerie" },
+      { key: "compta", label: "Saisie du jour", permission: "paiement.reconcile", table: "payments, expenses", wave: 1, href: "/dashboard/compta" },
       { key: "finances-vue-ensemble", label: "Vue d'ensemble", permission: "finance.report.read", table: "agrégats", wave: 2, href: "#finances-vue-ensemble" },
       { key: "caisse", label: "Caisse et transactions", permission: "caisse.read", table: "payments, expenses", wave: 2, href: "#finances-caisse" },
       { key: "devis-factures", label: "Devis et factures", permission: "devis.validate", table: "devis, factures", wave: 2, href: "#finances-devis-factures" },

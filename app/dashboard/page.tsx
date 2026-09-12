@@ -37,6 +37,11 @@ export default async function DashboardRootPage() {
     // Poste de réception.
     case "accueil_caisse":
       redirect("/dashboard/accueil");
+    // Étape 5 (§1.2) : DAF → Trésorerie, comptable → Saisie du jour.
+    case "daf":
+      redirect("/dashboard/tresorerie");
+    case "comptable":
+      redirect("/dashboard/compta");
   }
 
   // dg, daf, chef_service, comptable, moderateur, partenaire : aucune section

@@ -288,6 +288,12 @@ const ROUTE_ALLOWED_ROLES: Array<{ prefix: string; roles: UserRole[] }> = [
   // restent gardées une à une par assertPermission() côté serveur.
   { prefix: "/dashboard/accueil", roles: ["accueil_caisse", "admin", "super_admin"] },
   { prefix: "/api/accueil", roles: ["accueil_caisse", "admin", "super_admin"] },
+  // Étape 5 — Espaces DAF et Comptable (chaîne §4.3). Les actions restent
+  // gardées une à une par assertPermission() côté serveur.
+  { prefix: "/dashboard/tresorerie", roles: ["daf", "admin", "super_admin"] },
+  { prefix: "/dashboard/compta", roles: ["comptable", "daf", "admin", "super_admin"] },
+  { prefix: "/api/paiements", roles: ["comptable", "daf", "admin", "super_admin"] },
+  { prefix: "/api/depenses", roles: ["daf", "admin", "super_admin"] },
   { prefix: "/dashboard/super-admin", roles: ["super_admin"] },
   { prefix: "/dashboard/admin", roles: ["admin", "super_admin"] },
   { prefix: "/dashboard/agent", roles: ["agent", "admin", "super_admin"] },
@@ -333,7 +339,13 @@ export function homeForRole(role: UserRole): string {
       return "/dashboard/client";
     case "accueil_caisse":
       return "/dashboard/accueil";
-    // dg, daf, chef_service, comptable, moderateur, partenaire : aucune
+    // Étape 5 (§1.2) : le DAF arrive sur la Trésorerie, le comptable sur
+    // la Saisie du jour.
+    case "daf":
+      return "/dashboard/tresorerie";
+    case "comptable":
+      return "/dashboard/compta";
+    // dg, chef_service, moderateur, partenaire : aucune
     // section dédiée pour l'instant (arrive avec A3). "/dashboard" n'est
     // gardé par aucun préfixe RBAC (voir ROUTE_ALLOWED_ROLES) — sûr comme
     // cible de redirection, pas de boucle possible.

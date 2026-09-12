@@ -81,21 +81,24 @@ export function ModuleAdminShell({
         </>
       }
       sidebarFooter={
-        <SidebarItem
-          label="Retour à l'espace classique"
-          // « /dashboard » redirige désormais super_admin/admin vers la Vue
-          // d'ensemble (§1.2) : pointer directement l'ancien tableau de bord
-          // du rôle pour que ce lien reste un vrai retour, pas une boucle.
-          href={
-            profile.role === "super_admin"
-              ? "/dashboard/super-admin"
-              : profile.role === "admin"
-              ? "/dashboard/admin"
-              : profile.role === "agent"
-              ? "/dashboard/agent"
-              : "/dashboard"
-          }
-        />
+        // « /dashboard » redirige désormais super_admin/admin/daf/comptable
+        // vers leur écran d'accueil du nouveau shell (§1.2) : pointer
+        // directement l'ancien tableau de bord du rôle pour que ce lien
+        // reste un vrai retour, pas une boucle. Les rôles sans espace
+        // classique (daf, comptable…) n'ont pas ce lien — une entrée qui ne
+        // mène nulle part n'existe pas.
+        profile.role === "super_admin" || profile.role === "admin" || profile.role === "agent" ? (
+          <SidebarItem
+            label="Retour à l'espace classique"
+            href={
+              profile.role === "super_admin"
+                ? "/dashboard/super-admin"
+                : profile.role === "admin"
+                ? "/dashboard/admin"
+                : "/dashboard/agent"
+            }
+          />
+        ) : null
       }
       topbarRight={
         <UserMenu

@@ -2592,3 +2592,60 @@ toujours accessible par conception) — pas du code : la redirection avait
 été prouvée côté serveur par requête authentifiée (NEXT_REDIRECT →
 /dashboard/vue-ensemble dans la réponse en streaming, statut 200 — le
 service worker ne met jamais les pages HTML en cache, hors de cause).
+
+---
+
+## Étape 5 — Espaces DAF et Comptable (11/09/2026)
+
+Chaîne de validation complète (§4.3) : le maillon « comptable rapproche »
+manquait entre la saisie (paiement.record) et la validation DAF
+(paiement.validate), déjà portées par le schéma P6-0 (status pending/paid →
+validated, validated_by ≠ created_by imposé par trigger).
+
+**1. Migration 081 : `payments.reconciled_by/reconciled_at` + `paiement.reconcile` (comptable/admin/daf) + `depense.validate` (admin/daf).**
+Additif : aucun enum touché, aucun trigger modifié, les 3 paiements legacy
+(metadata.legacy) intacts et explicitement refusés par les nouvelles routes.
+`paiement.reconcile` et `depense.validate` n'existent pas dans l'énumération
+§P2 — ajoutées par nécessité (même traitement que commission.create avant
+elles). La séparation « rapprocheur ≠ créateur » et « validateur ≠
+rapprocheur » est appliquée par les routes API, pas par un nouveau trigger
+sur cette table sensible (le trigger existant garde validated_by ≠
+created_by).
+
+**2. Routes : POST /api/paiements/[id]/{reconcile,validate}, /api/depenses/[id]/validate.**
+`validate` exige un paiement DÉJÀ rapproché (« aucun rôle ne franchit deux
+étapes ») et laisse le trigger poser validated_at / refuser
+l'auto-validation. Dépense : valide/rejete avec motif obligatoire au rejet,
+et « on ne valide pas sa propre dépense ». Tout passe par audit_log.
+
+**3. Écrans : /dashboard/compta (Saisie du jour) et /dashboard/tresorerie (Trésorerie), ModuleAdminShell.**
+Atterrissage §1.2 : comptable → compta, daf → tresorerie (homeForRole +
+/dashboard + ROUTE_ALLOWED_ROLES). Nav Finances : deux modules wave 1
+(paiement.reconcile / paiement.validate). Le lien « Retour à l'espace
+classique » du shell est désormais masqué pour les rôles sans espace
+classique (daf, comptable) — sinon il bouclait sur /dashboard.
+Trésorerie réutilise les routes existantes pour sessions
+(/caisse-sessions/[id]/close) et commissions (/commissions/[id]/status).
+
+**4. Chiffres honnêtes (§I.6), écarts assumés vs document :**
+« Encaissements » = paiements VALIDÉS seulement ; ventes comptoir
+(quick_sales) affichées séparément (leur contrôle est le rapprochement de
+session, pas la chaîne payments) ; position nette = validés + comptoir −
+dépenses validées, formule affichée à l'écran. « Relances envoyées » (§2.4)
+NON affichées : aucun concept de relance dans le schéma — **à construire**
+si un vrai flux de relance est voulu. « Notes de frais » : pas de table
+distincte, couvertes par expenses. « Solde de caisse par devise » réduit
+aux ventilations par devise réellement mesurables. La vérification des
+liens de paiement déclarés reste sur l'écran super-admin existant (liste
+informative chez le comptable). Créances = échéanciers impayés (P6) —
+même limite qu'au lot Rapprochement : pas de lien facture ↔ paiement
+mesurable.
+
+**5. Test : `tsc`/`lint`/`build` 0 erreur ; chaîne simulée en SQL (DO + RAISE, rollback automatique).**
+Preuve : apres_saisie=pending, apres_validation=validated, reconciled=t,
+validated_by_ok=t ; l'auto-validation est bien refusée par le trigger
+(Self-validation forbidden) ; payments toujours à 3 lignes, 0 résidu.
+**Non vérifié visuellement** — à confirmer par Thierry avec
+test.comptable@nexusrca.test (saisie + rapprochement) puis
+test.daf@nexusrca.test (validation, dépenses, clôture de session,
+commissions) sur la préversion.
