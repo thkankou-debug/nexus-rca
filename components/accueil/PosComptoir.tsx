@@ -209,17 +209,28 @@ export function PosComptoir({
     setDossierId(null);
   }
 
-  const categories = useMemo(
-    () => ["Tous", ...Array.from(new Set(services.map((s) => s.categorie)))],
-    [services]
-  );
+  // Les prestations du quotidien (Services de proximite) s'affichent en
+  // PREMIER — c'est la caisse, pas une vitrine de pôles.
+  const PROXIMITE = "Services de proximite";
+  const categories = useMemo(() => {
+    const cats = Array.from(new Set(services.map((s) => s.categorie)));
+    cats.sort((a, b) => (a === PROXIMITE ? -1 : b === PROXIMITE ? 1 : a.localeCompare(b)));
+    return ["Tous", ...cats];
+  }, [services]);
   const filteredServices = useMemo(() => {
     const q = catalogQuery.trim().toLowerCase();
-    return services.filter(
-      (s) =>
-        (catalogFilter === "Tous" || s.categorie === catalogFilter) &&
-        (!q || s.nom.toLowerCase().includes(q))
-    );
+    return services
+      .filter(
+        (s) =>
+          (catalogFilter === "Tous" || s.categorie === catalogFilter) &&
+          (!q || s.nom.toLowerCase().includes(q))
+      )
+      .sort((a, b) => {
+        if ((a.categorie === PROXIMITE) !== (b.categorie === PROXIMITE)) {
+          return a.categorie === PROXIMITE ? -1 : 1;
+        }
+        return 0;
+      });
   }, [services, catalogFilter, catalogQuery]);
 
   function addLine(s: PosService) {
@@ -569,161 +580,147 @@ export function PosComptoir({
           )}
         </section>
 
-        {/* Étape 2 · Catalogue */}
+        {/* Étape 2 · Prestations — LA CAISSE : la saisie est au premier plan
+            (rejet Thierry 12/09 : pas de formulaire caché sous les cartes).
+            Toute prestation de l'agence s'encaisse ici, catalogue ou non. \*/}
         <section className="rounded-sm border border-line bg-surface-elevated p-4">
-          <h2 className="font-display text-title text-ink">2 · Catalogue des prestations</h2>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <div className="relative min-w-[220px] flex-1">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-subtle" />
-              <input
-                type="text"
-                value={catalogQuery}
-                onChange={(e) => setCatalogQuery(e.target.value)}
-                placeholder="Rechercher une prestation…"
-                className={cn(inputClass, "pl-9")}
-              />
+          <h2 className="font-display text-title text-ink">2 · Prestations</h2>
+
+          {/* Saisie rapide — TOUJOURS visible, en tête */}
+          <div className="mt-3 rounded-sm border border-line-strong bg-surface p-3">
+            <p className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+              Saisie rapide — toute prestation, avec ou sans catalogue
+            </p>
+            <div className="mt-2 flex flex-wrap items-end gap-2">
+              <label className="min-w-[220px] flex-[2]">
+                <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                  Prestation *
+                </span>
+                <input
+                  type="text"
+                  value={freeLabel}
+                  onChange={(e) => setFreeLabel(e.target.value)}
+                  placeholder="Ex : pressing avec repassage, traduction, location…"
+                  className={cn(inputClass, "mt-1")}
+                />
+              </label>
+              <label className="w-20">
+                <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">Qté</span>
+                <input
+                  type="number"
+                  min={1}
+                  value={freeQty}
+                  onChange={(e) => setFreeQty(e.target.value)}
+                  className={cn(inputClass, "mt-1")}
+                />
+              </label>
+              <label className="w-40">
+                <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                  Prix unitaire FCFA *
+                </span>
+                <input
+                  type="number"
+                  min={0}
+                  value={freePrice}
+                  onChange={(e) => setFreePrice(e.target.value)}
+                  className={cn(inputClass, "mt-1")}
+                />
+              </label>
+              <button
+                type="button"
+                onClick={addFreeLine}
+                className="rounded-sm border border-line-strong px-4 py-2 text-body-sm font-semibold text-ink hover:bg-surface-sunken"
+              >
+                Ajouter au ticket
+              </button>
+            </div>
+            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2">
+              <label className="min-w-[240px] flex-1">
+                <input
+                  type="text"
+                  value={freeDescription}
+                  onChange={(e) => setFreeDescription(e.target.value)}
+                  placeholder="Description (optionnel)…"
+                  className={inputClass}
+                />
+              </label>
+              <label className="flex cursor-pointer items-center gap-2 text-body-sm text-ink">
+                <input
+                  type="checkbox"
+                  checked={freeCaution}
+                  onChange={(e) => setFreeCaution(e.target.checked)}
+                  className="h-4 w-4 accent-[rgb(var(--brand))]"
+                />
+                Caution remboursable (location)
+              </label>
             </div>
           </div>
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setCatalogFilter(cat)}
-                className={cn(
-                  "rounded-sm border px-3 py-1.5 text-caption font-semibold transition-colors",
-                  catalogFilter === cat
-                    ? "border-line-strong bg-surface-sunken text-ink"
-                    : "border-line text-ink-muted hover:border-line-strong"
-                )}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-          <div className="mt-4 grid gap-2 sm:grid-cols-2">
-            {filteredServices.map((s) => (
-              <button
-                key={s.id}
-                type="button"
-                onClick={() => addLine(s)}
-                className="flex items-center justify-between rounded-sm border border-line bg-surface px-4 py-3 text-left transition-colors hover:border-line-strong"
-              >
-                <div>
-                  <p className="text-body-sm font-semibold text-ink">{s.nom}</p>
-                  <p className="text-caption text-ink-muted">
-                    {s.tarif_type === "fixe" && s.tarif_montant !== null
-                      ? formatMoney(Number(s.tarif_montant))
-                      : "Sur devis"}
-                  </p>
-                </div>
-                <span className="text-ink-subtle" aria-hidden>
-                  +
-                </span>
-              </button>
-            ))}
-            {filteredServices.length === 0 && (
-              <p className="text-body-sm text-ink-muted sm:col-span-2">
-                Aucune prestation ne correspond à cette recherche.
-              </p>
-            )}
-          </div>
-          {/* Caisse tout usage : encaissement libre */}
+
+          {/* Catalogue — raccourcis (proximité d'abord) */}
           <div className="mt-4 border-t border-line pt-4">
-            {showFreeForm ? (
-              <div className="space-y-2">
-                <div className="flex flex-wrap items-end gap-2">
-                  <label className="min-w-[200px] flex-1">
-                    <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
-                      Libellé du service encaissé *
-                    </span>
-                    <input
-                      type="text"
-                      value={freeLabel}
-                      onChange={(e) => setFreeLabel(e.target.value)}
-                      placeholder="Ex : pressing avec repassage, traduction, location…"
-                      className={cn(inputClass, "mt-1")}
-                      autoFocus
-                    />
-                  </label>
-                  <label className="w-20">
-                    <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
-                      Qté
-                    </span>
-                    <input
-                      type="number"
-                      min={1}
-                      value={freeQty}
-                      onChange={(e) => setFreeQty(e.target.value)}
-                      className={cn(inputClass, "mt-1")}
-                    />
-                  </label>
-                  <label className="w-36">
-                    <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
-                      Prix unitaire FCFA *
-                    </span>
-                    <input
-                      type="number"
-                      min={0}
-                      value={freePrice}
-                      onChange={(e) => setFreePrice(e.target.value)}
-                      className={cn(inputClass, "mt-1")}
-                    />
-                  </label>
-                </div>
-                <label className="block">
-                  <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
-                    Description (optionnel)
-                  </span>
-                  <input
-                    type="text"
-                    value={freeDescription}
-                    onChange={(e) => setFreeDescription(e.target.value)}
-                    placeholder="Précisions utiles sur la prestation…"
-                    className={cn(inputClass, "mt-1")}
-                  />
-                </label>
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <label className="flex cursor-pointer items-center gap-2 text-body-sm text-ink">
-                    <input
-                      type="checkbox"
-                      checked={freeCaution}
-                      onChange={(e) => setFreeCaution(e.target.checked)}
-                      className="h-4 w-4 accent-[rgb(var(--brand))]"
-                    />
-                    Caution remboursable (location) — dans le tiroir, jamais une recette
-                  </label>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={addFreeLine}
-                      className="rounded-sm border border-line px-4 py-2 text-body-sm font-semibold text-ink hover:border-line-strong"
-                    >
-                      Ajouter au ticket
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowFreeForm(false)}
-                      className="rounded-sm px-2 py-2 text-body-sm text-ink-muted hover:text-ink"
-                    >
-                      Annuler
-                    </button>
-                  </div>
-                </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                Catalogue
+              </p>
+              <div className="relative min-w-[200px] flex-1">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-subtle" />
+                <input
+                  type="text"
+                  value={catalogQuery}
+                  onChange={(e) => setCatalogQuery(e.target.value)}
+                  placeholder="Rechercher une prestation…"
+                  className={cn(inputClass, "pl-9")}
+                />
               </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setShowFreeForm(true)}
-                className="inline-flex items-center gap-2 rounded-sm border border-dashed border-line px-4 py-2.5 text-body-sm font-semibold text-ink-muted hover:border-line-strong hover:text-ink"
-              >
-                + Encaissement libre — autre service Nexus RCA
-              </button>
-            )}
+            </div>
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setCatalogFilter(cat)}
+                  className={cn(
+                    "rounded-sm border px-3 py-1.5 text-caption font-semibold transition-colors",
+                    catalogFilter === cat
+                      ? "border-line-strong bg-surface-sunken text-ink"
+                      : "border-line text-ink-muted hover:border-line-strong"
+                  )}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+            <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {filteredServices.map((s) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => addLine(s)}
+                  className="flex items-center justify-between rounded-sm border border-line bg-surface px-3 py-2.5 text-left transition-colors hover:border-line-strong"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate text-body-sm font-semibold text-ink">{s.nom}</p>
+                    <p className="text-caption text-ink-muted">
+                      {s.tarif_type === "fixe" && s.tarif_montant !== null
+                        ? formatMoney(Number(s.tarif_montant))
+                        : "Prix à saisir"}
+                    </p>
+                  </div>
+                  <span className="text-ink-subtle" aria-hidden>
+                    +
+                  </span>
+                </button>
+              ))}
+              {filteredServices.length === 0 && (
+                <p className="text-body-sm text-ink-muted sm:col-span-2 lg:col-span-3">
+                  Aucune prestation ne correspond — utilisez la saisie rapide ci-dessus.
+                </p>
+              )}
+            </div>
           </div>
           <p className="mt-3 text-caption text-ink-muted">
-            Tarifs issus du catalogue · Devis selon prestation · L&rsquo;encaissement libre couvre
-            tout service hors plateforme.
+            La caisse encaisse toutes les prestations NEXUS RCA — les tarifs fixés dans
+            « Services et tarifs » se pré-remplissent, les autres se saisissent.
           </p>
         </section>
 

@@ -1,19 +1,29 @@
 // ============================================================================
-// TICKET POS 80mm — Comptoir POS (§3.2 "Après encaissement : génération du
-// reçu au format 80 mm"). Multi-lignes, hauteur dynamique — même patron que
-// le générateur mono-ligne de QuickSaleForm.tsx (non touché), même
-// bibliothèque (pdf-lib + lib/pdf-layout, sanitize systématique via
-// drawText/wrapText).
+// REÇU 80 mm — page Encaissement libre (instruction Thierry §11, 12/09/2026).
+// Largeur 80 mm, hauteur variable, JAMAIS une mise en page A4 réduite.
+// - Accents correctement imprimés : sanitize LOCALE qui préserve le
+//   Latin-1 (WinAnsi encode é è à ç…), contrairement à lib/pdf-layout dont
+//   la sanitize historique translittère en ASCII. Seuls les caractères
+//   hors WinAnsi (espaces fines U+202F — le bug d'origine —, symboles
+//   exotiques) sont remplacés.
+// - Coordonnées VALIDÉES par l'instruction : Croisement Marabena, route de
+//   l'aéroport, P.O. Box 1204, Bangui, RCA · +236 70 21 95 25 ·
+//   www.nexusrca.com. Date et heure locales de Bangui (Africa/Bangui).
+// - Identification de la caisse et de l'opératrice ; unité par ligne ;
+//   PAYÉ / RESTE DÛ ; remis/monnaie ; caution à part ; DUPLICATA identifié.
+// - Mode TEST : document clairement marqué, aucune transaction.
 // ============================================================================
 
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
-import { drawText, drawDashedLine, wrapText, mm } from "@/lib/pdf-layout";
+import { PDFDocument, StandardFonts, rgb, type PDFPage, type PDFFont } from "pdf-lib";
+import { mm } from "@/lib/pdf-layout";
 
 export interface PosTicketLine {
   label: string;
   quantite: number;
+  unite?: string | null;
   prix_unitaire: number;
   montant_total: number;
+  caution?: boolean;
 }
 
 export interface PosTicketData {
@@ -28,230 +38,259 @@ export interface PosTicketData {
   montantRecu?: number | null;
   monnaieRendue?: number | null;
   caissiereNom?: string | null;
-  /** CAI-06 : une réimpression est identifiable — bandeau DUPLICATA. */
+  caisseLabel?: string | null;
   duplicata?: boolean;
-  /** Caisse ouverte G2 : acompte — montant payé maintenant + reste dû. */
   acompte?: { paye: number; resteDu: number } | null;
-  /** Caisse ouverte G3 : total des cautions remboursables du ticket. */
   cautionTotal?: number | null;
+  /** Règlement complémentaire : distinguer le paiement du jour (§11). */
+  reglementsPrecedents?: number | null;
+  /** Document de test imprimante — aucune transaction (§10). */
+  test?: boolean;
+}
+
+// Sanitize LOCALE : préserve les accents (Latin-1/WinAnsi), remplace
+// uniquement ce que WinAnsi ne sait pas encoder.
+function tk(text: string): string {
+  return (text || "")
+    .replace(/[     ]/g, " ")
+    .replace(/⁠/g, "")
+    .replace(/[—–]/g, "-")
+    .replace(/•/g, "-")
+    .replace(/[‘’]/g, "'")
+    .replace(/[“”]/g, '"')
+    .replace(/€/g, "EUR")
+    // WinAnsi : ASCII imprimable + Latin-1 (accents preserves). Reste -> ?
+    .replace(/[^ -~À-ÿŒœ]/g, "?")
 }
 
 const WIDTH_MM = 80;
 const MARGIN_MM = 5;
 
+function txt(
+  page: PDFPage,
+  pageHeight: number,
+  font: PDFFont,
+  text: string,
+  xMm: number,
+  topYMm: number,
+  size: number,
+  align: "left" | "right" | "center" = "left"
+) {
+  const safe = tk(text);
+  const width = font.widthOfTextAtSize(safe, size);
+  const x = align === "right" ? mm(xMm) - width : align === "center" ? mm(xMm) - width / 2 : mm(xMm);
+  page.drawText(safe, { x, y: pageHeight - mm(topYMm), size, font, color: rgb(0, 0, 0) });
+}
+
+function wrap(font: PDFFont, text: string, maxWidthPt: number, size: number): string[] {
+  const words = tk(text).split(" ");
+  const lines: string[] = [];
+  let current = "";
+  for (const word of words) {
+    const candidate = current ? `${current} ${word}` : word;
+    if (font.widthOfTextAtSize(candidate, size) > maxWidthPt && current) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = candidate;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
+}
+
+function dash(page: PDFPage, pageHeight: number, topYMm: number) {
+  page.drawLine({
+    start: { x: mm(MARGIN_MM), y: pageHeight - mm(topYMm) },
+    end: { x: mm(WIDTH_MM - MARGIN_MM), y: pageHeight - mm(topYMm) },
+    thickness: 0.85,
+    color: rgb(0, 0, 0),
+    dashArray: [2.8, 2.8],
+  });
+}
+
+function fcfa(n: number): string {
+  return `${Math.round(n).toLocaleString("fr-FR")} FCFA`;
+}
+
 export async function generatePosTicketPdf(data: PosTicketData): Promise<Uint8Array> {
   const pdfDoc = await PDFDocument.create();
   const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const bold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const courier = await pdfDoc.embedFont(StandardFonts.Courier);
 
-  // Hauteur dynamique : en-tête/pied fixes + ~10mm par ligne de ticket.
-  const heightMm = 95 + data.lignes.length * 10 + (data.clientNom ? 10 : 0) + (data.dossierReference ? 5 : 0);
-  const pageHeight = mm(heightMm);
+  // Hauteur variable : en-tête/pied fixes + lignes (libellés longs = retours
+  // à la ligne, estimés large puis page découpée à la hauteur réelle).
+  const estHeight =
+    118 +
+    data.lignes.length * 12 +
+    (data.clientNom ? 8 : 0) +
+    (data.dossierReference ? 4 : 0) +
+    (data.acompte ? 10 : 0) +
+    (data.cautionTotal ? 5 : 0) +
+    (data.reglementsPrecedents ? 5 : 0) +
+    (data.duplicata ? 5 : 0) +
+    (data.test ? 12 : 0);
+  const pageHeight = mm(estHeight);
   const page = pdfDoc.addPage([mm(WIDTH_MM), pageHeight]);
-
-  const black = rgb(0, 0, 0);
-  const centerX = WIDTH_MM / 2;
-  const margin = MARGIN_MM;
+  const cx = WIDTH_MM / 2;
+  const m = MARGIN_MM;
+  const innerPt = mm(WIDTH_MM - 2 * m);
   let y = 8;
 
-  drawText(page, pageHeight, helveticaBold, "NEXUS RCA", mm(centerX), mm(y), 14, black, "center");
+  // ── En-tête institutionnel (coordonnées validées §11) ──
+  txt(page, pageHeight, bold, "NEXUS RCA", cx, y, 15, "center");
   y += 5;
-  drawText(page, pageHeight, helvetica, "Agence Internationale", mm(centerX), mm(y), 8, black, "center");
-  y += 3;
-  drawText(page, pageHeight, helvetica, "Bangui, RCA", mm(centerX), mm(y), 8, black, "center");
-  y += 3;
-  drawText(page, pageHeight, helvetica, "+236 73 26 96 92", mm(centerX), mm(y), 8, black, "center");
+  txt(page, pageHeight, helvetica, "Agence Internationale", cx, y, 8, "center");
+  y += 3.6;
+  txt(page, pageHeight, helvetica, "Croisement Marabena, route de l'aéroport", cx, y, 7, "center");
+  y += 3.4;
+  txt(page, pageHeight, helvetica, "P.O. Box 1204, Bangui, République centrafricaine", cx, y, 7, "center");
+  y += 3.4;
+  txt(page, pageHeight, helvetica, "Tél : +236 70 21 95 25 · www.nexusrca.com", cx, y, 7, "center");
 
+  y += 4.5;
+  dash(page, pageHeight, y);
   y += 5;
-  drawDashedLine(page, pageHeight, mm(margin), mm(WIDTH_MM - margin), mm(y), black);
 
-  y += 5;
-  drawText(page, pageHeight, helveticaBold, "TICKET DE CAISSE", mm(centerX), mm(y), 9, black, "center");
-  if (data.duplicata) {
-    y += 4;
-    drawText(page, pageHeight, helveticaBold, "*** DUPLICATA — REIMPRESSION ***", mm(centerX), mm(y), 8, black, "center");
+  if (data.test) {
+    txt(page, pageHeight, bold, "*** TEST IMPRIMANTE ***", cx, y, 11, "center");
+    y += 5;
+    txt(page, pageHeight, bold, "AUCUNE TRANSACTION FINANCIÈRE", cx, y, 8, "center");
+    y += 5;
+    dash(page, pageHeight, y);
+    y += 5;
   }
+
+  txt(page, pageHeight, bold, "REÇU DE PAIEMENT", cx, y, 10, "center");
+  if (data.duplicata) {
+    y += 4.5;
+    txt(page, pageHeight, bold, "*** DUPLICATA - RÉIMPRESSION ***", cx, y, 8, "center");
+  }
+  y += 4.5;
+  txt(page, pageHeight, courier, data.reference, cx, y, 8, "center");
   y += 4;
-  drawText(page, pageHeight, courier, data.reference, mm(centerX), mm(y), 7, black, "center");
-  y += 4;
+  // Heure locale de Bangui (§11) — quel que soit le fuseau du serveur/poste.
   const dateStr = data.date.toLocaleString("fr-FR", {
+    timeZone: "Africa/Bangui",
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
   });
-  drawText(page, pageHeight, helvetica, dateStr, mm(centerX), mm(y), 8, black, "center");
-
-  y += 4;
-  drawDashedLine(page, pageHeight, mm(margin), mm(WIDTH_MM - margin), mm(y), black);
-
-  if (data.clientNom) {
-    y += 4;
-    drawText(page, pageHeight, helveticaBold, "Client :", mm(margin), mm(y), 8, black);
-    y += 3;
-    drawText(page, pageHeight, helvetica, data.clientNom, mm(margin), mm(y), 8, black);
-    y += 3;
-  }
-  if (data.dossierReference) {
-    y += 3;
-    drawText(page, pageHeight, helvetica, `Dossier : ${data.dossierReference}`, mm(margin), mm(y), 7, black);
-    y += 2;
-  }
-  if (data.clientNom || data.dossierReference) {
-    drawDashedLine(page, pageHeight, mm(margin), mm(WIDTH_MM - margin), mm(y), black);
-  }
-
-  for (const ligne of data.lignes) {
-    y += 5;
-    const labelLines = wrapText(helveticaBold, ligne.label, mm(WIDTH_MM - 2 * margin), 8);
-    for (const line of labelLines) {
-      drawText(page, pageHeight, helveticaBold, line, mm(margin), mm(y), 8, black);
-      y += 3;
-    }
-    drawText(
-      page,
-      pageHeight,
-      helvetica,
-      `${ligne.quantite} x ${Math.round(ligne.prix_unitaire).toLocaleString("fr-FR")}`,
-      mm(margin),
-      mm(y + 1),
-      8,
-      black
-    );
-    drawText(
-      page,
-      pageHeight,
-      helvetica,
-      `${Math.round(ligne.montant_total).toLocaleString("fr-FR")} ${data.devise}`,
-      mm(WIDTH_MM - margin),
-      mm(y + 1),
-      8,
-      black,
-      "right"
-    );
-    y += 4;
-  }
-
-  y += 3;
-  drawDashedLine(page, pageHeight, mm(margin), mm(WIDTH_MM - margin), mm(y), black);
-  y += 5;
-  drawText(page, pageHeight, helveticaBold, "TOTAL", mm(margin), mm(y), 11, black);
-  drawText(
+  txt(page, pageHeight, helvetica, dateStr, cx, y, 8, "center");
+  y += 3.8;
+  txt(
     page,
     pageHeight,
-    helveticaBold,
-    `${Math.round(data.total).toLocaleString("fr-FR")} ${data.devise}`,
-    mm(WIDTH_MM - margin),
-    mm(y),
-    11,
-    black,
-    "right"
+    helvetica,
+    `Caisse : ${data.caisseLabel || "Réception"}${data.caissiereNom ? ` · Opératrice : ${data.caissiereNom}` : ""}`,
+    cx,
+    y,
+    7,
+    "center"
   );
 
-  if (data.cautionTotal && data.cautionTotal > 0) {
-    y += 4;
-    drawText(
+  y += 4;
+  dash(page, pageHeight, y);
+
+  if (data.clientNom) {
+    y += 4.2;
+    txt(page, pageHeight, helvetica, `Client : ${data.clientNom}`, m, y, 8);
+  }
+  if (data.dossierReference) {
+    y += 3.8;
+    txt(page, pageHeight, helvetica, `Dossier : ${data.dossierReference}`, m, y, 7);
+  }
+  if (data.clientNom || data.dossierReference) {
+    y += 3.5;
+    dash(page, pageHeight, y);
+  }
+
+  // ── Lignes : libellé (retour à la ligne), puis "qté unité × PU" et total
+  //    sur une ligne dédiée — les montants ne sont jamais coupés (§11). ──
+  for (const ligne of data.lignes) {
+    y += 4.6;
+    const label = (ligne.caution ? "Caution - " : "") + ligne.label;
+    for (const l of wrap(bold, label, innerPt, 8)) {
+      txt(page, pageHeight, bold, l, m, y, 8);
+      y += 3.4;
+    }
+    txt(
       page,
       pageHeight,
       helvetica,
-      `dont caution remboursable : ${Math.round(data.cautionTotal).toLocaleString("fr-FR")} ${data.devise}`,
-      mm(margin),
-      mm(y),
-      7,
-      black
+      `${ligne.quantite} ${ligne.unite || "prestation"} × ${Math.round(ligne.prix_unitaire).toLocaleString("fr-FR")}`,
+      m,
+      y,
+      7.5
     );
+    txt(page, pageHeight, helvetica, fcfa(ligne.montant_total), WIDTH_MM - m, y, 8, "right");
+    y += 1.2;
   }
 
-  if (data.acompte) {
-    y += 4;
-    drawText(
-      page,
-      pageHeight,
-      helveticaBold,
-      `PAYE : ${Math.round(data.acompte.paye).toLocaleString("fr-FR")} ${data.devise}`,
-      mm(margin),
-      mm(y),
-      9,
-      black
-    );
-    drawText(
-      page,
-      pageHeight,
-      helveticaBold,
-      `RESTE DU : ${Math.round(data.acompte.resteDu).toLocaleString("fr-FR")} ${data.devise}`,
-      mm(WIDTH_MM - margin),
-      mm(y),
-      9,
-      black,
-      "right"
-    );
-  }
-
+  y += 3.6;
+  dash(page, pageHeight, y);
   y += 5;
-  drawText(page, pageHeight, helvetica, `Mode : ${data.modePaiement}`, mm(margin), mm(y), 7, black);
+  txt(page, pageHeight, bold, "TOTAL", m, y, 11);
+  txt(page, pageHeight, bold, fcfa(data.total), WIDTH_MM - m, y, 11, "right");
 
+  if (data.cautionTotal && data.cautionTotal > 0) {
+    y += 4.2;
+    txt(page, pageHeight, helvetica, `dont caution remboursable : ${fcfa(data.cautionTotal)}`, m, y, 7);
+  }
+  if (data.reglementsPrecedents && data.reglementsPrecedents > 0) {
+    y += 4.2;
+    txt(page, pageHeight, helvetica, `Règlements précédents : ${fcfa(data.reglementsPrecedents)}`, m, y, 7.5);
+  }
+  if (data.acompte) {
+    y += 4.6;
+    txt(page, pageHeight, bold, `PAYÉ CE JOUR : ${fcfa(data.acompte.paye)}`, m, y, 9);
+    y += 4.2;
+    txt(page, pageHeight, bold, `RESTE DÛ : ${fcfa(data.acompte.resteDu)}`, WIDTH_MM - m, y, 9, "right");
+  }
+
+  y += 4.6;
+  txt(page, pageHeight, helvetica, `Mode de paiement : ${data.modePaiement}`, m, y, 7.5);
   if (data.montantRecu !== null && data.montantRecu !== undefined) {
-    y += 3;
-    drawText(
-      page,
-      pageHeight,
-      helvetica,
-      `Recu : ${Math.round(data.montantRecu).toLocaleString("fr-FR")} ${data.devise}`,
-      mm(margin),
-      mm(y),
-      7,
-      black
-    );
+    y += 3.8;
+    txt(page, pageHeight, helvetica, `Remis : ${fcfa(data.montantRecu)}`, m, y, 7.5);
     if (data.monnaieRendue !== null && data.monnaieRendue !== undefined && data.monnaieRendue > 0) {
-      drawText(
-        page,
-        pageHeight,
-        helvetica,
-        `Monnaie : ${Math.round(data.monnaieRendue).toLocaleString("fr-FR")} ${data.devise}`,
-        mm(WIDTH_MM - margin),
-        mm(y),
-        7,
-        black,
-        "right"
-      );
+      txt(page, pageHeight, helvetica, `Monnaie rendue : ${fcfa(data.monnaieRendue)}`, WIDTH_MM - m, y, 7.5, "right");
     }
   }
 
-  if (data.caissiereNom) {
-    y += 4;
-    drawText(page, pageHeight, helvetica, `Servi par : ${data.caissiereNom}`, mm(margin), mm(y), 7, black);
-  }
-
-  y += 6;
-  drawDashedLine(page, pageHeight, mm(margin), mm(WIDTH_MM - margin), mm(y), black);
   y += 5;
-  drawText(page, pageHeight, helvetica, "Merci de votre confiance", mm(centerX), mm(y), 8, black, "center");
-  y += 4;
-  drawText(page, pageHeight, helvetica, "www.nexusrca.com", mm(centerX), mm(y), 7, black, "center");
+  dash(page, pageHeight, y);
+  y += 4.6;
+  txt(page, pageHeight, helvetica, "Merci de votre confiance !", cx, y, 8.5, "center");
 
   return pdfDoc.save();
 }
 
-/** Ouvre le ticket dans un nouvel onglet pour impression (même approche que QuickSaleForm). */
-export function openPdfForPrint(bytes: Uint8Array): void {
+/** Ouvre le PDF dans un onglet et déclenche la boîte d'impression du poste. */
+export function openPdfForPrint(bytes: Uint8Array): boolean {
   const buffer = new Uint8Array(bytes).buffer as ArrayBuffer;
   const blob = new Blob([buffer], { type: "application/pdf" });
   const url = URL.createObjectURL(blob);
   const win = window.open(url, "_blank");
   if (win) {
     win.addEventListener("load", () => win.print());
+    return true;
   }
+  return false;
+}
+
+export function pdfBlobUrl(bytes: Uint8Array): string {
+  const buffer = new Uint8Array(bytes).buffer as ArrayBuffer;
+  const blob = new Blob([buffer], { type: "application/pdf" });
+  return URL.createObjectURL(blob);
 }
 
 export function downloadPdf(bytes: Uint8Array, filename: string): void {
-  const buffer = new Uint8Array(bytes).buffer as ArrayBuffer;
-  const blob = new Blob([buffer], { type: "application/pdf" });
-  const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url;
+  a.href = pdfBlobUrl(bytes);
   a.download = filename;
   a.click();
-  URL.revokeObjectURL(url);
 }

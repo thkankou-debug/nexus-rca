@@ -33,13 +33,15 @@ type PosPaymentMode = (typeof ALLOWED_MODES)[number];
 const MAX_LINES = 20;
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const SALE_FIELDS =
-  "id, reference, description, quantite, prix_unitaire, montant_total, devise, mode_paiement, date_paiement, nature, credit_id";
+  "id, reference, description, quantite, unite, prix_unitaire, montant_total, devise, mode_paiement, date_paiement, nature, credit_id";
 
 interface PosLine {
   service_slug?: string;
   label: string;
   description?: string;
   quantite: number;
+  /** §5 (page Encaissement libre) : prestation, page, pièce, heure, jour… */
+  unite?: string;
   prix_unitaire: number;
   /** Caisse ouverte G3 : 'caution' = remboursable, jamais une recette. */
   nature?: "prestation" | "caution";
@@ -412,6 +414,7 @@ export async function POST(request: NextRequest) {
       type_service: "autre" as const,
       nature: l.nature === "caution" ? ("caution" as const) : ("prestation" as const),
       description: [l.nature === "caution" ? "Caution — " : "", l.label.trim(), l.description?.trim() ? ` · ${l.description.trim()}` : ""].join(""),
+      unite: l.unite?.trim().slice(0, 30) || "prestation",
       quantite: Number(l.quantite),
       prix_unitaire: Number(l.prix_unitaire),
       montant_total: Number(l.quantite) * Number(l.prix_unitaire),

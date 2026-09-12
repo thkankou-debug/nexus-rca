@@ -3039,3 +3039,67 @@ remboursement partiel depuis Tickets & reçus (le contrôle de session doit
 refléter la sortie) ; acompte puis règlement du reste dû ; bascule d'un
 service en « Interne (POS) » et vérification qu'il disparaît du site
 public mais reste au POS.
+
+---
+
+## Page Encaissement libre — caisse professionnelle dédiée (12/09/2026)
+
+Rejet par Thierry de l'interface « formulaire sous les cartes » + maquette
+« page d'encaissement libre.png » + instruction en 16 points, avec deux
+précisions : RIEN de l'espace Accueil & caisse n'est supprimé (réorganisé
+sans doublon), et la page devient l'ARRIVÉE de la réceptionniste.
+
+**1. Nouvelle page /dashboard/accueil/encaissement (CaisseLibre.tsx),
+fidèle à la maquette** : barre supérieure (Nouvelle transaction, état réel
+de session avec ouverture inline, état d'impression) ; 1·Client (passage
+sans fiche — nom/téléphone facultatifs, AUCUN profil fictif — ou recherche
+contrôlée + dossier facultatif par sélection) ; 2·Prestation (désignation,
+quantité, UNITÉ — migration 090 quick_sales.unite —, PU, total auto,
+description, caution) avec raccourcis = services « Services de proximite »
+(seed 089, les 8 prestations listées par Thierry, internes, configurables
+dans Services et tarifs) ; 3·Ticket (édition/retrait, mise en attente et
+reprise — brouillons localStorage PAR POSTE, aucun mouvement financier —,
+vidage confirmé, nouvelle transaction protégée) ; Paiement (Espèces +
+Mobile Money avec référence vérifiée ; CARTE MASQUÉE — aucun terminal
+configuré, §7 ; remis/monnaie/reste dû ; paiement partiel ; règlement des
+créances ouvertes avec reçu distinguant paiement du jour / précédents /
+nouveau reste dû) ; Reçu & impression (aperçu live puis PDF, impression
+automatique = ouverture immédiate de la boîte du poste, Tester/Réimprimer/
+PDF, suivi honnête : jamais « Imprimé » sans preuve, §10).
+
+**2. Reçu 80 mm v2 (pos-ticket réécrit)** : ACCENTS PRÉSERVÉS (sanitize
+locale WinAnsi/Latin-1 — la sanitize historique de lib/pdf-layout
+translittère en ASCII, non touchée pour les autres PDF) ; coordonnées de
+l'instruction §11 (Croisement Marabena, P.O. Box 1204, +236 70 21 95 25,
+www.nexusrca.com — NB : ce téléphone diffère du +236 73 26 96 92 de
+lib/contact.ts, repris tel quel de l'instruction, à harmoniser si besoin) ;
+heure locale Africa/Bangui ; caisse+opératrice ; unité par ligne ; libellés
+longs à la ligne sans couper les montants ; PAYÉ CE JOUR / RESTE DÛ ;
+règlements précédents ; DUPLICATA ; document TEST marqué.
+
+**3. Impression silencieuse 80 mm : NON activée — prérequis matériels
+demandés (§9).** window.print ne fait pas une impression silencieuse ;
+page /dashboard/accueil/imprimante : état honnête du poste, bouton Tester
+(document TEST, zéro transaction), et les 4 informations attendues de
+Thierry (modèle exact, connexion, OS, navigateur) avant de proposer un
+agent local (type QZ Tray) — rien ne sera installé sans présentation.
+**Test d'acceptation n°8 (impression automatique matérielle) : reste à
+effectuer sur le matériel réel — signalé explicitement.**
+
+**4. Réorganisation sans suppression** : nav Accueil & caisse = Caisse
+(Encaissement libre 1ère position, Comptoir POS (catalogue), Tickets &
+reçus, Session, Imprimante) + Accueil (Poste de réception, Clients &
+dossiers, Instructions). Toutes les pages existantes vérifiées 200 sur le
+build de production local. Atterrissage accueil_caisse →
+/accueil/encaissement. Le Comptoir POS conserve catalogue complet,
+rattachement dossier et orientation (pas un doublon : l'Encaissement
+libre est la caisse rapide, le POS la vente par catalogue+orientation).
+
+**5. Inclut aussi (même lot)** : seed 089 des 8 prestations de proximité ;
+section Prestations du POS catalogue réorganisée (saisie rapide en tête,
+proximité d'abord) ; route POS : unite par ligne.
+
+**Tests : tsc/lint/build 0 erreur ; rendu vérifié par requêtes
+authentifiées (atterrissage, contenus de la page, 6 pages conservées
+en 200).** Restent à dérouler par Thierry : les 15 tests d'acceptation
+(§15) sur la préversion — le n°8 exige l'imprimante réelle.

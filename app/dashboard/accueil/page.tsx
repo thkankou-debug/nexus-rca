@@ -79,10 +79,10 @@ export default async function PosteReceptionPage() {
       hint: "Depuis la fiche du client, puis orientation",
     },
     {
-      href: "/dashboard/accueil/pos",
+      href: "/dashboard/accueil/encaissement",
       icon: ShoppingCart,
       label: "Encaisser un paiement",
-      hint: session?.status === "ouverte" ? "Comptoir POS actif" : "Ouvrez d'abord votre caisse",
+      hint: session?.status === "ouverte" ? "Encaissement libre actif" : "Ouvrez d'abord votre caisse",
     },
   ];
 

@@ -13,7 +13,7 @@
 // ============================================================================
 
 import { useRouter, usePathname } from "next/navigation";
-import { Home, Users, ShoppingCart, Wallet, Megaphone, ReceiptText } from "lucide-react";
+import { Home, Users, ShoppingCart, Wallet, Megaphone, ReceiptText, Banknote, Printer } from "lucide-react";
 import { AdminShell } from "@/components/admin/ui/AdminShell";
 import { BrandMark } from "@/components/admin/ui/BrandMark";
 import { TopbarSearch, TopbarNotifications } from "@/components/admin/ui/TopbarTools";
@@ -24,25 +24,30 @@ import { PageHeader } from "@/components/admin/ui/PageHeader";
 import { createClient } from "@/lib/supabase/client";
 import type { Profile } from "@/types";
 
+// Réorganisation (instruction Thierry 12/09) : l'Encaissement libre en
+// PREMIÈRE position (page d'arrivée), toutes les fonctions existantes
+// conservées, aucun doublon — chaque entrée mène à une page distincte.
 const NAV = [
+  {
+    key: "caisse",
+    label: "Caisse",
+    items: [
+      { key: "encaissement", label: "Encaissement libre", href: "/dashboard/accueil/encaissement", icon: Banknote },
+      { key: "pos", label: "Comptoir POS (catalogue)", href: "/dashboard/accueil/pos", icon: ShoppingCart },
+      { key: "recus", label: "Tickets & reçus", href: "/dashboard/accueil/recus", icon: ReceiptText },
+      { key: "session", label: "Session de caisse", href: "/dashboard/accueil/session", icon: Wallet },
+      { key: "imprimante", label: "Imprimante", href: "/dashboard/accueil/imprimante", icon: Printer },
+    ],
+  },
   {
     key: "accueil",
     label: "Accueil",
     items: [
       { key: "reception", label: "Poste de réception", href: "/dashboard/accueil", icon: Home },
-      { key: "clients", label: "Clients", href: "/dashboard/accueil/clients", icon: Users },
+      { key: "clients", label: "Clients & dossiers", href: "/dashboard/accueil/clients", icon: Users },
       // §10 : consignes d'accueil descendantes — la caissière accuse
       // réception et rend compte depuis le module unique.
       { key: "instructions", label: "Instructions", href: "/dashboard/instructions", icon: Megaphone },
-    ],
-  },
-  {
-    key: "caisse",
-    label: "Caisse",
-    items: [
-      { key: "pos", label: "Comptoir POS", href: "/dashboard/accueil/pos", icon: ShoppingCart },
-      { key: "recus", label: "Tickets & reçus", href: "/dashboard/accueil/recus", icon: ReceiptText },
-      { key: "session", label: "Session de caisse", href: "/dashboard/accueil/session", icon: Wallet },
     ],
   },
 ];
