@@ -18,7 +18,7 @@ export default async function EncaissementLibrePage() {
   const profile = await requireProfile(["accueil_caisse", "admin", "super_admin"]);
   const admin = getAccueilAdminClient();
 
-  const [session, raccourcisRes, creditsRes] = await Promise.all([
+  const [session, raccourcisRes, catalogueRes, creditsRes] = await Promise.all([
     getOwnSessionSnapshot(profile.id),
     // Raccourcis configurables : les prestations de proximité (services
     // internes, catégorie dédiée) — gérées dans « Services et tarifs ».
@@ -27,6 +27,13 @@ export default async function EncaissementLibrePage() {
       .select("id, nom, tarif_type, tarif_montant")
       .eq("status", "actif")
       .eq("categorie", "Services de proximite")
+      .order("nom", { ascending: true }),
+    // Catalogue complet des services actifs : la désignation se CHOISIT ou se
+    // SAISIT librement (caisse ouverte — jamais limitée au catalogue).
+    admin
+      .from("services")
+      .select("id, nom, tarif_type, tarif_montant")
+      .eq("status", "actif")
       .order("nom", { ascending: true }),
     admin
       .from("pos_credits")
@@ -47,6 +54,7 @@ export default async function EncaissementLibrePage() {
         session={session}
         caissiereNom={[profile.prenom, profile.nom].filter(Boolean).join(" ") || profile.email}
         raccourcis={(raccourcisRes.data || []) as RaccourciService[]}
+        catalogue={(catalogueRes.data || []) as RaccourciService[]}
         credits={(creditsRes.data || []) as PosCredit[]}
       />
     </AccueilShell>

@@ -3103,3 +3103,51 @@ proximité d'abord) ; route POS : unite par ligne.
 authentifiées (atterrissage, contenus de la page, 6 pages conservées
 en 200).** Restent à dérouler par Thierry : les 15 tests d'acceptation
 (§15) sur la préversion — le n°8 exige l'imprimante réelle.
+
+---
+
+## 12/09/2026 — Encaissement libre v2 : retours de recette Thierry
+
+**Retour reçu** : libellés/boutons tronqués (« prestatio »), sélecteur
+« Dossier facultatif » perçu cassé, saisie manuelle du service demandée,
+données/montants coupés sur le reçu, page à fluidifier ; puis (même jour)
+« Ajouter au ticket » ne doit jamais être un passage obligé, et système
+rapide capable d'enchaîner plusieurs clients.
+
+**1. Reçu 80 mm en DEUX PASSES** (`components/accueil/pos-ticket.ts`) :
+la hauteur n'est plus estimée mais MESURÉE — le rendu tourne une première
+fois à blanc (helpers `txt`/`dash` no-op si page nulle), la page est créée
+à la hauteur exacte + 8 mm de marge, puis le rendu identique dessine.
+Par construction plus aucune donnée ni montant coupé en bas, quel que
+soit le nombre de lignes ou la longueur des libellés (preuve : PDF de
+stress 5 lignes longues + caution + acompte + duplicata → 80×173 mm,
+1 page valide).
+
+**2. Désignation = CHOISIR OU SAISIR** : input + `datalist` alimentée par
+le catalogue COMPLET des services actifs (22 services vérifiés dans le
+HTML rendu), préremplissage du prix si correspondance exacte avec un
+tarif fixe, saisie libre toujours possible (« autre à préciser » =
+n'importe quel texte). La page serveur passe désormais `catalogue` en
+plus des raccourcis proximité.
+
+**3. Encaissement 1 clic** : la ligne en cours de saisie (désignation +
+prix remplis) est visible dans le ticket (« En saisie — incluse à
+l'encaissement ») et part AUTOMATIQUEMENT à l'encaissement — « Ajouter
+au ticket » ne sert que pour empiler plusieurs lignes. « Mettre en
+attente » et « Vider » la prennent aussi en compte.
+
+**4. Fluidité clavier** : Entrée sur Désignation → focus Prix ; Entrée
+sur Prix → ajout de la ligne ; Entrée sur Montant reçu → encaissement ;
+bouton « Montant exact » préremplit le montant reçu.
+
+**5. Corrections visuelles** : colonne Unité `min-w-[136px]` (fin du
+« prestatio ») ; `whitespace-nowrap` sur les boutons tronqués ; aperçu
+du reçu élargi 180→260 px et 256→320 px de haut (c'était l'aperçu qui
+coupait les montants à l'écran) ; sélecteur Dossier retiré du mode
+« Client de passage » (il n'y a jamais de dossier sans fiche) et remplacé
+en mode recherche par un état lisible tant qu'aucun client n'est choisi.
+
+**Tests : tsc + next build 0 erreur ; page vérifiée en HTTP authentifié
+sur le build de production local (200, tous les nouveaux éléments
+présents, datalist peuplée).** Impression matérielle : toujours en
+attente des 4 prérequis (§9), test n°8 inchangé.

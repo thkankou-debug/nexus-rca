@@ -67,7 +67,7 @@ const WIDTH_MM = 80;
 const MARGIN_MM = 5;
 
 function txt(
-  page: PDFPage,
+  page: PDFPage | null,
   pageHeight: number,
   font: PDFFont,
   text: string,
@@ -76,6 +76,7 @@ function txt(
   size: number,
   align: "left" | "right" | "center" = "left"
 ) {
+  if (!page) return;
   const safe = tk(text);
   const width = font.widthOfTextAtSize(safe, size);
   const x = align === "right" ? mm(xMm) - width : align === "center" ? mm(xMm) - width / 2 : mm(xMm);
@@ -99,7 +100,8 @@ function wrap(font: PDFFont, text: string, maxWidthPt: number, size: number): st
   return lines;
 }
 
-function dash(page: PDFPage, pageHeight: number, topYMm: number) {
+function dash(page: PDFPage | null, pageHeight: number, topYMm: number) {
+  if (!page) return;
   page.drawLine({
     start: { x: mm(MARGIN_MM), y: pageHeight - mm(topYMm) },
     end: { x: mm(WIDTH_MM - MARGIN_MM), y: pageHeight - mm(topYMm) },
@@ -119,23 +121,15 @@ export async function generatePosTicketPdf(data: PosTicketData): Promise<Uint8Ar
   const bold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const courier = await pdfDoc.embedFont(StandardFonts.Courier);
 
-  // Hauteur variable : en-tête/pied fixes + lignes (libellés longs = retours
-  // à la ligne, estimés large puis page découpée à la hauteur réelle).
-  const estHeight =
-    118 +
-    data.lignes.length * 12 +
-    (data.clientNom ? 8 : 0) +
-    (data.dossierReference ? 4 : 0) +
-    (data.acompte ? 10 : 0) +
-    (data.cautionTotal ? 5 : 0) +
-    (data.reglementsPrecedents ? 5 : 0) +
-    (data.duplicata ? 5 : 0) +
-    (data.test ? 12 : 0);
-  const pageHeight = mm(estHeight);
-  const page = pdfDoc.addPage([mm(WIDTH_MM), pageHeight]);
   const cx = WIDTH_MM / 2;
   const m = MARGIN_MM;
   const innerPt = mm(WIDTH_MM - 2 * m);
+
+  // DEUX PASSES (retour Thierry 12/09 : montants coupés en bas du reçu) :
+  // 1) mesure — mêmes instructions, page null, on obtient la hauteur EXACTE
+  //    (les libellés longs ajoutent des lignes que l'estimation ratait) ;
+  // 2) dessin — page créée à la hauteur mesurée + marge basse.
+  const renderAll = (page: PDFPage | null, pageHeight: number): number => {
   let y = 8;
 
   // ── En-tête institutionnel (coordonnées validées §11) ──
@@ -265,6 +259,15 @@ export async function generatePosTicketPdf(data: PosTicketData): Promise<Uint8Ar
   dash(page, pageHeight, y);
   y += 4.6;
   txt(page, pageHeight, helvetica, "Merci de votre confiance !", cx, y, 8.5, "center");
+
+
+  return y;
+  };
+
+  const measuredMm = renderAll(null, 0);
+  const pageHeight = mm(measuredMm + 8);
+  const page = pdfDoc.addPage([mm(WIDTH_MM), pageHeight]);
+  renderAll(page, pageHeight);
 
   return pdfDoc.save();
 }

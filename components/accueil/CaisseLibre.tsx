@@ -108,11 +108,14 @@ export function CaisseLibre({
   session,
   caissiereNom,
   raccourcis,
+  catalogue = [],
   credits = [],
 }: {
   session: SessionSnapshot | null;
   caissiereNom: string;
   raccourcis: RaccourciService[];
+  /** Catalogue complet des services actifs — la désignation se choisit OU se saisit. */
+  catalogue?: RaccourciService[];
   credits?: PosCredit[];
 }) {
   const router = useRouter();
@@ -161,8 +164,19 @@ export function CaisseLibre({
   const [description, setDescription] = useState("");
   const [isCaution, setIsCaution] = useState(false);
   const designationRef = useRef<HTMLInputElement>(null);
+  const puRef = useRef<HTMLInputElement>(null);
 
   const lineTotal = (parseInt(qty) || 0) * (parseFloat(pu) || 0);
+
+  // Choisir OU saisir : si la désignation correspond exactement à un service
+  // du catalogue à tarif fixe, le prix se préremplit (modifiable ensuite).
+  function onDesignationChange(v: string) {
+    setDesignation(v);
+    const hit = catalogue.find((s) => s.nom.toLowerCase() === v.trim().toLowerCase());
+    if (hit && hit.tarif_type === "fixe" && hit.tarif_montant !== null) {
+      setPu(String(hit.tarif_montant));
+    }
+  }
 
   // ── 3 · Ticket ──
   const [lines, setLines] = useState<Line[]>([]);
@@ -222,8 +236,27 @@ export function CaisseLibre({
     designationRef.current?.focus();
   }
 
-  const total = lines.reduce((s, l) => s + l.quantite * l.prix_unitaire, 0);
-  const cautionTotal = lines
+  // Ligne en cours de saisie : si elle est complète, elle est comptée et
+  // encaissée AUTOMATIQUEMENT — pas besoin de cliquer « Ajouter au ticket »
+  // pour un encaissement simple (consigne Thierry 12/09 : rapide, un clic).
+  const pending = useMemo<Line | null>(() => {
+    const q = parseInt(qty) || 0;
+    const p = parseFloat(pu);
+    if (!designation.trim() || q <= 0 || !Number.isFinite(p) || p <= 0) return null;
+    return {
+      key: "__pending__",
+      label: designation.trim(),
+      description: description.trim() || undefined,
+      quantite: q,
+      unite,
+      prix_unitaire: p,
+      nature: isCaution ? "caution" : "prestation",
+    };
+  }, [designation, qty, pu, description, unite, isCaution]);
+
+  const allLines = pending ? [...lines, pending] : lines;
+  const total = allLines.reduce((s, l) => s + l.quantite * l.prix_unitaire, 0);
+  const cautionTotal = allLines
     .filter((l) => l.nature === "caution")
     .reduce((s, l) => s + l.quantite * l.prix_unitaire, 0);
   const hasCaution = cautionTotal > 0;
@@ -245,8 +278,8 @@ export function CaisseLibre({
 
   const blocked = !sessionOpen
     ? "Ouvrez la caisse pour encaisser."
-    : lines.length === 0
-    ? "Ajoutez au moins une prestation au ticket."
+    : allLines.length === 0
+    ? "Saisissez une prestation (désignation + prix) pour encaisser."
     : partiel && hasCaution
     ? "Une caution se paie comptant — retirez-la ou désactivez le paiement partiel."
     : partiel && (affecte <= 0 || affecte >= total)
@@ -294,7 +327,7 @@ export function CaisseLibre({
             ? { nom: passageNom.trim() }
             : undefined,
           demande_id: dossierId,
-          lignes: lines.map((l) => ({
+          lignes: allLines.map((l) => ({
             label: l.label,
             description: l.description,
             quantite: l.quantite,
@@ -316,7 +349,7 @@ export function CaisseLibre({
 
       const reference = (json.sales as { reference: string | null }[])[0]?.reference || "TICKET";
       const credit = json.credit as { reste_du: number } | undefined;
-      const ticketLines: PosTicketLine[] = lines.map((l) => ({
+      const ticketLines: PosTicketLine[] = allLines.map((l) => ({
         label: l.label + (l.description ? ` — ${l.description}` : ""),
         quantite: l.quantite,
         unite: l.unite,
@@ -341,8 +374,14 @@ export function CaisseLibre({
       });
       setLastReceipt({ reference, bytes, url: pdfBlobUrl(bytes) });
 
-      // Nouvelle transaction propre.
+      // Nouvelle transaction propre (formulaire de saisie compris).
       setLines([]);
+      setDesignation("");
+      setQty("1");
+      setUnite("prestation");
+      setPu("");
+      setDescription("");
+      setIsCaution(false);
       setMontantRecu("");
       setConfirmationRef("");
       setPartiel(false);
@@ -384,8 +423,14 @@ export function CaisseLibre({
   }
 
   function nouvelleTransaction() {
-    if (lines.length > 0 && !confirm("Le ticket en cours n'est pas enregistré. L'abandonner ?")) return;
+    if (allLines.length > 0 && !confirm("Le ticket en cours n'est pas enregistré. L'abandonner ?")) return;
     setLines([]);
+    setDesignation("");
+    setQty("1");
+    setUnite("prestation");
+    setPu("");
+    setDescription("");
+    setIsCaution(false);
     setClient(null);
     setDossiers([]);
     setDossierId(null);
@@ -438,7 +483,7 @@ export function CaisseLibre({
           <button
             type="button"
             onClick={nouvelleTransaction}
-            className="inline-flex items-center gap-1.5 rounded-sm border border-line px-3 py-2 text-body-sm font-semibold text-ink hover:border-line-strong"
+            className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm border border-line px-3 py-2 text-body-sm font-semibold text-ink hover:border-line-strong"
           >
             <Plus className="h-4 w-4" />
             Nouvelle transaction
@@ -512,7 +557,7 @@ export function CaisseLibre({
                 </label>
               ))}
             </div>
-            <div className="mt-3 grid gap-3 sm:grid-cols-[2fr_1fr]">
+            <div className={cn("mt-3 grid gap-3", clientMode === "recherche" && "sm:grid-cols-[2fr_1fr]")}>
               {clientMode === "passage" ? (
                 <label className="block">
                   <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
@@ -579,26 +624,36 @@ export function CaisseLibre({
                   )}
                 </div>
               )}
-              <label className="block">
-                <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
-                  Dossier : facultatif
-                </span>
-                <select
-                  value={dossierId ?? ""}
-                  onChange={(e) => setDossierId(e.target.value || null)}
-                  disabled={!client || dossiers.length === 0}
-                  className={cn(inputClass, "mt-1 disabled:opacity-50")}
-                >
-                  <option value="">
-                    {client ? (dossiers.length ? "Aucun rattachement" : "Aucun dossier pour ce client") : "Sélectionnez d'abord un client"}
-                  </option>
-                  {dossiers.map((d) => (
-                    <option key={d.id} value={d.id}>
-                      {[d.reference, d.service].filter(Boolean).join(" · ")}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              {/* Le rattachement à un dossier n'existe qu'avec une fiche
+                  client — en mode passage le sélecteur n'apparaît pas
+                  (retour Thierry 12/09 : le bouton grisé semblait cassé). */}
+              {clientMode === "recherche" && (
+                <div>
+                  <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                    Dossier (facultatif)
+                  </span>
+                  {client && dossiers.length > 0 ? (
+                    <select
+                      value={dossierId ?? ""}
+                      onChange={(e) => setDossierId(e.target.value || null)}
+                      className={cn(inputClass, "mt-1")}
+                    >
+                      <option value="">Aucun rattachement</option>
+                      {dossiers.map((d) => (
+                        <option key={d.id} value={d.id}>
+                          {[d.reference, d.service].filter(Boolean).join(" · ")}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <p className="mt-1 rounded-sm border border-dashed border-line px-3 py-2 text-body-sm text-ink-subtle">
+                      {client
+                        ? "Ce client n'a aucun dossier — l'encaissement reste possible sans rattachement."
+                        : "Choisissez d'abord un client pour voir ses dossiers."}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </section>
 
@@ -607,18 +662,32 @@ export function CaisseLibre({
             <h2 className="font-display text-title text-ink">2. Prestation à encaisser</h2>
             <label className="mt-3 block">
               <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
-                Désignation de la prestation *
+                Désignation de la prestation * — choisir dans la liste ou saisir librement
               </span>
               <input
                 ref={designationRef}
                 type="text"
+                list="caisse-catalogue"
                 value={designation}
-                onChange={(e) => setDesignation(e.target.value)}
-                placeholder="Saisir le service"
+                onChange={(e) => onDesignationChange(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    puRef.current?.focus();
+                  }
+                }}
+                placeholder="Ex. Photocopies, Visa Schengen… ou tout autre service à préciser"
                 className={cn(inputClass, "mt-1")}
               />
+              {/* Choisir OU saisir : tout le catalogue actif est proposé,
+                  la saisie libre reste toujours possible (caisse ouverte). */}
+              <datalist id="caisse-catalogue">
+                {catalogue.map((s) => (
+                  <option key={s.id} value={s.nom} />
+                ))}
+              </datalist>
             </label>
-            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="mt-3 grid grid-cols-2 gap-3 lg:grid-cols-[minmax(96px,0.6fr)_minmax(136px,0.8fr)_minmax(150px,1.2fr)_minmax(130px,1fr)]">
               <label className="block">
                 <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">Quantité *</span>
                 <input
@@ -631,7 +700,11 @@ export function CaisseLibre({
               </label>
               <label className="block">
                 <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">Unité</span>
-                <select value={unite} onChange={(e) => setUnite(e.target.value)} className={cn(inputClass, "mt-1")}>
+                <select
+                  value={unite}
+                  onChange={(e) => setUnite(e.target.value)}
+                  className={cn(inputClass, "mt-1 min-w-[136px] pr-8")}
+                >
                   {UNITES.map((u) => (
                     <option key={u} value={u}>
                       {u}
@@ -640,14 +713,21 @@ export function CaisseLibre({
                 </select>
               </label>
               <label className="block">
-                <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                <span className="whitespace-nowrap text-caption font-semibold uppercase tracking-wide text-ink-muted">
                   Prix unitaire · FCFA *
                 </span>
                 <input
+                  ref={puRef}
                   type="number"
                   min={0}
                   value={pu}
                   onChange={(e) => setPu(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      addLine();
+                    }
+                  }}
                   className={cn(inputClass, "mt-1")}
                 />
               </label>
@@ -671,14 +751,19 @@ export function CaisseLibre({
               />
             </label>
             <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-              <button
-                type="button"
-                onClick={addLine}
-                className="inline-flex items-center gap-2 rounded-sm border border-line-strong px-4 py-2 text-body-sm font-semibold text-ink hover:bg-surface-sunken"
-              >
-                <Plus className="h-4 w-4" />
-                Ajouter au ticket
-              </button>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={addLine}
+                  className="inline-flex items-center gap-2 whitespace-nowrap rounded-sm border border-line-strong px-4 py-2 text-body-sm font-semibold text-ink hover:bg-surface-sunken"
+                >
+                  <Plus className="h-4 w-4" />
+                  Ajouter au ticket
+                </button>
+                <span className="text-caption text-ink-subtle">
+                  Facultatif pour une seule prestation — « Encaisser » la prend automatiquement.
+                </span>
+              </div>
               <label className="flex cursor-pointer items-center gap-2 text-body-sm text-ink">
                 <input
                   type="checkbox"
@@ -714,10 +799,12 @@ export function CaisseLibre({
           {/* 3 · Ticket en cours */}
           <section className="rounded-sm border border-line bg-surface-elevated p-4">
             <h2 className="font-display text-title text-ink">3. Ticket en cours</h2>
-            {lines.length === 0 ? (
+            {allLines.length === 0 ? (
               <div className="mt-3 rounded-sm border border-dashed border-line px-4 py-8 text-center">
-                <p className="text-body-sm text-ink-muted">Ajoutez votre première prestation</p>
-                <p className="text-caption text-ink-subtle">Les prestations ajoutées apparaîtront ici.</p>
+                <p className="text-body-sm text-ink-muted">Saisissez votre première prestation ci-dessus</p>
+                <p className="text-caption text-ink-subtle">
+                  Dès que désignation et prix sont remplis, la ligne apparaît ici.
+                </p>
               </div>
             ) : (
               <div className="mt-3 overflow-x-auto">
@@ -792,6 +879,25 @@ export function CaisseLibre({
                         </td>
                       </tr>
                     ))}
+                    {pending && (
+                      <tr className="bg-surface-sunken/50">
+                        <td className="py-2 pr-3 text-body-sm font-medium italic text-ink-muted">
+                          {pending.label}
+                          <span className="ml-1.5 rounded-sm border border-dashed border-line px-1 py-0.5 text-caption font-semibold not-italic text-ink-subtle">
+                            En saisie — incluse à l&rsquo;encaissement
+                          </span>
+                        </td>
+                        <td className="py-2 pr-3 text-body-sm text-ink-muted">{pending.quantite}</td>
+                        <td className="py-2 pr-3 text-body-sm text-ink-muted">{pending.unite}</td>
+                        <td className="py-2 pr-3 text-right text-body-sm text-ink-muted [font-variant-numeric:tabular-nums]">
+                          {Math.round(pending.prix_unitaire).toLocaleString("fr-FR")}
+                        </td>
+                        <td className="py-2 pr-3 text-right text-body-sm font-semibold text-ink [font-variant-numeric:tabular-nums]">
+                          {Math.round(pending.quantite * pending.prix_unitaire).toLocaleString("fr-FR")}
+                        </td>
+                        <td className="py-2" />
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -799,22 +905,31 @@ export function CaisseLibre({
             <div className="mt-3 flex flex-wrap gap-2 border-t border-line pt-3">
               <button
                 type="button"
-                disabled={lines.length === 0}
+                disabled={allLines.length === 0}
                 onClick={() => {
                   persistDrafts([
                     {
                       id: crypto.randomUUID(),
                       savedAt: new Date().toISOString(),
                       clientNom: client ? clientName(client) : passageNom.trim() || null,
-                      lines,
+                      // La ligne en cours de saisie part aussi en attente.
+                      lines: allLines.map((l) =>
+                        l.key === "__pending__" ? { ...l, key: `${Date.now()}-p` } : l
+                      ),
                     },
                     ...drafts,
                   ]);
                   setLines([]);
+                  setDesignation("");
+                  setQty("1");
+                  setUnite("prestation");
+                  setPu("");
+                  setDescription("");
+                  setIsCaution(false);
                   ticketKeyRef.current = null;
                   toast.success("Ticket mis en attente (sur ce poste)");
                 }}
-                className="inline-flex items-center gap-1.5 rounded-sm border border-line px-3 py-2 text-body-sm font-semibold text-ink hover:border-line-strong disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm border border-line px-3 py-2 text-body-sm font-semibold text-ink hover:border-line-strong disabled:opacity-50"
               >
                 <Pause className="h-4 w-4" />
                 Mettre en attente
@@ -823,21 +938,27 @@ export function CaisseLibre({
                 type="button"
                 disabled={drafts.length === 0}
                 onClick={() => setShowDrafts(true)}
-                className="inline-flex items-center gap-1.5 rounded-sm border border-line px-3 py-2 text-body-sm font-semibold text-ink hover:border-line-strong disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 rounded-sm border border-line px-3 py-2 text-body-sm font-semibold text-ink whitespace-nowrap hover:border-line-strong disabled:opacity-50"
               >
                 <Play className="h-4 w-4" />
                 Reprendre un ticket ({drafts.length})
               </button>
               <button
                 type="button"
-                disabled={lines.length === 0}
+                disabled={allLines.length === 0}
                 onClick={() => {
                   if (confirm("Vider le ticket en cours ?")) {
                     setLines([]);
+                    setDesignation("");
+                    setQty("1");
+                    setUnite("prestation");
+                    setPu("");
+                    setDescription("");
+                    setIsCaution(false);
                     ticketKeyRef.current = null;
                   }
                 }}
-                className="inline-flex items-center gap-1.5 rounded-sm border border-status-failure px-3 py-2 text-body-sm font-semibold text-status-failure hover:bg-surface-sunken disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm border border-status-failure px-3 py-2 text-body-sm font-semibold text-status-failure hover:bg-surface-sunken disabled:opacity-50"
               >
                 <Trash2 className="h-4 w-4" />
                 Vider le ticket
@@ -891,7 +1012,7 @@ export function CaisseLibre({
             {payMode === "especes" ? (
               <div className="mt-3 grid grid-cols-3 gap-2">
                 <label className="block">
-                  <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                  <span className="whitespace-nowrap text-caption font-semibold uppercase tracking-wide text-ink-muted">
                     Montant reçu
                   </span>
                   <input
@@ -899,8 +1020,22 @@ export function CaisseLibre({
                     min={0}
                     value={montantRecu}
                     onChange={(e) => setMontantRecu(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !blocked && !checkingOut) {
+                        e.preventDefault();
+                        checkout();
+                      }
+                    }}
                     className={cn(inputClass, "mt-1")}
                   />
+                  <button
+                    type="button"
+                    disabled={duMaintenant <= 0}
+                    onClick={() => setMontantRecu(String(Math.round(duMaintenant)))}
+                    className="mt-1 whitespace-nowrap rounded-sm border border-line px-2 py-1 text-caption font-semibold text-ink hover:border-line-strong disabled:opacity-50"
+                  >
+                    Montant exact
+                  </button>
                 </label>
                 <div>
                   <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">Monnaie</span>
@@ -992,25 +1127,27 @@ export function CaisseLibre({
           {/* Reçu & impression */}
           <section className="rounded-sm border border-line bg-surface-elevated p-4">
             <h2 className="font-display text-title text-ink">Reçu &amp; impression</h2>
-            <div className="mt-3 grid gap-3 sm:grid-cols-[180px_1fr]">
+            {/* 260 px ≈ 80 mm à l'écran : l'aperçu montre le reçu entier,
+                montants compris (retour Thierry 12/09 : aperçu tronqué). */}
+            <div className="mt-3 grid gap-3 sm:grid-cols-[260px_1fr]">
               <div>
                 <p className="text-caption font-semibold uppercase tracking-wide text-ink-muted">Aperçu · 80 mm</p>
                 {lastReceipt ? (
                   <iframe
                     title={`Reçu ${lastReceipt.reference}`}
-                    src={`${lastReceipt.url}#toolbar=0`}
-                    className="mt-1 h-64 w-full rounded-sm border border-line bg-white"
+                    src={`${lastReceipt.url}#toolbar=0&view=FitH`}
+                    className="mt-1 h-80 w-full rounded-sm border border-line bg-white"
                   />
                 ) : (
-                  <div className="mt-1 h-64 w-full rounded-sm border border-line bg-white p-3 font-mono text-[10px] leading-4 text-slate-800">
+                  <div className="mt-1 h-80 w-full rounded-sm border border-line bg-white p-3 font-mono text-[10px] leading-4 text-slate-800">
                     <p className="text-center font-bold">NEXUS RCA</p>
                     <p className="text-center">REÇU DE PAIEMENT</p>
                     <p className="mt-2">Date&nbsp;: —</p>
                     <p>Référence&nbsp;: —</p>
                     <p className="mt-2 border-t border-dashed border-slate-400 pt-1">
-                      {lines.length === 0 ? "Prestation : —" : null}
+                      {allLines.length === 0 ? "Prestation : —" : null}
                     </p>
-                    {lines.slice(0, 6).map((l) => (
+                    {allLines.slice(0, 6).map((l) => (
                       <p key={l.key} className="truncate">
                         {l.label} ×{l.quantite} — {Math.round(l.quantite * l.prix_unitaire).toLocaleString("fr-FR")}
                       </p>
