@@ -2584,3 +2584,11 @@ dans le tableau), pas de « Documents à vérifier » (concept absent du
 schéma, A4 #2), barre latérale limitée aux modules réellement livrés
 (« une entrée qui ne mène nulle part n'existe pas » — la maquette
 elle-même porte « Modules selon livraison »).
+
+**11. Vue d'ensemble vérifiée visuellement par Thierry le 11/09/2026 — OK (après correctif du point 10).**
+Le premier « je vois toujours l'ancien écran » venait du navigateur (test
+avant la fin du redéploiement ou navigation directe vers l'ancienne URL,
+toujours accessible par conception) — pas du code : la redirection avait
+été prouvée côté serveur par requête authentifiée (NEXT_REDIRECT →
+/dashboard/vue-ensemble dans la réponse en streaming, statut 200 — le
+service worker ne met jamais les pages HTML en cache, hors de cause).
