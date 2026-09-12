@@ -3264,3 +3264,52 @@ cautions dans le suivi de journée, rapport de clôture téléchargeable,
 session interrompue/changement d'opératrice), puis D (factures PDF —
 mentions fiscales à fournir par Thierry), E (agenda RDV partagé), F
 (recette de bout en bout §12).
+
+---
+
+## 12/09/2026 — Reprise Accueil & caisse : PHASE C (suivi de journée + clôture) livrée
+
+**1. Entrées/sorties de fonds hors vente (§5)** — migration 093
+(appliquée + committée) : table `caisse_movements` (type entrée/sortie,
+montant > 0, MOTIF obligatoire ≥ 3 caractères, justificatif, auteur,
+horodatage) avec les mêmes verrous base que 091 : INSERT refusé si la
+session n'est pas ouverte (`CAISSE_FERMEE`), mouvements FIGÉS après
+soumission/clôture (`SESSION_CLOTUREE`). RLS activée (lecture auteur,
+écritures via API service-role uniquement). Preuve SQL DO+rollback 3/3.
+API `/api/caisse-sessions/[id]/mouvements` (GET liste, POST par la seule
+opératrice de la session, supervision en lecture) — « aucun ajustement
+direct et inexpliqué du solde » : motif vide → 400.
+
+**2. Solde théorique** — source unique `computeExpectedBalance` étendue :
+fonds + espèces nettes + cautions reçues − cautions restituées + entrées
+− sorties. Les 3 appelants (/submit, /close, détail live) passent
+désormais session_id ; le snapshot accueil (`getOwnSessionSnapshot`)
+compte aussi les mouvements. Électronique toujours hors tiroir.
+
+**3. Ventilation §5** — GET /api/caisse-sessions/[id] renvoie
+`breakdown` : fonds, espèces prestations, cautions reçues/restituées,
+électroniques PAR MOYEN, entrées/sorties. Affichée dans « Suivi de la
+journée » (CaisseSessionsManager) avec la formule affichée en clair.
+
+**4. Rapport de clôture téléchargeable (§6)** — GET
+/api/caisse-sessions/[id]/rapport : PDF A4 (opératrice, poste, horaires,
+coupures d'ouverture, ventilation, solde théorique/compté/écart +
+justification, journal complet ventes + mouvements). Lecture seule,
+propriétaire ou supervision (admin/super_admin/daf/comptable). Bouton
+« Rapport PDF » sur chaque session. Sanitize WinAnsi (accents conservés,
+espaces insécables neutralisés, jamais toLocaleString pour les nombres).
+
+**5. Session interrompue (§6)** — session ouverte un jour précédent
+(heure de Bangui) : bandeau d'avertissement dans le poste de travail +
+lien « Terminer ma journée ». Changement d'opératrice : déjà structurel
+(une session PAR opératrice, unicité en base depuis 091).
+
+**Vérifications** : tsc + build 0 erreur ; preuve SQL rollback ; HTTP
+authentifié bout en bout — POST entrée/sortie 200, sans motif 400,
+ventilation servie, rapport 200 application/pdf (%PDF). Les deux
+mouvements de démonstration (±1 000, net 0) restent dans la session de
+TEST comme illustration.
+
+**Écarts assumés vs §6-§7** : la comparaison aux relevés électroniques
+externes et le rapprochement factures↔paiements arrivent avec la Phase D
+(factures) ; la correction par avoir également.

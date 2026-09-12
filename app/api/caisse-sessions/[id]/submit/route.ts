@@ -92,7 +92,8 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       admin,
       sessionRow.agent_id,
       sessionRow.opened_at,
-      sessionRow.opening_balance
+      sessionRow.opening_balance,
+      sessionRow.id
     );
     const discrepancy = body.actual_balance - expectedBalance;
 

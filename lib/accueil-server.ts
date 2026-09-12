@@ -75,6 +75,18 @@ export async function getOwnSessionSnapshot(userId: string): Promise<SessionSnap
     else electroniques += signed;
   }
 
+  // Entrées/sorties de fonds hors vente (cahier §5) — même convention que
+  // computeExpectedBalance : entrées +, sorties −.
+  const { data: mouvements } = await admin
+    .from("caisse_movements")
+    .select("type, montant")
+    .eq("session_id", row.id);
+  const totalMouvements = (mouvements || []).reduce(
+    (sum, m) =>
+      sum + ((m as { type: string }).type === "entree" ? 1 : -1) * Number((m as { montant: number }).montant),
+    0
+  );
+
   return {
     id: row.id,
     status: row.status,
@@ -82,7 +94,7 @@ export async function getOwnSessionSnapshot(userId: string): Promise<SessionSnap
     opening_balance: Number(row.opening_balance),
     especes_encaissees: especes,
     paiements_electroniques: electroniques,
-    especes_theoriques: Number(row.opening_balance) + especes,
+    especes_theoriques: Number(row.opening_balance) + especes + totalMouvements,
   };
 }
 

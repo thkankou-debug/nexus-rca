@@ -104,8 +104,29 @@ export function CaisseWorkspace({
   }
 
   // ── 3. Session ouverte : bandeau de contexte + onglets ──
+  // Session interrompue (§6) : ouverte un jour précédent (heure de Bangui) —
+  // avertir et pousser vers la clôture de la journée passée.
+  const jourBangui = (d: string | Date) =>
+    new Date(d).toLocaleDateString("fr-CA", { timeZone: "Africa/Bangui" });
+  const sessionAnterieure = jourBangui(session.opened_at) < jourBangui(new Date());
+
   return (
     <div className="space-y-4">
+      {sessionAnterieure && (
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-sm border border-status-waiting bg-surface-elevated px-4 py-2.5">
+          <p className="text-body-sm font-semibold text-ink">
+            Session ouverte depuis le{" "}
+            {new Date(session.opened_at).toLocaleDateString("fr-FR", { timeZone: "Africa/Bangui" })} —
+            terminez la journée précédente (comptage et soumission) avant de poursuivre.
+          </p>
+          <Link
+            href="/dashboard/accueil/session"
+            className="whitespace-nowrap text-body-sm font-semibold text-ink underline-offset-2 hover:underline"
+          >
+            Terminer ma journée
+          </Link>
+        </div>
+      )}
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-sm border border-line bg-surface-elevated px-4 py-2.5">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
           <span className="inline-flex items-center gap-2 text-body-sm text-ink">

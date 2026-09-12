@@ -70,7 +70,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         admin,
         sessionRow.agent_id,
         sessionRow.opened_at,
-        sessionRow.opening_balance
+        sessionRow.opening_balance,
+        sessionRow.id
       );
     }
 
@@ -83,13 +84,54 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     if (sessionRow.closed_at) {
       movementsQuery = movementsQuery.lte("created_at", sessionRow.closed_at);
     }
-    const { data: movements } = await movementsQuery;
+    const [{ data: movements }, { data: fundMovements }] = await Promise.all([
+      movementsQuery,
+      admin
+        .from("caisse_movements")
+        .select("id, type, montant, motif, justificatif, created_at")
+        .eq("session_id", sessionRow.id)
+        .order("created_at", { ascending: false }),
+    ]);
+
+    // Ventilation (cahier §5) : espèces nettes, électroniques PAR MOYEN,
+    // cautions reçues/restituées, entrées/sorties de fonds — le solde
+    // théorique reste calculé par la source unique (lib/caisse-server.ts).
+    const breakdown = {
+      fonds_ouverture: Number(sessionRow.opening_balance),
+      especes_prestations: 0,
+      cautions_recues_especes: 0,
+      cautions_restituees_especes: 0,
+      electroniques_par_moyen: {} as Record<string, number>,
+      entrees_fonds: 0,
+      sorties_fonds: 0,
+    };
+    for (const v of (movements || []) as {
+      montant_total: number;
+      mode_paiement: string;
+      nature?: string | null;
+    }[]) {
+      const montant = Number(v.montant_total);
+      if (v.mode_paiement === "especes") {
+        if (v.nature === "caution_remboursement") breakdown.cautions_restituees_especes += montant;
+        else if (v.nature === "caution") breakdown.cautions_recues_especes += montant;
+        else breakdown.especes_prestations += montant;
+      } else {
+        breakdown.electroniques_par_moyen[v.mode_paiement] =
+          (breakdown.electroniques_par_moyen[v.mode_paiement] || 0) + montant;
+      }
+    }
+    for (const m of (fundMovements || []) as { type: string; montant: number }[]) {
+      if (m.type === "entree") breakdown.entrees_fonds += Number(m.montant);
+      else breakdown.sorties_fonds += Number(m.montant);
+    }
 
     return NextResponse.json({
       success: true,
       session,
       live_expected_balance: liveExpectedBalance,
       movements: movements || [],
+      fund_movements: fundMovements || [],
+      breakdown,
     });
   } catch (err) {
     console.error("[CAISSE_SESSIONS] GET/:id EXCEPTION:", err);

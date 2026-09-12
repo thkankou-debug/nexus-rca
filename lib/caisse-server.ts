@@ -8,7 +8,10 @@
 //     + Σ espèces (prestations, montants NETS de monnaie rendue)
 //     + Σ espèces (cautions reçues — dans le tiroir, jamais une recette)
 //     − Σ espèces (remboursements de caution — sortie du tiroir, stockés
-//       en montant positif avec nature='caution_remboursement').
+//       en montant positif avec nature='caution_remboursement')
+//     + Σ entrées de fonds autorisées − Σ sorties de fonds autorisées
+//       (caisse_movements, cahier §5 12/09/2026 — type+motif+auteur
+//       obligatoires, aucun ajustement direct du solde).
 // Les règlements électroniques n'entrent jamais dans ce calcul.
 // ============================================================================
 
@@ -23,7 +26,10 @@ export async function computeExpectedBalance(
   admin: SupabaseClient,
   agentId: string,
   openedAt: string,
-  openingBalance: number
+  openingBalance: number,
+  /** Fournir l'id de session pour compter les entrées/sorties de fonds hors
+      vente (caisse_movements) — voir convention en tête de fichier. */
+  sessionId?: string
 ): Promise<number> {
   const { data: ventes } = await admin
     .from("quick_sales")
@@ -37,5 +43,20 @@ export async function computeExpectedBalance(
     0
   );
 
-  return openingBalance + totalEspeces;
+  let totalMouvements = 0;
+  if (sessionId) {
+    const { data: mouvements } = await admin
+      .from("caisse_movements")
+      .select("type, montant")
+      .eq("session_id", sessionId);
+    totalMouvements = (mouvements || []).reduce(
+      (sum, m) =>
+        sum +
+        ((m as { type: string }).type === "entree" ? 1 : -1) *
+          Number((m as { montant: number }).montant),
+      0
+    );
+  }
+
+  return openingBalance + totalEspeces + totalMouvements;
 }

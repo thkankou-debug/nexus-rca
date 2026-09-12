@@ -46,6 +46,27 @@ interface CaisseMovement {
   created_at: string;
 }
 
+// Cahier §5 (12/09/2026) : entrées/sorties de fonds hors vente et
+// ventilation de la journée — servies par GET /api/caisse-sessions/:id.
+interface FundMovement {
+  id: string;
+  type: "entree" | "sortie";
+  montant: number;
+  motif: string;
+  justificatif: string | null;
+  created_at: string;
+}
+
+interface SessionBreakdown {
+  fonds_ouverture: number;
+  especes_prestations: number;
+  cautions_recues_especes: number;
+  cautions_restituees_especes: number;
+  electroniques_par_moyen: Record<string, number>;
+  entrees_fonds: number;
+  sorties_fonds: number;
+}
+
 const DENOMINATIONS = [10000, 5000, 2000, 1000, 500] as const;
 
 function formatMoney(amount: number | null): string {
@@ -77,6 +98,8 @@ export function CaisseSessionsManager({
     null
   );
   const [movements, setMovements] = useState<CaisseMovement[]>([]);
+  const [fundMovements, setFundMovements] = useState<FundMovement[]>([]);
+  const [breakdown, setBreakdown] = useState<SessionBreakdown | null>(null);
 
   const ownOpenSession = useMemo(
     () => sessions.find((s) => s.agent_id === currentUserId && s.status === "ouverte"),
@@ -98,16 +121,24 @@ export function CaisseSessionsManager({
     if (json.success) setSessions(json.sessions);
   }
 
+  async function reloadSessionDetail(sessionId: string) {
+    const res = await fetch(`/api/caisse-sessions/${sessionId}`);
+    const json = await res.json();
+    if (json.success) {
+      setMovements(json.movements || []);
+      setFundMovements(json.fund_movements || []);
+      setBreakdown(json.breakdown || null);
+    }
+  }
+
   useEffect(() => {
     if (!ownActiveSession) {
       setMovements([]);
+      setFundMovements([]);
+      setBreakdown(null);
       return;
     }
-    (async () => {
-      const res = await fetch(`/api/caisse-sessions/${ownActiveSession.id}`);
-      const json = await res.json();
-      if (json.success) setMovements(json.movements || []);
-    })();
+    reloadSessionDetail(ownActiveSession.id);
   }, [ownActiveSession]);
 
   return (
@@ -201,6 +232,45 @@ export function CaisseSessionsManager({
             </div>
           )}
         </div>
+      )}
+
+      {ownActiveSession && breakdown && (
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-sm font-semibold text-nexus-blue-950">Suivi de la journée</p>
+          <dl className="mt-3 space-y-1.5 text-sm">
+            {[
+              ["Fonds d'ouverture", breakdown.fonds_ouverture],
+              ["Espèces encaissées (nettes de monnaie rendue)", breakdown.especes_prestations],
+              ["Cautions reçues en espèces (tiroir, pas une recette)", breakdown.cautions_recues_especes],
+              ["Cautions restituées en espèces", -breakdown.cautions_restituees_especes],
+              ...Object.entries(breakdown.electroniques_par_moyen).map(
+                ([moyen, montant]) => [`Électronique — ${moyen} (hors tiroir)`, montant] as [string, number]
+              ),
+              ["Entrées de fonds autorisées", breakdown.entrees_fonds],
+              ["Sorties de fonds autorisées", -breakdown.sorties_fonds],
+            ].map(([label, montant]) => (
+              <div key={label as string} className="flex items-center justify-between gap-3">
+                <dt className="text-slate-600">{label}</dt>
+                <dd className="font-semibold text-nexus-blue-950 [font-variant-numeric:tabular-nums]">
+                  {formatMoney(montant as number)}
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-3 border-t border-slate-100 pt-2 text-xs text-slate-500">
+            Solde théorique = fonds d&apos;ouverture + entrées physiques nettes − sorties physiques.
+            Les paiements électroniques n&apos;augmentent jamais les espèces du tiroir.
+          </p>
+        </div>
+      )}
+
+      {ownActiveSession && (
+        <FundMovementsBlock
+          sessionId={ownActiveSession.id}
+          canAdd={ownActiveSession.status === "ouverte"}
+          movements={fundMovements}
+          onChanged={() => reloadSessionDetail(ownActiveSession.id)}
+        />
       )}
 
       {canClose && pendingValidation.length > 0 && (
@@ -306,6 +376,154 @@ export function CaisseSessionsManager({
   );
 }
 
+// Entrées/sorties de fonds hors vente (cahier §5) : type + montant + motif
+// (+ justificatif) obligatoires — aucun ajustement inexpliqué du solde.
+function FundMovementsBlock({
+  sessionId,
+  canAdd,
+  movements,
+  onChanged,
+}: {
+  sessionId: string;
+  canAdd: boolean;
+  movements: FundMovement[];
+  onChanged: () => void;
+}) {
+  const [type, setType] = useState<"entree" | "sortie">("entree");
+  const [montant, setMontant] = useState("");
+  const [motif, setMotif] = useState("");
+  const [justificatif, setJustificatif] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  async function save() {
+    const m = parseFloat(montant);
+    if (!Number.isFinite(m) || m <= 0) {
+      toast.error("Montant > 0 requis");
+      return;
+    }
+    if (motif.trim().length < 3) {
+      toast.error("Le motif est obligatoire — aucun ajustement inexpliqué du solde");
+      return;
+    }
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/caisse-sessions/${sessionId}/mouvements`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type, montant: m, motif: motif.trim(), justificatif: justificatif.trim() || undefined }),
+      });
+      const json = await res.json();
+      if (!json.success) {
+        toast.error(json.error || "Échec de l'enregistrement");
+        return;
+      }
+      toast.success(type === "entree" ? "Entrée de fonds enregistrée" : "Sortie de fonds enregistrée");
+      setMontant("");
+      setMotif("");
+      setJustificatif("");
+      onChanged();
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <p className="text-sm font-semibold text-nexus-blue-950">Entrées / sorties de fonds (hors vente)</p>
+      <p className="mt-1 text-xs text-slate-500">
+        Apport de monnaie, remise en banque, retrait autorisé… Chaque mouvement exige un motif et
+        entre dans le solde théorique.
+      </p>
+      {canAdd && (
+        <div className="mt-3 grid gap-2 sm:grid-cols-[auto_130px_1fr_1fr_auto]">
+          <div className="flex gap-1">
+            {(
+              [
+                ["entree", "Entrée"],
+                ["sortie", "Sortie"],
+              ] as const
+            ).map(([t, label]) => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setType(t)}
+                className={cn(
+                  "rounded-full border px-3 py-2 text-xs font-semibold",
+                  type === t
+                    ? "border-nexus-blue-950 bg-nexus-blue-950 text-white"
+                    : "border-slate-200 text-slate-600 hover:border-slate-300"
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <input
+            type="number"
+            min={1}
+            value={montant}
+            onChange={(e) => setMontant(e.target.value)}
+            placeholder="Montant XAF"
+            className="rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none"
+          />
+          <input
+            type="text"
+            value={motif}
+            onChange={(e) => setMotif(e.target.value)}
+            placeholder="Motif obligatoire (ex. remise en banque)"
+            className="rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none"
+          />
+          <input
+            type="text"
+            value={justificatif}
+            onChange={(e) => setJustificatif(e.target.value)}
+            placeholder="Justificatif / autorisation (réf.)"
+            className="rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none"
+          />
+          <button
+            type="button"
+            disabled={saving}
+            onClick={save}
+            className="whitespace-nowrap rounded-full bg-nexus-blue-950 px-4 py-2 text-xs font-semibold text-white hover:bg-nexus-blue-900 disabled:opacity-50"
+          >
+            {saving ? "…" : "Enregistrer"}
+          </button>
+        </div>
+      )}
+      {movements.length === 0 ? (
+        <p className="mt-3 text-sm text-slate-500">Aucun mouvement de fonds sur cette session.</p>
+      ) : (
+        <div className="mt-3 space-y-2">
+          {movements.map((m) => (
+            <div
+              key={m.id}
+              className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-100 bg-slate-50 px-3 py-2"
+            >
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-nexus-blue-950">
+                  {m.type === "entree" ? "Entrée" : "Sortie"} · {m.motif}
+                  {m.justificatif && (
+                    <span className="font-normal text-slate-500"> · justif. {m.justificatif}</span>
+                  )}
+                </p>
+                <p className="text-xs text-slate-500">{formatDateTime(m.created_at)}</p>
+              </div>
+              <p
+                className={cn(
+                  "font-display text-sm font-bold",
+                  m.type === "entree" ? "text-green-700" : "text-red-600"
+                )}
+              >
+                {m.type === "entree" ? "+" : "−"} {formatMoney(Number(m.montant))}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function SessionCard({ session }: { session: CaisseSessionListItem }) {
   const statusLabel =
     session.status === "ouverte" ? "Ouverte" : session.status === "a_cloturer" ? "À valider" : "Clôturée";
@@ -359,6 +577,15 @@ function SessionCard({ session }: { session: CaisseSessionListItem }) {
         )}
 
         {session.notes && <p className="mt-3 text-sm text-slate-600">{session.notes}</p>}
+
+        {/* Cahier §6 : rapport de session téléchargeable (PDF, lecture seule). */}
+        <a
+          href={`/api/caisse-sessions/${session.id}/rapport`}
+          className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+        >
+          <FileSpreadsheet className="h-3.5 w-3.5" />
+          Rapport PDF
+        </a>
       </div>
     </div>
   );
