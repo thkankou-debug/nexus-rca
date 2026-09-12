@@ -528,7 +528,16 @@ export function QuickSaleForm({
     setSaving(false);
 
     if (error) {
-      toast.error("Erreur : " + error.message);
+      // Verrou base 091 : aucun encaissement sans session de caisse ouverte.
+      if (error.message.includes("CAISSE_FERMEE")) {
+        toast.error(
+          "Caisse fermée — ouvrez d'abord votre session de caisse (page Sessions de caisse) avant d'encaisser."
+        );
+      } else if (error.message.includes("SESSION_CLOTUREE")) {
+        toast.error("Cette session est soumise ou clôturée — ses transactions sont figées.");
+      } else {
+        toast.error("Erreur : " + error.message);
+      }
       return;
     }
 

@@ -3186,3 +3186,39 @@ créance rechargée, jamais une seconde).
 **Tests : tsc + next build 0 erreur ; page 200 authentifiée avec les
 nouveaux blocs ; API recherche/fiche 200.** Aucun changement d'API ni de
 migration.
+
+---
+
+## 12/09/2026 — Cahier « reprise Accueil & caisse » : LOT A (sécurité) livré
+
+**Défaut confirmé (§2 du cahier)** : la « Caisse rapide » de l'espace
+agent (`QuickSaleForm` via `QuickSalesManager`, pages agent et
+super-admin) insérait dans `quick_sales` directement depuis le
+navigateur, SANS session de caisse. Les routes accueil (`/api/accueil/pos`,
+`caution-remboursement`) vérifiaient déjà la session — pas cette porte.
+
+**Correction — migration 091 (appliquée + committée)** :
+1. `quick_sales.session_id` : rattachement automatique par trigger à LA
+   session ouverte de l'opérateur (les 14 ventes historiques restent
+   `session_id NULL` — signalées, jamais rattachées arbitrairement, §11).
+2. Trigger BEFORE INSERT : aucune session ouverte → exception
+   `CAISSE_FERMEE`. Vaut pour TOUTES les portes (accueil, POS, agent,
+   anciennes routes, SQL direct) — la protection est en base, pas dans
+   un bouton.
+3. Trigger BEFORE UPDATE/DELETE : les ventes d'une session soumise ou
+   clôturée sont FIGÉES (`SESSION_CLOTUREE`) — aucune modification
+   silencieuse d'une journée close (§6). Aucun flux applicatif ne
+   modifiait quick_sales : rien de cassé.
+4. Index partiel unique : une seule session « ouverte » par opérateur,
+   garanti par la base (l'unicité n'était qu'applicative).
+
+**Preuve SQL (DO + rollback, aucune trace)** : sans session = REFUSE ;
+avec session = RATTACHE ; double session = REFUSE_UNIQUE ; après
+clôture = FIGEE.
+
+**UX** : `QuickSaleForm` affiche désormais « Caisse fermée — ouvrez
+d'abord votre session » au lieu de l'erreur SQL brute.
+
+**Reste du cahier (points 1, 3, 5-12 + agenda RDV partagé)** : périmètre
+phasé présenté à Thierry — GO attendu par phase, conformément à sa
+méthode. Rien d'autre n'a été modifié dans ce lot.
