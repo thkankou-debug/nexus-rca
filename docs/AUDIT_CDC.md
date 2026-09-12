@@ -19,7 +19,7 @@
 | §7 CRM et cycle de vie | **Partiel** — identité/fiche/étapes livrées ; file d'accueil, acceptation d'affectation absents |
 | §8 POS et caisse | **Partiel** — cœur livré ; monnaie/mouvements/état « correction demandée » absents (schéma) |
 | §9 Finance | **Partiel** — chaîne déclaré→rapproché→validé livrée ; affectations/remboursements/remises absents |
-| §10 Instructions et escalades | **Absent** — objet « instruction » inexistant (tables à proposer §14.2) |
+| §10 Instructions et escalades | **Livré (noyau, 12/09)** — instructions + accusés individuels + avancement/blocage + clôture + notifications ; escalades paramétrées et outbox transactionnelle restent à faire |
 | §11 Documents / RDV / RH | **Partiel** |
 | §12 Catalogue / contenus | **Partiel** — catalogue servi ; frais de tiers **Bloqué-AR-04** |
 | §13 Indicateurs | **Partiel** — règle du chiffre honnête appliquée ; dictionnaire des métriques à livrer |
@@ -35,7 +35,7 @@
 - EX-03 (actions d'abord, pas de décor) — **Livré** sur les nouveaux espaces (aucune bannière, aucun score inventé).
 - EX-04 (fonction = route réelle + rôle + serveur + préversion) — **Livré** comme méthode depuis L3 ; vérifié pour les 8 espaces raccordés.
 - EX-05 (traçabilité montée/descente) — **Absent** pour les instructions ; **Livré** pour caisse/paiements (audit_log).
-- EX-06 (réception seul point d'encaissement humain) — **Bloqué-AR-01** : aujourd'hui `paiement.record` est aussi accordée à admin/comptable/daf (P2) et les pages caisse agent/super-admin (`QuickSaleForm`) encaissent. Routes d'encaissement inventoriées : POST `/api/accueil/pos` (accueil) ; insert direct `quick_sales` via `QuickSaleForm.tsx` (agent/admin/super-admin, RLS) ; `PaymentForm.tsx` (staff) ; liens de paiement publics (déclaration client, vérification staff). Retirer ces canaux = changement de droits réels → GO explicite requis.
+- EX-06 (réception seul point d'encaissement humain) — **Livré (AR-01 validé par Thierry le 12/09)** : bouton retiré des pages caisse agent/super-admin + policies INSERT quick_sales agent/admin supprimées (migration 082) ; POS accueil inchangé. Anciennement : aujourd'hui `paiement.record` est aussi accordée à admin/comptable/daf (P2) et les pages caisse agent/super-admin (`QuickSaleForm`) encaissent. Routes d'encaissement inventoriées : POST `/api/accueil/pos` (accueil) ; insert direct `quick_sales` via `QuickSaleForm.tsx` (agent/admin/super-admin, RLS) ; `PaymentForm.tsx` (staff) ; liens de paiement publics (déclaration client, vérification staff). Retirer ces canaux = changement de droits réels → GO explicite requis.
 
 ## §4 Interface commune
 

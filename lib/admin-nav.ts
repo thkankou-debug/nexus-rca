@@ -52,6 +52,9 @@ export const ADMIN_NAV_STRUCTURE: AdminNavGroup[] = [
       // (§2.3/§2.7) — sentinelles de rôle, super_admin supervise les deux.
       { key: "pilotage-dg", label: "Pilotage", permission: "__dg__", table: "agrégats", wave: 1, href: "/dashboard/pilotage" },
       { key: "mon-service", label: "Mon service", permission: "__chef__", table: "demandes, profiles", wave: 1, href: "/dashboard/mon-service" },
+      // §10 — consignes descendantes : tout le staff est destinataire
+      // potentiel, l'émission reste gardée par instruction.create.
+      { key: "instructions", label: "Instructions", permission: "__staff__", table: "instructions", wave: 1, href: "/dashboard/instructions" },
       { key: "rapports", label: "Rapports", permission: "finance.report.read", table: "agrégats", wave: 2, href: "#pilotage-rapports" },
     ],
   },

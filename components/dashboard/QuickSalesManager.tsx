@@ -289,12 +289,19 @@ export function QuickSalesManager({
   currentUserId,
   showAgentColumn = false,
   showStats = false,
+  // AR-01 (12/09/2026, décision Thierry) : la réception habilitée est le
+  // SEUL point d'encaissement humain au comptoir (EX-06). Ces pages
+  // deviennent consultation/reçus — la création passe par le Comptoir POS
+  // (/dashboard/accueil/pos). Prop conservée pour un éventuel usage futur
+  // explicitement autorisé, jamais passée à true aujourd'hui.
+  allowCreate = false,
 }: {
   initialSales: QuickSale[];
   agents: AgentInfo[];
   currentUserId: string;
   showAgentColumn?: boolean;
   showStats?: boolean;
+  allowCreate?: boolean;
 }) {
   const [sales, setSales] = useState<QuickSale[]>(initialSales);
   const [showForm, setShowForm] = useState(false);
@@ -415,14 +422,20 @@ export function QuickSalesManager({
               </button>
             </>
           )}
-          <button
-            type="button"
-            onClick={() => setShowForm(true)}
-            className="inline-flex items-center gap-2 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
-          >
-            <Plus className="h-4 w-4" />
-            Nouvelle vente
-          </button>
+          {allowCreate ? (
+            <button
+              type="button"
+              onClick={() => setShowForm(true)}
+              className="inline-flex items-center gap-2 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
+            >
+              <Plus className="h-4 w-4" />
+              Nouvelle vente
+            </button>
+          ) : (
+            <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-semibold text-slate-500">
+              Encaissement réservé au Comptoir POS (Accueil &amp; caisse)
+            </span>
+          )}
         </div>
       </div>
 

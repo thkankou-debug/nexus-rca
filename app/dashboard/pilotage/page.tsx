@@ -43,7 +43,7 @@ export default async function PilotagePage() {
   const stale = new Date(now.getTime() - 15 * 86400000).toISOString();
   const todayDate = now.toISOString().split("T")[0];
 
-  const [demandesRes, paymentsRes, ventesRes, depensesRes, echeancesRes, devisRes, depensesAttenteRes, congesRes, commissionsRes, agentsRes, effectiveNav] =
+  const [demandesRes, paymentsRes, ventesRes, depensesRes, echeancesRes, devisRes, depensesAttenteRes, congesRes, instructionsRes, commissionsRes, agentsRes, effectiveNav] =
     await Promise.all([
       admin
         .from("demandes")
@@ -73,6 +73,11 @@ export default async function PilotagePage() {
         .eq("statut", "en_attente")
         .eq("is_test", includeTest),
       admin.from("leave_requests").select("id", { count: "exact", head: true }).eq("statut", "en_attente"),
+      admin
+        .from("instructions")
+        .select("id, due_date")
+        .eq("author_id", profile.id)
+        .eq("status", "envoyee"),
       admin.from("commissions").select("id", { count: "exact", head: true }).eq("status", "calculee"),
       admin
         .from("profiles")
@@ -188,6 +193,8 @@ export default async function PilotagePage() {
   );
   const congesAttente = congesRes.count ?? 0;
   const commissionsCalculees = commissionsRes.count ?? 0;
+  const instructionsOuvertes = (instructionsRes.data || []) as { id: string; due_date: string | null }[];
+  const instructionsEnRetard = instructionsOuvertes.filter((i) => i.due_date && i.due_date < todayDate).length;
 
   return (
     <ModuleAdminShell
@@ -347,6 +354,19 @@ export default async function PilotagePage() {
                   <dt className="text-body-sm text-ink-muted">Sans mouvement depuis 15 jours</dt>
                   <dd className="text-body-sm font-semibold text-ink [font-variant-numeric:tabular-nums]">
                     {sansMouvement.length}
+                  </dd>
+                </div>
+                <div className="flex items-center justify-between">
+                  <dt className="text-body-sm text-ink-muted">
+                    <Link href="/dashboard/instructions" className="underline-offset-2 hover:underline">
+                      Mes instructions non exécutées
+                    </Link>
+                  </dt>
+                  <dd className="text-body-sm font-semibold text-ink [font-variant-numeric:tabular-nums]">
+                    {instructionsOuvertes.length}
+                    {instructionsEnRetard > 0 && (
+                      <span className="text-status-failure"> · {instructionsEnRetard} en retard</span>
+                    )}
                   </dd>
                 </div>
               </dl>

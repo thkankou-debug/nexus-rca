@@ -2778,3 +2778,51 @@ comportement demandé (« toute transition validée côté serveur »).
 
 **4. Test : `tsc`/`lint`/`build` 0 erreur.** Non vérifié visuellement — à
 valider par Thierry (repli de barre, recherche, cloche) sur la préversion.
+
+---
+
+## AR-01 + Instructions §10 (12/09/2026)
+
+Décisions de Thierry : « oui pour AR-01 et GO pour les instructions ».
+
+**1. AR-01 — exclusivité d'encaissement à la réception (EX-06, §6.2).**
+Bouton « Nouvelle vente » retiré des pages caisse agent/super-admin
+(`QuickSalesManager`, prop `allowCreate` jamais passée — mention « réservé
+au Comptoir POS » à la place) ET migration 082 : policies INSERT
+`quick_sales` agent/admin supprimées en base (« retirer un bouton ne suffit
+pas »). Conservés volontairement : policy super_admin FOR ALL (patron RLS
+du schéma entier — retrait appliqué à l'interface, corrections
+d'exploitation possibles et tracées) ; `PaymentForm`/`payments` (saisie de
+la chaîne §4.3, PAS un encaissement comptoir) ; liens de paiement publics
+(canal en ligne). Documenté dans le fichier de migration.
+
+**2. Instructions (§10) — noyau livré : migration 083, 4 routes, écran,
+notifications.**
+Deux tables (`instructions` + `instruction_recipients`, proposition §14.2
+complète en tête de migration) : référence INS-YYYY-NNNNNN par séquence,
+statut GLOBAL réduit (brouillon/envoyee/cloturee/annulee) et états
+d'exécution PAR DESTINATAIRE (recue → prise_en_charge → en_cours →
+bloquee/soumise/terminee) — le cahier exige des accusés individuels.
+RLS lecture émetteur+destinataires, AUCUNE écriture directe client (routes
+service-role). Permission `instruction.create` : dg, admin, chef_service.
+Routes : POST /api/instructions (émission + notification réelle par
+destinataire), /ack (accusé individuel, exigé avant tout avancement si
+requires_ack), /status (blocage avec note obligatoire, notifications à
+l'émetteur sur bloquee/soumise/terminee), /close (émetteur ou super_admin,
+motif obligatoire à l'annulation, rien n'est supprimé). Écran
+/dashboard/instructions (module unique, tout le staff — nav __staff__ +
+entrée dans AccueilShell pour la caissière, non couverte par is_staff()).
+Pilotage DG : ligne « Mes instructions non exécutées » (+ en retard).
+Chaîne simulée en SQL (rollback) : séquence, états, accusé, doublon
+destinataire refusé — OK.
+
+**Reste du §10, non couvert (assumé) :** délais d'escalade paramétrables,
+remplaçants, boîte d'envoi transactionnelle (outbox), agrégation des
+remontées — chantiers suivants ; répartition d'une instruction en tâches
+liées (« l'Admin peut la répartir en tâches ») non construite, la table
+`taches` existante est le point d'accroche naturel.
+
+**3. Test : `tsc`/`lint`/`build` 0 erreur ; routes présentes au build.
+Non vérifié visuellement** — parcours : test.dg émet vers test.agent →
+l'agent voit la cloche + accuse + signale un blocage → le DG voit
+l'avancement et clôt.

@@ -295,6 +295,15 @@ const ROUTE_ALLOWED_ROLES: Array<{ prefix: string; roles: UserRole[] }> = [
   // Étape 6 — écrans d'accueil DG et Responsable de service (§2.3/§2.7).
   { prefix: "/dashboard/pilotage", roles: ["dg", "super_admin"] },
   { prefix: "/dashboard/mon-service", roles: ["chef_service", "super_admin"] },
+  // §10 — instructions : tout le staff (émission gardée par permission).
+  {
+    prefix: "/dashboard/instructions",
+    roles: ["super_admin", "admin", "dg", "daf", "chef_service", "agent", "comptable", "moderateur", "accueil_caisse"],
+  },
+  {
+    prefix: "/api/instructions",
+    roles: ["super_admin", "admin", "dg", "daf", "chef_service", "agent", "comptable", "moderateur", "accueil_caisse"],
+  },
   { prefix: "/api/paiements", roles: ["comptable", "daf", "admin", "super_admin"] },
   { prefix: "/api/depenses", roles: ["daf", "admin", "super_admin"] },
   { prefix: "/dashboard/super-admin", roles: ["super_admin"] },

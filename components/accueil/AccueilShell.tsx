@@ -13,7 +13,7 @@
 // ============================================================================
 
 import { useRouter, usePathname } from "next/navigation";
-import { Home, Users, ShoppingCart, Wallet } from "lucide-react";
+import { Home, Users, ShoppingCart, Wallet, Megaphone } from "lucide-react";
 import { AdminShell } from "@/components/admin/ui/AdminShell";
 import { BrandMark } from "@/components/admin/ui/BrandMark";
 import { TopbarSearch, TopbarNotifications } from "@/components/admin/ui/TopbarTools";
@@ -31,6 +31,9 @@ const NAV = [
     items: [
       { key: "reception", label: "Poste de réception", href: "/dashboard/accueil", icon: Home },
       { key: "clients", label: "Clients", href: "/dashboard/accueil/clients", icon: Users },
+      // §10 : consignes d'accueil descendantes — la caissière accuse
+      // réception et rend compte depuis le module unique.
+      { key: "instructions", label: "Instructions", href: "/dashboard/instructions", icon: Megaphone },
     ],
   },
   {
