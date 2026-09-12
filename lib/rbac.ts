@@ -320,10 +320,13 @@ export function requiredPermissionForPath(pathname: string): UserRole[] | null {
  */
 export function homeForRole(role: UserRole): string {
   switch (role) {
+    // §1.2 Dashboard Administration : la Vue d'ensemble est l'écran
+    // d'accueil de super_admin et admin (l'ancien tableau de bord reste
+    // accessible par URL directe et par le lien « espace classique »).
     case "super_admin":
-      return "/dashboard/super-admin";
+      return "/dashboard/vue-ensemble";
     case "admin":
-      return "/dashboard/admin";
+      return "/dashboard/vue-ensemble";
     case "agent":
       return "/dashboard/agent";
     case "client":

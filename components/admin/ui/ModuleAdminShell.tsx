@@ -80,7 +80,23 @@ export function ModuleAdminShell({
           ))}
         </>
       }
-      sidebarFooter={<SidebarItem label="Retour à l'espace classique" href="/dashboard" />}
+      sidebarFooter={
+        <SidebarItem
+          label="Retour à l'espace classique"
+          // « /dashboard » redirige désormais super_admin/admin vers la Vue
+          // d'ensemble (§1.2) : pointer directement l'ancien tableau de bord
+          // du rôle pour que ce lien reste un vrai retour, pas une boucle.
+          href={
+            profile.role === "super_admin"
+              ? "/dashboard/super-admin"
+              : profile.role === "admin"
+              ? "/dashboard/admin"
+              : profile.role === "agent"
+              ? "/dashboard/agent"
+              : "/dashboard"
+          }
+        />
+      }
       topbarRight={
         <UserMenu
           name={[profile.prenom, profile.nom].filter(Boolean).join(" ") || profile.email}

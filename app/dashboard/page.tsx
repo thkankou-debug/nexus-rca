@@ -20,10 +20,14 @@ export default async function DashboardRootPage() {
   if (!profile) redirect("/login");
 
   switch (profile.role) {
+    // §1.2 du document Dashboard Administration : super-admin et admin
+    // arrivent sur la Vue d'ensemble (supervision), pas sur l'ancien
+    // tableau de bord — qui reste accessible via « Retour à l'espace
+    // classique » dans la barre latérale du nouveau shell.
     case "super_admin":
-      redirect("/dashboard/super-admin");
+      redirect("/dashboard/vue-ensemble");
     case "admin":
-      redirect("/dashboard/admin");
+      redirect("/dashboard/vue-ensemble");
     case "agent":
       redirect("/dashboard/agent");
     case "client":
