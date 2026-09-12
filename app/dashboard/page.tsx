@@ -28,6 +28,11 @@ export default async function DashboardRootPage() {
       redirect("/dashboard/agent");
     case "client":
       redirect("/dashboard/client");
+    // Espace Accueil & Caisse (NEXUS_RCA_DASHBOARD_ADMINISTRATION.md §1.2) :
+    // chaque métier arrive sur son poste de travail — la caissière sur le
+    // Poste de réception.
+    case "accueil_caisse":
+      redirect("/dashboard/accueil");
   }
 
   // dg, daf, chef_service, comptable, moderateur, partenaire : aucune section

@@ -47,7 +47,10 @@ export async function GET(request: NextRequest) {
       .select("id, agent_id, opened_at, closed_at, opening_balance, expected_balance, actual_balance, discrepancy, status, notes, created_at, profiles(nom, prenom)")
       .order("opened_at", { ascending: false });
 
-    if (role === "agent") {
+    // accueil_caisse : même portée que l'agent — uniquement ses propres
+    // sessions (Espace Accueil & Caisse, §3.3 : la caissière ne voit pas
+    // les sessions des autres postes).
+    if (role === "agent" || role === "accueil_caisse") {
       query = query.eq("agent_id", user.id);
     }
 

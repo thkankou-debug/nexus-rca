@@ -42,8 +42,12 @@ export const ADMIN_NAV_STRUCTURE: AdminNavGroup[] = [
     key: "pilotage",
     label: "Pilotage",
     modules: [
-      // Permission "—" dans la feuille de route : tout staff.
-      { key: "vue-ensemble", label: "Vue d'ensemble", permission: "__staff__", table: "agrégats", wave: 1, href: "#pilotage-vue-ensemble" },
+      // Vue d'ensemble construite en dernier (NEXUS_RCA_DASHBOARD_
+      // ADMINISTRATION.md, Partie 5 étape 8) : supervision agence, réservée
+      // super_admin/admin (§2.1/2.2) — sentinelle __admin__, pas __staff__ :
+      // un chef_service ou un dg a son propre écran d'accueil (pas encore
+      // construit), pas celui-ci.
+      { key: "vue-ensemble", label: "Vue d'ensemble", permission: "__admin__", table: "agrégats", wave: 1, href: "/dashboard/vue-ensemble" },
       { key: "rapports", label: "Rapports", permission: "finance.report.read", table: "agrégats", wave: 2, href: "#pilotage-rapports" },
     ],
   },
@@ -110,11 +114,21 @@ export async function getEffectiveNav(): Promise<AdminNavGroup[]> {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Sentinelle __admin__ (Vue d'ensemble) : rôle admin/super_admin, pas une
+  // permission du catalogue — un seul select indexé, partagé par les checks.
+  const { data: ownProfile } = user
+    ? await supabase.from("profiles").select("role").eq("id", user.id).single()
+    : { data: null };
+  const ownRole = (ownProfile as { role?: string } | null)?.role ?? "";
+  const isAdminRole = ownRole === "admin" || ownRole === "super_admin";
+
   const allModules = ADMIN_NAV_STRUCTURE.flatMap((g) => g.modules);
   const checks = await Promise.all(
     allModules.map((m) =>
       m.permission === "__staff__"
         ? supabase.rpc("is_staff", { user_id: user?.id ?? "" })
+        : m.permission === "__admin__"
+        ? Promise.resolve({ data: isAdminRole })
         : supabase.rpc("has_permission", { perm: m.permission })
     )
   );

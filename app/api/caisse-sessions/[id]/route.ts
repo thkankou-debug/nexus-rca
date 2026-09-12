@@ -58,7 +58,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       opening_balance: number;
     };
 
-    if (role === "agent" && sessionRow.agent_id !== user.id) {
+    if ((role === "agent" || role === "accueil_caisse") && sessionRow.agent_id !== user.id) {
       return NextResponse.json({ success: false, error: "Accès refusé" }, { status: 403 });
     }
 
