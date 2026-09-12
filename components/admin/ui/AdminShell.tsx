@@ -15,8 +15,10 @@ interface AdminShellProps {
   className?: string;
 }
 
-// Compose Sidebar + Topbar. Bibliothèque de démonstration (A2) — n'est PAS
-// branché sur les pages existantes ni sur DashboardShell (gelé par CLAUDE.md).
+// Shell commun de l'administration (cahier des charges §4.1) : barre
+// latérale 240 px repliable à 64 px, barre supérieure (contexte, recherche,
+// notifications, menu utilisateur fournis par l'appelant). Partagé par tous
+// les espaces métiers — DashboardShell (gelé) reste l'ancien shell.
 export function AdminShell({
   sidebarHeader,
   sidebarContent,
@@ -27,10 +29,17 @@ export function AdminShell({
   className,
 }: AdminShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
     <div className={cn("flex min-h-screen bg-surface-sunken", className)}>
-      <Sidebar header={sidebarHeader} footer={sidebarFooter} open={mobileOpen}>
+      <Sidebar
+        header={sidebarHeader}
+        footer={sidebarFooter}
+        open={mobileOpen}
+        collapsed={collapsed}
+        onToggleCollapsed={() => setCollapsed((c) => !c)}
+      >
         {sidebarContent}
       </Sidebar>
 
@@ -41,7 +50,7 @@ export function AdminShell({
         />
       )}
 
-      <div className="flex flex-1 flex-col lg:ml-64">
+      <div className={cn("flex flex-1 flex-col", collapsed ? "lg:ml-16" : "lg:ml-[240px]")}>
         <Topbar
           onMenuClick={() => setMobileOpen((o) => !o)}
           center={topbarCenter}

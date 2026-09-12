@@ -2745,3 +2745,36 @@ qualité perçue est précisément l'objet du retour de Thierry : à valider
 par lui sur la préversion, écran par écran. Si le niveau ne suffit pas
 encore, le chantier suivant est écran par écran (densité, tableaux,
 graphiques) — à cadrer avec lui.
+
+---
+
+## Cahier des charges Administration — Lot 1 (12/09/2026)
+
+Fichier déposé : `NEXUS_RCA_Cahier_des_charges_Administration.md` (v1.0).
+GO explicite de Thierry. Exécuté dans l'ordre que le cahier impose lui-même
+(§19.1 : « l'état réel du dépôt détermine le premier travail nécessaire »).
+
+**1. Livrable Lot 1 : `docs/AUDIT_CDC.md` — audit de conformité exigence
+par exigence** (Livré / Partiel / Absent / Bloqué-AR / Non vérifiable),
+avec l'inventaire des routes d'encaissement (EX-06), les 7 décisions
+AR-01→AR-07 en attente de Thierry, et les lots suivants proposés.
+
+**2. Shell §4.1 complété (exécutable sans arbitrage) :**
+barre latérale 240 px repliable à 64 px (contexte React, libellés masqués,
+logo seul) ; recherche globale RÉELLEMENT câblée sur /api/search (proposée
+uniquement aux rôles que la route autorise : agent/admin/super_admin —
+l'élargir est une décision de portée, pas un câblage) ; cloche de
+notifications câblée sur /api/notifications (liste + marquer tout lu),
+tous rôles.
+
+**3. Correction §7.2 : `DemandesManager.tsx` contournait la route de
+statut** (écriture directe `demandes.statut` via Supabase client — ni
+historique, ni machine à états, ni audit, ni email). C'était la cause
+racine du constat A6 #11 (`demande_status_history` à 0 ligne malgré des
+changements réels). Corrigé : appel de POST /api/demandes/[id]/status.
+Conséquence assumée : les transitions non prévues par la machine à états
+sont désormais REFUSÉES aussi sur les anciennes pages demandes — c'est le
+comportement demandé (« toute transition validée côté serveur »).
+
+**4. Test : `tsc`/`lint`/`build` 0 erreur.** Non vérifié visuellement — à
+valider par Thierry (repli de barre, recherche, cloche) sur la préversion.

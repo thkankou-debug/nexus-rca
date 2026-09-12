@@ -60,21 +60,30 @@ export function DemandesManager({
   const filtered =
     filter === "all" ? demandes : demandes.filter((d) => d.statut === filter);
 
+  // Cahier des charges §7.2 (12/09/2026) : toute transition passe par la
+  // route serveur — historique (demande_status_history), machine à états,
+  // audit et email client. L'ancienne écriture directe Supabase contournait
+  // tout cela et laissait l'historique vide (cause du constat A6 #11).
   const updateStatus = async (id: string, statut: DemandeStatus) => {
     setSavingId(id);
-    const { error } = await supabase
-      .from("demandes")
-      .update({ statut })
-      .eq("id", id);
-    setSavingId(null);
-    if (error) {
-      toast.error("Erreur de mise a jour");
-      return;
+    try {
+      const res = await fetch(`/api/demandes/${id}/status`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ statut }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || json.success === false) {
+        toast.error(json.error || "Erreur de mise a jour");
+        return;
+      }
+      setDemandes((list) =>
+        list.map((d) => (d.id === id ? { ...d, statut } : d))
+      );
+      toast.success("Statut mis a jour");
+    } finally {
+      setSavingId(null);
     }
-    setDemandes((list) =>
-      list.map((d) => (d.id === id ? { ...d, statut } : d))
-    );
-    toast.success("Statut mis a jour");
   };
 
   const saveNotes = async (id: string, notes: string) => {

@@ -16,6 +16,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { Home, Users, ShoppingCart, Wallet } from "lucide-react";
 import { AdminShell } from "@/components/admin/ui/AdminShell";
 import { BrandMark } from "@/components/admin/ui/BrandMark";
+import { TopbarSearch, TopbarNotifications } from "@/components/admin/ui/TopbarTools";
 import { SidebarGroup, SidebarItem } from "@/components/admin/ui/SidebarGroup";
 import { UserMenu } from "@/components/admin/ui/UserMenu";
 import { Breadcrumb, type BreadcrumbItem } from "@/components/admin/ui/Breadcrumb";
@@ -91,13 +92,29 @@ export function AccueilShell({
           ))}
         </>
       }
-      sidebarFooter={<SidebarItem label="Retour à l'espace classique" href="/dashboard" />}
+      sidebarFooter={
+        // accueil_caisse n'a pas d'espace classique (« /dashboard » le
+        // ramènerait ici) — le lien n'existe que pour la supervision
+        // admin/super_admin.
+        profile.role === "super_admin" || profile.role === "admin" ? (
+          <SidebarItem
+            label="Retour à l'espace classique"
+            href={profile.role === "super_admin" ? "/dashboard/super-admin" : "/dashboard/admin"}
+          />
+        ) : null
+      }
+      topbarCenter={
+        ["super_admin", "admin"].includes(profile.role as string) ? <TopbarSearch /> : undefined
+      }
       topbarRight={
-        <UserMenu
-          name={[profile.prenom, profile.nom].filter(Boolean).join(" ") || profile.email}
-          email={profile.email}
-          onLogout={handleLogout}
-        />
+        <>
+          <TopbarNotifications />
+          <UserMenu
+            name={[profile.prenom, profile.nom].filter(Boolean).join(" ") || profile.email}
+            email={profile.email}
+            onLogout={handleLogout}
+          />
+        </>
       }
     >
       {showHeader ? (

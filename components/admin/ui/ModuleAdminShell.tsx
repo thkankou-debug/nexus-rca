@@ -16,6 +16,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { FolderOpen } from "lucide-react";
 import { AdminShell } from "@/components/admin/ui/AdminShell";
 import { BrandMark } from "@/components/admin/ui/BrandMark";
+import { TopbarSearch, TopbarNotifications } from "@/components/admin/ui/TopbarTools";
 import { SidebarGroup, SidebarItem } from "@/components/admin/ui/SidebarGroup";
 import { UserMenu } from "@/components/admin/ui/UserMenu";
 import { Breadcrumb, type BreadcrumbItem } from "@/components/admin/ui/Breadcrumb";
@@ -113,12 +114,23 @@ export function ModuleAdminShell({
           />
         ) : null
       }
+      topbarCenter={
+        // La route /api/search ne porte aujourd'hui que les portées
+        // agent/admin/super_admin — la proposer à un rôle qu'elle refuse
+        // serait un champ mort (voir docs/AUDIT_CDC.md).
+        ["super_admin", "admin", "agent"].includes(profile.role as string) ? (
+          <TopbarSearch />
+        ) : undefined
+      }
       topbarRight={
-        <UserMenu
-          name={[profile.prenom, profile.nom].filter(Boolean).join(" ") || profile.email}
-          email={profile.email}
-          onLogout={handleLogout}
-        />
+        <>
+          <TopbarNotifications />
+          <UserMenu
+            name={[profile.prenom, profile.nom].filter(Boolean).join(" ") || profile.email}
+            email={profile.email}
+            onLogout={handleLogout}
+          />
+        </>
       }
     >
       {showHeader ? (
