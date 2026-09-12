@@ -95,6 +95,10 @@ export const ADMIN_NAV_STRUCTURE: AdminNavGroup[] = [
     key: "contenus",
     label: "Contenus",
     modules: [
+      // §5.9 — espace Modérateur : hub réel réutilisant les écrans P8
+      // (contenus du site, FAQ, témoignages). cms.content.write est seedée
+      // pour moderateur + admin ; super_admin passe toujours.
+      { key: "moderation", label: "Contenus du site", permission: "cms.content.write", table: "contenus_site, faq, temoignages", wave: 1, href: "/dashboard/moderation" },
       { key: "services-tarifs", label: "Services et tarifs", permission: "cms.service.write", table: "services", wave: 2, href: "#contenus-services" },
       { key: "communications", label: "Communications", permission: "message.read", table: "demande_messages", wave: 1, href: "#contenus-communications" },
       { key: "documents", label: "Documents", permission: "document.read", table: "Storage", wave: 2, href: "#contenus-documents" },

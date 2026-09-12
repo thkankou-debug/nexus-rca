@@ -47,6 +47,11 @@ export default async function DashboardRootPage() {
       redirect("/dashboard/pilotage");
     case "chef_service":
       redirect("/dashboard/mon-service");
+    // §5.9/§5.10 : modérateur → contenus, partenaire → dossiers partagés.
+    case "moderateur":
+      redirect("/dashboard/moderation");
+    case "partenaire":
+      redirect("/dashboard/partenaire");
   }
 
   // dg, daf, chef_service, comptable, moderateur, partenaire : aucune section

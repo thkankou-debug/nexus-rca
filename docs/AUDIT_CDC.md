@@ -14,7 +14,7 @@
 | Domaine | État global |
 |---|---|
 | §4 Shell commun, centre de pilotage | **Livré** (recherche, notifications, repli 240/64 câblés ce jour) — écarts typographiques §4.3 à arbitrer |
-| §5 Espaces métiers (11 profils) | 8/11 **livrés** (super-admin, admin, DG, DAF, comptable, chef, accueil, client) · agent **partiel** (espace classique) · modérateur/partenaire **absents** |
+| §5 Espaces métiers (11 profils) | **10/11 livrés** (modérateur + partenaire livrés le 12/09) · agent **partiel** (espace classique fonctionnel, non rhabillé) |
 | §6 Permissions | **Partiel** — matrice §6.1 largement en place ; exclusivité d'encaissement §6.2 **Bloqué-AR-01** |
 | §7 CRM et cycle de vie | **Partiel** — identité/fiche/étapes livrées ; file d'accueil, acceptation d'affectation absents |
 | §8 POS et caisse | **Partiel** — cœur livré ; monnaie/mouvements/état « correction demandée » absents (schéma) |
@@ -61,8 +61,8 @@
 | Chef de service | `/dashboard/mon-service` | **Livré** | Portée = pôle (demandes.service_id vide partout — documenté) ; « instructions reçues » absentes |
 | Accueil & caisse | `/dashboard/accueil` | **Livré** | File d'accueil livrée (12/09) ; remises/tarif contrôlé serveur : voir §8 (AR-04) |
 | Agent | `/dashboard/agent` (classique) | **Partiel** | Pas encore rhabillé dans le nouveau shell ; « instructions » absentes ; le reste existe (dossiers, docs, messages, notes, RH) |
-| Modérateur | — | **Absent** | Écrans contenus existent côté super-admin ; aucun espace modérateur raccordé |
-| Partenaire | — | **Absent** | `dossier_partages` existe (schéma) ; aucun écran |
+| Modérateur | `/dashboard/moderation` | **Livré (12/09)** | Hub + contenus/FAQ/témoignages (réutilise P8, API gardées cms.*) ; médias et pages de prestations restent côté admin |
+| Partenaire | `/dashboard/partenaire` | **Livré (12/09)** | Dossiers partagés + retours (accusé/avis/décision/complément, table partner_returns 086) avec notification au responsable ; révocation du partage bloque page/API/dépôt ; l affichage des retours dans la fiche dossier staff reste à raccorder |
 | Client | `/dashboard/client` | **Livré** (V3/P9) | Acceptation de devis en ligne absente (décision P6 : hors V3) |
 
 - Identifiant technique du rôle : `accueil_caisse` (migration 077) au lieu de `reception_cashier` proposé — **décision déjà prise** (document Dashboard Administration §3.5) ; à confirmer comme définitif (AR-01).

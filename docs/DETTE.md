@@ -2859,3 +2859,41 @@ rejeu refusé par la contrainte, visite en_attente→en_charge→orientee OK.**
 Non vérifié visuellement — parcours : POS double-clic sur « Encaisser »
 (un seul reçu), Tickets & reçus → Réimprimer (bandeau DUPLICATA), Poste de
 réception → Enregistrer une arrivée → Prendre en charge → Orienter.
+
+---
+
+## Espaces Modérateur (§5.9) et Partenaire (§5.10) (12/09/2026)
+
+Les deux derniers profils sans espace. 10/11 espaces livrés.
+
+**1. Modérateur — /dashboard/moderation** (hub + contenus du site + FAQ +
+témoignages). Réutilisation intégrale des écrans P8 : les managers écrivent
+via /api/{contenus-site,faq,temoignages}, déjà gardées par
+cms.content.write / cms.faq.write — seedées pour moderateur depuis P8, il
+ne manquait QUE les pages accessibles au rôle. Aucun accès CRM/finance/notes
+(nav filtrée par permissions, pages gardées). Hors périmètre modérateur,
+laissé côté admin : médias, pages de prestations, partenaires (cms.
+partenaire.write = admin seul), informations institutionnelles.
+
+**2. Partenaire — /dashboard/partenaire** (navigation simplifiée §4.1 :
+en-tête logo, pas le shell complet). Dossiers expressément partagés
+(dossier_partages) en champs limités — jamais notes_internes ni finance ;
+`demandes` n'a aucune policy partenaire, lecture service-role après garde
+avec périmètre reconstruit (SEC-03). Migration 086 `partner_returns`
+(proposition §14.2 en tête) : accusé / avis / décision / demande de
+complément — le dépôt revérifie le partage à CHAQUE appel (une révocation
+bloque page, API et dépôt : R17), notifie le responsable du dossier et ne
+modifie jamais le dossier. **À raccorder** : afficher partner_returns dans
+la fiche dossier staff (aujourd'hui le responsable est notifié avec lien
+vers la fiche, mais la fiche ne liste pas encore les retours) ; dépôt de
+FICHIER partenaire non construit (texte seulement — le flux documents
+partagés est un chantier storage à part).
+
+**3. Routage** : moderateur → /dashboard/moderation, partenaire →
+/dashboard/partenaire (homeForRole + /dashboard + préfixes RBAC). Nav :
+module « Contenus du site » (cms.content.write) wave 1.
+
+**4. Tests : tsc/build 0 erreur ; SQL rollback partner_returns (FK + type)
+OK.** Non vérifié visuellement — test.moderateur (hub + édition FAQ) et
+test.partenaire (nécessite un partage : depuis la fiche dossier staff ou
+en base) à dérouler.

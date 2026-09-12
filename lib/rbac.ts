@@ -295,6 +295,10 @@ const ROUTE_ALLOWED_ROLES: Array<{ prefix: string; roles: UserRole[] }> = [
   // Étape 6 — écrans d'accueil DG et Responsable de service (§2.3/§2.7).
   { prefix: "/dashboard/pilotage", roles: ["dg", "super_admin"] },
   { prefix: "/dashboard/mon-service", roles: ["chef_service", "super_admin"] },
+  // §5.9/§5.10 — espaces Modérateur et Partenaire.
+  { prefix: "/dashboard/moderation", roles: ["moderateur", "admin", "super_admin"] },
+  { prefix: "/dashboard/partenaire", roles: ["partenaire", "super_admin"] },
+  { prefix: "/api/partenaire", roles: ["partenaire", "super_admin"] },
   // §10 — instructions : tout le staff (émission gardée par permission).
   {
     prefix: "/dashboard/instructions",
@@ -362,7 +366,12 @@ export function homeForRole(role: UserRole): string {
       return "/dashboard/pilotage";
     case "chef_service":
       return "/dashboard/mon-service";
-    // moderateur, partenaire : aucune
+    // §5.9/§5.10 : modérateur → contenus, partenaire → dossiers partagés.
+    case "moderateur":
+      return "/dashboard/moderation";
+    case "partenaire":
+      return "/dashboard/partenaire";
+    // aucune
     // section dédiée pour l'instant (arrive avec A3). "/dashboard" n'est
     // gardé par aucun préfixe RBAC (voir ROUTE_ALLOWED_ROLES) — sûr comme
     // cible de redirection, pas de boucle possible.
