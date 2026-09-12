@@ -2165,7 +2165,7 @@ Dossiers/Clients, il n'y a pas de sous-lot "fiche" pour Rendez-vous.
 `tsc`/`lint`/`build` (cache vidé) : 0 erreur, `/dashboard/rdv` compile
 avec `AdminShell` (3 entrées désormais dans la barre latérale : Dossiers,
 Clients, Rendez-vous). Les 3 anciennes pages compilent toujours à
-l'identique. **Non vérifié visuellement** — à confirmer par Thierry avec
+l'identique. ~~Non vérifié visuellement~~ **Vérifié visuellement par Thierry le 11/09/2026 — « ça marche »** avec
 `test.agent@nexusrca.test` (doit voir son RDV de test + pouvoir "Prendre"
 un RDV non assigné) et un compte admin/super_admin (doit voir tous les
 RDV + pouvoir assigner).
@@ -2645,7 +2645,60 @@ mesurable.
 Preuve : apres_saisie=pending, apres_validation=validated, reconciled=t,
 validated_by_ok=t ; l'auto-validation est bien refusée par le trigger
 (Self-validation forbidden) ; payments toujours à 3 lignes, 0 résidu.
-**Non vérifié visuellement** — à confirmer par Thierry avec
+~~Non vérifié visuellement~~ **Vérifié visuellement par Thierry le 11/09/2026 — « ça marche »** avec
 test.comptable@nexusrca.test (saisie + rapprochement) puis
 test.daf@nexusrca.test (validation, dépenses, clôture de session,
 commissions) sur la préversion.
+
+---
+
+## Étape 6 — Espaces DG et Responsable de service (11/09/2026)
+
+Dernière étape de l'ordre de construction (Partie 5). Lecture et arbitrage
+uniquement — aucune nouvelle écriture, aucune migration, aucune permission
+ajoutée (routes en lecture via service-role après garde requireProfile,
+même patron que les étapes 4/5).
+
+**1. Découverte structurelle : `demandes.service_id` est NULL sur les 19 dossiers réels — la portée chef de service (L3) était vide partout.**
+Vérifié avant de coder. Le périmètre réellement mesurable est le PÔLE :
+`profiles.service_id` → `services.categorie` → `categorie_dossier`
+(colonne propre et renseignée sur toutes les lignes). Mapping
+`POLE_TO_CATEGORIES` posé dans `lib/demande-categories.ts` (pur, partagé) :
+Visa et mobilite→[visa], Etudes internationales→[etudes_bourses],
+Assurance et voyage→[assurances, billets_hotels], Reseau
+international→[transferts], Financement et incubation→
+[financement_incubateur], Digitalisation→[digitalisation], Services
+administratifs→[recouvrement, autres], Accompagnement business/transverse→[].
+`getAllDossiersForRole` (L3) élargi en conséquence : `service_id` OU
+catégorie du pôle — le module Dossiers du chef passe de 0 à 5 dossiers
+réels (vérifié contre la base). `service_id` reste prioritaire quand il
+sera renseigné un jour. **À trancher** un jour : renseigner
+`demandes.service_id` à la création (formulaire/accueil) pour rendre le
+mapping par pôle superflu.
+
+**2. /dashboard/pilotage (DG — §2.3) et /dashboard/mon-service (chef — §2.7), ModuleAdminShell, sentinelles `__dg__`/`__chef__` dans admin-nav.**
+Atterrissage §1.2 : dg → pilotage, chef_service → mon-service (homeForRole
++ /dashboard + ROUTE_ALLOWED_ROLES). super_admin supervise les deux (un
+super_admin sans service voit l'état vide honnête sur Mon service).
+
+**3. Chiffres honnêtes (§I.6) — écarts assumés vs document :**
+Délai moyen, « taux de clôture dans les délais » et « dossiers en retard
+par agent » (au sens délais) NON affichés : demande_status_history vide,
+deadline non renseignée (A6 #11, inchangé). « Dossiers clos ce mois » (DG)
+= statut terminal + updated_at dans le mois, approximation étiquetée à
+l'écran. « À valider » du DG = lecture seule avec compteurs (devis
+envoyés, dépenses en attente, congés en attente, commissions calculées) :
+les validations opérationnelles vivent en Trésorerie (DAF) et au module
+RH — aucun seuil « devis au-dessus du seuil » n'existe dans
+agency_settings, **à paramétrer** si le DG doit un jour valider lui-même.
+Rapports PDF : le mensuel/journalier/annuel existant reste sur
+/dashboard/super-admin/rapports (super_admin) — pas dupliqué chez le DG,
+**à raccorder** quand la page rapports sera unifiée. Évolution 12 mois :
+dossiers créés (mesurable) + encaissé validé (chaîne récente — historique
+antérieur hors chaîne, dit à l'écran). RDV « du service » = RDV des agents
+rattachés au service (appointments n'a pas de service_id).
+
+**4. Test : `tsc`/`lint`/`build` 0 erreur ; périmètre chef vérifié contre la base réelle (5 dossiers visa pour le service Visa & e-Visa, 0 avant).**
+**Non vérifié visuellement** — à confirmer par Thierry avec
+test.dg@nexusrca.test (Pilotage) et test.chefservice@nexusrca.test
+(Mon service, rattaché au service Visa & e-Visa).

@@ -153,3 +153,24 @@ export function getCategorieFromService(service: string | null | undefined): Cat
 export function listCategoriesMeta(): CategorieMeta[] {
   return CATEGORIES_DOSSIER.map((slug) => CATEGORIE_META[slug]);
 }
+
+/**
+ * Étape 6 (Espaces DG / Responsable de service) : pôle officiel
+ * (services.categorie) → catégories de dossiers supervisées. Périmètre du
+ * chef de service : demandes.service_id est NULL sur tous les dossiers
+ * réels (11/09/2026), le pôle via categorie_dossier est le périmètre
+ * réellement mesurable — service_id reste prioritaire quand il sera
+ * renseigné. "Accompagnement business" et "transverse" n'ont aucune
+ * catégorie de dossier correspondante.
+ */
+export const POLE_TO_CATEGORIES: Record<string, CategorieDossier[]> = {
+  "Visa et mobilite": ["visa"],
+  "Etudes internationales": ["etudes_bourses"],
+  "Assurance et voyage": ["assurances", "billets_hotels"],
+  "Reseau international": ["transferts"],
+  "Financement et incubation": ["financement_incubateur"],
+  "Digitalisation et technologie": ["digitalisation"],
+  "Services administratifs": ["recouvrement", "autres"],
+  "Accompagnement business": [],
+  transverse: [],
+};

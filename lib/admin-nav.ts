@@ -48,6 +48,10 @@ export const ADMIN_NAV_STRUCTURE: AdminNavGroup[] = [
       // un chef_service ou un dg a son propre écran d'accueil (pas encore
       // construit), pas celui-ci.
       { key: "vue-ensemble", label: "Vue d'ensemble", permission: "__admin__", table: "agrégats", wave: 1, href: "/dashboard/vue-ensemble" },
+      // Étape 6 : écrans d'accueil des métiers DG et Responsable de service
+      // (§2.3/§2.7) — sentinelles de rôle, super_admin supervise les deux.
+      { key: "pilotage-dg", label: "Pilotage", permission: "__dg__", table: "agrégats", wave: 1, href: "/dashboard/pilotage" },
+      { key: "mon-service", label: "Mon service", permission: "__chef__", table: "demandes, profiles", wave: 1, href: "/dashboard/mon-service" },
       { key: "rapports", label: "Rapports", permission: "finance.report.read", table: "agrégats", wave: 2, href: "#pilotage-rapports" },
     ],
   },
@@ -126,6 +130,9 @@ export async function getEffectiveNav(): Promise<AdminNavGroup[]> {
     : { data: null };
   const ownRole = (ownProfile as { role?: string } | null)?.role ?? "";
   const isAdminRole = ownRole === "admin" || ownRole === "super_admin";
+  // Étape 6 : sentinelles de rôle supplémentaires — super_admin supervise.
+  const isDgRole = ownRole === "dg" || ownRole === "super_admin";
+  const isChefRole = ownRole === "chef_service" || ownRole === "super_admin";
 
   const allModules = ADMIN_NAV_STRUCTURE.flatMap((g) => g.modules);
   const checks = await Promise.all(
@@ -134,6 +141,10 @@ export async function getEffectiveNav(): Promise<AdminNavGroup[]> {
         ? supabase.rpc("is_staff", { user_id: user?.id ?? "" })
         : m.permission === "__admin__"
         ? Promise.resolve({ data: isAdminRole })
+        : m.permission === "__dg__"
+        ? Promise.resolve({ data: isDgRole })
+        : m.permission === "__chef__"
+        ? Promise.resolve({ data: isChefRole })
         : supabase.rpc("has_permission", { perm: m.permission })
     )
   );

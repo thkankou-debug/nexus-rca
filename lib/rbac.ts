@@ -292,6 +292,9 @@ const ROUTE_ALLOWED_ROLES: Array<{ prefix: string; roles: UserRole[] }> = [
   // gardées une à une par assertPermission() côté serveur.
   { prefix: "/dashboard/tresorerie", roles: ["daf", "admin", "super_admin"] },
   { prefix: "/dashboard/compta", roles: ["comptable", "daf", "admin", "super_admin"] },
+  // Étape 6 — écrans d'accueil DG et Responsable de service (§2.3/§2.7).
+  { prefix: "/dashboard/pilotage", roles: ["dg", "super_admin"] },
+  { prefix: "/dashboard/mon-service", roles: ["chef_service", "super_admin"] },
   { prefix: "/api/paiements", roles: ["comptable", "daf", "admin", "super_admin"] },
   { prefix: "/api/depenses", roles: ["daf", "admin", "super_admin"] },
   { prefix: "/dashboard/super-admin", roles: ["super_admin"] },
@@ -345,7 +348,12 @@ export function homeForRole(role: UserRole): string {
       return "/dashboard/tresorerie";
     case "comptable":
       return "/dashboard/compta";
-    // dg, chef_service, moderateur, partenaire : aucune
+    // Étape 6 (§1.2) : DG → Pilotage, chef de service → Mon service.
+    case "dg":
+      return "/dashboard/pilotage";
+    case "chef_service":
+      return "/dashboard/mon-service";
+    // moderateur, partenaire : aucune
     // section dédiée pour l'instant (arrive avec A3). "/dashboard" n'est
     // gardé par aucun préfixe RBAC (voir ROUTE_ALLOWED_ROLES) — sûr comme
     // cible de redirection, pas de boucle possible.

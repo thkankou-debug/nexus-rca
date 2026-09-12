@@ -6,6 +6,7 @@
 import { createClient } from "@/lib/supabase/server";
 import {
   CATEGORIES_DOSSIER,
+  POLE_TO_CATEGORIES,
   type CategorieDossier,
 } from "@/lib/demande-categories";
 import type { Demande } from "@/types";
@@ -234,7 +235,25 @@ export async function getAllDossiersForRole(profile: {
 
   if (profile.role === "chef_service") {
     if (!profile.service_id) return [];
-    query = query.eq("service_id", profile.service_id);
+    // Étape 6 (11/09/2026) : demandes.service_id est NULL sur tous les
+    // dossiers réels — la portée par service_id seul était vide partout.
+    // Élargie au pôle du service (categorie_dossier, renseignée sur toutes
+    // les lignes) via le même mapping que l'écran Mon service
+    // (lib/pilotage-server.ts). service_id reste prioritaire quand il sera
+    // renseigné.
+    const { data: svc } = await supabase
+      .from("services")
+      .select("categorie")
+      .eq("id", profile.service_id)
+      .single();
+    const cats = svc ? POLE_TO_CATEGORIES[(svc as { categorie: string }).categorie] ?? [] : [];
+    if (cats.length > 0) {
+      query = query.or(
+        `service_id.eq.${profile.service_id},categorie_dossier.in.(${cats.join(",")})`
+      );
+    } else {
+      query = query.eq("service_id", profile.service_id);
+    }
   } else if (profile.role === "agent") {
     query = query.eq("agent_id", profile.id);
   } else if (

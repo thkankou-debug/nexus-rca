@@ -42,6 +42,11 @@ export default async function DashboardRootPage() {
       redirect("/dashboard/tresorerie");
     case "comptable":
       redirect("/dashboard/compta");
+    // Étape 6 (§1.2) : DG → Pilotage, chef de service → Mon service.
+    case "dg":
+      redirect("/dashboard/pilotage");
+    case "chef_service":
+      redirect("/dashboard/mon-service");
   }
 
   // dg, daf, chef_service, comptable, moderateur, partenaire : aucune section
