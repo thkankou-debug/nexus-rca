@@ -355,7 +355,7 @@ export function homeForRole(role: UserRole): string {
       return "/dashboard/client";
     case "accueil_caisse":
       // Page d'arrivée = Encaissement libre (instruction 12/09/2026).
-      return "/dashboard/accueil/encaissement";
+      return "/dashboard/accueil/caisse";
     // Étape 5 (§1.2) : le DAF arrive sur la Trésorerie, le comptable sur
     // la Saisie du jour.
     case "daf":

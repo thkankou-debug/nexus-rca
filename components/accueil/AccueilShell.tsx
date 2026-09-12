@@ -13,7 +13,7 @@
 // ============================================================================
 
 import { useRouter, usePathname } from "next/navigation";
-import { Home, Users, ShoppingCart, Wallet, Megaphone, ReceiptText, Banknote, Printer } from "lucide-react";
+import { Home, Users, Wallet, Megaphone, ReceiptText, Banknote, Printer } from "lucide-react";
 import { AdminShell } from "@/components/admin/ui/AdminShell";
 import { BrandMark } from "@/components/admin/ui/BrandMark";
 import { TopbarSearch, TopbarNotifications } from "@/components/admin/ui/TopbarTools";
@@ -24,18 +24,20 @@ import { PageHeader } from "@/components/admin/ui/PageHeader";
 import { createClient } from "@/lib/supabase/client";
 import type { Profile } from "@/types";
 
-// Réorganisation (instruction Thierry 12/09) : l'Encaissement libre en
-// PREMIÈRE position (page d'arrivée), toutes les fonctions existantes
-// conservées, aucun doublon — chaque entrée mène à une page distincte.
+// Reprise Accueil & caisse (12/09/2026, §1/§3) : UNE entrée Caisse (les deux
+// modes de saisie sont des onglets de la même page — plus de menus
+// redondants), toutes les fonctions existantes conservées, chaque entrée
+// mène à une fonction opérationnelle. Les anciennes URL /encaissement et
+// /pos redirigent vers la Caisse unifiée. Factures et Agenda entreront dans
+// la nav avec leur module (pas de bouton sans effet).
 const NAV = [
   {
     key: "caisse",
     label: "Caisse",
     items: [
-      { key: "encaissement", label: "Encaissement libre", href: "/dashboard/accueil/encaissement", icon: Banknote },
-      { key: "pos", label: "Comptoir POS (catalogue)", href: "/dashboard/accueil/pos", icon: ShoppingCart },
-      { key: "recus", label: "Tickets & reçus", href: "/dashboard/accueil/recus", icon: ReceiptText },
-      { key: "session", label: "Session de caisse", href: "/dashboard/accueil/session", icon: Wallet },
+      { key: "caisse", label: "Caisse (encaissement)", href: "/dashboard/accueil/caisse", icon: Banknote },
+      { key: "recus", label: "Paiements & reçus", href: "/dashboard/accueil/recus", icon: ReceiptText },
+      { key: "session", label: "Session & clôture", href: "/dashboard/accueil/session", icon: Wallet },
       { key: "imprimante", label: "Imprimante", href: "/dashboard/accueil/imprimante", icon: Printer },
     ],
   },

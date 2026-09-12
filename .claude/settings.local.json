@@ -205,7 +205,8 @@
       "PowerShell($c = Get-NetTCPConnection -LocalPort 3123 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false; \"arrete\" } else { \"deja arrete\" })",
       "Bash(grep -n -- '--//\\\\|-- //' components/accueil/CaisseLibre.tsx)",
       "PowerShell($c = Get-NetTCPConnection -LocalPort 3124 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"port libre\")",
-      "PowerShell($c = Get-NetTCPConnection -LocalPort 3124 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")"
+      "PowerShell($c = Get-NetTCPConnection -LocalPort 3124 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")",
+      "PowerShell($c = Get-NetTCPConnection -LocalPort 3125 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")"
     ]
   }
 }

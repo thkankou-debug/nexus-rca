@@ -3222,3 +3222,45 @@ d'abord votre session » au lieu de l'erreur SQL brute.
 **Reste du cahier (points 1, 3, 5-12 + agenda RDV partagé)** : périmètre
 phasé présenté à Thierry — GO attendu par phase, conformément à sa
 méthode. Rien d'autre n'a été modifié dans ce lot.
+
+---
+
+## 12/09/2026 — Reprise Accueil & caisse : PHASE B (caisse unifiée) livrée
+
+**Une caisse, une session, deux modes de saisie (§1)** : nouvelle page
+`/dashboard/accueil/caisse` (atterrissage du rôle accueil_caisse) avec le
+poste de travail `CaisseWorkspace` : onglets « Encaissement rapide »
+(CaisseLibre, mode embedded) et « Vente catalogue (POS) » (PosComptoir).
+Les deux onglets partagent la même session, la même route
+`/api/accueil/pos`, le même journal (`quick_sales.session_id`, trigger
+091), les mêmes calculs et les mêmes reçus. Changer d'onglet ne perd pas
+la saisie en cours (les deux restent montés).
+
+**Ouverture obligatoire (§2)** : si aucune session, l'écran « Ouvrir ma
+caisse » s'affiche EN PRIORITÉ — fonds réellement compté, détail des
+coupures facultatif (5 billets XAF + pièces, total vérifié CONTRE le
+fonds côté client ET serveur : 400 si écart), observation, poste,
+opératrice, date/heure. Migration 092 (poste, opening_breakdown,
+opening_note — additive, appliquée + committée). Session soumise
+(a_cloturer) → écran « Journée soumise — encaissements arrêtés » avec
+lien vers l'état. La garantie ultime reste le trigger 091 en base.
+
+**Espace organisé (§3)** : nav = Caisse (encaissement) · Paiements &
+reçus · Session & clôture · Imprimante · Poste de réception · Clients &
+dossiers · Instructions — aucune entrée morte, aucun doublon. Bandeau de
+contexte permanent en session ouverte : opératrice, poste, heure
+d'ouverture, espèces théoriques, lien « Gérer ma session ».
+`/encaissement` et `/pos` redirigent vers la Caisse unifiée (rien de
+supprimé, aucune ancienne route ne contourne le gate). homeForRole et
+/dashboard mis à jour.
+
+**Vérifications** : tsc + build 0 erreur ; HTTP authentifié sur build
+prod local — session ouverte : onglets + bandeau, gate absent ; aucune
+session : gate présent (fonds/coupures/observation), onglets absents ;
+redirections effectives ; coupures incohérentes refusées 400 par l'API.
+
+**À suivre (GO Thierry B→C→D→E→F)** : Phase C (ventilation par moyen,
+cautions dans le suivi de journée, rapport de clôture téléchargeable,
+session interrompue/changement d'opératrice), puis D (factures PDF —
+mentions fiscales à fournir par Thierry), E (agenda RDV partagé), F
+(recette de bout en bout §12).

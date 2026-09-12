@@ -79,10 +79,10 @@ export default async function PosteReceptionPage() {
       hint: "Depuis la fiche du client, puis orientation",
     },
     {
-      href: "/dashboard/accueil/encaissement",
+      href: "/dashboard/accueil/caisse",
       icon: ShoppingCart,
       label: "Encaisser un paiement",
-      hint: session?.status === "ouverte" ? "Encaissement libre actif" : "Ouvrez d'abord votre caisse",
+      hint: session?.status === "ouverte" ? "Caisse ouverte — deux modes de saisie" : "Ouvrez d'abord votre caisse",
     },
   ];
 

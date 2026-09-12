@@ -110,6 +110,7 @@ export function CaisseLibre({
   raccourcis,
   catalogue = [],
   credits = [],
+  embedded = false,
 }: {
   session: SessionSnapshot | null;
   caissiereNom: string;
@@ -117,6 +118,9 @@ export function CaisseLibre({
   /** Catalogue complet des services actifs — la désignation se choisit OU se saisit. */
   catalogue?: RaccourciService[];
   credits?: PosCredit[];
+  /** true = monté dans le poste de travail Caisse (onglet) : le bandeau de
+      contexte du workspace remplace le titre et le pill session locaux. */
+  embedded?: boolean;
 }) {
   const router = useRouter();
   const sessionOpen = session?.status === "ouverte";
@@ -516,10 +520,12 @@ export function CaisseLibre({
     <div className="space-y-4">
       {/* ── Barre supérieure : titre, transaction, session, imprimante ── */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
-        <div>
-          <h1 className="font-display text-display-sm text-ink">Encaissement libre</h1>
-          <p className="mt-0.5 text-body-sm text-ink-muted">Page d&rsquo;accueil de la réception</p>
-        </div>
+        {!embedded && (
+          <div>
+            <h1 className="font-display text-display-sm text-ink">Encaissement libre</h1>
+            <p className="mt-0.5 text-body-sm text-ink-muted">Page d&rsquo;accueil de la réception</p>
+          </div>
+        )}
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
@@ -529,6 +535,7 @@ export function CaisseLibre({
             <Plus className="h-4 w-4" />
             Nouvelle transaction
           </button>
+          {!embedded && (
           <div className="flex items-center gap-2 rounded-sm border border-line bg-surface-elevated px-3 py-1.5">
             <span
               className={cn("h-2 w-2 rounded-full", sessionOpen ? "bg-status-success" : "bg-status-failure")}
@@ -558,6 +565,7 @@ export function CaisseLibre({
               </>
             )}
           </div>
+          )}
           <div className="flex items-center gap-2 rounded-sm border border-line bg-surface-elevated px-3 py-2">
             <Printer className="h-4 w-4 text-ink-muted" aria-hidden />
             <span className="text-body-sm text-ink-muted">

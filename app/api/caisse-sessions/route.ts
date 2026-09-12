@@ -26,6 +26,10 @@ function getAdminClient() {
 
 interface OpenSessionBody {
   opening_balance: number;
+  /** §2 cahier 12/09 : détail des coupures comptées, ex. {"10000":2,"pieces":250}. */
+  opening_breakdown?: Record<string, number>;
+  opening_note?: string;
+  poste?: string;
 }
 
 export async function GET(request: NextRequest) {
@@ -94,6 +98,37 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: "opening_balance requis (nombre >= 0)" }, { status: 400 });
     }
 
+    // Coupures (facultatives) : entiers >= 0, et si fournies leur total doit
+    // correspondre au fonds déclaré — le fonds est un comptage, pas une saisie.
+    let breakdown: Record<string, number> | null = null;
+    if (body.opening_breakdown && typeof body.opening_breakdown === "object") {
+      breakdown = {};
+      let sum = 0;
+      for (const [k, v] of Object.entries(body.opening_breakdown)) {
+        const n = Number(v);
+        if (!Number.isInteger(n) || n < 0) {
+          return NextResponse.json(
+            { success: false, error: `Coupure « ${k} » invalide (entier >= 0 requis)` },
+            { status: 400 }
+          );
+        }
+        if (n === 0) continue;
+        breakdown[k] = n;
+        sum += k === "pieces" ? n : Number(k) * n;
+      }
+      if (Object.keys(breakdown).length === 0) {
+        breakdown = null;
+      } else if (sum !== Math.round(body.opening_balance)) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: `Le détail des coupures (${sum} FCFA) ne correspond pas au fonds déclaré (${Math.round(body.opening_balance)} FCFA)`,
+          },
+          { status: 400 }
+        );
+      }
+    }
+
     const admin = getAdminClient();
 
     const { data: existingOpen } = await admin
@@ -112,8 +147,14 @@ export async function POST(request: NextRequest) {
 
     const { data: created, error: insertError } = await admin
       .from("caisse_sessions")
-      .insert({ agent_id: user.id, opening_balance: body.opening_balance })
-      .select("id, opened_at, opening_balance, status")
+      .insert({
+        agent_id: user.id,
+        opening_balance: body.opening_balance,
+        opening_breakdown: breakdown,
+        opening_note: body.opening_note?.trim().slice(0, 500) || null,
+        poste: body.poste?.trim().slice(0, 80) || "Réception",
+      })
+      .select("id, opened_at, opening_balance, status, poste")
       .single();
 
     if (insertError || !created) {
@@ -127,7 +168,12 @@ export async function POST(request: NextRequest) {
       action: "caisse_session.ouverte",
       entityType: "caisse_sessions",
       entityId: (created as { id: string }).id,
-      newValue: { opening_balance: body.opening_balance },
+      newValue: {
+        opening_balance: body.opening_balance,
+        opening_breakdown: breakdown,
+        opening_note: body.opening_note?.trim() || null,
+        poste: body.poste?.trim() || "Réception",
+      },
     });
 
     return NextResponse.json({ success: true, session: created });

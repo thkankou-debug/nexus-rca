@@ -36,8 +36,9 @@ export default async function DashboardRootPage() {
     // chaque métier arrive sur son poste de travail — la caissière sur le
     // Poste de réception.
     case "accueil_caisse":
-      // Page d'arrivée = Encaissement libre (instruction 12/09/2026).
-      redirect("/dashboard/accueil/encaissement");
+      // Page d'arrivée = Caisse unifiée (reprise 12/09/2026) : « Ouvrir ma
+      // caisse » en priorité si aucune session, sinon les deux onglets.
+      redirect("/dashboard/accueil/caisse");
     // Étape 5 (§1.2) : DAF → Trésorerie, comptable → Saisie du jour.
     case "daf":
       redirect("/dashboard/tresorerie");
