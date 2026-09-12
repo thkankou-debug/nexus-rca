@@ -3151,3 +3151,38 @@ en mode recherche par un état lisible tant qu'aucun client n'est choisi.
 sur le build de production local (200, tous les nouveaux éléments
 présents, datalist peuplée).** Impression matérielle : toujours en
 attente des 4 prérequis (§9), test n°8 inchangé.
+
+---
+
+## 12/09/2026 — Encaissement libre v3 : recherche client muette + paiement partiel
+
+**Retour reçu** : « la recherche d'un client existant n'affiche pas la
+fiche » et « paiement partiel / reste dû impossible, montant restant
+absent ».
+
+**1. Recherche client — diagnostic.** L'API `/api/accueil/clients` est
+saine (vérifiée en HTTP authentifié : 2 résultats pour « kank », fiche +
+dossiers en 200 ; permission `client.read` bien accordée à
+accueil_caisse ; les 7 fiches clients ont `actif=true`). Le vrai défaut
+était l'écran : AUCUN retour visuel — pas d'état « recherche en cours »,
+pas de « aucun résultat », et les erreurs (session expirée 401/403,
+réseau) étaient avalées en silence → pour l'utilisatrice, « ça ne marche
+pas ». Corrigé : trois états visibles sous le champ (Recherche…, Aucun
+client trouvé pour « X », erreur en rouge avec consigne de recharger),
+`pickClient` en try/catch avec toast si les dossiers sont indisponibles
+(l'encaissement reste possible), fiche sélectionnée enrichie
+(référence · téléphone · e-mail).
+
+**2. Paiement partiel refait.** L'ancienne case à cocher discrète +
+champ « Montant affecté » devient un choix explicite « **La totalité /
+Une partie (acompte)** », avec « Montant payé maintenant » et un
+récapitulatif permanent **Total / Payé maintenant / RESTE DÛ PAR LE
+CLIENT** — visible en espèces COMME en Mobile Money (avant, le reste dû
+n'était affiché qu'en espèces). Acompte désactivé si caution au ticket
+(règle inchangée : une caution se paie comptant), toast de succès avec le
+reste dû, rappel que la créance se règle depuis « Restes dus » (même
+créance rechargée, jamais une seconde).
+
+**Tests : tsc + next build 0 erreur ; page 200 authentifiée avec les
+nouveaux blocs ; API recherche/fiche 200.** Aucun changement d'API ni de
+migration.

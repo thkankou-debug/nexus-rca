@@ -126,23 +126,52 @@ export function CaisseLibre({
   const [passageNom, setPassageNom] = useState("");
   const [searchQ, setSearchQ] = useState("");
   const [results, setResults] = useState<FoundClient[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const [searchDone, setSearchDone] = useState(false);
   const [client, setClient] = useState<FoundClient | null>(null);
   const [dossiers, setDossiers] = useState<Dossier[]>([]);
   const [dossierId, setDossierId] = useState<string | null>(null);
   const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Retour Thierry 12/09 (« la recherche ne marche pas ») : chaque état est
+  // désormais VISIBLE — recherche en cours, zéro résultat, erreur (session
+  // expirée, permission, réseau). Plus jamais un écran muet.
   useEffect(() => {
     if (clientMode !== "recherche") return;
     if (searchTimer.current) clearTimeout(searchTimer.current);
     const q = searchQ.trim();
     if (q.length < 2) {
       setResults([]);
+      setSearchError(null);
+      setSearchDone(false);
       return;
     }
     searchTimer.current = setTimeout(async () => {
-      const res = await fetch(`/api/accueil/clients?q=${encodeURIComponent(q)}`);
-      const json = await res.json();
-      if (json.success) setResults(json.clients);
+      setSearching(true);
+      setSearchError(null);
+      try {
+        const res = await fetch(`/api/accueil/clients?q=${encodeURIComponent(q)}`);
+        const json = await res.json();
+        if (json.success) {
+          setResults(json.clients);
+          setSearchDone(true);
+        } else {
+          setResults([]);
+          setSearchDone(false);
+          setSearchError(
+            res.status === 401 || res.status === 403
+              ? "Session expirée ou accès refusé — rechargez la page (F5) et reconnectez-vous."
+              : json.error || "Recherche impossible — réessayez."
+          );
+        }
+      } catch {
+        setResults([]);
+        setSearchDone(false);
+        setSearchError("Réseau indisponible — vérifiez la connexion puis réessayez.");
+      } finally {
+        setSearching(false);
+      }
     }, 300);
   }, [searchQ, clientMode]);
 
@@ -150,10 +179,21 @@ export function CaisseLibre({
     setClient(c);
     setSearchQ("");
     setResults([]);
+    setSearchDone(false);
     setDossierId(null);
-    const res = await fetch(`/api/accueil/clients/${c.id}`);
-    const json = await res.json();
-    setDossiers(json.success ? json.dossiers : []);
+    try {
+      const res = await fetch(`/api/accueil/clients/${c.id}`);
+      const json = await res.json();
+      if (json.success) {
+        setDossiers(json.dossiers);
+      } else {
+        setDossiers([]);
+        toast.error(json.error || "Dossiers du client indisponibles — l'encaissement reste possible");
+      }
+    } catch {
+      setDossiers([]);
+      toast.error("Dossiers du client indisponibles — l'encaissement reste possible");
+    }
   }
 
   // ── 2 · Prestation ──
@@ -274,7 +314,6 @@ export function CaisseLibre({
   const duMaintenant = partiel ? affecte : total;
   const recu = parseFloat(montantRecu) || 0;
   const monnaie = payMode === "especes" && recu > duMaintenant ? recu - duMaintenant : 0;
-  const resteDuAffiche = partiel && affecte > 0 && affecte < total ? total - affecte : 0;
 
   const blocked = !sessionOpen
     ? "Ouvrez la caisse pour encaisser."
@@ -394,6 +433,8 @@ export function CaisseLibre({
       toast.success(
         json.replayed
           ? "Ticket déjà enregistré — résultat initial repris, aucun doublon"
+          : credit
+          ? `Acompte enregistré — reste dû ${fcfa(credit.reste_du)} (créance suivie)`
           : "Paiement enregistré"
       );
       if (autoPrint) doPrint(bytes);
@@ -572,11 +613,12 @@ export function CaisseLibre({
                   />
                 </label>
               ) : client ? (
-                <div className="flex items-center justify-between rounded-sm border border-line bg-surface px-3 py-2">
+                <div className="flex items-center justify-between rounded-sm border border-line-strong bg-surface px-3 py-2">
                   <div>
                     <p className="text-body-sm font-semibold text-ink">{clientName(client)}</p>
                     <p className="text-caption text-ink-muted">
-                      {[client.reference, client.telephone].filter(Boolean).join(" · ")}
+                      {[client.reference, client.telephone, client.email].filter(Boolean).join(" · ") ||
+                        "Fiche sans coordonnées"}
                     </p>
                   </div>
                   <button
@@ -621,6 +663,18 @@ export function CaisseLibre({
                         </li>
                       ))}
                     </ul>
+                  )}
+                  {searching && <p className="mt-1 text-caption text-ink-muted">Recherche…</p>}
+                  {searchError && (
+                    <p className="mt-1 rounded-sm border border-status-failure px-2 py-1 text-caption font-semibold text-status-failure">
+                      {searchError}
+                    </p>
+                  )}
+                  {!searching && !searchError && searchDone && results.length === 0 && (
+                    <p className="mt-1 text-caption text-ink-muted">
+                      Aucun client trouvé pour « {searchQ.trim()} » — vérifiez l&rsquo;orthographe ou
+                      créez la fiche dans Clients &amp; dossiers.
+                    </p>
                   )}
                 </div>
               )}
@@ -979,6 +1033,89 @@ export function CaisseLibre({
               </span>
             </div>
 
+            {/* Retour Thierry 12/09 : le paiement partiel était une case à
+                cocher discrète et le reste dû n'apparaissait qu'en espèces.
+                Désormais : choix explicite, montant, et RESTE DÛ affiché en
+                clair quel que soit le mode de paiement. */}
+            <p className="mt-3 text-caption font-semibold uppercase tracking-wide text-ink-muted">
+              Le client paie
+            </p>
+            <div className="mt-1.5 grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setPartiel(false);
+                  setMontantAffecte("");
+                }}
+                className={cn(
+                  "whitespace-nowrap rounded-sm border px-3 py-2 text-body-sm font-semibold",
+                  !partiel
+                    ? "border-line-strong bg-surface-sunken text-ink"
+                    : "border-line text-ink-muted hover:border-line-strong"
+                )}
+              >
+                La totalité
+              </button>
+              <button
+                type="button"
+                disabled={hasCaution}
+                onClick={() => setPartiel(true)}
+                title={hasCaution ? "Une caution se paie toujours comptant" : undefined}
+                className={cn(
+                  "whitespace-nowrap rounded-sm border px-3 py-2 text-body-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50",
+                  partiel
+                    ? "border-line-strong bg-surface-sunken text-ink"
+                    : "border-line text-ink-muted hover:border-line-strong"
+                )}
+              >
+                Une partie (acompte)
+              </button>
+            </div>
+            {hasCaution && (
+              <p className="mt-1 text-caption text-ink-subtle">
+                Une caution se paie toujours comptant — l&rsquo;acompte est désactivé.
+              </p>
+            )}
+            {partiel && (
+              <div className="mt-2 space-y-2">
+                <label className="block">
+                  <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                    Montant payé maintenant · FCFA *
+                  </span>
+                  <input
+                    type="number"
+                    min={1}
+                    value={montantAffecte}
+                    onChange={(e) => setMontantAffecte(e.target.value)}
+                    placeholder="Ex. 10 000"
+                    className={cn(inputClass, "mt-1")}
+                  />
+                </label>
+                <div className="rounded-sm border border-line bg-surface-sunken px-3 py-2">
+                  <div className="flex items-center justify-between text-body-sm text-ink-muted">
+                    <span>Total de la prestation</span>
+                    <span className="[font-variant-numeric:tabular-nums]">{fcfa(total)}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-body-sm text-ink-muted">
+                    <span>Payé maintenant</span>
+                    <span className="[font-variant-numeric:tabular-nums]">
+                      {affecte > 0 ? fcfa(affecte) : "—"}
+                    </span>
+                  </div>
+                  <div className="mt-1 flex items-center justify-between border-t border-line pt-1 text-body-sm font-bold text-ink">
+                    <span>Reste dû par le client</span>
+                    <span className="[font-variant-numeric:tabular-nums]">
+                      {affecte > 0 && affecte < total ? fcfa(total - affecte) : "—"}
+                    </span>
+                  </div>
+                </div>
+                <p className="text-caption text-ink-muted">
+                  Le reste dû est enregistré comme créance — réglable plus tard depuis « Restes
+                  dus » ci-dessous, sur la même créance (jamais une seconde).
+                </p>
+              </div>
+            )}
+
             <p className="mt-3 text-caption font-semibold uppercase tracking-wide text-ink-muted">
               Mode de paiement
             </p>
@@ -1010,7 +1147,7 @@ export function CaisseLibre({
             </p>
 
             {payMode === "especes" ? (
-              <div className="mt-3 grid grid-cols-3 gap-2">
+              <div className="mt-3 grid grid-cols-2 gap-2">
                 <label className="block">
                   <span className="whitespace-nowrap text-caption font-semibold uppercase tracking-wide text-ink-muted">
                     Montant reçu
@@ -1043,12 +1180,6 @@ export function CaisseLibre({
                     {monnaie > 0 ? Math.round(monnaie).toLocaleString("fr-FR") : "—"}
                   </p>
                 </div>
-                <div>
-                  <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">Reste dû</span>
-                  <p className="mt-1 rounded-sm border border-line bg-surface-sunken px-2 py-2 text-body-sm font-semibold text-ink [font-variant-numeric:tabular-nums]">
-                    {resteDuAffiche > 0 ? Math.round(resteDuAffiche).toLocaleString("fr-FR") : "—"}
-                  </p>
-                </div>
               </div>
             ) : (
               <label className="mt-3 block">
@@ -1064,28 +1195,6 @@ export function CaisseLibre({
                 />
               </label>
             )}
-
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-              <label className="flex cursor-pointer items-center gap-2 text-body-sm text-ink">
-                <input
-                  type="checkbox"
-                  checked={partiel}
-                  onChange={(e) => setPartiel(e.target.checked)}
-                  className="h-4 w-4 accent-[rgb(var(--brand))]"
-                />
-                Paiement partiel
-              </label>
-              {partiel && (
-                <input
-                  type="number"
-                  min={0}
-                  value={montantAffecte}
-                  onChange={(e) => setMontantAffecte(e.target.value)}
-                  placeholder="Montant affecté FCFA"
-                  className={cn(inputClass, "w-44")}
-                />
-              )}
-            </div>
 
             {credits.length > 0 && (
               <div className="mt-3 border-t border-line pt-3">

@@ -202,7 +202,10 @@
       "Bash(grep -o 'test\\\\.accueil@nexusrca\\\\.test[^\\\\\"]\\\\{0,60\\\\}' \"C:/Users/user/.claude/projects/C--Users-user-Desktop-nexus-test-nouveau-nexus-rca-claude-test/1810fd1a-70b3-4e71-9763-4e719f77c9fb.jsonl\")",
       "Bash(grep -o 'mot de passe[^\\\\\"]\\\\{0,80\\\\}' \"C:/Users/user/.claude/projects/C--Users-user-Desktop-nexus-test-nouveau-nexus-rca-claude-test/1810fd1a-70b3-4e71-9763-4e719f77c9fb.jsonl\")",
       "Bash(grep -o 'test\\\\.accueilcaisse@nexusrca\\\\.test[^\\\\\"]\\\\{0,120\\\\}' \"C:/Users/user/.claude/projects/C--Users-user-Desktop-nexus-test-nouveau-nexus-rca-claude-test/1810fd1a-70b3-4e71-9763-4e719f77c9fb.jsonl\")",
-      "PowerShell($c = Get-NetTCPConnection -LocalPort 3123 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false; \"arrete\" } else { \"deja arrete\" })"
+      "PowerShell($c = Get-NetTCPConnection -LocalPort 3123 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false; \"arrete\" } else { \"deja arrete\" })",
+      "Bash(grep -n -- '--//\\\\|-- //' components/accueil/CaisseLibre.tsx)",
+      "PowerShell($c = Get-NetTCPConnection -LocalPort 3124 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"port libre\")",
+      "PowerShell($c = Get-NetTCPConnection -LocalPort 3124 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")"
     ]
   }
 }
