@@ -2561,3 +2561,26 @@ du point 8 du lot précédent reste inchangée).
 `test.accueilcaisse@nexusrca.test` (créé pour l'occasion, script L2
 idempotent relancé) et `test.superadmin@nexusrca.test` (mot de passe
 réinitialisé via l'API admin, compte is_test vérifié avant).
+
+**10. Correctif après vérification de Thierry (11/09/2026) : atterrissage + fidélité de la Vue d'ensemble.**
+Deux retours : le compte super admin tombait sur l'ancien écran, et la
+maquette SUPER-ADMIN n'était pas assez fidèle. Corrigés : `/dashboard` et
+`homeForRole()` envoient désormais super_admin/admin sur
+`/dashboard/vue-ensemble` (règle d'entrée §1.2) — **changement de
+comportement réel pour le compte de production `tkankou@gmail.com`**,
+l'ancien tableau de bord reste accessible par « Retour à l'espace
+classique » (lien corrigé pour pointer l'ancien écran du rôle, sinon
+boucle). « Dossiers à superviser » refait conforme (onglets avec compteurs,
+recherche, filtres Service/Statut/Agent, colonne Échéance — retard en
+`status-failure` —, pagination) ; « Échéances dépassées » ajoutée aux
+alertes (mesurable via `demandes.deadline`, même si aucune valeur réelle
+n'est encore saisie — l'onglet « En retard » l'expose aussi) ; liens de
+pied de page réels (Gérer les accès, Journal d'audit). Écarts restants
+assumés vs maquette, tous documentés : pas de « + Nouveau dossier »
+(aucun flux staff de création de dossier n'existe — celui de la réception
+passe par la fiche client), pas de sélecteurs « Toute l'agence »/« Tous
+les services » en en-tête (un seul bureau réel ; le filtre service vit
+dans le tableau), pas de « Documents à vérifier » (concept absent du
+schéma, A4 #2), barre latérale limitée aux modules réellement livrés
+(« une entrée qui ne mène nulle part n'existe pas » — la maquette
+elle-même porte « Modules selon livraison »).
