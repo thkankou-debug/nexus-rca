@@ -2556,9 +2556,8 @@ du point 8 du lot précédent reste inchangée).
 **9. Test : `tsc` 0 erreur, `next lint` 0 erreur sur les nouveaux fichiers, `next build` succès (toutes les routes présentes).**
 `[SERVICES_GRID] exception` visible pendant le build : pré-existant
 (composant inchangé, page `/` déjà dynamique), pas une régression.
-**Non vérifié visuellement** — à confirmer par Thierry : créer un compte
-`TEST_accueil_caisse` (aucun profil n'a encore ce rôle), se connecter →
-atterrissage sur `/dashboard/accueil`, ouvrir la caisse, encaisser un ticket
-au POS (espèces puis mobile money avec référence), vérifier le reçu 80 mm,
-le journal des mouvements, la soumission du rapprochement, puis valider la
-session avec le super admin ; enfin ouvrir `/dashboard/vue-ensemble`.
+~~Non vérifié visuellement~~ **Vérifié visuellement par Thierry le
+11/09/2026 — OK** sur la préversion Vercel (commit 3958b50), avec le compte
+`test.accueilcaisse@nexusrca.test` (créé pour l'occasion, script L2
+idempotent relancé) et `test.superadmin@nexusrca.test` (mot de passe
+réinitialisé via l'API admin, compte is_test vérifié avant).
