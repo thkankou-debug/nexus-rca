@@ -3,6 +3,7 @@ import { UserPlus, FolderPlus, ShoppingCart, CalendarDays, Compass } from "lucid
 import { requireProfile } from "@/lib/auth";
 import { AccueilShell } from "@/components/accueil/AccueilShell";
 import { OuvrirCaisseCard } from "@/components/accueil/OuvrirCaisseCard";
+import { FileAccueil } from "@/components/accueil/FileAccueil";
 import { EmptyState } from "@/components/admin/ui/EmptyState";
 import { getAccueilAdminClient, getOwnSessionSnapshot } from "@/lib/accueil-server";
 
@@ -27,7 +28,7 @@ export default async function PosteReceptionPage() {
 
   const today = new Date().toISOString().split("T")[0];
 
-  const [session, aOrienterRes, rdvRes] = await Promise.all([
+  const [session, aOrienterRes, rdvRes, visitesRes] = await Promise.all([
     getOwnSessionSnapshot(profile.id),
     admin
       .from("demandes")
@@ -44,10 +45,25 @@ export default async function PosteReceptionPage() {
       .eq("is_test", includeTest)
       .order("rdv_heure", { ascending: true })
       .limit(10),
+    admin
+      .from("reception_visits")
+      .select("id, visitor_name, motif, status, arrived_at, client_record_id")
+      .in("status", ["en_attente", "en_charge"])
+      .eq("is_test", includeTest)
+      .order("arrived_at", { ascending: true })
+      .limit(30),
   ]);
 
   const aOrienter = aOrienterRes.data || [];
   const rdvJour = rdvRes.data || [];
+  const visites = (visitesRes.data || []) as {
+    id: string;
+    visitor_name: string;
+    motif: string;
+    status: string;
+    arrived_at: string;
+    client_record_id: string | null;
+  }[];
 
   const actions = [
     {
@@ -98,6 +114,9 @@ export default async function PosteReceptionPage() {
 
         <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
           <div className="space-y-6">
+            {/* File d'accueil (§7.3) : arrivées physiques du jour */}
+            <FileAccueil visits={visites} />
+
             {/* À orienter : dossiers sans agent, statuts d'entrée */}
             <section className="rounded-sm border border-line bg-surface-elevated p-4">
               <div className="flex items-center justify-between">

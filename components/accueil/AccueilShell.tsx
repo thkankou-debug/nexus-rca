@@ -13,7 +13,7 @@
 // ============================================================================
 
 import { useRouter, usePathname } from "next/navigation";
-import { Home, Users, ShoppingCart, Wallet, Megaphone } from "lucide-react";
+import { Home, Users, ShoppingCart, Wallet, Megaphone, ReceiptText } from "lucide-react";
 import { AdminShell } from "@/components/admin/ui/AdminShell";
 import { BrandMark } from "@/components/admin/ui/BrandMark";
 import { TopbarSearch, TopbarNotifications } from "@/components/admin/ui/TopbarTools";
@@ -41,6 +41,7 @@ const NAV = [
     label: "Caisse",
     items: [
       { key: "pos", label: "Comptoir POS", href: "/dashboard/accueil/pos", icon: ShoppingCart },
+      { key: "recus", label: "Tickets & reçus", href: "/dashboard/accueil/recus", icon: ReceiptText },
       { key: "session", label: "Session de caisse", href: "/dashboard/accueil/session", icon: Wallet },
     ],
   },

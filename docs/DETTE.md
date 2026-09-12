@@ -2826,3 +2826,36 @@ liées (« l'Admin peut la répartir en tâches ») non construite, la table
 Non vérifié visuellement** — parcours : test.dg émet vers test.agent →
 l'agent voit la cloche + accuse + signale un blocage → le DG voit
 l'avancement et clôt.
+
+---
+
+## Lot CAI-05 / CAI-07 / File d'accueil (12/09/2026)
+
+Suite de l'exécution du cahier (« exécuter au complet, zéro régression »).
+Trois chantiers sans arbitrage, migrations additives 084/085.
+
+**1. CAI-05 — idempotence du POS.** `quick_sales.ticket_key/ligne_index`
+(UNIQUE partiel). Le POS génère la clé à la première tentative et la garde
+jusqu'à confirmation ; la route renvoie le résultat INITIAL sur rejeu
+(check préalable + rattrapage 23505 pour la course concurrente, R08/R09).
+Si l'utilisateur modifie le ticket après une coupure et rejoue, le résultat
+initial est repris et signalé explicitement (« aucun doublon ») — jamais un
+second encaissement.
+
+**2. CAI-06/07 — écran Tickets & reçus** (`/dashboard/accueil/recus`).
+Tickets regroupés par clé (lignes multiples), réimpression reconstruite
+depuis la BASE avec bandeau « DUPLICATA — RÉIMPRESSION », zéro écriture.
+Les ventes antérieures à la clé restent réimprimables ligne à ligne.
+
+**3. File d'accueil (§7.3)** — `reception_visits` (migration 085,
+proposition §14.2 en tête de fichier) : arrivée (visiteur+motif) → prise
+en charge → orientée (renvoi vers la fiche client de réception, où vivent
+déjà ouverture+orientation) ou partie. Aucune estimation d'attente (ni
+méthode ni données — règle §7.3). Panneau sur le Poste de réception,
+audit à chaque étape. Écritures service-role uniquement (SEC-01).
+
+**4. Tests : `tsc`/`build` 0 erreur ; SQL rollback : ticket 2 lignes créé,
+rejeu refusé par la contrainte, visite en_attente→en_charge→orientee OK.**
+Non vérifié visuellement — parcours : POS double-clic sur « Encaisser »
+(un seul reçu), Tickets & reçus → Réimprimer (bandeau DUPLICATA), Poste de
+réception → Enregistrer une arrivée → Prendre en charge → Orienter.

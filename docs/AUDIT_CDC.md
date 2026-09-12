@@ -59,7 +59,7 @@
 | DAF | `/dashboard/tresorerie` | **Livré** | Remboursements absents (AR-04) ; « correction demandée » sur session absente |
 | Comptable | `/dashboard/compta` | **Livré** | File « retours du DAF » absente (dépend des états de correction) |
 | Chef de service | `/dashboard/mon-service` | **Livré** | Portée = pôle (demandes.service_id vide partout — documenté) ; « instructions reçues » absentes |
-| Accueil & caisse | `/dashboard/accueil` | **Livré** | File d'accueil (arrivées) absente ; remises/tarif contrôlé serveur : voir §8 |
+| Accueil & caisse | `/dashboard/accueil` | **Livré** | File d'accueil livrée (12/09) ; remises/tarif contrôlé serveur : voir §8 (AR-04) |
 | Agent | `/dashboard/agent` (classique) | **Partiel** | Pas encore rhabillé dans le nouveau shell ; « instructions » absentes ; le reste existe (dossiers, docs, messages, notes, RH) |
 | Modérateur | — | **Absent** | Écrans contenus existent côté super-admin ; aucun espace modérateur raccordé |
 | Partenaire | — | **Absent** | `dossier_partages` existe (schéma) ; aucun écran |
@@ -83,7 +83,7 @@
 - CRM-04 fiche 360° par onglets avec droits — **Livré** (fiche A6 + vue réception restreinte).
 - CRM-05 fusion humaine traçable réversible — **Livré** (A6 Lot 3).
 - §7.2 machine à états serveur, historique — **Partiel** : transitions gardées par rôle (routes status) mais `demande_status_history` n'est pas alimentée (défaut connu, A6 #11) → l'exigence « chaque transition écrit dans l'historique » est **non satisfaite**, chantier prioritaire du Lot 4.
-- §7.3 : files réception/mes dossiers/service/urgents — **Livré** (vues L3). Acceptation d'affectation + escalade sur non-acceptation — **Absent** (dépend de l'objet tâche/instruction). File d'accueil physique (arrivées) — **Absent** (table à proposer §14.2).
+- §7.3 : files réception/mes dossiers/service/urgents — **Livré** (vues L3). Acceptation d'affectation + escalade sur non-acceptation — **Absent** (dépend de l'objet tâche/instruction). File d'accueil physique — **Livré (12/09)** : reception_visits (migration 085), arrivée → prise en charge → orientée/partie, tracée dans l'audit.
 
 ## §8 POS et caisse
 
@@ -94,8 +94,8 @@
 - Prix contrôlés serveur / remises à permission — **Partiel** : montants validés serveur (>0, lignes bornées) mais prix libre saisi par la caissière assumé tant que le catalogue est « sur devis » ; l'« encaissement libre » livré à la demande explicite de Thierry (11/09) est en tension avec « pas de tarif libre hors autorisation » → à cadrer en AR-04. Remises : **Absent**.
 - Brouillon en attente / abandon — **Absent** (le ticket vit en mémoire du navigateur uniquement).
 - Espèces : monnaie rendue distincte — **Partiel** : calculée et imprimée sur le reçu, mais non stockée ; convention actuelle : montants stockés nets (documentée), donc pas de double soustraction.
-- CAI-05 idempotence — **Absent** (pas de clé d'idempotence sur `/api/accueil/pos` ; R08/R09 non garantis).
-- CAI-06/07 reçu unique, réimpression — **Partiel** : référence unique et PDF conformes ; la réimpression n'existe qu'immédiatement après encaissement (pas d'écran « reçus »).
+- CAI-05 idempotence — **Livré (12/09)** : ticket_key/ligne_index (migration 084), rejeu ou double clic renvoie le résultat initial (vérifié en SQL : contrainte UNIQUE + course concurrente).
+- CAI-06/07 reçu unique, réimpression — **Livré (12/09)** : écran /dashboard/accueil/recus (tickets regroupés par clé, réimpression DUPLICATA reconstruite depuis la base, aucun nouvel encaissement).
 - §8.4 entrées/sorties/remboursements typés — **Absent** (schéma à proposer).
 - §8.5 états de session — **Partiel** : non ouverte/ouverte/soumise/clôturée livrés ; « correction demandée » **Absent** (schéma + circuit).
 

@@ -28,6 +28,8 @@ export interface PosTicketData {
   montantRecu?: number | null;
   monnaieRendue?: number | null;
   caissiereNom?: string | null;
+  /** CAI-06 : une réimpression est identifiable — bandeau DUPLICATA. */
+  duplicata?: boolean;
 }
 
 const WIDTH_MM = 80;
@@ -62,6 +64,10 @@ export async function generatePosTicketPdf(data: PosTicketData): Promise<Uint8Ar
 
   y += 5;
   drawText(page, pageHeight, helveticaBold, "TICKET DE CAISSE", mm(centerX), mm(y), 9, black, "center");
+  if (data.duplicata) {
+    y += 4;
+    drawText(page, pageHeight, helveticaBold, "*** DUPLICATA — REIMPRESSION ***", mm(centerX), mm(y), 8, black, "center");
+  }
   y += 4;
   drawText(page, pageHeight, courier, data.reference, mm(centerX), mm(y), 7, black, "center");
   y += 4;

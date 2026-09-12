@@ -275,14 +275,21 @@ export function PosComptoir({
     ? "Le montant reçu est inférieur au total."
     : null;
 
+  // CAI-05 : la clé d'idempotence est générée à la première tentative et
+  // conservée tant que le serveur n'a pas confirmé — un double clic ou une
+  // reprise après coupure renvoie le résultat initial, jamais un doublon.
+  const ticketKeyRef = useRef<string | null>(null);
+
   async function handleCheckout() {
     if (checkoutBlockedReason) return;
+    if (!ticketKeyRef.current) ticketKeyRef.current = crypto.randomUUID();
     setCheckingOut(true);
     try {
       const res = await fetch("/api/accueil/pos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          ticket_key: ticketKeyRef.current,
           client: client
             ? {
                 record_id: client.id,
@@ -338,7 +345,12 @@ export function PosComptoir({
       setMontantRecu("");
       setConfirmationRef("");
       setDossierId(null);
-      toast.success("Encaissement enregistré dans la session");
+      ticketKeyRef.current = null;
+      toast.success(
+        json.replayed
+          ? "Ce ticket avait déjà été enregistré — résultat initial repris, aucun doublon"
+          : "Encaissement enregistré dans la session"
+      );
     } finally {
       setCheckingOut(false);
     }
@@ -874,7 +886,10 @@ export function PosComptoir({
           {lines.length > 0 && (
             <button
               type="button"
-              onClick={() => setLines([])}
+              onClick={() => {
+                setLines([]);
+                ticketKeyRef.current = null;
+              }}
               className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-sm border border-line px-4 py-2 text-body-sm font-semibold text-ink-muted hover:border-line-strong"
             >
               <Trash2 className="h-3.5 w-3.5" />

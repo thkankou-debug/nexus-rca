@@ -48,7 +48,14 @@ interface PosCheckoutBody {
   montant_recu?: number;
   confirmation_reference?: string;
   notes?: string;
+  /** CAI-05 : clé d'idempotence du ticket (uuid généré par le POS). */
+  ticket_key?: string;
 }
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+const SALE_FIELDS =
+  "id, reference, description, quantite, prix_unitaire, montant_total, devise, mode_paiement, date_paiement";
 
 export async function POST(request: NextRequest) {
   try {
@@ -111,6 +118,25 @@ export async function POST(request: NextRequest) {
 
     const admin = getAccueilAdminClient();
 
+    // CAI-05 : idempotence. Si ce ticket a déjà été enregistré (double clic,
+    // reprise après coupure réseau), renvoyer le résultat INITIAL — jamais
+    // un second encaissement.
+    const ticketKey = body.ticket_key && UUID_RE.test(body.ticket_key) ? body.ticket_key : null;
+    if (ticketKey) {
+      const { data: existing } = await admin
+        .from("quick_sales")
+        .select(SALE_FIELDS)
+        .eq("ticket_key", ticketKey)
+        .order("ligne_index", { ascending: true });
+      if (existing && existing.length > 0) {
+        const totalExisting = (existing as { montant_total: number }[]).reduce(
+          (s, r) => s + Number(r.montant_total),
+          0
+        );
+        return NextResponse.json({ success: true, sales: existing, total: totalExisting, replayed: true });
+      }
+    }
+
     // §3.1 règle d'ordre : session de caisse ouverte obligatoire.
     const { data: session } = await admin
       .from("caisse_sessions")
@@ -153,7 +179,7 @@ export async function POST(request: NextRequest) {
     if (body.notes?.trim()) notesParts.push(body.notes.trim());
     const notesInternes = notesParts.length > 0 ? notesParts.join(" — ") : null;
 
-    const rows = body.lignes.map((l) => ({
+    const rows = body.lignes.map((l, i) => ({
       type_service: "autre" as const,
       description: l.label.trim(),
       quantite: Number(l.quantite),
@@ -169,19 +195,38 @@ export async function POST(request: NextRequest) {
       notes_internes: notesInternes,
       agent_id: user.id,
       created_by: user.id,
+      ticket_key: ticketKey,
+      ligne_index: ticketKey ? i : null,
     }));
 
     const { data: created, error: insertError } = await admin
       .from("quick_sales")
       .insert(rows)
-      .select("id, reference, description, quantite, prix_unitaire, montant_total, devise, mode_paiement, date_paiement");
+      .select(SALE_FIELDS);
 
-    if (insertError || !created || created.length === 0) {
-      console.error("[POS] insert error:", insertError?.message);
-      return NextResponse.json(
-        { success: false, error: insertError?.message || "Échec de l'encaissement" },
-        { status: 500 }
-      );
+    if (insertError) {
+      // CAI-05, cas concurrent : deux requêtes identiques simultanées — la
+      // seconde perd la course (contrainte UNIQUE ticket_key/ligne_index)
+      // et renvoie le résultat de la première, sans doublon.
+      if (insertError.code === "23505" && ticketKey) {
+        const { data: existing } = await admin
+          .from("quick_sales")
+          .select(SALE_FIELDS)
+          .eq("ticket_key", ticketKey)
+          .order("ligne_index", { ascending: true });
+        if (existing && existing.length > 0) {
+          const totalExisting = (existing as { montant_total: number }[]).reduce(
+            (s, r) => s + Number(r.montant_total),
+            0
+          );
+          return NextResponse.json({ success: true, sales: existing, total: totalExisting, replayed: true });
+        }
+      }
+      console.error("[POS] insert error:", insertError.message);
+      return NextResponse.json({ success: false, error: insertError.message }, { status: 500 });
+    }
+    if (!created || created.length === 0) {
+      return NextResponse.json({ success: false, error: "Échec de l'encaissement" }, { status: 500 });
     }
 
     await logAudit({
