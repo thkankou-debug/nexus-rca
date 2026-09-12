@@ -61,11 +61,28 @@ export async function updateSession(request: NextRequest) {
       // Charger le rôle (table profiles). Léger : 1 select indexé par PK.
       const { data: profile } = await supabase
         .from("profiles")
-        .select("role")
+        .select("role, actif")
         .eq("id", user.id)
         .single();
 
       const userRole = (profile?.role as UserRole | undefined) ?? null;
+
+      // R22 (cahier des charges §18) : un compte désactivé perd l'accès aux
+      // routes gardées immédiatement — pas seulement à la prochaine
+      // connexion. `actif === false` uniquement : NULL (comptes historiques
+      // sans valeur) reste traité comme actif, aucun blocage rétroactif.
+      if ((profile as { actif?: boolean | null } | null)?.actif === false) {
+        if (pathname.startsWith("/api/")) {
+          return new NextResponse(JSON.stringify({ error: "Compte désactivé" }), {
+            status: 403,
+            headers: { "content-type": "application/json" },
+          });
+        }
+        const url = request.nextUrl.clone();
+        url.pathname = "/login";
+        url.searchParams.set("disabled", "1");
+        return NextResponse.redirect(url);
+      }
 
       // Pas de profil ou rôle non autorisé → redirect vers son home dashboard
       if (!userRole || !allowedRoles.includes(userRole)) {

@@ -2897,3 +2897,54 @@ module « Contenus du site » (cms.content.write) wave 1.
 OK.** Non vérifié visuellement — test.moderateur (hub + édition FAQ) et
 test.partenaire (nécessite un partage : depuis la fiche dossier staff ou
 en base) à dérouler.
+
+---
+
+## Chantiers CDC sans arbitrage (12/09/2026, GO Thierry)
+
+**1. Retours partenaires dans la fiche dossier staff.** Nouvel onglet
+« Retours partenaire » (badge, visible seulement s'il y a des retours —
+pas d'onglet vide) dans StaffDossierDetail, alimenté par la page unifiée
+(RLS lecture staff). Prop optionnelle : les anciennes pages consommatrices
+ne changent pas.
+
+**2. DOC-02 — contrôle des pièces (migration 087).** demande_documents :
+statut_controle reçu/vérifié/rejeté/remplacé + motif + contrôleur/date.
+Route POST /documents/[docId]/controle : agent AFFECTÉ (R04 appliqué),
+chef, admin ; motif obligatoire au rejet ; « remplacé » figé. Badges +
+actions dans DocumentsManager (staff, pièces client uniquement — les
+documents officiels de l'agence ne se contrôlent pas). Aucune pièce
+existante backfillée (état « reçu » = vrai). Motif saisi via prompt()
+navigateur — à raffiner en modale si Thierry le veut. « Remplacé »
+automatique au re-dépôt d'une même catégorie : NON câblé (le dépôt actuel
+ne connaît pas la notion de « même pièce » — chantier versions).
+
+**3. Escalade des instructions (cron quotidien, §10.2).**
+/api/cron/instruction-escalades (vercel.json 07:30) : instructions
+envoyées à échéance dépassée → notification émetteur + retardataires,
+idempotent par jour (marqueur audit_log). Aucun délai inventé : l'échéance
+est celle de l'instruction. Circuits d'escalade PARAMÉTRÉS
+(chef→admin→DG, remplaçants) : AR-02. Outbox transactionnelle : non
+construite — les notifications sont non bloquantes et idempotentes par
+construction, une vraie outbox exige une décision d'infrastructure.
+
+**4. Dictionnaire des métriques — docs/METRIQUES.md (§13).** Tous les
+indicateurs des 8 écrans : définition, source, statuts inclus/exclus,
+champ de date, portée, route de détail, conventions d'honnêteté. Fuseau :
+« aujourd'hui » = date serveur (UTC), l'alignement Africa/Bangui strict
+reste ouvert.
+
+**5. Recette R01→R24 — docs/RECETTE_CDC.md : 18/24 exécutés avec preuves.**
+La recette a trouvé et fait corriger DEUX trous réels :
+- **R22** : un compte désactivé (actif=false) gardait TOUS ses accès —
+  ni middleware ni requireProfile ne vérifiaient `actif`. Corrigé aux deux
+  niveaux (page → /login?disabled=1, API → 403), prouvé sur
+  test.moderateur désactivé puis réactivé.
+- **R13** : /submit acceptait un écart de caisse sans justification.
+  Corrigé serveur (400 si écart ≠ 0 sans notes) + modale (explication
+  LIBRE exigée en plus du détail des coupures).
+Non exécutés : R11/R14 (remboursements/affectations — AR-04), R03
+(navigateur, couvert par l'audit P9).
+
+**Tests du lot : tsc/lint/build 0 erreur ; preuves HTTP R02/R05/R07/R22
+sur build de production local ; état du compte test restauré.**

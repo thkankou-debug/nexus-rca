@@ -484,6 +484,19 @@ function ReconcileSessionModal({
       toast.error("Le solde réel doit être un nombre positif");
       return;
     }
+    // R13 (§8.5) : un écart non nul exige une explication LIBRE de la
+    // caissière — le détail des coupures n'est pas une justification.
+    if (
+      !isClose &&
+      liveExpected !== null &&
+      Math.abs(finalActualBalance - liveExpected) > 0 &&
+      !notes.trim()
+    ) {
+      toast.error(
+        `Écart de ${Math.round(finalActualBalance - liveExpected).toLocaleString("fr-FR")} XAF : expliquez-le dans les notes avant de soumettre`
+      );
+      return;
+    }
     setSaving(true);
     try {
       const breakdown = isClose

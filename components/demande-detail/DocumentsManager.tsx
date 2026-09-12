@@ -31,6 +31,16 @@ type Doc = {
   categorie: string | null;
   created_at: string;
   uploaded_by_role: "client" | "agence" | null;
+  // DOC-02 (migration 087) : statut de contrôle de la pièce.
+  statut_controle: "recu" | "verifie" | "rejete" | "remplace";
+  controle_motif: string | null;
+};
+
+const CONTROLE_BADGES: Record<Doc["statut_controle"], { label: string; cls: string }> = {
+  recu: { label: "Reçu", cls: "bg-slate-100 text-slate-600" },
+  verifie: { label: "Vérifié", cls: "bg-green-100 text-green-700" },
+  rejete: { label: "Rejeté", cls: "bg-red-100 text-red-700" },
+  remplace: { label: "Remplacé", cls: "bg-amber-100 text-amber-700" },
 };
 
 type DocRequest = {
@@ -67,6 +77,40 @@ export function DocumentsManager({
   const [docs, setDocs] = useState<Doc[] | null>(null);
   const [requests, setRequests] = useState<DocRequest[] | null>(null);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [controlingId, setControlingId] = useState<string | null>(null);
+
+  // DOC-02 : contrôle d'une pièce reçue (vérifiée / rejetée avec motif) —
+  // route serveur gardée (agent affecté, chef, admin), motif conservé.
+  const handleControle = async (d: Doc, decision: "verifie" | "rejete") => {
+    let motif: string | undefined;
+    if (decision === "rejete") {
+      const answer = window.prompt(`Motif du rejet de « ${d.file_name} » (obligatoire) :`);
+      if (!answer?.trim()) return;
+      motif = answer.trim();
+    }
+    setControlingId(d.id);
+    try {
+      const res = await fetch(`/api/demandes/${demandeId}/documents/${d.id}/controle`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ decision, motif }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || json.success === false) {
+        alert(json.error || "Échec du contrôle");
+        return;
+      }
+      setDocs((prev) =>
+        (prev || []).map((x) =>
+          x.id === d.id
+            ? { ...x, statut_controle: decision, controle_motif: motif || null }
+            : x
+        )
+      );
+    } finally {
+      setControlingId(null);
+    }
+  };
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [resolvingId, setResolvingId] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -75,7 +119,7 @@ export function DocumentsManager({
     const [{ data: docsData }, { data: reqsData }] = await Promise.all([
       supabase
         .from("demande_documents")
-        .select("id, storage_path, file_name, file_size_bytes, mime_type, categorie, created_at, uploaded_by_role")
+        .select("id, storage_path, file_name, file_size_bytes, mime_type, categorie, created_at, uploaded_by_role, statut_controle, controle_motif")
         .eq("demande_id", demandeId)
         .order("created_at", { ascending: false }),
       supabase
@@ -344,8 +388,39 @@ export function DocumentsManager({
                         <p className="text-[10px] text-slate-500">
                           {formatSize(d.file_size_bytes)} ·{" "}
                           {new Date(d.created_at).toLocaleDateString("fr-FR")}
+                          {d.statut_controle === "rejete" && d.controle_motif && (
+                            <span className="text-red-600"> · {d.controle_motif}</span>
+                          )}
                         </p>
                       </div>
+                      <span
+                        className={cn(
+                          "rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
+                          CONTROLE_BADGES[d.statut_controle]?.cls || CONTROLE_BADGES.recu.cls
+                        )}
+                      >
+                        {CONTROLE_BADGES[d.statut_controle]?.label || "Reçu"}
+                      </span>
+                      {isStaff && d.statut_controle === "recu" && (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => handleControle(d, "verifie")}
+                            disabled={controlingId === d.id}
+                            className="rounded-md border border-green-200 bg-white px-2 py-1 text-[10px] font-bold text-green-700 transition hover:bg-green-50 disabled:opacity-50"
+                          >
+                            Vérifier
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleControle(d, "rejete")}
+                            disabled={controlingId === d.id}
+                            className="rounded-md border border-red-200 bg-white px-2 py-1 text-[10px] font-bold text-red-600 transition hover:bg-red-50 disabled:opacity-50"
+                          >
+                            Rejeter
+                          </button>
+                        </>
+                      )}
                       <button
                         type="button"
                         onClick={() => handleDownload(d)}

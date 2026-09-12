@@ -19,10 +19,10 @@
 | §7 CRM et cycle de vie | **Partiel** — identité/fiche/étapes livrées ; file d'accueil, acceptation d'affectation absents |
 | §8 POS et caisse | **Partiel** — cœur livré ; monnaie/mouvements/état « correction demandée » absents (schéma) |
 | §9 Finance | **Partiel** — chaîne déclaré→rapproché→validé livrée ; affectations/remboursements/remises absents |
-| §10 Instructions et escalades | **Livré (noyau, 12/09)** — instructions + accusés individuels + avancement/blocage + clôture + notifications ; escalades paramétrées et outbox transactionnelle restent à faire |
+| §10 Instructions et escalades | **Livré (noyau, 12/09)** — instructions + accusés individuels + avancement/blocage + clôture + notifications ; escalade quotidienne des retards livrée (cron idempotent, 12/09) ; circuits paramétrés (AR-02) et outbox restent à faire |
 | §11 Documents / RDV / RH | **Partiel** |
 | §12 Catalogue / contenus | **Partiel** — catalogue servi ; frais de tiers **Bloqué-AR-04** |
-| §13 Indicateurs | **Partiel** — règle du chiffre honnête appliquée ; dictionnaire des métriques à livrer |
+| §13 Indicateurs | **Livré (12/09)** — docs/METRIQUES.md (définitions, sources, statuts, portées) |
 | §15 Sécurité | **Partiel** — RLS+assertPermission systématiques sur le neuf ; audit non effaçable à durcir côté DB |
 | §16 Réseau/accessibilité | **Non vérifié** (aucune mesure faite au sens §16) |
 
@@ -114,7 +114,7 @@
 
 ## §11 Documents / RDV / RH
 
-- DOC-01/02 — **Partiel** : pièces avec dossier/auteur/date + demandes de pièces livrées (V3) ; versions, statut vérifié/rejeté/remplacé, liens temporaires : **Absent** (pas d'état de contrôle dans le schéma — constat A4 #2).
+- DOC-01/02 — **Partiel→Livré (12/09)** : statut de contrôle reçu/vérifié/rejeté/remplacé (migration 087) + actions Vérifier/Rejeter (motif obligatoire, agent affecté/chef/admin) dans la fiche dossier ; versions multiples et liens temporaires restent à faire.
 - RDV-01/02 — **Livré** (appointments canonique, portées par rôle, `rendez_vous` gelée) ; conflits de créneau non détectés.
 - RH-01/02 — **Livré** (module RH existant, cloisonnement) ; absences alimentent Mon service ; délégations : **Absent** (AR-02).
 

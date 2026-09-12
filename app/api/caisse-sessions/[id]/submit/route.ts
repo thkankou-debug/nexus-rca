@@ -49,6 +49,8 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     if (!body || !Number.isFinite(body.actual_balance) || body.actual_balance < 0) {
       return NextResponse.json({ success: false, error: "actual_balance requis (nombre >= 0)" }, { status: 400 });
     }
+    // R13 (§8.5) : un écart non nul exige une justification — vérifié plus
+    // bas une fois expected_balance calculé (voir contrôle discrepancy).
 
     const admin = getAdminClient();
     const { data: session } = await admin
@@ -93,6 +95,17 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       sessionRow.opening_balance
     );
     const discrepancy = body.actual_balance - expectedBalance;
+
+    // R13 (§8.5) : justification obligatoire si l'écart n'est pas nul.
+    if (Math.abs(discrepancy) > 0 && !body.notes?.trim()) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Écart de ${Math.round(discrepancy)} XAF : une justification est obligatoire avant soumission`,
+        },
+        { status: 400 }
+      );
+    }
 
     const { error: updateError } = await admin
       .from("caisse_sessions")

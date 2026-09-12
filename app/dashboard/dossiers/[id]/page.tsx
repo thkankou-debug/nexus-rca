@@ -91,6 +91,28 @@ export default async function DossierUniquePage({
         .order("rdv_date", { ascending: false })
     : { data: [] };
 
+  // §5.10 : retours partenaires sur ce dossier (RLS : lecture staff).
+  const { data: partnerReturnsRows } = await supabase
+    .from("partner_returns")
+    .select("id, type, content, created_at, profiles:partenaire_id(nom, prenom)")
+    .eq("demande_id", params.id)
+    .order("created_at", { ascending: false });
+  const partnerReturns = ((partnerReturnsRows || []) as unknown as {
+    id: string;
+    type: string;
+    content: string;
+    created_at: string;
+    profiles: { nom: string; prenom: string | null } | null;
+  }[]).map((r) => ({
+    id: r.id,
+    type: r.type,
+    content: r.content,
+    created_at: r.created_at,
+    partenaire_nom: r.profiles
+      ? [r.profiles.prenom, r.profiles.nom].filter(Boolean).join(" ")
+      : "Partenaire",
+  }));
+
   const effectiveNav = await getEffectiveNav();
 
   return (
@@ -114,6 +136,7 @@ export default async function DossierUniquePage({
         history={(historyRows || []) as Array<{ step: number; created_at: string }>}
         payments={paymentsRows ?? []}
         appointments={appointmentsRows ?? []}
+        partnerReturns={partnerReturns}
       />
     </ModuleAdminShell>
   );

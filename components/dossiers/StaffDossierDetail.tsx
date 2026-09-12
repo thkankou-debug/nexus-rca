@@ -55,7 +55,24 @@ interface StaffDossierDetailProps {
   payments: DossierPayment[];
   /** A5 : rendez-vous du même client (appointments n'a pas de demande_id) */
   appointments: DossierAppointment[];
+  /** §5.10 : retours des partenaires sur ce dossier (partner_returns) —
+   * vérification interne avant toute décision, le retour ne change jamais
+   * le dossier lui-même. Optionnel : les anciennes pages n'en passent pas. */
+  partnerReturns?: Array<{
+    id: string;
+    type: string;
+    content: string;
+    created_at: string;
+    partenaire_nom: string;
+  }>;
 }
+
+const PARTNER_RETURN_LABELS: Record<string, string> = {
+  accuse: "Accusé de réception",
+  avis: "Avis",
+  decision: "Décision",
+  complement_demande: "Demande de complément",
+};
 
 export function StaffDossierDetail({
   demande,
@@ -67,6 +84,7 @@ export function StaffDossierDetail({
   history,
   payments,
   appointments,
+  partnerReturns = [],
 }: StaffDossierDetailProps) {
   const meta = CATEGORIE_META[categorieSlug];
   const reference = demande.reference || `NX-${demande.id.slice(0, 8).toUpperCase()}`;
@@ -182,6 +200,41 @@ export function StaffDossierDetail({
                 label: "Tâches",
                 content: <DossierTachesTab demandeId={demande.id} />,
               },
+              // §5.10 : onglet visible seulement s'il y a des retours — pas
+              // d'onglet vide décoratif.
+              ...(partnerReturns.length > 0
+                ? [
+                    {
+                      id: "partenaire",
+                      label: "Retours partenaire",
+                      badge: partnerReturns.length,
+                      content: (
+                        <ul className="space-y-3">
+                          {partnerReturns.map((r) => (
+                            <li
+                              key={r.id}
+                              className="rounded-xl border border-slate-200 bg-white p-4"
+                            >
+                              <p className="text-xs font-bold uppercase tracking-wide text-nexus-blue-950">
+                                {PARTNER_RETURN_LABELS[r.type] || r.type}
+                                <span className="ml-2 font-medium normal-case tracking-normal text-slate-500">
+                                  {r.partenaire_nom} · {formatDate(r.created_at)}
+                                </span>
+                              </p>
+                              <p className="mt-2 whitespace-pre-wrap text-sm text-slate-700">
+                                {r.content}
+                              </p>
+                            </li>
+                          ))}
+                          <li className="text-xs text-slate-500">
+                            Le retour partenaire est une information à vérifier — il ne modifie
+                            jamais le dossier lui-même.
+                          </li>
+                        </ul>
+                      ),
+                    },
+                  ]
+                : []),
               {
                 id: "historique",
                 label: "Historique",
