@@ -47,5 +47,11 @@
 - **Compléments navigateur restants** : inspection visuelle des menus
   (R01), payload client (R18), écrans mobiles (§16 — non mesuré).
 
+## R25 (ajouté par l'addendum Caisse ouverte, 12/09)
+
+| ID | Essai | Statut | Preuve |
+|---|---|---|---|
+| R25 | Session ouverte → prestation ABSENTE du catalogue saisie librement → encaissée → reçu imprimé → retrouvable en caisse et en Trésorerie | **Exécutable dès aujourd'hui** (parcours livré) — déroulé visuel à faire par Thierry ; automatisation après quick_sales.is_test (G7) | Chemin : POS → « Encaissement libre » → Encaisser → reçu 80 mm → Tickets & reçus + Trésorerie « Ventes comptoir » |
+
 Sorties techniques du jour : `npx tsc --noEmit` 0 erreur ·
 `npx next lint` 0 erreur sur les fichiers du lot · `npx next build` succès.

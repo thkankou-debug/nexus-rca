@@ -2964,3 +2964,25 @@ shell. Vérifié sur build de production local par requêtes authentifiées :
 shell (bg-sidebar présent, un seul shell). DashboardShell.tsx (gelé) reste
 utilisé par les espaces admin/super-admin/client classiques — inchangé.
 tsc/build 0 erreur.
+
+---
+
+## Addendum « Caisse ouverte » (12/09/2026) — spécification intégrée, code EN ATTENTE DE GO
+
+Instruction normative de Thierry intégrée dans
+`docs/ADDENDUM_CAISSE_OUVERTE.md` : la caisse couvre TOUTES les
+prestations de l'agence (pressing, photocopies, traduction, location…),
+catalogue ou non — ce texte complète et corrige toute formulation
+antérieure plus restrictive, et TRANCHE la tension AR-04 sur
+l'encaissement libre (autorisé, prix saisi par la réceptionniste
+habilitée). État de conformité vérifié point par point : les points 1, 2,
+3 et l'essentiel de 5/6 étaient DÉJÀ livrés (encaissement libre du 11/09,
+vente sans fiche client, référence de transaction, réimpression
+DUPLICATA, idempotence, chaîne session) ; le critère d'acceptation CA-1
+est satisfait dès aujourd'hui sur la préversion. Écarts restants proposés
+en phase « Caisse ouverte » (G1 prestation libre enrichie, G2 acompte/
+reste dû comptoir avec table pos_credits, G3 caution de location non-
+recette, G5 visibilité publique indépendante du catalogue, G6 ventes
+comptoir chez le comptable, G7 quick_sales.is_test + R25). **Aucun code
+modifié dans ce lot** — Thierry a demandé la présentation du périmètre et
+le GO de phase avant modification : périmètre présenté, GO attendu.

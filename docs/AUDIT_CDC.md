@@ -91,7 +91,7 @@
 - CAI-04 blocage serveur sans session — **Livré** (vérifié + testé).
 - Trois zones POS, client visible, catalogue réel, facture existante — **Partiel** : zones livrées ; « charger une facture existante » **Absent** (lien facture↔POS inexistant, cf. §9).
 - Frais NEXUS vs débours/tiers — **Bloqué-AR-04** (aucune catégorie « frais de tiers » en base ; décision produit).
-- Prix contrôlés serveur / remises à permission — **Partiel** : montants validés serveur (>0, lignes bornées) mais prix libre saisi par la caissière assumé tant que le catalogue est « sur devis » ; l'« encaissement libre » livré à la demande explicite de Thierry (11/09) est en tension avec « pas de tarif libre hors autorisation » → à cadrer en AR-04. Remises : **Absent**.
+- Prix contrôlés serveur / remises à permission — **Partiel** : montants validés serveur (>0, lignes bornées) mais prix libre saisi par la caissière assumé tant que le catalogue est « sur devis » ; l'« encaissement libre » est TRANCHÉ par l'addendum du 12/09 (docs/ADDENDUM_CAISSE_OUVERTE.md) : autorisé pour la réceptionniste habilitée, prix saisi librement — la caisse couvre TOUTES les prestations de l'agence, catalogue ou non. Remises : **Absent**.
 - Brouillon en attente / abandon — **Absent** (le ticket vit en mémoire du navigateur uniquement).
 - Espèces : monnaie rendue distincte — **Partiel** : calculée et imprimée sur le reçu, mais non stockée ; convention actuelle : montants stockés nets (documentée), donc pas de double soustraction.
 - CAI-05 idempotence — **Livré (12/09)** : ticket_key/ligne_index (migration 084), rejeu ou double clic renvoie le résultat initial (vérifié en SQL : contrainte UNIQUE + course concurrente).
@@ -151,7 +151,7 @@
 1. **AR-01** — Exclusivité de l'encaissement comptoir : confirmer le retrait des canaux d'encaissement hors réception (pages caisse agent/super-admin, `PaymentForm`) et l'identifiant `accueil_caisse`.
 2. **AR-02 / AR-05** — Titulaires, suppléants, délégations, poste(s) de caisse physique, procédure de remplacement de la réceptionniste.
 3. **AR-03** — Confirmer D6 (statuts financiers canoniques actuels) et D7 (personne canonique `clients`) comme définitifs.
-4. **AR-04** — Moyens de paiement actifs, politique de remise, remboursement, trop-perçu, avances, « frais de tiers », et statut de l'« encaissement libre » (autorisé tel quel, plafonné, ou soumis à permission).
+4. **AR-04** — Moyens de paiement actifs, politique de remise, remboursement, trop-perçu, avances, « frais de tiers ». (Le statut de l'encaissement libre est tranché — addendum du 12/09.)
 5. **AR-06** — Portées de lecture DG/DAF/Admin/RH + règles de partage partenaire.
 6. **AR-07** — Objectifs de reprise, profil réseau de test, critères de bascule production.
 7. **Typographie §4.3** — trancher entre « sans-serif unique graisse ≤600 » (texte du cahier) et les titres display des maquettes validées (état actuel du site).
