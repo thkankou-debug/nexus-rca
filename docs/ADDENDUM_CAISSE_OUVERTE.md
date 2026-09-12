@@ -63,13 +63,13 @@ caisse et les espaces financiers autorisés.
 | 7 · Visibilité publique indépendante | **Non conforme** | `services.status='actif'` implique aujourd'hui la lecture publique (policy P8). Il manque un drapeau de **publication publique distinct** (G5) pour vendre à l'agence sans publier sur le site. |
 | CA-1 | **Satisfait dès aujourd'hui** | Parcours complet livré (11-12/09). Preuve d'insertion en SQL annulé ; le déroulé visuel appartient à la recette de Thierry (pas de test d'écriture réel : `quick_sales` n'a pas de colonne is_test — voir G7). |
 
-## C. Écarts à construire — périmètre proposé pour la phase « Caisse ouverte » (à GO)
+## C. Écarts construits — phase « Caisse ouverte » LIVRÉE le 12/09/2026 (GO Thierry ; décision : la réceptionniste rembourse la caution, traçabilité complète)
 
-**G1 — Prestation libre enrichie** (léger, aucun schéma) : le formulaire
+**G1 (livré) — Prestation libre enrichie** (léger, aucun schéma) : le formulaire
 d'encaissement libre gagne description (optionnelle) et quantité dès la
 saisie. Libellé explicite exigé.
 
-**G2 — Acompte et reste dû au comptoir** (schéma, proposition §14.2) :
+**G2 (livré) — Acompte et reste dû au comptoir** (schéma, proposition §14.2) :
 table `pos_credits` — 1 ligne = 1 créance de comptoir ouverte par un
 ticket partiellement réglé : `ticket_key`, client éventuel, total dû,
 somme des règlements (chaque règlement = une ligne `quick_sales` reliée),
@@ -79,18 +79,18 @@ créance — règle « charger une facture existante ne crée pas une seconde
 créance » étendue au comptoir). Verrou : deux règlements concurrents ne
 dépassent jamais le total (même patron que CAI-05/R09).
 
-**G3 — Caution de location** (schéma) : `quick_sales.nature`
+**G3 (livré) — Caution de location** (schéma) : `quick_sales.nature`
 (`prestation` par défaut | `caution` | `caution_remboursement`). Une
 caution entre dans le TIROIR (espèces théoriques) mais **jamais dans les
 recettes** (Trésorerie/Pilotage/rapports l'excluent explicitement) ; son
 remboursement est un mouvement compensatoire lié à l'original, borné au
 montant remboursable. Affichée à part sur le reçu.
 
-**G4 — Reçu : poste de caisse** : dépend d'AR-05 (postes physiques non
+**G4 (reste lié à AR-05) — Reçu : poste de caisse** : dépend d'AR-05 (postes physiques non
 modélisés). En attendant : le reçu porte déjà l'opératrice ; la mention
 de poste sera ajoutée avec AR-05.
 
-**G5 — Catalogue interne / visibilité publique indépendante** (schéma +
+**G5 (livré) — Catalogue interne / visibilité publique indépendante** (schéma +
 retouches publiques) : `services.visibilite_publique boolean NOT NULL
 DEFAULT true` (backfill true = comportement actuel inchangé). La policy
 publique et les consommateurs publics (pages /services, grille d'accueil)
@@ -102,10 +102,10 @@ l'écran Services et tarifs — tarif pré-rempli au POS — sans jamais
 apparaître sur le site. Aucune ligne créée par le développement (règle
 « aucune prestation inventée »).
 
-**G6 — Ventes comptoir dans « Saisie du jour »** (léger) : bloc lecture
+**G6 (livré) — Ventes comptoir dans « Saisie du jour »** (léger) : bloc lecture
 des quick_sales du jour chez le comptable (suivi comptable, point 6).
 
-**G7 — Recette** : scénario **R25 = CA-1** ajouté au cahier de recette,
+**G7 (livré, R25 automatisable) — Recette** : scénario **R25 = CA-1** ajouté au cahier de recette,
 plus `quick_sales.is_test` (colonne additive) pour pouvoir dérouler R25
 avec le compte de test sans polluer la caisse réelle — même règle L2 que
 les 8 tables déjà couvertes.

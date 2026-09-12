@@ -61,15 +61,18 @@ export async function getOwnSessionSnapshot(userId: string): Promise<SessionSnap
 
   const { data: ventes } = await admin
     .from("quick_sales")
-    .select("montant_total, mode_paiement")
+    .select("montant_total, mode_paiement, nature")
     .eq("agent_id", userId)
     .gte("created_at", row.opened_at);
 
+  // Même convention que lib/caisse-server.ts : cautions dans le tiroir,
+  // remboursements de caution soustraits (montants stockés positifs).
   let especes = 0;
   let electroniques = 0;
-  for (const v of (ventes || []) as { montant_total: number; mode_paiement: string }[]) {
-    if (v.mode_paiement === "especes") especes += Number(v.montant_total);
-    else electroniques += Number(v.montant_total);
+  for (const v of (ventes || []) as { montant_total: number; mode_paiement: string; nature?: string | null }[]) {
+    const signed = v.nature === "caution_remboursement" ? -Number(v.montant_total) : Number(v.montant_total);
+    if (v.mode_paiement === "especes") especes += signed;
+    else electroniques += signed;
   }
 
   return {

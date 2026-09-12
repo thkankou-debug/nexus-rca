@@ -2986,3 +2986,56 @@ recette, G5 visibilité publique indépendante du catalogue, G6 ventes
 comptoir chez le comptable, G7 quick_sales.is_test + R25). **Aucun code
 modifié dans ce lot** — Thierry a demandé la présentation du périmètre et
 le GO de phase avant modification : périmètre présenté, GO attendu.
+
+---
+
+## Phase Caisse ouverte — G1→G7 livrés (12/09/2026, GO Thierry)
+
+Décision intégrée : la réceptionniste rembourse la caution elle-même,
+traçabilité complète. Migration 088 (additive) appliquée + committée.
+
+**1. G1** — encaissement libre enrichi : libellé, description, quantité,
+prix, option « caution remboursable ».
+
+**2. G2 — acompte / reste dû comptoir.** `pos_credits` (proposition §14.2
+en tête de migration) : le détail des prestations vit dans la créance ;
+chaque règlement (acompte puis compléments) est une ligne quick_sales du
+MONTANT PAYÉ — le tiroir et les recettes ne comptent que l'argent reçu.
+Verrou optimiste (update conditionnel) + contrainte total_regle ≤
+total_du : prouvés en SQL (update concurrent → 0 ligne ; dépassement →
+check_violation). Reçu d'acompte : PAYÉ / RESTE DÛ. Section « Restes dus
+au comptoir » au POS, règlement sur la MÊME créance. Cautions interdites
+sur un ticket partiel (une caution se paie comptant).
+
+**3. G3 — caution de location.** quick_sales.nature (prestation | caution
+| caution_remboursement) + caution_ref. Convention d'espèces UNIQUE
+centralisée (lib/caisse-server.signedCashAmount, réutilisée par le calcul
+live et le snapshot accueil) : caution DANS le tiroir, remboursement
+SOUSTRAIT (stocké positif — CHECK >= 0 conservé). Recettes = prestations
+uniquement, appliqué à : Trésorerie, Pilotage, fiche client réception,
+bloc comptable. Remboursement par la réceptionniste : lié à l'origine,
+borné (Σ ≤ caution), session ouverte exigée, idempotent, audité —
+depuis Tickets & reçus. Tiroir signé prouvé en SQL (5000 − 3000 = 2000).
+
+**4. G5 — visibilité publique indépendante.** services.visibilite_publique
+(backfill true = aucun changement public) ; policy publique = actif ET
+publique ; écran Services et tarifs : badge Public/Interne (POS) + bascule
+« Publier / Rendre interne » ; POS et staff voient tout l'actif. Thierry
+peut créer pressing/photocopies/location comme services INTERNES tarifés.
+Effet de bord assumé : le sélecteur « service demandé » de NewClientModal
+(lecture publique) ne propose que les services publics — voulu, un
+service interne n'ouvre pas de dossier.
+
+**5. G6** — « Ventes comptoir aujourd'hui » + « Cautions reçues » chez le
+comptable (cautions ≠ recettes, dit à l'écran). **G7** —
+quick_sales.is_test propagé au POS et filtré dans tous les agrégats
+d'agence ; R25 automatisable. **G4** — mention du poste de caisse sur le
+reçu : reste lié à AR-05 (postes physiques non modélisés).
+
+**6. Tests : tsc/lint/build 0 erreur ; SQL rollback complet (verrou,
+borne, tiroir signé) ; 0 résidu.** Non vérifié visuellement — parcours :
+encaissement libre avec description/qté ; ticket avec caution puis
+remboursement partiel depuis Tickets & reçus (le contrôle de session doit
+refléter la sortie) ; acompte puis règlement du reste dû ; bascule d'un
+service en « Interne (POS) » et vérification qu'il disparaît du site
+public mais reste au POS.

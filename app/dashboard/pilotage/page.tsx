@@ -55,9 +55,12 @@ export default async function PilotagePage() {
         .eq("status", "validated")
         .gte("date_paiement", yearAgo.toISOString())
         .eq("is_test", includeTest),
+      // Caisse ouverte G3 : recettes comptoir = prestations uniquement.
       admin
         .from("quick_sales")
         .select("montant_total, created_at")
+        .eq("nature", "prestation")
+        .eq("is_test", includeTest)
         .gte("created_at", monthStart.toISOString()),
       admin
         .from("expenses")

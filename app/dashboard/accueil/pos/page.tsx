@@ -1,6 +1,6 @@
 import { requireProfile } from "@/lib/auth";
 import { AccueilShell } from "@/components/accueil/AccueilShell";
-import { PosComptoir, type PosService, type PosAgent } from "@/components/accueil/PosComptoir";
+import { PosComptoir, type PosService, type PosAgent, type PosCredit } from "@/components/accueil/PosComptoir";
 import { getAccueilAdminClient, getOwnSessionSnapshot } from "@/lib/accueil-server";
 
 export const metadata = {
@@ -17,7 +17,7 @@ export default async function ComptoirPosPage() {
   const profile = await requireProfile(["accueil_caisse", "admin", "super_admin"]);
   const admin = getAccueilAdminClient();
 
-  const [{ data: services }, { data: agents }, session] = await Promise.all([
+  const [{ data: services }, { data: agents }, session, { data: credits }] = await Promise.all([
     admin
       .from("services")
       .select("id, slug, nom, categorie, tarif_type, tarif_montant")
@@ -32,6 +32,14 @@ export default async function ComptoirPosPage() {
       .eq("is_test", Boolean(profile.is_test))
       .order("nom", { ascending: true }),
     getOwnSessionSnapshot(profile.id),
+    // G2 : créances de comptoir ouvertes (reste dû), réglables ici.
+    admin
+      .from("pos_credits")
+      .select("id, client_nom, total_du, total_regle, created_at")
+      .eq("status", "ouverte")
+      .eq("is_test", Boolean(profile.is_test))
+      .order("created_at", { ascending: false })
+      .limit(30),
   ]);
 
   return (
@@ -49,6 +57,7 @@ export default async function ComptoirPosPage() {
         agents={(agents || []) as PosAgent[]}
         session={session}
         caissiereNom={[profile.prenom, profile.nom].filter(Boolean).join(" ") || profile.email}
+        credits={(credits || []) as PosCredit[]}
       />
     </AccueilShell>
   );

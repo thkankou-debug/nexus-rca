@@ -31,6 +31,7 @@ interface PatchBody {
   delai_indicatif?: string | null;
   status?: "actif" | "inactif";
   ordre_affichage?: number;
+  visibilite_publique?: boolean;
 }
 
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
@@ -71,6 +72,9 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     if (body.delai_indicatif !== undefined) update.delai_indicatif = body.delai_indicatif;
     if (body.status !== undefined) update.status = body.status;
     if (body.ordre_affichage !== undefined) update.ordre_affichage = body.ordre_affichage;
+    // Caisse ouverte G5 : un service peut être vendu à l'agence (POS) sans
+    // être publié sur le site.
+    if (body.visibilite_publique !== undefined) update.visibilite_publique = Boolean(body.visibilite_publique);
 
     const admin = getAdminClient();
     const { error: updateError } = await admin.from("services").update(update).eq("id", params.id);

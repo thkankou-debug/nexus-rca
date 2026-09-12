@@ -20,7 +20,7 @@ export default async function RecusPage() {
   const { data: sales } = await admin
     .from("quick_sales")
     .select(
-      "id, reference, description, quantite, prix_unitaire, montant_total, devise, mode_paiement, client_nom, date_paiement, ticket_key, ligne_index, demande_id"
+      "id, reference, description, quantite, prix_unitaire, montant_total, devise, mode_paiement, client_nom, date_paiement, ticket_key, ligne_index, demande_id, nature, caution_ref"
     )
     .eq("agent_id", profile.id)
     .order("date_paiement", { ascending: false })

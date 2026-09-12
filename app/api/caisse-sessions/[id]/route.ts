@@ -13,6 +13,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
+import { computeExpectedBalance } from "@/lib/caisse-server";
 
 export const dynamic = "force-dynamic";
 
@@ -64,19 +65,18 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
     let liveExpectedBalance: number | null = null;
     if (sessionRow.status === "ouverte") {
-      const { data: ventes } = await admin
-        .from("quick_sales")
-        .select("montant_total")
-        .eq("agent_id", sessionRow.agent_id)
-        .eq("mode_paiement", "especes")
-        .gte("created_at", sessionRow.opened_at);
-      const total = (ventes || []).reduce((sum, v) => sum + Number((v as { montant_total: number }).montant_total), 0);
-      liveExpectedBalance = sessionRow.opening_balance + total;
+      // Même calcul que lib/caisse-server.ts (cautions +, remboursements −).
+      liveExpectedBalance = await computeExpectedBalance(
+        admin,
+        sessionRow.agent_id,
+        sessionRow.opened_at,
+        sessionRow.opening_balance
+      );
     }
 
     let movementsQuery = admin
       .from("quick_sales")
-      .select("id, type_service, description, montant_total, devise, mode_paiement, client_nom, created_at")
+      .select("id, type_service, description, montant_total, devise, mode_paiement, client_nom, created_at, nature")
       .eq("agent_id", sessionRow.agent_id)
       .gte("created_at", sessionRow.opened_at)
       .order("created_at", { ascending: false });

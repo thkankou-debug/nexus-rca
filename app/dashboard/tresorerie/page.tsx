@@ -80,9 +80,13 @@ export default async function TresoreriePage() {
       .eq("is_test", includeTest)
       .order("date_paiement", { ascending: false })
       .limit(50),
+    // Caisse ouverte G3 : recettes comptoir = prestations uniquement (les
+    // cautions et leurs remboursements ne sont jamais des recettes).
     admin
       .from("quick_sales")
       .select("montant_total, created_at")
+      .eq("nature", "prestation")
+      .eq("is_test", includeTest)
       .gte("created_at", monthStart.toISOString()),
     admin
       .from("expenses")

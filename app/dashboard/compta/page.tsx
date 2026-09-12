@@ -38,7 +38,7 @@ export default async function ComptaSaisieDuJourPage() {
   todayStart.setHours(0, 0, 0, 0);
   const todayIso = todayStart.toISOString();
 
-  const [aRapprocherRes, saisisJourRes, depensesJourRes, liensDeclaresRes, sessionsRes, effectiveNav] =
+  const [aRapprocherRes, saisisJourRes, depensesJourRes, liensDeclaresRes, sessionsRes, ventesJourRes, effectiveNav] =
     await Promise.all([
       // Déclarés : non validés, non terminaux, non rapprochés, non legacy.
       admin
@@ -72,8 +72,21 @@ export default async function ComptaSaisieDuJourPage() {
         .select("id, status, opened_at, opening_balance, profiles(nom, prenom)")
         .in("status", ["ouverte", "a_cloturer"])
         .order("opened_at", { ascending: false }),
+      // Caisse ouverte G6 : ventes comptoir du jour (suivi comptable).
+      admin
+        .from("quick_sales")
+        .select("montant_total, nature")
+        .gte("created_at", todayIso)
+        .eq("is_test", includeTest),
       getEffectiveNav(),
     ]);
+
+  const ventesJour = (ventesJourRes.data || []) as { montant_total: number; nature: string }[];
+  const ventesPrestations = ventesJour.filter((v) => v.nature === "prestation");
+  const totalVentesJour = ventesPrestations.reduce((s, v) => s + Number(v.montant_total), 0);
+  const cautionsJour = ventesJour
+    .filter((v) => v.nature === "caution")
+    .reduce((s, v) => s + Number(v.montant_total), 0);
 
   // Les paiements legacy (metadata.legacy) sont hors chaîne : jamais listés
   // à rapprocher (la route les refuse aussi côté serveur).
@@ -118,11 +131,20 @@ export default async function ComptaSaisieDuJourPage() {
       description="Le comptable saisit et rapproche — la validation appartient au DAF."
     >
       <div className="space-y-6">
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
           <StatCard label="Paiements saisis aujourd'hui" value={saisisJour.length} />
           <StatCard label="Montant saisi aujourd'hui" value={formatMoney(totalSaisiJour)} />
           <StatCard label="Dépenses saisies aujourd'hui" value={depensesJour.length} />
+          <StatCard
+            label="Ventes comptoir aujourd'hui"
+            value={`${ventesPrestations.length} · ${formatMoney(totalVentesJour)}`}
+          />
+          <StatCard label="Cautions reçues aujourd'hui" value={formatMoney(cautionsJour)} />
         </div>
+        <p className="text-caption text-ink-muted">
+          Les cautions sont dans le tiroir mais ne sont jamais des recettes (addendum Caisse
+          ouverte).
+        </p>
 
         <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
           <div className="space-y-6">

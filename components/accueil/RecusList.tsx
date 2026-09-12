@@ -29,6 +29,9 @@ export interface RecuSale {
   ticket_key: string | null;
   ligne_index: number | null;
   demande_id: string | null;
+  /** Caisse ouverte G3. */
+  nature: "prestation" | "caution" | "caution_remboursement";
+  caution_ref: string | null;
 }
 
 const MODE_LABELS: Record<string, string> = {
@@ -73,6 +76,18 @@ function formatDateTime(d: string): string {
 
 export function RecusList({ sales, caissiereNom }: { sales: RecuSale[]; caissiereNom: string }) {
   const [busyKey, setBusyKey] = useState<string | null>(null);
+  const [refundTarget, setRefundTarget] = useState<{ sale: RecuSale; remboursable: number } | null>(null);
+
+  // G3 : remboursable restant par ligne caution (Σ remboursements liés).
+  const refundedByCaution = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const s of sales) {
+      if (s.nature === "caution_remboursement" && s.caution_ref) {
+        m.set(s.caution_ref, (m.get(s.caution_ref) || 0) + Number(s.montant_total));
+      }
+    }
+    return m;
+  }, [sales]);
 
   const tickets = useMemo<TicketGroup[]>(() => {
     const byKey = new Map<string, RecuSale[]>();
@@ -92,7 +107,11 @@ export function RecusList({ sales, caissiereNom }: { sales: RecuSale[]; caissier
           date: first.date_paiement,
           client_nom: first.client_nom,
           mode_paiement: first.mode_paiement,
-          total: sorted.reduce((s2, r) => s2 + Number(r.montant_total), 0),
+          // Total signé : un remboursement de caution est une SORTIE.
+          total: sorted.reduce(
+            (s2, r) => s2 + (r.nature === "caution_remboursement" ? -1 : 1) * Number(r.montant_total),
+            0
+          ),
           devise: first.devise,
           sales: sorted,
         };
@@ -143,6 +162,7 @@ export function RecusList({ sales, caissiereNom }: { sales: RecuSale[]; caissier
   }
 
   return (
+    <>
     <ul className="space-y-3">
       {tickets.map((t) => (
         <li key={t.key} className="rounded-sm border border-line bg-surface-elevated p-4">
@@ -183,19 +203,155 @@ export function RecusList({ sales, caissiereNom }: { sales: RecuSale[]; caissier
             </div>
           </div>
           <ul className="mt-2 space-y-0.5 border-t border-line pt-2">
-            {t.sales.map((s) => (
-              <li key={s.id} className="flex items-center justify-between text-caption text-ink-muted">
-                <span>
-                  {s.description || "Prestation"} × {s.quantite}
-                </span>
-                <span className="[font-variant-numeric:tabular-nums]">
-                  {formatMoney(Number(s.montant_total), s.devise)}
-                </span>
-              </li>
-            ))}
+            {t.sales.map((s) => {
+              const rembourse = refundedByCaution.get(s.id) || 0;
+              const remboursable = s.nature === "caution" ? Number(s.montant_total) - rembourse : 0;
+              return (
+                <li key={s.id} className="flex flex-wrap items-center justify-between gap-2 text-caption text-ink-muted">
+                  <span>
+                    {s.description || "Prestation"} × {s.quantite}
+                    {s.nature === "caution" && (
+                      <span className="ml-1.5 rounded-sm border border-line px-1 py-0.5 font-semibold">
+                        Caution{rembourse > 0 && ` · remboursé ${Math.round(rembourse).toLocaleString("fr-FR")}`}
+                      </span>
+                    )}
+                    {s.nature === "caution_remboursement" && (
+                      <span className="ml-1.5 rounded-sm border border-line px-1 py-0.5 font-semibold">
+                        Remboursement (sortie)
+                      </span>
+                    )}
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <span className="[font-variant-numeric:tabular-nums]">
+                      {s.nature === "caution_remboursement" ? "−" : ""}
+                      {formatMoney(Number(s.montant_total), s.devise)}
+                    </span>
+                    {remboursable > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setRefundTarget({ sale: s, remboursable })}
+                        className="rounded-sm border border-line px-2 py-0.5 font-semibold text-ink hover:border-line-strong"
+                      >
+                        Rembourser
+                      </button>
+                    )}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         </li>
       ))}
     </ul>
+
+    {refundTarget && (
+      <CautionRefundModal
+        sale={refundTarget.sale}
+        remboursable={refundTarget.remboursable}
+        onClose={() => setRefundTarget(null)}
+      />
+    )}
+    </>
+  );
+}
+
+// ── G3 : remboursement de caution par la réceptionniste (tracé, borné) ─────
+function CautionRefundModal({
+  sale,
+  remboursable,
+  onClose,
+}: {
+  sale: RecuSale;
+  remboursable: number;
+  onClose: () => void;
+}) {
+  const [montant, setMontant] = useState(String(remboursable));
+  const [notes, setNotes] = useState("");
+  const [saving, setSaving] = useState(false);
+  const keyRef = { current: null as string | null };
+
+  async function submit() {
+    const m = parseFloat(montant);
+    if (!Number.isFinite(m) || m <= 0 || m > remboursable) {
+      toast.error(`Montant entre 1 et ${remboursable} FCFA requis`);
+      return;
+    }
+    if (!keyRef.current) keyRef.current = crypto.randomUUID();
+    setSaving(true);
+    try {
+      const res = await fetch("/api/accueil/caution-remboursement", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sale_id: sale.id,
+          montant: m,
+          notes: notes.trim() || undefined,
+          ticket_key: keyRef.current,
+        }),
+      });
+      const json = await res.json();
+      if (!json.success) {
+        toast.error(json.error || "Échec du remboursement");
+        return;
+      }
+      toast.success("Caution remboursée — sortie d'espèces enregistrée dans la session");
+      window.location.reload();
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
+      <div
+        className="w-full max-w-md rounded-sm border border-line bg-surface-elevated p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 className="font-display text-title font-bold text-ink">Rembourser la caution</h3>
+        <p className="mt-1 text-caption text-ink-muted">
+          {sale.description || "Caution"} · remboursable {Math.round(remboursable).toLocaleString("fr-FR")} FCFA.
+          Sortie d&rsquo;espèces du tiroir, liée à la caution d&rsquo;origine et tracée dans l&rsquo;audit.
+        </p>
+        <label className="mt-4 block">
+          <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">Montant FCFA *</span>
+          <input
+            type="number"
+            min={1}
+            max={remboursable}
+            value={montant}
+            onChange={(e) => setMontant(e.target.value)}
+            className="mt-1 w-full rounded-sm border border-line bg-surface px-3 py-2 text-body-sm text-ink focus:border-line-strong focus:outline-none focus:ring-2 focus:ring-focus"
+            autoFocus
+          />
+        </label>
+        <label className="mt-3 block">
+          <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">Note (optionnel)</span>
+          <input
+            type="text"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Ex : matériel restitué en bon état"
+            className="mt-1 w-full rounded-sm border border-line bg-surface px-3 py-2 text-body-sm text-ink focus:border-line-strong focus:outline-none focus:ring-2 focus:ring-focus"
+          />
+        </label>
+        <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-sm border border-line px-4 py-2 text-body-sm font-semibold text-ink hover:border-line-strong"
+          >
+            Annuler
+          </button>
+          <button
+            type="button"
+            disabled={saving}
+            onClick={submit}
+            className="rounded-sm bg-brand px-4 py-2 text-body-sm font-semibold text-on-brand hover:bg-brand-hover disabled:opacity-50"
+          >
+            {saving ? "Remboursement…" : "Rembourser"}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }

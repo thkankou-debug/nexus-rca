@@ -30,6 +30,10 @@ export interface PosTicketData {
   caissiereNom?: string | null;
   /** CAI-06 : une réimpression est identifiable — bandeau DUPLICATA. */
   duplicata?: boolean;
+  /** Caisse ouverte G2 : acompte — montant payé maintenant + reste dû. */
+  acompte?: { paye: number; resteDu: number } | null;
+  /** Caisse ouverte G3 : total des cautions remboursables du ticket. */
+  cautionTotal?: number | null;
 }
 
 const WIDTH_MM = 80;
@@ -145,6 +149,45 @@ export async function generatePosTicketPdf(data: PosTicketData): Promise<Uint8Ar
     black,
     "right"
   );
+
+  if (data.cautionTotal && data.cautionTotal > 0) {
+    y += 4;
+    drawText(
+      page,
+      pageHeight,
+      helvetica,
+      `dont caution remboursable : ${Math.round(data.cautionTotal).toLocaleString("fr-FR")} ${data.devise}`,
+      mm(margin),
+      mm(y),
+      7,
+      black
+    );
+  }
+
+  if (data.acompte) {
+    y += 4;
+    drawText(
+      page,
+      pageHeight,
+      helveticaBold,
+      `PAYE : ${Math.round(data.acompte.paye).toLocaleString("fr-FR")} ${data.devise}`,
+      mm(margin),
+      mm(y),
+      9,
+      black
+    );
+    drawText(
+      page,
+      pageHeight,
+      helveticaBold,
+      `RESTE DU : ${Math.round(data.acompte.resteDu).toLocaleString("fr-FR")} ${data.devise}`,
+      mm(WIDTH_MM - margin),
+      mm(y),
+      9,
+      black,
+      "right"
+    );
+  }
 
   y += 5;
   drawText(page, pageHeight, helvetica, `Mode : ${data.modePaiement}`, mm(margin), mm(y), 7, black);

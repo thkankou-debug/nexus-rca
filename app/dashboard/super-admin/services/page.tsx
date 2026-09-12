@@ -17,7 +17,7 @@ export default async function ServicesPage() {
 
   const { data, error } = await supabase
     .from("services")
-    .select("id, slug, nom, categorie, description, tarif_type, tarif_montant, devise, delai_indicatif, status, ordre_affichage")
+    .select("id, slug, nom, categorie, description, tarif_type, tarif_montant, devise, delai_indicatif, status, ordre_affichage, visibilite_publique")
     .order("categorie", { ascending: true })
     .order("ordre_affichage", { ascending: true });
 

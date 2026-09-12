@@ -46,7 +46,7 @@ export async function GET() {
     const admin = getAdminClient();
     const { data, error } = await admin
       .from("services")
-      .select("id, slug, nom, categorie, description, tarif_type, tarif_montant, devise, delai_indicatif, status, ordre_affichage, created_at")
+      .select("id, slug, nom, categorie, description, tarif_type, tarif_montant, devise, delai_indicatif, status, ordre_affichage, visibilite_publique, created_at")
       .order("categorie", { ascending: true })
       .order("ordre_affichage", { ascending: true });
 
@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
         devise: body.devise || "XAF",
         delai_indicatif: body.delai_indicatif || null,
       })
-      .select("id, slug, nom, categorie, description, tarif_type, tarif_montant, devise, delai_indicatif, status, ordre_affichage, created_at")
+      .select("id, slug, nom, categorie, description, tarif_type, tarif_montant, devise, delai_indicatif, status, ordre_affichage, visibilite_publique, created_at")
       .single();
 
     if (insertError || !created) {

@@ -23,7 +23,7 @@
 | R08 | Double clic / reprise → une seule transaction | **Exécuté (SQL)** | Migration 084 : rejeu du même (ticket_key, ligne_index) → `unique_violation` levée, prouvé en transaction annulée ; la route renvoie le résultat initial (`replayed: true`) |
 | R09 | Deux encaissements concurrents | **Exécuté (SQL)** | Même contrainte UNIQUE : le perdant de la course reçoit 23505 et relit le résultat initial (code + preuve SQL du conflit) |
 | R10 | Espèces vs électronique : seules les espèces dans le tiroir | **Exécuté (code)** | `computeExpectedBalance` filtre `mode_paiement='especes'` ; l'écran sépare les deux (« jamais dans le tiroir ») |
-| R11 | Paiement partiel + complément | **Non exécuté** | Affectations de paiement non construites (Bloqué-AR-04 / FIN-02) |
+| R11 | Paiement partiel + complément | **Exécuté au COMPTOIR (SQL, 12/09)** | pos_credits (088) : acompte → créance, complément sur la MÊME créance, verrou optimiste prouvé (update concurrent 0 ligne), suraffectation bloquée par contrainte. Le volet factures/payments reste AR-04 |
 | R12 | Saisisseur/comptable tente de valider | **Exécuté (SQL)** | Auto-validation refusée par trigger (« Self-validation forbidden », preuve du 11/09) ; validate exige un paiement rapproché ; rapprocheur ≠ validateur (routes) |
 | R13 | Clôture avec écart → motif requis | **Exécuté (code, corrigé ce jour)** | `/submit` refuse désormais un écart non nul sans justification (400) ; la modale exige une explication LIBRE en plus du détail des coupures |
 | R14 | Remboursements partiels répétés | **Non exécuté** | Remboursements non construits (Bloqué-AR-04) |

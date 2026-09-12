@@ -91,7 +91,7 @@ export default async function FicheClientReceptionPage({ params }: { params: { i
       : Promise.resolve({ data: [] as { montant_recu: number | null }[] }),
     admin
       .from("quick_sales")
-      .select("id, reference, description, montant_total, mode_paiement, created_at")
+      .select("id, reference, description, montant_total, mode_paiement, created_at, nature")
       .eq("client_record_id", c.id)
       .order("created_at", { ascending: false })
       .limit(10),
@@ -122,7 +122,11 @@ export default async function FicheClientReceptionPage({ params }: { params: { i
       (s, p) => s + Number(p.montant_recu || 0),
       0
     ) +
-    ((passagesRes.data || []) as { montant_total: number }[]).reduce((s, q) => s + Number(q.montant_total), 0);
+    // Caisse ouverte G3 : les cautions et leurs remboursements ne sont pas
+    // des règlements de prestations.
+    ((passagesRes.data || []) as { montant_total: number; nature?: string }[])
+      .filter((q) => (q.nature ?? "prestation") === "prestation")
+      .reduce((s, q) => s + Number(q.montant_total), 0);
   const reste = Math.max(0, facture - regle);
   const passages = (passagesRes.data || []) as {
     id: string;

@@ -27,6 +27,9 @@ export interface ServiceItem {
   delai_indicatif: string | null;
   status: ServiceStatus;
   ordre_affichage: number;
+  // Caisse ouverte G5 (addendum 12/09/2026) : false = prestation INTERNE,
+  // vendable au Comptoir POS mais jamais publiée sur le site.
+  visibilite_publique: boolean;
 }
 
 function formatMoney(amount: number | null, currency: string): string {
@@ -53,6 +56,27 @@ export function ServicesManager({ initialServices }: { initialServices: ServiceI
     const res = await fetch("/api/services");
     const json = await res.json();
     if (json.success) setServices(json.services);
+  }
+
+  // Caisse ouverte G5 : bascule public / interne (POS seulement).
+  async function toggleVisibilite(s: ServiceItem) {
+    setBusyId(s.id);
+    try {
+      const res = await fetch(`/api/services/${s.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ visibilite_publique: !s.visibilite_publique }),
+      });
+      const json = await res.json();
+      if (!json.success) {
+        toast.error(json.error || "Échec");
+        return;
+      }
+      toast.success(!s.visibilite_publique ? "Service publié sur le site" : "Service rendu interne (POS seulement)");
+      await reload();
+    } finally {
+      setBusyId(null);
+    }
   }
 
   async function toggleStatus(s: ServiceItem) {
@@ -94,6 +118,14 @@ export function ServicesManager({ initialServices }: { initialServices: ServiceI
                     >
                       {s.status === "actif" ? "Actif" : "Inactif"}
                     </span>
+                    <span
+                      className={cn(
+                        "rounded-full px-2 py-0.5 text-xs font-semibold",
+                        s.visibilite_publique ? "bg-blue-100 text-blue-700" : "bg-amber-100 text-amber-700"
+                      )}
+                    >
+                      {s.visibilite_publique ? "Public" : "Interne (POS)"}
+                    </span>
                   </div>
                   {s.description && <p className="mt-1 text-sm text-slate-600">{s.description}</p>}
                   <p className="mt-1 text-xs text-slate-500">
@@ -102,6 +134,15 @@ export function ServicesManager({ initialServices }: { initialServices: ServiceI
                   </p>
                 </div>
                 <div className="flex gap-2">
+                  <button
+                    type="button"
+                    disabled={busyId === s.id}
+                    onClick={() => toggleVisibilite(s)}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+                    title="Un service interne est vendable au POS mais jamais publié sur le site"
+                  >
+                    {s.visibilite_publique ? "Rendre interne" : "Publier sur le site"}
+                  </button>
                   <button
                     type="button"
                     onClick={() => setEditing(s)}

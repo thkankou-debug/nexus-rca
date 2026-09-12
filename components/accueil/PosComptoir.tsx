@@ -18,6 +18,7 @@
 // ============================================================================
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import {
   Search,
@@ -77,8 +78,19 @@ interface TicketLine {
   key: string;
   service_slug: string;
   label: string;
+  description?: string;
   quantite: number;
   prix_unitaire: number | "";
+  /** Caisse ouverte G3 : caution remboursable — jamais une recette. */
+  nature: "prestation" | "caution";
+}
+
+export interface PosCredit {
+  id: string;
+  client_nom: string | null;
+  total_du: number;
+  total_regle: number;
+  created_at: string;
 }
 
 type PayMode = "especes" | "mobile_money" | "carte";
@@ -113,12 +125,17 @@ export function PosComptoir({
   agents,
   session,
   caissiereNom,
+  credits = [],
 }: {
   services: PosService[];
   agents: PosAgent[];
   session: SessionSnapshot | null;
   caissiereNom: string;
+  /** Caisse ouverte G2 : créances de comptoir ouvertes (reste dû). */
+  credits?: PosCredit[];
 }) {
+  const router = useRouter();
+
   // ── Étape 1 · Client ──────────────────────────────────────────────────────
   const [clientQuery, setClientQuery] = useState("");
   const [clientResults, setClientResults] = useState<PosClient[]>([]);
@@ -214,21 +231,27 @@ export function PosComptoir({
         label: s.nom,
         quantite: 1,
         prix_unitaire: s.tarif_type === "fixe" && s.tarif_montant !== null ? Number(s.tarif_montant) : "",
+        nature: "prestation",
       },
     ]);
   }
 
-  // Caisse tout usage (demande Thierry, 11/09/2026) : encaisser un service
-  // Nexus RCA qui n'est pas (encore) une ligne du catalogue — libellé libre,
-  // même circuit quick_sales/session que le reste du ticket.
+  // Caisse ouverte (addendum 12/09/2026) : encaisser TOUTE prestation de
+  // l'agence, catalogue ou non — libellé explicite, description, quantité,
+  // prix ; option caution remboursable (location) qui n'est jamais une
+  // recette. Même circuit quick_sales/session que le reste du ticket.
   const [freeLabel, setFreeLabel] = useState("");
+  const [freeDescription, setFreeDescription] = useState("");
+  const [freeQty, setFreeQty] = useState("1");
   const [freePrice, setFreePrice] = useState("");
+  const [freeCaution, setFreeCaution] = useState(false);
   const [showFreeForm, setShowFreeForm] = useState(false);
 
   function addFreeLine() {
     const prix = parseFloat(freePrice);
-    if (!freeLabel.trim() || !Number.isFinite(prix) || prix <= 0) {
-      toast.error("Libellé et montant requis pour un encaissement libre");
+    const qte = parseInt(freeQty) || 1;
+    if (!freeLabel.trim() || !Number.isFinite(prix) || prix <= 0 || qte <= 0) {
+      toast.error("Libellé, quantité et montant requis pour un encaissement libre");
       return;
     }
     setLines((prev) => [
@@ -237,14 +260,25 @@ export function PosComptoir({
         key: `libre-${Date.now()}`,
         service_slug: "libre",
         label: freeLabel.trim(),
-        quantite: 1,
+        description: freeDescription.trim() || undefined,
+        quantite: qte,
         prix_unitaire: prix,
+        nature: freeCaution ? "caution" : "prestation",
       },
     ]);
     setFreeLabel("");
+    setFreeDescription("");
+    setFreeQty("1");
     setFreePrice("");
+    setFreeCaution(false);
     setShowFreeForm(false);
   }
+
+  // Caisse ouverte G2 : acompte (paiement partiel) — le reste dû devient une
+  // créance de comptoir, réglable plus tard sur la même créance.
+  const [acompteMode, setAcompteMode] = useState(false);
+  const [montantAffecte, setMontantAffecte] = useState("");
+  const [reglementTarget, setReglementTarget] = useState<PosCredit | null>(null);
 
   function updateLine(key: string, patch: Partial<TicketLine>) {
     setLines((prev) => prev.map((l) => (l.key === key ? { ...l, ...patch } : l)));
@@ -263,16 +297,29 @@ export function PosComptoir({
     lines.every((l) => typeof l.prix_unitaire === "number" && l.prix_unitaire >= 0 && l.quantite > 0) &&
     total > 0;
   const recu = parseFloat(montantRecu) || 0;
-  const monnaie = payMode === "especes" && recu > total ? recu - total : 0;
+  const hasCaution = lines.some((l) => l.nature === "caution");
+  const cautionTotal = lines.reduce(
+    (s, l) =>
+      s + (l.nature === "caution" && typeof l.prix_unitaire === "number" ? l.prix_unitaire * l.quantite : 0),
+    0
+  );
+  // G2 : en mode acompte, le montant dû MAINTENANT est le montant affecté.
+  const affecte = parseFloat(montantAffecte) || 0;
+  const duMaintenant = acompteMode ? affecte : total;
+  const monnaie = payMode === "especes" && recu > duMaintenant ? recu - duMaintenant : 0;
 
   const checkoutBlockedReason = !sessionOpen
     ? "Ouvrez votre caisse pour activer l'encaissement."
     : !linesReady
     ? "Ajoutez au moins une prestation avec son prix."
+    : acompteMode && hasCaution
+    ? "Une caution se paie comptant — retirez-la ou désactivez l'acompte."
+    : acompteMode && (!Number.isFinite(affecte) || affecte <= 0 || affecte >= total)
+    ? "Saisissez un acompte supérieur à 0 et inférieur au total."
     : payMode !== "especes" && !confirmationRef.trim()
     ? "Saisissez la référence de confirmation du paiement électronique."
-    : payMode === "especes" && recu < total
-    ? "Le montant reçu est inférieur au total."
+    : payMode === "especes" && recu < duMaintenant
+    ? "Le montant reçu est inférieur au montant à encaisser."
     : null;
 
   // CAI-05 : la clé d'idempotence est générée à la première tentative et
@@ -302,12 +349,15 @@ export function PosComptoir({
           lignes: lines.map((l) => ({
             service_slug: l.service_slug,
             label: l.label,
+            description: l.description,
             quantite: l.quantite,
             prix_unitaire: l.prix_unitaire,
+            nature: l.nature,
           })),
           mode_paiement: payMode,
           montant_recu: payMode === "especes" ? recu : undefined,
           confirmation_reference: confirmationRef.trim() || undefined,
+          montant_affecte: acompteMode ? affecte : undefined,
         }),
       });
       const json = await res.json();
@@ -321,13 +371,14 @@ export function PosComptoir({
       const dossierRef = dossierId
         ? dossiers.find((d) => d.id === dossierId)?.reference || null
         : null;
+      const credit = json.credit as { reste_du: number } | undefined;
       const bytes = await generatePosTicketPdf({
         reference,
         date: new Date(),
         clientNom: client ? clientDisplayName(client) : null,
         dossierReference: dossierRef,
         lignes: lines.map((l) => ({
-          label: l.label,
+          label: (l.nature === "caution" ? "Caution — " : "") + l.label,
           quantite: l.quantite,
           prix_unitaire: typeof l.prix_unitaire === "number" ? l.prix_unitaire : 0,
           montant_total: (typeof l.prix_unitaire === "number" ? l.prix_unitaire : 0) * l.quantite,
@@ -338,6 +389,8 @@ export function PosComptoir({
         montantRecu: payMode === "especes" ? recu : null,
         monnaieRendue: payMode === "especes" ? monnaie : null,
         caissiereNom,
+        cautionTotal: cautionTotal > 0 ? cautionTotal : null,
+        acompte: credit ? { paye: duMaintenant, resteDu: credit.reste_du } : null,
       });
 
       setLastTicket({ reference, bytes });
@@ -345,7 +398,10 @@ export function PosComptoir({
       setMontantRecu("");
       setConfirmationRef("");
       setDossierId(null);
+      setAcompteMode(false);
+      setMontantAffecte("");
       ticketKeyRef.current = null;
+      if (credit) router.refresh();
       toast.success(
         json.replayed
           ? "Ce ticket avait déjà été enregistré — résultat initial repris, aucun doublon"
@@ -575,46 +631,85 @@ export function PosComptoir({
           {/* Caisse tout usage : encaissement libre */}
           <div className="mt-4 border-t border-line pt-4">
             {showFreeForm ? (
-              <div className="flex flex-wrap items-end gap-2">
-                <label className="min-w-[200px] flex-1">
+              <div className="space-y-2">
+                <div className="flex flex-wrap items-end gap-2">
+                  <label className="min-w-[200px] flex-1">
+                    <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                      Libellé du service encaissé *
+                    </span>
+                    <input
+                      type="text"
+                      value={freeLabel}
+                      onChange={(e) => setFreeLabel(e.target.value)}
+                      placeholder="Ex : pressing avec repassage, traduction, location…"
+                      className={cn(inputClass, "mt-1")}
+                      autoFocus
+                    />
+                  </label>
+                  <label className="w-20">
+                    <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                      Qté
+                    </span>
+                    <input
+                      type="number"
+                      min={1}
+                      value={freeQty}
+                      onChange={(e) => setFreeQty(e.target.value)}
+                      className={cn(inputClass, "mt-1")}
+                    />
+                  </label>
+                  <label className="w-36">
+                    <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                      Prix unitaire FCFA *
+                    </span>
+                    <input
+                      type="number"
+                      min={0}
+                      value={freePrice}
+                      onChange={(e) => setFreePrice(e.target.value)}
+                      className={cn(inputClass, "mt-1")}
+                    />
+                  </label>
+                </div>
+                <label className="block">
                   <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
-                    Libellé du service encaissé
+                    Description (optionnel)
                   </span>
                   <input
                     type="text"
-                    value={freeLabel}
-                    onChange={(e) => setFreeLabel(e.target.value)}
-                    placeholder="Ex : légalisation de document, frais consulaires…"
-                    className={cn(inputClass, "mt-1")}
-                    autoFocus
-                  />
-                </label>
-                <label className="w-36">
-                  <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
-                    Montant FCFA
-                  </span>
-                  <input
-                    type="number"
-                    min={0}
-                    value={freePrice}
-                    onChange={(e) => setFreePrice(e.target.value)}
+                    value={freeDescription}
+                    onChange={(e) => setFreeDescription(e.target.value)}
+                    placeholder="Précisions utiles sur la prestation…"
                     className={cn(inputClass, "mt-1")}
                   />
                 </label>
-                <button
-                  type="button"
-                  onClick={addFreeLine}
-                  className="rounded-sm border border-line px-4 py-2 text-body-sm font-semibold text-ink hover:border-line-strong"
-                >
-                  Ajouter au ticket
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowFreeForm(false)}
-                  className="rounded-sm px-2 py-2 text-body-sm text-ink-muted hover:text-ink"
-                >
-                  Annuler
-                </button>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <label className="flex cursor-pointer items-center gap-2 text-body-sm text-ink">
+                    <input
+                      type="checkbox"
+                      checked={freeCaution}
+                      onChange={(e) => setFreeCaution(e.target.checked)}
+                      className="h-4 w-4 accent-[rgb(var(--brand))]"
+                    />
+                    Caution remboursable (location) — dans le tiroir, jamais une recette
+                  </label>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={addFreeLine}
+                      className="rounded-sm border border-line px-4 py-2 text-body-sm font-semibold text-ink hover:border-line-strong"
+                    >
+                      Ajouter au ticket
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowFreeForm(false)}
+                      className="rounded-sm px-2 py-2 text-body-sm text-ink-muted hover:text-ink"
+                    >
+                      Annuler
+                    </button>
+                  </div>
+                </div>
               </div>
             ) : (
               <button
@@ -746,7 +841,14 @@ export function PosComptoir({
               {lines.map((l) => (
                 <li key={l.key} className="rounded-sm border border-line bg-surface p-3">
                   <div className="flex items-start justify-between gap-2">
-                    <p className="text-body-sm font-semibold text-ink">{l.label}</p>
+                    <p className="text-body-sm font-semibold text-ink">
+                      {l.label}
+                      {l.nature === "caution" && (
+                        <span className="ml-2 rounded-sm border border-line px-1.5 py-0.5 text-caption font-semibold text-ink-muted">
+                          Caution
+                        </span>
+                      )}
+                    </p>
                     <button
                       type="button"
                       onClick={() => removeLine(l.key)}
@@ -823,6 +925,35 @@ export function PosComptoir({
             ))}
           </div>
 
+          {/* G2 : acompte (paiement partiel) */}
+          <label className="mt-3 flex cursor-pointer items-center justify-between gap-2 rounded-sm border border-line bg-surface px-3 py-2">
+            <span className="flex items-center gap-2 text-body-sm text-ink">
+              <input
+                type="checkbox"
+                checked={acompteMode}
+                onChange={(e) => setAcompteMode(e.target.checked)}
+                className="h-4 w-4 accent-[rgb(var(--brand))]"
+              />
+              Paiement partiel (acompte)
+            </span>
+            {acompteMode && (
+              <input
+                type="number"
+                min={0}
+                value={montantAffecte}
+                onChange={(e) => setMontantAffecte(e.target.value)}
+                placeholder="Montant affecté FCFA"
+                className={cn(inputClass, "w-44")}
+              />
+            )}
+          </label>
+          {acompteMode && affecte > 0 && affecte < total && (
+            <p className="mt-1 text-caption text-ink-muted">
+              Reste dû après cet acompte : {formatMoney(total - affecte)} — créance de comptoir
+              ouverte, réglable plus tard.
+            </p>
+          )}
+
           {payMode === "especes" ? (
             <div className="mt-3 grid grid-cols-2 gap-3">
               <label className="block">
@@ -898,6 +1029,38 @@ export function PosComptoir({
           )}
         </section>
 
+        {/* G2 : créances de comptoir ouvertes (reste dû) */}
+        {credits.length > 0 && (
+          <section className="rounded-sm border border-line bg-surface-elevated p-4">
+            <h2 className="font-display text-title text-ink">Restes dus au comptoir</h2>
+            <ul className="mt-3 divide-y divide-line">
+              {credits.map((c) => (
+                <li key={c.id} className="flex flex-wrap items-center justify-between gap-2 py-2.5">
+                  <div>
+                    <p className="text-body-sm font-medium text-ink">{c.client_nom || "Client de passage"}</p>
+                    <p className="text-caption text-ink-muted">
+                      Dû {formatMoney(Number(c.total_du))} · réglé {formatMoney(Number(c.total_regle))}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-body-sm font-semibold text-ink [font-variant-numeric:tabular-nums]">
+                      reste {formatMoney(Number(c.total_du) - Number(c.total_regle))}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setReglementTarget(c)}
+                      disabled={!sessionOpen}
+                      className="rounded-sm border border-line px-3 py-1.5 text-caption font-semibold text-ink hover:border-line-strong disabled:opacity-50"
+                    >
+                      Encaisser un règlement
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         {lastTicket && (
           <section className="rounded-sm border border-line bg-surface-elevated p-4">
             <p className="text-body-sm font-semibold text-ink">
@@ -934,6 +1097,147 @@ export function PosComptoir({
           }}
         />
       )}
+
+      {reglementTarget && (
+        <ReglementModal
+          credit={reglementTarget}
+          caissiereNom={caissiereNom}
+          onClose={() => setReglementTarget(null)}
+          onDone={(ticket) => {
+            setReglementTarget(null);
+            setLastTicket(ticket);
+            router.refresh();
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+// ── G2 : règlement complémentaire d'une créance de comptoir ────────────────
+function ReglementModal({
+  credit,
+  caissiereNom,
+  onClose,
+  onDone,
+}: {
+  credit: PosCredit;
+  caissiereNom: string;
+  onClose: () => void;
+  onDone: (ticket: { reference: string; bytes: Uint8Array }) => void;
+}) {
+  const reste = Number(credit.total_du) - Number(credit.total_regle);
+  const [montant, setMontant] = useState(String(reste));
+  const [mode, setMode] = useState<PayMode>("especes");
+  const [confirmation, setConfirmation] = useState("");
+  const [saving, setSaving] = useState(false);
+  const keyRef = useRef<string | null>(null);
+
+  async function submit() {
+    const paid = parseFloat(montant);
+    if (!Number.isFinite(paid) || paid <= 0 || paid > reste) {
+      toast.error(`Montant entre 1 et ${reste} FCFA requis`);
+      return;
+    }
+    if (mode !== "especes" && !confirmation.trim()) {
+      toast.error("Référence de confirmation requise pour un paiement électronique");
+      return;
+    }
+    if (!keyRef.current) keyRef.current = crypto.randomUUID();
+    setSaving(true);
+    try {
+      const res = await fetch("/api/accueil/pos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ticket_key: keyRef.current,
+          mode_paiement: mode,
+          confirmation_reference: confirmation.trim() || undefined,
+          credit_reglement: { credit_id: credit.id, montant: paid },
+        }),
+      });
+      const json = await res.json();
+      if (!json.success) {
+        toast.error(json.error || "Échec du règlement");
+        return;
+      }
+      const reference = (json.sales as { reference: string | null }[])[0]?.reference || "TICKET";
+      const resteApres = json.credit ? Number(json.credit.reste_du) : Math.max(0, reste - paid);
+      const bytes = await generatePosTicketPdf({
+        reference,
+        date: new Date(),
+        clientNom: credit.client_nom,
+        lignes: [
+          { label: "Règlement créance comptoir", quantite: 1, prix_unitaire: paid, montant_total: paid },
+        ],
+        total: paid,
+        devise: "FCFA",
+        modePaiement: PAY_MODE_LABELS[mode],
+        caissiereNom,
+        acompte: resteApres > 0 ? { paye: paid, resteDu: resteApres } : null,
+      });
+      toast.success(resteApres > 0 ? `Règlement encaissé — reste dû ${resteApres} FCFA` : "Créance soldée");
+      onDone({ reference, bytes });
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
+      <div className="w-full max-w-md rounded-sm border border-line bg-surface-elevated p-6" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between">
+          <h3 className="font-display text-title font-bold text-ink">Encaisser un règlement</h3>
+          <button type="button" onClick={onClose} className="rounded-sm p-1 text-ink-subtle hover:bg-surface-sunken" aria-label="Fermer">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+        <p className="mt-1 text-caption text-ink-muted">
+          {credit.client_nom || "Client de passage"} · reste dû {Math.round(reste).toLocaleString("fr-FR")} FCFA —
+          la même créance est rechargée, jamais une seconde.
+        </p>
+        <label className="mt-4 block">
+          <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">Montant FCFA *</span>
+          <input type="number" min={1} max={reste} value={montant} onChange={(e) => setMontant(e.target.value)} className={cn(inputClass, "mt-1")} autoFocus />
+        </label>
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          {PAY_MODES.map((m) => (
+            <button
+              key={m.value}
+              type="button"
+              onClick={() => setMode(m.value)}
+              className={cn(
+                "flex flex-col items-center gap-1 rounded-sm border px-2 py-2 text-caption font-semibold",
+                mode === m.value ? "border-line-strong bg-surface-sunken text-ink" : "border-line text-ink-muted hover:border-line-strong"
+              )}
+            >
+              <m.icon className="h-4 w-4" aria-hidden />
+              {m.label}
+            </button>
+          ))}
+        </div>
+        {mode !== "especes" && (
+          <label className="mt-3 block">
+            <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+              Référence de confirmation vérifiée *
+            </span>
+            <input type="text" value={confirmation} onChange={(e) => setConfirmation(e.target.value)} className={cn(inputClass, "mt-1")} />
+          </label>
+        )}
+        <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+          <button type="button" onClick={onClose} className="rounded-sm border border-line px-4 py-2 text-body-sm font-semibold text-ink hover:border-line-strong">
+            Annuler
+          </button>
+          <button
+            type="button"
+            disabled={saving}
+            onClick={submit}
+            className="rounded-sm bg-brand px-4 py-2 text-body-sm font-semibold text-on-brand hover:bg-brand-hover disabled:opacity-50"
+          >
+            {saving ? "Encaissement…" : "Encaisser"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
