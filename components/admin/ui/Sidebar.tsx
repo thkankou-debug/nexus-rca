@@ -62,6 +62,12 @@ export function Sidebar({
               {footer}
             </div>
           )}
+          {/* Marqueur de build — diagnostic « quel écran est affiché ? » */}
+          {!collapsed && (
+            <p className="shrink-0 px-4 pb-1 text-[10px] tracking-wide text-sidebar-ink-subtle">
+              build {process.env.NEXT_PUBLIC_BUILD_SHA || "?"}
+            </p>
+          )}
           {onToggleCollapsed && (
             <div className="hidden shrink-0 border-t border-sidebar-line p-2 lg:block">
               <button
