@@ -20,7 +20,7 @@ const inputClass =
 export function OuvrirCaisseCard({
   sessionStatus,
 }: {
-  sessionStatus: "ouverte" | "a_cloturer" | null;
+  sessionStatus: "ouverte" | "a_cloturer" | "correction_demandee" | null;
 }) {
   const router = useRouter();
   const [fonds, setFonds] = useState("");

@@ -11,7 +11,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
-import { createNotification } from "@/lib/notifications";
+import { createNotification, createNotificationsForRoles } from "@/lib/notifications";
 import { logAudit } from "@/lib/audit";
 
 export const dynamic = "force-dynamic";
@@ -102,8 +102,65 @@ export async function GET(request: NextRequest) {
       escalated++;
     }
 
-    console.log(`[CRON ESCALADES] ${escalated} instruction(s) escaladée(s)`);
-    return NextResponse.json({ success: true, escalated });
+    // ── §7.3 (lot G1) : affectations sans réponse depuis plus de 24 h ──
+    // Même patron d'idempotence (marqueur audit_log par jour).
+    const cutoff = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
+    const { data: silentAssignments } = await admin
+      .from("demandes")
+      .select("id, reference, nom_complet, service, agent_id, updated_at")
+      .eq("acceptation_status", "en_attente")
+      .lt("updated_at", cutoff)
+      .limit(50);
+
+    let acceptationsEscaladees = 0;
+    for (const dem of (silentAssignments || []) as {
+      id: string;
+      reference: string | null;
+      nom_complet: string;
+      service: string;
+      agent_id: string | null;
+    }[]) {
+      const { data: already } = await admin
+        .from("audit_log")
+        .select("id")
+        .eq("entity_type", "demandes")
+        .eq("entity_id", dem.id)
+        .eq("action", "demande.acceptation_escalade")
+        .gte("created_at", `${today}T00:00:00Z`)
+        .limit(1);
+      if (already && already.length > 0) continue;
+
+      if (dem.agent_id) {
+        await createNotification(
+          dem.agent_id,
+          "demande_urgent",
+          `Dossier ${dem.reference || dem.nom_complet} en attente de votre acceptation`,
+          `${dem.service} — acceptez ou refusez l'affectation (silence escaladé à la direction).`,
+          "/dashboard/agent"
+        );
+      }
+      await createNotificationsForRoles(
+        ["admin", "super_admin"],
+        "demande_urgent",
+        `Affectation sans réponse — ${dem.reference || dem.nom_complet}`,
+        `L'agent n'a ni accepté ni refusé depuis plus de 24 h (${dem.service}).`,
+        "/dashboard/admin/dossiers"
+      );
+      await logAudit({
+        userId: null,
+        userRole: "system",
+        action: "demande.acceptation_escalade",
+        entityType: "demandes",
+        entityId: dem.id,
+        newValue: { agent_id: dem.agent_id },
+      });
+      acceptationsEscaladees++;
+    }
+
+    console.log(
+      `[CRON ESCALADES] ${escalated} instruction(s), ${acceptationsEscaladees} affectation(s) escaladée(s)`
+    );
+    return NextResponse.json({ success: true, escalated, acceptations: acceptationsEscaladees });
   } catch (err) {
     console.error("[CRON ESCALADES] EXCEPTION:", err);
     const message = err instanceof Error ? err.message : "Erreur inconnue";

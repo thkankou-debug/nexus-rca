@@ -59,6 +59,7 @@ export function CaisseWorkspace({
 
   const sessionOpen = session?.status === "ouverte";
   const soumise = session?.status === "a_cloturer";
+  const correction = session?.status === "correction_demandee";
 
   // Session interrompue (§6) : ouverte un jour précédent (heure de Bangui).
   const jourBangui = (d: string | Date) =>
@@ -75,11 +76,23 @@ export function CaisseWorkspace({
             <span
               className={cn(
                 "h-2 w-2 rounded-full",
-                sessionOpen ? "bg-status-success" : soumise ? "bg-status-waiting" : "bg-status-inert"
+                sessionOpen
+                  ? "bg-status-success"
+                  : soumise
+                  ? "bg-status-waiting"
+                  : correction
+                  ? "bg-status-failure"
+                  : "bg-status-inert"
               )}
               aria-hidden
             />
-            {sessionOpen ? "Session ouverte" : soumise ? "Journée soumise" : "Session à ouvrir"}
+            {sessionOpen
+              ? "Session ouverte"
+              : soumise
+              ? "Journée soumise"
+              : correction
+              ? "Correction demandée"
+              : "Session à ouvrir"}
           </span>
           {!session && (
             <button
@@ -114,7 +127,30 @@ export function CaisseWorkspace({
         </div>
       )}
 
-      {soumise ? (
+      {correction ? (
+        <div className="mx-auto max-w-2xl">
+          <div className="rounded-sm border border-status-failure bg-surface-elevated p-6 text-center">
+            <Lock className="mx-auto h-8 w-8 text-status-failure" aria-hidden />
+            <h2 className="mt-3 font-display text-title text-ink">
+              Correction demandée par le valideur
+            </h2>
+            <p className="mt-2 text-body-sm font-semibold text-ink">
+              {session!.correction_motif || "Re-comptez les espèces puis soumettez de nouveau."}
+            </p>
+            <p className="mt-2 text-body-sm text-ink-muted">
+              Vos valeurs initiales sont conservées. Re-comptez le tiroir puis re-soumettez le
+              rapprochement — les encaissements de cette session restent arrêtés.
+            </p>
+            <Link
+              href="/dashboard/accueil/session"
+              className="mt-4 inline-flex items-center gap-2 rounded-sm bg-brand px-4 py-2 text-body-sm font-semibold text-on-brand hover:bg-brand-hover"
+            >
+              <Wallet className="h-4 w-4" />
+              Reprendre le rapprochement
+            </Link>
+          </div>
+        </div>
+      ) : soumise ? (
         <div className="mx-auto max-w-2xl">
           <div className="rounded-sm border border-line bg-surface-elevated p-6 text-center">
             <Lock className="mx-auto h-8 w-8 text-ink-muted" aria-hidden />

@@ -217,7 +217,9 @@
       "PowerShell($c = Get-NetTCPConnection -LocalPort 3130 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")",
       "PowerShell($c = Get-NetTCPConnection -LocalPort 3131 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")",
       "PowerShell($c = Get-NetTCPConnection -LocalPort 3133 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")",
-      "PowerShell($c = Get-NetTCPConnection -LocalPort 3134 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")"
+      "PowerShell($c = Get-NetTCPConnection -LocalPort 3134 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")",
+      "Bash(grep -o 'test\\\\.agent@nexusrca\\\\.test[^\\\\\"]\\\\{0,40\\\\}' \"C:/Users/user/.claude/projects/C--Users-user-Desktop-nexus-test-nouveau-nexus-rca-claude-test/1810fd1a-70b3-4e71-9763-4e719f77c9fb.jsonl\")",
+      "PowerShell($c = Get-NetTCPConnection -LocalPort 3135 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")"
     ]
   }
 }

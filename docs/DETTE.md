@@ -3470,3 +3470,45 @@ les bandes d'en-tête existantes.
 stockée et PDF logotypé (FC-2026-000008) ; page factures 200. Les PDF
 client-side chargent le logo par fetch (cache) — hors ligne, le document
 sort sans logo, l'impression n'est jamais bloquée.
+
+---
+
+## 13/09/2026 — Retour au cahier : décisions actées + LOT G1/G2 livré
+
+**Décisions Thierry (13/09)** : **AR-04 = avoir uniquement** (pas de
+remise en caisse ; toute réduction/remboursement de prestation passe par
+un avoir tracé — les cautions restent remboursables en espèces) ;
+**Typographie §4.3 = Syne + Jakarta conservées** (le cahier est amendé,
+les maquettes validées font foi) ; **AR-03 = D6/D7 DÉFINITIFS** (statuts
+financiers déclaré→rapproché→validé et fiche client canonique).
+
+**SEC-06 (096)** : audit_log IMMUABLE par trigger — UPDATE/DELETE
+refusés même en service_role (preuve rollback).
+
+**G2 · §8.5 « correction demandée » (migration 097)** : le valideur
+(caisse.close, ≠ titulaire — 403 même super_admin) renvoie une session
+SOUMISE avec motif obligatoire ; transactions toujours figées ; la
+titulaire voit le motif (poste de travail Caisse + page Session), re-
+compte et RE-SOUMET (/submit accepte correction_demandee) ; notification
+in-app. Boutons « Demander une correction » (valideur) / « Reprendre le
+rapprochement » (titulaire) ; badge d'état partout. Vérifié 5/5 : motif
+vide 400, self-correction 403, cycle soumis→correction→re-soumis→clôturé.
+
+**G1 · §7.3 acceptation d'affectation (097)** : toute affectation
+(route /assign) passe en `en_attente` ; l'agent ACCEPTE ou REFUSE (motif
+obligatoire → admins notifiés pour réaffecter) depuis un bandeau dédié
+sur son tableau de bord ; seul l'agent affecté répond (403 sinon) ;
+double réponse 409 ; réaffectation remet en_attente. **Escalade** :
+le cron quotidien instruction-escalades notifie agent + direction après
+24 h de silence (idempotent par jour via audit_log). Vérifié 7/7.
+NULL = dossiers historiques, aucun blocage rétroactif.
+
+**§7.2 constaté au passage** : demande_status_history s'alimente
+désormais réellement (2 lignes après les affectations de test).
+
+**Reste du Lot G (sans arbitrage)** : G3 outbox transactionnelle,
+G4 versions documentaires + liens temporaires, G5 écrans partenaire
+staff, G6 recherche globale portées daf/dg/comptable/chef, G7 états
+uniformes accès refusé/erreur + masquage audit, G8 recette R01→R24.
+Bloqués restants : AR-02/05 (délégations/suppléants), AR-06 (portées),
+AR-07 (bascule production), fusion FAC-/FC-.

@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
     const admin = getAdminClient();
     let query = admin
       .from("caisse_sessions")
-      .select("id, agent_id, opened_at, closed_at, opening_balance, expected_balance, actual_balance, discrepancy, status, notes, created_at, profiles(nom, prenom)")
+      .select("id, agent_id, opened_at, closed_at, opening_balance, expected_balance, actual_balance, discrepancy, status, notes, correction_motif, created_at, profiles(nom, prenom)")
       .order("opened_at", { ascending: false });
 
     // accueil_caisse : même portée que l'agent — uniquement ses propres

@@ -81,7 +81,9 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       );
     }
 
-    if (sessionRow.status !== "ouverte") {
+    // §8.5 (lot G2) : une session renvoyée en « correction demandée » se
+    // RE-SOUMET après re-comptage — les autres états restent bloqués.
+    if (sessionRow.status !== "ouverte" && sessionRow.status !== "correction_demandee") {
       return NextResponse.json(
         { success: false, error: "Cette session n'est pas ouverte (déjà soumise ou clôturée)" },
         { status: 400 }

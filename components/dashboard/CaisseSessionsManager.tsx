@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
 import { downloadCsv } from "@/lib/csv-export";
 import { SERVICE_LABELS, type QuickServiceType } from "@/components/dashboard/QuickSaleForm";
 
-type SessionStatus = "ouverte" | "a_cloturer" | "cloturee";
+type SessionStatus = "ouverte" | "a_cloturer" | "correction_demandee" | "cloturee";
 
 export interface CaisseSessionListItem {
   id: string;
@@ -32,6 +32,8 @@ export interface CaisseSessionListItem {
   discrepancy: number | null;
   status: SessionStatus;
   notes: string | null;
+  /** §8.5 : motif du renvoi en correction par le valideur. */
+  correction_motif?: string | null;
   profiles: { nom: string; prenom: string | null } | null;
 }
 
@@ -109,7 +111,13 @@ export function CaisseSessionsManager({
     () => sessions.find((s) => s.agent_id === currentUserId && s.status === "a_cloturer"),
     [sessions, currentUserId]
   );
-  const ownActiveSession = ownOpenSession || ownPendingSession;
+  // §8.5 (lot G2) : session renvoyée par le valideur — à re-compter puis
+  // re-soumettre.
+  const ownCorrectionSession = useMemo(
+    () => sessions.find((s) => s.agent_id === currentUserId && s.status === "correction_demandee"),
+    [sessions, currentUserId]
+  );
+  const ownActiveSession = ownOpenSession || ownPendingSession || ownCorrectionSession;
   const pendingValidation = useMemo(
     () => (canClose ? sessions.filter((s) => s.status === "a_cloturer") : []),
     [sessions, canClose]
@@ -177,6 +185,32 @@ export function CaisseSessionsManager({
                 En attente de validation par le DAF / l&apos;admin
               </p>
             </div>
+          </div>
+        ) : ownCorrectionSession ? (
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-red-100 text-red-700">
+                <AlertTriangle className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-red-700">Correction demandée par le valideur</p>
+                <p className="font-display text-lg font-bold text-nexus-blue-950">
+                  {ownCorrectionSession.correction_motif || "Re-comptez puis soumettez de nouveau"}
+                </p>
+                <p className="mt-0.5 text-xs text-slate-500">
+                  Vos valeurs initiales sont conservées — re-comptez les espèces puis soumettez de
+                  nouveau le rapprochement.
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setReconcileTarget({ session: ownCorrectionSession, mode: "submit" })}
+              className="inline-flex items-center gap-2 rounded-full bg-nexus-blue-950 px-5 py-2.5 text-sm font-semibold text-white hover:bg-nexus-blue-900"
+            >
+              <ClipboardCheck className="h-4 w-4" />
+              Reprendre le rapprochement
+            </button>
           </div>
         ) : (
           <div className="flex flex-wrap items-center justify-between gap-4">
@@ -293,14 +327,46 @@ export function CaisseSessionsManager({
                     {s.discrepancy !== null && Math.abs(s.discrepancy) > 0 && ` · Écart ${formatMoney(s.discrepancy)}`}
                   </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setReconcileTarget({ session: s, mode: "close" })}
-                  className="inline-flex items-center gap-2 rounded-full bg-nexus-blue-950 px-4 py-2 text-xs font-semibold text-white hover:bg-nexus-blue-900"
-                >
-                  <Lock className="h-3.5 w-3.5" />
-                  Valider et clôturer
-                </button>
+                <div className="flex flex-wrap gap-2">
+                  {/* §8.5 (lot G2) : renvoi en correction — motif obligatoire,
+                      valeurs conservées, titulaire notifiée. */}
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const motif = prompt(
+                        "Motif de la demande de correction (obligatoire) — la caissière le verra :"
+                      );
+                      if (!motif || motif.trim().length < 3) {
+                        if (motif !== null) toast.error("Motif obligatoire (3 caractères minimum)");
+                        return;
+                      }
+                      const res = await fetch(`/api/caisse-sessions/${s.id}/correction`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ motif: motif.trim() }),
+                      });
+                      const json = await res.json();
+                      if (!json.success) {
+                        toast.error(json.error || "Échec de la demande de correction");
+                        return;
+                      }
+                      toast.success("Session renvoyée en correction — titulaire notifiée");
+                      await reload();
+                    }}
+                    className="inline-flex items-center gap-2 rounded-full border border-red-200 bg-white px-4 py-2 text-xs font-semibold text-red-700 hover:bg-red-50"
+                  >
+                    <AlertTriangle className="h-3.5 w-3.5" />
+                    Demander une correction
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setReconcileTarget({ session: s, mode: "close" })}
+                    className="inline-flex items-center gap-2 rounded-full bg-nexus-blue-950 px-4 py-2 text-xs font-semibold text-white hover:bg-nexus-blue-900"
+                  >
+                    <Lock className="h-3.5 w-3.5" />
+                    Valider et clôturer
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -526,12 +592,20 @@ function FundMovementsBlock({
 
 function SessionCard({ session }: { session: CaisseSessionListItem }) {
   const statusLabel =
-    session.status === "ouverte" ? "Ouverte" : session.status === "a_cloturer" ? "À valider" : "Clôturée";
+    session.status === "ouverte"
+      ? "Ouverte"
+      : session.status === "a_cloturer"
+      ? "À valider"
+      : session.status === "correction_demandee"
+      ? "Correction demandée"
+      : "Clôturée";
   const statusClass =
     session.status === "ouverte"
       ? "bg-blue-100 text-blue-700 border-blue-200"
       : session.status === "a_cloturer"
       ? "bg-amber-100 text-amber-700 border-amber-200"
+      : session.status === "correction_demandee"
+      ? "bg-red-100 text-red-700 border-red-200"
       : "bg-slate-100 text-slate-700 border-slate-200";
   const discrepancy = session.discrepancy;
   const hasDiscrepancy = discrepancy !== null && Math.abs(discrepancy) > 0;

@@ -42,7 +42,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     const admin = getAdminClient();
     const { data: session } = await admin
       .from("caisse_sessions")
-      .select("id, agent_id, opened_at, closed_at, opening_balance, expected_balance, actual_balance, discrepancy, status, notes")
+      .select("id, agent_id, opened_at, closed_at, opening_balance, expected_balance, actual_balance, discrepancy, status, notes, correction_motif")
       .eq("id", params.id)
       .single();
 

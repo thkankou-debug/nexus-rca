@@ -16,6 +16,7 @@ import {
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
+import { AcceptationDossiers, type AffectationEnAttente } from "@/components/dashboard/AcceptationDossiers";
 import { DashboardHero } from "@/components/dashboard/DashboardHero";
 import { AgentAvatar } from "@/components/dashboard/AgentAvatar";
 import { Sparkline } from "@/components/ui/Sparkline";
@@ -229,6 +230,15 @@ export default async function AgentDashboardPage() {
     [profile.prenom, profile.nom].filter(Boolean).join(" ") || "Agent";
   const initials = (profile.prenom?.[0] ?? "") + (profile.nom?.[0] ?? "");
 
+  // §7.3 (lot G1) : dossiers affectés en attente d'acceptation de l'agent.
+  const { data: affectationsEnAttente } = await supabase
+    .from("demandes")
+    .select("id, reference, nom_complet, service, created_at")
+    .eq("agent_id", profile.id)
+    .eq("acceptation_status", "en_attente")
+    .order("created_at", { ascending: false })
+    .limit(20);
+
   return (
     <>
       {/* HERO PREMIUM (composant partagé) */}
@@ -268,6 +278,9 @@ export default async function AgentDashboardPage() {
           ) : undefined
         }
       />
+
+      {/* §7.3 : affectations à accepter — disparaît quand tout est traité */}
+      <AcceptationDossiers dossiers={(affectationsEnAttente || []) as AffectationEnAttente[]} />
 
       {/* ACTIONS RAPIDES */}
       <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

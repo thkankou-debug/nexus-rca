@@ -20,9 +20,11 @@ export function getAccueilAdminClient(): SupabaseClient {
 
 export interface SessionSnapshot {
   id: string;
-  status: "ouverte" | "a_cloturer";
+  status: "ouverte" | "a_cloturer" | "correction_demandee";
   opened_at: string;
   opening_balance: number;
+  /** §8.5 : motif du renvoi en correction par le valideur (sinon null). */
+  correction_motif?: string | null;
   /** Ventes rapides en espèces depuis l'ouverture. */
   especes_encaissees: number;
   /** Ventes rapides hors espèces depuis l'ouverture (jamais dans le tiroir). */
@@ -43,9 +45,9 @@ export async function getOwnSessionSnapshot(userId: string): Promise<SessionSnap
 
   const { data: session } = await admin
     .from("caisse_sessions")
-    .select("id, status, opened_at, opening_balance")
+    .select("id, status, opened_at, opening_balance, correction_motif")
     .eq("agent_id", userId)
-    .in("status", ["ouverte", "a_cloturer"])
+    .in("status", ["ouverte", "a_cloturer", "correction_demandee"])
     .order("opened_at", { ascending: false })
     .limit(1)
     .maybeSingle();
@@ -54,9 +56,10 @@ export async function getOwnSessionSnapshot(userId: string): Promise<SessionSnap
 
   const row = session as {
     id: string;
-    status: "ouverte" | "a_cloturer";
+    status: "ouverte" | "a_cloturer" | "correction_demandee";
     opened_at: string;
     opening_balance: number;
+    correction_motif: string | null;
   };
 
   const { data: ventes } = await admin
@@ -92,6 +95,7 @@ export async function getOwnSessionSnapshot(userId: string): Promise<SessionSnap
     status: row.status,
     opened_at: row.opened_at,
     opening_balance: Number(row.opening_balance),
+    correction_motif: row.correction_motif,
     especes_encaissees: especes,
     paiements_electroniques: electroniques,
     especes_theoriques: Number(row.opening_balance) + especes + totalMouvements,
