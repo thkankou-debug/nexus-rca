@@ -17,7 +17,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { Banknote, Loader2, Lock, ShoppingCart, Wallet, X } from "lucide-react";
+import { Banknote, Loader2, Lock, Plus, ShoppingCart, Wallet, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { SessionSnapshot } from "@/lib/accueil-server";
 import { CaisseLibre, type RaccourciService } from "./CaisseLibre";
@@ -164,11 +164,13 @@ export function CaisseWorkspace({
                 </button>
               ))}
             </div>
+            {/* Vrai bouton (retour Thierry 12/09 : pas un simple texte). */}
             <button
               type="button"
               onClick={() => window.dispatchEvent(new CustomEvent("nexus-caisse-nouvelle-vente"))}
-              className="whitespace-nowrap px-2 py-2 text-body-sm font-semibold text-brand underline-offset-2 hover:underline"
+              className="mb-1.5 inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm bg-brand px-4 py-2 text-body-sm font-semibold text-on-brand transition-colors hover:bg-brand-hover"
             >
+              <Plus className="h-4 w-4" aria-hidden />
               Nouvelle vente
             </button>
           </div>
