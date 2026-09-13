@@ -114,3 +114,31 @@ GELÉ (CLAUDE.md). Ne plus proposer de le migrer.
 - Imprimante 80 mm : modèle exact, connexion (USB/réseau/Bluetooth), OS
   du poste, navigateur → active l'impression silencieuse + test n°8.
 - NIF et RCCM → à recopier dans `lib/facture-config.ts`.
+
+## GO PRODUCTION — exécuté le 13/09/2026 (critère 5 rempli)
+Thierry a donné le GO explicite le 13/09/2026 au soir (heure de Bangui,
+hors heures d'ouverture, conformément à la fenêtre conseillée).
+
+**Exécution** : tag de sauvegarde `backup-pre-v3-2026-09-13` poussé sur
+`main` (= ec32424, production du 08/05) → merge `--no-ff` de
+`v3/integration-v3` (c6d8a62) → push → déploiement Vercel.
+
+**Vérification post-déploiement (www.nexusrca.com, 13/09)** :
+- 10 pages publiques clés en 200 (accueil, services, visa,
+  reseau-international, a-propos, contact, nexus-connect,
+  demande/complet, login, rendez-vous) ; palette or confirmée servie ;
+- **11/11 profils** : connexion réelle + page d'accueil du rôle en 200
+  (vue-ensemble ×2, pilotage, trésorerie, compta, mon-service, agent,
+  accueil/caisse, modération, partenaire, client).
+
+**Retour arrière si besoin** : `git revert -m 1 c6d8a62` sur main, ou
+redéploiement du tag `backup-pre-v3-2026-09-13` depuis Vercel.
+
+**Reste à faire post-bascule** :
+- Ajouter `CRON_SECRET` dans Vercel (Settings → Environment Variables)
+  pour activer les 4 crons (rapport mensuel, rappels RDV, contrôles RH,
+  escalades d'instructions) — sans elle, les crons répondent une erreur
+  explicite et ne font rien. `MONTHLY_REPORT_RECIPIENTS` optionnelle.
+- Comptes de test `is_test` : rotation du mot de passe commun ou
+  désactivation (durcissement) — à planifier avec Thierry.
+- MFA TOTP (GO dédié), imprimante 80 mm, NIF/RCCM.
