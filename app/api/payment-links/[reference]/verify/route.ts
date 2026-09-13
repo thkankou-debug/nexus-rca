@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { Resend } from "resend";
+import { embedNexusLogo } from "@/lib/pdf-logo";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { sanitizeForPdf } from "@/lib/pdf-layout";
 
@@ -360,8 +361,11 @@ async function generateReceiptPDF(data: {
   // HEADER
   page.drawRectangle({ x: 0, y: height - 130, width, height: 130, color: nexusBlue });
   page.drawRectangle({ x: 0, y: height - 130, width: 6, height: 130, color: nexusOrange });
-  drawSafeText("NEXUS RCA", { x: 50, y: height - 55, size: 24, font: helveticaBold, color: white });
-  drawSafeText("Agence Internationale - Bangui", { x: 50, y: height - 78, size: 11, font: helvetica, color: rgb(0.7, 0.75, 0.85) });
+  // Logo officiel (demande Thierry 12/09) — jamais bloquant.
+  const nexusLogo = await embedNexusLogo(pdfDoc);
+  if (nexusLogo) page.drawImage(nexusLogo, { x: 50, y: height - 88, width: 44, height: 44 });
+  drawSafeText("NEXUS RCA", { x: 106, y: height - 55, size: 24, font: helveticaBold, color: white });
+  drawSafeText("Agence Internationale - Bangui", { x: 106, y: height - 78, size: 11, font: helvetica, color: rgb(0.7, 0.75, 0.85) });
   page.drawRectangle({ x: width - 175, y: height - 60, width: 125, height: 24, color: nexusOrange });
   drawSafeText("RECU OFFICIEL", { x: width - 162, y: height - 53, size: 11, font: helveticaBold, color: white });
   drawSafeText(`No ${data.reference}`, { x: width - 175, y: height - 80, size: 10, font: helvetica, color: white });

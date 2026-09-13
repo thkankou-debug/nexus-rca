@@ -235,6 +235,7 @@ export async function POST(request: NextRequest) {
         demande_id: body.demande_id || null,
         lignes: lignes.map((l) => ({
           designation: l.designation.trim().slice(0, 200),
+          description: l.description?.trim().slice(0, 300) || undefined,
           quantite: Number(l.quantite),
           unite: l.unite?.trim().slice(0, 30) || undefined,
           prix_unitaire: Number(l.prix_unitaire),

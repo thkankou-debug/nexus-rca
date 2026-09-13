@@ -1,5 +1,7 @@
 "use client";
 
+import { embedNexusLogoClient } from "@/lib/pdf-logo-client";
+
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import {
@@ -140,7 +142,12 @@ async function generateTicketPDF(
   const centerX = width / 2;
   let y = 8;
 
-  // En-tete
+  // En-tete (logo officiel — jamais bloquant)
+  const nexusLogo = await embedNexusLogoClient(pdfDoc);
+  if (nexusLogo) {
+    page.drawImage(nexusLogo, { x: mm(centerX - 6), y: pageHeight - mm(y + 12), width: mm(12), height: mm(12) });
+    y += 13;
+  }
   drawText(page, pageHeight, helveticaBold, "NEXUS RCA", mm(centerX), mm(y), 14, black, "center");
 
   y += 5;

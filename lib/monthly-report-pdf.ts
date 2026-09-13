@@ -7,6 +7,7 @@
 //   - Couleurs Nexus (navy + orange)
 // ============================================================================
 
+import { embedNexusLogo } from "@/lib/pdf-logo";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import type { MonthSummary } from "@/lib/monthly-report-data";
 
@@ -101,15 +102,17 @@ export async function buildMonthlyReportPdf(summary: MonthSummary): Promise<Uint
   drawRect(0, PAGE_H - 130, PAGE_W, 130, nexusBlue);
   drawRect(0, PAGE_H - 130, 6, 130, nexusGold);
 
+  const nexusLogo = await embedNexusLogo(pdfDoc);
+  if (nexusLogo) page.drawImage(nexusLogo, { x: MARGIN_X, y: PAGE_H - 88, width: 44, height: 44 });
   drawText("NEXUS RCA", {
-    x: MARGIN_X,
+    x: MARGIN_X + 56,
     y: PAGE_H - 55,
     size: 22,
     font: helveticaBold,
     color: white,
   });
   drawText("Rapport mensuel financier", {
-    x: MARGIN_X,
+    x: MARGIN_X + 56,
     y: PAGE_H - 78,
     size: 12,
     color: rgb(0.7, 0.78, 0.9),

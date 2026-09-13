@@ -1,5 +1,7 @@
 "use client";
 
+import { embedNexusLogoClient } from "@/lib/pdf-logo-client";
+
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { FileDown, Loader2, Printer, Mail, X } from "lucide-react";
@@ -115,8 +117,10 @@ async function generateReceiptPDF(
   drawFilledRect(page, pageHeightPt, 0, 0, mm(pageWidth), mm(8), NEXUS_GOLD);
 
   y = 25;
-  drawText(page, pageHeightPt, helveticaBold, "NEXUS RCA", mm(margin), mm(y), 24, NEXUS_BLUE);
-  drawText(page, pageHeightPt, helvetica, "Agence Internationale", mm(margin), mm(y + 6), 10, NEXUS_BLUE);
+  const nexusLogo = await embedNexusLogoClient(pdfDoc);
+  if (nexusLogo) page.drawImage(nexusLogo, { x: mm(margin), y: pageHeightPt - mm(y + 7), width: mm(13), height: mm(13) });
+  drawText(page, pageHeightPt, helveticaBold, "NEXUS RCA", mm(margin) + mm(16), mm(y), 24, NEXUS_BLUE);
+  drawText(page, pageHeightPt, helvetica, "Agence Internationale", mm(margin) + mm(16), mm(y + 6), 10, NEXUS_BLUE);
 
   const rightX = pageWidth - margin;
   drawText(page, pageHeightPt, helvetica, "Croisement Marabena, Route de l'Aéroport", mm(rightX), mm(y - 2), 8, SLATE_MID, "right");

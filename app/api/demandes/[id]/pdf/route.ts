@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { embedNexusLogo } from "@/lib/pdf-logo";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
@@ -172,12 +173,14 @@ export async function GET(
       height: 100,
       color: nexusBlue,
     });
-    drawText("NEXUS RCA", MARGIN_X, PAGE_H - 35, {
+    const nexusLogo = await embedNexusLogo(pdfDoc);
+    if (nexusLogo) page.drawImage(nexusLogo, { x: MARGIN_X, y: PAGE_H - 66, width: 36, height: 36 });
+    drawText("NEXUS RCA", MARGIN_X + 46, PAGE_H - 35, {
       size: 18,
       bold: true,
       color: white,
     });
-    drawText("Recapitulatif de dossier", MARGIN_X, PAGE_H - 56, {
+    drawText("Recapitulatif de dossier", MARGIN_X + 46, PAGE_H - 56, {
       size: 11,
       color: rgb(0.7, 0.75, 0.85),
     });

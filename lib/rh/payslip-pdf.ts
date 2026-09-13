@@ -5,6 +5,7 @@
 // Couleurs Nexus (navy + orange). A4.
 // ============================================================================
 
+import { embedNexusLogo } from "@/lib/pdf-logo";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import type { Employee, Payslip, PayslipLigne } from "@/types";
 
@@ -124,15 +125,17 @@ export async function buildPayslipPdf(opts: BuildPayslipOptions): Promise<Uint8A
   drawRect(0, PAGE_H - 130, PAGE_W, 130, nexusBlue);
   drawRect(0, PAGE_H - 130, 6, 130, nexusGold);
 
+  const nexusLogo = await embedNexusLogo(pdfDoc);
+  if (nexusLogo) page.drawImage(nexusLogo, { x: MARGIN_X, y: PAGE_H - 88, width: 44, height: 44 });
   drawText("NEXUS RCA", {
-    x: MARGIN_X,
+    x: MARGIN_X + 56,
     y: PAGE_H - 55,
     size: 22,
     font: helveticaBold,
     color: white,
   });
   drawText("Agence internationale - Bangui, RCA", {
-    x: MARGIN_X,
+    x: MARGIN_X + 56,
     y: PAGE_H - 75,
     size: 9,
     color: rgb(0.7, 0.78, 0.9),

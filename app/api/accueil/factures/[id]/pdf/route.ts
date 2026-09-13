@@ -239,6 +239,13 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
         text(suite, { size: 9.5 });
         nl(13);
       }
+      if (l.description) {
+        for (const desc of wrap(font, l.description, 280, 8)) {
+          ensure(11);
+          text(desc, { size: 8, color: GREY });
+          nl(11);
+        }
+      }
       page.drawLine({ start: { x: M, y: y + 4 }, end: { x: RIGHT, y: y + 4 }, thickness: 0.5, color: LIGHT });
       nl(6);
     }

@@ -6,6 +6,7 @@
 // WinAnsi, mais PRESERVE les accents (é è à ç ô etc.) et apostrophes.
 // ============================================================================
 
+import { embedNexusLogo } from "@/lib/pdf-logo";
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
 import type { Employee } from "@/types";
 
@@ -191,15 +192,17 @@ export async function buildContractPdf(opts: BuildContractOptions): Promise<Uint
   drawRect(0, PAGE_H - 110, PAGE_W, 110, nexusBlue);
   drawRect(0, PAGE_H - 110, 6, 110, nexusGold);
 
+  const nexusLogo = await embedNexusLogo(pdfDoc);
+  if (nexusLogo) page.drawImage(nexusLogo, { x: MARGIN_X, y: PAGE_H - 85, width: 40, height: 40 });
   drawText("NEXUS RCA", {
-    x: MARGIN_X,
+    x: MARGIN_X + 52,
     y: PAGE_H - 50,
     size: 22,
     font: helveticaBold,
     color: white,
   });
   drawText("Agence internationale - Bangui, République Centrafricaine", {
-    x: MARGIN_X,
+    x: MARGIN_X + 52,
     y: PAGE_H - 70,
     size: 9,
     color: rgb(0.7, 0.78, 0.9),

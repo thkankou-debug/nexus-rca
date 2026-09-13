@@ -12,6 +12,8 @@ export const FACTURE_SUPERVISION_ROLES = ["admin", "super_admin", "daf", "compta
 
 export interface InvoiceLine {
   designation: string;
+  /** Précision facultative affichée sous la désignation (facture complète). */
+  description?: string;
   quantite: number;
   unite?: string;
   prix_unitaire: number;

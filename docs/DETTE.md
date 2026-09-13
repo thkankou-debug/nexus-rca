@@ -3441,3 +3441,32 @@ coupure réseau (rejeu idempotent), concurrence sur le même reste dû
 NIF/RCCM (lib/facture-config.ts). Reste du grand cahier : rapprochements
 étendus §7 (relevés électroniques externes, factures de dossier),
 absences dans l'agenda, vue semaine.
+
+---
+
+## 12/09/2026 — Formulaire de facture COMPLET + logo sur TOUS les PDF
+
+**Formulaire de facture (retour Thierry : « pas du bricolage »)** :
+recherche d'une FICHE client (mêmes états visibles que la caisse,
+coordonnées préremplies, record_id envoyé) OU saisie libre ; chaque ligne
+= désignation (catalogue choisir-ou-saisir) + **DESCRIPTION facultative**
+(stockée dans lignes jsonb, affichée en gris sous la désignation sur le
+PDF) + quantité + unité + prix unitaire + TOTAL DE LIGNE ; total facture,
+échéance, conditions modifiables, brouillon/émission. `InvoiceLine`
+étendu côté serveur (description ≤ 300 car.).
+
+**Logo Nexus RCA sur les 16 générateurs PDF du site** (helpers
+`lib/pdf-logo.ts` serveur / `lib/pdf-logo-client.ts` navigateur, même
+fichier que le BrandMark, JAMAIS bloquant) : facture comptoir · rapport
+de session · reçu 80 mm accueil (déjà faits) + facture de dossier ·
+devis · récap de dossier · reçu de paiement (payments/receipt) · reçu
+auto des liens de paiement (verify) · rapport mensuel (lib) · contrat RH
+· bulletin de paie · rapport performances agents · rapport mensuel
+client · reçu A4 PaymentReceipt · ticket 80 mm Caisse rapide agent ·
+export Caisse rapide. Wordmarks décalés pour laisser place au logo dans
+les bandes d'en-tête existantes.
+
+**Vérifié** : tsc + build 0 erreur ; facture émise avec description
+stockée et PDF logotypé (FC-2026-000008) ; page factures 200. Les PDF
+client-side chargent le logo par fetch (cache) — hors ligne, le document
+sort sans logo, l'impression n'est jamais bloquée.

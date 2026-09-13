@@ -13,6 +13,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { embedNexusLogo } from "@/lib/pdf-logo";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { createClient } from "@/lib/supabase/server";
 import { drawText, drawLine, sanitizeForPdf } from "@/lib/pdf-layout";
@@ -110,8 +111,11 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
     page.drawRectangle({ x: 0, y: height - 130, width, height: 130, color: nexusBlue });
     page.drawRectangle({ x: 0, y: height - 130, width: 6, height: 130, color: nexusOrange });
-    drawText(page, height, helveticaBold, "NEXUS RCA", 50, 55, 24, white);
-    drawText(page, height, helvetica, "Agence Internationale - Bangui", 50, 78, 11, rgb(0.7, 0.75, 0.85));
+    // Logo officiel (demande Thierry 12/09) — jamais bloquant.
+    const nexusLogo = await embedNexusLogo(pdfDoc);
+    if (nexusLogo) page.drawImage(nexusLogo, { x: 50, y: height - 88, width: 44, height: 44 });
+    drawText(page, height, helveticaBold, "NEXUS RCA", 106, 55, 24, white);
+    drawText(page, height, helvetica, "Agence Internationale - Bangui", 106, 78, 11, rgb(0.7, 0.75, 0.85));
     page.drawRectangle({ x: width - 175, y: height - 60, width: 125, height: 24, color: nexusOrange });
     drawText(page, height, helveticaBold, "RECU", width - 155, 53, 12, white);
     drawText(page, height, helvetica, `No ${p.reference}`, width - 175, 80, 10, white);

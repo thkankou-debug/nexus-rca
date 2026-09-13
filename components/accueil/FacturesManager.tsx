@@ -8,7 +8,7 @@
 // décrit ce que le client doit ; le reçu atteste ce qu'il a payé.
 // ============================================================================
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { FileText, Loader2, Plus, Printer, Trash2, X } from "lucide-react";
@@ -54,6 +54,7 @@ function fcfa(n: number): string {
 interface DraftLine {
   key: string;
   designation: string;
+  description: string;
   quantite: string;
   unite: string;
   prix_unitaire: string;
@@ -269,7 +270,28 @@ export function FacturesManager({
   );
 }
 
-// ── Création ─────────────────────────────────────────────────────────────────
+// ── Création — formulaire COMPLET (retour Thierry 12/09) ────────────────────
+// Client identifié (recherche de fiche, coordonnées préremplies) OU client
+// libre ; lignes avec désignation (catalogue choisir-ou-saisir), DESCRIPTION
+// facultative, quantité, unité, prix unitaire et total de ligne ; échéance ;
+// conditions modifiables ; brouillon ou émission directe.
+interface FactureClient {
+  id: string;
+  reference: string | null;
+  type: string;
+  nom: string;
+  prenom: string | null;
+  raison_sociale: string | null;
+  email: string | null;
+  telephone: string | null;
+}
+
+function factureClientName(c: FactureClient): string {
+  return c.type === "particulier"
+    ? [c.prenom, c.nom].filter(Boolean).join(" ") || c.nom
+    : c.raison_sociale || c.nom;
+}
+
 function NouvelleFactureModal({
   catalogue,
   conditionsDefaut,
@@ -281,10 +303,60 @@ function NouvelleFactureModal({
   onClose: () => void;
   onDone: () => void;
 }) {
+  // ── Client : fiche existante OU saisie libre ──
+  const [clientChoisi, setClientChoisi] = useState<FactureClient | null>(null);
+  const [searchQ, setSearchQ] = useState("");
+  const [results, setResults] = useState<FactureClient[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [searchDone, setSearchDone] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [clientNom, setClientNom] = useState("");
   const [coordonnees, setCoordonnees] = useState("");
+
+  useEffect(() => {
+    if (searchTimer.current) clearTimeout(searchTimer.current);
+    const q = searchQ.trim();
+    if (q.length < 2) {
+      setResults([]);
+      setSearchDone(false);
+      setSearchError(null);
+      return;
+    }
+    searchTimer.current = setTimeout(async () => {
+      setSearching(true);
+      setSearchError(null);
+      try {
+        const res = await fetch(`/api/accueil/clients?q=${encodeURIComponent(q)}`);
+        const json = await res.json();
+        if (json.success) {
+          setResults(json.clients);
+          setSearchDone(true);
+        } else {
+          setResults([]);
+          setSearchError(json.error || "Recherche impossible — réessayez");
+        }
+      } catch {
+        setResults([]);
+        setSearchError("Réseau indisponible — réessayez");
+      } finally {
+        setSearching(false);
+      }
+    }, 300);
+  }, [searchQ]);
+
+  function pickClient(c: FactureClient) {
+    setClientChoisi(c);
+    setClientNom(factureClientName(c));
+    setCoordonnees([c.telephone, c.email].filter(Boolean).join(" · "));
+    setSearchQ("");
+    setResults([]);
+    setSearchDone(false);
+  }
+
+  // ── Lignes complètes ──
   const [lines, setLines] = useState<DraftLine[]>([
-    { key: "1", designation: "", quantite: "1", unite: "prestation", prix_unitaire: "" },
+    { key: "1", designation: "", description: "", quantite: "1", unite: "prestation", prix_unitaire: "" },
   ]);
   const [echeance, setEcheance] = useState("");
   const [conditions, setConditions] = useState(conditionsDefaut);
@@ -311,13 +383,14 @@ function NouvelleFactureModal({
 
   async function submit(emettre: boolean) {
     if (clientNom.trim().length < 2) {
-      toast.error("Nom du client requis");
+      toast.error("Nom du client requis (fiche identifiée ou saisie libre)");
       return;
     }
     const payload = lines
       .filter((l) => l.designation.trim())
       .map((l) => ({
         designation: l.designation.trim(),
+        description: l.description.trim() || undefined,
         quantite: parseInt(l.quantite) || 0,
         unite: l.unite,
         prix_unitaire: parseFloat(l.prix_unitaire) || 0,
@@ -332,7 +405,11 @@ function NouvelleFactureModal({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          client: { nom: clientNom.trim(), coordonnees: coordonnees.trim() || undefined },
+          client: {
+            record_id: clientChoisi?.id,
+            nom: clientNom.trim(),
+            coordonnees: coordonnees.trim() || undefined,
+          },
           lignes: payload,
           echeance: echeance || undefined,
           conditions,
@@ -365,14 +442,78 @@ function NouvelleFactureModal({
           </button>
         </div>
 
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        {/* ── Client : identifier une fiche OU saisir librement ── */}
+        <p className="mt-4 text-caption font-semibold uppercase tracking-wide text-ink-muted">Client</p>
+        {clientChoisi ? (
+          <div className="mt-1.5 flex items-center justify-between rounded-sm border border-line-strong bg-surface px-3 py-2">
+            <div>
+              <p className="text-body-sm font-semibold text-ink">{factureClientName(clientChoisi)}</p>
+              <p className="text-caption text-ink-muted">
+                {[clientChoisi.reference, clientChoisi.telephone, clientChoisi.email].filter(Boolean).join(" · ") ||
+                  "Fiche sans coordonnées"}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setClientChoisi(null);
+                setClientNom("");
+                setCoordonnees("");
+              }}
+              className="rounded-sm p-1 text-ink-subtle hover:bg-surface-sunken"
+              aria-label="Retirer le client"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        ) : (
+          <div className="relative mt-1.5">
+            <input
+              type="text"
+              value={searchQ}
+              onChange={(e) => setSearchQ(e.target.value)}
+              placeholder="Rechercher une fiche client (nom, téléphone, référence) — ou saisissez librement ci-dessous"
+              className={inputClass}
+            />
+            {results.length > 0 && (
+              <ul className="absolute z-10 mt-1 w-full divide-y divide-line rounded-sm border border-line bg-surface-overlay shadow-lg">
+                {results.map((c) => (
+                  <li key={c.id}>
+                    <button
+                      type="button"
+                      onClick={() => pickClient(c)}
+                      className="flex w-full items-center justify-between px-3 py-2 text-left hover:bg-surface-sunken"
+                    >
+                      <span className="text-body-sm text-ink">{factureClientName(c)}</span>
+                      <span className="text-caption text-ink-muted">{c.telephone || c.reference}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {searching && <p className="mt-1 text-caption text-ink-muted">Recherche…</p>}
+            {searchError && (
+              <p className="mt-1 rounded-sm border border-status-failure px-2 py-1 text-caption font-semibold text-status-failure">
+                {searchError}
+              </p>
+            )}
+            {!searching && !searchError && searchDone && results.length === 0 && (
+              <p className="mt-1 text-caption text-ink-muted">
+                Aucune fiche trouvée — saisissez le client librement ci-dessous.
+              </p>
+            )}
+          </div>
+        )}
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
           <label className="block">
-            <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">Client *</span>
-            <input type="text" value={clientNom} onChange={(e) => setClientNom(e.target.value)} className={cn(inputClass, "mt-1")} autoFocus />
+            <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+              Nom du client (facturé à) *
+            </span>
+            <input type="text" value={clientNom} onChange={(e) => setClientNom(e.target.value)} className={cn(inputClass, "mt-1")} />
           </label>
           <label className="block">
             <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
-              Coordonnées de facturation (facultatif)
+              Coordonnées de facturation
             </span>
             <input
               type="text"
@@ -384,6 +525,7 @@ function NouvelleFactureModal({
           </label>
         </div>
 
+        {/* ── Prestations : désignation + DESCRIPTION + qté/unité/PU/total ── */}
         <p className="mt-4 text-caption font-semibold uppercase tracking-wide text-ink-muted">Prestations</p>
         <datalist id="facture-catalogue">
           {catalogue.map((s) => (
@@ -391,62 +533,97 @@ function NouvelleFactureModal({
           ))}
         </datalist>
         <div className="mt-1.5 space-y-2">
-          {lines.map((l) => (
-            <div key={l.key} className="grid grid-cols-2 gap-2 sm:grid-cols-[1fr_80px_120px_130px_auto]">
-              <input
-                type="text"
-                list="facture-catalogue"
-                value={l.designation}
-                onChange={(e) => onDesignation(l.key, e.target.value)}
-                placeholder="Désignation — choisir ou saisir"
-                className={inputClass}
-              />
-              <input
-                type="number"
-                min={1}
-                value={l.quantite}
-                onChange={(e) => setLine(l.key, { quantite: e.target.value })}
-                placeholder="Qté"
-                className={inputClass}
-              />
-              <select value={l.unite} onChange={(e) => setLine(l.key, { unite: e.target.value })} className={cn(inputClass, "min-w-[110px]")}>
-                {UNITES.map((u) => (
-                  <option key={u} value={u}>
-                    {u}
-                  </option>
-                ))}
-              </select>
-              <input
-                type="number"
-                min={0}
-                value={l.prix_unitaire}
-                onChange={(e) => setLine(l.key, { prix_unitaire: e.target.value })}
-                placeholder="P.U. FCFA"
-                className={inputClass}
-              />
-              <button
-                type="button"
-                disabled={lines.length === 1}
-                onClick={() => setLines((prev) => prev.filter((x) => x.key !== l.key))}
-                className="rounded-sm border border-line p-2 text-ink-subtle hover:border-line-strong disabled:opacity-40"
-                aria-label="Retirer la ligne"
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
-            </div>
-          ))}
+          {lines.map((l, idx) => {
+            const ligneTotal = (parseInt(l.quantite) || 0) * (parseFloat(l.prix_unitaire) || 0);
+            return (
+              <div key={l.key} className="rounded-sm border border-line p-3">
+                <div className="flex items-start gap-2">
+                  <div className="min-w-0 flex-1 space-y-2">
+                    <input
+                      type="text"
+                      list="facture-catalogue"
+                      value={l.designation}
+                      onChange={(e) => onDesignation(l.key, e.target.value)}
+                      placeholder={`Désignation de la prestation ${idx + 1} * — choisir ou saisir`}
+                      className={inputClass}
+                    />
+                    <input
+                      type="text"
+                      value={l.description}
+                      onChange={(e) => setLine(l.key, { description: e.target.value })}
+                      placeholder="Description (facultatif) — précision affichée sur la facture"
+                      className={inputClass}
+                    />
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-[90px_130px_140px_1fr]">
+                      <label className="block">
+                        <span className="text-caption font-semibold text-ink-muted">Qté *</span>
+                        <input
+                          type="number"
+                          min={1}
+                          value={l.quantite}
+                          onChange={(e) => setLine(l.key, { quantite: e.target.value })}
+                          className={cn(inputClass, "mt-0.5 py-1.5")}
+                        />
+                      </label>
+                      <label className="block">
+                        <span className="text-caption font-semibold text-ink-muted">Unité</span>
+                        <select
+                          value={l.unite}
+                          onChange={(e) => setLine(l.key, { unite: e.target.value })}
+                          className={cn(inputClass, "mt-0.5 min-w-[120px] py-1.5")}
+                        >
+                          {UNITES.map((u) => (
+                            <option key={u} value={u}>
+                              {u}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <label className="block">
+                        <span className="whitespace-nowrap text-caption font-semibold text-ink-muted">
+                          Prix unitaire · FCFA *
+                        </span>
+                        <input
+                          type="number"
+                          min={0}
+                          value={l.prix_unitaire}
+                          onChange={(e) => setLine(l.key, { prix_unitaire: e.target.value })}
+                          className={cn(inputClass, "mt-0.5 py-1.5")}
+                        />
+                      </label>
+                      <div>
+                        <span className="text-caption font-semibold text-ink-muted">Total ligne</span>
+                        <p className="mt-0.5 rounded-sm border border-line bg-surface-sunken px-2 py-1.5 text-body-sm font-semibold text-ink [font-variant-numeric:tabular-nums]">
+                          {ligneTotal > 0 ? fcfa(ligneTotal) : "—"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={lines.length === 1}
+                    onClick={() => setLines((prev) => prev.filter((x) => x.key !== l.key))}
+                    className="rounded-sm border border-line p-2 text-ink-subtle hover:border-line-strong disabled:opacity-40"
+                    aria-label="Retirer la ligne"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
         <button
           type="button"
           onClick={() =>
             setLines((prev) => [
               ...prev,
-              { key: String(Date.now()), designation: "", quantite: "1", unite: "prestation", prix_unitaire: "" },
+              { key: String(Date.now()), designation: "", description: "", quantite: "1", unite: "prestation", prix_unitaire: "" },
             ])
           }
-          className="mt-2 inline-flex items-center gap-1.5 rounded-sm border border-line px-3 py-1.5 text-caption font-semibold text-ink hover:border-line-strong"
+          className="mt-2 inline-flex items-center gap-1.5 rounded-sm border border-line-strong px-3 py-2 text-body-sm font-semibold text-ink hover:bg-surface-sunken"
         >
-          <Plus className="h-3.5 w-3.5" />
+          <Plus className="h-4 w-4" />
           Ajouter une ligne
         </button>
 
@@ -459,7 +636,7 @@ function NouvelleFactureModal({
           </label>
           <div className="flex items-end justify-end">
             <p className="text-body font-bold text-ink [font-variant-numeric:tabular-nums]">
-              Total : {total > 0 ? fcfa(total) : "—"}
+              Total facture : {total > 0 ? fcfa(total) : "—"}
             </p>
           </div>
         </div>

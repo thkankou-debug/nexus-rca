@@ -1,5 +1,7 @@
 "use client";
 
+import { embedNexusLogoClient } from "@/lib/pdf-logo-client";
+
 import { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import {
@@ -155,6 +157,8 @@ async function generateReportPDF(
   const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const helveticaItalic = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
+  // Logo officiel (demande Thierry 12/09) — jamais bloquant.
+  const nexusLogo = await embedNexusLogoClient(pdfDoc);
 
   const pageWidth = 210;
   const pageHeight = 297;
@@ -185,7 +189,8 @@ async function generateReportPDF(
   const drawPageHeader = (pageNum: number, totalPages: number) => {
     drawFilledRect(page, pageHeightPt, 0, 0, mm(pageWidth), mm(5), NEXUS_GOLD);
 
-    drawText(page, pageHeightPt, helveticaBold, "NEXUS RCA", mm(margin), mm(11), 9, NEXUS_BLUE);
+    if (nexusLogo) page.drawImage(nexusLogo, { x: mm(margin), y: pageHeightPt - mm(13.5), width: mm(7), height: mm(7) });
+    drawText(page, pageHeightPt, helveticaBold, "NEXUS RCA", mm(margin) + mm(9), mm(11), 9, NEXUS_BLUE);
     drawText(page, pageHeightPt, helvetica, `Rapport financier - ${monthLabel}`, mm(pageWidth / 2), mm(11), 9, SLATE_MID, "center");
     drawText(page, pageHeightPt, helvetica, `Page ${pageNum}/${totalPages}`, mm(pageWidth - margin), mm(11), 9, SLATE_MID, "right");
 

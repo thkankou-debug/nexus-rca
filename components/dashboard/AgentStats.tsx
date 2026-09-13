@@ -25,6 +25,7 @@ import {
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { embedNexusLogoClient } from "@/lib/pdf-logo-client";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { drawText, drawFilledRect } from "@/lib/pdf-layout";
 
@@ -280,8 +281,10 @@ async function exportPDF(rows: (AgentStatsRow & { score: number })[], periodLabe
   drawFilledRect(page, PAGE_HEIGHT, 0, 0, PAGE_WIDTH, 17, nexusGold);
 
   topY = 51;
-  drawText(page, PAGE_HEIGHT, helveticaBold, "NEXUS RCA", MARGIN, topY, 18, nexusBlue);
-  drawText(page, PAGE_HEIGHT, helvetica, "Rapport Performances Agents", MARGIN, topY + 14, 9, slateMid);
+  const nexusLogo = await embedNexusLogoClient(pdfDoc);
+  if (nexusLogo) page.drawImage(nexusLogo, { x: MARGIN, y: PAGE_HEIGHT - 72, width: 36, height: 36 });
+  drawText(page, PAGE_HEIGHT, helveticaBold, "NEXUS RCA", MARGIN + 46, topY, 18, nexusBlue);
+  drawText(page, PAGE_HEIGHT, helvetica, "Rapport Performances Agents", MARGIN + 46, topY + 14, 9, slateMid);
 
   drawText(
     page,

@@ -1,5 +1,7 @@
 "use client";
 
+import { embedNexusLogoClient } from "@/lib/pdf-logo-client";
+
 import { useState, useMemo } from "react";
 import {
   Plus,
@@ -171,7 +173,9 @@ async function exportPDF(sales: QuickSale[], agents: AgentInfo[], period: Period
   drawFilledRect(page, PAGE_HEIGHT, 0, 0, PAGE_WIDTH, 17, nexusGold);
 
   topY = 45;
-  drawText(page, PAGE_HEIGHT, helveticaBold, "NEXUS RCA - Caisse rapide", MARGIN, topY, 16, nexusBlue);
+  const nexusLogo = await embedNexusLogoClient(pdfDoc);
+  if (nexusLogo) page.drawImage(nexusLogo, { x: MARGIN, y: PAGE_HEIGHT - 66, width: 34, height: 34 });
+  drawText(page, PAGE_HEIGHT, helveticaBold, "NEXUS RCA - Caisse rapide", MARGIN + 44, topY, 16, nexusBlue);
 
   drawText(
     page,
