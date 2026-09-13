@@ -13,6 +13,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { createNotification, createNotificationsForRoles } from "@/lib/notifications";
 import { logAudit } from "@/lib/audit";
+import { retryFailedOutbox } from "@/lib/email/send";
 
 export const dynamic = "force-dynamic";
 
@@ -157,10 +158,18 @@ export async function GET(request: NextRequest) {
       acceptationsEscaladees++;
     }
 
+    // ── §10 (lot G3) : rejeu de la boîte d'envoi — aucun e-mail perdu. ──
+    const outbox = await retryFailedOutbox();
+
     console.log(
-      `[CRON ESCALADES] ${escalated} instruction(s), ${acceptationsEscaladees} affectation(s) escaladée(s)`
+      `[CRON ESCALADES] ${escalated} instruction(s), ${acceptationsEscaladees} affectation(s), outbox ${outbox.delivered}/${outbox.retried} relivré(s)`
     );
-    return NextResponse.json({ success: true, escalated, acceptations: acceptationsEscaladees });
+    return NextResponse.json({
+      success: true,
+      escalated,
+      acceptations: acceptationsEscaladees,
+      outbox,
+    });
   } catch (err) {
     console.error("[CRON ESCALADES] EXCEPTION:", err);
     const message = err instanceof Error ? err.message : "Erreur inconnue";

@@ -3512,3 +3512,18 @@ staff, G6 recherche globale portées daf/dg/comptable/chef, G7 états
 uniformes accès refusé/erreur + masquage audit, G8 recette R01→R24.
 Bloqués restants : AR-02/05 (délégations/suppléants), AR-06 (portées),
 AR-07 (bascule production), fusion FAC-/FC-.
+
+---
+
+## 13/09/2026 — LOT G3 : boîte d'envoi transactionnelle (outbox, §10)
+
+Migration 098 : table `outbox` (payload, statut pending/sent/failed,
+tentatives, dernière erreur — RLS sans policy client, service-role
+uniquement). Journalisation au POINT UNIQUE `lib/email/send.ts` : chaque
+e-mail de l'application (7 routes émettrices, aucune modifiée) est
+enregistré avant tentative puis marqué sent/failed ; la journalisation
+n'est jamais bloquante (échec d'écriture → l'e-mail part quand même).
+Rejeu : `retryFailedOutbox()` (5 tentatives max, 50 messages/passage)
+branché sur le cron quotidien instruction-escalades — plus aucun envoi
+perdu en silence. Vérifié en réel : e-mail RDV agenda journalisé
+`sent`/1 tentative/tag [AGENDA].
