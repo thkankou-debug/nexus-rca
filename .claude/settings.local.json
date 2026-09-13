@@ -209,7 +209,10 @@
       "PowerShell($c = Get-NetTCPConnection -LocalPort 3125 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")",
       "PowerShell($c = Get-NetTCPConnection -LocalPort 3126 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")",
       "Bash(grep -n -- '--//\\\\|-- //' components/accueil/FacturesManager.tsx components/accueil/RecusList.tsx app/api/factures/route.ts lib/facture-server.ts lib/facture-config.ts)",
-      "PowerShell($c = Get-NetTCPConnection -LocalPort 3127 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")"
+      "PowerShell($c = Get-NetTCPConnection -LocalPort 3127 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")",
+      "PowerShell(Get-ChildItem -File | Where-Object { $_.LastWriteTime -gt \\(Get-Date\\).AddDays\\(-1\\) } | Sort-Object LastWriteTime -Descending | Select-Object Name, LastWriteTime | Format-Table -AutoSize)",
+      "PowerShell($c = Get-NetTCPConnection -LocalPort 3128 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")",
+      "PowerShell($c = Get-NetTCPConnection -LocalPort 3129 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")"
     ]
   }
 }

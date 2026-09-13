@@ -319,6 +319,8 @@ export function CaisseLibre({
   const recu = parseFloat(montantRecu) || 0;
   const monnaie = payMode === "especes" && recu > duMaintenant ? recu - duMaintenant : 0;
 
+  const resteAPayer = payMode === "especes" && recu < duMaintenant ? duMaintenant - recu : 0;
+
   const blocked = !sessionOpen
     ? "Ouvrez la caisse pour encaisser."
     : allLines.length === 0
@@ -488,6 +490,16 @@ export function CaisseLibre({
     designationRef.current?.focus();
   }
 
+  // « Nouvelle vente » (barre d'onglets du poste de travail, maquette) —
+  // même action que le bouton local, déclenchée par événement.
+  const nouvelleVenteRef = useRef<() => void>();
+  nouvelleVenteRef.current = nouvelleTransaction;
+  useEffect(() => {
+    const h = () => nouvelleVenteRef.current?.();
+    window.addEventListener("nexus-caisse-nouvelle-vente", h);
+    return () => window.removeEventListener("nexus-caisse-nouvelle-vente", h);
+  }, []);
+
   // ── Ouverture de caisse rapide (barre supérieure) ──
   const [fonds, setFonds] = useState("");
   const [opening, setOpening] = useState(false);
@@ -518,14 +530,15 @@ export function CaisseLibre({
 
   return (
     <div className="space-y-4">
-      {/* ── Barre supérieure : titre, transaction, session, imprimante ── */}
+      {/* ── Barre supérieure : titre, transaction, session, imprimante —
+            entièrement portée par le poste de travail en mode embarqué
+            (maquette « espace acceui et caisse.png »). ── */}
+      {!embedded && (
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
-        {!embedded && (
           <div>
             <h1 className="font-display text-display-sm text-ink">Encaissement libre</h1>
             <p className="mt-0.5 text-body-sm text-ink-muted">Page d&rsquo;accueil de la réception</p>
           </div>
-        )}
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
@@ -574,25 +587,21 @@ export function CaisseLibre({
           </div>
         </div>
       </div>
+      )}
 
       <div className="grid gap-4 xl:grid-cols-[1fr_400px]">
         {/* ══ Colonne principale ══ */}
         <div className="space-y-4">
-          {/* 1 · Client */}
+          {/* Client (maquette : select passage · Identifier le client · nom optionnel) */}
           <section className="rounded-sm border border-line bg-surface-elevated p-4">
-            <h2 className="font-display text-title text-ink">1. Client</h2>
-            <div className="mt-2 flex flex-wrap gap-4">
-              {(
-                [
-                  ["passage", "Client de passage"],
-                  ["recherche", "Rechercher un client"],
-                ] as const
-              ).map(([mode, label]) => (
-                <label key={mode} className="flex cursor-pointer items-center gap-2 text-body-sm text-ink">
-                  <input
-                    type="radio"
-                    checked={clientMode === mode}
-                    onChange={() => {
+            <h2 className="font-display text-title text-ink">Client</h2>
+            <div className={cn("mt-3 grid gap-3", clientMode === "passage" ? "sm:grid-cols-[220px_auto_1fr]" : "sm:grid-cols-[2fr_1fr]")}>
+              {clientMode === "passage" ? (
+                <>
+                  <select
+                    value={clientMode}
+                    onChange={(e) => {
+                      const mode = e.target.value as "passage" | "recherche";
                       setClientMode(mode);
                       if (mode === "passage") {
                         setClient(null);
@@ -600,26 +609,32 @@ export function CaisseLibre({
                         setDossierId(null);
                       }
                     }}
-                    className="h-4 w-4 accent-[rgb(var(--brand))]"
-                  />
-                  {label}
-                </label>
-              ))}
-            </div>
-            <div className={cn("mt-3 grid gap-3", clientMode === "recherche" && "sm:grid-cols-[2fr_1fr]")}>
-              {clientMode === "passage" ? (
-                <label className="block">
-                  <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
-                    Nom / téléphone (facultatif)
-                  </span>
-                  <input
-                    type="text"
-                    value={passageNom}
-                    onChange={(e) => setPassageNom(e.target.value)}
-                    placeholder="Saisir un nom ou un numéro de téléphone"
-                    className={cn(inputClass, "mt-1")}
-                  />
-                </label>
+                    aria-label="Type de client"
+                    className={cn(inputClass, "self-end")}
+                  >
+                    <option value="passage">Client de passage</option>
+                    <option value="recherche">Client identifié (fiche)</option>
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => setClientMode("recherche")}
+                    className="self-end whitespace-nowrap rounded-sm border border-line-strong px-4 py-2 text-body-sm font-semibold text-ink hover:bg-surface-sunken"
+                  >
+                    Identifier le client
+                  </button>
+                  <label className="block">
+                    <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                      Nom du client (optionnel)
+                    </span>
+                    <input
+                      type="text"
+                      value={passageNom}
+                      onChange={(e) => setPassageNom(e.target.value)}
+                      placeholder="Saisir un nom"
+                      className={cn(inputClass, "mt-1")}
+                    />
+                  </label>
+                </>
               ) : client ? (
                 <div className="flex items-center justify-between rounded-sm border border-line-strong bg-surface px-3 py-2">
                   <div>
@@ -644,8 +659,21 @@ export function CaisseLibre({
                 </div>
               ) : (
                 <div className="relative">
-                  <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                  <span className="flex items-center justify-between text-caption font-semibold uppercase tracking-wide text-ink-muted">
                     Rechercher (nom, téléphone, référence)
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setClientMode("passage");
+                        setClient(null);
+                        setDossiers([]);
+                        setDossierId(null);
+                        setSearchQ("");
+                      }}
+                      className="font-semibold normal-case tracking-normal text-ink underline-offset-2 hover:underline"
+                    >
+                      ← Client de passage
+                    </button>
                   </span>
                   <div className="relative mt-1">
                     <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-subtle" />
@@ -719,12 +747,12 @@ export function CaisseLibre({
             </div>
           </section>
 
-          {/* 2 · Prestation à encaisser */}
+          {/* Service ou prestation (maquette) */}
           <section className="rounded-sm border border-line bg-surface-elevated p-4">
-            <h2 className="font-display text-title text-ink">2. Prestation à encaisser</h2>
+            <h2 className="font-display text-title text-ink">Service ou prestation</h2>
             <label className="mt-3 block">
               <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
-                Désignation de la prestation * — choisir dans la liste ou saisir librement
+                Choisir ou saisir une prestation *
               </span>
               <input
                 ref={designationRef}
@@ -738,7 +766,7 @@ export function CaisseLibre({
                     puRef.current?.focus();
                   }
                 }}
-                placeholder="Ex. Photocopies, Visa Schengen… ou tout autre service à préciser"
+                placeholder="Choisir ou saisir une prestation (autre à préciser)"
                 className={cn(inputClass, "mt-1")}
               />
               {/* Choisir OU saisir : tout le catalogue actif est proposé,
@@ -817,10 +845,10 @@ export function CaisseLibre({
                 <button
                   type="button"
                   onClick={addLine}
-                  className="inline-flex items-center gap-2 whitespace-nowrap rounded-sm border border-line-strong px-4 py-2 text-body-sm font-semibold text-ink hover:bg-surface-sunken"
+                  className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm px-2 py-2 text-body-sm font-semibold text-brand underline-offset-2 hover:underline"
                 >
                   <Plus className="h-4 w-4" />
-                  Ajouter au ticket
+                  Autre ligne
                 </button>
                 <span className="text-caption text-ink-subtle">
                   Facultatif pour une seule prestation — « Encaisser » la prend automatiquement.
@@ -860,13 +888,11 @@ export function CaisseLibre({
 
           {/* 3 · Ticket en cours */}
           <section className="rounded-sm border border-line bg-surface-elevated p-4">
-            <h2 className="font-display text-title text-ink">3. Ticket en cours</h2>
+            <h2 className="font-display text-title text-ink">Ticket en cours</h2>
             {allLines.length === 0 ? (
               <div className="mt-3 rounded-sm border border-dashed border-line px-4 py-8 text-center">
-                <p className="text-body-sm text-ink-muted">Saisissez votre première prestation ci-dessus</p>
-                <p className="text-caption text-ink-subtle">
-                  Dès que désignation et prix sont remplis, la ligne apparaît ici.
-                </p>
+                <FileDown className="mx-auto h-7 w-7 text-ink-subtle" aria-hidden />
+                <p className="mt-2 text-body-sm text-ink-muted">Votre prestation apparaîtra ici.</p>
               </div>
             ) : (
               <div className="mt-3 overflow-x-auto">
@@ -1003,7 +1029,7 @@ export function CaisseLibre({
                 className="inline-flex items-center gap-1.5 rounded-sm border border-line px-3 py-2 text-body-sm font-semibold text-ink whitespace-nowrap hover:border-line-strong disabled:opacity-50"
               >
                 <Play className="h-4 w-4" />
-                Reprendre un ticket ({drafts.length})
+                Reprendre une vente ({drafts.length})
               </button>
               <button
                 type="button"
@@ -1027,6 +1053,54 @@ export function CaisseLibre({
               </button>
             </div>
           </section>
+
+          {/* Documents client (maquette) : facture et paiement liés à la même vente. */}
+          <section className="flex flex-wrap items-center justify-between gap-3 rounded-sm border border-line bg-surface-elevated p-4">
+            <div>
+              <p className="text-body-sm font-semibold text-ink">Documents client</p>
+              <p className="text-caption text-ink-muted">Facture et paiement liés à la même vente.</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <a
+                href="/dashboard/accueil/factures"
+                className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm border border-line px-3 py-2 text-body-sm font-semibold text-ink hover:border-line-strong"
+              >
+                <FileDown className="h-4 w-4" />
+                Préparer une facture PDF
+              </a>
+              <a
+                href="/dashboard/accueil/recus"
+                className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm border border-line px-3 py-2 text-body-sm font-semibold text-ink hover:border-line-strong"
+              >
+                <Search className="h-4 w-4" />
+                Retrouver un reçu
+              </a>
+            </div>
+          </section>
+
+          {/* Agenda de l'équipe (maquette) */}
+          <section className="flex flex-wrap items-center justify-between gap-3 rounded-sm border border-line bg-surface-elevated p-4">
+            <div>
+              <p className="text-body-sm font-semibold text-ink">Agenda de l&rsquo;équipe</p>
+              <p className="text-caption text-ink-muted">
+                Consultez les disponibilités pour proposer un rendez-vous.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="/dashboard/accueil/agenda"
+                className="whitespace-nowrap text-body-sm font-semibold text-brand underline-offset-2 hover:underline"
+              >
+                Consulter les disponibilités
+              </a>
+              <a
+                href="/dashboard/accueil/agenda"
+                className="whitespace-nowrap text-body-sm font-semibold text-brand underline-offset-2 hover:underline"
+              >
+                Créer un rendez-vous
+              </a>
+            </div>
+          </section>
         </div>
 
         {/* ══ Colonne paiement + reçu ══ */}
@@ -1034,21 +1108,18 @@ export function CaisseLibre({
           {/* Paiement */}
           <section className="rounded-sm border border-line bg-surface-elevated p-4">
             <h2 className="font-display text-title text-ink">Paiement</h2>
-            <div className="mt-3 flex items-center justify-between rounded-sm bg-surface-sunken px-4 py-3">
-              <span className="text-body-sm font-semibold text-ink">Total à payer</span>
-              <span className="font-display text-display-sm text-ink [font-variant-numeric:tabular-nums]">
+            <div className="mt-3">
+              <p className="text-body-sm font-semibold text-ink">Total à régler</p>
+              <p className="font-display text-display text-ink [font-variant-numeric:tabular-nums]">
                 {total > 0 ? fcfa(total) : "— FCFA"}
-              </span>
+              </p>
             </div>
 
             {/* Retour Thierry 12/09 : le paiement partiel était une case à
                 cocher discrète et le reste dû n'apparaissait qu'en espèces.
                 Désormais : choix explicite, montant, et RESTE DÛ affiché en
                 clair quel que soit le mode de paiement. */}
-            <p className="mt-3 text-caption font-semibold uppercase tracking-wide text-ink-muted">
-              Le client paie
-            </p>
-            <div className="mt-1.5 grid grid-cols-2 gap-2">
+            <div className="mt-3 grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => {
@@ -1058,11 +1129,11 @@ export function CaisseLibre({
                 className={cn(
                   "whitespace-nowrap rounded-sm border px-3 py-2 text-body-sm font-semibold",
                   !partiel
-                    ? "border-line-strong bg-surface-sunken text-ink"
+                    ? "border-brand bg-brand text-on-brand"
                     : "border-line text-ink-muted hover:border-line-strong"
                 )}
               >
-                La totalité
+                Complet
               </button>
               <button
                 type="button"
@@ -1072,11 +1143,11 @@ export function CaisseLibre({
                 className={cn(
                   "whitespace-nowrap rounded-sm border px-3 py-2 text-body-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50",
                   partiel
-                    ? "border-line-strong bg-surface-sunken text-ink"
+                    ? "border-brand bg-brand text-on-brand"
                     : "border-line text-ink-muted hover:border-line-strong"
                 )}
               >
-                Une partie (acompte)
+                Partiel
               </button>
             </div>
             {hasCaution && (
@@ -1124,41 +1195,28 @@ export function CaisseLibre({
               </div>
             )}
 
-            <p className="mt-3 text-caption font-semibold uppercase tracking-wide text-ink-muted">
-              Mode de paiement
-            </p>
-            <div className="mt-1.5 grid grid-cols-2 gap-2">
-              {(
-                [
-                  ["especes", "Espèces", Banknote],
-                  ["mobile_money", "Mobile Money", Smartphone],
-                ] as const
-              ).map(([mode, label, Icon]) => (
-                <button
-                  key={mode}
-                  type="button"
-                  onClick={() => setPayMode(mode)}
-                  className={cn(
-                    "flex items-center justify-center gap-2 rounded-sm border px-3 py-2.5 text-body-sm font-semibold",
-                    payMode === mode
-                      ? "border-line-strong bg-surface-sunken text-ink"
-                      : "border-line text-ink-muted hover:border-line-strong"
-                  )}
-                >
-                  <Icon className="h-4 w-4" aria-hidden />
-                  {label}
-                </button>
-              ))}
-            </div>
+            <label className="mt-3 block">
+              <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                Moyen de paiement
+              </span>
+              <select
+                value={payMode}
+                onChange={(e) => setPayMode(e.target.value as "especes" | "mobile_money")}
+                className={cn(inputClass, "mt-1")}
+              >
+                <option value="especes">Espèces</option>
+                <option value="mobile_money">Mobile Money</option>
+              </select>
+            </label>
             <p className="mt-1 text-caption text-ink-subtle">
               Carte : aucun terminal configuré — non proposée.
             </p>
 
             {payMode === "especes" ? (
-              <div className="mt-3 grid grid-cols-2 gap-2">
+              <div className="mt-3 space-y-3">
                 <label className="block">
                   <span className="whitespace-nowrap text-caption font-semibold uppercase tracking-wide text-ink-muted">
-                    Montant reçu
+                    Montant remis · FCFA
                   </span>
                   <input
                     type="number"
@@ -1171,6 +1229,7 @@ export function CaisseLibre({
                         checkout();
                       }
                     }}
+                    placeholder="Saisir le montant"
                     className={cn(inputClass, "mt-1")}
                   />
                   <button
@@ -1182,11 +1241,20 @@ export function CaisseLibre({
                     Montant exact
                   </button>
                 </label>
-                <div>
-                  <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">Monnaie</span>
-                  <p className="mt-1 rounded-sm border border-line bg-surface-sunken px-2 py-2 text-body-sm font-semibold text-ink [font-variant-numeric:tabular-nums]">
-                    {monnaie > 0 ? Math.round(monnaie).toLocaleString("fr-FR") : "—"}
-                  </p>
+                {/* Maquette : Reste à payer | Monnaie à rendre côte à côte. */}
+                <div className="grid grid-cols-2 divide-x divide-line rounded-sm border border-line">
+                  <div className="px-3 py-2">
+                    <p className="text-caption font-semibold text-ink-muted">Reste à payer</p>
+                    <p className="text-body font-bold text-ink [font-variant-numeric:tabular-nums]">
+                      {resteAPayer > 0 ? fcfa(resteAPayer) : "— FCFA"}
+                    </p>
+                  </div>
+                  <div className="px-3 py-2">
+                    <p className="text-caption font-semibold text-ink-muted">Monnaie à rendre</p>
+                    <p className="text-body font-bold text-ink [font-variant-numeric:tabular-nums]">
+                      {monnaie > 0 ? fcfa(monnaie) : "— FCFA"}
+                    </p>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -1227,18 +1295,46 @@ export function CaisseLibre({
               </div>
             )}
 
+            {/* Maquette : état du reçu thermique + lien Configurer. */}
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-sm border border-line px-3 py-2.5">
+              <span className="inline-flex items-center gap-2 text-body-sm text-ink">
+                <Printer className="h-4 w-4 text-ink-muted" aria-hidden />
+                Reçu thermique · 80 mm
+              </span>
+              <span className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 text-caption text-ink-muted">
+                  <span className="h-2 w-2 rounded-full bg-status-inert" aria-hidden />
+                  Imprimante à configurer
+                </span>
+                <a
+                  href="/dashboard/accueil/imprimante"
+                  className="text-body-sm font-semibold text-brand underline-offset-2 hover:underline"
+                >
+                  Configurer
+                </a>
+              </span>
+            </div>
+
             <button
               type="button"
               disabled={Boolean(blocked) || checkingOut}
               onClick={checkout}
-              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-sm bg-brand px-4 py-3.5 text-body font-semibold text-on-brand transition-colors hover:bg-brand-hover disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-ink-subtle"
+              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-sm bg-brand px-4 py-3.5 text-body font-semibold text-on-brand transition-colors hover:bg-brand-hover disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-ink-subtle"
             >
               {checkingOut ? <Loader2 className="h-5 w-5 animate-spin" /> : <Printer className="h-5 w-5" />}
               Encaisser et imprimer
             </button>
             <p className="mt-1.5 text-center text-caption text-ink-muted">
-              {blocked || "Le reçu 80 mm part à l'impression dès l'enregistrement du paiement."}
+              {blocked ? `${blocked} ` : ""}Le reçu reste disponible si l&rsquo;impression échoue.
             </p>
+            <div className="mt-2 text-center">
+              <a
+                href="/dashboard/accueil/session"
+                className="text-body-sm font-semibold text-ink underline-offset-2 hover:underline"
+              >
+                Gérer ma session
+              </a>
+            </div>
           </section>
 
           {/* Reçu & impression */}

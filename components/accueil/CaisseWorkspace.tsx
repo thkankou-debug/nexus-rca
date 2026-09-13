@@ -1,31 +1,23 @@
 "use client";
 
 // ============================================================================
-// CAISSE — poste de travail unifié (cahier « reprise Accueil & caisse »
-// 12/09/2026, §1-§3). UNE seule caisse, UNE seule session, deux modes de
-// saisie présentés en onglets :
-//   · Encaissement rapide (CaisseLibre) — clients de passage, saisie directe ;
-//   · Vente catalogue (PosComptoir) — prestations enregistrées + dossier.
-// Les deux onglets partagent la même session, la même route
-// /api/accueil/pos, le même journal (quick_sales.session_id, trigger 091),
-// les mêmes calculs (lib/caisse-server) et les mêmes reçus.
-//
-// Ordre d'affichage (§2) :
-//   1. Session précédente soumise (a_cloturer) → état affiché, encaissements
-//      bloqués (le trigger 091 les refuserait de toute façon).
-//   2. Aucune session → écran « Ouvrir ma caisse » PRIORITAIRE : fonds
-//      réellement compté, détail des coupures (facultatif mais vérifié),
-//      observation, poste. L'encaissement n'apparaît qu'après confirmation
-//      serveur de l'ouverture.
-//   3. Session ouverte → onglets + bandeau de contexte permanent
-//      (opératrice, poste, session, lien gestion).
+// CAISSE — poste de travail unifié, fidèle à la maquette « espace acceui et
+// caisse.png » (Thierry, 12/09/2026) : barre « Caisse » + état de session +
+// bouton « Ouvrir la caisse » (modal fonds/coupures/observation), onglets
+// « Saisie rapide | Catalogue » avec « Nouvelle vente » à droite. Les deux
+// modes partagent la même session, la même route /api/accueil/pos, le même
+// journal (quick_sales.session_id, trigger 091) et les mêmes reçus.
+// Caisse fermée : la saisie reste visible (maquette) mais AUCUN
+// encaissement ne passe — bouton désactivé « Ouvrez la caisse pour
+// encaisser. », refus serveur 409 et refus base (trigger 091).
+// Journée soumise (a_cloturer) : encaissements arrêtés, état affiché (§6).
 // ============================================================================
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { Banknote, Loader2, Lock, ShoppingCart, Wallet } from "lucide-react";
+import { Banknote, Loader2, Lock, ShoppingCart, Wallet, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { SessionSnapshot } from "@/lib/accueil-server";
 import { CaisseLibre, type RaccourciService } from "./CaisseLibre";
@@ -63,60 +55,54 @@ export function CaisseWorkspace({
   initialTab?: "rapide" | "catalogue";
 }) {
   const [tab, setTab] = useState<"rapide" | "catalogue">(initialTab);
+  const [showOuverture, setShowOuverture] = useState(false);
 
-  // ── 1. Session soumise, en attente de validation : encaissements arrêtés ──
-  if (session?.status === "a_cloturer") {
-    return (
-      <div className="mx-auto max-w-2xl">
-        <div className="rounded-sm border border-line bg-surface-elevated p-6 text-center">
-          <Lock className="mx-auto h-8 w-8 text-ink-muted" aria-hidden />
-          <h1 className="mt-3 font-display text-title text-ink">
-            Journée soumise — encaissements arrêtés
-          </h1>
-          <p className="mt-2 text-body-sm text-ink-muted">
-            Votre session du{" "}
-            {new Date(session.opened_at).toLocaleString("fr-FR", {
-              timeZone: "Africa/Bangui",
-              day: "2-digit",
-              month: "2-digit",
-              hour: "2-digit",
-              minute: "2-digit",
-            })}{" "}
-            est soumise et attend la validation financière. Aucun nouvel encaissement n&rsquo;est
-            possible dans cette session — la protection est appliquée par la base de données,
-            pas seulement par cet écran.
-          </p>
-          <Link
-            href="/dashboard/accueil/session"
-            className="mt-4 inline-flex items-center gap-2 rounded-sm border border-line px-4 py-2 text-body-sm font-semibold text-ink hover:border-line-strong"
-          >
-            <Wallet className="h-4 w-4" />
-            Voir l&rsquo;état de ma session
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  const sessionOpen = session?.status === "ouverte";
+  const soumise = session?.status === "a_cloturer";
 
-  // ── 2. Aucune session : ouverture obligatoire AVANT tout encaissement ──
-  if (!session) {
-    return <OuvrirMaCaisse caissiereNom={caissiereNom} poste={poste} />;
-  }
-
-  // ── 3. Session ouverte : bandeau de contexte + onglets ──
-  // Session interrompue (§6) : ouverte un jour précédent (heure de Bangui) —
-  // avertir et pousser vers la clôture de la journée passée.
+  // Session interrompue (§6) : ouverte un jour précédent (heure de Bangui).
   const jourBangui = (d: string | Date) =>
     new Date(d).toLocaleDateString("fr-CA", { timeZone: "Africa/Bangui" });
-  const sessionAnterieure = jourBangui(session.opened_at) < jourBangui(new Date());
+  const sessionAnterieure = sessionOpen && jourBangui(session!.opened_at) < jourBangui(new Date());
 
   return (
     <div className="space-y-4">
+      {/* ── Barre supérieure (maquette) : Caisse · état session · action ── */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
+        <h1 className="font-display text-display-sm text-ink">Caisse</h1>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-2 rounded-full border border-line bg-surface-elevated px-4 py-2 text-body-sm text-ink">
+            <span
+              className={cn(
+                "h-2 w-2 rounded-full",
+                sessionOpen ? "bg-status-success" : soumise ? "bg-status-waiting" : "bg-status-inert"
+              )}
+              aria-hidden
+            />
+            {sessionOpen ? "Session ouverte" : soumise ? "Journée soumise" : "Session à ouvrir"}
+          </span>
+          {!session && (
+            <button
+              type="button"
+              onClick={() => setShowOuverture(true)}
+              className="whitespace-nowrap rounded-sm border border-line-strong bg-surface-elevated px-4 py-2 text-body-sm font-semibold text-ink hover:bg-surface-sunken"
+            >
+              Ouvrir la caisse
+            </button>
+          )}
+          {sessionOpen && (
+            <span className="text-body-sm text-ink-muted [font-variant-numeric:tabular-nums]">
+              {caissiereNom} · {poste} · espèces théoriques {fcfa(session!.especes_theoriques)}
+            </span>
+          )}
+        </div>
+      </div>
+
       {sessionAnterieure && (
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-sm border border-status-waiting bg-surface-elevated px-4 py-2.5">
           <p className="text-body-sm font-semibold text-ink">
             Session ouverte depuis le{" "}
-            {new Date(session.opened_at).toLocaleDateString("fr-FR", { timeZone: "Africa/Bangui" })} —
+            {new Date(session!.opened_at).toLocaleDateString("fr-FR", { timeZone: "Africa/Bangui" })} —
             terminez la journée précédente (comptage et soumission) avant de poursuivre.
           </p>
           <Link
@@ -127,85 +113,111 @@ export function CaisseWorkspace({
           </Link>
         </div>
       )}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-sm border border-line bg-surface-elevated px-4 py-2.5">
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-          <span className="inline-flex items-center gap-2 text-body-sm text-ink">
-            <span className="h-2 w-2 rounded-full bg-status-success" aria-hidden />
-            Caisse ouverte
-          </span>
-          <span className="text-body-sm text-ink-muted">
-            {caissiereNom} · {poste} · depuis{" "}
-            {new Date(session.opened_at).toLocaleTimeString("fr-FR", {
-              timeZone: "Africa/Bangui",
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </span>
-          <span className="text-body-sm text-ink-muted [font-variant-numeric:tabular-nums]">
-            Espèces théoriques : {fcfa(session.especes_theoriques)}
-          </span>
+
+      {soumise ? (
+        <div className="mx-auto max-w-2xl">
+          <div className="rounded-sm border border-line bg-surface-elevated p-6 text-center">
+            <Lock className="mx-auto h-8 w-8 text-ink-muted" aria-hidden />
+            <h2 className="mt-3 font-display text-title text-ink">
+              Journée soumise — encaissements arrêtés
+            </h2>
+            <p className="mt-2 text-body-sm text-ink-muted">
+              Votre session attend la validation financière. Aucun nouvel encaissement n&rsquo;est
+              possible dans cette session — la protection est appliquée par la base de données, pas
+              seulement par cet écran.
+            </p>
+            <Link
+              href="/dashboard/accueil/session"
+              className="mt-4 inline-flex items-center gap-2 rounded-sm border border-line px-4 py-2 text-body-sm font-semibold text-ink hover:border-line-strong"
+            >
+              <Wallet className="h-4 w-4" />
+              Voir l&rsquo;état de ma session
+            </Link>
+          </div>
         </div>
-        <Link
-          href="/dashboard/accueil/session"
-          className="whitespace-nowrap text-body-sm font-semibold text-ink underline-offset-2 hover:underline"
-        >
-          Gérer ma session
-        </Link>
-      </div>
+      ) : (
+        <>
+          {/* ── Onglets (maquette) + Nouvelle vente ── */}
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line">
+            <div className="flex gap-1" role="tablist">
+              {(
+                [
+                  ["rapide", "Saisie rapide", Banknote],
+                  ["catalogue", "Catalogue", ShoppingCart],
+                ] as const
+              ).map(([key, label, Icon]) => (
+                <button
+                  key={key}
+                  type="button"
+                  role="tab"
+                  aria-selected={tab === key}
+                  onClick={() => setTab(key)}
+                  className={cn(
+                    "inline-flex items-center gap-2 whitespace-nowrap rounded-t-sm border-b-2 px-4 py-2.5 text-body-sm font-semibold transition-colors",
+                    tab === key
+                      ? "border-brand text-ink"
+                      : "border-transparent text-ink-muted hover:text-ink"
+                  )}
+                >
+                  <Icon className="h-4 w-4" aria-hidden />
+                  {label}
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent("nexus-caisse-nouvelle-vente"))}
+              className="whitespace-nowrap px-2 py-2 text-body-sm font-semibold text-brand underline-offset-2 hover:underline"
+            >
+              Nouvelle vente
+            </button>
+          </div>
 
-      <div className="flex gap-1 border-b border-line" role="tablist">
-        {(
-          [
-            ["rapide", "Encaissement rapide", Banknote],
-            ["catalogue", "Vente catalogue (POS)", ShoppingCart],
-          ] as const
-        ).map(([key, label, Icon]) => (
-          <button
-            key={key}
-            type="button"
-            role="tab"
-            aria-selected={tab === key}
-            onClick={() => setTab(key)}
-            className={cn(
-              "inline-flex items-center gap-2 whitespace-nowrap rounded-t-sm border border-b-0 px-4 py-2.5 text-body-sm font-semibold transition-colors",
-              tab === key
-                ? "border-line bg-surface-elevated text-ink"
-                : "border-transparent text-ink-muted hover:text-ink"
-            )}
-          >
-            <Icon className="h-4 w-4" aria-hidden />
-            {label}
-          </button>
-        ))}
-      </div>
+          {/* Les deux modes restent montés : changer d'onglet ne perd rien. */}
+          <div className={tab === "rapide" ? "" : "hidden"}>
+            <CaisseLibre
+              session={session}
+              caissiereNom={caissiereNom}
+              raccourcis={raccourcis}
+              catalogue={catalogue}
+              credits={credits}
+              embedded
+            />
+          </div>
+          <div className={tab === "catalogue" ? "" : "hidden"}>
+            <PosComptoir
+              services={services}
+              agents={agents}
+              session={session}
+              caissiereNom={caissiereNom}
+              credits={credits}
+            />
+          </div>
+        </>
+      )}
 
-      {/* Les deux modes restent montés sur la même session : changer d'onglet
-          ne perd pas une saisie en cours. */}
-      <div className={tab === "rapide" ? "" : "hidden"}>
-        <CaisseLibre
-          session={session}
+      {showOuverture && (
+        <OuvrirMaCaisseModal
           caissiereNom={caissiereNom}
-          raccourcis={raccourcis}
-          catalogue={catalogue}
-          credits={credits}
-          embedded
+          poste={poste}
+          onClose={() => setShowOuverture(false)}
         />
-      </div>
-      <div className={tab === "catalogue" ? "" : "hidden"}>
-        <PosComptoir
-          services={services}
-          agents={agents}
-          session={session}
-          caissiereNom={caissiereNom}
-          credits={credits}
-        />
-      </div>
+      )}
     </div>
   );
 }
 
-// ── Écran d'ouverture obligatoire (§2) ───────────────────────────────────────
-function OuvrirMaCaisse({ caissiereNom, poste }: { caissiereNom: string; poste: string }) {
+// ── Modal d'ouverture obligatoire (§2) : fonds réellement compté, coupures
+//    vérifiées (client ET serveur), observation, poste, opératrice. ─────────
+function OuvrirMaCaisseModal({
+  caissiereNom,
+  poste,
+  onClose,
+}: {
+  caissiereNom: string;
+  poste: string;
+  onClose: () => void;
+}) {
   const router = useRouter();
   const [fonds, setFonds] = useState("");
   const [avecCoupures, setAvecCoupures] = useState(false);
@@ -257,6 +269,7 @@ function OuvrirMaCaisse({ caissiereNom, poste }: { caissiereNom: string; poste: 
         return;
       }
       toast.success("Caisse ouverte — bonne journée !");
+      onClose();
       router.refresh();
     } finally {
       setOpening(false);
@@ -264,19 +277,24 @@ function OuvrirMaCaisse({ caissiereNom, poste }: { caissiereNom: string; poste: 
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
-      <div className="rounded-sm border border-line bg-surface-elevated p-6">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-sm bg-surface-sunken">
-            <Wallet className="h-5 w-5 text-ink" aria-hidden />
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 p-4" onClick={onClose}>
+      <div className="my-8 w-full max-w-2xl rounded-sm border border-line bg-surface-elevated p-6" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-sm bg-surface-sunken">
+              <Wallet className="h-5 w-5 text-ink" aria-hidden />
+            </div>
+            <div>
+              <h2 className="font-display text-title text-ink">Ouvrir ma caisse</h2>
+              <p className="text-caption text-ink-muted">
+                {caissiereNom} · Poste : {poste} ·{" "}
+                {new Date().toLocaleDateString("fr-FR", { timeZone: "Africa/Bangui" })}
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="font-display text-title text-ink">Ouvrir ma caisse</h1>
-            <p className="text-caption text-ink-muted">
-              {caissiereNom} · Poste : {poste} ·{" "}
-              {new Date().toLocaleDateString("fr-FR", { timeZone: "Africa/Bangui" })}
-            </p>
-          </div>
+          <button type="button" onClick={onClose} className="rounded-sm p-1 text-ink-subtle hover:bg-surface-sunken" aria-label="Fermer">
+            <X className="h-5 w-5" />
+          </button>
         </div>
 
         <p className="mt-4 rounded-sm bg-surface-sunken px-3 py-2 text-body-sm text-ink-muted">

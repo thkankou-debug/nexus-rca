@@ -13,7 +13,7 @@
 // ============================================================================
 
 import { useRouter, usePathname } from "next/navigation";
-import { Home, Users, Wallet, Megaphone, ReceiptText, Banknote, Printer, FileText } from "lucide-react";
+import { Home, Users, Wallet, Megaphone, ReceiptText, Banknote, Printer, FileText, CalendarDays } from "lucide-react";
 import { AdminShell } from "@/components/admin/ui/AdminShell";
 import { BrandMark } from "@/components/admin/ui/BrandMark";
 import { TopbarSearch, TopbarNotifications } from "@/components/admin/ui/TopbarTools";
@@ -30,16 +30,26 @@ import type { Profile } from "@/types";
 // mène à une fonction opérationnelle. Les anciennes URL /encaissement et
 // /pos redirigent vers la Caisse unifiée. Factures et Agenda entreront dans
 // la nav avec leur module (pas de bouton sans effet).
+// Ordre de la maquette « espace acceui et caisse.png » (12/09/2026) :
+// Caisse, Clients & dossiers, [Agenda de l'équipe — arrive avec son module,
+// pas de bouton mort], Factures, Paiements & reçus, Session & clôture,
+// Instructions ; Poste de réception et Imprimante conservés (rien n'est
+// supprimé — l'imprimante est aussi accessible via « Configurer » dans la
+// colonne Paiement).
 const NAV = [
   {
-    key: "caisse",
-    label: "Caisse",
+    key: "travail",
+    label: "Espace de travail",
     items: [
-      { key: "caisse", label: "Caisse (encaissement)", href: "/dashboard/accueil/caisse", icon: Banknote },
+      { key: "caisse", label: "Caisse", href: "/dashboard/accueil/caisse", icon: Banknote },
+      { key: "clients", label: "Clients & dossiers", href: "/dashboard/accueil/clients", icon: Users },
+      { key: "agenda", label: "Agenda de l'équipe", href: "/dashboard/accueil/agenda", icon: CalendarDays },
       { key: "factures", label: "Factures", href: "/dashboard/accueil/factures", icon: FileText },
       { key: "recus", label: "Paiements & reçus", href: "/dashboard/accueil/recus", icon: ReceiptText },
       { key: "session", label: "Session & clôture", href: "/dashboard/accueil/session", icon: Wallet },
-      { key: "imprimante", label: "Imprimante", href: "/dashboard/accueil/imprimante", icon: Printer },
+      // §10 : consignes d'accueil descendantes — la caissière accuse
+      // réception et rend compte depuis le module unique.
+      { key: "instructions", label: "Instructions", href: "/dashboard/instructions", icon: Megaphone },
     ],
   },
   {
@@ -47,10 +57,7 @@ const NAV = [
     label: "Accueil",
     items: [
       { key: "reception", label: "Poste de réception", href: "/dashboard/accueil", icon: Home },
-      { key: "clients", label: "Clients & dossiers", href: "/dashboard/accueil/clients", icon: Users },
-      // §10 : consignes d'accueil descendantes — la caissière accuse
-      // réception et rend compte depuis le module unique.
-      { key: "instructions", label: "Instructions", href: "/dashboard/instructions", icon: Megaphone },
+      { key: "imprimante", label: "Imprimante", href: "/dashboard/accueil/imprimante", icon: Printer },
     ],
   },
 ];

@@ -3365,3 +3365,51 @@ avoir AV-2026-000005 → dépassement 400 → solde 15 000 → statut
 « réglée », reste 0 → ticket inconnu 404 → ancien module /api/factures
 intact (200). tsc + build 0 erreur. Données de démonstration en
 environnement de test uniquement.
+
+---
+
+## 12/09/2026 — Maquette « espace acceui et caisse.png » exécutée + Agenda de l'équipe (Phase E)
+
+**Écran Caisse refait à l'identique de la maquette** (vérifié 28/28
+éléments en HTTP authentifié) : barre « Caisse » + pill d'état (Session à
+ouvrir / ouverte / Journée soumise) + bouton « Ouvrir la caisse » (MODAL
+fonds/coupures/observation — le §2 reste garanti : bouton Encaisser
+désactivé « Ouvrez la caisse pour encaisser. », refus serveur 409, refus
+base trigger 091) ; onglets « Saisie rapide | Catalogue » + « Nouvelle
+vente » ; bloc Client (select Client de passage · « Identifier le
+client » · Nom optionnel, retour possible) ; « Service ou prestation »
+avec « Choisir ou saisir une prestation » + « + Autre ligne » +
+Quantité/Unité/Prix + Description (demande explicite) + caution +
+raccourcis ; tableau « Votre prestation apparaîtra ici. » ; « Mettre en
+attente / Reprendre une vente » ; blocs « Documents client » (Préparer
+une facture PDF → Factures ; Retrouver un reçu → Paiements & reçus) et
+« Agenda de l'équipe » ; colonne Paiement : Total à régler,
+Complet/Partiel, Moyen de paiement (select), Montant remis (+ Montant
+exact), Reste à payer | Monnaie à rendre, Reçu thermique · 80 mm (état
+honnête + Configurer → Imprimante), Encaisser et imprimer (« Le reçu
+reste disponible si l'impression échoue. »), Gérer ma session. « Concept
+à valider » (annotation de maquette) volontairement non reproduit. Le
+bloc Reçu & impression complet (aperçu, réimpression, test) est conservé
+sous la colonne Paiement — rien de supprimé.
+
+**Nav (ordre maquette)** : Caisse · Clients & dossiers · Agenda de
+l'équipe · Factures · Paiements & reçus · Session & clôture ·
+Instructions, puis Poste de réception · Imprimante (conservés).
+
+**Agenda de l'équipe (Phase E, v1)** : page /dashboard/accueil/agenda —
+vue JOUR par collaborateur × heures (08-17 h), créneaux libres cliquables,
+RDV cliquables pour REPROGRAMMER (date/heure/réattribution), filtre par
+collaborateur, « Créer un rendez-vous » (types de service = contrainte
+base : visa/bourse/tcf/billet/hotel/transfert/consultation_generale/
+autre, avec libellés). API /api/accueil/agenda (GET plage + agents ;
+POST création attribuée) et /[id] (PATCH reprogrammation) : CONFLIT même
+agent/date/heure → 409 ; notification e-mail du collaborateur (best
+effort via lib/email/send, jamais bloquante — ancien ET nouvel agent si
+réattribution) ; champs limités à l'organisation (jamais notes_client/
+notes_agent). Vérifié : création 200 (confirme), conflit 409,
+reprogrammation 200, type invalide 400. **Dette Phase E** : absences non
+modélisées (pas de table congés côté agenda — les conflits ne couvrent
+que les RDV) ; vue semaine ; granularité 30 min ; notification in-app.
+
+**tsc + build 0 erreur.** RDV de démonstration (14/09 11:00, données de
+test) laissé pour la vérification de Thierry.
