@@ -102,6 +102,14 @@ d'authentification), à imposer aux rôles super_admin, admin, daf.
 verrouillage) — elle sera implémentée et déployée sur GO explicite,
 avec procédure d'enrôlement accompagnée.
 
+## Logo — exception à la migration or (tranché par Thierry le 13/09)
+Le logo dessiné (`components/ui/Logo.tsx` : pastille et dégradé
+`nexus-orange-500`, mention « RCA » orange) **reste tel quel** — décision
+explicite de Thierry après la clôture de L12. C'est l'unique exception à
+M11 (« l'orange ne subsiste nulle part ») avec les e-mails
+transactionnels : 3 occurrences `nexus-orange` assumées, le fichier reste
+GELÉ (CLAUDE.md). Ne plus proposer de le migrer.
+
 ## Données toujours attendues de Thierry
 - Imprimante 80 mm : modèle exact, connexion (USB/réseau/Bluetooth), OS
   du poste, navigateur → active l'impression silencieuse + test n°8.
