@@ -131,6 +131,7 @@ Si Thierry te dit "améliore le site", **POSE-LUI DES QUESTIONS PRÉCISES** avan
 ### Contacts
 - **Adresse** : Croisement Marabena, Route de l'Aéroport, PO.BOX 1204, Bangui, RCA
 - **Téléphone RCA** : +236 73 26 96 92 (DEFAULT WhatsApp + Mobile Money)
+- **Téléphone RCA 2** : +236 70 21 95 25 (ajouté le 13/09/2026 — affiché sur les documents officiels avec le principal)
 - **Téléphone Canada** : +1 587 327 6344
 - **Email** : contact@nexusrca.com
 

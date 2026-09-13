@@ -11,6 +11,11 @@ export const NEXUS_CONTACT = {
   phoneRca: "+236 73 26 96 92",
   phoneRcaRaw: "23673269692", // sans espaces, pour les liens wa.me et tel:
 
+  // Second numero RCA (ajoute par Thierry le 13/09/2026 — affiche sur les
+  // documents officiels aux cotes du numero principal)
+  phoneRca2: "+236 70 21 95 25",
+  phoneRca2Raw: "23670219525",
+
   // Numero international Canada (secondaire)
   phoneCanada: "+1 587 327 6344",
   phoneCanadaRaw: "15873276344", // sans espaces

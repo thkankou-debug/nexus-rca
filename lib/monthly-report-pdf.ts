@@ -376,8 +376,10 @@ export async function buildMonthlyReportPdf(
   drawText("NEXUS RCA - Bangui, Republique Centrafricaine", {
     x: MARGIN_X, y: 12, size: 8, color: white,
   });
-  drawText("contact@nexusrca.com  -  +236 73 26 96 92", {
-    x: PAGE_W - MARGIN_X - 180, y: 12, size: 8, color: white,
+  // Coordonnées officielles (Thierry, 13/09/2026) : e-mail officiel unique
+  // contact@nexusrca.com + les deux numéros RCA.
+  drawText("contact@nexusrca.com  -  +236 73 26 96 92  -  +236 70 21 95 25", {
+    x: PAGE_W - MARGIN_X - 280, y: 12, size: 8, color: white,
   });
 
   return await pdfDoc.save();

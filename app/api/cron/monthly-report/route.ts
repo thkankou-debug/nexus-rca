@@ -24,9 +24,10 @@ function defaultRecipients(): string[] {
       .map((s) => s.trim())
       .filter((s) => s.length > 0);
   }
-  // Destinataires officiels (cf. décision 2026-05-05) :
-  //   - tkankou@gmail.com    : super_admin
-  //   - contact@nexusrca.com : email principal de l'entreprise
+  // Destinataires de LIVRAISON (Thierry reçoit le rapport chaque mois —
+  // confirmé le 13/09/2026, on ne casse pas ça). Ces adresses ne sont
+  // JAMAIS affichées sur le document : l'e-mail officiel du rapport est
+  // contact@nexusrca.com (pied de page du PDF), décision Thierry 13/09.
   return ["tkankou@gmail.com", "contact@nexusrca.com"];
 }
 
