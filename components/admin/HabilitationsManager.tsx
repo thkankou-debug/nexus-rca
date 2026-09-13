@@ -20,6 +20,14 @@ import { ConfirmDialog } from "@/components/admin/ui/ConfirmDialog";
 import { ROLE_LABELS_FR } from "@/lib/rbac";
 import type { UserRole } from "@/types";
 
+// Libellés des rôles dans CETTE section : « Agent » doit être trouvable
+// sous son nom courant (retour Thierry 13/09 : il cherchait « Agent »,
+// le libellé produit global est « Conseiller » — on affiche les deux).
+const ROLE_LABELS: Record<UserRole, string> = {
+  ...ROLE_LABELS_FR,
+  agent: "Agent (conseiller)",
+};
+
 const STAFF_ROLES: UserRole[] = [
   "super_admin",
   "admin",
@@ -86,7 +94,7 @@ export function HabilitationsManager({
     const q = query.trim().toLowerCase();
     if (!q) return accounts;
     return accounts.filter((a) =>
-      [a.prenom, a.nom, a.email, ROLE_LABELS_FR[a.role]]
+      [a.prenom, a.nom, a.email, ROLE_LABELS[a.role]]
         .filter(Boolean)
         .some((v) => String(v).toLowerCase().includes(q))
     );
@@ -121,7 +129,7 @@ export function HabilitationsManager({
             ? `${fullName(account)} désactivé — connexion refusée dès maintenant.`
             : payload.actif === true
             ? `${fullName(account)} réactivé.`
-            : `Rôle de ${fullName(account)} : ${ROLE_LABELS_FR[payload.role!]}.`,
+            : `Rôle de ${fullName(account)} : ${ROLE_LABELS[payload.role!]}.`,
       });
       router.refresh();
     } catch (e) {
@@ -233,7 +241,7 @@ export function HabilitationsManager({
             >
               {STAFF_ROLES.map((r) => (
                 <option key={r} value={r}>
-                  {ROLE_LABELS_FR[r]}
+                  {ROLE_LABELS[r]}
                 </option>
               ))}
             </Select>
@@ -332,7 +340,7 @@ export function HabilitationsManager({
                     >
                       {STAFF_ROLES.map((r) => (
                         <option key={r} value={r}>
-                          {ROLE_LABELS_FR[r]}
+                          {ROLE_LABELS[r]}
                         </option>
                       ))}
                     </select>
@@ -432,7 +440,7 @@ export function HabilitationsManager({
           }
           description={
             confirm.action === "role"
-              ? `${fullName(confirm.account)} passera de « ${ROLE_LABELS_FR[confirm.account.role]} » à « ${ROLE_LABELS_FR[confirm.newRole!]} ». Ses accès changent immédiatement.`
+              ? `${fullName(confirm.account)} passera de « ${ROLE_LABELS[confirm.account.role]} » à « ${ROLE_LABELS[confirm.newRole!]} ». Ses accès changent immédiatement.`
               : confirm.action === "desactiver"
               ? `${fullName(confirm.account)} ne pourra plus se connecter, immédiatement. Ses données et son historique sont conservés.`
               : `${fullName(confirm.account)} pourra à nouveau se connecter avec ses identifiants.`
