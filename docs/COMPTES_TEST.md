@@ -75,3 +75,14 @@ message à Thierry.
 **Rappel avant GO production** : ces comptes `is_test` restent en base ;
 mot de passe à faire tourner (ou comptes désactivés) au moment de la
 bascule (P12/durcissement).
+
+## Désactivation du 13/09/2026 (post-bascule production)
+
+Les 11 comptes de test sont **DÉSACTIVÉS** (profiles.actif=false + ban
+auth — connexion refusée, vérifiée 11/11, tracée dans audit_log). Les
+données de test (fiche client, demandes, lien de paiement) sont
+conservées et restent marquées is_test.
+
+**Réactivation** : depuis la section « Utilisateurs & habilitations »
+(/dashboard/utilisateurs, super-admin), bouton « Réactiver » sur le
+compte voulu — ou me le demander.
