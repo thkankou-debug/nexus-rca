@@ -34,6 +34,25 @@ export interface AuditEntry {
   userAgent?: string | null;
 }
 
+// SEC-05 (lot G7, 13/09/2026) : les champs sensibles ne sont JAMAIS écrits
+// en clair dans l'audit — masquage récursif par nom de clé avant insertion.
+// L'audit conserve l'intention (la clé est présente, valeur « ••• »), pas
+// le secret.
+const SENSITIVE_KEY = /password|passe|mot_de_passe|secret|token|api_key|apikey|authorization|private_key/i;
+
+function maskSensitive(value: unknown, depth = 0): unknown {
+  if (depth > 6 || value === null || value === undefined) return value ?? null;
+  if (Array.isArray(value)) return value.map((v) => maskSensitive(v, depth + 1));
+  if (typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      out[k] = SENSITIVE_KEY.test(k) ? "•••" : maskSensitive(v, depth + 1);
+    }
+    return out;
+  }
+  return value;
+}
+
 export async function logAudit(entry: AuditEntry): Promise<void> {
   try {
     const admin = getAdminClient();
@@ -43,8 +62,8 @@ export async function logAudit(entry: AuditEntry): Promise<void> {
       action: entry.action,
       entity_type: entry.entityType,
       entity_id: entry.entityId ?? null,
-      old_value: (entry.oldValue ?? null) as never,
-      new_value: (entry.newValue ?? null) as never,
+      old_value: maskSensitive(entry.oldValue ?? null) as never,
+      new_value: maskSensitive(entry.newValue ?? null) as never,
       ip_address: entry.ipAddress ?? null,
       user_agent: entry.userAgent ?? null,
     });

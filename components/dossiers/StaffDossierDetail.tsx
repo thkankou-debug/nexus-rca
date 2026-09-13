@@ -16,6 +16,7 @@ import { MessagesList } from "@/components/demande-detail/MessagesList";
 import { RecapAccordion } from "@/components/demande-detail/RecapAccordion";
 import { DossierStaffActions } from "./DossierStaffActions";
 import { StaffNotes } from "./StaffNotes";
+import { PartageDossier } from "@/components/dossiers/PartageDossier";
 import { StaffHistoryTimeline } from "./StaffHistoryTimeline";
 import { DossierTabs } from "./DossierTabs";
 import { DossierPaiementsTab, type DossierPayment } from "./DossierPaiementsTab";
@@ -248,6 +249,10 @@ export function StaffDossierDetail({
         <aside className="space-y-4 lg:col-span-4">
           <ConseillerCard agent={agentInfo} demandeRef={reference} />
           <StaffNotes demandeId={demande.id} role={role} />
+          {/* §12 (lot G5) : partage partenaire — acte de direction. */}
+          {(role === "admin" || role === "super_admin") && (
+            <PartageDossier demandeId={demande.id} />
+          )}
         </aside>
       </div>
     </>

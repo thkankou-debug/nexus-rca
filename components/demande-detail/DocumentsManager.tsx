@@ -34,6 +34,8 @@ type Doc = {
   // DOC-02 (migration 087) : statut de contrôle de la pièce.
   statut_controle: "recu" | "verifie" | "rejete" | "remplace";
   controle_motif: string | null;
+  /** §11 (lot G4) : versionnage — v1 par défaut, +1 à chaque remplacement. */
+  version: number | null;
 };
 
 const CONTROLE_BADGES: Record<Doc["statut_controle"], { label: string; cls: string }> = {
@@ -111,6 +113,44 @@ export function DocumentsManager({
       setControlingId(null);
     }
   };
+  // §11 (lot G4) : lien temporaire 1 h (URL signée, auditée) copié dans le
+  // presse-papiers ; remplacement versionné (l'ancien reste consultable).
+  const [linkingId, setLinkingId] = useState<string | null>(null);
+  const replaceInputRef = useRef<HTMLInputElement>(null);
+  const [replacingDoc, setReplacingDoc] = useState<Doc | null>(null);
+
+  const handleLienTemporaire = async (d: Doc) => {
+    setLinkingId(d.id);
+    try {
+      const res = await fetch(`/api/demandes/${demandeId}/documents/${d.id}/lien-temporaire`, { method: "POST" });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || !json.success) {
+        alert(json.error || "Échec de la génération du lien");
+        return;
+      }
+      await navigator.clipboard.writeText(json.url).catch(() => {});
+      window.prompt("Lien temporaire (valable 1 h) — copié dans le presse-papiers :", json.url);
+    } finally {
+      setLinkingId(null);
+    }
+  };
+
+  const handleReplaceFile = async (file: File) => {
+    if (!replacingDoc) return;
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("categorie", replacingDoc.categorie || "autre");
+    fd.append("replaces_doc_id", replacingDoc.id);
+    const res = await fetch(`/api/demandes/${demandeId}/documents`, { method: "POST", body: fd });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok || !json.success) {
+      alert(json.error || "Échec du remplacement");
+      return;
+    }
+    setReplacingDoc(null);
+    await refresh();
+  };
+
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [resolvingId, setResolvingId] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -119,7 +159,7 @@ export function DocumentsManager({
     const [{ data: docsData }, { data: reqsData }] = await Promise.all([
       supabase
         .from("demande_documents")
-        .select("id, storage_path, file_name, file_size_bytes, mime_type, categorie, created_at, uploaded_by_role, statut_controle, controle_motif")
+        .select("id, storage_path, file_name, file_size_bytes, mime_type, categorie, created_at, uploaded_by_role, statut_controle, controle_motif, version")
         .eq("demande_id", demandeId)
         .order("created_at", { ascending: false }),
       supabase
@@ -217,6 +257,17 @@ export function DocumentsManager({
 
   return (
     <div className="space-y-4">
+      {/* §11 (lot G4) : sélection du fichier de remplacement (versionné) */}
+      <input
+        ref={replaceInputRef}
+        type="file"
+        className="hidden"
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          e.target.value = "";
+          if (f) handleReplaceFile(f);
+        }}
+      />
       {/* === Documents officiels délivrés par l'agence (P9 Lot 3) === */}
       {officiels.length > 0 && (
         <div className="rounded-2xl border-2 border-nexus-blue-200 bg-nexus-blue-50/40 p-5 shadow-sm">
@@ -388,6 +439,9 @@ export function DocumentsManager({
                         <p className="text-[10px] text-slate-500">
                           {formatSize(d.file_size_bytes)} ·{" "}
                           {new Date(d.created_at).toLocaleDateString("fr-FR")}
+                          {Number(d.version || 1) > 1 && (
+                            <span className="font-bold text-nexus-blue-950"> · v{d.version}</span>
+                          )}
                           {d.statut_controle === "rejete" && d.controle_motif && (
                             <span className="text-red-600"> · {d.controle_motif}</span>
                           )}
@@ -418,6 +472,31 @@ export function DocumentsManager({
                             className="rounded-md border border-red-200 bg-white px-2 py-1 text-[10px] font-bold text-red-600 transition hover:bg-red-50 disabled:opacity-50"
                           >
                             Rejeter
+                          </button>
+                        </>
+                      )}
+                      {isStaff && d.statut_controle !== "remplace" && (
+                        <>
+                          {/* §11 (lot G4) : lien signé 1 h, audité */}
+                          <button
+                            type="button"
+                            onClick={() => handleLienTemporaire(d)}
+                            disabled={linkingId === d.id}
+                            className="whitespace-nowrap rounded-md border border-slate-200 bg-white px-2 py-1 text-[10px] font-bold text-slate-600 transition hover:bg-slate-50 disabled:opacity-50"
+                            title="Générer un lien temporaire (1 h) — copié dans le presse-papiers"
+                          >
+                            Lien 1 h
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setReplacingDoc(d);
+                              replaceInputRef.current?.click();
+                            }}
+                            className="whitespace-nowrap rounded-md border border-slate-200 bg-white px-2 py-1 text-[10px] font-bold text-slate-600 transition hover:bg-slate-50"
+                            title="Remplacer par une nouvelle version — l'ancienne reste consultable"
+                          >
+                            Remplacer
                           </button>
                         </>
                       )}

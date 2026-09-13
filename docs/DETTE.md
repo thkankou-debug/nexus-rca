@@ -3527,3 +3527,48 @@ Rejeu : `retryFailedOutbox()` (5 tentatives max, 50 messages/passage)
 branché sur le cron quotidien instruction-escalades — plus aucun envoi
 perdu en silence. Vérifié en réel : e-mail RDV agenda journalisé
 `sent`/1 tentative/tag [AGENDA].
+
+---
+
+## 13/09/2026 — LOTS G4→G8 livrés (fin du Lot G)
+
+**G6 · Recherche globale étendue** : /api/search sert désormais
+daf/comptable (paiements), dg (dossiers+RDV+paiements lecture),
+chef_service (dossiers de SON pôle — même mapping que Mon service).
+Portées = miroir exact de ce que leurs pages montrent déjà (AR-06 reste
+ouvert, rien d'inventé). Vérifié : chef → 0 client/0 paiement.
+
+**G7 · États uniformes + audit** : boundary `app/dashboard/error.tsx`
+(erreur récupérable : même écran partout, Réessayer + retour, digest en
+référence, jamais de page blanche) ; composant `AccessDenied` partagé ;
+SEC-05 : `logAudit` MASQUE récursivement les clés sensibles
+(password/secret/token/api_key…, valeur « ••• ») avant écriture.
+
+**G4 · Documents versionnés + liens temporaires (099)** :
+`demande_documents.version/replaces_id` — remplacer une pièce crée la
+version N+1 et marque l'ancienne « remplacée » (jamais effacée) ; route
+`/documents/[docId]/lien-temporaire` : URL signée 1 h, staff habilité
+(agent affecté/chef/admin), AUDITÉE ; UI fiche dossier : badge vN,
+boutons « Lien 1 h » (presse-papiers) et « Remplacer ».
+
+**G5 · Partage partenaire côté staff** : route
+`/api/demandes/[id]/partages` (GET/POST/DELETE, admin/super_admin —
+acte de direction, AR-06 ouvert), audit + notification du partenaire au
+partage ET à la révocation ; bloc « Partage partenaire » dans la fiche
+dossier staff. Les retours partenaires étaient déjà affichés dans la
+fiche (constaté — l'audit était en retard). Pas de nouvelle page
+« comptes partenaires » : les comptes vivent dans Utilisateurs, les
+partages dans chaque dossier — choix documenté.
+
+**G8 · Recette formelle R01→R24** : docs/RECETTE_R01_R24.md — 23 ✅
+(preuves datées : rejeux HTTP du 13/09 pour R02/R04/R05/R07/R17 +
+renvois aux recettes des 12-13/09) + R19 partiel (« même instant de
+référence » à formaliser — dette). R17 : après révocation, la réponse
+rendue est la page 404 SANS aucune donnée du dossier (statut de
+transport 200 = streaming Next sur notFound tardif — vérifié sans
+fuite).
+
+**Restent ouverts (décisions Thierry)** : AR-02/05 (délégations,
+suppléants, postes), AR-06 (portées de lecture officielles), AR-07
+(bascule production, mesures §16), fusion FAC-/FC-, MFA (SEC-02),
+imprimante (4 prérequis), NIF/RCCM.

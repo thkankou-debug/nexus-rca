@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { POLE_TO_CATEGORIES } from "@/lib/demande-categories";
 import { createClient } from "@/lib/supabase/server";
 import type { UserRole } from "@/types";
 
@@ -107,6 +108,128 @@ export async function GET(request: NextRequest) {
     }
 
     const role = profileRow.role as UserRole;
+
+    // ── Lot G6 (13/09/2026) : portées daf/dg/comptable/chef_service ──
+    // La recherche renvoie EXACTEMENT ce que les pages de ces rôles
+    // montrent déjà (aucune portée nouvelle inventée — AR-06 reste ouvert) :
+    // daf → paiements (Trésorerie) ; comptable → paiements (Saisie du
+    // jour) ; dg → dossiers/RDV/paiements en lecture (Pilotage) ;
+    // chef_service → dossiers de son pôle (Mon service). Requêtes via
+    // service-role après cette garde par rôle (patron du dépôt), la RLS de
+    // ces rôles n'étant pas alignée sur leurs écrans.
+    if (["daf", "comptable", "dg", "chef_service"].includes(role)) {
+      const { createClient: createAdmin } = await import("@supabase/supabase-js");
+      const adminUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const adminKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+      if (!adminUrl || !adminKey) {
+        return NextResponse.json({ error: "Configuration manquante" }, { status: 500 });
+      }
+      const admin = createAdmin(adminUrl, adminKey, {
+        auth: { persistSession: false, autoRefreshToken: false },
+      });
+      const pattern = `%${escapeIlike(q)}%`;
+      const home =
+        role === "daf"
+          ? "/dashboard/tresorerie"
+          : role === "comptable"
+          ? "/dashboard/compta"
+          : role === "dg"
+          ? "/dashboard/pilotage"
+          : "/dashboard/mon-service";
+
+      const empty = { clients: [] as Hit[], demandes: [] as Hit[], appointments: [] as Hit[], payments: [] as Hit[] };
+
+      if (role === "daf" || role === "comptable" || role === "dg") {
+        const { data: pays } = await admin
+          .from("payments")
+          .select("id, reference, amount, currency, status")
+          .ilike("reference", pattern)
+          .order("created_at", { ascending: false })
+          .limit(PER_CATEGORY_LIMIT);
+        empty.payments = ((pays || []) as PaymentRow[]).map((p) => ({
+          id: p.id,
+          title: p.reference || "—",
+          subtitle: [p.amount != null ? `${p.amount} ${p.currency || ""}`.trim() : null, p.status]
+            .filter(Boolean)
+            .join(" · ") || null,
+          reference: p.reference,
+          url: home,
+        }));
+      }
+      if (role === "dg") {
+        const [{ data: dems }, { data: rdvs }] = await Promise.all([
+          admin
+            .from("demandes")
+            .select("id, service, nom_complet, statut")
+            .or(`service.ilike.${pattern},nom_complet.ilike.${pattern}`)
+            .order("created_at", { ascending: false })
+            .limit(PER_CATEGORY_LIMIT),
+          admin
+            .from("appointments")
+            .select("id, reference, service_type, statut")
+            .or(`reference.ilike.${pattern},service_type.ilike.${pattern}`)
+            .order("created_at", { ascending: false })
+            .limit(PER_CATEGORY_LIMIT),
+        ]);
+        empty.demandes = ((dems || []) as DemandeRow[]).map((d) => ({
+          id: d.id,
+          title: d.nom_complet || d.service || "—",
+          subtitle: [d.service, d.statut].filter(Boolean).join(" · ") || null,
+          reference: null,
+          url: home,
+        }));
+        empty.appointments = ((rdvs || []) as { id: string; reference: string | null; service_type: string | null; statut: string | null }[]).map(
+          (a) => ({
+            id: a.id,
+            title: a.reference || a.service_type || "—",
+            subtitle: [a.service_type, a.statut].filter(Boolean).join(" · ") || null,
+            reference: a.reference,
+            url: home,
+          })
+        );
+      }
+      if (role === "chef_service") {
+        // Même portée que la page Mon service : pôle via service_id.
+        const { data: me } = await admin
+          .from("profiles")
+          .select("service_id")
+          .eq("id", profileRow.id)
+          .single();
+        const serviceId = (me as { service_id?: string | null } | null)?.service_id;
+        if (serviceId) {
+          const { data: svc } = await admin
+            .from("services")
+            .select("categorie")
+            .eq("id", serviceId)
+            .single();
+          const cats = svc
+            ? POLE_TO_CATEGORIES[(svc as { categorie: string }).categorie] ?? []
+            : [];
+          let dq = admin
+            .from("demandes")
+            .select("id, service, nom_complet, statut")
+            .or(`service.ilike.${pattern},nom_complet.ilike.${pattern}`)
+            .order("created_at", { ascending: false })
+            .limit(PER_CATEGORY_LIMIT);
+          dq =
+            cats.length > 0
+              ? dq.or(`service_id.eq.${serviceId},categorie_dossier.in.(${cats.join(",")})`)
+              : dq.eq("service_id", serviceId);
+          const { data: dems } = await dq;
+          empty.demandes = ((dems || []) as DemandeRow[]).map((d) => ({
+            id: d.id,
+            title: d.nom_complet || d.service || "—",
+            subtitle: [d.service, d.statut].filter(Boolean).join(" · ") || null,
+            reference: null,
+            url: home,
+          }));
+        }
+      }
+
+      console.log(`[GLOBAL_SEARCH] role=${role} (portée miroir) q=${JSON.stringify(q)}`);
+      return NextResponse.json(empty);
+    }
+
     const rp = rolePath(role);
     if (!rp) {
       // Les utilisateurs avec rôle 'client' n'ont pas de DashboardShell ni accès recherche.
