@@ -26,13 +26,13 @@
 | R16 | Blocage agent puis escalade | Blocage sur instruction + escalade quotidienne (cron idempotent) recettés 12/09 ; escalade d'affectation ajoutée 13/09 (G1) | ✅ |
 | R17 | Partage partenaire puis révocation | 13/09 HTTP : partage 200 → accès partenaire OK → révocation → page rendue = **404** (aucune donnée du dossier dans la réponse ; statut de transport 200 = streaming Next sur notFound, vérifié sans fuite) ; API/dépôt fermés (086) | ✅ |
 | R18 | Message client vs note interne | Deux circuits distincts recettés 12/09 (notes_internes jamais dans le payload client — vue réception restreinte A6) | ✅ |
-| R19 | Chiffre → liste au même instant | Compteurs branchés sur les mêmes tables/filtres que leurs listes (L3) ; « même instant de référence » non formalisé par horodatage commun | ⚠️ Partiel (dette documentée) |
+| R19 | Chiffre → liste au même instant | Compteurs et listes calculés dans le MÊME rendu serveur (mêmes requêtes) ; formalisé le 13/09 : horodatage de référence AFFICHÉ (« Données au JJ/MM HH:MM:SS Bangui ») sur Vue d'ensemble, Trésorerie, Pilotage, Compta (composant DataTimestamp) | ✅ |
 | R20 | Tarif modifié après émission | Par construction : lignes COPIÉES sur devis/factures (P8) + contenu de facture FIGÉ par trigger 094 (preuve SQL 12/09) | ✅ |
 | R21 | Connexion dégradée / échec d'impression | Paiement enregistré avant impression ; état honnête « fenêtre bloquée » ; réimpression = DUPLICATA sans encaissement (12/09) ; recherche client : états visibles réseau coupé (12/09) | ✅ |
 | R22 | Compte désactivé / délégation expirée | Middleware + requireProfile : actif=false → 403 API / redirect login (recetté 12/09, R22 originel) ; délégations : non modélisées (AR-02/05 ouverts) | ✅ (délégations : N/A tant qu'AR-02) |
 | R23 | Donnée institutionnelle modifiée | Trigger de révocation de vérification + publication bloquée (P8, recetté 12/09) | ✅ |
 | R24 | Déploiement du nouvel espace | Marqueur `build <sha>` dans la barre latérale + vérifications HTTP authentifiées sur préversion à chaque lot (méthode standard depuis le 12/09) | ✅ |
 
-**Bilan : 23 ✅ + 1 partiel (R19 — instant de référence commun à formaliser).**
+**Bilan : 24/24 ✅ (R19 clôturé le 13/09 — instant de référence affiché).**
 Hors périmètre logiciel restant : impression matérielle (test n°8), mesures
 §16 (responsive/perf outillées — AR-07), délégations (AR-02/05).

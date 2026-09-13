@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DataTimestamp } from "@/components/admin/ui/DataTimestamp";
 import { requireProfile } from "@/lib/auth";
 import { getEffectiveNav } from "@/lib/admin-nav";
 import { ModuleAdminShell } from "@/components/admin/ui/ModuleAdminShell";
@@ -207,6 +208,8 @@ export default async function PilotagePage() {
       title="Pilotage"
       description="Lecture, validation et rapports — aucune saisie opérationnelle."
     >
+      {/* R19 : instant de référence commun compteurs/listes */}
+      <div className="mb-4"><DataTimestamp /></div>
       <div className="space-y-6">
         {/* Situation du mois */}
         <section>

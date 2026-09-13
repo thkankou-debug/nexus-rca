@@ -1,4 +1,5 @@
 import { requireProfile } from "@/lib/auth";
+import { DataTimestamp } from "@/components/admin/ui/DataTimestamp";
 import { getEffectiveNav } from "@/lib/admin-nav";
 import { ModuleAdminShell } from "@/components/admin/ui/ModuleAdminShell";
 import { StatCard } from "@/components/admin/ui/StatCard";
@@ -240,6 +241,8 @@ export default async function TresoreriePage() {
       title="Trésorerie"
       description="Le DAF valide, il ne saisit pas — fin de la chaîne de validation."
     >
+      {/* R19 : instant de référence commun compteurs/listes */}
+      <div className="mb-4"><DataTimestamp /></div>
       <div className="space-y-6">
         {/* Position du mois */}
         <section>

@@ -3572,3 +3572,28 @@ fuite).
 suppléants, postes), AR-06 (portées de lecture officielles), AR-07
 (bascule production, mesures §16), fusion FAC-/FC-, MFA (SEC-02),
 imprimante (4 prérequis), NIF/RCCM.
+
+---
+
+## 13/09/2026 — GO Thierry sur les points 1-4 : registre DECISIONS_AR.md + R19 clos
+
+Thierry a donné GO pour trancher les arbitrages restants avec les défauts
+les plus sûrs → `docs/DECISIONS_AR.md` est LE registre unique (AR-01→07,
+fusion FAC-/FC- : deux registres maintenus, MFA : TOTP Supabase retenu
+mais NON activé sans GO dédié, critères de bascule production définis —
+tous remplis sauf le GO explicite). AR-02/05 : un poste « Réception »,
+remplaçante = compte propre (partage de compte interdit), délégations non
+modélisées tant que le besoin réel n'existe pas. AR-06 : portées
+officielles = miroir des écrans livrés (tableau).
+
+**R19 clos (24/24)** : composant `DataTimestamp` (heure de Bangui,
+seconde près) affiché sur Vue d'ensemble, Trésorerie, Pilotage, Compta —
+compteurs et listes du même rendu, instant de référence EXPLICITE.
+
+**Mesures §16 (build prod)** : Caisse 404 kB / Factures 391 kB (pdf-lib
+embarqué, assumé) ; autres pages neuves 175-184 kB ; Agent 101 kB.
+Responsive : procédure manuelle 360 px documentée pour Thierry.
+
+**Toujours attendus** : imprimante (4 infos), NIF/RCCM, puis GO
+production (procédure tag + merge + vérification écrite dans
+DECISIONS_AR.md).

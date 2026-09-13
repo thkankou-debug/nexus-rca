@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DataTimestamp } from "@/components/admin/ui/DataTimestamp";
 import { requireProfile } from "@/lib/auth";
 import { getEffectiveNav } from "@/lib/admin-nav";
 import { ModuleAdminShell } from "@/components/admin/ui/ModuleAdminShell";
@@ -130,6 +131,8 @@ export default async function ComptaSaisieDuJourPage() {
       title="Saisie du jour"
       description="Le comptable saisit et rapproche — la validation appartient au DAF."
     >
+      {/* R19 : instant de référence commun compteurs/listes */}
+      <div className="mb-4"><DataTimestamp /></div>
       <div className="space-y-6">
         <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
           <StatCard label="Paiements saisis aujourd'hui" value={saisisJour.length} />

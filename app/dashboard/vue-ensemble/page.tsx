@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DataTimestamp } from "@/components/admin/ui/DataTimestamp";
 import { ArrowRight, CalendarDays, BellRing } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -186,6 +187,8 @@ export default async function VueEnsemblePage() {
       title="Vue d'ensemble"
       description="Pilotage de l'agence et supervision des opérations."
     >
+      {/* R19 : instant de référence commun compteurs/listes */}
+      <div className="mb-4"><DataTimestamp /></div>
       <div className="space-y-6">
         {/* À traiter (maquette : 3 colonnes, chacune ouvre la liste) */}
         <section className="rounded-sm border border-line bg-surface-elevated p-4">
