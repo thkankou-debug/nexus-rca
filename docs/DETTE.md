@@ -3730,3 +3730,39 @@ attendue : passer le logo à l'or ou le conserver) + 1 commentaire.
 L'exigence M11 « l'orange ne subsiste nulle part » est atteinte, à
 cette exception délibérée près. E-mails transactionnels : #FF6600
 conservé (écart documenté CLAUDE.md, hors périmètre).
+
+---
+
+## 13/09/2026 — L9 résiduel : rapports journalier et annuel (dette #14 SOLDÉE)
+
+La feuille de route (P6) et le cahier (§2.3/§2.4) exigeaient les rapports
+journalier et annuel — seul le mensuel existait (cron + archive).
+
+**Livré — rapports PDF à la demande** :
+- `lib/monthly-report-data.ts` : `dayBoundsFor()` / `yearBoundsFor()` —
+  l'agrégateur mensuel `aggregateMonth()` accepte des bornes arbitraires,
+  il est réutilisé tel quel (mêmes chiffres, aucune logique dupliquée) ;
+- `lib/monthly-report-pdf.ts` : sous-titre paramétrable (journalier /
+  mensuel / annuel) ; correction au passage : « Généré le » affiche la
+  date RÉELLE de génération, plus la borne de fin de période (un rapport
+  annuel demandé en septembre affichait « généré le 31/12 » — faux) ;
+- `GET /api/rapports?type=journalier|mensuel|annuel` (+ date/annee/mois,
+  défauts : aujourd'hui Bangui / mois courant / année courante) — généré
+  et streamé, JAMAIS stocké (le mensuel archivé du cron est inchangé) ;
+  rôles super_admin/admin/daf/dg ; chaque génération tracée dans
+  audit_log (`finance.rapport.generate`) ;
+- carte « Rapports PDF » (`components/finance/RapportsPdfCard.tsx`)
+  branchée sur Trésorerie (DAF) et Pilotage (DG) — actions secondaires
+  neutres, focus bleu, aucun or (A1). Résout aussi « rapports PDF non
+  raccordés au rôle » (audit CDC §5, ligne DG).
+
+**Recette réelle (build de production local, comptes TEST_, 13/09)** :
+DAF → journalier/mensuel/annuel = 200 `application/pdf` (%PDF-, ~21 Ko) ;
+DG → annuel 200 ; agent → 403 ; sans session → 401 ; annee=1999,
+date=13/09/2026, type=xxx → 400. Trois lignes `finance.rapport.generate`
+vérifiées dans audit_log (daf ×2, dg ×1). PDF annuel ouvert et contrôlé
+visuellement (en-tête, tuiles, tableaux, pied institutionnel).
+
+**Périmètre non couvert (assumé)** : rapport trimestriel (§2.3 le cite —
+s'ajoute en 3 lignes si Thierry le demande : bornes + libellé) ; export
+Excel des données sous-jacentes (roadmap #8, non commencé).

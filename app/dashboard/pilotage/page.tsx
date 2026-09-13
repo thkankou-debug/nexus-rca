@@ -4,6 +4,7 @@ import { requireProfile } from "@/lib/auth";
 import { getEffectiveNav } from "@/lib/admin-nav";
 import { ModuleAdminShell } from "@/components/admin/ui/ModuleAdminShell";
 import { StatCard } from "@/components/admin/ui/StatCard";
+import { RapportsPdfCard } from "@/components/finance/RapportsPdfCard";
 import { getFinanceAdminClient } from "@/lib/finance-server";
 import { STATUTS_TERMINAUX } from "@/lib/pilotage-server";
 import { getCategorieFromService, CATEGORIE_META, type CategorieDossier, isCategorieDossier } from "@/lib/demande-categories";
@@ -433,6 +434,9 @@ export default async function PilotagePage() {
                 paramétré.
               </p>
             </section>
+
+            {/* Rapports PDF à la demande (§2.3 : mensuels et annuels pour le DG) */}
+            <RapportsPdfCard />
           </div>
         </div>
       </div>

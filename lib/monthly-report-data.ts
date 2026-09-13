@@ -51,6 +51,43 @@ export function monthBoundsFor(year: number, month: number): MonthBounds {
   };
 }
 
+// ── Bornes journalières / annuelles (L9 résiduel, 13/09/2026) ──────────────
+// Réutilisent l'interface MonthBounds : aggregateMonth() ne dépend que de
+// start/end/label, les rapports journalier et annuel réutilisent donc le
+// même agrégateur et le même générateur PDF que le mensuel.
+
+const FR_DAYS = [
+  "Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi",
+];
+
+/** Bornes d'une journée (dateStr = "YYYY-MM-DD", interprétée en UTC —
+ *  cohérent avec le scope mensuel existant, lui aussi en UTC). */
+export function dayBoundsFor(dateStr: string): MonthBounds {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const start = new Date(Date.UTC(y, m - 1, d, 0, 0, 0, 0));
+  const end = new Date(Date.UTC(y, m - 1, d, 23, 59, 59, 999));
+  return {
+    year: y,
+    month: m,
+    start: start.toISOString(),
+    end: end.toISOString(),
+    label: `${FR_DAYS[start.getUTCDay()]} ${d} ${FR_MONTHS[m - 1].toLowerCase()} ${y}`,
+  };
+}
+
+/** Bornes d'une année civile complète. */
+export function yearBoundsFor(year: number): MonthBounds {
+  const start = new Date(Date.UTC(year, 0, 1, 0, 0, 0, 0));
+  const end = new Date(Date.UTC(year, 11, 31, 23, 59, 59, 999));
+  return {
+    year,
+    month: 12,
+    start: start.toISOString(),
+    end: end.toISOString(),
+    label: `Annee ${year}`,
+  };
+}
+
 export function previousMonthBounds(now: Date = new Date()): MonthBounds {
   const y = now.getUTCFullYear();
   const m = now.getUTCMonth(); // 0..11 → mois précédent en 1-based

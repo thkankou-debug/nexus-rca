@@ -12,6 +12,7 @@ import {
   type PendingSession,
   type PendingCommission,
 } from "@/components/finance/ValidationsTresorerie";
+import { RapportsPdfCard } from "@/components/finance/RapportsPdfCard";
 import { getFinanceAdminClient } from "@/lib/finance-server";
 
 export const metadata = {
@@ -400,6 +401,9 @@ export default async function TresoreriePage() {
                 </ul>
               )}
             </section>
+
+            {/* Rapports PDF à la demande (L9 : journalier / mensuel / annuel) */}
+            <RapportsPdfCard />
           </div>
         </div>
       </div>

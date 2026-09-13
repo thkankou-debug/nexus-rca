@@ -38,7 +38,11 @@ function formatMoney(amount: number, currency = "XAF"): string {
 }
 
 // ─── Génération PDF ────────────────────────────────────────────────────────
-export async function buildMonthlyReportPdf(summary: MonthSummary): Promise<Uint8Array> {
+export async function buildMonthlyReportPdf(
+  summary: MonthSummary,
+  options?: { subtitle?: string }
+): Promise<Uint8Array> {
+  const subtitle = options?.subtitle || "Rapport mensuel financier";
   const pdfDoc = await PDFDocument.create();
   const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
@@ -111,7 +115,7 @@ export async function buildMonthlyReportPdf(summary: MonthSummary): Promise<Uint
     font: helveticaBold,
     color: white,
   });
-  drawText("Rapport mensuel financier", {
+  drawText(subtitle, {
     x: MARGIN_X + 56,
     y: PAGE_H - 78,
     size: 12,
@@ -125,8 +129,10 @@ export async function buildMonthlyReportPdf(summary: MonthSummary): Promise<Uint
     color: white,
   });
 
+  // Date de génération RÉELLE (pas la borne de fin de période — un rapport
+  // annuel demandé en septembre affichait « généré le 31/12 », faux).
   drawText(
-    `Genere le ${new Date(summary.bounds.end).toLocaleDateString("fr-FR")}`,
+    `Genere le ${new Date().toLocaleDateString("fr-FR")}`,
     {
       x: PAGE_W - MARGIN_X - 130,
       y: PAGE_H - 55,
