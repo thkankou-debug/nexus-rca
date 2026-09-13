@@ -65,6 +65,18 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     }
 
     const sessionRow = session as { id: string; agent_id: string; opened_at: string; opening_balance: number; status: string };
+    // Cahier §6 (12/09/2026) et séparation des tâches : la validation
+    // financière est réalisée par une personne DISTINCTE du préparateur —
+    // sans exception, super_admin compris (trou détecté par la recette F13a).
+    if (sessionRow.agent_id === user.id) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Séparation des tâches : le titulaire de la session ne valide pas sa propre clôture",
+        },
+        { status: 403 }
+      );
+    }
     if (sessionRow.status === "cloturee") {
       return NextResponse.json({ success: false, error: "Cette session est déjà clôturée" }, { status: 400 });
     }
@@ -84,6 +96,24 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     );
     const discrepancy = body.actual_balance - expectedBalance;
 
+    // §6 : « Une correction conserve les valeurs initiales et son motif » —
+    // la justification saisie par la caissière à la SOUMISSION ne doit
+    // jamais être effacée par la validation (défaut détecté par la recette
+    // F : /close écrasait notes). Les remarques du valideur s'AJOUTENT.
+    const { data: current } = await admin
+      .from("caisse_sessions")
+      .select("notes")
+      .eq("id", params.id)
+      .single();
+    const notesSoumission = (current as { notes?: string | null } | null)?.notes?.trim() || "";
+    const notesValidation = body.notes?.trim() || "";
+    const notesFinales =
+      notesSoumission && notesValidation
+        ? `${notesSoumission}\n— Validation : ${notesValidation}`
+        : notesValidation
+        ? `— Validation : ${notesValidation}`
+        : notesSoumission || null;
+
     const { error: updateError } = await admin
       .from("caisse_sessions")
       .update({
@@ -92,7 +122,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
         expected_balance: expectedBalance,
         actual_balance: body.actual_balance,
         discrepancy,
-        notes: body.notes || null,
+        notes: notesFinales,
       })
       .eq("id", params.id);
 

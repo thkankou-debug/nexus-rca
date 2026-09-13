@@ -3413,3 +3413,31 @@ que les RDV) ; vue semaine ; granularité 30 min ; notification in-app.
 
 **tsc + build 0 erreur.** RDV de démonstration (14/09 11:00, données de
 test) laissé pour la vérification de Thierry.
+
+---
+
+## 12/09/2026 — PHASE F : recette de bout en bout (cahier §12) déroulée
+
+Détail complet dans `docs/RECETTE_CAISSE_F.md` — 14/14 exigences
+vérifiées en HTTP authentifié sur le build de production local (comptes
+de TEST distincts : superadmin opère, DAF valide — la session de la
+réceptionniste n'a pas été touchée). Erreurs testées : double clic /
+coupure réseau (rejeu idempotent), concurrence sur le même reste dû
+(verrou optimiste 200+409), anciennes routes (redirection + trigger),
+échec d'impression (paiement conservé, duplicata honnête).
+
+**Deux défauts DÉTECTÉS par la recette et corrigés immédiatement** :
+1. `/api/caisse-sessions/[id]/close` acceptait la SELF-VALIDATION (le
+   préparateur validait sa propre clôture) → 403 « Séparation des
+   tâches », sans exception (super_admin compris). Re-testé : 403 puis
+   validation DAF 200.
+2. `/close` ÉCRASAIT la justification d'écart saisie à la soumission
+   (§6 : « une correction conserve les valeurs initiales et son
+   motif ») → la justification est conservée, la remarque du valideur
+   s'ajoute (« — Validation : … »). Re-testé : les deux textes
+   coexistent après clôture.
+
+**En attente (inchangé)** : impression matérielle (4 prérequis à fournir),
+NIF/RCCM (lib/facture-config.ts). Reste du grand cahier : rapprochements
+étendus §7 (relevés électroniques externes, factures de dossier),
+absences dans l'agenda, vue semaine.
