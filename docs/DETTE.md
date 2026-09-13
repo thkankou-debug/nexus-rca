@@ -3766,3 +3766,39 @@ visuellement (en-tête, tuiles, tableaux, pied institutionnel).
 **Périmètre non couvert (assumé)** : rapport trimestriel (§2.3 le cite —
 s'ajoute en 3 lignes si Thierry le demande : bornes + libellé) ; export
 Excel des données sous-jacentes (roadmap #8, non commencé).
+
+---
+
+## 13/09/2026 — Logo officiel dans le shell admin + bouton Retour global
+
+**Demande Thierry (13/09)** : « le logo du dashboard admin est différent du
+logo de Nexus RCA — je veux le logo actuel sur tous les comptes ; et il n'y
+a pas de bouton retour sur les pages des comptes. »
+
+**Logo** : la barre latérale du shell unique affichait l'icône PWA
+(`public/icones/icon-96.png`), pas le logo dessiné du site.
+`BrandMark.tsx` rend désormais la copie exacte du logo officiel
+(`components/ui/Logo.tsx`, fichier gelé non touché) : carré dégradé
+navy→orange, croix + point, wordmark NEXUS RCA — sans la rotation au
+survol (A1 : pas d'animation décorative en admin). Un `NexusMark`
+réutilisable est exporté ; l'en-tête de l'espace partenaire (qui
+utilisait aussi icon-96) le consomme. Un seul point de changement →
+tous les espaces du shell (vue-ensemble, pilotage, trésorerie, compta,
+mon-service, dossiers, clients, accueil, modération, instructions,
+agent) sont corrigés d'un coup. Le portail client et les espaces
+classiques utilisaient déjà `ui/Logo` — inchangés. Les couleurs orange
+de ce bloc sont LE logo (exception M11 actée dans DECISIONS_AR.md).
+
+**Retour** : `ShellBackButton` (components/admin/ui) rendu par
+`ModuleAdminShell` et `AccueilShell` sur la ligne du fil d'Ariane —
+`router.back()` si un historique existe, sinon repli sur l'écran
+d'accueil du rôle (`homeForRole`) ; MASQUÉ sur l'écran d'accueil du rôle
+(revenir depuis son poste de travail sortirait de l'espace). Style
+neutre, focus bleu, 150 ms. Les pages classiques et le portail client
+gardent leur `BackButton` existant sur les fiches.
+
+**Vérifié (build prod local, comptes TEST_, 13/09)** : 8 rejeux HTTP —
+logo dessiné rendu et icon-96 absent sur trésorerie/pilotage/
+vue-ensemble/dossiers/caisse/reçus/partenaire ; bouton Retour présent
+sur les sous-pages (dossiers, reçus), absent sur les écrans d'accueil
+de rôle ; tsc + build 0 erreur.

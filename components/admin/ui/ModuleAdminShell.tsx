@@ -21,9 +21,11 @@ import { SidebarGroup, SidebarItem } from "@/components/admin/ui/SidebarGroup";
 import { UserMenu } from "@/components/admin/ui/UserMenu";
 import { Breadcrumb, type BreadcrumbItem } from "@/components/admin/ui/Breadcrumb";
 import { PageHeader } from "@/components/admin/ui/PageHeader";
+import { ShellBackButton } from "@/components/admin/ui/ShellBackButton";
 import { createClient } from "@/lib/supabase/client";
+import { homeForRole } from "@/lib/rbac";
 import type { AdminNavGroup } from "@/lib/admin-nav";
-import type { Profile } from "@/types";
+import type { Profile, UserRole } from "@/types";
 
 export function ModuleAdminShell({
   profile,
@@ -136,7 +138,12 @@ export function ModuleAdminShell({
       {showHeader ? (
         <>
           <PageHeader
-            breadcrumb={<Breadcrumb items={breadcrumb} />}
+            breadcrumb={
+              <div className="flex items-center gap-3">
+                <ShellBackButton home={homeForRole(profile.role as UserRole)} />
+                <Breadcrumb items={breadcrumb} />
+              </div>
+            }
             title={title ?? ""}
             description={description}
           />
@@ -144,7 +151,8 @@ export function ModuleAdminShell({
         </>
       ) : (
         <>
-          <div className="mb-2">
+          <div className="mb-2 flex items-center gap-3">
+            <ShellBackButton home={homeForRole(profile.role as UserRole)} />
             <Breadcrumb items={breadcrumb} />
           </div>
           {children}

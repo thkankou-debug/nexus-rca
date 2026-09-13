@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { requireProfile } from "@/lib/auth";
+import { NexusMark } from "@/components/admin/ui/BrandMark";
 import {
   PartenaireEspace,
   type SharedDossier,
@@ -58,7 +58,7 @@ export default async function PartenairePage() {
       <header className="border-b border-sidebar-line bg-sidebar">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <Image src="/icones/icon-96.png" alt="Nexus RCA" width={38} height={38} className="rounded-sm" priority />
+            <NexusMark size={38} />
             <div>
               <p className="font-display text-base font-bold leading-tight tracking-wide text-sidebar-ink">
                 NEXUS <span className="text-brand">RCA</span>

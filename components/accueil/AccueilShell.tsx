@@ -21,8 +21,12 @@ import { SidebarGroup, SidebarItem } from "@/components/admin/ui/SidebarGroup";
 import { UserMenu } from "@/components/admin/ui/UserMenu";
 import { Breadcrumb, type BreadcrumbItem } from "@/components/admin/ui/Breadcrumb";
 import { PageHeader } from "@/components/admin/ui/PageHeader";
+import { ShellBackButton } from "@/components/admin/ui/ShellBackButton";
 import { createClient } from "@/lib/supabase/client";
 import type { Profile } from "@/types";
+
+// Écran d'accueil du rôle (homeForRole) — le bouton Retour s'y masque.
+const ACCUEIL_HOME = "/dashboard/accueil/caisse";
 
 // Reprise Accueil & caisse (12/09/2026, §1/§3) : UNE entrée Caisse (les deux
 // modes de saisie sont des onglets de la même page — plus de menus
@@ -139,7 +143,12 @@ export function AccueilShell({
       {showHeader ? (
         <>
           <PageHeader
-            breadcrumb={<Breadcrumb items={breadcrumb} />}
+            breadcrumb={
+              <div className="flex items-center gap-3">
+                <ShellBackButton home={ACCUEIL_HOME} />
+                <Breadcrumb items={breadcrumb} />
+              </div>
+            }
             title={title ?? ""}
             description={description}
           />
@@ -147,7 +156,8 @@ export function AccueilShell({
         </>
       ) : (
         <>
-          <div className="mb-2">
+          <div className="mb-2 flex items-center gap-3">
+            <ShellBackButton home={ACCUEIL_HOME} />
             <Breadcrumb items={breadcrumb} />
           </div>
           {children}
