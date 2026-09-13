@@ -54,3 +54,24 @@ Sur le lien `PAY-LINK-2026-000012` (100 XAF), serveur de développement local :
    après correction sur le même lien (réinitialisé à `en_attente`) :
    1ère déclaration acceptée, 2e refusée (400), `numero_transaction`
    toujours celui de la 1ère en base. Voir `docs/DETTE.md`.
+
+## Rotation du 13/09/2026 — incident et règle
+
+**Incident** : les recettes HTTP du 13/09 (rapports PDF, logo/bouton
+Retour) posaient un mot de passe temporaire ALÉATOIRE sur chaque compte
+de test avant de s'y connecter — les mots de passe transmis à Thierry ne
+fonctionnaient plus. Détecté par Thierry le 13/09 au soir.
+
+**Correction** : un mot de passe UNIQUE commun a été posé sur les
+11 comptes et la connexion de chacun vérifiée (11/11). Comme toujours,
+**aucun mot de passe dans ce fichier** — transmis à Thierry hors dépôt.
+
+**Règle permanente pour les recettes futures** : les scripts de recette
+HTTP réutilisent le mot de passe commun courant (transmis hors dépôt) et
+n'en génèrent JAMAIS un nouveau. Si une rotation est inévitable, elle se
+termine par la repose du mot de passe commun + vérification 11/11 +
+message à Thierry.
+
+**Rappel avant GO production** : ces comptes `is_test` restent en base ;
+mot de passe à faire tourner (ou comptes désactivés) au moment de la
+bascule (P12/durcissement).
