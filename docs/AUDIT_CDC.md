@@ -9,6 +9,43 @@
 >
 > Ce document est l'inventaire de départ ; il sera tenu à jour lot par lot.
 
+## ⬆ Mise à jour du 12/09/2026 (soir) — lots « reprise Accueil & caisse » A→F
+
+Livrés depuis l'inventaire ci-dessous (preuves : docs/DETTE.md,
+docs/RECETTE_CAISSE_F.md, migrations 088→096) :
+
+- **§6.2/EX-06 exclusivité d'encaissement → Livré EN BASE** : trigger 091,
+  aucun encaissement sans session ouverte quelle que soit la porte ;
+  ventes figées après soumission/clôture ; une session ouverte par
+  opérateur (index unique).
+- **§8 POS/caisse** : caisse UNIFIÉE 2 onglets (maquette exécutée) ;
+  ouverture obligatoire détaillée (poste/coupures/observation, 092) ;
+  **§8.4 entrées/sorties typées → Livré** (caisse_movements 093 : motif
+  obligatoire, figées, dans le solde théorique) ; **brouillons de ticket
+  → Livré** (mise en attente/reprise) ; ventilation §5 complète (espèces
+  nettes, électronique par moyen, cautions) ; **rapport de clôture PDF
+  téléchargeable → Livré** ; session interrompue signalée ; date affichée
+  Africa/Bangui sur les documents.
+- **§9 Finance** : **factures de comptoir (FC-/AV-, 094-095) → Livré** —
+  émission figée, règlements multiples AFFECTÉS (quick_sales.invoice_id,
+  verrou optimiste, idempotence), avoirs tracés, PDF pro ; **FIN-04
+  remboursements de caution → Livré** (G3) ; remboursements de
+  prestations/remises : toujours Bloqué-AR-04.
+- **§6.1 séparation des tâches** : **validation de clôture ≠ préparateur
+  → Livré** (403 sans exception, défaut détecté et corrigé par la
+  recette F) ; justification d'écart CONSERVÉE à la validation.
+- **§11 RDV** : **conflits de créneau détectés → Livré** (agenda de
+  l'équipe accueil : création attribuée, reprogrammation, notification
+  e-mail du collaborateur, 409 sur conflit).
+- **§15 SEC-06 → Livré** : audit_log IMMUABLE par trigger (096, preuve
+  UPDATE/DELETE refusés même en service_role).
+- **§18** : recette caisse de bout en bout 14/14 (docs/RECETTE_CAISSE_F.md).
+- **§7.2** : la route /api/demandes/[id]/status écrit bien l'historique ;
+  0 transition effectuée depuis le correctif → à exercer en recette.
+- Divers : logo officiel sur les 16 générateurs PDF ; conditions de
+  règlement protectrices ; deux registres de factures (FAC- dossier /
+  FC- comptoir) — fusion à arbitrer.
+
 ## Synthèse
 
 | Domaine | État global |
