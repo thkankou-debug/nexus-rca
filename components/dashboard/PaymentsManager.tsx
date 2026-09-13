@@ -256,7 +256,7 @@ export function PaymentsManager({
             placeholder="Rechercher par client, référence, service..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
           />
         </div>
         <button
@@ -265,7 +265,7 @@ export function PaymentsManager({
             setEditingPayment(null);
             setShowForm(true);
           }}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 transition hover:bg-brand-hover"
         >
           <Plus className="h-4 w-4" />
           Nouveau paiement
@@ -300,7 +300,7 @@ export function PaymentsManager({
             <button
               type="button"
               onClick={() => setShowForm(true)}
-              className="mt-4 inline-flex items-center gap-2 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white hover:bg-nexus-orange-600"
+              className="mt-4 inline-flex items-center gap-2 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-on-brand hover:bg-brand-hover"
             >
               <Plus className="h-4 w-4" />
               Enregistrer le premier paiement
@@ -471,13 +471,13 @@ function PaymentCard({
                 "h-full transition-all",
                 payment.status === "paid"
                   ? "bg-green-500"
-                  : "bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600"
+                  : "bg-brand"
               )}
               style={{ width: `${Math.min(100, pct)}%` }}
             />
           </div>
           {restant > 0 && (
-            <p className="mt-1 text-xs text-nexus-orange-600">
+            <p className="mt-1 text-xs text-brand-hover">
               Restant : {formatMoney(restant, payment.devise)}
             </p>
           )}
@@ -593,7 +593,7 @@ function StatBlock({
   const colorMap = {
     blue: "from-nexus-blue-600 to-nexus-blue-800",
     green: "from-emerald-400 to-emerald-600",
-    orange: "from-nexus-orange-400 to-nexus-orange-600",
+    orange: "from-brand to-brand",
   };
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">

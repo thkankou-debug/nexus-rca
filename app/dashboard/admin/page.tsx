@@ -404,7 +404,7 @@ export default async function AdminDashboardPage() {
                   className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50/60 px-4 py-3"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <span className="rounded-lg bg-nexus-orange-100 px-2 py-1 text-[10px] font-bold text-nexus-orange-700 tabular-nums">
+                    <span className="rounded-lg bg-brand-subtle px-2 py-1 text-[10px] font-bold text-brand-hover tabular-nums">
                       {r.rdv_heure}
                     </span>
                     <p className="truncate text-sm font-semibold text-nexus-blue-950">
@@ -459,7 +459,7 @@ export default async function AdminDashboardPage() {
                       </p>
                     </div>
                   </div>
-                  <p className="font-display text-sm font-bold text-nexus-orange-600 tabular-nums">
+                  <p className="font-display text-sm font-bold text-brand-hover tabular-nums">
                     {formatMoney(a.total)}
                   </p>
                 </li>
@@ -530,7 +530,7 @@ function SectionPanel({
 }) {
   const accentClass = {
     orange:
-      "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white",
+      "bg-brand text-on-brand",
     rose: "bg-gradient-to-br from-rose-500 to-rose-700 text-white",
     blue: "bg-gradient-to-br from-blue-500 to-blue-700 text-white",
     emerald:
@@ -566,7 +566,7 @@ function SectionPanel({
         {link && (
           <Link
             href={link.href}
-            className="shrink-0 text-xs font-semibold text-nexus-orange-600 hover:underline"
+            className="shrink-0 text-xs font-semibold text-brand-hover hover:underline"
           >
             {link.label}
           </Link>

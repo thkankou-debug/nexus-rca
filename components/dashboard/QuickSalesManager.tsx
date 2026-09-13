@@ -430,7 +430,7 @@ export function QuickSalesManager({
             <button
               type="button"
               onClick={() => setShowForm(true)}
-              className="inline-flex items-center gap-2 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
+              className="inline-flex items-center gap-2 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 transition hover:bg-brand-hover"
             >
               <Plus className="h-4 w-4" />
               Nouvelle vente
@@ -481,7 +481,7 @@ export function QuickSalesManager({
         <div className="grid gap-4 lg:grid-cols-2">
           {/* Top services */}
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-            <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+            <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-brand-hover">
               Ventes par service
             </h3>
             <div className="space-y-2">
@@ -501,7 +501,7 @@ export function QuickSalesManager({
                     </div>
                     <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-slate-200">
                       <div
-                        className="h-full bg-gradient-to-r from-nexus-orange-400 to-nexus-orange-600"
+                        className="h-full bg-brand"
                         style={{ width: `${Math.max(2, pct)}%` }}
                       />
                     </div>
@@ -516,7 +516,7 @@ export function QuickSalesManager({
 
           {/* Top agents */}
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-            <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+            <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-brand-hover">
               Ventes par agent
             </h3>
             <div className="space-y-2">
@@ -563,7 +563,7 @@ export function QuickSalesManager({
             placeholder="Rechercher par référence, description, client..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-10 pr-4 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+            className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-10 pr-4 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
           />
         </div>
         <select
@@ -655,7 +655,7 @@ function SaleRow({
 
   return (
     <div className="flex items-center gap-3 p-4 transition hover:bg-slate-50">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-100 to-nexus-orange-50 text-nexus-orange-700">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-subtle text-brand-hover">
         <Icon className="h-5 w-5" />
       </div>
       <div className="min-w-0 flex-1">
@@ -709,7 +709,7 @@ function StatBlock({
 }) {
   const colorMap = {
     green: "from-emerald-400 to-emerald-600",
-    orange: "from-nexus-orange-400 to-nexus-orange-600",
+    orange: "from-brand to-brand",
     blue: "from-nexus-blue-600 to-nexus-blue-800",
   };
   return (

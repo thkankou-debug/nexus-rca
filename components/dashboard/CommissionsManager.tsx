@@ -148,7 +148,7 @@ export function CommissionsManager({
             placeholder="Rechercher par agent, référence dossier..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
           />
         </div>
         <div className="flex gap-2">
@@ -177,7 +177,7 @@ export function CommissionsManager({
             <button
               type="button"
               onClick={() => setShowForm(true)}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 hover:bg-nexus-orange-600"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 hover:bg-brand-hover"
             >
               <Plus className="h-4 w-4" />
               Nouvelle commission
@@ -375,7 +375,7 @@ function CommissionFormModal({
               value={agentId}
               onChange={(e) => setAgentId(e.target.value)}
               disabled={loadingOptions}
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
             >
               <option value="">{loadingOptions ? "Chargement..." : "Sélectionner un agent"}</option>
               {agents.map((a) => (
@@ -392,7 +392,7 @@ function CommissionFormModal({
               value={demandeId}
               onChange={(e) => setDemandeId(e.target.value)}
               disabled={loadingOptions}
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
             >
               <option value="">Aucun</option>
               {demandes.map((d) => (
@@ -411,7 +411,7 @@ function CommissionFormModal({
                 min={0}
                 value={amount}
                 onChange={(e) => setAmount(Number(e.target.value))}
-                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
               />
             </div>
             <div>
@@ -422,7 +422,7 @@ function CommissionFormModal({
                 max={100}
                 value={rate}
                 onChange={(e) => setRate(e.target.value)}
-                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
               />
             </div>
           </div>
@@ -440,7 +440,7 @@ function CommissionFormModal({
             type="button"
             disabled={saving}
             onClick={handleSubmit}
-            className="rounded-full bg-nexus-orange-500 px-5 py-2 text-sm font-semibold text-white hover:bg-nexus-orange-600 disabled:opacity-50"
+            className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-on-brand hover:bg-brand-hover disabled:opacity-50"
           >
             {saving ? "Création..." : "Créer"}
           </button>

@@ -209,7 +209,7 @@ export function AgentDetailView({ data }: { data: AgentDetailData }) {
       {/* HEADER AGENT */}
       <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-800 to-nexus-orange-500 text-xl font-bold text-white shadow-lg">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-800 to-brand text-xl font-bold text-white shadow-lg">
             {initials.toUpperCase() || "U"}
           </div>
           <div className="min-w-0 flex-1">
@@ -297,7 +297,7 @@ export function AgentDetailView({ data }: { data: AgentDetailData }) {
       {/* GRAPHIQUE 6 MOIS */}
       <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="mb-4 flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-nexus-orange-600" />
+          <TrendingUp className="h-5 w-5 text-brand-hover" />
           <h2 className="font-display text-lg font-bold text-nexus-blue-950">
             Évolution des encaissements (6 derniers mois)
           </h2>
@@ -312,7 +312,7 @@ export function AgentDetailView({ data }: { data: AgentDetailData }) {
                     className={cn(
                       "w-full rounded-t-lg transition-all",
                       m.encaisse > 0
-                        ? "bg-gradient-to-t from-nexus-orange-500 to-nexus-orange-300"
+                        ? "bg-brand"
                         : "bg-slate-100"
                     )}
                     style={{ height: `${Math.max(2, heightPct)}%` }}
@@ -504,7 +504,7 @@ function BigStatCard({
 }) {
   const colorMap = {
     green: "from-emerald-400 to-emerald-600",
-    orange: "from-nexus-orange-400 to-nexus-orange-600",
+    orange: "from-brand to-brand",
     blue: "from-nexus-blue-600 to-nexus-blue-800",
     purple: "from-purple-500 to-purple-700",
     indigo: "from-indigo-500 to-indigo-700",
@@ -549,7 +549,7 @@ function SectionList({
   children: React.ReactNode;
 }) {
   const colorMap = {
-    orange: "text-nexus-orange-600",
+    orange: "text-brand-hover",
     blue: "text-nexus-blue-700",
     purple: "text-purple-600",
     indigo: "text-indigo-600",

@@ -168,14 +168,14 @@ export function EvaluationsDashboard({ basePath, canCreate, canLaunch }: Props) 
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 px-6 py-8 shadow-lg sm:px-9 sm:py-10">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
+          className="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-brand/15 blur-[120px]"
         />
         <div className="relative flex items-start gap-3">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-md">
             <Award className="h-6 w-6" />
           </div>
           <div className="min-w-0 flex-1">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur-md">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-brand backdrop-blur-md">
               Évaluations de performance
             </span>
             <h1 className="mt-3 font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
@@ -190,7 +190,7 @@ export function EvaluationsDashboard({ basePath, canCreate, canLaunch }: Props) 
             <button
               type="button"
               onClick={() => setCreateOpen(true)}
-              className="hidden shrink-0 items-center gap-2 rounded-xl bg-nexus-orange-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 sm:inline-flex"
+              className="hidden shrink-0 items-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover sm:inline-flex"
             >
               <Plus className="h-4 w-4" />
               Nouvelle période
@@ -255,7 +255,7 @@ export function EvaluationsDashboard({ basePath, canCreate, canLaunch }: Props) 
           <button
             type="button"
             onClick={() => setCreateOpen(true)}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-nexus-orange-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 sm:hidden"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover sm:hidden"
           >
             <Plus className="h-4 w-4" />
             Nouvelle période
@@ -266,7 +266,7 @@ export function EvaluationsDashboard({ basePath, canCreate, canLaunch }: Props) 
       {/* PÉRIODES */}
       <section>
         <div className="mb-4 flex items-center gap-2">
-          <Calendar className="h-4 w-4 text-nexus-orange-500" />
+          <Calendar className="h-4 w-4 text-brand" />
           <h2 className="font-display text-lg font-bold text-nexus-blue-950">
             Périodes d&apos;évaluation ({filteredPeriods.length})
           </h2>
@@ -274,7 +274,7 @@ export function EvaluationsDashboard({ basePath, canCreate, canLaunch }: Props) 
 
         {loading ? (
           <div className="flex items-center justify-center rounded-3xl border border-slate-200 bg-white p-12 shadow-sm">
-            <Loader2 className="h-6 w-6 animate-spin text-nexus-orange-500" />
+            <Loader2 className="h-6 w-6 animate-spin text-brand" />
           </div>
         ) : filteredPeriods.length === 0 ? (
           <div className="rounded-3xl border border-slate-200 bg-white p-12 text-center shadow-sm ring-1 ring-slate-100/80">
@@ -334,7 +334,7 @@ function HeroStat({
 }) {
   const valueClass =
     accent === "orange"
-      ? "text-nexus-orange-300"
+      ? "text-brand"
       : accent === "amber"
         ? "text-amber-300"
         : accent === "emerald"
@@ -369,7 +369,7 @@ function FilterChip({
 }) {
   const base = active
     ? "bg-nexus-blue-950 text-white border-nexus-blue-950"
-    : "bg-white text-slate-700 border-slate-200 hover:border-nexus-orange-300 hover:text-nexus-orange-700";
+    : "bg-white text-slate-700 border-slate-200 hover:border-brand/40 hover:text-brand-hover";
   const TONE_BADGE: Record<string, { active: string; idle: string }> = {
     amber: { active: "bg-amber-300 text-amber-900", idle: "bg-amber-100 text-amber-700" },
     emerald: {
@@ -482,7 +482,7 @@ function PeriodCard({
           type="button"
           onClick={onLaunch}
           disabled={launching}
-          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-nexus-orange-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
         >
           {launching ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -565,7 +565,7 @@ function CreatePeriodModal({
       >
         <div className="flex items-start justify-between gap-3 border-b border-slate-100 p-6">
           <div className="flex items-start gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-md">
               <Sparkles className="h-5 w-5" />
             </div>
             <div>
@@ -600,7 +600,7 @@ function CreatePeriodModal({
                 value={year}
                 onChange={(e) => setYear(Number(e.target.value))}
                 required
-                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
               />
             </div>
             <div>
@@ -612,7 +612,7 @@ function CreatePeriodModal({
                 value={label}
                 onChange={(e) => setLabel(e.target.value)}
                 required
-                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
               />
             </div>
           </div>
@@ -624,7 +624,7 @@ function CreatePeriodModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
               placeholder="Optionnel — contexte / consignes"
             />
           </div>
@@ -638,7 +638,7 @@ function CreatePeriodModal({
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
                 required
-                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
               />
             </div>
             <div>
@@ -650,7 +650,7 @@ function CreatePeriodModal({
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
                 required
-                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
               />
             </div>
           </div>
@@ -675,7 +675,7 @@ function CreatePeriodModal({
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
             Créer la période

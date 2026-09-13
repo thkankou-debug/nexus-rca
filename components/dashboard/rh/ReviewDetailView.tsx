@@ -226,7 +226,7 @@ export function ReviewDetailView({ reviewId, mode }: Props) {
   if (loading) {
     return (
       <div className="flex items-center justify-center rounded-3xl border border-slate-200 bg-white p-12 shadow-sm">
-        <Loader2 className="h-6 w-6 animate-spin text-nexus-orange-500" />
+        <Loader2 className="h-6 w-6 animate-spin text-brand" />
       </div>
     );
   }
@@ -253,14 +253,14 @@ export function ReviewDetailView({ reviewId, mode }: Props) {
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 px-6 py-8 shadow-lg sm:px-9 sm:py-10">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
+          className="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-brand/15 blur-[120px]"
         />
         <div className="relative flex flex-wrap items-start gap-4">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-base font-bold text-white shadow-md">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-brand text-base font-bold text-on-brand shadow-md">
             {initials}
           </div>
           <div className="min-w-0 flex-1">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur-md">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-brand backdrop-blur-md">
               {period?.label ?? "Évaluation"} · {period?.year ?? ""}
             </span>
             <h1 className="mt-3 font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
@@ -303,7 +303,7 @@ export function ReviewDetailView({ reviewId, mode }: Props) {
               patch("start-auto", { statut: "auto_eval" }, "Auto-éval démarrée")
             }
             disabled={saving === "start-auto"}
-            className="mt-4 inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-4 inline-flex items-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
           >
             {saving === "start-auto" ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -343,7 +343,7 @@ export function ReviewDetailView({ reviewId, mode }: Props) {
                 )
               }
               disabled={saving === "self-save" || (isSelf && stepIndex > STEP_ORDER.auto_eval)}
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-nexus-orange-300 hover:text-nexus-orange-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-brand/40 hover:text-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
             >
               {saving === "self-save" ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -363,7 +363,7 @@ export function ReviewDetailView({ reviewId, mode }: Props) {
                   )
                 }
                 disabled={saving === "self-submit"}
-                className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {saving === "self-submit" ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -402,7 +402,7 @@ export function ReviewDetailView({ reviewId, mode }: Props) {
                 )
               }
               disabled={saving === "mgr-save"}
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-nexus-orange-300 hover:text-nexus-orange-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-brand/40 hover:text-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
             >
               {saving === "mgr-save" ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -422,7 +422,7 @@ export function ReviewDetailView({ reviewId, mode }: Props) {
                   )
                 }
                 disabled={saving === "mgr-submit"}
-                className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {saving === "mgr-submit" ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -455,7 +455,7 @@ export function ReviewDetailView({ reviewId, mode }: Props) {
               onChange={(e) => setFormationPlan(e.target.value)}
               rows={4}
               placeholder="Formations, certifications, mentorat..."
-              className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+              className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
             />
           </div>
           <div className="mt-4">
@@ -469,7 +469,7 @@ export function ReviewDetailView({ reviewId, mode }: Props) {
                 )
               }
               disabled={saving === "obj-save"}
-              className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex items-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
             >
               {saving === "obj-save" ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -499,7 +499,7 @@ export function ReviewDetailView({ reviewId, mode }: Props) {
                 type="datetime-local"
                 value={meetingDate}
                 onChange={(e) => setMeetingDate(e.target.value)}
-                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
               />
             </div>
           </div>
@@ -511,7 +511,7 @@ export function ReviewDetailView({ reviewId, mode }: Props) {
               value={meetingNotes}
               onChange={(e) => setMeetingNotes(e.target.value)}
               rows={4}
-              className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+              className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
             />
           </div>
           <div className="mt-4">
@@ -523,7 +523,7 @@ export function ReviewDetailView({ reviewId, mode }: Props) {
               onChange={(e) => setNotesFinales(e.target.value)}
               rows={3}
               placeholder="Bilan global, message de clôture..."
-              className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+              className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
             />
           </div>
           <div className="mt-4">
@@ -543,7 +543,7 @@ export function ReviewDetailView({ reviewId, mode }: Props) {
                 )
               }
               disabled={saving === "meeting-save"}
-              className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex items-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
             >
               {saving === "meeting-save" ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -608,7 +608,7 @@ function Stepper({ currentIndex }: { currentIndex: number }) {
                 done
                   ? "border-emerald-400 bg-emerald-500/10 text-emerald-300 ring-emerald-400/30"
                   : active
-                    ? "border-nexus-orange-400 bg-nexus-orange-500/15 text-nexus-orange-300 ring-nexus-orange-400/30"
+                    ? "border-brand bg-brand/15 text-brand ring-brand/30"
                     : "border-white/10 bg-white/[0.03] text-slate-400 ring-white/5"
               }`}
             >
@@ -619,7 +619,7 @@ function Stepper({ currentIndex }: { currentIndex: number }) {
                 done
                   ? "text-emerald-300"
                   : active
-                    ? "text-nexus-orange-300"
+                    ? "text-brand"
                     : "text-slate-400"
               }`}
             >
@@ -781,7 +781,7 @@ export function SelfAssessmentForm({
                   }}
                   placeholder="Objectif"
                   disabled={disabled}
-                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200 disabled:bg-slate-100"
+                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 disabled:bg-slate-100"
                 />
                 <div className="flex items-center gap-2">
                   <input
@@ -798,7 +798,7 @@ export function SelfAssessmentForm({
                       update({ objectives_review: arr });
                     }}
                     disabled={disabled}
-                    className="w-20 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200 disabled:bg-slate-100"
+                    className="w-20 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 disabled:bg-slate-100"
                   />
                   <span className="text-xs text-slate-500">%</span>
                   {!disabled && (
@@ -826,7 +826,7 @@ export function SelfAssessmentForm({
                 placeholder="Commentaire…"
                 rows={2}
                 disabled={disabled}
-                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200 disabled:bg-slate-100"
+                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 disabled:bg-slate-100"
               />
             </div>
           ))}
@@ -940,14 +940,14 @@ function ObjectivesEditor({
                 value={o.objective}
                 onChange={(e) => update(idx, { objective: e.target.value })}
                 placeholder="Objectif"
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
               />
               <input
                 type="text"
                 value={o.target ?? ""}
                 onChange={(e) => update(idx, { target: e.target.value })}
                 placeholder="Cible mesurable"
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
               />
             </div>
             <div className="mt-2 grid gap-2 sm:grid-cols-[1fr_140px_auto]">
@@ -955,7 +955,7 @@ function ObjectivesEditor({
                 type="date"
                 value={o.deadline ?? ""}
                 onChange={(e) => update(idx, { deadline: e.target.value })}
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
               />
               <div className="flex items-center gap-2">
                 <input
@@ -964,7 +964,7 @@ function ObjectivesEditor({
                   max={100}
                   value={Number.isFinite(o.weight) ? o.weight : 0}
                   onChange={(e) => update(idx, { weight: Number(e.target.value) })}
-                  className="w-20 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                  className="w-20 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
                 />
                 <span className="text-xs text-slate-500">% poids</span>
               </div>
@@ -1007,8 +1007,8 @@ export function RatingPicker({
             disabled={disabled}
             className={`inline-flex flex-col items-start gap-0.5 rounded-2xl border px-3 py-2 text-left transition ${
               active
-                ? "border-nexus-orange-400 bg-nexus-orange-50 text-nexus-orange-700 ring-2 ring-nexus-orange-200"
-                : "border-slate-200 bg-white text-slate-700 hover:border-nexus-orange-300"
+                ? "border-brand bg-brand-subtle text-brand-hover ring-2 ring-brand/30"
+                : "border-slate-200 bg-white text-slate-700 hover:border-brand/40"
             } disabled:cursor-not-allowed disabled:opacity-60`}
           >
             <span className="font-display text-base font-bold tabular-nums">{n}</span>
@@ -1050,7 +1050,7 @@ function FieldTextarea({
         rows={rows}
         placeholder={placeholder}
         disabled={disabled}
-        className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200 disabled:bg-slate-100"
+        className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 disabled:bg-slate-100"
       />
     </div>
   );
@@ -1105,7 +1105,7 @@ function SignatureBox({
               type="button"
               onClick={onSign}
               disabled={busy}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-nexus-orange-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
             >
               {busy ? (
                 <Loader2 className="h-4 w-4 animate-spin" />

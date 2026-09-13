@@ -252,7 +252,7 @@ export function VisaExpressManager({ initialRows, readOnly = false }: Props) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Rechercher par référence, nom, email, pays…"
-            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-nexus-blue-950 placeholder:text-slate-400 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-100"
+            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-nexus-blue-950 placeholder:text-slate-400 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
           />
         </div>
         <div className="flex gap-2">
@@ -428,7 +428,7 @@ function SelectFilter({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-9 text-sm text-nexus-blue-950 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-100"
+        className="appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-9 text-sm text-nexus-blue-950 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
       >
         {options.map((o) => (
           <option key={o.value} value={o.value}>
@@ -535,7 +535,7 @@ function DrawerContent({
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <p className="font-mono text-[10px] uppercase tracking-wider text-nexus-orange-600">
+        <p className="font-mono text-[10px] uppercase tracking-wider text-brand-hover">
           {detail.reference}
         </p>
         <h2 className="mt-1 font-display text-2xl font-bold text-nexus-blue-950">
@@ -576,7 +576,7 @@ function DrawerContent({
           <Row icon={Mail} label="E-mail">
             <a
               href={`mailto:${detail.email}`}
-              className="text-nexus-orange-600 hover:underline"
+              className="text-brand-hover hover:underline"
             >
               {detail.email}
             </a>
@@ -586,7 +586,7 @@ function DrawerContent({
               href={`https://wa.me/${detail.whatsapp.replace(/[^0-9]/g, "")}`}
               target="_blank"
               rel="noreferrer"
-              className="text-nexus-orange-600 hover:underline"
+              className="text-brand-hover hover:underline"
             >
               {detail.whatsapp}
             </a>
@@ -639,11 +639,11 @@ function DrawerContent({
                   href={d.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="group flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 transition-colors hover:border-nexus-orange-300 hover:bg-nexus-orange-50/50"
+                  className="group flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 transition-colors hover:border-brand/40 hover:bg-brand-subtle/50"
                 >
-                  <FileText className="h-4 w-4 shrink-0 text-nexus-orange-600" />
+                  <FileText className="h-4 w-4 shrink-0 text-brand-hover" />
                   <span className="min-w-0 flex-1 truncate">{d.name}</span>
-                  <ExternalLink className="h-3.5 w-3.5 shrink-0 text-slate-400 transition-colors group-hover:text-nexus-orange-600" />
+                  <ExternalLink className="h-3.5 w-3.5 shrink-0 text-slate-400 transition-colors group-hover:text-brand-hover" />
                 </a>
               </li>
             ))}
@@ -668,7 +668,7 @@ function DrawerContent({
                   "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition",
                   s === detail.status
                     ? "cursor-default bg-nexus-blue-950 text-white"
-                    : "border border-slate-200 bg-white text-slate-600 hover:border-nexus-orange-300 hover:text-nexus-orange-700",
+                    : "border border-slate-200 bg-white text-slate-600 hover:border-brand/40 hover:text-brand-hover",
                   updating && "opacity-60"
                 )}
               >

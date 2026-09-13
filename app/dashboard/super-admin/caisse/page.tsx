@@ -43,7 +43,7 @@ export default async function SuperAdminCaissePage() {
       />
 
       <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-lg">
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand text-on-brand shadow-lg">
           <ShoppingCart className="h-6 w-6" />
         </div>
         <div>

@@ -101,7 +101,7 @@ const URGENCY_LABELS: Record<string, string> = {
 
 const URGENCY_COLORS: Record<string, string> = {
   normal: "bg-slate-100 text-slate-700",
-  prioritaire: "bg-nexus-orange-100 text-nexus-orange-700",
+  prioritaire: "bg-brand-subtle text-brand-hover",
   tres_urgent: "bg-red-100 text-red-700",
 };
 
@@ -496,7 +496,7 @@ function InfoRow({
 }) {
   const content = (
     <div className="flex items-start gap-2">
-      <Icon className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-500" />
+      <Icon className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
       <div className="min-w-0">
         <p className="text-xs font-semibold text-slate-500">{label}</p>
         <p className="truncate text-sm text-slate-800">{value}</p>

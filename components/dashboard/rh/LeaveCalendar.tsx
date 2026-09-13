@@ -275,14 +275,14 @@ export function LeaveCalendar() {
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 px-6 py-8 shadow-lg sm:px-9 sm:py-10">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
+          className="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-brand/15 blur-[120px]"
         />
         <div className="relative flex items-start gap-3">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-md">
             <CalendarDays className="h-6 w-6" />
           </div>
           <div className="min-w-0">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur-md">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-brand backdrop-blur-md">
               Calendrier RH
             </span>
             <h1 className="mt-3 font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
@@ -303,7 +303,7 @@ export function LeaveCalendar() {
             type="button"
             onClick={goPrev}
             aria-label="Mois précédent"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:border-nexus-orange-300 hover:text-nexus-orange-700"
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:border-brand/40 hover:text-brand-hover"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -314,14 +314,14 @@ export function LeaveCalendar() {
             type="button"
             onClick={goNext}
             aria-label="Mois suivant"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:border-nexus-orange-300 hover:text-nexus-orange-700"
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:border-brand/40 hover:text-brand-hover"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
           <button
             type="button"
             onClick={goToday}
-            className="ml-1 inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-nexus-orange-300 hover:text-nexus-orange-700"
+            className="ml-1 inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-brand/40 hover:text-brand-hover"
           >
             Aujourd&apos;hui
           </button>
@@ -361,7 +361,7 @@ export function LeaveCalendar() {
               setFilters((f) => ({ ...f, trialEnds: !f.trialEnds }))
             }
             label="Fins d&apos;essai"
-            color="bg-nexus-orange-500"
+            color="bg-brand"
             icon={ClipboardCheck}
           />
         </div>
@@ -370,7 +370,7 @@ export function LeaveCalendar() {
       {/* GRILLE DESKTOP / AGENDA MOBILE */}
       {loading ? (
         <div className="flex items-center justify-center rounded-3xl border border-slate-200 bg-white p-12 shadow-sm">
-          <Loader2 className="h-6 w-6 animate-spin text-nexus-orange-500" />
+          <Loader2 className="h-6 w-6 animate-spin text-brand" />
         </div>
       ) : error ? (
         <div className="rounded-3xl border border-rose-200 bg-rose-50 p-6 text-sm text-rose-800">
@@ -404,16 +404,16 @@ export function LeaveCalendar() {
                     onClick={() => events.length > 0 && setSelectedDay(day)}
                     className={`relative flex min-h-[88px] flex-col items-start rounded-xl border p-2 text-left transition ${
                       inMonth
-                        ? "border-slate-100 bg-white hover:border-nexus-orange-200"
+                        ? "border-slate-100 bg-white hover:border-brand/30"
                         : "border-slate-100 bg-slate-50/40 text-slate-400"
-                    } ${isToday ? "ring-2 ring-nexus-orange-400" : ""} ${
+                    } ${isToday ? "ring-2 ring-brand" : ""} ${
                       events.length > 0 ? "cursor-pointer" : "cursor-default"
                     }`}
                   >
                     <span
                       className={`text-xs font-bold tabular-nums ${
                         isToday
-                          ? "text-nexus-orange-600"
+                          ? "text-brand-hover"
                           : inMonth
                             ? "text-nexus-blue-950"
                             : "text-slate-400"
@@ -445,7 +445,7 @@ export function LeaveCalendar() {
                       key={ymd(date)}
                       className={`rounded-2xl border p-4 shadow-sm ${
                         isToday
-                          ? "border-nexus-orange-300 bg-nexus-orange-50/40"
+                          ? "border-brand/40 bg-brand-subtle/40"
                           : "border-slate-200 bg-white"
                       }`}
                     >
@@ -475,7 +475,7 @@ export function LeaveCalendar() {
           <Legend color="bg-nexus-blue-700" label="Congés validés" />
           <Legend color="bg-rose-500" label="Jours fériés CAR" />
           <Legend color="bg-purple-500" label="Anniversaires" />
-          <Legend color="bg-nexus-orange-500" label="Fins de période d&apos;essai" />
+          <Legend color="bg-brand" label="Fins de période d&apos;essai" />
         </div>
       </section>
 
@@ -535,7 +535,7 @@ function DayEventsPreview({ events }: { events: DayEvent[] }) {
           color = ev.data.leave_types?.color_hex ?? "#0C1C40";
         else if (ev.kind === "holiday") color = "#E11D48";
         else if (ev.kind === "birthday") color = "#A855F7";
-        else if (ev.kind === "trial_end") color = "#FF6600";
+        else if (ev.kind === "trial_end") color = "#B99760";
         return (
           <span
             key={i}
@@ -597,9 +597,9 @@ function EventLine({ event }: { event: DayEvent }) {
   // trial_end
   return (
     <div className="flex items-start gap-2">
-      <ClipboardCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-nexus-orange-600" />
+      <ClipboardCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-hover" />
       <div className="text-sm">
-        <span className="font-semibold text-nexus-orange-700">
+        <span className="font-semibold text-brand-hover">
           Fin d&apos;essai
         </span>{" "}
         <span className="text-slate-700">· {event.data.nom_complet}</span>
@@ -637,7 +637,7 @@ function DayDetailModal({
       >
         <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
               Détail du jour
             </p>
             <p className="mt-1 font-display text-base font-bold text-nexus-blue-950">

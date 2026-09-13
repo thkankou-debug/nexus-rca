@@ -187,7 +187,7 @@ export function ParametresAgenceClient({
           className={cn(
             "inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-body-sm font-semibold shadow-elev-2 transition",
             hasChanges && !saving
-              ? "bg-brand text-white hover:bg-brand-hover hover:shadow-glow-orange"
+              ? "bg-brand text-on-brand hover:bg-brand-hover hover:shadow-glow-orange"
               : "cursor-not-allowed bg-surface-sunken text-ink-muted"
           )}
         >

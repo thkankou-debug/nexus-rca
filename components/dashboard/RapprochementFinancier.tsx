@@ -147,7 +147,7 @@ export function RapprochementFinancier({
           <button
             type="button"
             onClick={() => setShowAll(!showAll)}
-            className="mt-3 text-xs font-semibold text-nexus-orange-600 hover:underline"
+            className="mt-3 text-xs font-semibold text-brand-hover hover:underline"
           >
             {showAll ? "Masquer" : "Voir"} les {facturesPayeesAvecEcheancier.length} facture(s) avec échéancier
           </button>

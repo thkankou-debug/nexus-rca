@@ -169,7 +169,7 @@ export function NotificationBell({ className }: { className?: string }) {
       >
         <Bell className="h-5 w-5" />
         {badge && (
-          <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-nexus-orange-500 px-1 text-[10px] font-bold text-white shadow-elev-2">
+          <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-brand px-1 text-[10px] font-bold text-on-brand shadow-elev-2">
             {badge}
           </span>
         )}
@@ -226,7 +226,7 @@ export function NotificationBell({ className }: { className?: string }) {
                     className={cn(
                       "mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl",
                       isUnread
-                        ? "bg-nexus-orange-500/15 text-nexus-orange-600 dark:text-brand"
+                        ? "bg-brand/15 text-brand-hover dark:text-brand"
                         : "bg-surface-sunken text-ink-muted"
                     )}
                   >
@@ -243,7 +243,7 @@ export function NotificationBell({ className }: { className?: string }) {
                         {n.title}
                       </span>
                       {isUnread && (
-                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-nexus-orange-500" />
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
                       )}
                     </span>
                     {n.message && (

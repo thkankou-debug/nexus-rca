@@ -84,7 +84,7 @@ export default async function RolesPage() {
               <ul className="mt-4 space-y-2">
                 {r.perms.map((p) => (
                   <li key={p} className="flex items-start gap-2 text-sm text-slate-700">
-                    <span className="mt-1 block h-1.5 w-1.5 shrink-0 rounded-full bg-nexus-orange-500" />
+                    <span className="mt-1 block h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
                     {p}
                   </li>
                 ))}

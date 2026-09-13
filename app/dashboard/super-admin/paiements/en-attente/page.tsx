@@ -111,7 +111,7 @@ export default async function PaiementsEnAttentePage({
     <DashboardShell profile={profile}>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-lg">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand text-on-brand shadow-lg">
             <Wallet className="h-6 w-6" />
           </div>
           <div>
@@ -144,7 +144,7 @@ export default async function PaiementsEnAttentePage({
           )}
           <Link
             href="/dashboard/super-admin/paiements/nouveau-lien"
-            className="inline-flex items-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:bg-nexus-orange-600"
+            className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg hover:bg-brand-hover"
           >
             <Wallet className="h-4 w-4" />
             Générer un nouveau lien
@@ -248,7 +248,7 @@ export default async function PaiementsEnAttentePage({
           </p>
           <Link
             href="/dashboard/super-admin/paiements/nouveau-lien"
-            className="mt-5 inline-flex items-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:bg-nexus-orange-600"
+            className="mt-5 inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg hover:bg-brand-hover"
           >
             <Wallet className="h-4 w-4" />
             Créer le premier lien
@@ -279,7 +279,7 @@ function StatCard({
     blue: "from-nexus-blue-700 to-nexus-blue-900",
     amber: "from-amber-500 to-amber-700",
     green: "from-green-500 to-green-700",
-    orange: "from-nexus-orange-500 to-nexus-orange-700",
+    orange: "from-brand to-brand",
   };
   return (
     <div

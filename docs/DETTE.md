@@ -3691,3 +3691,42 @@ Le site public est intégralement à l'or.
 1 242 occ.) — à requalifier avec leur rhabillage dans le shell unique,
 pas mécaniquement (règles A1 admin plus strictes : pas de dégradés ni
 de lueurs, une seule action or par écran).
+
+---
+
+## 13/09/2026 — L12 lot 3 : migration or des dashboards hérités (157 fichiers) — L12 CLOS
+
+Périmètre : `app/dashboard/**` (353 occ.) + `components/dashboard/**`
+(889 occ.) — les anciens espaces agent/client/admin/super-admin et le
+module RH, toujours accessibles par URL directe, plus le portail client
+P9 réellement utilisé par les clients.
+
+Mêmes règles que le lot 2 (focus → token `focus`, teintes claires →
+`brand-subtle`/`brand/20-40`, `text -600/-900` → `text-brand-hover`,
+boutons pleins → `bg-brand`+`text-on-brand`, dégradés monochromes
+aplatis), plus :
+- `shadow-nexus-orange-500/30` → `shadow-brand/30` (27 occ.) ;
+- palette du graphique RH (`statistiques`, `#FF6600`) et couleur
+  d'événement « fin d'essai » du calendrier des congés → `#B99760` ;
+- 2 ombres `rgba(255,102,0,…)` de la page RH → or ;
+- 2 violations D8 antérieures corrigées au passage (bouton d'exemple du
+  Design System, bouton Enregistrer de ParametresAgence : blanc sur or).
+
+**Limite assumée** : les badges de statut des écrans hérités qui
+utilisaient l'orange utilisent désormais l'or. Le passage aux familles
+`status.{waiting,progress,…}` (A1) relève du RHABILLAGE de ces écrans
+dans le shell unique, pas d'une requalification de couleur — les écrans
+neufs (vue-ensemble, trésorerie, caisse…) utilisent déjà les tokens de
+statut.
+
+**Vérifié** : 0 `nexus-orange` et 0 couleur orange en dur sous
+`app/dashboard` + `components/dashboard` ; `tsc` 0 erreur ;
+`next build` 0 erreur.
+
+**Bilan L12 (3 lots, 13/09/2026)** : 5 089 occurrences au matin →
+**3 restantes**, toutes dans `components/ui/Logo.tsx` (logo dessiné,
+GELÉ par CLAUDE.md — pastille et dégradé orange ; décision Thierry
+attendue : passer le logo à l'or ou le conserver) + 1 commentaire.
+L'exigence M11 « l'orange ne subsiste nulle part » est atteinte, à
+cette exception délibérée près. E-mails transactionnels : #FF6600
+conservé (écart documenté CLAUDE.md, hors périmètre).

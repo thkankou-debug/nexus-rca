@@ -597,7 +597,7 @@ export default async function SuperAdminDashboard() {
             <div className="mt-4 text-center">
               <Link
                 href="/dashboard/super-admin/rh/paie/a-valider"
-                className="inline-flex items-center gap-1 text-sm font-semibold text-nexus-orange-600 hover:text-nexus-orange-700"
+                className="inline-flex items-center gap-1 text-sm font-semibold text-brand-hover hover:text-brand-hover"
               >
                 Voir les {totalAlertes - 8} autres alertes
                 <ArrowUpRight className="h-4 w-4" />
@@ -980,7 +980,7 @@ function Section({
     purple: "from-purple-500 to-purple-700",
     blue: "from-blue-500 to-blue-700",
     slate: "from-slate-500 to-slate-700",
-    orange: "from-nexus-orange-500 to-nexus-orange-700",
+    orange: "from-brand to-brand",
     rose: "from-rose-500 to-rose-700",
   };
 
@@ -990,7 +990,7 @@ function Section({
     purple: "text-purple-600",
     blue: "text-blue-600",
     slate: "text-slate-500",
-    orange: "text-nexus-orange-600",
+    orange: "text-brand-hover",
     rose: "text-rose-600",
   };
 
@@ -1055,13 +1055,13 @@ function MetricCard({
   const colorMap = {
     green: "from-emerald-400 to-emerald-600",
     emerald: "from-teal-400 to-emerald-600",
-    orange: "from-nexus-orange-400 to-nexus-orange-600",
+    orange: "from-brand to-brand",
     amber: "from-amber-400 to-amber-600",
   };
   const sparkColorMap = {
     green: "text-emerald-500",
     emerald: "text-teal-500",
-    orange: "text-nexus-orange-500",
+    orange: "text-brand",
     amber: "text-amber-500",
   };
 
@@ -1074,16 +1074,16 @@ function MetricCard({
     <Link
       href={href}
       className={cn(
-        "group relative overflow-hidden rounded-2xl border bg-white p-4 ring-1 ring-slate-100/80 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/40 hover:shadow-lg",
+        "group relative overflow-hidden rounded-2xl border bg-white p-4 ring-1 ring-slate-100/80 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-lg",
         highlight
-          ? "border-nexus-orange-200 bg-gradient-to-br from-white via-white to-nexus-orange-50/40"
+          ? "border-brand/30 bg-gradient-to-br from-white via-white to-brand-subtle/40"
           : "border-slate-200"
       )}
     >
       {highlight && (
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/10 blur-2xl transition-opacity duration-500 group-hover:bg-nexus-orange-500/20"
+          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/10 blur-2xl transition-opacity duration-500 group-hover:bg-brand/20"
         />
       )}
       <div className="relative flex items-start justify-between">
@@ -1095,7 +1095,7 @@ function MetricCard({
             className={cn(
               "mt-1 truncate font-display text-xl font-bold tabular-nums sm:text-2xl",
               highlight
-                ? "bg-gradient-to-r from-nexus-orange-600 to-nexus-orange-800 bg-clip-text text-transparent"
+                ? "bg-brand bg-clip-text text-transparent"
                 : "text-nexus-blue-950"
             )}
           >
@@ -1164,7 +1164,7 @@ function OpCard({
         "group rounded-2xl border bg-white p-4 ring-1 ring-slate-100/80 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md",
         urgent
           ? "border-rose-300 bg-rose-50/60"
-          : "border-slate-200 hover:border-nexus-orange-300/40"
+          : "border-slate-200 hover:border-brand/40"
       )}
     >
       <div className="flex items-start justify-between">
@@ -1237,7 +1237,7 @@ function RhStatCard({
           ? "border-emerald-300 bg-emerald-50/60"
           : highlight
             ? "border-yellow-300 bg-gradient-to-br from-yellow-50/60 via-white to-white"
-            : "border-slate-200 hover:border-nexus-orange-300/40"
+            : "border-slate-200 hover:border-brand/40"
       )}
     >
       <div className="flex items-center justify-between">
@@ -1325,7 +1325,7 @@ function NavLink({
   return (
     <Link
       href={href}
-      className="group flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-3 ring-1 ring-slate-100/80 transition hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-sm"
+      className="group flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-3 ring-1 ring-slate-100/80 transition hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-sm"
     >
       <Icon className="h-4 w-4 text-slate-500 transition group-hover:text-nexus-blue-950" />
       <span className="truncate text-xs font-semibold text-slate-700 group-hover:text-nexus-blue-950">

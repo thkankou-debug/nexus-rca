@@ -174,7 +174,7 @@ export function ClientForm({
                     onClick={() => handleChange("type", val)}
                     className={
                       isActive
-                        ? "flex flex-col items-center gap-2 rounded-xl border-2 border-nexus-orange-500 bg-nexus-orange-50 p-4 text-nexus-orange-700"
+                        ? "flex flex-col items-center gap-2 rounded-xl border-2 border-brand bg-brand-subtle p-4 text-brand-hover"
                         : "flex flex-col items-center gap-2 rounded-xl border border-slate-200 bg-white p-4 text-slate-600 hover:border-slate-300"
                     }
                   >
@@ -347,7 +347,7 @@ export function ClientForm({
                   type="checkbox"
                   checked={form.actif}
                   onChange={(e) => handleChange("actif", e.target.checked)}
-                  className="h-4 w-4 rounded border-slate-300 text-nexus-orange-600 focus:ring-nexus-orange-500"
+                  className="h-4 w-4 rounded border-slate-300 text-brand-hover focus:ring-focus/25"
                 />
                 <span className="text-sm font-semibold text-slate-700">
                   Client actif
@@ -372,7 +372,7 @@ export function ClientForm({
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600 disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 transition hover:bg-brand-hover disabled:opacity-50"
             >
               {saving ? (
                 <>
@@ -397,7 +397,7 @@ export function ClientForm({
 // SOUS-COMPOSANTS
 // ============================================================================
 const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30";
+  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30";
 
 function Section({
   title,
@@ -408,7 +408,7 @@ function Section({
 }) {
   return (
     <div>
-      <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+      <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-brand-hover">
         {title}
       </h3>
       {children}

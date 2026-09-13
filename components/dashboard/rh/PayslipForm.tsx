@@ -390,7 +390,7 @@ export function PayslipForm({
       <section className="rounded-2xl border border-slate-200 bg-slate-50/40 p-5">
         <div className="mb-3 flex items-center justify-between">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-nexus-orange-600">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-brand-hover">
               Phase C · Rémunération
             </p>
             <h4 className="font-display text-base font-bold text-nexus-blue-950">
@@ -404,7 +404,7 @@ export function PayslipForm({
           <button
             type="button"
             onClick={addLigne}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-nexus-blue-950 shadow-sm transition hover:border-nexus-orange-300 hover:bg-nexus-orange-50/40"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-nexus-blue-950 shadow-sm transition hover:border-brand/40 hover:bg-brand-subtle/40"
           >
             <Plus className="h-3.5 w-3.5" />
             Ajouter une ligne
@@ -469,7 +469,7 @@ export function PayslipForm({
       {/* ─── Section Cotisations ──────────────────────────────────────── */}
       <section className="rounded-2xl border border-slate-200 bg-slate-50/40 p-5">
         <div className="mb-3">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-nexus-orange-600">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-brand-hover">
             Phase C · Cotisations RCA
           </p>
           <h4 className="font-display text-base font-bold text-nexus-blue-950">
@@ -551,7 +551,7 @@ export function PayslipForm({
 
       {/* ─── Récap auto-calc ──────────────────────────────────────────── */}
       <section className="rounded-2xl border border-nexus-blue-950 bg-gradient-to-br from-nexus-blue-950 to-nexus-blue-900 p-5 text-white shadow-md">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-nexus-orange-300">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-brand">
           Auto-calcul
         </p>
         <div className="mt-2 grid gap-4 sm:grid-cols-2">
@@ -570,7 +570,7 @@ export function PayslipForm({
             <p className="text-xs uppercase tracking-wide text-slate-300">
               Net à payer
             </p>
-            <p className="font-display text-3xl font-bold text-nexus-orange-300">
+            <p className="font-display text-3xl font-bold text-brand">
               {formatFcfaInline(salaireNet)}
             </p>
             <p className="mt-0.5 text-[11px] text-slate-400">
@@ -590,7 +590,7 @@ export function PayslipForm({
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center gap-2 rounded-xl bg-brand px-6 py-3 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
         >
           {submitting ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -607,4 +607,4 @@ export function PayslipForm({
 }
 
 const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm transition focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200";
+  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm transition focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25";

@@ -26,7 +26,7 @@ export default async function SuperAdminDossiersIndexPage() {
       <header className="mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-6 sm:p-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-400">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
               Vue globale
             </p>
             <h1 className="mt-2 font-display text-3xl font-bold text-white sm:text-4xl">

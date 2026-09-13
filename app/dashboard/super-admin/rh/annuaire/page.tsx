@@ -47,7 +47,7 @@ export default async function AnnuairePage() {
 
       {/* Hero compact */}
       <div className="mb-8">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
           Équipe Nexus RCA
         </p>
         <h1 className="mt-2 font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl">

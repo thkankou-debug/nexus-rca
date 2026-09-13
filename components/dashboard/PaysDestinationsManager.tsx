@@ -82,7 +82,7 @@ export function PaysDestinationsManager({ initialPays }: { initialPays: PaysDest
         <button
           type="button"
           onClick={() => setShowForm(true)}
-          className="inline-flex items-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 hover:bg-nexus-orange-600"
+          className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 hover:bg-brand-hover"
         >
           <Plus className="h-4 w-4" />
           Nouveau pays
@@ -248,7 +248,7 @@ function PaysFormModal({
               value={nom}
               onChange={(e) => setNom(e.target.value)}
               placeholder="ex: Canada"
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -260,7 +260,7 @@ function PaysFormModal({
                 onChange={(e) => setCodeIso(e.target.value)}
                 placeholder="CA"
                 maxLength={3}
-                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm uppercase focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm uppercase focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
               />
             </div>
             <div>
@@ -270,7 +270,7 @@ function PaysFormModal({
                 value={continent}
                 onChange={(e) => setContinent(e.target.value)}
                 placeholder="Amérique du Nord"
-                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
               />
             </div>
           </div>
@@ -288,7 +288,7 @@ function PaysFormModal({
             type="button"
             disabled={saving}
             onClick={handleSubmit}
-            className="rounded-full bg-nexus-orange-500 px-5 py-2 text-sm font-semibold text-white hover:bg-nexus-orange-600 disabled:opacity-50"
+            className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-on-brand hover:bg-brand-hover disabled:opacity-50"
           >
             {saving ? "Enregistrement..." : "Enregistrer"}
           </button>

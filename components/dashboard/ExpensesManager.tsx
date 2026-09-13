@@ -276,7 +276,7 @@ export function ExpensesManager({
             placeholder="Rechercher par employé, motif, fournisseur, catégorie..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
           />
         </div>
         <button
@@ -285,7 +285,7 @@ export function ExpensesManager({
             setEditingExpense(null);
             setShowForm(true);
           }}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 transition hover:bg-brand-hover"
         >
           <Plus className="h-4 w-4" />
           Nouvelle dépense
@@ -692,7 +692,7 @@ function StatBlock({
   const colorMap = {
     blue: "from-nexus-blue-600 to-nexus-blue-800",
     green: "from-emerald-400 to-emerald-600",
-    orange: "from-nexus-orange-400 to-nexus-orange-600",
+    orange: "from-brand to-brand",
   };
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">

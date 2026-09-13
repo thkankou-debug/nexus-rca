@@ -46,7 +46,7 @@ export function AgentAvatar({
         "relative inline-flex shrink-0 items-center justify-center rounded-full font-bold text-white",
         SIZE_CLASS[size],
         highlight
-          ? "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700"
+          ? "bg-brand"
           : "bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-950",
         className
       )}

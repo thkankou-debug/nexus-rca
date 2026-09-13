@@ -233,14 +233,14 @@ export function LeaveRequestsManager({ role: _role }: Props) {
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 px-6 py-8 shadow-lg sm:px-9 sm:py-10">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
+          className="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-brand/15 blur-[120px]"
         />
         <div className="relative flex items-start gap-3">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-md">
             <Plane className="h-6 w-6" />
           </div>
           <div className="min-w-0">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur-md">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-brand backdrop-blur-md">
               Gestion des congés
             </span>
             <h1 className="mt-3 font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
@@ -314,7 +314,7 @@ export function LeaveRequestsManager({ role: _role }: Props) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Rechercher un employé…"
-            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-3 text-sm text-nexus-blue-950 shadow-sm placeholder:text-slate-400 focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-3 text-sm text-nexus-blue-950 shadow-sm placeholder:text-slate-400 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
           />
         </div>
       </section>
@@ -323,7 +323,7 @@ export function LeaveRequestsManager({ role: _role }: Props) {
       <section>
         {loading ? (
           <div className="flex items-center justify-center rounded-3xl border border-slate-200 bg-white p-12 shadow-sm">
-            <Loader2 className="h-6 w-6 animate-spin text-nexus-orange-500" />
+            <Loader2 className="h-6 w-6 animate-spin text-brand" />
           </div>
         ) : error ? (
           <div className="flex items-start gap-3 rounded-3xl border border-rose-200 bg-rose-50 p-6 text-sm text-rose-800">
@@ -381,7 +381,7 @@ function HeroStat({
 }) {
   const valueClass =
     accent === "orange"
-      ? "text-nexus-orange-300"
+      ? "text-brand"
       : accent === "amber"
         ? "text-amber-300"
         : "text-white";
@@ -414,7 +414,7 @@ function FilterChip({
 }) {
   const base = active
     ? "bg-nexus-blue-950 text-white border-nexus-blue-950"
-    : "bg-white text-slate-700 border-slate-200 hover:border-nexus-orange-300 hover:text-nexus-orange-700";
+    : "bg-white text-slate-700 border-slate-200 hover:border-brand/40 hover:text-brand-hover";
   const badgeTone =
     tone === "amber"
       ? active
@@ -464,7 +464,7 @@ function RequestCard({
       {/* HEADER */}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-800 to-nexus-orange-500 text-sm font-bold text-white shadow-sm">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-800 to-brand text-sm font-bold text-white shadow-sm">
             {initials}
           </div>
           <div className="min-w-0">
@@ -573,7 +573,7 @@ function RequestCard({
               type="button"
               onClick={onApprove}
               disabled={busy}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-nexus-orange-500 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-brand px-3.5 py-2 text-xs font-semibold text-on-brand shadow-sm transition hover:-translate-y-0.5 hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               {busy ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />

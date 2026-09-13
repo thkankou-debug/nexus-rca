@@ -18,7 +18,7 @@ export default async function SuperAdminAgentsPage() {
           <Briefcase className="h-6 w-6" />
         </div>
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
             Gouvernance équipe
           </p>
           <h1 className="font-display text-3xl font-bold text-nexus-blue-950">

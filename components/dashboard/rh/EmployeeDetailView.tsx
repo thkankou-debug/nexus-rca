@@ -240,7 +240,7 @@ function Tab({
       className={cn(
         "-mb-px inline-flex items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-semibold transition",
         active
-          ? "border-nexus-orange-500 text-nexus-blue-950"
+          ? "border-brand text-nexus-blue-950"
           : "border-transparent text-slate-500 hover:text-nexus-blue-950"
       )}
     >
@@ -433,7 +433,7 @@ function DocumentsTab({ employeeId }: { employeeId: string }) {
               type="button"
               onClick={handleUpload}
               disabled={!uploadFile || uploading}
-              className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex items-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
             >
               {uploading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -557,7 +557,7 @@ function PayslipsTab({
       <div className="flex justify-end">
         <Link
           href={`${basePath}/paie/nouvelle?employee_id=${employeeId}`}
-          className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600"
+          className="inline-flex items-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover"
         >
           <Plus className="h-4 w-4" />
           Nouvelle fiche pour cet employé
@@ -604,7 +604,7 @@ function PayslipsTab({
                   <td className="px-4 py-3 text-right">
                     <Link
                       href={`${basePath}/paie/${p.id}`}
-                      className="text-xs font-semibold text-nexus-orange-600 hover:underline"
+                      className="text-xs font-semibold text-brand-hover hover:underline"
                     >
                       Détail →
                     </Link>
@@ -740,7 +740,7 @@ function NotesTab({ employee }: { employee: Employee }) {
             <button
               type="button"
               onClick={() => setAdding(true)}
-              className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600"
+              className="inline-flex items-center gap-2 rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover"
             >
               <MessageSquarePlus className="h-4 w-4" />
               Ajouter une note
@@ -756,7 +756,7 @@ function NotesTab({ employee }: { employee: Employee }) {
               onChange={(e) => setContent(e.target.value)}
               placeholder="Écrire une note… (max 5000 caractères)"
               maxLength={5000}
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
             />
             <div className="flex flex-wrap justify-end gap-2">
               <button
@@ -774,7 +774,7 @@ function NotesTab({ employee }: { employee: Employee }) {
                 type="button"
                 onClick={submitNote}
                 disabled={saving || content.trim() === ""}
-                className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-xl bg-brand px-5 py-2 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {saving ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -810,7 +810,7 @@ function NotesTab({ employee }: { employee: Employee }) {
             <li key={note.id} className="relative">
               {/* Dot */}
               <span className="absolute -left-[31px] top-3 flex h-4 w-4 items-center justify-center">
-                <span className="h-2.5 w-2.5 rounded-full bg-nexus-orange-500 ring-4 ring-white" />
+                <span className="h-2.5 w-2.5 rounded-full bg-brand ring-4 ring-white" />
               </span>
 
               <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm ring-1 ring-slate-100/80">
@@ -921,15 +921,15 @@ function ContractGenerator({
 
   if (!open) {
     return (
-      <div className="relative overflow-hidden rounded-2xl border-2 border-dashed border-nexus-orange-300 bg-gradient-to-br from-nexus-orange-50/60 via-white to-white p-6 shadow-sm">
-        <div className="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/15 blur-2xl" />
+      <div className="relative overflow-hidden rounded-2xl border-2 border-dashed border-brand/40 bg-gradient-to-br from-brand-subtle/60 via-white to-white p-6 shadow-sm">
+        <div className="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/15 blur-2xl" />
         <div className="relative flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand text-on-brand shadow-md">
               <FileSignature className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
                 Génération automatique
               </p>
               <h3 className="mt-1 font-display text-base font-bold text-nexus-blue-950 sm:text-lg">
@@ -944,7 +944,7 @@ function ContractGenerator({
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600"
+            className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover"
           >
             <Sparkles className="h-4 w-4" />
             Générer
@@ -955,9 +955,9 @@ function ContractGenerator({
   }
 
   return (
-    <div className="rounded-2xl border-2 border-nexus-orange-300 bg-white p-6 shadow-md">
+    <div className="rounded-2xl border-2 border-brand/40 bg-white p-6 shadow-md">
       <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand text-on-brand shadow-md">
           <FileSignature className="h-5 w-5" />
         </div>
         <div>
@@ -983,8 +983,8 @@ function ContractGenerator({
               className={cn(
                 "rounded-xl border p-3 text-left transition",
                 active
-                  ? "border-nexus-orange-400 bg-nexus-orange-50/60 ring-2 ring-nexus-orange-200"
-                  : "border-slate-200 bg-white hover:border-nexus-orange-300"
+                  ? "border-brand bg-brand-subtle/60 ring-2 ring-brand/30"
+                  : "border-slate-200 bg-white hover:border-brand/40"
               )}
             >
               <p className="font-display text-base font-bold text-nexus-blue-950">
@@ -1049,7 +1049,7 @@ function ContractGenerator({
           type="button"
           onClick={handleGenerate}
           disabled={generating}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
         >
           {generating ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -1175,7 +1175,7 @@ function OnboardingTab({
       <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm ring-1 ring-slate-100/80">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="flex items-start gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-md">
               <Rocket className="h-5 w-5" />
             </div>
             <div>
@@ -1189,7 +1189,7 @@ function OnboardingTab({
           </div>
           <Link
             href={`${basePath}/onboarding/${employeeId}`}
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-nexus-blue-950 shadow-sm transition hover:border-nexus-orange-300 hover:text-nexus-orange-700"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-nexus-blue-950 shadow-sm transition hover:border-brand/40 hover:text-brand-hover"
           >
             Voir détail
             <ArrowUpRight className="h-4 w-4" />
@@ -1208,7 +1208,7 @@ function OnboardingTab({
           <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-slate-100">
             <div
               className={`h-full rounded-full transition-all ${
-                done ? "bg-emerald-500" : "bg-nexus-orange-500"
+                done ? "bg-emerald-500" : "bg-brand"
               }`}
               style={{ width: `${Math.max(2, Math.min(100, pct))}%` }}
             />
@@ -1220,14 +1220,14 @@ function OnboardingTab({
 
   // Pas d onboarding
   return (
-    <div className="rounded-3xl border border-dashed border-nexus-orange-300 bg-gradient-to-br from-nexus-orange-50/60 via-white to-white p-6 shadow-sm">
+    <div className="rounded-3xl border border-dashed border-brand/40 bg-gradient-to-br from-brand-subtle/60 via-white to-white p-6 shadow-sm">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-md">
             <Rocket className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
               Onboarding
             </p>
             <h3 className="mt-1 font-display text-base font-bold text-nexus-blue-950 sm:text-lg">
@@ -1242,7 +1242,7 @@ function OnboardingTab({
           <button
             type="button"
             onClick={() => setShowTemplates(true)}
-            className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600"
+            className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover"
           >
             <Sparkles className="h-4 w-4" />
             Démarrer un onboarding
@@ -1273,8 +1273,8 @@ function OnboardingTab({
                       onClick={() => setSelectedTplId(t.id)}
                       className={`rounded-2xl border p-3 text-left transition ${
                         active
-                          ? "border-nexus-orange-400 bg-nexus-orange-50/60 ring-2 ring-nexus-orange-200"
-                          : "border-slate-200 bg-white hover:border-nexus-orange-300"
+                          ? "border-brand bg-brand-subtle/60 ring-2 ring-brand/30"
+                          : "border-slate-200 bg-white hover:border-brand/40"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">
@@ -1308,7 +1308,7 @@ function OnboardingTab({
                   type="button"
                   onClick={handleStart}
                   disabled={submitting || !selectedTplId}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {submitting ? (
                     <Loader2 className="h-4 w-4 animate-spin" />

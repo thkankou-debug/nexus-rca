@@ -14,7 +14,7 @@ export default async function RhSettingsPage() {
         label="Retour à l'aperçu RH"
       />
       <div className="mb-8">
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-hover">
           Paramètres RH
         </p>
         <h1 className="mt-2 font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl">

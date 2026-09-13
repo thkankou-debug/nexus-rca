@@ -158,7 +158,7 @@ export function DevisManager({ initialDevis }: { initialDevis: DevisListItem[] }
             placeholder="Rechercher par référence, client, service..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
           />
         </div>
         <div className="flex gap-2">
@@ -189,7 +189,7 @@ export function DevisManager({ initialDevis }: { initialDevis: DevisListItem[] }
           <button
             type="button"
             onClick={() => setShowForm(true)}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 transition hover:bg-brand-hover"
           >
             <Plus className="h-4 w-4" />
             Nouveau devis
@@ -442,7 +442,7 @@ function DevisFormModal({
               value={demandeId}
               onChange={(e) => setDemandeId(e.target.value)}
               disabled={loadingDemandes}
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
             >
               <option value="">{loadingDemandes ? "Chargement..." : "Sélectionner un dossier"}</option>
               {demandes.map((d) => (
@@ -461,14 +461,14 @@ function DevisFormModal({
               type="date"
               value={validUntil}
               onChange={(e) => setValidUntil(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
             />
           </div>
 
           <div>
             <div className="flex items-center justify-between">
               <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">Prestations</label>
-              <button type="button" onClick={addLigne} className="text-xs font-semibold text-nexus-orange-600 hover:underline">
+              <button type="button" onClick={addLigne} className="text-xs font-semibold text-brand-hover hover:underline">
                 + Ajouter une ligne
               </button>
             </div>
@@ -480,7 +480,7 @@ function DevisFormModal({
                     placeholder="Description"
                     value={ligne.description}
                     onChange={(e) => updateLigne(idx, { description: e.target.value })}
-                    className="min-w-[180px] flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                    className="min-w-[180px] flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
                   />
                   <input
                     type="number"
@@ -488,7 +488,7 @@ function DevisFormModal({
                     placeholder="Qté"
                     value={ligne.quantity}
                     onChange={(e) => updateLigne(idx, { quantity: Number(e.target.value) })}
-                    className="w-20 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                    className="w-20 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
                   />
                   <input
                     type="number"
@@ -496,7 +496,7 @@ function DevisFormModal({
                     placeholder="Prix unitaire"
                     value={ligne.unit_price}
                     onChange={(e) => updateLigne(idx, { unit_price: Number(e.target.value) })}
-                    className="w-32 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                    className="w-32 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
                   />
                   {lignes.length > 1 && (
                     <button
@@ -530,7 +530,7 @@ function DevisFormModal({
             type="button"
             disabled={saving}
             onClick={handleSubmit}
-            className="rounded-full bg-nexus-orange-500 px-5 py-2 text-sm font-semibold text-white hover:bg-nexus-orange-600 disabled:opacity-50"
+            className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-on-brand hover:bg-brand-hover disabled:opacity-50"
           >
             {saving ? "Création..." : "Créer le devis"}
           </button>

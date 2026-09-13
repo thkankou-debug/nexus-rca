@@ -339,11 +339,11 @@ export function FinancialDashboard({
       {alerts.length > 0 && (
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="mb-4 flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-nexus-orange-600" />
+            <AlertTriangle className="h-5 w-5 text-brand-hover" />
             <h3 className="font-display text-base font-bold text-nexus-blue-950">
               Alertes & actions à faire
             </h3>
-            <span className="ml-auto rounded-full bg-nexus-orange-100 px-2.5 py-0.5 text-xs font-bold text-nexus-orange-700">
+            <span className="ml-auto rounded-full bg-brand-subtle px-2.5 py-0.5 text-xs font-bold text-brand-hover">
               {alerts.length}
             </span>
           </div>
@@ -380,7 +380,7 @@ export function FinancialDashboard({
             </div>
             <div className="rounded-lg bg-slate-50 p-2">
               <p className="text-slate-500">Restant</p>
-              <p className="font-semibold text-nexus-orange-600">
+              <p className="font-semibold text-brand-hover">
                 {formatMoney(stats.totalRestant)}
               </p>
             </div>
@@ -461,14 +461,14 @@ export function FinancialDashboard({
         <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="flex items-center justify-between border-b border-slate-200 p-5">
             <div className="flex items-center gap-2">
-              <Wallet className="h-5 w-5 text-nexus-orange-600" />
+              <Wallet className="h-5 w-5 text-brand-hover" />
               <h3 className="font-display text-base font-bold text-nexus-blue-950">
                 Paiements récents
               </h3>
             </div>
             <Link
               href="/dashboard/super-admin/paiements"
-              className="inline-flex items-center gap-1 text-xs font-semibold text-nexus-orange-600 hover:text-nexus-orange-700"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-brand-hover hover:text-brand-hover"
             >
               Tout voir
               <ArrowRight className="h-3 w-3" />
@@ -518,7 +518,7 @@ export function FinancialDashboard({
       </div>
 
       {/* ACCES RAPIDE */}
-      <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-nexus-blue-50 to-nexus-orange-50 p-5 shadow-sm">
+      <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-nexus-blue-50 to-brand-subtle p-5 shadow-sm">
         <h3 className="font-display text-base font-bold text-nexus-blue-950">
           Actions rapides
         </h3>
@@ -527,7 +527,7 @@ export function FinancialDashboard({
             href="/dashboard/super-admin/paiements"
             className="group flex items-center gap-3 rounded-xl bg-white p-4 shadow-sm transition hover:shadow-md"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-orange-100 text-nexus-orange-700">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-subtle text-brand-hover">
               <Wallet className="h-5 w-5" />
             </div>
             <div className="flex-1">
@@ -588,7 +588,7 @@ function BigStatCard({
 }) {
   const colorMap = {
     green: "from-emerald-400 to-emerald-600",
-    orange: "from-nexus-orange-400 to-nexus-orange-600",
+    orange: "from-brand to-brand",
     blue: "from-nexus-blue-600 to-nexus-blue-800",
     purple: "from-purple-500 to-indigo-700",
     red: "from-red-500 to-red-700",
@@ -597,7 +597,7 @@ function BigStatCard({
   const cardClasses = cn(
     "block rounded-2xl border bg-white p-5 shadow-sm transition hover:shadow-md",
     highlighted
-      ? "border-2 border-nexus-orange-300 ring-2 ring-nexus-orange-100"
+      ? "border-2 border-brand/40 ring-2 ring-brand/30"
       : "border-slate-200",
     href && "cursor-pointer hover:-translate-y-0.5"
   );
@@ -736,7 +736,7 @@ function AlertItem({
 function RecentPaymentRow({ payment }: { payment: Payment }) {
   return (
     <div className="flex items-center gap-3 p-4 transition hover:bg-slate-50">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-100 to-nexus-orange-50 text-nexus-orange-700">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-subtle text-brand-hover">
         <Wallet className="h-5 w-5" />
       </div>
       <div className="min-w-0 flex-1">

@@ -60,7 +60,7 @@ export function ContenusSiteManager({ initialContenus }: { initialContenus: Cont
         <button
           type="button"
           onClick={() => setShowForm(true)}
-          className="inline-flex items-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 hover:bg-nexus-orange-600"
+          className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 hover:bg-brand-hover"
         >
           <Plus className="h-4 w-4" />
           Nouveau contenu
@@ -221,7 +221,7 @@ function ContenuFormModal({
               onChange={(e) => setSection(e.target.value)}
               list="sections-existantes"
               placeholder="ex: accueil_hero"
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
             />
             <datalist id="sections-existantes">
               {sectionsExistantes.map((s) => (
@@ -237,7 +237,7 @@ function ContenuFormModal({
               onChange={(e) => setCle(e.target.value)}
               disabled={!!contenu}
               placeholder="ex: accueil_hero_titre"
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 font-mono text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30 disabled:bg-slate-50 disabled:text-slate-500"
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 font-mono text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30 disabled:bg-slate-50 disabled:text-slate-500"
             />
           </div>
           <div>
@@ -246,7 +246,7 @@ function ContenuFormModal({
               rows={4}
               value={texte}
               onChange={(e) => setTexte(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
             />
           </div>
         </div>
@@ -263,7 +263,7 @@ function ContenuFormModal({
             type="button"
             disabled={saving}
             onClick={handleSubmit}
-            className="rounded-full bg-nexus-orange-500 px-5 py-2 text-sm font-semibold text-white hover:bg-nexus-orange-600 disabled:opacity-50"
+            className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-on-brand hover:bg-brand-hover disabled:opacity-50"
           >
             {saving ? "Enregistrement..." : "Enregistrer"}
           </button>

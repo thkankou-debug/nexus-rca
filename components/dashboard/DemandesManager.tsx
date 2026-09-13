@@ -168,7 +168,7 @@ export function DemandesManager({
                         <StatusBadge status={d.statut} />
                         <UrgenceBadge level={d.urgence} />
                         {d.traitement_prioritaire && (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600 px-2 py-0.5 text-xs font-semibold text-white">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-brand px-2 py-0.5 text-xs font-semibold text-on-brand">
                             <Zap className="h-3 w-3" />
                             Prioritaire
                           </span>
@@ -340,7 +340,7 @@ export function DemandesManager({
                             updateStatus(d.id, e.target.value as DemandeStatus)
                           }
                           disabled={savingId === d.id}
-                          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
                         >
                           {STATUSES.map((s) => (
                             <option key={s} value={s}>
@@ -509,7 +509,7 @@ function NotesEditor({
         onChange={(e) => setValue(e.target.value)}
         rows={3}
         placeholder="Notes pour l equipe (non visibles par le client)"
-        className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+        className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
       />
       <div className="mt-2 flex justify-end">
         <button

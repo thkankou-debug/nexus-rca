@@ -409,7 +409,7 @@ export function DesignSystemShowcase({
                 title="Aucun dossier"
                 description="Aucun dossier ne correspond à ces filtres pour le moment."
                 action={
-                  <button className="rounded-xs bg-brand px-4 py-2 text-body-sm font-semibold text-white hover:bg-brand-hover">
+                  <button className="rounded-xs bg-brand px-4 py-2 text-body-sm font-semibold text-on-brand hover:bg-brand-hover">
                     Créer un dossier
                   </button>
                 }

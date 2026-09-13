@@ -215,7 +215,7 @@ export default function NewTeamMemberPage() {
                   temporary_password: "",
                 });
               }}
-              className="rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-nexus-orange-600"
+              className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand hover:bg-brand-hover"
             >
               Créer un autre employé
             </button>
@@ -489,7 +489,7 @@ export default function NewTeamMemberPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600 disabled:opacity-50"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-2.5 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 transition hover:bg-brand-hover disabled:opacity-50"
           >
             {submitting ? (
               <>
@@ -510,7 +510,7 @@ export default function NewTeamMemberPage() {
 }
 
 const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30";
+  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30";
 
 function Section({
   title,
@@ -521,7 +521,7 @@ function Section({
 }) {
   return (
     <div>
-      <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+      <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-brand-hover">
         {title}
       </h3>
       {children}

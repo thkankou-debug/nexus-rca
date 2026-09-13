@@ -15,7 +15,7 @@ interface AnnuaireViewProps {
 // Couleurs par département (rotation déterministe)
 const DEPT_TONES = [
   "bg-nexus-blue-100 text-nexus-blue-800 ring-nexus-blue-200",
-  "bg-nexus-orange-100 text-nexus-orange-700 ring-nexus-orange-200",
+  "bg-brand-subtle text-brand-hover ring-brand/30",
   "bg-emerald-100 text-emerald-800 ring-emerald-200",
   "bg-purple-100 text-purple-800 ring-purple-200",
   "bg-amber-100 text-amber-800 ring-amber-200",
@@ -90,7 +90,7 @@ export function AnnuaireView({ employees, basePath }: AnnuaireViewProps) {
             placeholder="Rechercher nom, poste, email…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-3 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-3 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
           />
         </div>
 
@@ -126,10 +126,10 @@ export function AnnuaireView({ employees, basePath }: AnnuaireViewProps) {
             return (
               <article
                 key={e.id}
-                className="group relative flex flex-col rounded-3xl border border-slate-200 bg-white p-5 shadow-sm ring-1 ring-slate-100/80 transition hover:-translate-y-0.5 hover:border-nexus-orange-200 hover:shadow-lg"
+                className="group relative flex flex-col rounded-3xl border border-slate-200 bg-white p-5 shadow-sm ring-1 ring-slate-100/80 transition hover:-translate-y-0.5 hover:border-brand/30 hover:shadow-lg"
               >
                 <div className="flex items-start gap-3">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-blue-900 text-base font-bold text-white shadow-sm">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-nexus-blue-900 text-base font-bold text-white shadow-sm">
                     {initials(e.nom_complet)}
                   </div>
                   <div className="min-w-0 flex-1">
@@ -153,7 +153,7 @@ export function AnnuaireView({ employees, basePath }: AnnuaireViewProps) {
                 <div className="mt-4 space-y-1.5 border-t border-slate-100 pt-3 text-xs text-slate-600">
                   <a
                     href={`mailto:${e.email}`}
-                    className="flex items-center gap-2 truncate transition hover:text-nexus-orange-600"
+                    className="flex items-center gap-2 truncate transition hover:text-brand-hover"
                   >
                     <Mail className="h-3.5 w-3.5 shrink-0 text-slate-400" />
                     <span className="truncate">{e.email}</span>
@@ -161,7 +161,7 @@ export function AnnuaireView({ employees, basePath }: AnnuaireViewProps) {
                   {e.telephone && (
                     <a
                       href={`tel:${e.telephone}`}
-                      className="flex items-center gap-2 transition hover:text-nexus-orange-600"
+                      className="flex items-center gap-2 transition hover:text-brand-hover"
                     >
                       <Phone className="h-3.5 w-3.5 shrink-0 text-slate-400" />
                       <span>{e.telephone}</span>
@@ -180,7 +180,7 @@ export function AnnuaireView({ employees, basePath }: AnnuaireViewProps) {
 
                 <Link
                   href={`${basePath}/employes/${e.id}`}
-                  className="mt-4 inline-flex items-center gap-1 self-start text-xs font-semibold text-nexus-orange-600 hover:underline"
+                  className="mt-4 inline-flex items-center gap-1 self-start text-xs font-semibold text-brand-hover hover:underline"
                 >
                   Voir fiche <ArrowUpRight className="h-3 w-3" />
                 </Link>
@@ -210,7 +210,7 @@ function ChipBtn({
         "rounded-full border px-3 py-1.5 text-xs font-semibold transition",
         active
           ? "border-nexus-blue-950 bg-nexus-blue-950 text-white shadow-sm"
-          : "border-slate-200 bg-white text-slate-600 hover:border-nexus-orange-300 hover:text-nexus-orange-700"
+          : "border-slate-200 bg-white text-slate-600 hover:border-brand/40 hover:text-brand-hover"
       )}
     >
       {label}

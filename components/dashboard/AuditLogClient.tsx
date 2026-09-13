@@ -172,7 +172,7 @@ export function AuditLogClient({ initialEntries }: { initialEntries: AuditEntry[
       {/* ─── Vue d'ensemble ──────────────────────────────────── */}
       <div>
         <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold text-nexus-blue-950">
-          <Activity className="h-5 w-5 text-nexus-orange-600" />
+          <Activity className="h-5 w-5 text-brand-hover" />
           Vue d&apos;ensemble
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -187,7 +187,7 @@ export function AuditLogClient({ initialEntries }: { initialEntries: AuditEntry[
       <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md sm:p-6">
         <div className="mb-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-on-brand shadow">
               <Filter className="h-5 w-5" />
             </div>
             <h2 className="font-display text-lg font-bold text-nexus-blue-950">
@@ -212,14 +212,14 @@ export function AuditLogClient({ initialEntries }: { initialEntries: AuditEntry[
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Rechercher acteur, cible, description…"
-              className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-3 text-sm text-nexus-blue-950 placeholder:text-slate-400 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-100"
+              className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-3 text-sm text-nexus-blue-950 placeholder:text-slate-400 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
             />
           </div>
 
           <select
             value={eventFilter}
             onChange={(e) => setEventFilter(e.target.value)}
-            className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-100"
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
           >
             <option value="all">Tous les événements</option>
             {eventTypes.map((t) => (
@@ -232,7 +232,7 @@ export function AuditLogClient({ initialEntries }: { initialEntries: AuditEntry[
           <select
             value={severityFilter}
             onChange={(e) => setSeverityFilter(e.target.value)}
-            className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-100"
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
           >
             <option value="all">Toutes sévérités</option>
             <option value="high">Haute</option>
@@ -244,7 +244,7 @@ export function AuditLogClient({ initialEntries }: { initialEntries: AuditEntry[
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-100"
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
           >
             <option value="all">Tous les rôles</option>
             <option value="super_admin">Super admin</option>
@@ -259,7 +259,7 @@ export function AuditLogClient({ initialEntries }: { initialEntries: AuditEntry[
       {/* ─── Journal des événements ──────────────────────────── */}
       <div>
         <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold text-nexus-blue-950">
-          <FileText className="h-5 w-5 text-nexus-orange-600" />
+          <FileText className="h-5 w-5 text-brand-hover" />
           Journal des événements
         </h2>
         <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
@@ -326,7 +326,7 @@ export function AuditLogClient({ initialEntries }: { initialEntries: AuditEntry[
                         </td>
                         <td className="px-5 py-4">
                           <div className="flex items-center gap-2">
-                            <Icon className="h-4 w-4 text-nexus-orange-600" />
+                            <Icon className="h-4 w-4 text-brand-hover" />
                             <span className="text-sm text-nexus-blue-950">{eventLabel}</span>
                           </div>
                         </td>

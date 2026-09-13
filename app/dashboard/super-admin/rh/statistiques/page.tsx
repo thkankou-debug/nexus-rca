@@ -73,7 +73,7 @@ const AGE_BUCKETS: { label: string; min: number; max: number }[] = [
 // Palette stable pour les segments de donut
 const DONUT_PALETTE = [
   "#0C1C40", // navy
-  "#FF6600", // orange
+  "#B99760", // orange
   "#10b981", // emerald
   "#8b5cf6", // purple
   "#f59e0b", // amber
@@ -83,7 +83,7 @@ const DONUT_PALETTE = [
 
 const DEPT_PALETTE = [
   "from-nexus-blue-700 to-nexus-blue-900",
-  "from-nexus-orange-500 to-nexus-orange-700",
+  "from-brand to-brand",
   "from-emerald-500 to-emerald-700",
   "from-purple-500 to-purple-700",
   "from-amber-500 to-amber-600",
@@ -197,7 +197,7 @@ export default async function StatistiquesRhPage() {
 
       {/* Hero compact */}
       <div className="mb-8">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
           Statistiques
         </p>
         <h1 className="mt-2 font-display text-3xl font-bold text-nexus-blue-950 sm:text-4xl">
@@ -227,7 +227,7 @@ export default async function StatistiquesRhPage() {
           label="Ancienneté moyenne"
           value={ancLabel}
           icon={Clock}
-          accent="from-nexus-orange-400 to-nexus-orange-600"
+          accent="from-brand to-brand"
         />
         <Kpi
           label="Fiches paie validées"
@@ -305,7 +305,7 @@ export default async function StatistiquesRhPage() {
                     </span>
                     <div className="relative h-6 flex-1 overflow-hidden rounded-lg bg-slate-100">
                       <div
-                        className="h-full rounded-lg bg-gradient-to-r from-nexus-orange-400 to-nexus-orange-600 transition-all"
+                        className="h-full rounded-lg bg-brand transition-all"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
@@ -387,7 +387,7 @@ export default async function StatistiquesRhPage() {
             </p>
           ) : (
             <>
-              <div className="text-nexus-orange-500">
+              <div className="text-brand">
                 <Sparkline
                   data={trendData}
                   height={120}

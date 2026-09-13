@@ -158,7 +158,7 @@ export function FacturesManager({ initialFactures }: { initialFactures: FactureL
             placeholder="Rechercher par référence, client, service..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
           />
         </div>
         <div className="flex gap-2">
@@ -189,7 +189,7 @@ export function FacturesManager({ initialFactures }: { initialFactures: FactureL
           <button
             type="button"
             onClick={() => setShowForm(true)}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 transition hover:bg-brand-hover"
           >
             <Plus className="h-4 w-4" />
             Nouvelle facture
@@ -471,7 +471,7 @@ function FactureFormModal({
             onClick={() => setMode("manuel")}
             className={cn(
               "flex-1 rounded-xl border px-3 py-2 text-sm font-semibold",
-              mode === "manuel" ? "border-nexus-orange-500 bg-nexus-orange-50 text-nexus-orange-700" : "border-slate-200 text-slate-600"
+              mode === "manuel" ? "border-brand bg-brand-subtle text-brand-hover" : "border-slate-200 text-slate-600"
             )}
           >
             Facture manuelle
@@ -481,7 +481,7 @@ function FactureFormModal({
             onClick={() => setMode("devis")}
             className={cn(
               "flex-1 rounded-xl border px-3 py-2 text-sm font-semibold",
-              mode === "devis" ? "border-nexus-orange-500 bg-nexus-orange-50 text-nexus-orange-700" : "border-slate-200 text-slate-600"
+              mode === "devis" ? "border-brand bg-brand-subtle text-brand-hover" : "border-slate-200 text-slate-600"
             )}
           >
             Générer depuis un devis accepté
@@ -496,7 +496,7 @@ function FactureFormModal({
                 value={devisId}
                 onChange={(e) => setDevisId(e.target.value)}
                 disabled={loadingOptions}
-                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
               >
                 <option value="">
                   {loadingOptions ? "Chargement..." : devisAcceptes.length === 0 ? "Aucun devis accepté" : "Sélectionner un devis"}
@@ -516,7 +516,7 @@ function FactureFormModal({
                   value={demandeId}
                   onChange={(e) => setDemandeId(e.target.value)}
                   disabled={loadingOptions}
-                  className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                  className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
                 >
                   <option value="">{loadingOptions ? "Chargement..." : "Sélectionner un dossier"}</option>
                   {demandes.map((d) => (
@@ -530,7 +530,7 @@ function FactureFormModal({
               <div>
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">Prestations</label>
-                  <button type="button" onClick={addLigne} className="text-xs font-semibold text-nexus-orange-600 hover:underline">
+                  <button type="button" onClick={addLigne} className="text-xs font-semibold text-brand-hover hover:underline">
                     + Ajouter une ligne
                   </button>
                 </div>
@@ -542,7 +542,7 @@ function FactureFormModal({
                         placeholder="Description"
                         value={ligne.description}
                         onChange={(e) => updateLigne(idx, { description: e.target.value })}
-                        className="min-w-[180px] flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                        className="min-w-[180px] flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
                       />
                       <input
                         type="number"
@@ -550,7 +550,7 @@ function FactureFormModal({
                         placeholder="Qté"
                         value={ligne.quantity}
                         onChange={(e) => updateLigne(idx, { quantity: Number(e.target.value) })}
-                        className="w-20 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                        className="w-20 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
                       />
                       <input
                         type="number"
@@ -558,7 +558,7 @@ function FactureFormModal({
                         placeholder="Prix unitaire"
                         value={ligne.unit_price}
                         onChange={(e) => updateLigne(idx, { unit_price: Number(e.target.value) })}
-                        className="w-32 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                        className="w-32 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
                       />
                       {lignes.length > 1 && (
                         <button type="button" onClick={() => removeLigne(idx)} className="rounded-full p-1.5 text-red-500 hover:bg-red-50">
@@ -583,7 +583,7 @@ function FactureFormModal({
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
             />
           </div>
         </div>
@@ -600,7 +600,7 @@ function FactureFormModal({
             type="button"
             disabled={saving}
             onClick={handleSubmit}
-            className="rounded-full bg-nexus-orange-500 px-5 py-2 text-sm font-semibold text-white hover:bg-nexus-orange-600 disabled:opacity-50"
+            className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-on-brand hover:bg-brand-hover disabled:opacity-50"
           >
             {saving ? "Création..." : "Créer la facture"}
           </button>

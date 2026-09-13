@@ -133,7 +133,7 @@ export function RhSettingsManager() {
               </span>
               {RH_SETTING_CATEGORY_LABELS[cat]}
               {active && (
-                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-nexus-orange-400 to-nexus-orange-600" />
+                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-brand" />
               )}
             </button>
           );
@@ -181,7 +181,7 @@ export function RhSettingsManager() {
                           [s.key]: { value_number: Number(e.target.value) },
                         }))
                       }
-                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold tabular-nums text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold tabular-nums text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
                     />
                   ) : (
                     <input
@@ -193,7 +193,7 @@ export function RhSettingsManager() {
                           [s.key]: { value_text: e.target.value },
                         }))
                       }
-                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
                     />
                   )}
                 </div>
@@ -212,7 +212,7 @@ export function RhSettingsManager() {
 
       {/* Save bar (sticky) */}
       {dirty && (
-        <div className="sticky bottom-4 mt-6 flex items-center justify-between rounded-2xl border border-nexus-orange-300 bg-white p-4 shadow-lg ring-1 ring-nexus-orange-200/60">
+        <div className="sticky bottom-4 mt-6 flex items-center justify-between rounded-2xl border border-brand/40 bg-white p-4 shadow-lg ring-1 ring-brand/30">
           <p className="text-sm font-semibold text-nexus-blue-950">
             {Object.keys(edits).length} modification(s) en attente
           </p>
@@ -228,7 +228,7 @@ export function RhSettingsManager() {
               type="button"
               onClick={handleSave}
               disabled={saving}
-              className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:opacity-60"
+              className="inline-flex items-center gap-2 rounded-xl bg-brand px-5 py-2 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:opacity-60"
             >
               {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
               {saving ? "Enregistrement…" : "Enregistrer"}

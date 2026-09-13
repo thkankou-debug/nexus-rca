@@ -156,14 +156,14 @@ export function NotificationsManager() {
                     onClick={() => markOne(n)}
                     className={cn(
                       "flex w-full items-start gap-3 p-4 text-left transition-colors hover:bg-slate-50",
-                      isUnread && "bg-nexus-orange-50/40"
+                      isUnread && "bg-brand-subtle/40"
                     )}
                   >
                     <span
                       className={cn(
                         "mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
                         isUnread
-                          ? "bg-nexus-orange-100 text-nexus-orange-600"
+                          ? "bg-brand-subtle text-brand-hover"
                           : "bg-slate-100 text-slate-500"
                       )}
                     >
@@ -180,7 +180,7 @@ export function NotificationsManager() {
                           {n.title}
                         </span>
                         {isUnread && (
-                          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-nexus-orange-500" />
+                          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
                         )}
                       </span>
                       {n.message && (

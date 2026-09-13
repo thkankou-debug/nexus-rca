@@ -129,14 +129,14 @@ export function MyEvaluationsView({ basePath }: Props) {
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 px-6 py-7 shadow-lg sm:px-9 sm:py-8">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
+          className="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-brand/15 blur-[120px]"
         />
         <div className="relative flex items-start gap-3">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-md">
             <Award className="h-6 w-6" />
           </div>
           <div className="min-w-0">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur-md">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-brand backdrop-blur-md">
               Mes évaluations
             </span>
             <h1 className="mt-3 font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
@@ -158,7 +158,7 @@ export function MyEvaluationsView({ basePath }: Props) {
 
       {loading ? (
         <div className="flex items-center justify-center rounded-3xl border border-slate-200 bg-white p-12 shadow-sm">
-          <Loader2 className="h-6 w-6 animate-spin text-nexus-orange-500" />
+          <Loader2 className="h-6 w-6 animate-spin text-brand" />
         </div>
       ) : sortedReviews.length === 0 ? (
         <div className="rounded-3xl border border-slate-200 bg-white p-12 text-center shadow-sm ring-1 ring-slate-100/80">
@@ -298,7 +298,7 @@ function MyReviewCard({
           <button
             type="button"
             onClick={onAutoEval}
-            className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600"
+            className="inline-flex items-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover"
           >
             <PenLine className="h-4 w-4" />
             {selfDone ? "Modifier mon auto-évaluation" : "Faire mon auto-évaluation"}
@@ -308,7 +308,7 @@ function MyReviewCard({
           <button
             type="button"
             onClick={onSign}
-            className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600"
+            className="inline-flex items-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover"
           >
             <PenLine className="h-4 w-4" />
             Signer mon évaluation
@@ -317,7 +317,7 @@ function MyReviewCard({
         {bothSigned && (
           <Link
             href={detailHref}
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-nexus-orange-300 hover:text-nexus-orange-700"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-brand/40 hover:text-brand-hover"
           >
             Voir le détail
             <ArrowUpRight className="h-4 w-4" />
@@ -385,7 +385,7 @@ function SelfEvalModal({
       >
         <div className="flex items-start justify-between gap-3 border-b border-slate-100 p-6">
           <div className="flex items-start gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-md">
               <PenLine className="h-5 w-5" />
             </div>
             <div>
@@ -430,7 +430,7 @@ function SelfEvalModal({
             type="button"
             onClick={() => save(false)}
             disabled={busy !== null}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-nexus-orange-300 hover:text-nexus-orange-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-brand/40 hover:text-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
           >
             {busy === "save" ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -443,7 +443,7 @@ function SelfEvalModal({
             type="button"
             onClick={() => save(true)}
             disabled={busy !== null}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
           >
             {busy === "submit" ? (
               <Loader2 className="h-4 w-4 animate-spin" />

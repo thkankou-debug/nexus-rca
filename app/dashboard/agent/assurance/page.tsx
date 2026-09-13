@@ -73,11 +73,11 @@ export default async function AgentAssurancePage() {
       />
 
       <header className="mb-8 flex flex-wrap items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-sm">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-sm">
           <ShieldCheck className="h-5 w-5" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
             Pipeline assurance
           </p>
           <h1 className="mt-1 font-display text-2xl font-bold text-nexus-blue-950 sm:text-3xl">
@@ -110,7 +110,7 @@ export default async function AgentAssurancePage() {
             soumission via{" "}
             <Link
               href="/services/assurance/devis"
-              className="font-semibold text-nexus-orange-600 underline-offset-4 hover:underline"
+              className="font-semibold text-brand-hover underline-offset-4 hover:underline"
             >
               /services/assurance/devis
             </Link>
@@ -216,7 +216,7 @@ export default async function AgentAssurancePage() {
                       <Link
                         href={`/services/assurance/devis/${q.reference}`}
                         target="_blank"
-                        className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-nexus-blue-950 transition-all hover:border-nexus-orange-400 hover:text-nexus-orange-600"
+                        className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-nexus-blue-950 transition-all hover:border-brand hover:text-brand-hover"
                       >
                         Voir
                         <ExternalLink className="h-3 w-3" />
@@ -246,7 +246,7 @@ function KpiCard({
     <div
       className={`rounded-2xl border p-5 shadow-sm ${
         highlight
-          ? "border-nexus-orange-300 bg-gradient-to-br from-nexus-orange-50 to-white"
+          ? "border-brand/40 bg-gradient-to-br from-brand-subtle to-white"
           : "border-slate-200 bg-white"
       }`}
     >

@@ -405,7 +405,7 @@ export default async function ClientUniqueDetailPage({
       <div className="mb-8 rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="flex items-center justify-between border-b border-slate-200 p-5">
           <div className="flex items-center gap-2">
-            <Wallet className="h-5 w-5 text-nexus-orange-600" />
+            <Wallet className="h-5 w-5 text-brand-hover" />
             <h2 className="font-display text-lg font-bold text-nexus-blue-950">
               Historique des paiements
             </h2>
@@ -668,7 +668,7 @@ function StatBlock({
 }) {
   const colorMap = {
     blue: "from-nexus-blue-600 to-nexus-blue-800",
-    orange: "from-nexus-orange-400 to-nexus-orange-600",
+    orange: "from-brand to-brand",
     green: "from-emerald-400 to-emerald-600",
     red: "from-red-500 to-red-700",
   };

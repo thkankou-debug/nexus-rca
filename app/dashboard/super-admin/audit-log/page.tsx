@@ -241,16 +241,16 @@ export default async function SuperAdminAuditLogPage() {
 
       {/* HERO PREMIUM */}
       <div className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-6 shadow-xl sm:p-8">
-        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-nexus-orange-500/20 blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-nexus-orange-500/10 blur-3xl" />
+        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-brand/20 blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-brand/10 blur-3xl" />
 
         <div className="relative flex flex-wrap items-center gap-6">
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-2xl">
+          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-2xl">
             <ShieldAlert className="h-10 w-10" />
           </div>
 
           <div className="min-w-0 flex-1">
-            <span className="inline-block rounded-full bg-nexus-orange-500/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-nexus-orange-300">
+            <span className="inline-block rounded-full bg-brand/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-brand">
               🔒 Sécurité Premium
             </span>
             <h1 className="mt-2 font-display text-3xl font-bold text-white sm:text-4xl">
@@ -283,7 +283,7 @@ export default async function SuperAdminAuditLogPage() {
             <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
               Aujourd&apos;hui
             </p>
-            <p className="mt-1 font-display text-2xl font-bold text-nexus-orange-300">
+            <p className="mt-1 font-display text-2xl font-bold text-brand">
               {todayCount}
             </p>
           </div>

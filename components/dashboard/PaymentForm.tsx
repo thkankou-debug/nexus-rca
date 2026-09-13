@@ -492,7 +492,7 @@ export function PaymentForm({
                   <span
                     className={
                       montantRestant > 0
-                        ? "font-bold text-nexus-orange-600"
+                        ? "font-bold text-brand-hover"
                         : "font-bold text-green-600"
                     }
                   >
@@ -501,7 +501,7 @@ export function PaymentForm({
                 </div>
                 <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200">
                   <div
-                    className="h-full bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600 transition-all"
+                    className="h-full bg-brand transition-all"
                     style={{
                       width: `${Math.min(
                         100,
@@ -573,7 +573,7 @@ export function PaymentForm({
 
           {/* SECTION : Preuve */}
           <Section title="Preuve / reçu (optionnel)">
-            <label className="flex cursor-pointer items-center justify-center gap-3 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-4 hover:border-nexus-orange-300 hover:bg-nexus-orange-50">
+            <label className="flex cursor-pointer items-center justify-center gap-3 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-4 hover:border-brand/40 hover:bg-brand-subtle">
               <Upload className="h-5 w-5 text-slate-400" />
               <span className="text-sm font-semibold text-slate-700">
                 {proofFile
@@ -619,7 +619,7 @@ export function PaymentForm({
             <button
               type="submit"
               disabled={saving || uploadingProof}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600 disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 transition hover:bg-brand-hover disabled:opacity-50"
             >
               {saving || uploadingProof ? (
                 <>
@@ -643,7 +643,7 @@ export function PaymentForm({
 }
 
 const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30";
+  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30";
 
 function Section({
   title,
@@ -654,7 +654,7 @@ function Section({
 }) {
   return (
     <div>
-      <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+      <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-brand-hover">
         {title}
       </h3>
       {children}

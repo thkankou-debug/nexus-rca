@@ -48,7 +48,7 @@ export default async function AdminDossiersListPage({
           <Icon className={`h-7 w-7 ${meta.iconColor}`} />
         </div>
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
             Catégorie
           </p>
           <h1 className="font-display text-3xl font-bold text-nexus-blue-950">

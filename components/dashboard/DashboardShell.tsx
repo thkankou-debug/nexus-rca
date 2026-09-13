@@ -557,7 +557,7 @@ export function DashboardShell({
 
           <div className="shrink-0 border-b border-line p-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-800 to-nexus-orange-500 text-sm font-bold text-white shadow-elev-2">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-800 to-brand text-sm font-bold text-white shadow-elev-2">
                 {initials.toUpperCase() || "U"}
               </div>
               <div className="min-w-0 flex-1">
@@ -631,7 +631,7 @@ export function DashboardShell({
                             active
                               ? "bg-nexus-blue-950 text-white shadow-elev-2 dark:bg-brand dark:text-white"
                               : item.highlight
-                                ? "bg-brand-subtle text-nexus-orange-700 hover:bg-nexus-orange-100 dark:text-brand"
+                                ? "bg-brand-subtle text-brand-hover hover:bg-brand-subtle dark:text-brand"
                                 : "text-ink-muted hover:bg-surface-sunken hover:text-ink"
                           )}
                         >

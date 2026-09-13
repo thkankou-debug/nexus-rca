@@ -130,7 +130,7 @@ export default async function ClientRdvPage() {
     <DashboardShell profile={profile}>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-lg">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand text-on-brand shadow-lg">
             <Calendar className="h-6 w-6" />
           </div>
           <div>
@@ -145,7 +145,7 @@ export default async function ClientRdvPage() {
 
         <Link
           href="/dashboard/client/rdv/nouveau"
-          className="inline-flex items-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:bg-nexus-orange-600"
+          className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg hover:bg-brand-hover"
         >
           <Plus className="h-4 w-4" />
           Réserver un rendez-vous
@@ -161,7 +161,7 @@ export default async function ClientRdvPage() {
           action={
             <Link
               href="/dashboard/client/rdv/nouveau"
-              className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-body-sm font-semibold text-white shadow-elev-2 hover:bg-brand-hover hover:shadow-glow-orange"
+              className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-body-sm font-semibold text-on-brand shadow-elev-2 hover:bg-brand-hover hover:shadow-glow-orange"
             >
               <Sparkles className="h-4 w-4" />
               Réserver mon premier RDV
@@ -174,7 +174,7 @@ export default async function ClientRdvPage() {
           {upcoming.length > 0 && (
             <div className="mb-8">
               <h2 className="mb-4 flex items-center gap-2 font-display text-lg font-bold text-nexus-blue-950">
-                <Sparkles className="h-5 w-5 text-nexus-orange-600" />
+                <Sparkles className="h-5 w-5 text-brand-hover" />
                 À venir ({upcoming.length})
               </h2>
               <div className="space-y-3">
@@ -239,7 +239,7 @@ function AppointmentCard({
     <div
       className={cn(
         "rounded-2xl border bg-white p-5 shadow-sm transition hover:shadow-md",
-        highlight ? "border-nexus-orange-200" : "border-slate-200"
+        highlight ? "border-brand/30" : "border-slate-200"
       )}
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -261,11 +261,11 @@ function AppointmentCard({
 
           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-600">
             <span className="flex items-center gap-1.5">
-              <Calendar className="h-4 w-4 text-nexus-orange-600" />
+              <Calendar className="h-4 w-4 text-brand-hover" />
               {formatDateLong(rdv.rdv_date)}
             </span>
             <span className="flex items-center gap-1.5">
-              <Clock className="h-4 w-4 text-nexus-orange-600" />
+              <Clock className="h-4 w-4 text-brand-hover" />
               {rdv.rdv_heure}
             </span>
           </div>
@@ -305,7 +305,7 @@ function AppointmentCard({
                 {rdv.agent?.email && (
                   <a
                     href={`mailto:${rdv.agent.email}`}
-                    className="flex h-9 w-9 items-center justify-center rounded-full bg-nexus-orange-500 text-white shadow hover:bg-nexus-orange-600"
+                    className="flex h-9 w-9 items-center justify-center rounded-full bg-brand text-on-brand shadow hover:bg-brand-hover"
                     title="Envoyer un email"
                   >
                     <Mail className="h-4 w-4" />

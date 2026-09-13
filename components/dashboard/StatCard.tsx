@@ -11,14 +11,14 @@ type Accent = "blue" | "orange" | "green" | "red";
 
 const ACCENT_GRADIENT: Record<Accent, string> = {
   blue: "from-nexus-blue-600 to-nexus-blue-800",
-  orange: "from-nexus-orange-400 to-nexus-orange-600",
+  orange: "from-brand to-brand",
   green: "from-emerald-400 to-emerald-600",
   red: "from-rose-400 to-rose-600",
 };
 
 const ACCENT_TEXT: Record<Accent, string> = {
   blue: "text-nexus-blue-500",
-  orange: "text-nexus-orange-500",
+  orange: "text-brand",
   green: "text-emerald-500",
   red: "text-rose-500",
 };

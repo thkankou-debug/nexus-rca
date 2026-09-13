@@ -608,14 +608,14 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
               className={cn(
                 "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition",
                 showFilters || period === "custom" || agentFilter !== "all"
-                  ? "border-nexus-orange-500 bg-nexus-orange-50 text-nexus-orange-700"
+                  ? "border-brand bg-brand-subtle text-brand-hover"
                   : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
               )}
             >
               <Filter className="h-3.5 w-3.5" />
               Filtres avancés
               {(period === "custom" || agentFilter !== "all") && (
-                <span className="rounded-full bg-nexus-orange-500 px-1.5 text-[10px] font-bold text-white">
+                <span className="rounded-full bg-brand px-1.5 text-[10px] font-bold text-on-brand">
                   {(period === "custom" ? 1 : 0) +
                     (agentFilter !== "all" ? 1 : 0)}
                 </span>
@@ -724,7 +724,7 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
           {agentFilter !== "all" && (
             <>
               {" · "}
-              <span className="font-semibold text-nexus-orange-600">
+              <span className="font-semibold text-brand-hover">
                 Filtré sur 1 agent
               </span>
             </>
@@ -848,7 +848,7 @@ export function AgentStats({ rows }: { rows: AgentStatsRow[] }) {
       <div ref={tableRef} className="rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="flex items-center justify-between border-b border-slate-200 p-4 print:border-b-2 print:border-black">
           <div className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-nexus-orange-600" />
+            <TrendingUp className="h-5 w-5 text-brand-hover" />
             <h2 className="font-display text-lg font-bold text-nexus-blue-950">
               Classement complet
             </h2>
@@ -1052,7 +1052,7 @@ function GlobalCard({
     green: "from-emerald-400 to-emerald-600",
     blue: "from-nexus-blue-600 to-nexus-blue-800",
     purple: "from-purple-500 to-purple-700",
-    orange: "from-nexus-orange-400 to-nexus-orange-600",
+    orange: "from-brand to-brand",
   };
   return (
     <button
@@ -1136,7 +1136,7 @@ function SortableHeader({
         <ArrowUpDown
           className={cn(
             "h-3 w-3",
-            active ? "text-nexus-orange-500" : "text-slate-300"
+            active ? "text-brand" : "text-slate-300"
           )}
         />
         {active && (

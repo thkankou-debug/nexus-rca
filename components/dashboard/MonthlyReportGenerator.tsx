@@ -1049,7 +1049,7 @@ export function MonthlyReportGenerator({
                     onClick={() => setPeriodType(p)}
                     className={`rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition ${
                       periodType === p
-                        ? "bg-white text-nexus-orange-600 shadow-sm"
+                        ? "bg-white text-brand-hover shadow-sm"
                         : "text-slate-500 hover:text-slate-700"
                     }`}
                   >
@@ -1064,14 +1064,14 @@ export function MonthlyReportGenerator({
                   value={selectedDay}
                   onChange={(e) => setSelectedDay(e.target.value)}
                   max={new Date().toISOString().split("T")[0]}
-                  className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-nexus-blue-950 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                  className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-nexus-blue-950 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
                 />
               )}
               {periodType === "mois" && (
                 <select
                   value={selectedMonth}
                   onChange={(e) => setSelectedMonth(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-nexus-blue-950 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30 sm:max-w-xs"
+                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-nexus-blue-950 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30 sm:max-w-xs"
                 >
                   {monthOptions.map((opt) => (
                     <option key={opt.value} value={opt.value}>
@@ -1084,7 +1084,7 @@ export function MonthlyReportGenerator({
                 <select
                   value={selectedYear}
                   onChange={(e) => setSelectedYear(e.target.value)}
-                  className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-nexus-blue-950 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                  className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-nexus-blue-950 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
                 >
                   {yearOptions.map((y) => (
                     <option key={y} value={y}>
@@ -1101,7 +1101,7 @@ export function MonthlyReportGenerator({
               type="button"
               onClick={handleDownload}
               disabled={!summary || generating}
-              className="inline-flex items-center gap-1.5 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 hover:bg-nexus-orange-600 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 hover:bg-brand-hover disabled:opacity-50"
             >
               {generating ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -1135,7 +1135,7 @@ export function MonthlyReportGenerator({
       {/* APERCU */}
       {loading && (
         <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm">
-          <Loader2 className="mx-auto h-8 w-8 animate-spin text-nexus-orange-500" />
+          <Loader2 className="mx-auto h-8 w-8 animate-spin text-brand" />
           <p className="mt-3 text-sm text-slate-600">
             Chargement des données du mois...
           </p>
@@ -1148,14 +1148,14 @@ export function MonthlyReportGenerator({
           <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-nexus-blue-950 to-nexus-blue-800 p-6 text-white shadow-lg">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-400">
+                <p className="text-xs font-bold uppercase tracking-wider text-brand">
                   Aperçu du rapport
                 </p>
                 <h2 className="mt-1 font-display text-3xl font-bold">
                   {monthBounds.label}
                 </h2>
               </div>
-              <Calendar className="h-8 w-8 text-nexus-orange-400" />
+              <Calendar className="h-8 w-8 text-brand" />
             </div>
           </div>
 
@@ -1210,7 +1210,7 @@ export function MonthlyReportGenerator({
                 .reduce((s, p) => s + p.count, 0)
                 .toString()}
               sub={`${summary.paiements.length} devise(s)`}
-              color="text-nexus-orange-600"
+              color="text-brand-hover"
             />
             <StatBlock
               icon={ShoppingCart}
@@ -1278,7 +1278,7 @@ export function MonthlyReportGenerator({
 
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
               <h3 className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-slate-500">
-                <Users className="h-4 w-4 text-nexus-orange-600" />
+                <Users className="h-4 w-4 text-brand-hover" />
                 Top agents (encaissements)
               </h3>
               {summary.topAgents.length === 0 ? (
@@ -1352,7 +1352,7 @@ export function MonthlyReportGenerator({
                 type="email"
                 value={emailDest}
                 onChange={(e) => setEmailDest(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
                 placeholder="comptable@exemple.com"
               />
               <p className="mt-2 text-xs text-slate-500">

@@ -463,7 +463,7 @@ export default async function RhOverviewPage() {
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
+          className="pointer-events-none absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-brand/15 blur-[120px]"
         />
         <div
           aria-hidden
@@ -471,20 +471,20 @@ export default async function RhOverviewPage() {
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
         />
 
         <div className="relative">
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-start gap-3">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md sm:h-14 sm:w-14">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-md sm:h-14 sm:w-14">
                 <Briefcase className="h-6 w-6 sm:h-7 sm:w-7" />
               </div>
               <div className="min-w-0">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur-md">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-brand backdrop-blur-md">
                   <span className="relative flex h-1 w-1">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                    <span className="relative inline-flex h-1 w-1 rounded-full bg-nexus-orange-400" />
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                    <span className="relative inline-flex h-1 w-1 rounded-full bg-brand" />
                   </span>
                   Ressources humaines
                 </span>
@@ -580,7 +580,7 @@ export default async function RhOverviewPage() {
       {/* INDICATEURS CLÉS — 8 KPIs en 2 lignes */}
       <section className="mb-10">
         <div className="mb-3 flex items-center gap-2">
-          <Sparkles className="h-3.5 w-3.5 text-nexus-orange-500" />
+          <Sparkles className="h-3.5 w-3.5 text-brand" />
           <SectionEyebrow>Indicateurs clés</SectionEyebrow>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -604,7 +604,7 @@ export default async function RhOverviewPage() {
             value={ancienneteValue}
             sub="Effectif actif"
             icon={Clock}
-            accent="from-nexus-orange-400 to-nexus-orange-600"
+            accent="from-brand to-brand"
           />
           <KpiCard
             label="Fiches validées ce mois"
@@ -838,7 +838,7 @@ export default async function RhOverviewPage() {
               {activityFeed.map((a) => {
                 const Icon = a.icon;
                 const accentTone: Record<Activity["accent"], string> = {
-                  orange: "bg-nexus-orange-100 text-nexus-orange-700",
+                  orange: "bg-brand-subtle text-brand-hover",
                   emerald: "bg-emerald-100 text-emerald-700",
                   rose: "bg-rose-100 text-rose-700",
                   navy: "bg-nexus-blue-100 text-nexus-blue-800",
@@ -846,7 +846,7 @@ export default async function RhOverviewPage() {
                 };
                 return (
                   <li key={a.key} className="flex items-start gap-3 p-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-orange-500 to-nexus-blue-900 text-xs font-bold text-white shadow-sm">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand to-nexus-blue-900 text-xs font-bold text-white shadow-sm">
                       {a.initials}
                     </div>
                     <div className="min-w-0 flex-1">
@@ -897,7 +897,7 @@ function ModuleGroup({
 }) {
   return (
     <div className={className}>
-      <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+      <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
         {label}
       </p>
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{children}</div>
@@ -916,7 +916,7 @@ function HeroStat({
 }) {
   const valueClass =
     accent === "orange"
-      ? "text-nexus-orange-300"
+      ? "text-brand"
       : accent === "amber"
         ? "text-amber-300"
         : "text-white";
@@ -946,9 +946,9 @@ function HeroChip({
   return (
     <Link
       href={href}
-      className="group inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-nexus-orange-400/40 hover:bg-white/10 sm:px-4 sm:py-2 sm:text-sm"
+      className="group inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-brand/40 hover:bg-white/10 sm:px-4 sm:py-2 sm:text-sm"
     >
-      <Icon className="h-3.5 w-3.5 text-nexus-orange-300 transition group-hover:text-nexus-orange-200 sm:h-4 sm:w-4" />
+      <Icon className="h-3.5 w-3.5 text-brand transition group-hover:text-brand sm:h-4 sm:w-4" />
       {label}
     </Link>
   );
@@ -973,14 +973,14 @@ function KpiCard({
     <div
       className={`relative overflow-hidden rounded-3xl border bg-white p-5 ring-1 ring-slate-100/80 transition hover:-translate-y-0.5 hover:shadow-lg ${
         highlight
-          ? "border-nexus-orange-200 shadow-[0_20px_40px_-20px_rgba(255,102,0,0.18)]"
+          ? "border-brand/30 shadow-[0_20px_40px_-20px_rgba(185,151,96,0.18)]"
           : "border-slate-200 shadow-sm"
       }`}
     >
       {highlight && (
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/15 blur-2xl"
+          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/15 blur-2xl"
         />
       )}
       <div className="relative flex items-start justify-between gap-3">
@@ -1043,7 +1043,7 @@ function AlertItem({
         <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconWrap}`}>
           <Icon className="h-5 w-5" />
         </div>
-        <ArrowUpRight className="h-4 w-4 text-slate-400 transition group-hover:text-nexus-orange-600" />
+        <ArrowUpRight className="h-4 w-4 text-slate-400 transition group-hover:text-brand-hover" />
       </div>
       <p className="mt-3 text-sm font-semibold text-nexus-blue-950">{label}</p>
       <div className="mt-2 flex items-baseline gap-2">
@@ -1075,7 +1075,7 @@ function ModuleCard({
 }) {
   const accentMap: Record<typeof accent, string> = {
     navy: "from-nexus-blue-700 to-nexus-blue-900",
-    orange: "from-nexus-orange-500 to-nexus-orange-700",
+    orange: "from-brand to-brand",
     emerald: "from-emerald-500 to-emerald-700",
     amber: "from-amber-500 to-amber-700",
     blue: "from-blue-500 to-blue-700",
@@ -1084,11 +1084,11 @@ function ModuleCard({
     rose: "from-rose-500 to-rose-700",
   };
   const hoverBorder = highlight
-    ? "hover:border-nexus-orange-300"
-    : "hover:border-nexus-orange-200";
-  const borderClass = highlight ? "border-nexus-orange-200" : "border-slate-200";
+    ? "hover:border-brand/40"
+    : "hover:border-brand/30";
+  const borderClass = highlight ? "border-brand/30" : "border-slate-200";
   const shadowClass = highlight
-    ? "shadow-[0_18px_36px_-20px_rgba(255,102,0,0.20)]"
+    ? "shadow-[0_18px_36px_-20px_rgba(185,151,96,0.20)]"
     : "shadow-sm";
 
   return (
@@ -1099,7 +1099,7 @@ function ModuleCard({
       {highlight && (
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-nexus-orange-500/15 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/25"
+          className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-brand/15 blur-2xl transition-all duration-500 group-hover:bg-brand/25"
         />
       )}
       <div className="relative flex items-start justify-between">
@@ -1108,7 +1108,7 @@ function ModuleCard({
         >
           <Icon className="h-6 w-6" />
         </div>
-        <ArrowUpRight className="h-4 w-4 text-slate-300 transition group-hover:text-nexus-orange-600" />
+        <ArrowUpRight className="h-4 w-4 text-slate-300 transition group-hover:text-brand-hover" />
       </div>
       <p className="relative mt-4 font-display text-base font-bold text-nexus-blue-950">
         {label}
@@ -1116,7 +1116,7 @@ function ModuleCard({
       <p className="relative mt-1 text-xs text-slate-500">
         {count === null ? countLabel : `${formatNumber(count)} ${countLabel}`}
       </p>
-      <span className="relative mt-3 inline-flex items-center gap-1 text-xs font-semibold text-nexus-orange-600">
+      <span className="relative mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand-hover">
         Ouvrir <ArrowUpRight className="h-3 w-3 transition group-hover:translate-x-0.5" />
       </span>
     </Link>

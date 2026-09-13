@@ -294,7 +294,7 @@ export default async function AgentDashboardPage() {
           href="/dashboard/agent/rdv"
           icon={Calendar}
           label="Mon agenda"
-          color="from-nexus-orange-500 to-nexus-orange-700"
+          color="from-brand to-brand"
         />
         <QuickAction
           href="/dashboard/agent/clients"
@@ -313,7 +313,7 @@ export default async function AgentDashboardPage() {
       {/* STATS */}
       <div className="mb-6">
         <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold text-nexus-blue-950">
-          <Zap className="h-5 w-5 text-nexus-orange-600" />
+          <Zap className="h-5 w-5 text-brand-hover" />
           Mes performances ce mois
         </h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -370,7 +370,7 @@ export default async function AgentDashboardPage() {
       <div className="mb-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="mb-5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-on-brand shadow">
               <Target className="h-5 w-5" />
             </div>
             <div>
@@ -463,7 +463,7 @@ export default async function AgentDashboardPage() {
                   className={cn(
                     "flex items-center gap-4 rounded-2xl border p-4 transition-colors",
                     agent.isCurrent
-                      ? "border-nexus-orange-300 bg-nexus-orange-50/40"
+                      ? "border-brand/40 bg-brand-subtle/40"
                       : "border-slate-200 bg-white hover:bg-slate-50/60"
                   )}
                 >
@@ -486,14 +486,14 @@ export default async function AgentDashboardPage() {
                         className={cn(
                           "font-semibold",
                           agent.isCurrent
-                            ? "text-nexus-orange-700"
+                            ? "text-brand-hover"
                             : "text-nexus-blue-950"
                         )}
                       >
                         {agent.name}
                       </p>
                       {agent.isCurrent && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-nexus-orange-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-brand px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-on-brand">
                           <Star className="h-2.5 w-2.5" />
                           Vous
                         </span>
@@ -502,7 +502,7 @@ export default async function AgentDashboardPage() {
                     <p className="text-xs text-slate-500">{agent.poste}</p>
                     <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-600">
                       <span className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3 text-nexus-orange-600" />
+                        <Calendar className="h-3 w-3 text-brand-hover" />
                         {agent.rdvCount} RDV
                       </span>
                       <span className="flex items-center gap-1">
@@ -557,7 +557,7 @@ function QuickAction({
       <div className="min-w-0 flex-1">
         <p className="text-sm font-semibold text-nexus-blue-950">{label}</p>
       </div>
-      <ArrowRight className="h-4 w-4 shrink-0 text-slate-300 transition group-hover:translate-x-1 group-hover:text-nexus-orange-600" />
+      <ArrowRight className="h-4 w-4 shrink-0 text-slate-300 transition group-hover:translate-x-1 group-hover:text-brand-hover" />
     </Link>
   );
 }
@@ -580,13 +580,13 @@ function StatCard({
   delta?: number;
 }) {
   const gradientMap: Record<string, string> = {
-    orange: "from-nexus-orange-500 to-nexus-orange-700",
+    orange: "from-brand to-brand",
     green: "from-emerald-500 to-emerald-700",
     blue: "from-blue-500 to-blue-700",
     purple: "from-purple-500 to-purple-700",
   };
   const sparkColorMap: Record<string, string> = {
-    orange: "text-nexus-orange-500",
+    orange: "text-brand",
     green: "text-emerald-500",
     blue: "text-blue-500",
     purple: "text-purple-500",
@@ -664,7 +664,7 @@ function ProgressBar({
   isMoney?: boolean;
 }) {
   const colorMap: Record<string, string> = {
-    orange: "bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600",
+    orange: "bg-brand",
     green: "bg-gradient-to-r from-green-500 to-green-600",
     blue: "bg-gradient-to-r from-blue-500 to-blue-600",
   };

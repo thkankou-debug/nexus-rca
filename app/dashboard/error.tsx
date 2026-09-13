@@ -48,7 +48,7 @@ export default function DashboardError({
           <button
             type="button"
             onClick={reset}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-nexus-orange-600"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand hover:bg-brand-hover"
           >
             <RotateCcw className="h-4 w-4" aria-hidden />
             Réessayer

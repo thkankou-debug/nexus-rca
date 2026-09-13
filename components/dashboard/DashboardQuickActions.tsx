@@ -27,7 +27,7 @@ export interface QuickActionItem {
 }
 
 const COLOR_CLASS: Record<QuickActionColor, string> = {
-  orange: "from-nexus-orange-500 to-nexus-orange-700",
+  orange: "from-brand to-brand",
   blue: "from-blue-500 to-blue-700",
   emerald: "from-emerald-500 to-emerald-700",
   purple: "from-purple-500 to-purple-700",
@@ -68,7 +68,7 @@ export function DashboardQuickActions({ actions, title, className }: Props) {
             <Link
               key={a.href}
               href={a.href}
-              className="group relative flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 transition-colors hover:border-nexus-orange-300/60 hover:bg-slate-50/60"
+              className="group relative flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 transition-colors hover:border-brand/40 hover:bg-slate-50/60"
             >
               <div
                 className={cn(
@@ -78,7 +78,7 @@ export function DashboardQuickActions({ actions, title, className }: Props) {
               >
                 <Icon className="h-5 w-5" />
                 {a.badge !== undefined && a.badge > 0 && (
-                  <span className="absolute -right-1.5 -top-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-nexus-orange-500 px-1 text-[10px] font-bold text-white ring-2 ring-white">
+                  <span className="absolute -right-1.5 -top-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-brand px-1 text-[10px] font-bold text-on-brand ring-2 ring-white">
                     {a.badge > 99 ? "99+" : a.badge}
                   </span>
                 )}
@@ -86,7 +86,7 @@ export function DashboardQuickActions({ actions, title, className }: Props) {
               <p className="min-w-0 flex-1 text-sm font-semibold text-nexus-blue-950">
                 {a.label}
               </p>
-              <ArrowRight className="h-4 w-4 shrink-0 text-slate-300 transition-colors group-hover:text-nexus-orange-600" />
+              <ArrowRight className="h-4 w-4 shrink-0 text-slate-300 transition-colors group-hover:text-brand-hover" />
             </Link>
           );
         })}

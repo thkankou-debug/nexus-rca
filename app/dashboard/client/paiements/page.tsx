@@ -190,14 +190,14 @@ export default async function ClientPaiementsPage() {
             className={cn(
               "rounded-2xl border p-5 shadow-sm",
               totalRestant > 0
-                ? "border-nexus-orange-200 bg-nexus-orange-50"
+                ? "border-brand/30 bg-brand-subtle"
                 : "border-slate-200 bg-white"
             )}
           >
             <p
               className={cn(
                 "text-xs font-medium",
-                totalRestant > 0 ? "text-nexus-orange-700" : "text-slate-500"
+                totalRestant > 0 ? "text-brand-hover" : "text-slate-500"
               )}
             >
               Reste à régler
@@ -205,7 +205,7 @@ export default async function ClientPaiementsPage() {
             <p
               className={cn(
                 "mt-1 font-display text-2xl font-bold",
-                totalRestant > 0 ? "text-nexus-orange-700" : "text-slate-700"
+                totalRestant > 0 ? "text-brand-hover" : "text-slate-700"
               )}
             >
               {formatMoney(totalRestant)}
@@ -213,7 +213,7 @@ export default async function ClientPaiementsPage() {
             <p
               className={cn(
                 "mt-0.5 text-xs",
-                totalRestant > 0 ? "text-nexus-orange-600" : "text-slate-500"
+                totalRestant > 0 ? "text-brand-hover" : "text-slate-500"
               )}
             >
               {partiels.length > 0
@@ -228,7 +228,7 @@ export default async function ClientPaiementsPage() {
       {Object.keys(byDevise).length > 1 && (
         <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="mb-3 flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-nexus-orange-600" />
+            <TrendingUp className="h-5 w-5 text-brand-hover" />
             <h2 className="font-display text-base font-bold text-nexus-blue-950">
               Répartition par devise
             </h2>
@@ -256,12 +256,12 @@ export default async function ClientPaiementsPage() {
                     </p>
                   </div>
                   <div>
-                    <p className="text-[10px] text-nexus-orange-600">Restant</p>
+                    <p className="text-[10px] text-brand-hover">Restant</p>
                     <p
                       className={cn(
                         "text-sm font-bold",
                         stats.restant > 0
-                          ? "text-nexus-orange-700"
+                          ? "text-brand-hover"
                           : "text-green-700"
                       )}
                     >
@@ -347,7 +347,7 @@ export default async function ClientPaiementsPage() {
                         </p>
                       )}
                       {restant > 0 && (
-                        <p className="mt-1 inline-block rounded-full bg-nexus-orange-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-nexus-orange-700">
+                        <p className="mt-1 inline-block rounded-full bg-brand-subtle px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-hover">
                           Reste : {formatMoney(restant, p.devise || "XAF")}
                         </p>
                       )}

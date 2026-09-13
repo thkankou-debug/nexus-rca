@@ -84,7 +84,7 @@ export function PayslipsListView({ basePath, defaultStatutFilter = "all" }: Pays
 
         <Link
           href={`${basePath}/paie/nouvelle`}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover"
         >
           <Plus className="h-4 w-4" />
           Nouvelle fiche
@@ -122,7 +122,7 @@ export function PayslipsListView({ basePath, defaultStatutFilter = "all" }: Pays
                 <tr
                   key={p.id}
                   onClick={() => router.push(`${basePath}/paie/${p.id}`)}
-                  className="cursor-pointer transition hover:bg-nexus-orange-50/40"
+                  className="cursor-pointer transition hover:bg-brand-subtle/40"
                 >
                   <td className="px-4 py-3 font-mono text-xs font-semibold text-nexus-blue-950">
                     {p.reference}
@@ -157,7 +157,7 @@ export function PayslipsListView({ basePath, defaultStatutFilter = "all" }: Pays
                     <Link
                       href={`${basePath}/paie/${p.id}`}
                       onClick={(ev) => ev.stopPropagation()}
-                      className="text-xs font-semibold text-nexus-orange-600 hover:underline"
+                      className="text-xs font-semibold text-brand-hover hover:underline"
                     >
                       Ouvrir →
                     </Link>
@@ -189,7 +189,7 @@ function ChipBtn({
         "rounded-full border px-3 py-1.5 text-xs font-semibold transition",
         active
           ? "border-nexus-blue-950 bg-nexus-blue-950 text-white shadow-sm"
-          : "border-slate-200 bg-white text-slate-600 hover:border-nexus-orange-300 hover:text-nexus-orange-700"
+          : "border-slate-200 bg-white text-slate-600 hover:border-brand/40 hover:text-brand-hover"
       )}
     >
       {label}

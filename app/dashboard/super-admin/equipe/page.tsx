@@ -63,7 +63,7 @@ export default async function EquipeNexusPage() {
         {profile.role === "super_admin" && (
           <Link
             href="/dashboard/super-admin/equipe/nouveau"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 transition hover:bg-brand-hover"
           >
             <Plus className="h-4 w-4" />
             Créer un employé Nexus
@@ -91,7 +91,7 @@ export default async function EquipeNexusPage() {
         <StatCard
           label="Agents"
           value={counts.agents}
-          accent="from-nexus-orange-400 to-nexus-orange-600"
+          accent="from-brand to-brand"
         />
       </div>
 

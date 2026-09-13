@@ -432,7 +432,7 @@ export function ReceiptButtons({
                 type="email"
                 value={emailDestinataire}
                 onChange={(e) => setEmailDestinataire(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
                 placeholder="email@exemple.com"
               />
               <p className="mt-2 text-xs text-slate-500">

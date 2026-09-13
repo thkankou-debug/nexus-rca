@@ -108,11 +108,11 @@ export default async function MesRhPage() {
       {/* Hero */}
       <div className="mb-8 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-7 shadow-lg sm:p-9">
         <div className="flex flex-wrap items-center gap-5">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-base font-bold text-white shadow-md">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-brand text-base font-bold text-on-brand shadow-md">
             {emp.nom_complet[0]?.toUpperCase() ?? "U"}
           </div>
           <div className="min-w-0 flex-1">
-            <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] text-nexus-orange-300">
+            <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] text-brand">
               Mon espace RH
             </span>
             <h1 className="mt-1.5 font-display text-xl font-bold leading-tight text-white sm:text-2xl">
@@ -197,7 +197,7 @@ function TileLink({
       className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:bg-slate-50/60"
     >
       <div className="flex items-center justify-between">
-        <Icon className="h-6 w-6 text-nexus-orange-500" />
+        <Icon className="h-6 w-6 text-brand" />
         <ArrowUpRight className="h-4 w-4 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-nexus-blue-950" />
       </div>
       <h3 className="mt-3 font-display text-lg font-bold text-nexus-blue-950">

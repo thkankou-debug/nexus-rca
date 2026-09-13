@@ -241,7 +241,7 @@ function ServiceEditModal({
               rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
             />
           </div>
 
@@ -253,7 +253,7 @@ function ServiceEditModal({
                 onClick={() => setTarifType("sur_devis")}
                 className={cn(
                   "flex-1 rounded-xl border px-3 py-2 text-sm font-semibold",
-                  tarifType === "sur_devis" ? "border-nexus-orange-500 bg-nexus-orange-50 text-nexus-orange-700" : "border-slate-200 text-slate-600"
+                  tarifType === "sur_devis" ? "border-brand bg-brand-subtle text-brand-hover" : "border-slate-200 text-slate-600"
                 )}
               >
                 Sur devis
@@ -263,7 +263,7 @@ function ServiceEditModal({
                 onClick={() => setTarifType("fixe")}
                 className={cn(
                   "flex-1 rounded-xl border px-3 py-2 text-sm font-semibold",
-                  tarifType === "fixe" ? "border-nexus-orange-500 bg-nexus-orange-50 text-nexus-orange-700" : "border-slate-200 text-slate-600"
+                  tarifType === "fixe" ? "border-brand bg-brand-subtle text-brand-hover" : "border-slate-200 text-slate-600"
                 )}
               >
                 Tarif fixe
@@ -276,7 +276,7 @@ function ServiceEditModal({
                 value={tarifMontant}
                 onChange={(e) => setTarifMontant(Number(e.target.value))}
                 placeholder="Montant en XAF"
-                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
               />
             )}
           </div>
@@ -288,7 +288,7 @@ function ServiceEditModal({
               value={delaiIndicatif}
               onChange={(e) => setDelaiIndicatif(e.target.value)}
               placeholder="ex: 5 à 10 jours ouvrés"
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
             />
           </div>
         </div>
@@ -305,7 +305,7 @@ function ServiceEditModal({
             type="button"
             disabled={saving}
             onClick={handleSubmit}
-            className="rounded-full bg-nexus-orange-500 px-5 py-2 text-sm font-semibold text-white hover:bg-nexus-orange-600 disabled:opacity-50"
+            className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-on-brand hover:bg-brand-hover disabled:opacity-50"
           >
             {saving ? "Enregistrement..." : "Enregistrer"}
           </button>

@@ -403,7 +403,7 @@ export function QuickSaleReceiptButtons({
               type="email"
               value={emailDest}
               onChange={(e) => setEmailDest(e.target.value)}
-              className="mt-4 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+              className="mt-4 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
               placeholder="email@exemple.com"
             />
             <div className="mt-6 flex justify-end gap-2">
@@ -595,7 +595,7 @@ export function QuickSaleForm({
                     onClick={() => handleChange("type_service", val)}
                     className={
                       isActive
-                        ? "flex flex-col items-center gap-1 rounded-xl border-2 border-nexus-orange-500 bg-nexus-orange-50 p-3 text-nexus-orange-700"
+                        ? "flex flex-col items-center gap-1 rounded-xl border-2 border-brand bg-brand-subtle p-3 text-brand-hover"
                         : "flex flex-col items-center gap-1 rounded-xl border border-slate-200 bg-white p-3 text-slate-600 hover:border-slate-300"
                     }
                   >
@@ -681,12 +681,12 @@ export function QuickSaleForm({
             </div>
 
             {/* Total */}
-            <div className="mt-4 rounded-xl border-2 border-nexus-orange-300 bg-nexus-orange-50 p-4">
+            <div className="mt-4 rounded-xl border-2 border-brand/40 bg-brand-subtle p-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-semibold text-slate-700">
                   Total à encaisser
                 </span>
-                <span className="font-display text-2xl font-bold text-nexus-orange-700">
+                <span className="font-display text-2xl font-bold text-brand-hover">
                   {total.toLocaleString("fr-FR")} {form.devise}
                 </span>
               </div>
@@ -755,7 +755,7 @@ export function QuickSaleForm({
             <button
               type="submit"
               disabled={saving || total <= 0}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600 disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-2.5 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 transition hover:bg-brand-hover disabled:opacity-50"
             >
               {saving ? (
                 <>
@@ -778,7 +778,7 @@ export function QuickSaleForm({
 }
 
 const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30";
+  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30";
 
 function Section({
   title,
@@ -789,7 +789,7 @@ function Section({
 }) {
   return (
     <div>
-      <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+      <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-brand-hover">
         {title}
       </h3>
       {children}

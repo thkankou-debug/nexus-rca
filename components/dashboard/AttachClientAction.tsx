@@ -152,7 +152,7 @@ export function AttachClientAction({
                 type="button"
                 disabled={saving}
                 onClick={() => attach(c.id)}
-                className="shrink-0 rounded-lg bg-nexus-orange-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-nexus-orange-600 disabled:opacity-50"
+                className="shrink-0 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-on-brand hover:bg-brand-hover disabled:opacity-50"
               >
                 Rattacher
               </button>
