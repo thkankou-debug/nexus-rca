@@ -13,7 +13,7 @@
 // ============================================================================
 
 import { useRouter, usePathname } from "next/navigation";
-import { Home, Users, Wallet, Megaphone, ReceiptText, Banknote, Printer } from "lucide-react";
+import { Home, Users, Wallet, Megaphone, ReceiptText, Banknote, Printer, FileText } from "lucide-react";
 import { AdminShell } from "@/components/admin/ui/AdminShell";
 import { BrandMark } from "@/components/admin/ui/BrandMark";
 import { TopbarSearch, TopbarNotifications } from "@/components/admin/ui/TopbarTools";
@@ -36,6 +36,7 @@ const NAV = [
     label: "Caisse",
     items: [
       { key: "caisse", label: "Caisse (encaissement)", href: "/dashboard/accueil/caisse", icon: Banknote },
+      { key: "factures", label: "Factures", href: "/dashboard/accueil/factures", icon: FileText },
       { key: "recus", label: "Paiements & reçus", href: "/dashboard/accueil/recus", icon: ReceiptText },
       { key: "session", label: "Session & clôture", href: "/dashboard/accueil/session", icon: Wallet },
       { key: "imprimante", label: "Imprimante", href: "/dashboard/accueil/imprimante", icon: Printer },

@@ -138,6 +138,35 @@ export function RecusList({ sales, caissiereNom }: { sales: RecuSale[]; caissier
     });
   }
 
+  // Cahier §8 : créer la facture d'un ticket déjà encaissé — le serveur
+  // référence les ventes existantes (rien n'est doublé) et renvoie la
+  // facture déjà créée si la clé a déjà été facturée.
+  async function facturerTicket(t: TicketGroup) {
+    const ticketKey = t.sales[0]?.ticket_key;
+    if (!ticketKey) return;
+    setBusyKey(t.key);
+    try {
+      const res = await fetch("/api/accueil/factures", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ticket_key: ticketKey }),
+      });
+      const json = await res.json();
+      if (!json.success) {
+        toast.error(json.error || "Facturation impossible");
+        return;
+      }
+      toast.success(
+        json.replayed
+          ? `Ce ticket est déjà facturé (${json.facture.reference}) — aucune seconde facture`
+          : `Facture ${json.facture.reference} créée depuis le ticket`
+      );
+      window.open(`/api/accueil/factures/${json.facture.id}/pdf`, "_blank", "noopener");
+    } finally {
+      setBusyKey(null);
+    }
+  }
+
   async function reprint(t: TicketGroup, mode: "print" | "download") {
     setBusyKey(t.key);
     try {
@@ -200,6 +229,19 @@ export function RecusList({ sales, caissiereNom }: { sales: RecuSale[]; caissier
                 <FileDown className="h-3.5 w-3.5" />
                 PDF
               </button>
+              {/* Cahier §8 : facture depuis un ticket — la facture RÉFÉRENCE
+                  les ventes existantes (aucun revenu doublé) ; une même clé
+                  ne produit qu'une facture (rejeu = facture existante). */}
+              {t.sales[0]?.ticket_key && (
+                <button
+                  type="button"
+                  disabled={busyKey === t.key}
+                  onClick={() => facturerTicket(t)}
+                  className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm border border-line px-3 py-1.5 text-caption font-semibold text-ink hover:border-line-strong disabled:opacity-50"
+                >
+                  Facturer
+                </button>
+              )}
             </div>
           </div>
           <ul className="mt-2 space-y-0.5 border-t border-line pt-2">

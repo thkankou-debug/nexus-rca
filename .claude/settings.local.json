@@ -207,7 +207,9 @@
       "PowerShell($c = Get-NetTCPConnection -LocalPort 3124 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"port libre\")",
       "PowerShell($c = Get-NetTCPConnection -LocalPort 3124 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")",
       "PowerShell($c = Get-NetTCPConnection -LocalPort 3125 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")",
-      "PowerShell($c = Get-NetTCPConnection -LocalPort 3126 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")"
+      "PowerShell($c = Get-NetTCPConnection -LocalPort 3126 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")",
+      "Bash(grep -n -- '--//\\\\|-- //' components/accueil/FacturesManager.tsx components/accueil/RecusList.tsx app/api/factures/route.ts lib/facture-server.ts lib/facture-config.ts)",
+      "PowerShell($c = Get-NetTCPConnection -LocalPort 3127 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { Stop-Process -Id \\($c | Select-Object -First 1\\).OwningProcess -Force -Confirm:$false }; \"ok\")"
     ]
   }
 }

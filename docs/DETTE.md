@@ -3313,3 +3313,55 @@ TEST comme illustration.
 **Écarts assumés vs §6-§7** : la comparaison aux relevés électroniques
 externes et le rapprochement factures↔paiements arrivent avec la Phase D
 (factures) ; la correction par avoir également.
+
+---
+
+## 12/09/2026 — Reprise Accueil & caisse : PHASE D (factures PDF) livrée
+
+**Décisions Thierry appliquées** : pas de taxe ni TVA ; NIF/RCCM plus
+tard — `lib/facture-config.ts` centralise identité, conditions de
+règlement protectrices (obligation de moyens, frais de tiers non
+remboursables, réclamation sous 7 jours, suspension en cas d'impayé…) et
+mentions ; NIF/RCCM vides = OMIS du PDF, à remplir dans CE fichier dès
+attribution. Aucune valeur fiscale inventée.
+
+**Module factures de COMPTOIR (migrations 094 + 095, appliquées +
+committées)** : table `invoices` — référence auto **FC-AAAA-NNNNNN**
+(avoirs **AV-**), statuts brouillon → émise → partiellement réglée →
+réglée / annulée. Garanties EN BASE (preuve DO+rollback 5/5) : contenu
+FIGÉ après émission (`FACTURE_EMISE`), suppression d'une émise refusée,
+avoir sans motif ou sans facture parente refusé (`AVOIR_INVALIDE`).
+Droits `facture.create`/`facture.read` accordés à accueil_caisse (+
+daf/comptable).
+
+**⚠ Incident évité pendant la phase** : un module « factures de
+DOSSIER » existait déjà (P6/P9 — tables `factures`/`facture_lignes`,
+devis, espace client, références FAC-AAAA-NNNNNN). Mes routes l'avaient
+écrasé ; restauré via git, routes caisse déplacées sous
+`/api/accueil/factures/*`, et préfixe FC-/AV- adopté (095) pour
+qu'aucune référence ne soit ambiguë. Les DEUX registres coexistent :
+dossier (FAC-) et comptoir (FC-). **À arbitrer plus tard** : fusion
+éventuelle des deux registres (cahier §11 « pas de deuxième système ») —
+l'ancien exige un dossier, le comptoir sert les clients de passage.
+
+**Routes** : `/api/accueil/factures` (liste + création libre OU depuis
+un ticket encaissé — la facture RÉFÉRENCE les ventes, ne double rien ;
+une clé de ticket = une seule facture, rejeu → l'existante),
+`[id]/emettre`, `[id]/reglement` (session ouverte obligatoire, verrou
+optimiste sur total_regle, idempotence ticket_key, quick_sales.invoice_id
+→ chaque règlement produit SON reçu 80 mm et son passage caisse),
+`[id]/avoir` (motif obligatoire, jamais plus que le reste dû),
+`[id]/pdf` (A4 pro : identité, référence, échéance, client, tableau,
+TOTAL, réglé/avoirs/RESTE DÛ, avoirs listés, conditions, pied).
+
+**UI** : page `/dashboard/accueil/factures` (nav « Factures ») —
+création multi-lignes avec catalogue choisir-ou-saisir, brouillon ou
+émission directe, règlement modal avec impression du reçu, avoir modal ;
+bouton « Facturer » sur chaque ticket dans Paiements & reçus.
+
+**Vérifié bout en bout (HTTP authentifié, build prod local)** :
+FC-2026-000004 émise → PDF 200 → règlement 10 000 + REJEU idempotent →
+avoir AV-2026-000005 → dépassement 400 → solde 15 000 → statut
+« réglée », reste 0 → ticket inconnu 404 → ancien module /api/factures
+intact (200). tsc + build 0 erreur. Données de démonstration en
+environnement de test uniquement.
