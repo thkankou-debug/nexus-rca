@@ -3640,3 +3640,54 @@ pages publiques restantes + composants publics partagés. Attention aux
 formulaires sur fond clair : les `focus:ring-nexus-orange-*` devront
 aller vers le token `focus` (anneau bleu, A1), pas vers `brand` — ce
 n'est plus purement mécanique, à requalifier champ par champ.
+
+---
+
+## 13/09/2026 — L12 lot 2 : migration or du reste du site public (78 fichiers)
+
+Périmètre : pages publiques hors services (`a-propos`, `nexus-connect`,
+`contact`, `demande`, `rendez-vous`, `login`, `register`, `payer`, `auth`)
++ tous les composants partagés hors `components/{dashboard,admin}` (y
+compris les composants staff `dossiers/*`, `demande-detail/*`, rendus
+dans le shell admin), + `app/globals.css` et `tailwind.config.ts`.
+
+**Règles nouvelles par rapport au lot 1 (formulaires, fonds clairs)** :
+- `focus:border-*`/`focus:ring-*` orange → **token `focus`** (anneau
+  bleu, A1 : l'or reste réservé à l'action principale) — `Input.tsx`
+  et tous les champs des formulaires publics ;
+- `bg-nexus-orange-50/100` → `bg-brand-subtle` ; `border -200/-300` →
+  `border-brand/30`–`/40` ; `text -600/-700` → `text-brand-hover`
+  (or sombre sur fond clair) ;
+- panneaux OR PLEINS à enfants multiples repris à la main : CTA final
+  de `nexus-connect` et carte Hôtels de `TravelCTA` (texte navy
+  `on-brand`, badges/boutons fantômes bleu nuit — le blanc ne tient
+  pas sur l'or) ;
+- boutons or des 11 formulaires `demarrer` (`components/*/‹Service›Form`),
+  `Button.tsx` (variante primaire) et `ServiceCTA` : `text-white` →
+  `text-on-brand` (violation D8 antérieure au lot, détectée au passage) ;
+- chrome global : scrollbar (dégradé bleu→or), `.text-gradient-nexus`,
+  `.text-gradient-orange` (nom hérité conservé, rend l'or),
+  `.gradient-animate`, ombres tailwind `glow`/`glow-orange` (noms
+  conservés), `nexus-gradient`/`nexus-hero`/`mesh-gradient(-subtle)`,
+  variables CSS `--nexus-orange(-dark)` supprimées (plus de consommateur) ;
+- lueurs SVG `#f97316` des cartes (AboutPresenceMap, HeroDemandeVisual,
+  IdentityStatement, AssuranceWorldMap) et contours de texte
+  `rgba(251,146,60,…)` → or ; variables JS `"255,102,0"` des glows
+  dynamiques (`nexus-connect`, `[slug]`) → `"185,151,96"`.
+
+**Exceptions assumées** :
+- `components/ui/Logo.tsx` (3 occurrences) : logo dessiné — GELÉ par
+  CLAUDE.md, reverti après passage du script. Décision Thierry requise
+  pour peindre le point/dégradé du logo en or.
+- E-mails transactionnels (`app/api/*`) : conservent `#FF6600` — écart
+  connu documenté dans CLAUDE.md, hors périmètre.
+
+**Vérifié** : `tsc` 0 erreur ; `next build` 0 erreur ; recompte global
+`nexus-orange-` : **1 246** (était 2 423 après le lot 1, 5 089 au 08/09) —
+`app/dashboard` 353, `components/dashboard` 889, logo 3, 1 commentaire.
+Le site public est intégralement à l'or.
+
+**Reste de L12 (lot 3)** : les dashboards hérités (agent/client legacy,
+1 242 occ.) — à requalifier avec leur rhabillage dans le shell unique,
+pas mécaniquement (règles A1 admin plus strictes : pas de dégradés ni
+de lueurs, une seule action or par écran).

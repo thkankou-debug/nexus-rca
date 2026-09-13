@@ -191,19 +191,19 @@ const config: Config = {
         },
       },
       backgroundImage: {
-        // v1 — preserved for homepage flagship hero only
+        // v1 — preserved for homepage flagship hero only (accent or depuis L12 lot 2, 13/09/2026)
         "nexus-gradient":
-          "linear-gradient(135deg, #050f3d 0%, #0a1a6b 50%, #f97316 100%)",
+          "linear-gradient(135deg, #050f3d 0%, #0a1a6b 50%, #B99760 100%)",
         "nexus-hero":
-          "linear-gradient(135deg, rgba(5,15,61,0.95) 0%, rgba(10,26,107,0.85) 50%, rgba(249,115,22,0.3) 100%)",
-        // v2 — institutional dark for service pages (no orange dominance)
+          "linear-gradient(135deg, rgba(5,15,61,0.95) 0%, rgba(10,26,107,0.85) 50%, rgba(185,151,96,0.3) 100%)",
+        // v2 — institutional dark for service pages (no accent dominance)
         "nexus-hero-institutional":
           "linear-gradient(180deg, rgba(2,7,31,1) 0%, rgba(5,15,61,1) 100%)",
         "mesh-gradient":
-          "radial-gradient(at 20% 20%, rgba(249,115,22,0.06) 0px, transparent 55%), radial-gradient(at 80% 80%, rgba(31,63,245,0.08) 0px, transparent 55%)",
+          "radial-gradient(at 20% 20%, rgba(185,151,96,0.06) 0px, transparent 55%), radial-gradient(at 80% 80%, rgba(31,63,245,0.08) 0px, transparent 55%)",
         // Subtler accent variant for institutional sections
         "mesh-gradient-subtle":
-          "radial-gradient(at 30% 0%, rgba(249,115,22,0.04) 0px, transparent 60%), radial-gradient(at 70% 100%, rgba(31,63,245,0.05) 0px, transparent 60%)",
+          "radial-gradient(at 30% 0%, rgba(185,151,96,0.04) 0px, transparent 60%), radial-gradient(at 70% 100%, rgba(31,63,245,0.05) 0px, transparent 60%)",
       },
       // Vocabulaire d'ombres élargi — layered shadows premium
       boxShadow: {
@@ -217,14 +217,15 @@ const config: Config = {
           "0 8px 16px rgb(15 23 42 / 0.05), 0 24px 48px rgb(15 23 42 / 0.12)",
         "elev-5":
           "0 12px 24px rgb(15 23 42 / 0.06), 0 32px 64px rgb(15 23 42 / 0.16)",
-        // v2 — glows atténués pour ton institutionnel (orange en accent, pas dominant)
+        // v2 — glows atténués pour ton institutionnel (accent or D8 depuis le 13/09/2026,
+        // le nom "glow-orange" est hérité et conservé pour ne pas casser les consommateurs)
         "glow-orange":
-          "0 0 0 1px rgb(249 115 22 / 0.08), 0 4px 12px rgb(249 115 22 / 0.12), 0 8px 24px rgb(249 115 22 / 0.08)",
+          "0 0 0 1px rgb(185 151 96 / 0.08), 0 4px 12px rgb(185 151 96 / 0.12), 0 8px 24px rgb(185 151 96 / 0.08)",
         "glow-blue":
           "0 0 0 1px rgb(31 63 245 / 0.08), 0 4px 12px rgb(31 63 245 / 0.12), 0 8px 24px rgb(31 63 245 / 0.08)",
         "inset-line": "inset 0 0 0 1px rgb(255 255 255 / 0.08)",
         // Backwards-compat — atténués aussi
-        glow: "0 0 24px rgba(249, 115, 22, 0.18)",
+        glow: "0 0 24px rgba(185, 151, 96, 0.18)",
         card: "0 8px 30px rgba(0, 0, 0, 0.06)",
         "card-hover": "0 20px 40px rgba(0, 0, 0, 0.12)",
       },

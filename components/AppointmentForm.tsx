@@ -361,14 +361,14 @@ export function AppointmentForm() {
   // ============================================================================
   if (success) {
     return (
-      <div className="relative overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/[0.06] via-white/[0.04] to-white/[0.02] p-8 ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(255,102,0,0.20)] sm:p-12">
+      <div className="relative overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/[0.06] via-white/[0.04] to-white/[0.02] p-8 ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(185,151,96,0.20)] sm:p-12">
         <div
           aria-hidden
           className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-emerald-500/20 blur-3xl"
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -bottom-20 -left-12 h-56 w-56 rounded-full bg-nexus-orange-500/15 blur-3xl"
+          className="pointer-events-none absolute -bottom-20 -left-12 h-56 w-56 rounded-full bg-brand/15 blur-3xl"
         />
 
         <div className="relative mx-auto max-w-xl text-center">
@@ -390,12 +390,12 @@ export function AppointmentForm() {
             demande a bien été enregistrée.
           </p>
 
-          <div className="mt-8 rounded-2xl border border-nexus-orange-400/30 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-white/5 backdrop-blur-xl">
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+          <div className="mt-8 rounded-2xl border border-brand/30 bg-gradient-to-br from-brand/10 via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-white/5 backdrop-blur-xl">
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
               Numéro de référence
             </p>
             <p className="mt-2 break-all font-mono text-2xl font-bold leading-tight sm:text-3xl">
-              <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-500 bg-clip-text text-transparent">
+              <span className="bg-brand bg-clip-text text-transparent">
                 {success.referenceId}
               </span>
             </p>
@@ -420,7 +420,7 @@ export function AppointmentForm() {
                 "Après vérification de disponibilité, votre rendez-vous est confirmé",
               ].map((step, i) => (
                 <li key={i} className="flex items-start gap-3 text-sm text-slate-300">
-                  <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-nexus-orange-400/40 bg-nexus-orange-500/10 text-xs font-bold text-nexus-orange-300">
+                  <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-brand/40 bg-brand/10 text-xs font-bold text-brand">
                     {i + 1}
                   </div>
                   <span>{step}</span>
@@ -464,15 +464,15 @@ export function AppointmentForm() {
   return (
     <div
       ref={topRef}
-      className="relative overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/[0.06] via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(255,102,0,0.20)] sm:p-8 lg:p-10"
+      className="relative overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/[0.06] via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(185,151,96,0.20)] sm:p-8 lg:p-10"
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-nexus-orange-500/15 blur-3xl"
+        className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-brand/15 blur-3xl"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-300/60 to-transparent"
+        className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
       />
 
       <div className="relative">
@@ -786,8 +786,8 @@ export function AppointmentForm() {
                 />
               </div>
               {data.hasDocumentsReady === "oui" && (
-                <p className="mt-3 flex items-start gap-2 rounded-xl border border-nexus-orange-400/30 bg-nexus-orange-500/10 p-3 text-xs text-nexus-orange-200 backdrop-blur-md">
-                  <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-300" />
+                <p className="mt-3 flex items-start gap-2 rounded-xl border border-brand/30 bg-brand/10 p-3 text-xs text-brand backdrop-blur-md">
+                  <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
                   <span>
                     Parfait ! Vous pourrez les transmettre lors du rendez-vous
                     ou via notre formulaire de dossier complet.
@@ -799,8 +799,8 @@ export function AppointmentForm() {
             {/* Récap */}
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 ring-1 ring-white/5 backdrop-blur-md sm:p-6">
               <div className="mb-4 flex items-center gap-2">
-                <ClipboardCheck className="h-4 w-4 text-nexus-orange-300" />
-                <h3 className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                <ClipboardCheck className="h-4 w-4 text-brand" />
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
                   Récapitulatif de votre demande
                 </h3>
               </div>
@@ -872,7 +872,7 @@ export function AppointmentForm() {
               type="button"
               onClick={handleSubmit}
               disabled={loading}
-              className="group/cta relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600 px-7 py-4 text-base font-bold text-white shadow-[0_12px_32px_-10px_rgba(255,102,0,0.7)] transition-all duration-300 hover:-translate-y-0.5 hover:from-nexus-orange-600 hover:to-nexus-orange-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="group/cta relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-4 text-base font-bold text-on-brand shadow-[0_12px_32px_-10px_rgba(185,151,96,0.7)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
             >
               <span
                 aria-hidden
@@ -917,7 +917,7 @@ export function AppointmentForm() {
             <button
               type="button"
               onClick={handleNext}
-              className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-nexus-orange-500 px-7 py-3 text-sm font-bold text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-nexus-orange-600"
+              className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-brand px-7 py-3 text-sm font-bold text-on-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-hover"
             >
               <span
                 aria-hidden
@@ -967,7 +967,7 @@ function Stepper({
         />
         <div
           aria-hidden
-          className="absolute left-0 top-5 h-0.5 rounded-full bg-gradient-to-r from-nexus-orange-500 via-nexus-orange-400 to-nexus-orange-300 shadow-[0_0_18px_-2px_rgba(255,102,0,0.7)] transition-all duration-700 ease-out"
+          className="absolute left-0 top-5 h-0.5 rounded-full bg-brand shadow-[0_0_18px_-2px_rgba(185,151,96,0.7)] transition-all duration-700 ease-out"
           style={{ width: `${((currentStep - 1) / (STEPS.length - 1)) * 100}%` }}
         />
         <ol className="relative grid grid-cols-3 gap-2">
@@ -990,9 +990,9 @@ function Stepper({
                   className={cn(
                     "relative flex h-10 w-10 items-center justify-center rounded-full ring-2 transition-all duration-500 sm:h-12 sm:w-12",
                     state === "done"
-                      ? "bg-nexus-orange-500 text-white ring-nexus-orange-400/40 shadow-[0_0_24px_-4px_rgba(255,102,0,0.6)]"
+                      ? "bg-brand text-on-brand ring-brand/40 shadow-[0_0_24px_-4px_rgba(185,151,96,0.6)]"
                       : state === "active"
-                        ? "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white ring-nexus-orange-400/70 shadow-[0_0_28px_-4px_rgba(255,102,0,0.9)]"
+                        ? "bg-brand text-on-brand ring-brand/70 shadow-[0_0_28px_-4px_rgba(185,151,96,0.9)]"
                         : "bg-nexus-blue-950 text-white/40 ring-white/10 backdrop-blur-md hover:ring-white/20"
                   )}
                 >
@@ -1004,7 +1004,7 @@ function Stepper({
                   {state === "active" && (
                     <span
                       aria-hidden
-                      className="absolute inset-0 rounded-full bg-nexus-orange-500/40 animate-ping"
+                      className="absolute inset-0 rounded-full bg-brand/40 animate-ping"
                     />
                   )}
                 </button>
@@ -1025,7 +1025,7 @@ function Stepper({
       {/* Mobile : indicator + barre */}
       <div className="sm:hidden">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
             Étape {currentStep} / {STEPS.length}
           </span>
           <span className="text-xs font-semibold text-white/85">
@@ -1034,7 +1034,7 @@ function Stepper({
         </div>
         <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-white/10">
           <div
-            className="h-full bg-gradient-to-r from-nexus-orange-500 via-nexus-orange-400 to-nexus-orange-300 shadow-[0_0_12px_-2px_rgba(255,102,0,0.6)] transition-all duration-500"
+            className="h-full bg-brand shadow-[0_0_12px_-2px_rgba(185,151,96,0.6)] transition-all duration-500"
             style={{ width: `${(currentStep / STEPS.length) * 100}%` }}
           />
         </div>
@@ -1104,7 +1104,7 @@ function OptionCard({
           ? "px-3 py-2.5 text-sm text-center"
           : "p-3.5 text-sm",
         selected
-          ? "border-nexus-orange-400/60 bg-nexus-orange-500/10 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_8px_24px_-8px_rgba(255,102,0,0.30)]"
+          ? "border-brand/60 bg-brand/10 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_8px_24px_-8px_rgba(185,151,96,0.30)]"
           : "border-white/10 bg-white/[0.04] text-white/85 hover:border-white/20 hover:bg-white/[0.07]"
       )}
     >
@@ -1177,7 +1177,7 @@ function YesNoButton({
       className={cn(
         "rounded-xl border p-3 text-sm font-semibold backdrop-blur-md transition-all duration-200",
         selected
-          ? "border-nexus-orange-400/60 bg-nexus-orange-500/10 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]"
+          ? "border-brand/60 bg-brand/10 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]"
           : "border-white/10 bg-white/[0.04] text-white/85 hover:border-white/20 hover:bg-white/[0.07]"
       )}
     >
@@ -1206,7 +1206,7 @@ function PremiumInput({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       min={min}
-      className="w-full rounded-xl border border-white/10 bg-nexus-blue-950/40 px-4 py-3 text-sm text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/20 [color-scheme:dark]"
+      className="w-full rounded-xl border border-white/10 bg-nexus-blue-950/40 px-4 py-3 text-sm text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:border-focus focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-2 focus:ring-focus/30 [color-scheme:dark]"
     />
   );
 }
@@ -1234,7 +1234,7 @@ function PremiumTextarea({
         "w-full rounded-xl border bg-nexus-blue-950/40 px-4 py-3 text-sm text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-2",
         hasError
           ? "border-rose-400/40 focus:border-rose-400/70 focus:ring-rose-500/20"
-          : "border-white/10 focus:border-nexus-orange-400/60 focus:ring-nexus-orange-500/20"
+          : "border-white/10 focus:border-focus focus:ring-focus/30"
       )}
     />
   );
@@ -1253,7 +1253,7 @@ function PremiumSelect({
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full rounded-xl border border-white/10 bg-nexus-blue-950/40 px-4 py-3 text-sm text-white backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/20 [color-scheme:dark]"
+      className="w-full rounded-xl border border-white/10 bg-nexus-blue-950/40 px-4 py-3 text-sm text-white backdrop-blur-md transition-all duration-200 focus:border-focus focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-2 focus:ring-focus/30 [color-scheme:dark]"
     >
       {options.map((o) => (
         <option key={o} value={o} className="bg-nexus-blue-950 text-white">
@@ -1298,7 +1298,7 @@ function ConsentBox({
         className={cn(
           "flex cursor-pointer items-start gap-3 rounded-xl border p-3 backdrop-blur-md transition-colors",
           checked
-            ? "border-nexus-orange-400/40 bg-nexus-orange-500/10"
+            ? "border-brand/40 bg-brand/10"
             : error
               ? "border-rose-400/40 bg-rose-500/10"
               : "border-white/10 bg-white/[0.04] hover:bg-white/[0.06]"
@@ -1308,7 +1308,7 @@ function ConsentBox({
           type="checkbox"
           checked={checked}
           onChange={(e) => onChange(e.target.checked)}
-          className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-white/30 bg-transparent accent-nexus-orange-500"
+          className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-white/30 bg-transparent accent-brand"
         />
         <span
           className={cn(

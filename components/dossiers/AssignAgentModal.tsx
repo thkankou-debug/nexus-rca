@@ -139,7 +139,7 @@ export function AssignAgentModal({
       >
         <div className="flex items-center justify-between border-b border-slate-100 p-5">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
               Assignation
             </p>
             <h2 className="font-display text-lg font-bold text-nexus-blue-950">
@@ -181,7 +181,7 @@ export function AssignAgentModal({
                     className={cn(
                       "rounded-xl border p-4 transition",
                       isSpec
-                        ? "border-nexus-orange-300 bg-nexus-orange-50/50"
+                        ? "border-brand/40 bg-brand-subtle/50"
                         : "border-slate-200 bg-white"
                     )}
                   >
@@ -195,7 +195,7 @@ export function AssignAgentModal({
                             {fullName}
                           </p>
                           {isSpec && (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-nexus-orange-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-brand px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-on-brand">
                               <Star className="h-2.5 w-2.5" />
                               Spécialiste
                             </span>
@@ -231,7 +231,7 @@ export function AssignAgentModal({
                         type="button"
                         onClick={() => handleAssign(a.id)}
                         disabled={assigningId !== null}
-                        className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-nexus-orange-500 px-3 py-2 text-xs font-bold text-white transition hover:bg-nexus-orange-600 disabled:opacity-50"
+                        className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-brand px-3 py-2 text-xs font-bold text-on-brand transition hover:bg-brand-hover disabled:opacity-50"
                       >
                         {assigningId === a.id ? (
                           <Loader2 className="h-3.5 w-3.5 animate-spin" />

@@ -158,7 +158,7 @@ export function AgentSpecialitesEditor({ initialAgents }: { initialAgents: Agent
                         className={cn(
                           "flex items-center gap-2 rounded-xl border p-2.5 text-left transition",
                           checked
-                            ? "border-nexus-orange-400 bg-nexus-orange-50"
+                            ? "border-brand bg-brand-subtle"
                             : "border-slate-200 bg-white hover:border-slate-300"
                         )}
                       >
@@ -174,7 +174,7 @@ export function AgentSpecialitesEditor({ initialAgents }: { initialAgents: Agent
                           {meta.shortLabel}
                         </span>
                         {checked && (
-                          <Star className="h-3.5 w-3.5 shrink-0 text-nexus-orange-500" />
+                          <Star className="h-3.5 w-3.5 shrink-0 text-brand" />
                         )}
                       </button>
                     );
@@ -192,7 +192,7 @@ export function AgentSpecialitesEditor({ initialAgents }: { initialAgents: Agent
                     type="button"
                     onClick={() => save(a.id)}
                     disabled={savingId === a.id}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-nexus-orange-500 px-4 py-2 text-xs font-bold text-white hover:bg-nexus-orange-600 disabled:opacity-50"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2 text-xs font-bold text-on-brand hover:bg-brand-hover disabled:opacity-50"
                   >
                     {savingId === a.id ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />

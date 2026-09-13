@@ -121,7 +121,7 @@ export function PWAInstaller() {
       {showBanner && installPrompt && !isIOS && (
         <div className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-200 bg-white shadow-2xl print:hidden">
           <div className="mx-auto flex max-w-3xl items-center gap-3 p-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-lg">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand text-on-brand shadow-lg">
               <Smartphone className="h-6 w-6" />
             </div>
             <div className="min-w-0 flex-1">
@@ -135,7 +135,7 @@ export function PWAInstaller() {
             <button
               type="button"
               onClick={handleInstall}
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 hover:bg-nexus-orange-600"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 hover:bg-brand-hover"
             >
               <Download className="h-4 w-4" />
               Installer
@@ -157,7 +157,7 @@ export function PWAInstaller() {
         <>
           <div className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-200 bg-white shadow-2xl print:hidden">
             <div className="mx-auto flex max-w-3xl items-center gap-3 p-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-lg">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand text-on-brand shadow-lg">
                 <Smartphone className="h-6 w-6" />
               </div>
               <div className="min-w-0 flex-1">
@@ -171,7 +171,7 @@ export function PWAInstaller() {
               <button
                 type="button"
                 onClick={() => setShowIOSInstructions(true)}
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 hover:bg-nexus-orange-600"
+                className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 hover:bg-brand-hover"
               >
                 Voir comment
               </button>
@@ -272,7 +272,7 @@ function Step({
 }) {
   return (
     <div className="flex gap-3">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-nexus-orange-500 text-sm font-bold text-white">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-bold text-on-brand">
         {number}
       </div>
       <div className="flex-1">

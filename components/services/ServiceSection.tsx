@@ -25,7 +25,7 @@ export function ServiceSection({
   };
 
   const eyebrowColor =
-    variant === "dark" ? "text-nexus-orange-300" : "text-brand";
+    variant === "dark" ? "text-brand" : "text-brand";
 
   const titleColor = variant === "dark" ? "text-white" : "text-ink";
 

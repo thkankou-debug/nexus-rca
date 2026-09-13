@@ -14,7 +14,7 @@ export function RevenusParServiceCard({
   return (
     <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex items-center gap-2">
-        <Icon className="h-4 w-4 text-nexus-orange-600" />
+        <Icon className="h-4 w-4 text-brand-hover" />
         <h2 className="text-sm font-bold uppercase tracking-wide text-slate-600">
           Revenus par service
         </h2>

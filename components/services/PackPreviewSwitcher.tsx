@@ -100,14 +100,14 @@ export function PackPreviewSwitcher() {
                 aria-pressed={isActive}
                 className={`group relative flex flex-1 items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-xs font-bold uppercase tracking-[0.16em] transition-all duration-300 ease-out sm:px-5 sm:py-3 sm:text-sm sm:tracking-[0.18em] ${
                   isActive
-                    ? "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.5)]"
+                    ? "bg-brand text-on-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.5)]"
                     : "text-white/60 hover:text-white"
                 }`}
               >
                 {isActive && (
                   <span
                     aria-hidden
-                    className="pointer-events-none absolute inset-0 -z-10 rounded-xl bg-nexus-orange-500/30 blur-md"
+                    className="pointer-events-none absolute inset-0 -z-10 rounded-xl bg-brand/30 blur-md"
                   />
                 )}
                 <span className="hidden sm:inline">{p.name}</span>
@@ -121,11 +121,11 @@ export function PackPreviewSwitcher() {
       {/* Live preview card */}
       <div
         key={active}
-        className="relative overflow-hidden rounded-3xl border border-nexus-orange-400/30 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)] transition-all duration-500 ease-out animate-[packFade_0.5s_ease-out] sm:p-9"
+        className="relative overflow-hidden rounded-3xl border border-brand/30 bg-gradient-to-br from-brand/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.30)] transition-all duration-500 ease-out animate-[packFade_0.5s_ease-out] sm:p-9"
       >
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-nexus-orange-500/25 blur-[100px]"
+          className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-brand/25 blur-[100px]"
         />
         <div
           aria-hidden
@@ -139,23 +139,23 @@ export function PackPreviewSwitcher() {
               <div className="relative">
                 <div
                   aria-hidden
-                  className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 blur-md"
+                  className="absolute inset-0 rounded-2xl bg-brand/40 blur-md"
                 />
-                <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/10">
+                <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.6)] ring-1 ring-white/10">
                   <Icon className="h-7 w-7" />
                 </div>
               </div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-400/30 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
                 </span>
                 Pack {pack.name}
               </span>
             </div>
 
             <h3 className="mt-6 font-display text-5xl font-bold leading-[0.95] tracking-tight sm:text-6xl">
-              <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+              <span className="bg-brand bg-clip-text text-transparent">
                 {pack.name}
               </span>
             </h3>
@@ -164,21 +164,21 @@ export function PackPreviewSwitcher() {
             </p>
 
             <div className="mt-7 rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur ring-1 ring-white/5">
-              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
                 Tarif indicatif
               </p>
               <p className="mt-2 font-display text-2xl font-bold leading-tight text-white sm:text-3xl">
                 {pack.price}
               </p>
               <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur">
-                <Clock className="h-3 w-3 text-nexus-orange-300" />
+                <Clock className="h-3 w-3 text-brand" />
                 {pack.duration}
               </p>
             </div>
 
             <Link
               href={`/services/digitalisation/demarrer?pack=${pack.key}`}
-              className="group/cta mt-7 inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-6 py-3 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+              className="group/cta mt-7 inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-6 py-3 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)]"
             >
               <span
                 aria-hidden
@@ -191,7 +191,7 @@ export function PackPreviewSwitcher() {
 
           {/* Colonne droite : liste features */}
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] sm:p-7">
-            <p className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+            <p className="bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
               Inclus dans ce pack
             </p>
             <ul className="mt-4 space-y-3.5">
@@ -200,7 +200,7 @@ export function PackPreviewSwitcher() {
                   key={i}
                   className="flex items-start gap-3 text-sm leading-relaxed text-slate-200 sm:text-base"
                 >
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_6px_14px_-6px_rgba(255,102,0,0.5)] ring-1 ring-white/10">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand text-on-brand shadow-[0_6px_14px_-6px_rgba(185,151,96,0.5)] ring-1 ring-white/10">
                     <Check className="h-3 w-3" strokeWidth={3} />
                   </span>
                   <span>{feature}</span>

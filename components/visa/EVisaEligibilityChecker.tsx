@@ -27,7 +27,7 @@ export function EVisaEligibilityChecker() {
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
       <div className="mb-5 flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow">
           <Smartphone className="h-5 w-5" />
         </div>
         <div>
@@ -51,7 +51,7 @@ export function EVisaEligibilityChecker() {
           id="evc-destination"
           value={destination}
           onChange={(e) => setDestination(e.target.value)}
-          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-100"
+          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
         >
           <option value="">Sélectionner un pays…</option>
           {DESTINATIONS.map((d) => (
@@ -112,7 +112,7 @@ export function EVisaEligibilityChecker() {
                   {delai && (
                     <div className="rounded-lg border border-slate-200 bg-white px-3 py-2">
                       <p className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                        <Zap className="h-3 w-3 text-nexus-orange-600" />
+                        <Zap className="h-3 w-3 text-brand-hover" />
                         Délai indicatif
                       </p>
                       <p className="mt-0.5 text-sm font-bold text-nexus-blue-950">
@@ -136,7 +136,7 @@ export function EVisaEligibilityChecker() {
 
                 <Link
                   href="/services/visa/demarrer"
-                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600"
+                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover"
                 >
                   {dest.hasEVisa ? "Démarrer mon e-Visa" : "Démarrer ma demande"}
                   <ArrowRight className="h-4 w-4" />

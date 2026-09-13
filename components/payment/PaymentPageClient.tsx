@@ -364,7 +364,7 @@ export default function PaymentPageClient({ paymentLink, isExpired, token }: Pro
         {/* HEADER NEXUS */}
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-on-brand shadow">
               <CreditCard className="h-5 w-5" />
             </div>
             <div>
@@ -385,7 +385,7 @@ export default function PaymentPageClient({ paymentLink, isExpired, token }: Pro
         <div className="overflow-hidden rounded-3xl bg-white shadow-xl">
           {/* HEADER PAIEMENT */}
           <div className="bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-6 sm:p-8">
-            <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-400">
+            <p className="text-xs font-bold uppercase tracking-wider text-brand">
               Paiement à effectuer
             </p>
             <h1 className="mt-2 font-display text-2xl font-bold text-white sm:text-3xl">
@@ -422,7 +422,7 @@ export default function PaymentPageClient({ paymentLink, isExpired, token }: Pro
             {step === "choose" && (
               <>
                 <div className="mb-6">
-                  <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+                  <p className="text-xs font-bold uppercase tracking-wider text-brand-hover">
                     Étape 1 / 3
                   </p>
                   <h2 className="mt-1 font-display text-xl font-bold text-nexus-blue-950">
@@ -500,7 +500,7 @@ export default function PaymentPageClient({ paymentLink, isExpired, token }: Pro
                                   "rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider",
                                   m.disabled
                                     ? "bg-slate-200 text-slate-600"
-                                    : "bg-nexus-orange-100 text-nexus-orange-700"
+                                    : "bg-brand-subtle text-brand-hover"
                                 )}
                               >
                                 {m.badge}
@@ -523,7 +523,7 @@ export default function PaymentPageClient({ paymentLink, isExpired, token }: Pro
                   💡 Si vous avez des questions, contactez-nous au{" "}
                   <a
                     href={`tel:${NEXUS_PAYMENT_PHONE_RAW}`}
-                    className="font-semibold text-nexus-blue-950 hover:text-nexus-orange-600"
+                    className="font-semibold text-nexus-blue-950 hover:text-brand-hover"
                   >
                     {NEXUS_PAYMENT_PHONE}
                   </a>
@@ -544,7 +544,7 @@ export default function PaymentPageClient({ paymentLink, isExpired, token }: Pro
                 </button>
 
                 <div className="mb-6">
-                  <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+                  <p className="text-xs font-bold uppercase tracking-wider text-brand-hover">
                     Étape 2 / 3
                   </p>
                   <h2 className="mt-1 font-display text-xl font-bold text-nexus-blue-950">
@@ -557,10 +557,10 @@ export default function PaymentPageClient({ paymentLink, isExpired, token }: Pro
                 </div>
 
                 {/* MONTANT À PAYER (rappel + copy) */}
-                <div className="mb-4 rounded-2xl border-2 border-nexus-orange-300 bg-nexus-orange-50 p-4">
+                <div className="mb-4 rounded-2xl border-2 border-brand/40 bg-brand-subtle p-4">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-700">
+                      <p className="text-xs font-bold uppercase tracking-wider text-brand-hover">
                         Montant à payer exactement
                       </p>
                       <p className="mt-1 font-display text-2xl font-bold text-nexus-blue-950">
@@ -629,7 +629,7 @@ export default function PaymentPageClient({ paymentLink, isExpired, token }: Pro
                   type="button"
                   onClick={() => setStep("submit")}
                   disabled={selectedMethodData.disabled}
-                  className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-6 py-3.5 text-sm font-semibold text-white shadow-lg hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-brand px-6 py-3.5 text-sm font-semibold text-on-brand shadow-lg hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   J&apos;ai effectué le paiement
                   <ChevronRight className="h-4 w-4" />
@@ -650,7 +650,7 @@ export default function PaymentPageClient({ paymentLink, isExpired, token }: Pro
                 </button>
 
                 <div className="mb-6">
-                  <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+                  <p className="text-xs font-bold uppercase tracking-wider text-brand-hover">
                     Étape 3 / 3
                   </p>
                   <h2 className="mt-1 font-display text-xl font-bold text-nexus-blue-950">
@@ -677,7 +677,7 @@ export default function PaymentPageClient({ paymentLink, isExpired, token }: Pro
                             ? "Ex: Reçu en agence le DD/MM/YYYY"
                             : "Ex: MP123456789"
                       }
-                      className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                      className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
                     />
                     <p className="mt-1 text-xs text-slate-500">
                       {selectedMethodData.id === "orange_money" && "Le numéro reçu par SMS d'Orange Money"}
@@ -697,7 +697,7 @@ export default function PaymentPageClient({ paymentLink, isExpired, token }: Pro
                       onChange={(e) => setClientNotes(e.target.value)}
                       rows={2}
                       placeholder="Précisions sur votre paiement..."
-                      className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                      className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
                     />
                   </div>
 
@@ -712,7 +712,7 @@ export default function PaymentPageClient({ paymentLink, isExpired, token }: Pro
                     type="button"
                     onClick={handleSubmit}
                     disabled={submitting || !transactionNumber.trim()}
-                    className="flex w-full items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-6 py-3.5 text-sm font-semibold text-white shadow-lg hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex w-full items-center justify-center gap-2 rounded-full bg-brand px-6 py-3.5 text-sm font-semibold text-on-brand shadow-lg hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {submitting ? (
                       <>

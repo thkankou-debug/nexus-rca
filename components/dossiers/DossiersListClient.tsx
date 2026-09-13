@@ -342,14 +342,14 @@ export function DossiersListClient({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Référence, nom ou email…"
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 pl-9 text-sm focus:border-nexus-orange-400 focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 pl-9 text-sm focus:border-focus focus:outline-none"
             />
           </div>
           <div className="lg:col-span-3">
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as DemandeStatus | "all")}
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-400 focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none"
             >
               {STATUS_FILTERS.map((s) => (
                 <option key={s.value} value={s.value}>
@@ -370,7 +370,7 @@ export function DossiersListClient({
                   setAgentFilter(e.target.value);
                 }
               }}
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-400 focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none"
             >
               <option value="all">Agent : tous</option>
               <option value="_unassigned">Agent : non assignés</option>
@@ -385,7 +385,7 @@ export function DossiersListClient({
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as SortKey)}
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-400 focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none"
             >
               <option value="date_desc">Tri : récent</option>
               <option value="date_asc">Tri : ancien</option>
@@ -414,7 +414,7 @@ export function DossiersListClient({
 
       {/* Barre d'actions de masse */}
       {selectedCount > 0 && (
-        <div className="rounded-2xl border border-nexus-orange-200 bg-nexus-orange-50 p-3">
+        <div className="rounded-2xl border border-brand/30 bg-brand-subtle p-3">
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={clearSelection}
@@ -452,7 +452,7 @@ export function DossiersListClient({
           </div>
 
           {bulkAction === "assign" && (
-            <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-nexus-orange-200 pt-3">
+            <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-brand/30 pt-3">
               <select
                 value={bulkAssignAgent}
                 onChange={(e) => setBulkAssignAgent(e.target.value)}
@@ -477,7 +477,7 @@ export function DossiersListClient({
           )}
 
           {bulkAction === "status" && (
-            <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-nexus-orange-200 pt-3">
+            <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-brand/30 pt-3">
               <select
                 value={bulkStatus}
                 onChange={(e) => setBulkStatus(e.target.value as DemandeStatus)}
@@ -522,8 +522,8 @@ export function DossiersListClient({
               <li
                 key={d.id}
                 className={cn(
-                  "rounded-2xl border bg-white p-4 shadow-sm transition hover:border-nexus-orange-300",
-                  !d.agent_id && "border-l-4 border-l-nexus-orange-500"
+                  "rounded-2xl border bg-white p-4 shadow-sm transition hover:border-brand/40",
+                  !d.agent_id && "border-l-4 border-l-brand"
                 )}
               >
                 <div className="flex flex-wrap items-start gap-3">
@@ -536,7 +536,7 @@ export function DossiersListClient({
                   />
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="rounded-md bg-slate-100 px-1.5 py-0.5 font-mono text-[11px] font-bold text-nexus-orange-700">
+                      <span className="rounded-md bg-slate-100 px-1.5 py-0.5 font-mono text-[11px] font-bold text-brand-hover">
                         {ref}
                       </span>
                       <StatusBadge status={d.statut} />
@@ -557,7 +557,7 @@ export function DossiersListClient({
                       <span>Étape {d.current_step ?? 1}/6</span>
                       <span className="h-1 w-24 overflow-hidden rounded-full bg-slate-100">
                         <span
-                          className="block h-full bg-nexus-orange-500"
+                          className="block h-full bg-brand"
                           style={{
                             width: `${Math.min(100, ((d.current_step ?? 1) / 6) * 100)}%`,
                           }}
@@ -573,7 +573,7 @@ export function DossiersListClient({
                         {[agent.prenom, agent.nom].filter(Boolean).join(" ")}
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-nexus-orange-100 px-2 py-1 text-[11px] font-bold text-nexus-orange-700">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-brand-subtle px-2 py-1 text-[11px] font-bold text-brand-hover">
                         Non assigné
                       </span>
                     )}
@@ -588,7 +588,7 @@ export function DossiersListClient({
                     {canViewDetail && canAssign && !d.agent_id && (
                       <Link
                         href={`${detailHref}/assigner`}
-                        className="inline-flex items-center gap-1 rounded-lg border border-nexus-orange-300 bg-white px-3 py-1.5 text-[11px] font-bold text-nexus-orange-700 hover:bg-nexus-orange-50"
+                        className="inline-flex items-center gap-1 rounded-lg border border-brand/40 bg-white px-3 py-1.5 text-[11px] font-bold text-brand-hover hover:bg-brand-subtle"
                       >
                         <UserPlus className="h-3 w-3" />
                         Assigner

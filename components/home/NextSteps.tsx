@@ -62,7 +62,7 @@ export function NextSteps() {
       {/* === Orbes ambiantes === */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-40 -top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+        className="pointer-events-none absolute -right-40 -top-32 h-[36rem] w-[36rem] rounded-full bg-brand/15 blur-[140px]"
       />
       <div
         aria-hidden
@@ -71,20 +71,20 @@ export function NextSteps() {
       {/* === Hairline top === */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
       />
 
       <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
         {/* === Header éditorial === */}
         <div className="mx-auto mb-16 max-w-3xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.24em] text-nexus-orange-300">
+          <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.24em] text-brand">
             <Sparkles className="h-3 w-3" />
             Engager Nexus
           </span>
           <h2 className="mt-5 font-display text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-4xl lg:text-5xl">
             De l&apos;intention au mandat instruit,
             <br />
-            <span className="text-nexus-orange-400">en trois étapes lisibles.</span>
+            <span className="text-brand">en trois étapes lisibles.</span>
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
             Aucune des trois étapes ci-dessous n&apos;est facturée. Aucune ne
@@ -104,11 +104,11 @@ export function NextSteps() {
           >
             <defs>
               <linearGradient id="step-path-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="rgba(255,102,0,0)" />
-                <stop offset="15%" stopColor="rgba(255,102,0,0.6)" />
-                <stop offset="50%" stopColor="rgba(255,102,0,0.9)" />
-                <stop offset="85%" stopColor="rgba(255,102,0,0.6)" />
-                <stop offset="100%" stopColor="rgba(255,102,0,0)" />
+                <stop offset="0%" stopColor="rgba(185,151,96,0)" />
+                <stop offset="15%" stopColor="rgba(185,151,96,0.6)" />
+                <stop offset="50%" stopColor="rgba(185,151,96,0.9)" />
+                <stop offset="85%" stopColor="rgba(185,151,96,0.6)" />
+                <stop offset="100%" stopColor="rgba(185,151,96,0)" />
               </linearGradient>
             </defs>
             <line
@@ -131,12 +131,12 @@ export function NextSteps() {
               return (
                 <article
                   key={step.num}
-                  className="group relative overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-br from-[#0F1B40] via-nexus-blue-900 to-[#0F1B40] p-7 shadow-[0_30px_60px_-25px_rgba(0,0,0,0.7)] transition-all duration-500 hover:-translate-y-1 hover:border-nexus-orange-400/60 hover:shadow-[0_40px_80px_-25px_rgba(255,102,0,0.45)] sm:p-8"
+                  className="group relative overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-br from-[#0F1B40] via-nexus-blue-900 to-[#0F1B40] p-7 shadow-[0_30px_60px_-25px_rgba(0,0,0,0.7)] transition-all duration-500 hover:-translate-y-1 hover:border-brand/60 hover:shadow-[0_40px_80px_-25px_rgba(185,151,96,0.45)] sm:p-8"
                 >
                   {/* Numéro fantôme XXL en arrière-plan */}
                   <span
                     aria-hidden
-                    className="pointer-events-none absolute -right-4 -top-4 select-none font-display text-[8rem] font-black leading-none tracking-tighter text-white/[0.05] transition-all duration-500 group-hover:text-nexus-orange-400/[0.15]"
+                    className="pointer-events-none absolute -right-4 -top-4 select-none font-display text-[8rem] font-black leading-none tracking-tighter text-white/[0.05] transition-all duration-500 group-hover:text-brand/[0.15]"
                   >
                     {step.num}
                   </span>
@@ -144,14 +144,14 @@ export function NextSteps() {
                   {/* Glow corner hover */}
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-nexus-orange-500/0 blur-3xl transition-all duration-700 group-hover:bg-nexus-orange-500/40"
+                    className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-brand/0 blur-3xl transition-all duration-700 group-hover:bg-brand/40"
                   />
 
                   {/* Connector orange flèche desktop */}
                   {!isLast && (
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-3 top-12 hidden h-7 w-7 items-center justify-center rounded-full border border-nexus-orange-400/50 bg-nexus-blue-950 text-nexus-orange-400 shadow-[0_0_24px_rgba(255,102,0,0.6)] lg:flex"
+                      className="pointer-events-none absolute -right-3 top-12 hidden h-7 w-7 items-center justify-center rounded-full border border-brand/50 bg-nexus-blue-950 text-brand shadow-[0_0_24px_rgba(185,151,96,0.6)] lg:flex"
                     >
                       <ArrowRight className="h-3 w-3" />
                     </div>
@@ -162,20 +162,20 @@ export function NextSteps() {
                     <div className="relative inline-flex">
                       <div
                         aria-hidden
-                        className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 blur-md opacity-70 transition-opacity duration-500 group-hover:opacity-100 group-hover:scale-110"
+                        className="absolute inset-0 rounded-2xl bg-brand/40 blur-md opacity-70 transition-opacity duration-500 group-hover:opacity-100 group-hover:scale-110"
                       />
-                      <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_24px_-8px_rgba(255,102,0,0.7)] ring-1 ring-white/15 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">
+                      <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_8px_24px_-8px_rgba(185,151,96,0.7)] ring-1 ring-white/15 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">
                         <Icon className="h-5 w-5" />
                       </div>
                     </div>
 
                     {/* Numéro orange XL pulse */}
-                    <p className="mt-6 font-display text-5xl font-black tabular-nums leading-none text-nexus-orange-500 transition-all duration-500 group-hover:text-nexus-orange-400">
+                    <p className="mt-6 font-display text-5xl font-black tabular-nums leading-none text-brand transition-all duration-500 group-hover:text-brand">
                       {step.num}
                     </p>
 
                     {/* Eyebrow */}
-                    <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.24em] text-nexus-orange-300">
+                    <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.24em] text-brand">
                       {step.eyebrow}
                     </p>
 
@@ -187,7 +187,7 @@ export function NextSteps() {
                     {/* Hairline */}
                     <div
                       aria-hidden
-                      className="my-5 h-px w-12 bg-gradient-to-r from-nexus-orange-400 to-transparent"
+                      className="my-5 h-px w-12 bg-gradient-to-r from-brand to-transparent"
                     />
 
                     {/* Description */}
@@ -197,7 +197,7 @@ export function NextSteps() {
 
                     {/* Meta */}
                     <p className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300">
-                      <span className="h-1 w-1 rounded-full bg-nexus-orange-400" />
+                      <span className="h-1 w-1 rounded-full bg-brand" />
                       {step.meta}
                     </p>
                   </div>
@@ -211,7 +211,7 @@ export function NextSteps() {
         <div className="mt-16 flex justify-center">
           <Link
             href="/demande/complet"
-            className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+            className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)]"
           >
             <span
               aria-hidden

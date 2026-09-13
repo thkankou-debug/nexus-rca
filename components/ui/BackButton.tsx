@@ -27,7 +27,7 @@ export function BackButton({
     return (
       <Link
         href={href}
-        className="group mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-nexus-orange-300 hover:bg-nexus-orange-50 hover:text-nexus-orange-700 sm:px-5 sm:py-2.5"
+        className="group mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-brand/40 hover:bg-brand-subtle hover:text-brand-hover sm:px-5 sm:py-2.5"
       >
         <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
         {label}
@@ -49,7 +49,7 @@ export function BackButton({
     <button
       type="button"
       onClick={handleClick}
-      className="group mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-nexus-orange-300 hover:bg-nexus-orange-50 hover:text-nexus-orange-700 sm:px-5 sm:py-2.5"
+      className="group mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-brand/40 hover:bg-brand-subtle hover:text-brand-hover sm:px-5 sm:py-2.5"
     >
       <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
       {label}

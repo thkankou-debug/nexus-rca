@@ -62,12 +62,12 @@ export function DossierStaffBanner({
   };
 
   return (
-    <section className="mb-6 overflow-hidden rounded-2xl border border-nexus-orange-200 bg-gradient-to-br from-nexus-orange-50/60 via-white to-white p-5 shadow-sm">
+    <section className="mb-6 overflow-hidden rounded-2xl border border-brand/30 bg-gradient-to-br from-brand/60 via-white to-white p-5 shadow-sm">
       <div className="mb-3 flex items-center gap-2">
-        <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-nexus-orange-500 text-white shadow-sm">
+        <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-brand text-on-brand shadow-sm">
           <ChevronUp className="h-4 w-4" />
         </span>
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-700">
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
           Espace conseiller
         </p>
       </div>
@@ -87,7 +87,7 @@ export function DossierStaffBanner({
               value={currentStep}
               disabled={savingStep || isPending}
               onChange={(e) => updateStep(Number(e.target.value))}
-              className="w-full appearance-none rounded-xl border border-slate-300 bg-white px-3 py-2.5 pr-10 text-sm font-semibold text-nexus-blue-950 focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-300/40 disabled:opacity-50"
+              className="w-full appearance-none rounded-xl border border-slate-300 bg-white px-3 py-2.5 pr-10 text-sm font-semibold text-nexus-blue-950 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30 disabled:opacity-50"
             >
               {steps.map((label, i) => (
                 <option key={i + 1} value={i + 1}>
@@ -96,7 +96,7 @@ export function DossierStaffBanner({
               ))}
             </select>
             {(savingStep || isPending) && (
-              <Loader2 className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-nexus-orange-500" />
+              <Loader2 className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-brand" />
             )}
           </div>
           <p className="mt-1 text-[11px] text-slate-500">
@@ -110,10 +110,10 @@ export function DossierStaffBanner({
             type="button"
             onClick={onRequestDocument}
             className={cn(
-              "inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-nexus-blue-950 transition hover:border-nexus-orange-300 hover:bg-nexus-orange-50"
+              "inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-nexus-blue-950 transition hover:border-brand/40 hover:bg-brand-subtle"
             )}
           >
-            <FileQuestion className="h-4 w-4 text-nexus-orange-500" />
+            <FileQuestion className="h-4 w-4 text-brand" />
             Demander un document
           </button>
           {canAssign && (

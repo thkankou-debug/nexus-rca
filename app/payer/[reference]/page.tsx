@@ -43,14 +43,14 @@ export default function PaymentReferencePage({
 
         <div className="mt-6 space-y-2 text-sm text-slate-600">
           <p className="flex items-center justify-center gap-2">
-            <Phone className="h-4 w-4 text-nexus-orange-500" />
-            <a href="https://wa.me/23673269692" className="hover:text-nexus-orange-600">
+            <Phone className="h-4 w-4 text-brand" />
+            <a href="https://wa.me/23673269692" className="hover:text-brand-hover">
               +236 73 26 96 92 (WhatsApp)
             </a>
           </p>
           <p className="flex items-center justify-center gap-2">
-            <Mail className="h-4 w-4 text-nexus-orange-500" />
-            <a href="mailto:contact@nexusrca.com" className="hover:text-nexus-orange-600">
+            <Mail className="h-4 w-4 text-brand" />
+            <a href="mailto:contact@nexusrca.com" className="hover:text-brand-hover">
               contact@nexusrca.com
             </a>
           </p>

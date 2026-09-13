@@ -70,12 +70,12 @@ export function DossierKanban({
                     key={d.id}
                     href={`${baseDetailHref}/${d.id}`}
                     className={cn(
-                      "block rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition hover:border-nexus-orange-300",
-                      !d.agent_id && "border-l-4 border-l-nexus-orange-500"
+                      "block rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition hover:border-brand/40",
+                      !d.agent_id && "border-l-4 border-l-brand"
                     )}
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <span className="font-mono text-[11px] font-bold text-nexus-orange-700">{ref}</span>
+                      <span className="font-mono text-[11px] font-bold text-brand-hover">{ref}</span>
                       {d.traitement_prioritaire && <Zap className="h-3 w-3 text-rose-500" />}
                     </div>
                     <p className="mt-1 truncate text-xs font-semibold text-nexus-blue-950">{d.nom_complet}</p>
@@ -87,7 +87,7 @@ export function DossierKanban({
                           {[agent.prenom, agent.nom].filter(Boolean).join(" ")}
                         </span>
                       ) : (
-                        <span className="ml-auto text-[10px] font-bold text-nexus-orange-600">Non assigné</span>
+                        <span className="ml-auto text-[10px] font-bold text-brand-hover">Non assigné</span>
                       )}
                     </div>
                   </Link>

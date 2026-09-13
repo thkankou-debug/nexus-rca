@@ -68,16 +68,16 @@ export function AssuranceCompanionPanel({ variant }: Props) {
       {/* Halo externe — couche profondeur */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-nexus-orange-500/15 via-nexus-orange-500/5 to-nexus-blue-500/10 opacity-70 blur-3xl"
+        className="pointer-events-none absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-brand/15 via-brand/5 to-nexus-blue-500/10 opacity-70 blur-3xl"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-2 rounded-[2.25rem] bg-gradient-to-br from-nexus-orange-400/10 via-transparent to-nexus-blue-400/10 blur-xl"
+        className="pointer-events-none absolute -inset-2 rounded-[2.25rem] bg-gradient-to-br from-brand/10 via-transparent to-nexus-blue-400/10 blur-xl"
       />
 
       {/* Panel flottant */}
       <div
-        className="relative overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/[0.07] via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(255,102,0,0.40)] sm:p-7"
+        className="relative overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/[0.07] via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(185,151,96,0.40)] sm:p-7"
         style={{
           animation: "companion-float 6.5s ease-in-out infinite",
         }}
@@ -85,7 +85,7 @@ export function AssuranceCompanionPanel({ variant }: Props) {
         {/* Glow décoratif interne — top right */}
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-nexus-orange-500/25 blur-3xl"
+          className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-brand/25 blur-3xl"
         />
         {/* Glow décoratif interne — bottom left */}
         <div
@@ -95,16 +95,16 @@ export function AssuranceCompanionPanel({ variant }: Props) {
         {/* Liseré supérieur lumineux */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-300/60 to-transparent"
+          className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
         />
 
         <div className="relative">
           {/* Badge eyebrow + icône shield */}
           <div className="flex items-start justify-between gap-4">
-            <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+            <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
               <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
               </span>
               Protection internationale
             </span>
@@ -113,9 +113,9 @@ export function AssuranceCompanionPanel({ variant }: Props) {
             <div className="relative shrink-0">
               <div
                 aria-hidden
-                className="absolute inset-0 -m-2 rounded-2xl bg-nexus-orange-500/30 blur-xl"
+                className="absolute inset-0 -m-2 rounded-2xl bg-brand/30 blur-xl"
               />
-              <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.7)] ring-1 ring-white/15">
+              <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.7)] ring-1 ring-white/15">
                 <ShieldCheck className="h-5 w-5" />
               </div>
             </div>
@@ -124,7 +124,7 @@ export function AssuranceCompanionPanel({ variant }: Props) {
           {/* Titre */}
           <h2 className="mt-5 font-display text-xl font-bold leading-tight tracking-tight text-white sm:text-2xl">
             Assurance{" "}
-            <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+            <span className="bg-brand bg-clip-text text-transparent">
               Voyage & Visa
             </span>
           </h2>
@@ -145,9 +145,9 @@ export function AssuranceCompanionPanel({ variant }: Props) {
               return (
                 <div
                   key={b.label}
-                  className={`group/badge ${visibility} items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.04] px-2.5 py-2 text-[10px] font-semibold leading-tight text-white/85 ring-1 ring-white/5 backdrop-blur-md transition-all duration-300 hover:border-nexus-orange-400/40 hover:bg-white/[0.07] hover:text-white`}
+                  className={`group/badge ${visibility} items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.04] px-2.5 py-2 text-[10px] font-semibold leading-tight text-white/85 ring-1 ring-white/5 backdrop-blur-md transition-all duration-300 hover:border-brand/40 hover:bg-white/[0.07] hover:text-white`}
                 >
-                  <Icon className="h-3.5 w-3.5 shrink-0 text-nexus-orange-300 transition-transform duration-300 group-hover/badge:scale-110" />
+                  <Icon className="h-3.5 w-3.5 shrink-0 text-brand transition-transform duration-300 group-hover/badge:scale-110" />
                   <span className="truncate">{b.label}</span>
                 </div>
               );
@@ -163,7 +163,7 @@ export function AssuranceCompanionPanel({ variant }: Props) {
           {/* CTA discret */}
           <Link
             href="/services/assurance"
-            className="group/cta mt-5 inline-flex items-center gap-2 text-sm font-semibold text-nexus-orange-300 transition-colors hover:text-nexus-orange-200"
+            className="group/cta mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand transition-colors hover:text-brand"
           >
             Découvrir les protections
             <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-1" />

@@ -382,7 +382,7 @@ export function DemandeFormComplete() {
     <div ref={topRef} className="grid gap-6 lg:grid-cols-12 lg:gap-8">
       {/* ─── Colonne formulaire (8/12) ─── */}
       <div className="lg:col-span-8">
-        <div className="relative overflow-hidden rounded-2xl border border-white/12 bg-gradient-to-br from-white/[0.06] via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(255,102,0,0.20)]">
+        <div className="relative overflow-hidden rounded-2xl border border-white/12 bg-gradient-to-br from-white/[0.06] via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(185,151,96,0.20)]">
           {/* Stepper compact */}
           <SectionStepper currentStep={currentStep} />
 
@@ -764,8 +764,8 @@ export function DemandeFormComplete() {
               <div className="space-y-5">
                 <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5 ring-1 ring-white/5 backdrop-blur-md sm:p-6">
                   <div className="mb-4 flex items-center gap-2">
-                    <ClipboardCheck className="h-4 w-4 text-nexus-orange-300" />
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                    <ClipboardCheck className="h-4 w-4 text-brand" />
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
                       Récapitulatif
                     </h3>
                   </div>
@@ -818,7 +818,7 @@ export function DemandeFormComplete() {
                   type="button"
                   onClick={handleSubmit}
                   disabled={loading}
-                  className="group/cta relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600 px-7 py-4 text-base font-bold text-white shadow-[0_12px_32px_-10px_rgba(255,102,0,0.7)] transition-all duration-300 hover:-translate-y-0.5 hover:from-nexus-orange-600 hover:to-nexus-orange-700 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="group/cta relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-brand px-7 py-4 text-base font-bold text-on-brand shadow-[0_12px_32px_-10px_rgba(185,151,96,0.7)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <span
                     aria-hidden
@@ -860,7 +860,7 @@ export function DemandeFormComplete() {
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-lg bg-nexus-orange-500 px-6 py-2.5 text-xs font-bold uppercase tracking-[0.14em] text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-nexus-orange-600"
+                  className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-lg bg-brand px-6 py-2.5 text-xs font-bold uppercase tracking-[0.14em] text-on-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-hover"
                 >
                   {currentStep === 0 &&
                   form.identification_mode === "deja_client"
@@ -918,7 +918,7 @@ function SectionStepper({ currentStep }: { currentStep: StepId }) {
                 className={cn(
                   "flex h-5 w-5 items-center justify-center rounded-full font-mono text-[9px] transition-all",
                   state === "active"
-                    ? "bg-nexus-orange-500 text-white shadow-[0_0_18px_-2px_rgba(255,102,0,0.7)]"
+                    ? "bg-brand text-on-brand shadow-[0_0_18px_-2px_rgba(185,151,96,0.7)]"
                     : state === "done"
                       ? "bg-white/15 text-white"
                       : "bg-white/[0.04] text-white/35 ring-1 ring-white/10"
@@ -935,7 +935,7 @@ function SectionStepper({ currentStep }: { currentStep: StepId }) {
                   className={cn(
                     "h-px w-2 transition-colors",
                     s.id < currentStep
-                      ? "bg-nexus-orange-400/60"
+                      ? "bg-brand/60"
                       : "bg-white/10"
                   )}
                 />
@@ -946,7 +946,7 @@ function SectionStepper({ currentStep }: { currentStep: StepId }) {
       </div>
       <div className="sm:hidden">
         <div className="flex items-center justify-between text-xs">
-          <span className="font-mono font-bold text-nexus-orange-300">
+          <span className="font-mono font-bold text-brand">
             {SECTIONS.find((s) => s.id === currentStep)?.number} / 06
           </span>
           <span className="font-semibold text-white/85">
@@ -955,7 +955,7 @@ function SectionStepper({ currentStep }: { currentStep: StepId }) {
         </div>
         <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-white/10">
           <div
-            className="h-full bg-gradient-to-r from-nexus-orange-500 via-nexus-orange-400 to-nexus-orange-300 shadow-[0_0_12px_-2px_rgba(255,102,0,0.6)] transition-all duration-500"
+            className="h-full bg-brand shadow-[0_0_12px_-2px_rgba(185,151,96,0.6)] transition-all duration-500"
             style={{ width: `${((currentStep + 1) / 7) * 100}%` }}
           />
         </div>
@@ -979,7 +979,7 @@ function SectionHeader({
         <span className="font-display text-3xl font-bold leading-none text-transparent [-webkit-text-stroke:1px_rgba(251,146,60,0.4)] sm:text-4xl">
           {number}
         </span>
-        <span className="text-xl font-thin text-nexus-orange-400/40 sm:text-2xl">
+        <span className="text-xl font-thin text-brand/40 sm:text-2xl">
           —
         </span>
         <h2 className="font-display text-xl font-bold leading-tight tracking-tight text-white sm:text-2xl">
@@ -989,7 +989,7 @@ function SectionHeader({
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-400 sm:text-base">
         {description}
       </p>
-      <div className="mt-6 h-px w-full bg-gradient-to-r from-nexus-orange-400/40 via-white/10 to-transparent" />
+      <div className="mt-6 h-px w-full bg-gradient-to-r from-brand/40 via-white/10 to-transparent" />
     </div>
   );
 }
@@ -1014,7 +1014,7 @@ function RadioCard({
       className={cn(
         "flex w-full items-start gap-4 rounded-xl border p-5 text-left backdrop-blur-md transition-all duration-200",
         selected
-          ? "border-nexus-orange-400/60 bg-nexus-orange-500/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_8px_24px_-8px_rgba(255,102,0,0.30)]"
+          ? "border-brand/60 bg-brand/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_8px_24px_-8px_rgba(185,151,96,0.30)]"
           : "border-white/10 bg-white/[0.04] hover:border-white/20 hover:bg-white/[0.07]"
       )}
     >
@@ -1022,7 +1022,7 @@ function RadioCard({
         className={cn(
           "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-all",
           selected
-            ? "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white"
+            ? "bg-brand text-on-brand"
             : "bg-white/[0.04] text-white/60 ring-1 ring-white/10"
         )}
       >
@@ -1045,7 +1045,7 @@ function RadioCard({
         className={cn(
           "mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all",
           selected
-            ? "border-nexus-orange-400 bg-nexus-orange-500 text-white"
+            ? "border-brand bg-brand text-on-brand"
             : "border-white/20 bg-transparent"
         )}
       >
@@ -1115,7 +1115,7 @@ function PremiumInput({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 px-4 py-2.5 text-base text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-nexus-orange-500/30 [color-scheme:dark]"
+      className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 px-4 py-2.5 text-base text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:border-focus focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-focus/30 [color-scheme:dark]"
     />
   );
 }
@@ -1146,7 +1146,7 @@ function PasswordField({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           autoComplete="new-password"
-          className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 py-2.5 pl-4 pr-11 text-base text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-nexus-orange-500/30 [color-scheme:dark]"
+          className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 py-2.5 pl-4 pr-11 text-base text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:border-focus focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-focus/30 [color-scheme:dark]"
         />
         <button
           type="button"
@@ -1228,8 +1228,8 @@ function PasswordStrengthBar({ strength }: { strength: PasswordStrength }) {
 
 function PasswordHelpBox() {
   return (
-    <div className="flex items-start gap-2 rounded-lg border border-nexus-orange-400/25 bg-nexus-orange-500/8 p-3 text-xs leading-relaxed text-nexus-orange-100">
-      <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-nexus-orange-300" />
+    <div className="flex items-start gap-2 rounded-lg border border-brand/25 bg-brand/8 p-3 text-xs leading-relaxed text-brand">
+      <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand" />
       <span>
         <strong>Minimum 8 caractères.</strong> Vous utiliserez ce mot de passe
         pour accéder à votre espace Nexus Connect et suivre votre dossier.
@@ -1255,7 +1255,7 @@ function PremiumTextarea({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       rows={rows}
-      className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 px-4 py-3 text-base leading-relaxed text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-nexus-orange-500/30"
+      className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 px-4 py-3 text-base leading-relaxed text-white placeholder:text-white/35 backdrop-blur-md transition-all duration-200 focus:border-focus focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-focus/30"
     />
   );
 }
@@ -1278,7 +1278,7 @@ function PremiumSelect({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       disabled={disabled}
-      className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 px-4 py-2.5 text-base text-white backdrop-blur-md transition-all duration-200 focus:border-nexus-orange-400/60 focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-nexus-orange-500/30 disabled:opacity-50 [color-scheme:dark]"
+      className="w-full rounded-lg border border-white/10 bg-nexus-blue-950/40 px-4 py-2.5 text-base text-white backdrop-blur-md transition-all duration-200 focus:border-focus focus:bg-nexus-blue-950/60 focus:outline-none focus:ring-1 focus:ring-focus/30 disabled:opacity-50 [color-scheme:dark]"
     >
       {options.map((o) => (
         <option key={o} value={o} className="bg-nexus-blue-950 text-white">
@@ -1305,7 +1305,7 @@ function YesNoButton({
       className={cn(
         "flex-1 rounded-lg border px-4 py-2.5 text-sm font-semibold backdrop-blur-md transition-all duration-200",
         selected
-          ? "border-nexus-orange-400/60 bg-nexus-orange-500/10 text-white"
+          ? "border-brand/60 bg-brand/10 text-white"
           : "border-white/10 bg-white/[0.04] text-white/85 hover:border-white/20 hover:bg-white/[0.07]"
       )}
     >
@@ -1620,7 +1620,7 @@ function DocumentsUpload({
 
   return (
     <div className="space-y-4">
-      <div className="rounded-lg border border-nexus-orange-400/25 bg-nexus-orange-500/10 p-4 text-sm text-nexus-orange-100">
+      <div className="rounded-lg border border-brand/25 bg-brand/10 p-4 text-sm text-brand">
         <p>
           <strong>Aucune catégorie n&rsquo;est obligatoire.</strong> Vous
           pourrez ajouter ou compléter vos documents après soumission depuis
@@ -1636,7 +1636,7 @@ function DocumentsUpload({
           >
             <div className="mb-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <FileText className="h-4 w-4 text-nexus-orange-300" />
+                <FileText className="h-4 w-4 text-brand" />
                 <p className="text-sm font-semibold text-white">{cat.label}</p>
                 {files.length > 0 && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-200">
@@ -1645,7 +1645,7 @@ function DocumentsUpload({
                   </span>
                 )}
               </div>
-              <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] font-semibold text-white/85 transition-colors hover:border-nexus-orange-400/40 hover:text-white">
+              <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] font-semibold text-white/85 transition-colors hover:border-brand/40 hover:text-white">
                 <Upload className="h-3 w-3" />
                 Ajouter
                 <input
@@ -1664,7 +1664,7 @@ function DocumentsUpload({
                     className="flex items-center justify-between gap-2 rounded-md border border-white/5 bg-white/[0.03] px-3 py-2 text-xs text-slate-200"
                   >
                     <span className="flex min-w-0 items-center gap-2">
-                      <Paperclip className="h-3 w-3 shrink-0 text-nexus-orange-300" />
+                      <Paperclip className="h-3 w-3 shrink-0 text-brand" />
                       <span className="truncate">{f.name}</span>
                       <span className="shrink-0 text-[10px] text-white/45">
                         ({(f.size / 1024).toFixed(0)} Ko)
@@ -1736,7 +1736,7 @@ function ConsentCheckbox({
         className={cn(
           "flex cursor-pointer items-start gap-3 rounded-lg border p-3 backdrop-blur-md transition-colors",
           checked
-            ? "border-nexus-orange-400/40 bg-nexus-orange-500/10"
+            ? "border-brand/40 bg-brand/10"
             : error
               ? "border-rose-400/40 bg-rose-500/10"
               : "border-white/10 bg-white/[0.04] hover:bg-white/[0.06]"
@@ -1746,7 +1746,7 @@ function ConsentCheckbox({
           type="checkbox"
           checked={checked}
           onChange={(e) => onChange(e.target.checked)}
-          className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-white/30 bg-transparent accent-nexus-orange-500"
+          className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-white/30 bg-transparent accent-brand"
         />
         <span className="text-xs leading-relaxed text-slate-200 sm:text-sm">
           {label}
@@ -1774,7 +1774,7 @@ function ResumeSidebar({
   return (
     <div className="overflow-hidden rounded-2xl border border-white/12 bg-gradient-to-br from-white/[0.06] via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 backdrop-blur-2xl">
       <div className="border-b border-white/10 px-5 py-4">
-        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
           Résumé du dossier
         </p>
         <p className="mt-1 text-[11px] text-white/55">
@@ -1791,7 +1791,7 @@ function ResumeSidebar({
         </p>
         <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/10">
           <div
-            className="h-full bg-gradient-to-r from-nexus-orange-500 via-nexus-orange-400 to-nexus-orange-300 transition-all duration-500"
+            className="h-full bg-brand transition-all duration-500"
             style={{ width: `${((currentStep + 1) / 7) * 100}%` }}
           />
         </div>
@@ -1836,10 +1836,10 @@ function ResumeSidebar({
         </p>
       </div>
 
-      <div className="bg-gradient-to-br from-nexus-orange-500/10 via-nexus-orange-500/5 to-transparent px-5 py-4">
+      <div className="bg-gradient-to-br from-brand/10 via-brand/5 to-transparent px-5 py-4">
         <div className="flex items-center gap-1.5">
-          <Lock className="h-3 w-3 text-nexus-orange-300" />
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+          <Lock className="h-3 w-3 text-brand" />
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
             Espace sécurisé
           </p>
         </div>
@@ -1849,7 +1849,7 @@ function ResumeSidebar({
         </p>
         <Link
           href="/login"
-          className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-semibold text-nexus-orange-300 transition-colors hover:text-nexus-orange-200"
+          className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-semibold text-brand transition-colors hover:text-brand"
         >
           <LogIn className="h-3 w-3" />
           Accéder à mon espace existant

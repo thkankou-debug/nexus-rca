@@ -151,7 +151,7 @@ export function RdvListClient({
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as FilterValue)}
-          className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-sm focus:border-nexus-orange-400 focus:outline-none"
+          className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-sm focus:border-focus focus:outline-none"
         >
           {FILTERS.map((f) => (
             <option key={f.value} value={f.value}>
@@ -222,11 +222,11 @@ export function RdvListClient({
 
                     <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-600">
                       <span className="flex items-center gap-1.5">
-                        <Calendar className="h-4 w-4 text-nexus-orange-600" />
+                        <Calendar className="h-4 w-4 text-brand-hover" />
                         {formatDateLong(rdv.rdv_date)}
                       </span>
                       <span className="flex items-center gap-1.5">
-                        <Clock className="h-4 w-4 text-nexus-orange-600" />
+                        <Clock className="h-4 w-4 text-brand-hover" />
                         {rdv.rdv_heure}
                       </span>
                     </div>

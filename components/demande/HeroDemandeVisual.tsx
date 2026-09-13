@@ -59,7 +59,7 @@ export function HeroDemandeVisual() {
       {/* Halo externe — couche profondeur */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-6 rounded-full bg-gradient-to-br from-nexus-orange-500/15 via-nexus-orange-500/5 to-nexus-blue-500/15 opacity-70 blur-3xl"
+        className="pointer-events-none absolute -inset-6 rounded-full bg-gradient-to-br from-brand/15 via-brand/5 to-nexus-blue-500/15 opacity-70 blur-3xl"
       />
 
       {/* SVG globe + connexions + particules */}
@@ -73,12 +73,12 @@ export function HeroDemandeVisual() {
           {/* Gradients */}
           <radialGradient id="hero-hub-glow" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#fb923c" stopOpacity="0.7" />
-            <stop offset="60%" stopColor="#f97316" stopOpacity="0.2" />
-            <stop offset="100%" stopColor="#f97316" stopOpacity="0" />
+            <stop offset="60%" stopColor="#B99760" stopOpacity="0.2" />
+            <stop offset="100%" stopColor="#B99760" stopOpacity="0" />
           </radialGradient>
           <radialGradient id="hero-cap-glow" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#fdba74" stopOpacity="0.5" />
-            <stop offset="80%" stopColor="#f97316" stopOpacity="0" />
+            <stop offset="80%" stopColor="#B99760" stopOpacity="0" />
           </radialGradient>
           <radialGradient id="hero-globe-bg" cx="50%" cy="40%" r="60%">
             <stop offset="0%" stopColor="rgba(59,99,255,0.15)" />
@@ -86,7 +86,7 @@ export function HeroDemandeVisual() {
             <stop offset="100%" stopColor="rgba(2,7,31,0.05)" />
           </radialGradient>
           <linearGradient id="hero-route" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#f97316" stopOpacity="0.7" />
+            <stop offset="0%" stopColor="#B99760" stopOpacity="0.7" />
             <stop offset="50%" stopColor="#fb923c" stopOpacity="0.4" />
             <stop offset="100%" stopColor="#fb923c" stopOpacity="0.15" />
           </linearGradient>
@@ -222,7 +222,7 @@ export function HeroDemandeVisual() {
             cx={CENTER.x}
             cy={CENTER.y}
             r="9"
-            fill="#f97316"
+            fill="#B99760"
             stroke="#fff7ed"
             strokeWidth="2"
           />
@@ -238,7 +238,7 @@ export function HeroDemandeVisual() {
             height="22"
             rx="11"
             fill="rgba(2,7,31,0.85)"
-            stroke="rgba(249,115,22,0.5)"
+            stroke="rgba(185,151,96,0.5)"
             strokeWidth="0.8"
           />
           <text
@@ -346,19 +346,19 @@ function FloatingCard({
   const toneClass =
     statusTone === "emerald"
       ? "border-emerald-400/40 bg-emerald-500/15 text-emerald-200"
-      : "border-nexus-orange-400/40 bg-nexus-orange-500/15 text-nexus-orange-200";
+      : "border-brand/40 bg-brand/15 text-brand";
 
   return (
     <div className="relative">
       {/* Halo subtil */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-2 rounded-2xl bg-gradient-to-br from-nexus-orange-500/15 via-transparent to-nexus-blue-500/10 blur-xl"
+        className="pointer-events-none absolute -inset-2 rounded-2xl bg-gradient-to-br from-brand/15 via-transparent to-nexus-blue-500/10 blur-xl"
       />
-      <div className="relative w-[145px] overflow-hidden rounded-xl border border-white/15 bg-gradient-to-br from-white/[0.10] via-white/[0.05] to-white/[0.02] p-2.5 ring-1 ring-white/10 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12),0_18px_40px_-18px_rgba(255,102,0,0.30)] sm:w-[170px] sm:p-3">
+      <div className="relative w-[145px] overflow-hidden rounded-xl border border-white/15 bg-gradient-to-br from-white/[0.10] via-white/[0.05] to-white/[0.02] p-2.5 ring-1 ring-white/10 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12),0_18px_40px_-18px_rgba(185,151,96,0.30)] sm:w-[170px] sm:p-3">
         <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-nexus-orange-500/30 to-nexus-orange-700/20 ring-1 ring-nexus-orange-400/30">
-            <Icon className="h-3.5 w-3.5 text-nexus-orange-300" />
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-brand/30 to-brand/20 ring-1 ring-brand/30">
+            <Icon className="h-3.5 w-3.5 text-brand" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-[8px] font-bold uppercase tracking-[0.18em] text-white/55">
@@ -380,7 +380,7 @@ function FloatingCard({
             <div className="flex-1">
               <div className="h-0.5 w-full overflow-hidden rounded-full bg-white/10">
                 <div
-                  className="h-full bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-300"
+                  className="h-full bg-brand"
                   style={{ width: "62%" }}
                 />
               </div>

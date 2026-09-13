@@ -531,7 +531,7 @@ export default function AssurancePage() {
                     />
                     <div className="relative">
                       <div className="flex items-center justify-between">
-                        <span className="font-display text-5xl font-bold leading-none text-transparent [-webkit-text-stroke:1px_rgba(251,146,60,0.4)] sm:text-6xl">
+                        <span className="font-display text-5xl font-bold leading-none text-transparent [-webkit-text-stroke:1px_rgba(185,151,96,0.4)] sm:text-6xl">
                           {etape.n}
                         </span>
                         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand/30 to-brand/20 ring-1 ring-brand/30">

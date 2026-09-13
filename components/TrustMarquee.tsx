@@ -55,7 +55,7 @@ export function TrustMarquee() {
       {/* Glow blob orange subtil */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-32 -top-24 h-72 w-72 rounded-full bg-nexus-orange-500/10 blur-[100px]"
+        className="pointer-events-none absolute -right-32 -top-24 h-72 w-72 rounded-full bg-brand/10 blur-[100px]"
       />
       <div
         aria-hidden
@@ -64,15 +64,15 @@ export function TrustMarquee() {
       {/* Bordure inférieure éclairée */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
       />
 
       {/* Header */}
       <div className="relative mx-auto mb-8 max-w-3xl px-4 text-center sm:mb-10 lg:px-8">
-        <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+        <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
           <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
           </span>
           Réseau & partenaires
         </span>
@@ -145,7 +145,7 @@ function Track({
 
 function Pill({ partner }: { partner: Partner }) {
   return (
-    <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 backdrop-blur-md transition-all duration-200 ease-out hover:scale-[1.02] hover:border-nexus-orange-400/30 hover:bg-white/[0.06]">
+    <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 backdrop-blur-md transition-all duration-200 ease-out hover:scale-[1.02] hover:border-brand/30 hover:bg-white/[0.06]">
       {/* Monogram */}
       <span
         aria-hidden

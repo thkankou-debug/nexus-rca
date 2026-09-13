@@ -77,7 +77,7 @@ export function Section({
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/12 blur-[120px]"
+            className="pointer-events-none absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-brand/12 blur-[120px]"
           />
           <div
             aria-hidden
@@ -111,7 +111,7 @@ export function Section({
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 top-32 h-96 w-96 rounded-full bg-nexus-orange-500/8 blur-[100px]"
+            className="pointer-events-none absolute -right-32 top-32 h-96 w-96 rounded-full bg-brand/8 blur-[100px]"
           />
           <div
             aria-hidden
@@ -157,7 +157,7 @@ export function SectionHeader({
       )}
     >
       {eyebrow && (
-        <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+        <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-brand-hover">
           {eyebrow}
         </span>
       )}

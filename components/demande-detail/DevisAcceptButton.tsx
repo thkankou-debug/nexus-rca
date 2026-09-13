@@ -30,11 +30,11 @@ export function DevisAcceptButton({ devisId }: { devisId: string }) {
 
   if (confirming) {
     return (
-      <div className="rounded-2xl border-2 border-nexus-orange-300 bg-nexus-orange-50 p-4">
-        <p className="text-sm font-semibold text-nexus-orange-900">
+      <div className="rounded-2xl border-2 border-brand/40 bg-brand-subtle p-4">
+        <p className="text-sm font-semibold text-brand">
           Confirmer l&apos;acceptation de ce devis ?
         </p>
-        <p className="mt-1 text-xs text-nexus-orange-700">
+        <p className="mt-1 text-xs text-brand-hover">
           Cette action est définitive et engage votre accord sur les montants et prestations indiqués.
         </p>
         <div className="mt-3 flex gap-2">
@@ -42,7 +42,7 @@ export function DevisAcceptButton({ devisId }: { devisId: string }) {
             type="button"
             onClick={handleAccept}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-nexus-orange-500 px-4 py-2 text-sm font-bold text-white hover:bg-nexus-orange-600 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2 text-sm font-bold text-on-brand hover:bg-brand-hover disabled:opacity-50"
           >
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
             Confirmer l&apos;acceptation
@@ -64,7 +64,7 @@ export function DevisAcceptButton({ devisId }: { devisId: string }) {
     <button
       type="button"
       onClick={() => setConfirming(true)}
-      className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-nexus-orange-600"
+      className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-5 py-3 text-sm font-bold text-on-brand shadow-lg transition hover:bg-brand-hover"
     >
       <CheckCircle2 className="h-4 w-4" />
       Accepter ce devis

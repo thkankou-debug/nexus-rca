@@ -42,8 +42,8 @@ const STATUS_LABELS: Record<DocStatus, { label: string; classes: string; dot: st
   },
   todo: {
     label: "À préparer",
-    classes: "border-nexus-orange-400/30 bg-nexus-orange-500/10 text-nexus-orange-300",
-    dot: "bg-nexus-orange-400",
+    classes: "border-brand/30 bg-brand/10 text-brand",
+    dot: "bg-brand",
   },
   translate: {
     label: "À traduire",
@@ -67,10 +67,10 @@ export function AdminChecklist() {
   const progress = (readyCount / total) * 100;
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)] sm:p-8">
+    <div className="relative overflow-hidden rounded-3xl border border-brand/40 bg-gradient-to-br from-brand/10 via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.30)] sm:p-8">
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/20 blur-[100px]"
+        className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand/20 blur-[100px]"
       />
       <div
         aria-hidden
@@ -84,14 +84,14 @@ export function AdminChecklist() {
             <div className="relative">
               <div
                 aria-hidden
-                className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 blur-md"
+                className="absolute inset-0 rounded-2xl bg-brand/40 blur-md"
               />
-              <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/10">
+              <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.6)] ring-1 ring-white/10">
                 <ClipboardCheck className="h-5 w-5" />
               </div>
             </div>
             <div>
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Checklist documents
               </span>
               <p className="font-display text-base font-bold leading-tight text-white sm:text-lg">
@@ -113,7 +113,7 @@ export function AdminChecklist() {
         {/* Progress bar */}
         <div className="relative mt-5 h-1.5 overflow-hidden rounded-full bg-white/10 ring-1 ring-white/5">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 shadow-[0_0_12px_rgba(255,102,0,0.6)] transition-all duration-500 ease-out"
+            className="h-full rounded-full bg-brand shadow-[0_0_12px_rgba(185,151,96,0.6)] transition-all duration-500 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -133,7 +133,7 @@ export function AdminChecklist() {
                   aria-pressed={isChecked}
                   className={`group/item relative flex w-full items-center gap-3 overflow-hidden rounded-2xl border p-3.5 text-left ring-1 backdrop-blur transition-all duration-300 ease-out hover:-translate-y-0.5 ${
                     isChecked
-                      ? "border-nexus-orange-400/50 bg-nexus-orange-500/10 ring-nexus-orange-400/20"
+                      ? "border-brand/50 bg-brand/10 ring-brand/20"
                       : "border-white/10 bg-white/[0.03] ring-white/5 hover:border-white/20 hover:bg-white/[0.06]"
                   }`}
                 >
@@ -141,7 +141,7 @@ export function AdminChecklist() {
                   <span
                     className={`relative flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border transition-all duration-300 ${
                       isChecked
-                        ? "border-nexus-orange-400 bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 shadow-[0_6px_16px_-6px_rgba(255,102,0,0.6)]"
+                        ? "border-brand bg-brand shadow-[0_6px_16px_-6px_rgba(185,151,96,0.6)]"
                         : "border-white/20 bg-white/[0.04]"
                     }`}
                   >
@@ -156,7 +156,7 @@ export function AdminChecklist() {
                   {/* Icon */}
                   <Icon
                     className={`h-4 w-4 shrink-0 transition-colors duration-300 ${
-                      isChecked ? "text-nexus-orange-300" : "text-white/50"
+                      isChecked ? "text-brand" : "text-white/50"
                     }`}
                   />
 
@@ -196,7 +196,7 @@ export function AdminChecklist() {
 
         {/* Footer info */}
         <div className="mt-6 flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-3.5 ring-1 ring-white/5 backdrop-blur">
-          <Languages className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-300" />
+          <Languages className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
           <p className="text-xs leading-relaxed text-slate-300">
             Liste indicative — Nexus adapte la checklist à votre dossier
             précis (visa, études, immigration). Cochez les éléments déjà en

@@ -9,8 +9,8 @@
   /* Brand (constants — same in light/dark) */
   --nexus-blue: #050f3d;
   --nexus-blue-mid: #0a1a6b;
-  --nexus-orange: #f97316;
-  --nexus-orange-dark: #ea580c;
+  /* --nexus-orange / --nexus-orange-dark supprimées le 13/09/2026 (L12 lot 2) :
+     plus aucun consommateur — l'accent passe par --brand (or, D8). */
 
   /* Surfaces (rgb triplets, consumed via rgb(var(--…) / α)) */
   --surface: 255 255 255;            /* page background */
@@ -178,12 +178,12 @@ body {
   background: rgb(var(--surface-sunken));
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--nexus-blue-mid), var(--nexus-orange));
+  background: linear-gradient(180deg, var(--nexus-blue-mid), rgb(var(--brand)));
   border-radius: 10px;
   border: 2px solid rgb(var(--surface-sunken));
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, var(--nexus-blue), var(--nexus-orange-dark));
+  background: linear-gradient(180deg, var(--nexus-blue), rgb(var(--brand-hover)));
 }
 
 /* ============================================================
@@ -191,20 +191,21 @@ body {
    ============================================================ */
 
 .text-gradient-nexus {
-  background: linear-gradient(135deg, #0a1a6b 0%, #f97316 100%);
+  background: linear-gradient(135deg, #0a1a6b 0%, #B99760 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 .dark .text-gradient-nexus {
-  background: linear-gradient(135deg, #608aff 0%, #fb923c 100%);
+  background: linear-gradient(135deg, #608aff 0%, #B99760 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
+/* Nom hérité — rend désormais l'or de marque (D8, 13/09/2026) */
 .text-gradient-orange {
-  background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+  background: linear-gradient(135deg, #B99760 0%, #A3854A 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -251,7 +252,7 @@ body {
     #050f3d,
     #0a1a6b,
     #182fd8,
-    #f97316
+    #B99760
   );
   background-size: 400% 400%;
   animation: gradientX 15s ease infinite;

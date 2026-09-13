@@ -34,12 +34,12 @@ export function CategoryCard({
       className={cn(
         "group relative block overflow-hidden rounded-2xl border bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md",
         isSpecialite
-          ? "border-nexus-orange-300 ring-1 ring-nexus-orange-200/60"
-          : "border-slate-200 hover:border-nexus-orange-300/60"
+          ? "border-brand/40 ring-1 ring-brand/30"
+          : "border-slate-200 hover:border-brand/40"
       )}
     >
       {isSpecialite && (
-        <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-nexus-orange-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">
+        <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-brand px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-on-brand shadow-sm">
           <Star className="h-2.5 w-2.5" />
           Votre spécialité
         </span>
@@ -67,7 +67,7 @@ export function CategoryCard({
         <Counter label="Urgents" value={urgents} accent="rose" />
       </div>
 
-      <div className="mt-4 inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 transition group-hover:text-nexus-orange-600">
+      <div className="mt-4 inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 transition group-hover:text-brand-hover">
         Voir les dossiers
         <ArrowRight className="h-3 w-3" />
       </div>
@@ -86,7 +86,7 @@ function Counter({
 }) {
   const colorMap = {
     blue: "text-nexus-blue-950",
-    orange: value > 0 ? "text-nexus-orange-600" : "text-slate-400",
+    orange: value > 0 ? "text-brand-hover" : "text-slate-400",
     rose: value > 0 ? "text-rose-600" : "text-slate-400",
   };
   return (

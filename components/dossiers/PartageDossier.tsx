@@ -145,7 +145,7 @@ export function PartageDossier({ demandeId }: { demandeId: string }) {
               <select
                 value={choix}
                 onChange={(e) => setChoix(e.target.value)}
-                className="min-w-[220px] flex-1 rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none"
+                className="min-w-[220px] flex-1 rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-focus focus:outline-none"
               >
                 <option value="">Choisir un compte partenaire…</option>
                 {disponibles.map((c) => (

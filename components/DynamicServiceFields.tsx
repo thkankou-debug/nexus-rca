@@ -27,9 +27,9 @@ export function DynamicServiceFields({
   onChange,
 }: DynamicFieldsProps) {
   const wrapClass =
-    "rounded-2xl border border-nexus-orange-200 bg-nexus-orange-50/50 p-5";
+    "rounded-2xl border border-brand/30 bg-brand-subtle/50 p-5";
   const titleClass =
-    "mb-4 text-sm font-bold uppercase tracking-wide text-nexus-orange-700";
+    "mb-4 text-sm font-bold uppercase tracking-wide text-brand-hover";
 
   switch (serviceType) {
     case "visa":

@@ -30,7 +30,7 @@ export function DossierPaiementsTab({ payments }: { payments: DossierPayment[] }
       {payments.map((p) => (
         <li key={p.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="font-mono text-xs font-bold text-nexus-orange-700">
+            <span className="font-mono text-xs font-bold text-brand-hover">
               {p.reference ?? p.id.slice(0, 8)}
             </span>
             <span className="text-sm font-bold text-nexus-blue-950">

@@ -35,7 +35,7 @@ export function DossierRendezVousTab({ appointments }: { appointments: DossierAp
         {appointments.map((a) => (
           <li key={a.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="font-mono text-xs font-bold text-nexus-orange-700">
+              <span className="font-mono text-xs font-bold text-brand-hover">
                 {a.reference ?? a.id.slice(0, 8)}
               </span>
               <span className="text-sm font-bold text-nexus-blue-950">

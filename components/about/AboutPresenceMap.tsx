@@ -54,7 +54,7 @@ export function AboutPresenceMap() {
           {/* Glow d'ambiance */}
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[24rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/12 blur-[120px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[24rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/12 blur-[120px]"
           />
           <div
             aria-hidden
@@ -70,15 +70,15 @@ export function AboutPresenceMap() {
             <defs>
               <radialGradient id="about-hub-glow" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stopColor="#fb923c" stopOpacity="0.7" />
-                <stop offset="60%" stopColor="#f97316" stopOpacity="0.2" />
-                <stop offset="100%" stopColor="#f97316" stopOpacity="0" />
+                <stop offset="60%" stopColor="#B99760" stopOpacity="0.2" />
+                <stop offset="100%" stopColor="#B99760" stopOpacity="0" />
               </radialGradient>
               <radialGradient id="about-point-glow" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stopColor="#fdba74" stopOpacity="0.6" />
-                <stop offset="80%" stopColor="#f97316" stopOpacity="0" />
+                <stop offset="80%" stopColor="#B99760" stopOpacity="0" />
               </radialGradient>
               <linearGradient id="about-route" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#f97316" stopOpacity="0.6" />
+                <stop offset="0%" stopColor="#B99760" stopOpacity="0.6" />
                 <stop offset="50%" stopColor="#fb923c" stopOpacity="0.4" />
                 <stop offset="100%" stopColor="#fb923c" stopOpacity="0.15" />
               </linearGradient>
@@ -178,7 +178,7 @@ export function AboutPresenceMap() {
                 cx={HUB.x}
                 cy={HUB.y}
                 r="9"
-                fill="#f97316"
+                fill="#B99760"
                 stroke="#fff7ed"
                 strokeWidth="2"
               />
@@ -221,7 +221,7 @@ export function AboutPresenceMap() {
                 height="22"
                 rx="11"
                 fill="rgba(2,7,31,0.9)"
-                stroke="rgba(249,115,22,0.5)"
+                stroke="rgba(185,151,96,0.5)"
                 strokeWidth="0.8"
               />
               <text
@@ -242,15 +242,15 @@ export function AboutPresenceMap() {
           {/* Légende sous la carte */}
           <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-[10px] font-bold uppercase tracking-[0.18em] text-white/50 sm:gap-6">
             <span className="inline-flex items-center gap-2">
-              <span className="inline-block h-2.5 w-2.5 rounded-full bg-nexus-orange-500 ring-2 ring-nexus-orange-500/30" />
+              <span className="inline-block h-2.5 w-2.5 rounded-full bg-brand ring-2 ring-brand/30" />
               Hub historique
             </span>
             <span className="inline-flex items-center gap-2">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-nexus-orange-300" />
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-brand" />
               Pôles internationaux
             </span>
             <span className="inline-flex items-center gap-2">
-              <span className="inline-block h-px w-6 bg-gradient-to-r from-nexus-orange-500/60 to-nexus-orange-300/0" />
+              <span className="inline-block h-px w-6 bg-gradient-to-r from-brand/60 to-brand/0" />
               Liens actifs
             </span>
           </div>
@@ -264,21 +264,21 @@ export function AboutPresenceMap() {
           return (
             <div
               key={kpi.label}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-brand/40 hover:bg-white/[0.06]"
             >
               <div
                 aria-hidden
-                className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
+                className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/15"
               />
               <div className="relative flex gap-5">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500/30 to-nexus-orange-700/20 ring-1 ring-nexus-orange-400/30">
-                  <Icon className="h-5 w-5 text-nexus-orange-300" />
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand/30 to-brand/20 ring-1 ring-brand/30">
+                  <Icon className="h-5 w-5 text-brand" />
                 </div>
                 <div className="flex-1">
                   <p className="font-display text-3xl font-bold leading-none text-white sm:text-4xl">
                     {kpi.value}
                   </p>
-                  <p className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+                  <p className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
                     {kpi.label}
                   </p>
                   <p className="mt-2 text-xs leading-relaxed text-slate-400">

@@ -188,7 +188,7 @@ export function StaffHistoryTimeline({ demandeId }: { demandeId: string }) {
   return (
     <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="flex items-center gap-2 border-b border-slate-100 p-4">
-        <Clock className="h-3.5 w-3.5 text-nexus-orange-500" />
+        <Clock className="h-3.5 w-3.5 text-brand" />
         <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
           Historique du dossier
         </p>
@@ -219,7 +219,7 @@ export function StaffHistoryTimeline({ demandeId }: { demandeId: string }) {
                         : CheckCircle2;
               const accent =
                 e.kind === "status"
-                  ? "text-nexus-orange-600 bg-nexus-orange-50"
+                  ? "text-brand-hover bg-brand-subtle"
                   : e.kind === "doc_request"
                     ? "text-amber-700 bg-amber-50"
                     : e.kind === "assignment"

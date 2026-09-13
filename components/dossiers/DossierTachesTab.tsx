@@ -121,7 +121,7 @@ export function DossierTachesTab({ demandeId }: { demandeId: string }) {
             value={titre}
             onChange={(e) => setTitre(e.target.value)}
             placeholder="Nouvelle tâche…"
-            className="min-w-[180px] flex-1 rounded-lg border border-slate-200 px-3 py-2 text-sm text-nexus-blue-950 focus:border-nexus-orange-400 focus:outline-none focus:ring-1 focus:ring-nexus-orange-300"
+            className="min-w-[180px] flex-1 rounded-lg border border-slate-200 px-3 py-2 text-sm text-nexus-blue-950 focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus/25"
           />
           <select
             value={priority}
@@ -143,7 +143,7 @@ export function DossierTachesTab({ demandeId }: { demandeId: string }) {
             type="button"
             onClick={create}
             disabled={creating || !titre.trim()}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-nexus-orange-500 px-3 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-2 text-xs font-bold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50"
           >
             {creating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
             Ajouter

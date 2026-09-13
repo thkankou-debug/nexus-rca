@@ -35,7 +35,7 @@ export function VisaRequirementChecker() {
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
       <div className="mb-5 flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow">
           <Search className="h-5 w-5" />
         </div>
         <div>
@@ -61,7 +61,7 @@ export function VisaRequirementChecker() {
             id="vrc-destination"
             value={destination}
             onChange={(e) => setDestination(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-100"
+            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
           >
             <option value="">Choisir un pays…</option>
             {DESTINATIONS.map((d) => (
@@ -83,7 +83,7 @@ export function VisaRequirementChecker() {
             id="vrc-type"
             value={type}
             onChange={(e) => setType(e.target.value as TypeVisa | "")}
-            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-100"
+            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
           >
             <option value="">Motif…</option>
             {TYPES_VISA_OPTIONS.map((t) => (
@@ -105,7 +105,7 @@ export function VisaRequirementChecker() {
             id="vrc-duree"
             value={duree}
             onChange={(e) => setDuree(e.target.value as DureeSejour | "")}
-            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-100"
+            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
           >
             <option value="">Durée…</option>
             {DUREES.map((d) => (
@@ -124,7 +124,7 @@ export function VisaRequirementChecker() {
           <button
             type="button"
             onClick={reset}
-            className="mt-3 text-xs font-semibold text-slate-500 underline-offset-4 hover:text-nexus-orange-600 hover:underline"
+            className="mt-3 text-xs font-semibold text-slate-500 underline-offset-4 hover:text-brand-hover hover:underline"
           >
             Recommencer la vérification
           </button>

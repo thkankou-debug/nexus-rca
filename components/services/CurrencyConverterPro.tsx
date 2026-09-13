@@ -70,24 +70,24 @@ export function CurrencyConverterPro() {
   };
 
   return (
-    <article className="group relative overflow-hidden rounded-3xl border border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/15 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-orange-400/20 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.25)] sm:p-9">
+    <article className="group relative overflow-hidden rounded-3xl border border-brand/40 bg-gradient-to-br from-brand/15 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-orange-400/20 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.25)] sm:p-9">
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/25 blur-[100px]"
+        className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand/25 blur-[100px]"
       />
       <div className="relative">
         <div className="flex items-center gap-3">
           <div className="relative">
             <div
               aria-hidden
-              className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 blur-md"
+              className="absolute inset-0 rounded-2xl bg-brand/40 blur-md"
             />
-            <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/10">
+            <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.6)] ring-1 ring-white/10">
               <Coins className="h-6 w-6" />
             </div>
           </div>
           <div>
-            <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+            <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
               Convertisseur Pro
             </span>
             <h3 className="font-display text-xl font-bold leading-tight text-white sm:text-2xl">
@@ -99,7 +99,7 @@ export function CurrencyConverterPro() {
         <div className="mt-7 space-y-4">
           {/* Montant + devise départ */}
           <div>
-            <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+            <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
               Montant à changer
             </label>
             <div className="grid grid-cols-[1fr_auto] gap-3">
@@ -110,12 +110,12 @@ export function CurrencyConverterPro() {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="0"
-                className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 font-display text-xl font-bold tabular-nums text-white placeholder:text-white/30 ring-1 ring-white/5 backdrop-blur transition-all duration-200 focus:border-nexus-orange-400/60 focus:outline-none focus:ring-2 focus:ring-nexus-orange-400/30 sm:text-2xl"
+                className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 font-display text-xl font-bold tabular-nums text-white placeholder:text-white/30 ring-1 ring-white/5 backdrop-blur transition-all duration-200 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30 sm:text-2xl"
               />
               <select
                 value={from}
                 onChange={(e) => setFrom(e.target.value as Currency)}
-                className="cursor-pointer rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-bold text-white ring-1 ring-white/5 backdrop-blur transition-all duration-200 focus:border-nexus-orange-400/60 focus:outline-none"
+                className="cursor-pointer rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-bold text-white ring-1 ring-white/5 backdrop-blur transition-all duration-200 focus:border-focus focus:outline-none"
               >
                 {CURRENCIES.map((c) => (
                   <option
@@ -136,7 +136,7 @@ export function CurrencyConverterPro() {
               type="button"
               onClick={swap}
               aria-label="Inverser les devises"
-              className="group/swap relative flex h-11 w-11 items-center justify-center rounded-full border border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.6)] ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_-10px_rgba(255,102,0,0.7)]"
+              className="group/swap relative flex h-11 w-11 items-center justify-center rounded-full border border-brand/40 bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.6)] ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_-10px_rgba(185,151,96,0.7)]"
             >
               <ArrowLeftRight className="h-4 w-4 transition-transform duration-300 group-hover/swap:rotate-180" />
             </button>
@@ -144,11 +144,11 @@ export function CurrencyConverterPro() {
 
           {/* Résultat + devise arrivée */}
           <div>
-            <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+            <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
               Vous obtenez
             </label>
             <div className="grid grid-cols-[1fr_auto] gap-3">
-              <div className="flex items-center rounded-2xl border border-nexus-orange-400/30 bg-nexus-orange-500/[0.08] px-4 py-3 ring-1 ring-nexus-orange-400/15 backdrop-blur">
+              <div className="flex items-center rounded-2xl border border-brand/30 bg-brand/[0.08] px-4 py-3 ring-1 ring-brand/15 backdrop-blur">
                 <span className="font-display text-xl font-bold tabular-nums text-white sm:text-2xl">
                   ≈ {formatNumber(converted, to)}
                 </span>
@@ -156,7 +156,7 @@ export function CurrencyConverterPro() {
               <select
                 value={to}
                 onChange={(e) => setTo(e.target.value as Currency)}
-                className="cursor-pointer rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-bold text-white ring-1 ring-white/5 backdrop-blur transition-all duration-200 focus:border-nexus-orange-400/60 focus:outline-none"
+                className="cursor-pointer rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-bold text-white ring-1 ring-white/5 backdrop-blur transition-all duration-200 focus:border-focus focus:outline-none"
               >
                 {CURRENCIES.map((c) => (
                   <option
@@ -174,7 +174,7 @@ export function CurrencyConverterPro() {
           {/* Stats taux mid + spread */}
           <div className="grid gap-2 sm:grid-cols-3">
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur">
-              <p className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-[0.16em] text-nexus-orange-300">
+              <p className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-[0.16em] text-brand">
                 <TrendingUp className="h-3 w-3" />
                 Taux mid
               </p>
@@ -187,7 +187,7 @@ export function CurrencyConverterPro() {
               </p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur">
-              <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-nexus-orange-300">
+              <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-brand">
                 Marge Nexus
               </p>
               <p className="mt-1 font-display text-sm font-bold tabular-nums text-white">
@@ -195,7 +195,7 @@ export function CurrencyConverterPro() {
               </p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur">
-              <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-nexus-orange-300">
+              <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-brand">
                 Taux client
               </p>
               <p className="mt-1 font-display text-sm font-bold tabular-nums text-white">
@@ -209,7 +209,7 @@ export function CurrencyConverterPro() {
 
         {/* Note légale */}
         <div className="mt-6 flex items-start gap-2 text-[11px] leading-relaxed text-slate-300">
-          <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-nexus-orange-300" />
+          <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand" />
           <p>
             Taux indicatifs — confirmés au comptoir avant toute transaction.
             La marge Nexus de 0,5 % est déjà incluse dans le taux client
@@ -220,7 +220,7 @@ export function CurrencyConverterPro() {
         <div className="mt-6">
           <Link
             href="/services/change/demarrer"
-            className="group/cta relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-6 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+            className="group/cta relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-6 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)]"
           >
             <span
               aria-hidden

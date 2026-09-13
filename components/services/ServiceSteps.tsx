@@ -15,7 +15,7 @@ export function ServiceSteps({ steps }: ServiceStepsProps) {
           key={i}
           className="relative flex gap-5 rounded-3xl border border-line bg-surface-elevated p-6 shadow-elev-2 transition hover:shadow-elev-3"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-800 to-nexus-orange-500 font-display text-xl font-bold text-white shadow-elev-2">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-800 to-brand font-display text-xl font-bold text-white shadow-elev-2">
             {i + 1}
           </div>
           <div className="min-w-0 flex-1 pt-1">

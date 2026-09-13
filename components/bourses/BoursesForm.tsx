@@ -338,7 +338,7 @@ export function BoursesForm() {
           <button
             type="button"
             onClick={handleNext}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-3 text-body-sm font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-3 text-body-sm font-semibold text-on-brand shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
           >
             Continuer
             <ArrowRight className="h-4 w-4" />
@@ -395,7 +395,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
           <button
             type="button"
             onClick={onStart}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-on-brand shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
           >
             <FileText className="h-5 w-5" />
             Commencer l&apos;analyse
@@ -462,7 +462,7 @@ function Stepper({
                   onClick={() => onStepClick(step.id as 1 | 2 | 3 | 4 | 5)}
                   className={cn(
                     "flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all",
-                    done && "border-brand bg-brand text-white shadow-elev-2",
+                    done && "border-brand bg-brand text-on-brand shadow-elev-2",
                     current &&
                       "border-brand bg-surface-elevated text-brand shadow-glow-orange ring-4 ring-brand-subtle",
                     !done &&
@@ -1234,7 +1234,7 @@ function Step5({
             type="button"
             onClick={onSubmit}
             disabled={loading}
-            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-on-brand shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? (
               <Loader2 className="h-5 w-5 animate-spin" />
@@ -1469,7 +1469,7 @@ function SuccessScreen({
         <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
           <Link
             href="/dashboard"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-body-sm font-semibold text-white shadow-elev-2 transition hover:bg-brand-hover hover:shadow-glow-orange"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-body-sm font-semibold text-on-brand shadow-elev-2 transition hover:bg-brand-hover hover:shadow-glow-orange"
           >
             Mon espace client
             <ArrowRight className="h-4 w-4" />

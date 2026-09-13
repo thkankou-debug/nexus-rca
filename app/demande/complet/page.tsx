@@ -38,7 +38,7 @@ export default function DemandeCompletePage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/10 blur-[140px]"
+            className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-brand/10 blur-[140px]"
           />
           <div
             aria-hidden
@@ -46,7 +46,7 @@ export default function DemandeCompletePage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/30 to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/30 to-transparent"
           />
 
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -55,10 +55,10 @@ export default function DemandeCompletePage() {
               {/* ─── Colonne gauche : contenu premium (lg:col-span-7) ─── */}
               <div className="lg:col-span-7">
                 {/* 1. Badge institutionnel premium */}
-                <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+                <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                   <span className="relative flex h-1.5 w-1.5">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
                   </span>
                   Espace de soumission · cabinet international
                 </span>
@@ -67,12 +67,12 @@ export default function DemandeCompletePage() {
                 <h1 className="mt-6 font-display text-3xl font-bold leading-[1.05] tracking-tight text-white sm:mt-7 sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.75rem]">
                   Soumettre votre{" "}
                   <span className="relative inline-block">
-                    <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    <span className="bg-brand bg-clip-text text-transparent">
                       dossier
                     </span>
                     <span
                       aria-hidden
-                      className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                      className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                     />
                   </span>
                 </h1>
@@ -107,7 +107,7 @@ export default function DemandeCompletePage() {
                 <div className="mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
                   <a
                     href="#dossier-form"
-                    className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+                    className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)]"
                   >
                     <span
                       aria-hidden
@@ -117,7 +117,7 @@ export default function DemandeCompletePage() {
                     <ArrowDown className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-y-0.5" />
                   </a>
                   <span className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/65 backdrop-blur-md">
-                    <Lock className="h-3 w-3 text-nexus-orange-300" />
+                    <Lock className="h-3 w-3 text-brand" />
                     Espace sécurisé · Traitement confidentiel
                   </span>
                 </div>
@@ -174,15 +174,15 @@ function HeroIndicator({
   label: string;
 }) {
   return (
-    <article className="group/ind relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3 ring-1 ring-white/5 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-nexus-orange-400/40 hover:bg-white/[0.07] sm:px-4 sm:py-4">
+    <article className="group/ind relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3 ring-1 ring-white/5 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-brand/40 hover:bg-white/[0.07] sm:px-4 sm:py-4">
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-6 -top-6 h-20 w-20 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover/ind:bg-nexus-orange-500/15"
+        className="pointer-events-none absolute -right-6 -top-6 h-20 w-20 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover/ind:bg-brand/15"
       />
       <div className="relative">
-        <Icon className="h-3.5 w-3.5 text-nexus-orange-300" />
+        <Icon className="h-3.5 w-3.5 text-brand" />
         <p className="mt-2 font-display text-xl font-bold leading-none text-white sm:text-2xl">
-          <span className="bg-gradient-to-r from-nexus-orange-300 to-nexus-orange-500 bg-clip-text text-transparent">
+          <span className="bg-brand bg-clip-text text-transparent">
             {value}
           </span>
         </p>

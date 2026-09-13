@@ -319,10 +319,10 @@ export function DocumentsManager({
 
       {/* === D2 — Documents demandés par le conseiller === */}
       {requests && requests.length > 0 && (
-        <div className="rounded-2xl border-2 border-nexus-orange-300 bg-nexus-orange-50/40 p-5 shadow-sm">
+        <div className="rounded-2xl border-2 border-brand/40 bg-brand-subtle/40 p-5 shadow-sm">
           <div className="mb-3 flex items-center gap-2">
-            <AlertCircle className="h-4 w-4 text-nexus-orange-600" />
-            <h3 className="font-display text-sm font-bold text-nexus-orange-900">
+            <AlertCircle className="h-4 w-4 text-brand-hover" />
+            <h3 className="font-display text-sm font-bold text-brand">
               Documents demandés par votre conseiller
             </h3>
           </div>
@@ -332,10 +332,10 @@ export function DocumentsManager({
               .map((r) => (
                 <li
                   key={r.id}
-                  className="rounded-lg border border-nexus-orange-200 bg-white p-3"
+                  className="rounded-lg border border-brand/30 bg-white p-3"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-nexus-orange-100 text-nexus-orange-700">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-brand-subtle text-brand-hover">
                       {r.statut === "fourni" ? (
                         <CheckCircle2 className="h-4 w-4" />
                       ) : (
@@ -363,7 +363,7 @@ export function DocumentsManager({
                         <button
                           type="button"
                           onClick={() => setShowAddModal(true)}
-                          className="rounded-md bg-nexus-orange-500 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white hover:bg-nexus-orange-600"
+                          className="rounded-md bg-brand px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-on-brand hover:bg-brand-hover"
                         >
                           Téléverser
                         </button>
@@ -541,7 +541,7 @@ export function DocumentsManager({
       <button
         type="button"
         onClick={() => setShowAddModal(true)}
-        className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-nexus-orange-300 bg-nexus-orange-50 px-4 py-3 text-sm font-bold text-nexus-orange-700 transition hover:bg-nexus-orange-100"
+        className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-brand/40 bg-brand-subtle px-4 py-3 text-sm font-bold text-brand-hover transition hover:bg-brand-subtle"
       >
         <Plus className="h-4 w-4" />
         Ajouter un document
@@ -633,7 +633,7 @@ function UploadModal({
             <select
               value={categorie}
               onChange={(e) => setCategorie(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-nexus-orange-400 focus:outline-none"
+              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-focus focus:outline-none"
             >
               {DOCUMENT_CATEGORIES.map((c) => (
                 <option key={c.value} value={c.value}>
@@ -676,7 +676,7 @@ function UploadModal({
               type="button"
               onClick={handleUpload}
               disabled={uploading || !file}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-nexus-orange-500 px-4 py-2 text-sm font-bold text-white hover:bg-nexus-orange-600 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2 text-sm font-bold text-on-brand hover:bg-brand-hover disabled:opacity-50"
             >
               {uploading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />

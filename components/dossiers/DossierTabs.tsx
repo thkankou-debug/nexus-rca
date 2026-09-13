@@ -35,7 +35,7 @@ export function DossierTabs({ tabs, defaultTab }: { tabs: DossierTab[]; defaultT
               className={cn(
                 "flex items-center gap-1.5 border-b-2 px-3 py-2.5 text-sm font-semibold transition",
                 isActive
-                  ? "border-nexus-orange-500 text-nexus-blue-950"
+                  ? "border-brand text-nexus-blue-950"
                   : "border-transparent text-slate-500 hover:text-nexus-blue-950"
               )}
             >
@@ -44,7 +44,7 @@ export function DossierTabs({ tabs, defaultTab }: { tabs: DossierTab[]; defaultT
                 <span
                   className={cn(
                     "rounded-full px-1.5 text-[11px] tabular-nums",
-                    isActive ? "bg-nexus-orange-100 text-nexus-orange-700" : "bg-slate-100 text-slate-500"
+                    isActive ? "bg-brand-subtle text-brand-hover" : "bg-slate-100 text-slate-500"
                   )}
                 >
                   {t.badge}

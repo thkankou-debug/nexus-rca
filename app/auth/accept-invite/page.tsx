@@ -214,7 +214,7 @@ export default function AcceptInvitePage() {
     return (
       <Container>
         <div className="flex flex-col items-center justify-center py-12">
-          <Loader2 className="h-12 w-12 animate-spin text-nexus-orange-500" />
+          <Loader2 className="h-12 w-12 animate-spin text-brand" />
           <p className="mt-4 text-sm text-slate-600">
             Vérification de votre invitation...
           </p>
@@ -240,7 +240,7 @@ export default function AcceptInvitePage() {
           <div className="mt-6 space-y-2">
             <Link
               href="/connexion"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 hover:bg-nexus-orange-600"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 hover:bg-brand-hover"
             >
               Aller à la page de connexion
             </Link>
@@ -269,7 +269,7 @@ export default function AcceptInvitePage() {
           <p className="mt-2 text-sm text-slate-600">
             Votre mot de passe a été défini. Redirection vers votre tableau de bord...
           </p>
-          <Loader2 className="mx-auto mt-4 h-6 w-6 animate-spin text-nexus-orange-500" />
+          <Loader2 className="mx-auto mt-4 h-6 w-6 animate-spin text-brand" />
         </div>
       </Container>
     );
@@ -315,7 +315,7 @@ export default function AcceptInvitePage() {
               minLength={8}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pr-10 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pr-10 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
               placeholder="Minimum 8 caractères"
               disabled={status === "submitting"}
             />
@@ -347,7 +347,7 @@ export default function AcceptInvitePage() {
             minLength={8}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
             placeholder="Retape ton mot de passe"
             disabled={status === "submitting"}
           />
@@ -361,7 +361,7 @@ export default function AcceptInvitePage() {
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600 disabled:opacity-50"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 transition hover:bg-brand-hover disabled:opacity-50"
         >
           {status === "submitting" ? (
             <>
@@ -390,7 +390,7 @@ export default function AcceptInvitePage() {
 // ============================================================================
 function Container({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 via-white to-nexus-orange-50 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 via-white to-brand p-4">
       <div className="w-full max-w-md">
         <div className="mb-6 flex justify-center">
           <Link href="/">

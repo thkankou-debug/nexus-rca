@@ -108,7 +108,7 @@ export default function AProposPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[40rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/12 blur-[160px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[40rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/12 blur-[160px]"
           />
           <div
             aria-hidden
@@ -119,10 +119,10 @@ export default function AProposPage() {
             <div className="grid gap-12 lg:grid-cols-12 lg:items-start lg:gap-16">
               {/* ─── Colonne texte (5/12) ─── */}
               <div className="lg:col-span-5">
-                <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+                <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                   <span className="relative flex h-1.5 w-1.5">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
                   </span>
                   {t("vision_eyebrow")}
                 </span>
@@ -130,12 +130,12 @@ export default function AProposPage() {
                 <h2 className="mt-6 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-[3.4rem]">
                   Une mission{" "}
                   <span className="relative inline-block">
-                    <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    <span className="bg-brand bg-clip-text text-transparent">
                       profondément humaine
                     </span>
                     <span
                       aria-hidden
-                      className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                      className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                     />
                   </span>
                   .
@@ -161,11 +161,11 @@ export default function AProposPage() {
                 {/* Trust pills */}
                 <div className="mt-8 flex flex-wrap items-center gap-2">
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-white/70 backdrop-blur-md">
-                    <MapPin className="h-3 w-3 text-nexus-orange-300" />
+                    <MapPin className="h-3 w-3 text-brand" />
                     {t("hero_trust_bureau")}
                   </span>
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-white/70 backdrop-blur-md">
-                    <Globe2 className="h-3 w-3 text-nexus-orange-300" />
+                    <Globe2 className="h-3 w-3 text-brand" />
                     {t("hero_trust_presence")}
                   </span>
                 </div>
@@ -176,14 +176,14 @@ export default function AProposPage() {
                 {/* Halo décoratif */}
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-nexus-orange-500/15 via-nexus-orange-500/5 to-nexus-blue-500/10 opacity-70 blur-3xl"
+                  className="pointer-events-none absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-brand/15 via-brand/5 to-nexus-blue-500/10 opacity-70 blur-3xl"
                 />
 
-                <blockquote className="relative overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/[0.07] via-white/[0.04] to-white/[0.02] p-8 ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(255,102,0,0.30)] sm:p-10 lg:p-12">
+                <blockquote className="relative overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/[0.07] via-white/[0.04] to-white/[0.02] p-8 ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(185,151,96,0.30)] sm:p-10 lg:p-12">
                   {/* Glow décoratif */}
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-nexus-orange-500/25 blur-3xl"
+                    className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-brand/25 blur-3xl"
                   />
                   <div
                     aria-hidden
@@ -191,11 +191,11 @@ export default function AProposPage() {
                   />
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-300/60 to-transparent"
+                    className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
 
                   <div className="relative">
-                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.7)] ring-1 ring-white/15">
+                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.7)] ring-1 ring-white/15">
                       <Heart className="h-5 w-5" />
                     </div>
 
@@ -234,18 +234,18 @@ export default function AProposPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 top-32 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/12 blur-[120px]"
+            className="pointer-events-none absolute -right-32 top-32 h-[28rem] w-[28rem] rounded-full bg-brand/12 blur-[120px]"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/30 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/30 to-transparent"
           />
 
           <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
             <div className="grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
               {/* ─── Narration (7/12) ─── */}
               <div className="lg:col-span-7">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                   {t("qui_eyebrow")}
                 </span>
                 <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
@@ -277,17 +277,17 @@ export default function AProposPage() {
                       key={s.labelKey}
                       className={`group/stat relative overflow-hidden rounded-2xl border p-5 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.07] sm:p-6 ${
                         i === 0
-                          ? "border-nexus-orange-400/30 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] hover:border-nexus-orange-400/60"
+                          ? "border-brand/30 bg-gradient-to-br from-brand/10 via-white/[0.04] to-white/[0.02] hover:border-brand/60"
                           : "border-white/10 bg-white/[0.04] hover:border-white/25"
                       }`}
                     >
                       <div
                         aria-hidden
-                        className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover/stat:bg-nexus-orange-500/20"
+                        className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover/stat:bg-brand/20"
                       />
                       <div className="relative">
                         <p className="font-display text-3xl font-bold leading-none text-white sm:text-4xl">
-                          <span className="bg-gradient-to-r from-nexus-orange-300 to-nexus-orange-500 bg-clip-text text-transparent">
+                          <span className="bg-brand bg-clip-text text-transparent">
                             {s.value}
                           </span>
                         </p>
@@ -304,7 +304,7 @@ export default function AProposPage() {
             {/* ─── Bandeau méthode 3 étapes ─── */}
             <div className="mt-20 border-t border-white/10 pt-14">
               <div className="mx-auto max-w-2xl text-center">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                   {t("approach_eyebrow")}
                 </span>
                 <h3 className="mt-4 font-display text-2xl font-bold leading-tight text-white sm:text-3xl lg:text-4xl">
@@ -321,19 +321,19 @@ export default function AProposPage() {
                   return (
                     <article
                       key={m.step}
-                      className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                      className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06]"
                     >
                       <div
                         aria-hidden
-                        className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-3xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
+                        className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-3xl transition-all duration-500 group-hover:bg-brand/15"
                       />
                       <div className="relative">
                         <div className="flex items-center justify-between">
-                          <span className="font-display text-5xl font-bold leading-none text-transparent [-webkit-text-stroke:1px_rgba(251,146,60,0.4)] sm:text-6xl">
+                          <span className="font-display text-5xl font-bold leading-none text-transparent [-webkit-text-stroke:1px_rgba(185,151,96,0.4)] sm:text-6xl">
                             {m.step}
                           </span>
-                          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500/30 to-nexus-orange-700/20 ring-1 ring-nexus-orange-400/30">
-                            <Icon className="h-4 w-4 text-nexus-orange-300" />
+                          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand/30 to-brand/20 ring-1 ring-brand/30">
+                            <Icon className="h-4 w-4 text-brand" />
                           </div>
                         </div>
                         <h4 className="mt-5 font-display text-lg font-bold leading-tight text-white">
@@ -346,7 +346,7 @@ export default function AProposPage() {
                       {i < METHODE.length - 1 && (
                         <span
                           aria-hidden
-                          className="pointer-events-none absolute right-0 top-1/2 hidden h-px w-6 -translate-y-1/2 translate-x-3 bg-gradient-to-r from-nexus-orange-500/40 to-transparent sm:block"
+                          className="pointer-events-none absolute right-0 top-1/2 hidden h-px w-6 -translate-y-1/2 translate-x-3 bg-gradient-to-r from-brand/40 to-transparent sm:block"
                         />
                       )}
                     </article>
@@ -358,7 +358,7 @@ export default function AProposPage() {
             {/* ─── Bandeau valeurs (4 chips premium) ─── */}
             <div className="mt-16">
               <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] sm:p-8">
-                <p className="text-center text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                <p className="text-center text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
                   {t("diff_eyebrow")}
                 </p>
                 <h3 className="mt-2 text-center font-display text-xl font-bold text-white sm:text-2xl">
@@ -370,10 +370,10 @@ export default function AProposPage() {
                     return (
                       <div
                         key={v.key}
-                        className="group/v flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4 transition-all duration-300 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                        className="group/v flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4 transition-all duration-300 hover:border-brand/40 hover:bg-white/[0.06]"
                       >
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500/30 to-nexus-orange-700/20 ring-1 ring-nexus-orange-400/30 transition-transform duration-300 group-hover/v:scale-105">
-                          <Icon className="h-4 w-4 text-nexus-orange-300" />
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand/30 to-brand/20 ring-1 ring-brand/30 transition-transform duration-300 group-hover/v:scale-105">
+                          <Icon className="h-4 w-4 text-brand" />
                         </div>
                         <div className="min-w-0">
                           <p className="font-display text-sm font-bold leading-tight text-white">
@@ -403,7 +403,7 @@ export default function AProposPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-40 top-1/3 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/12 blur-[140px]"
+            className="pointer-events-none absolute -left-40 top-1/3 h-[36rem] w-[36rem] rounded-full bg-brand/12 blur-[140px]"
           />
           <div
             aria-hidden
@@ -412,7 +412,7 @@ export default function AProposPage() {
 
           <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                 {t("founders_eyebrow")}
               </span>
               <h2 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl">
@@ -445,18 +445,18 @@ export default function AProposPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 top-32 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/12 blur-[140px]"
+            className="pointer-events-none absolute -right-32 top-32 h-[28rem] w-[28rem] rounded-full bg-brand/12 blur-[140px]"
           />
 
           <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                 <Globe2 className="h-3 w-3" />
                 Présence internationale
               </span>
               <h2 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl">
                 Trois pôles, une{" "}
-                <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                <span className="bg-brand bg-clip-text text-transparent">
                   mission commune
                 </span>
                 .
@@ -485,7 +485,7 @@ export default function AProposPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -top-40 -right-40 h-[40rem] w-[40rem] rounded-full bg-nexus-orange-500/20 blur-[140px]"
+            className="pointer-events-none absolute -top-40 -right-40 h-[40rem] w-[40rem] rounded-full bg-brand/20 blur-[140px]"
           />
           <div
             aria-hidden
@@ -493,25 +493,25 @@ export default function AProposPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/8 blur-[120px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/8 blur-[120px]"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-3xl px-4 text-center lg:px-8">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
               <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
               </span>
               {t("cta_eyebrow")}
             </span>
 
             <h2 className="mt-6 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
               L&rsquo;avenir d&rsquo;un projet commence par une{" "}
-              <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+              <span className="bg-brand bg-clip-text text-transparent">
                 conversation
               </span>
               .
@@ -528,7 +528,7 @@ export default function AProposPage() {
                 )}
                 target="_blank"
                 rel="noreferrer"
-                className="group/wa relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+                className="group/wa relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)]"
               >
                 <span
                   aria-hidden
@@ -549,17 +549,17 @@ export default function AProposPage() {
 
             <div className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[11px] uppercase tracking-[0.18em] text-white/60">
               <span className="flex items-center gap-1.5">
-                <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-300" />
+                <ShieldCheck className="h-3.5 w-3.5 text-brand" />
                 Étude initiale gratuite
               </span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
               <span className="flex items-center gap-1.5">
-                <Sparkles className="h-3.5 w-3.5 text-nexus-orange-300" />
+                <Sparkles className="h-3.5 w-3.5 text-brand" />
                 Plan d&rsquo;action sous 24 h
               </span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
               <span className="flex items-center gap-1.5">
-                <MapPin className="h-3.5 w-3.5 text-nexus-orange-300" />
+                <MapPin className="h-3.5 w-3.5 text-brand" />
                 Bangui (siège) · Canada (bureau) · Europe (représentation)
               </span>
             </div>

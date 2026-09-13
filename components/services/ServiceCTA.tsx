@@ -47,7 +47,7 @@ export function ServiceCTA({
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link
                 href={href}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-body-sm font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-body-sm font-semibold text-on-brand shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
               >
                 {label}
                 <ArrowRight className="h-4 w-4" />

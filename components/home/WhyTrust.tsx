@@ -74,8 +74,8 @@ export function WhyTrust() {
         {/* === Header style rapport === */}
         <div className="mb-16 max-w-3xl">
           <div className="flex items-center gap-3">
-            <span className="h-px w-12 bg-nexus-orange-600" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.28em] text-nexus-orange-700">
+            <span className="h-px w-12 bg-brand" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.28em] text-brand-hover">
               Cadre déontologique
             </span>
           </div>
@@ -115,24 +115,24 @@ export function WhyTrust() {
                 {/* Glow corner hover */}
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-nexus-orange-500/0 blur-3xl transition-all duration-700 group-hover:bg-nexus-orange-500/30"
+                  className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-brand/0 blur-3xl transition-all duration-700 group-hover:bg-brand/30"
                 />
 
                 <div className="relative">
                   {/* Numéro romain XL + icône */}
                   <div className="flex items-start justify-between">
-                    <span className="font-display text-5xl font-black leading-none text-nexus-orange-400">
+                    <span className="font-display text-5xl font-black leading-none text-brand">
                       {p.num}
                     </span>
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/20 backdrop-blur-md transition-transform duration-500 group-hover:scale-105">
-                      <Icon className="h-5 w-5 text-nexus-orange-300" />
+                      <Icon className="h-5 w-5 text-brand" />
                     </div>
                   </div>
 
                   {/* Hairline */}
                   <div
                     aria-hidden
-                    className="my-5 h-px w-full bg-gradient-to-r from-nexus-orange-400/50 via-white/10 to-transparent"
+                    className="my-5 h-px w-full bg-gradient-to-r from-brand/50 via-white/10 to-transparent"
                   />
 
                   {/* Titre blanc pur */}
@@ -154,7 +154,7 @@ export function WhyTrust() {
         <div className="relative mt-14 overflow-hidden rounded-3xl border-2 border-nexus-blue-950/15 bg-white p-8 shadow-[0_30px_60px_-25px_rgba(12,28,64,0.25)] sm:p-10">
           <div className="grid gap-10 lg:grid-cols-[2fr,3fr] lg:items-center lg:gap-12">
             <div>
-              <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.24em] text-nexus-orange-700">
+              <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.24em] text-brand-hover">
                 <ShieldCheck className="h-3 w-3" />
                 Engagements vérifiables
               </span>
@@ -162,7 +162,7 @@ export function WhyTrust() {
                 Quatre repères qui structurent chaque mandat — et que vous pouvez exiger à toute étape.
               </p>
               <p className="mt-4 inline-flex items-center gap-2 text-sm text-nexus-blue-950/70">
-                <MapPin className="h-3.5 w-3.5 text-nexus-orange-600" />
+                <MapPin className="h-3.5 w-3.5 text-brand-hover" />
                 Bureau permanent · Bangui, Croisement Marabena
               </p>
             </div>
@@ -173,7 +173,7 @@ export function WhyTrust() {
                   key={i}
                   className="rounded-xl border border-nexus-blue-950/15 bg-[#F9F6F1] px-4 py-3"
                 >
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-nexus-orange-700">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-brand-hover">
                     {c.sub}
                   </p>
                   <p className="mt-1 text-sm font-semibold text-nexus-blue-950">

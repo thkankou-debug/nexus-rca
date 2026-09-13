@@ -389,7 +389,7 @@ export default function ServiceDetailPage({
               {others.map((o) => {
                 const OIcon = o.icon;
                 const oIsOrange = o.accent === "orange";
-                const oGlowRgba = oIsOrange ? "255,102,0" : "30,64,175";
+                const oGlowRgba = oIsOrange ? "185,151,96" : "30,64,175";
                 return (
                   <Link
                     key={o.id}

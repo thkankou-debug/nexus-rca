@@ -58,14 +58,14 @@ export function AssuranceQuoteSummary({ reference, formData, step }: Props) {
       {/* Halo décoratif */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-4 rounded-[2.5rem] bg-gradient-to-br from-nexus-orange-500/15 via-nexus-orange-500/5 to-nexus-blue-500/15 opacity-70 blur-3xl"
+        className="pointer-events-none absolute -inset-4 rounded-[2.5rem] bg-gradient-to-br from-brand/15 via-brand/5 to-nexus-blue-500/15 opacity-70 blur-3xl"
       />
 
-      <div className="relative overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/[0.06] via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(255,102,0,0.30)]">
+      <div className="relative overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/[0.06] via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_28px_60px_-24px_rgba(185,151,96,0.30)]">
         {/* Glow décoratif */}
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-nexus-orange-500/25 blur-3xl"
+          className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-brand/25 blur-3xl"
         />
         <div
           aria-hidden
@@ -73,16 +73,16 @@ export function AssuranceQuoteSummary({ reference, formData, step }: Props) {
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-300/60 to-transparent"
+          className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
         />
 
         {/* ─── En-tête : référence + dossier actif ─── */}
         <div className="relative border-b border-white/10 p-6">
           <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 ring-1 ring-white/15 shadow-[0_8px_22px_-8px_rgba(255,102,0,0.7)]">
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand ring-1 ring-white/15 shadow-[0_8px_22px_-8px_rgba(185,151,96,0.7)]">
               <ShieldCheck className="h-4 w-4 text-white" />
             </span>
-            <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+            <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
               Dossier actif
             </span>
           </div>
@@ -94,15 +94,15 @@ export function AssuranceQuoteSummary({ reference, formData, step }: Props) {
             </span>
           </div>
           <p className="mt-1 break-all font-mono text-2xl font-bold leading-tight text-white sm:text-[1.7rem]">
-            <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-500 bg-clip-text text-transparent">
+            <span className="bg-brand bg-clip-text text-transparent">
               {reference}
             </span>
           </p>
 
           <div className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-white/65">
             <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
             </span>
             En préparation · étape {step} / 4
           </div>
@@ -180,10 +180,10 @@ export function AssuranceQuoteSummary({ reference, formData, step }: Props) {
 
         {/* ─── Estimation tarifaire (à partir étape 3) ─── */}
         {est && (
-          <div className="relative border-t border-white/10 bg-gradient-to-br from-nexus-orange-500/10 via-nexus-orange-500/5 to-transparent p-6">
+          <div className="relative border-t border-white/10 bg-gradient-to-br from-brand/10 via-brand/5 to-transparent p-6">
             <div className="flex items-center gap-2">
-              <Wallet className="h-3.5 w-3.5 text-nexus-orange-300" />
-              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+              <Wallet className="h-3.5 w-3.5 text-brand" />
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
                 Estimation indicative
               </p>
             </div>
@@ -198,7 +198,7 @@ export function AssuranceQuoteSummary({ reference, formData, step }: Props) {
               <ul className="mt-3 space-y-1 text-[11px] leading-tight text-slate-400">
                 {est.breakdown.map((b, i) => (
                   <li key={i} className="flex gap-1.5">
-                    <span className="mt-0.5 h-1 w-1 shrink-0 rounded-full bg-nexus-orange-400/60" />
+                    <span className="mt-0.5 h-1 w-1 shrink-0 rounded-full bg-brand/60" />
                     <span>{b}</span>
                   </li>
                 ))}
@@ -227,7 +227,7 @@ function SummaryRow({ icon: Icon, label, value }: RowProps) {
         className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors duration-300 ${
           isEmpty
             ? "bg-white/[0.03] text-white/30"
-            : "bg-gradient-to-br from-nexus-orange-500/25 to-nexus-orange-700/20 text-nexus-orange-300 ring-1 ring-nexus-orange-400/30"
+            : "bg-gradient-to-br from-brand/25 to-brand/20 text-brand ring-1 ring-brand/30"
         }`}
       >
         <Icon className="h-3.5 w-3.5" />

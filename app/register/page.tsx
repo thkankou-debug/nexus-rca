@@ -179,7 +179,7 @@ export default function RegisterPage() {
         <Button
           type="submit"
           disabled={loading}
-          className="group/btn relative mt-2 w-full overflow-hidden shadow-[0_10px_30px_-10px_rgba(255,102,0,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-10px_rgba(255,102,0,0.6)]"
+          className="group/btn relative mt-2 w-full overflow-hidden shadow-[0_10px_30px_-10px_rgba(185,151,96,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-10px_rgba(185,151,96,0.6)]"
           size="lg"
         >
           <span

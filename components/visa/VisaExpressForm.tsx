@@ -407,16 +407,16 @@ export function VisaExpressForm() {
 
   if (success) {
     return (
-      <div className="relative overflow-hidden rounded-3xl border border-nexus-orange-200/70 bg-gradient-to-br from-white via-nexus-orange-50/40 to-white p-10 text-center shadow-[0_24px_48px_-16px_rgba(255,102,0,0.18)] sm:p-14">
+      <div className="relative overflow-hidden rounded-3xl border border-brand/30 bg-gradient-to-br from-white via-brand/40 to-white p-10 text-center shadow-[0_24px_48px_-16px_rgba(185,151,96,0.18)] sm:p-14">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/15 blur-[100px]"
+          className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand/15 blur-[100px]"
         />
         <div className="relative">
-          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/20">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] ring-1 ring-white/20">
             <CheckCircle2 className="h-8 w-8" />
           </div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-hover">
             Dossier enregistré
           </p>
           <h3 className="mt-3 font-display text-2xl font-bold leading-tight text-nexus-blue-950 sm:text-3xl">
@@ -429,7 +429,7 @@ export function VisaExpressForm() {
             <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
               Référence
             </span>
-            <span className="font-mono text-sm font-bold text-nexus-orange-600">
+            <span className="font-mono text-sm font-bold text-brand-hover">
               {success}
             </span>
           </div>
@@ -458,11 +458,11 @@ export function VisaExpressForm() {
           <button
             type="button"
             onClick={() => setRecapOpen((v) => !v)}
-            className="flex w-full items-center justify-between rounded-2xl border border-nexus-orange-500/20 bg-white/[0.04] px-4 py-3 text-left text-white backdrop-blur-md ring-1 ring-white/5"
+            className="flex w-full items-center justify-between rounded-2xl border border-brand/20 bg-white/[0.04] px-4 py-3 text-left text-white backdrop-blur-md ring-1 ring-white/5"
           >
             <span className="flex items-center gap-2">
-              <ClipboardCheck className="h-4 w-4 text-nexus-orange-300" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-nexus-orange-300">
+              <ClipboardCheck className="h-4 w-4 text-brand" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand">
                 Votre dossier
               </span>
             </span>
@@ -486,24 +486,24 @@ export function VisaExpressForm() {
           {/* Bordure éclairée orange en haut */}
           <span
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/50 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/50 to-transparent"
           />
           <span
             aria-hidden
-            className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-nexus-orange-500/8 blur-[100px]"
+            className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-brand/8 blur-[100px]"
           />
 
           {/* ─── Header ─────────────────────────────────────────────────── */}
           <div className="relative mb-8">
             <div className="flex flex-wrap items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-950 to-nexus-blue-900 text-nexus-orange-400 shadow-[0_10px_28px_-10px_rgba(12,28,64,0.6)] ring-1 ring-white/10">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-950 to-nexus-blue-900 text-brand shadow-[0_10px_28px_-10px_rgba(12,28,64,0.6)] ring-1 ring-white/10">
                 <Sparkles className="h-5 w-5" />
               </div>
               <div className="min-w-0 flex-1">
-                <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/20 bg-nexus-orange-500/8 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+                <span className="inline-flex items-center gap-2 rounded-full border border-brand/20 bg-brand/8 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand-hover">
                   <span className="relative flex h-1.5 w-1.5">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-500" />
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
                   </span>
                   Étape {step} sur 4
                 </span>
@@ -587,7 +587,7 @@ export function VisaExpressForm() {
               <button
                 type="button"
                 onClick={goNext}
-                className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-nexus-orange-500 px-6 py-3 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+                className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-brand px-6 py-3 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)]"
               >
                 <span
                   aria-hidden
@@ -600,7 +600,7 @@ export function VisaExpressForm() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none disabled:hover:translate-y-0"
+                className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none disabled:hover:translate-y-0"
               >
                 <span
                   aria-hidden
@@ -624,8 +624,8 @@ export function VisaExpressForm() {
           {submitting && (
             <div className="mt-4 flex items-center justify-center gap-2 text-xs text-slate-500">
               <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-500" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
               </span>
               Chiffrement et transmission sécurisée…
             </div>
@@ -679,7 +679,7 @@ function Stepper({ currentStep }: { currentStep: Step }) {
                   isCompleted &&
                     "border-emerald-500 bg-emerald-500 text-white shadow-[0_8px_22px_-8px_rgba(16,185,129,0.6)]",
                   isActive &&
-                    "border-nexus-orange-500 bg-nexus-orange-50 text-nexus-orange-700 shadow-[0_8px_22px_-8px_rgba(255,102,0,0.5)]",
+                    "border-brand bg-brand-subtle text-brand-hover shadow-[0_8px_22px_-8px_rgba(185,151,96,0.5)]",
                   !isCompleted &&
                     !isActive &&
                     "border-slate-200 bg-white text-slate-400"
@@ -688,7 +688,7 @@ function Stepper({ currentStep }: { currentStep: Step }) {
                 {isActive && (
                   <span
                     aria-hidden
-                    className="absolute inset-0 animate-ping rounded-xl bg-nexus-orange-500/20"
+                    className="absolute inset-0 animate-ping rounded-xl bg-brand/20"
                   />
                 )}
                 {isCompleted ? (
@@ -701,7 +701,7 @@ function Stepper({ currentStep }: { currentStep: Step }) {
                 className={cn(
                   "mt-2 hidden text-[10px] font-bold uppercase tracking-[0.16em] sm:inline-block",
                   (isActive || isCompleted)
-                    ? "bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent"
+                    ? "bg-brand bg-clip-text text-transparent"
                     : "text-slate-400"
                 )}
               >
@@ -716,7 +716,7 @@ function Stepper({ currentStep }: { currentStep: Step }) {
                     isCompleted
                       ? "w-full bg-gradient-to-r from-emerald-400 to-emerald-500"
                       : isActive
-                      ? "w-1/2 bg-gradient-to-r from-nexus-orange-400 to-nexus-orange-500"
+                      ? "w-1/2 bg-brand"
                       : "w-0"
                   )}
                 />
@@ -857,7 +857,7 @@ function StepProjet({
           className="mb-2 block text-[10px] font-bold uppercase tracking-[0.18em] text-slate-600"
         >
           Motif détaillé du voyage
-          <span className="ml-1 text-nexus-orange-600">*</span>
+          <span className="ml-1 text-brand-hover">*</span>
         </label>
         <textarea
           id="vef-motif"
@@ -867,7 +867,7 @@ function StepProjet({
           maxLength={1000}
           required
           placeholder="Décrivez en quelques lignes l'objet du voyage : motif, durée, contexte."
-          className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm text-nexus-blue-950 placeholder:text-slate-400 transition focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+          className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm text-nexus-blue-950 placeholder:text-slate-400 transition focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
         />
         <p className="mt-1 text-right text-[10px] text-slate-400">
           {form.motif.length} / 1000
@@ -899,7 +899,7 @@ function StepPieces({
       <div className="mt-6">
         <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.18em] text-slate-600">
           Passeport disponible
-          <span className="ml-1 text-nexus-orange-600">*</span>
+          <span className="ml-1 text-brand-hover">*</span>
         </label>
         <div className="grid gap-2 sm:grid-cols-3">
           {PASSEPORT_OPTIONS.map((opt) => (
@@ -953,7 +953,7 @@ function StepPieces({
                 className={cn(
                   "flex items-start gap-3 rounded-xl border-2 px-3 py-3 text-left transition",
                   checked
-                    ? "border-nexus-orange-500 bg-nexus-orange-50/60 ring-2 ring-nexus-orange-200"
+                    ? "border-brand bg-brand-subtle/60 ring-2 ring-brand/30"
                     : "border-slate-200 bg-white hover:border-slate-300"
                 )}
               >
@@ -961,7 +961,7 @@ function StepPieces({
                   className={cn(
                     "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition",
                     checked
-                      ? "border-nexus-orange-500 bg-nexus-orange-500 text-white"
+                      ? "border-brand bg-brand text-on-brand"
                       : "border-slate-300 bg-white"
                   )}
                 >
@@ -971,7 +971,7 @@ function StepPieces({
                   className={cn(
                     "text-xs leading-snug",
                     checked
-                      ? "font-semibold text-nexus-orange-800"
+                      ? "font-semibold text-brand-hover"
                       : "text-nexus-blue-950"
                   )}
                 >
@@ -987,7 +987,7 @@ function StepPieces({
       <div className="mt-8">
         <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.18em] text-slate-600">
           Réservation vol / hôtel
-          <span className="ml-1 text-nexus-orange-600">*</span>
+          <span className="ml-1 text-brand-hover">*</span>
         </label>
         <div className="grid gap-2 sm:grid-cols-3">
           {RESERVATION_OPTIONS.map((opt) => (
@@ -1005,7 +1005,7 @@ function StepPieces({
       <div className="mt-6">
         <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.18em] text-slate-600">
           Lettre d&apos;invitation requise ?
-          <span className="ml-1 text-nexus-orange-600">*</span>
+          <span className="ml-1 text-brand-hover">*</span>
         </label>
         <div className="grid gap-2 sm:grid-cols-3">
           {INVITATION_OPTIONS.map((opt) => (
@@ -1064,7 +1064,7 @@ function StepConfirmation({
           rows={5}
           maxLength={2000}
           placeholder="Précisions, contexte personnel, situations particulières, contraintes calendaires, refus antérieurs, etc."
-          className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm text-nexus-blue-950 placeholder:text-slate-400 transition focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+          className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm text-nexus-blue-950 placeholder:text-slate-400 transition focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
         />
         <p className="mt-1 text-right text-[10px] text-slate-400">
           {form.commentaires.length} / 2000
@@ -1075,7 +1075,7 @@ function StepConfirmation({
       <div className="mt-8">
         <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.18em] text-slate-600">
           Niveau d&apos;urgence
-          <span className="ml-1 text-nexus-orange-600">*</span>
+          <span className="ml-1 text-brand-hover">*</span>
         </label>
         <div className="grid gap-2 sm:grid-cols-3">
           {URGENCE_OPTIONS.map((opt) => (
@@ -1086,7 +1086,7 @@ function StepConfirmation({
               className={cn(
                 "rounded-xl border-2 px-3 py-3 text-left transition",
                 form.urgence === opt.value
-                  ? "border-nexus-orange-500 bg-nexus-orange-50 shadow-sm ring-2 ring-nexus-orange-200"
+                  ? "border-brand bg-brand-subtle shadow-sm ring-2 ring-brand/30"
                   : "border-slate-200 bg-white hover:border-slate-300"
               )}
             >
@@ -1094,7 +1094,7 @@ function StepConfirmation({
                 className={cn(
                   "text-xs font-semibold",
                   form.urgence === opt.value
-                    ? "text-nexus-orange-700"
+                    ? "text-brand-hover"
                     : "text-nexus-blue-950"
                 )}
               >
@@ -1114,7 +1114,7 @@ function StepConfirmation({
             (optionnel — {MAX_FILES} max · 5 MB · PDF/JPG/PNG)
           </span>
         </label>
-        <div className="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/60 p-6 text-center transition hover:border-nexus-orange-300 hover:bg-nexus-orange-50/30">
+        <div className="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/60 p-6 text-center transition hover:border-brand/40 hover:bg-brand-subtle/30">
           <input
             ref={fileInputRef}
             type="file"
@@ -1126,7 +1126,7 @@ function StepConfirmation({
           />
           <label
             htmlFor="vef-files"
-            className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-nexus-blue-950 shadow-sm transition hover:-translate-y-0.5 hover:border-nexus-orange-300 hover:bg-nexus-orange-50"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-nexus-blue-950 shadow-sm transition hover:-translate-y-0.5 hover:border-brand/40 hover:bg-brand-subtle"
           >
             <Paperclip className="h-4 w-4" />
             Ajouter des fichiers
@@ -1143,7 +1143,7 @@ function StepConfirmation({
                 key={`${f.name}-${i}`}
                 className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-sm"
               >
-                <FileText className="h-4 w-4 shrink-0 text-nexus-orange-600" />
+                <FileText className="h-4 w-4 shrink-0 text-brand-hover" />
                 <span className="min-w-0 flex-1 truncate text-sm text-nexus-blue-950">
                   {f.name}
                 </span>
@@ -1171,7 +1171,7 @@ function StepConfirmation({
             type="checkbox"
             checked={form.acceptation}
             onChange={(e) => update("acceptation", e.target.checked)}
-            className="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 text-nexus-orange-500 focus:ring-2 focus:ring-nexus-orange-200"
+            className="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 text-brand focus:ring-2 focus:ring-focus/25"
           />
           <span className="text-xs leading-relaxed text-slate-700">
             Je confirme l&apos;exactitude des informations transmises et accepte
@@ -1196,29 +1196,29 @@ function RecapCard({
   completion: { identite: boolean; projet: boolean; pieces: boolean; confirmation: boolean };
 }) {
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] ring-1 ring-nexus-orange-400/15 backdrop-blur-xl sm:p-7">
+    <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] ring-1 ring-brand/15 backdrop-blur-xl sm:p-7">
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-nexus-orange-500/15 blur-[80px]"
+        className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-brand/15 blur-[80px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
       />
 
       <div className="relative">
         <div className="flex items-center gap-2">
           <span
             aria-hidden
-            className="h-px w-8 bg-gradient-to-r from-nexus-orange-500/60 to-transparent"
+            className="h-px w-8 bg-gradient-to-r from-brand/60 to-transparent"
           />
-          <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+          <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
             Votre dossier
           </span>
         </div>
         <h4 className="mt-2 font-display text-xl font-bold leading-tight text-white">
           Récapitulatif{" "}
-          <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+          <span className="bg-brand bg-clip-text text-transparent">
             en direct
           </span>
         </h4>
@@ -1339,7 +1339,7 @@ function RecapCard({
 
         {/* Footer trust */}
         <div className="mt-7 flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 ring-1 ring-white/5">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_22px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand text-on-brand shadow-[0_8px_22px_-8px_rgba(185,151,96,0.5)] ring-1 ring-white/10">
             <FileSignature className="h-4 w-4" />
           </div>
           <div className="min-w-0 flex-1">
@@ -1447,8 +1447,8 @@ function HelperBanner({
   text: string;
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-2xl border border-nexus-orange-200/70 bg-gradient-to-br from-nexus-orange-50/80 to-white p-4">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-nexus-orange-600 shadow-sm ring-1 ring-nexus-orange-200/60">
+    <div className="flex items-start gap-3 rounded-2xl border border-brand/30 bg-gradient-to-br from-brand/80 to-white p-4">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-brand-hover shadow-sm ring-1 ring-brand/30">
         <Icon className="h-4 w-4" />
       </div>
       <p className="text-xs leading-relaxed text-slate-700 sm:text-sm">{text}</p>
@@ -1472,7 +1472,7 @@ function RadioPill({
       className={cn(
         "rounded-xl border-2 px-3 py-2.5 text-xs font-semibold transition",
         active
-          ? "border-nexus-orange-500 bg-nexus-orange-50 text-nexus-orange-700 shadow-sm ring-2 ring-nexus-orange-200"
+          ? "border-brand bg-brand-subtle text-brand-hover shadow-sm ring-2 ring-brand/30"
           : "border-slate-200 bg-white text-nexus-blue-950 hover:border-slate-300"
       )}
     >
@@ -1509,7 +1509,7 @@ function Field({
         className="mb-2 block text-[10px] font-bold uppercase tracking-[0.18em] text-slate-600"
       >
         {label}
-        {required && <span className="ml-1 text-nexus-orange-600">*</span>}
+        {required && <span className="ml-1 text-brand-hover">*</span>}
       </label>
       <div className="relative">
         {type === "date" && (
@@ -1524,7 +1524,7 @@ function Field({
           placeholder={placeholder}
           autoComplete={autoComplete}
           className={cn(
-            "w-full rounded-xl border-2 border-slate-200 bg-white py-3 text-sm text-nexus-blue-950 placeholder:text-slate-400 transition focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200",
+            "w-full rounded-xl border-2 border-slate-200 bg-white py-3 text-sm text-nexus-blue-950 placeholder:text-slate-400 transition focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25",
             type === "date" ? "pl-9 pr-4" : "px-4"
           )}
         />
@@ -1556,14 +1556,14 @@ function SelectField({
         className="mb-2 block text-[10px] font-bold uppercase tracking-[0.18em] text-slate-600"
       >
         {label}
-        {required && <span className="ml-1 text-nexus-orange-600">*</span>}
+        {required && <span className="ml-1 text-brand-hover">*</span>}
       </label>
       <select
         id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         required={required}
-        className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm text-nexus-blue-950 transition focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+        className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm text-nexus-blue-950 transition focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
       >
         {children}
       </select>
