@@ -3597,3 +3597,46 @@ Responsive : procédure manuelle 360 px documentée pour Thierry.
 **Toujours attendus** : imprimante (4 infos), NIF/RCCM, puis GO
 production (procédure tag + merge + vérification écrite dans
 DECISIONS_AR.md).
+
+---
+
+## 13/09/2026 — L12 lot 1 : migration or des 16 fichiers app/services (2 666 occurrences)
+
+Exécution du lot L12 (spécification complète, « long, mécanique, sans
+risque ») sur la totalité de `app/services` : les 12 pages de service +
+`/services`, `[slug]`, `assurance/devis` et `assurance/devis/[reference]`.
+
+**Règles appliquées** (patron identique aux migrations validées
+Hero/FinalCTA/ServicesGrid du 08/09) :
+- `nexus-orange-{200→700}` → token `brand` (or unique #B99760),
+  modificateurs d'opacité conservés à l'identique ;
+- `hover:bg-nexus-orange-600` → `hover:bg-brand-hover` (27 boutons) ;
+- `text-white` sur fond or PLEIN → `text-on-brand` (D8 : jamais de blanc
+  sur or) — 32 boutons + pastilles d'icônes + bulles de chat nexus-ia +
+  carte « Réserver un hôtel » de `[slug]` (enfant `text-white/95` →
+  `text-on-brand/80`, corrigé à la main) ;
+- dégradés devenus monochromes (`from-brand [via-brand] to-brand` sans
+  opacité) aplatis en `bg-brand` ; les dégradés à stops translucides
+  (`via-brand/60`…) conservés ;
+- ombres codées en dur `rgba(255,102,0,…)` → `rgba(185,151,96,…)` ;
+- fond clair de `[slug]` : `bg-nexus-orange-50` → `bg-brand-subtle`,
+  `text-nexus-orange-600/700` → `text-brand-hover` (or sombre, meilleur
+  contraste sur clair), `border-nexus-orange-200/70` → `border-brand/30`.
+
+**Aucun texte, titre ni structure modifié** — classes et valeurs de
+couleur uniquement. Les clés internes `accent: "orange"` (cartes de
+tarifs) sont conservées : ce sont des identifiants de variante, plus
+aucune classe orange derrière.
+
+**Vérifié** : 0 occurrence `nexus-orange` sous `app/services` (était
+2 666 dans 16 fichiers) ; `tsc` 0 erreur ; `next build` 0 erreur.
+Recompte global : **2 423** restantes (était 5 089) — components/
+publics ≈ 960, dashboards hérités (agent/client legacy) ≈ 1 242, pages
+publiques hors services ≈ 220 (`a-propos` 68, `nexus-connect` 77,
+`contact` 19, `demande` 23, `rendez-vous` 11, divers 19).
+
+**Lot 2 proposé (après vérification visuelle de Thierry en préversion)** :
+pages publiques restantes + composants publics partagés. Attention aux
+formulaires sur fond clair : les `focus:ring-nexus-orange-*` devront
+aller vers le token `focus` (anneau bleu, A1), pas vers `brand` — ce
+n'est plus purement mécanique, à requalifier champ par champ.

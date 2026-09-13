@@ -99,7 +99,7 @@ export default async function AssuranceQuoteConfirmationPage({
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/20 blur-[140px]"
+            className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-brand/20 blur-[140px]"
           />
           <div
             aria-hidden
@@ -128,7 +128,7 @@ export default async function AssuranceQuoteConfirmationPage({
                 Votre référence dossier
               </p>
               <h1 className="mt-3 break-all font-mono text-3xl font-bold leading-tight sm:text-5xl lg:text-6xl">
-                <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                <span className="bg-brand bg-clip-text text-transparent">
                   {quote.reference}
                 </span>
               </h1>
@@ -143,7 +143,7 @@ export default async function AssuranceQuoteConfirmationPage({
 
             {/* Status tracker horizontal */}
             <div className="mt-14 rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] sm:p-8">
-              <p className="text-center text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+              <p className="text-center text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
                 Suivi du dossier — statut actuel : {STATUS_LABELS[quote.status as QuoteStatus]}
               </p>
               <div className="mt-8">
@@ -169,7 +169,7 @@ export default async function AssuranceQuoteConfirmationPage({
               {/* ─── Détails dossier ─── */}
               <div className="lg:col-span-7">
                 <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] sm:p-8">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
                     Récapitulatif du dossier
                   </p>
                   <h2 className="mt-2 font-display text-2xl font-bold text-white sm:text-3xl">
@@ -281,10 +281,10 @@ export default async function AssuranceQuoteConfirmationPage({
               <aside className="lg:col-span-5">
                 <div className="space-y-5 lg:sticky lg:top-24">
                   {/* Estimation */}
-                  <div className="rounded-3xl border border-nexus-orange-400/30 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.20)] sm:p-7">
+                  <div className="rounded-3xl border border-brand/30 bg-gradient-to-br from-brand/10 via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.20)] sm:p-7">
                     <div className="flex items-center gap-2">
-                      <Wallet className="h-4 w-4 text-nexus-orange-300" />
-                      <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                      <Wallet className="h-4 w-4 text-brand" />
+                      <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
                         Estimation indicative
                       </p>
                     </div>
@@ -348,19 +348,19 @@ export default async function AssuranceQuoteConfirmationPage({
                     </p>
                     <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] font-semibold text-white/65">
                       <span className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.04] px-2.5 py-2">
-                        <Download className="h-3 w-3 text-nexus-orange-300" />
+                        <Download className="h-3 w-3 text-brand" />
                         PDF du devis
                       </span>
                       <span className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.04] px-2.5 py-2">
-                        <CreditCard className="h-3 w-3 text-nexus-orange-300" />
+                        <CreditCard className="h-3 w-3 text-brand" />
                         Paiement en ligne
                       </span>
                       <span className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.04] px-2.5 py-2">
-                        <FileSignature className="h-3 w-3 text-nexus-orange-300" />
+                        <FileSignature className="h-3 w-3 text-brand" />
                         Signature électronique
                       </span>
                       <span className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.04] px-2.5 py-2">
-                        <FilePlus className="h-3 w-3 text-nexus-orange-300" />
+                        <FilePlus className="h-3 w-3 text-brand" />
                         Upload documents
                       </span>
                     </div>
@@ -372,17 +372,17 @@ export default async function AssuranceQuoteConfirmationPage({
             {/* Trust footer */}
             <div className="mt-14 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[11px] uppercase tracking-[0.18em] text-white/55">
               <span className="inline-flex items-center gap-1.5">
-                <Lock className="h-3 w-3 text-nexus-orange-300" />
+                <Lock className="h-3 w-3 text-brand" />
                 URL personnelle confidentielle
               </span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
               <span className="inline-flex items-center gap-1.5">
-                <ShieldCheck className="h-3 w-3 text-nexus-orange-300" />
+                <ShieldCheck className="h-3 w-3 text-brand" />
                 Cabinet de courtage Nexus RCA
               </span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
               <span className="inline-flex items-center gap-1.5">
-                <Sparkles className="h-3 w-3 text-nexus-orange-300" />
+                <Sparkles className="h-3 w-3 text-brand" />
                 Bangui, République Centrafricaine
               </span>
             </div>
@@ -407,8 +407,8 @@ function DetailRow({
 }) {
   return (
     <div className="flex items-start gap-4 border-b border-white/10 pb-5 last:border-0 last:pb-0">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500/30 to-nexus-orange-700/20 ring-1 ring-nexus-orange-400/30">
-        <Icon className="h-4 w-4 text-nexus-orange-300" />
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand/30 to-brand/20 ring-1 ring-brand/30">
+        <Icon className="h-4 w-4 text-brand" />
       </div>
       <div className="flex-1">
         <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">

@@ -382,7 +382,7 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -390,17 +390,17 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
             <div className="grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-10 xl:gap-14">
               {/* ─── Colonne principale (gauche) ─── */}
               <div className="text-center lg:col-span-7 lg:text-left">
-                <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md transition-all duration-300 hover:border-nexus-orange-500/50">
+                <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md transition-all duration-300 hover:border-brand/50">
                   <span className="relative flex h-1.5 w-1.5">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
                   </span>
                   Service visa
                 </span>
@@ -408,12 +408,12 @@ export default function VisaPage() {
                 <h1 className="mt-6 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-[3.6rem] xl:text-6xl">
                   Visa &{" "}
                   <span className="relative inline-block">
-                    <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    <span className="bg-brand bg-clip-text text-transparent">
                       e-Visa
                     </span>
                     <span
                       aria-hidden
-                      className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                      className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                     />
                   </span>
                 </h1>
@@ -429,7 +429,7 @@ export default function VisaPage() {
                 <div className="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4 lg:justify-start">
                   <Link
                     href="/services/visa/demarrer"
-                    className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+                    className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)]"
                   >
                     <span
                       aria-hidden
@@ -456,7 +456,7 @@ export default function VisaPage() {
                     )}
                     target="_blank"
                     rel="noreferrer"
-                    className="font-bold text-nexus-orange-300 underline-offset-4 hover:underline"
+                    className="font-bold text-brand underline-offset-4 hover:underline"
                   >
                     Question sur WhatsApp
                   </a>
@@ -469,17 +469,17 @@ export default function VisaPage() {
                       key={s.label}
                       className={`group/stat relative overflow-hidden rounded-2xl border bg-white/[0.04] px-5 py-4 backdrop-blur-md ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/[0.07] ${
                         i === 0
-                          ? "border-nexus-orange-400/30 hover:border-nexus-orange-400/60"
+                          ? "border-brand/30 hover:border-brand/60"
                           : "border-white/10 hover:border-white/25"
                       }`}
                     >
                       <div
                         aria-hidden
-                        className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover/stat:bg-nexus-orange-500/20"
+                        className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover/stat:bg-brand/20"
                       />
                       <div className="relative">
                         <p className="font-display text-xl font-bold leading-none text-white sm:text-2xl">
-                          <span className="bg-gradient-to-r from-nexus-orange-300 to-nexus-orange-500 bg-clip-text text-transparent">
+                          <span className="bg-brand bg-clip-text text-transparent">
                             {s.value}
                           </span>
                         </p>
@@ -509,15 +509,15 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/10 blur-[120px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/10 blur-[120px]"
           />
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
@@ -529,19 +529,19 @@ export default function VisaPage() {
                     key={ind.label}
                     className={`group relative overflow-hidden rounded-2xl border bg-white/[0.04] p-5 backdrop-blur-md ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/[0.07] ${
                       i === 0
-                        ? "border-nexus-orange-400/30 hover:border-nexus-orange-400/60"
+                        ? "border-brand/30 hover:border-brand/60"
                         : "border-white/10 hover:border-white/25"
                     }`}
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                      className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/22"
                     />
                     <div className="relative">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500/20 to-nexus-orange-700/10 text-nexus-orange-300 ring-1 ring-nexus-orange-400/30 backdrop-blur transition-transform duration-300 ease-out group-hover:scale-105">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-brand/20 to-brand/10 text-brand ring-1 ring-brand/30 backdrop-blur transition-transform duration-300 ease-out group-hover:scale-105">
                         <Icon className="h-5 w-5" />
                       </div>
-                      <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                      <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
                         Marqueur
                       </p>
                       <p className="mt-1 font-display text-lg font-bold leading-tight text-white sm:text-xl">
@@ -570,7 +570,7 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-40 top-32 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-40 top-32 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -578,27 +578,27 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
                 </span>
                 Diagnostic gratuit
               </span>
               <h2 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Évaluez votre dossier en{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     60 secondes
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 .
@@ -610,19 +610,19 @@ export default function VisaPage() {
             </div>
 
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
-              <div className="group relative overflow-hidden rounded-3xl border border-white/30 bg-white/[0.92] p-1 ring-1 ring-white/5 backdrop-blur-xl shadow-[0_24px_48px_-16px_rgba(0,0,0,0.4)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40">
+              <div className="group relative overflow-hidden rounded-3xl border border-white/30 bg-white/[0.92] p-1 ring-1 ring-white/5 backdrop-blur-xl shadow-[0_24px_48px_-16px_rgba(0,0,0,0.4)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40">
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/25"
+                  className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/25"
                 />
                 <div className="relative">
                   <VisaRequirementChecker />
                 </div>
               </div>
-              <div className="group relative overflow-hidden rounded-3xl border border-white/30 bg-white/[0.92] p-1 ring-1 ring-white/5 backdrop-blur-xl shadow-[0_24px_48px_-16px_rgba(0,0,0,0.4)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40">
+              <div className="group relative overflow-hidden rounded-3xl border border-white/30 bg-white/[0.92] p-1 ring-1 ring-white/5 backdrop-blur-xl shadow-[0_24px_48px_-16px_rgba(0,0,0,0.4)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40">
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/25"
+                  className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/25"
                 />
                 <div className="relative">
                   <EVisaEligibilityChecker />
@@ -641,7 +641,7 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-32 top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -left-32 top-32 h-[36rem] w-[36rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -649,23 +649,23 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Notre approche
               </span>
               <h2 className="mt-4 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Une approche{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     d&rsquo;expert
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>{" "}
                 du visa.
@@ -677,7 +677,7 @@ export default function VisaPage() {
               <blockquote className="relative">
                 <span
                   aria-hidden
-                  className="absolute -left-2 -top-6 font-display text-7xl leading-none text-nexus-orange-500/30 sm:-left-6 sm:-top-4 sm:text-8xl"
+                  className="absolute -left-2 -top-6 font-display text-7xl leading-none text-brand/30 sm:-left-6 sm:-top-4 sm:text-8xl"
                 >
                   &ldquo;
                 </span>
@@ -692,9 +692,9 @@ export default function VisaPage() {
                 <footer className="mt-6 flex items-center gap-3">
                   <span
                     aria-hidden
-                    className="h-px w-10 bg-gradient-to-r from-nexus-orange-500/60 to-transparent"
+                    className="h-px w-10 bg-gradient-to-r from-brand/60 to-transparent"
                   />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
                     Cabinet Nexus Visa &mdash; Bangui
                   </span>
                 </footer>
@@ -708,14 +708,14 @@ export default function VisaPage() {
                 return (
                   <article
                     key={p.title}
-                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06]"
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/22"
                     />
                     <div className="relative">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.6)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
                         <Icon className="h-6 w-6" />
                       </div>
                       <h3 className="mt-5 font-display text-lg font-bold leading-tight text-white sm:text-xl">
@@ -741,27 +741,27 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/8 blur-[120px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/8 blur-[120px]"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
           <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
             <p className="font-display text-2xl font-bold leading-snug tracking-tight text-white sm:text-3xl lg:text-4xl">
               Le visa n&apos;est pas une formalité. C&apos;est une décision
               d&apos;État qui demande{" "}
               <span className="relative inline-block">
-                <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                <span className="bg-brand bg-clip-text text-transparent">
                   structure, transparence et conformité
                 </span>
                 <span
                   aria-hidden
-                  className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                 />
               </span>
               .
@@ -778,7 +778,7 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -788,12 +788,12 @@ export default function VisaPage() {
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mb-12 grid gap-10 lg:grid-cols-[1fr_2fr] lg:items-start lg:gap-16">
               <div>
-                <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+                <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                   Périmètre
                 </span>
                 <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                   Ce que nous{" "}
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     faisons
                   </span>
                   .
@@ -810,14 +810,14 @@ export default function VisaPage() {
                   {NOUS_FAISONS.map((item, i) => (
                     <article
                       key={i}
-                      className="group relative w-[85vw] shrink-0 snap-center overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40"
+                      className="group relative w-[85vw] shrink-0 snap-center overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40"
                     >
                       <div
                         aria-hidden
-                        className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                        className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/22"
                       />
                       <div className="relative flex items-start gap-3">
-                        <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)]">
+                        <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)]">
                           <Check className="h-3.5 w-3.5" strokeWidth={3} />
                         </div>
                         <div className="min-w-0">
@@ -847,14 +847,14 @@ export default function VisaPage() {
                 {NOUS_FAISONS.map((item, i) => (
                   <li
                     key={i}
-                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06]"
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/22"
                     />
                     <div className="relative flex items-start gap-3.5">
-                      <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] transition-transform duration-300 ease-out group-hover:scale-110">
+                      <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)] transition-transform duration-300 ease-out group-hover:scale-110">
                         <Check className="h-3.5 w-3.5" strokeWidth={3} />
                       </div>
                       <div>
@@ -882,7 +882,7 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-40 top-32 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-40 top-32 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -890,23 +890,23 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Résultat
               </span>
               <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Ce que vous{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     obtenez
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 .
@@ -927,10 +927,10 @@ export default function VisaPage() {
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/10 blur-2xl"
+                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/10 blur-2xl"
                     />
                     <div className="relative">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)] ring-1 ring-white/10">
                         <Check className="h-5 w-5" />
                       </div>
                       <h3 className="mt-4 font-display text-base font-bold leading-tight text-white">
@@ -958,14 +958,14 @@ export default function VisaPage() {
               {VOUS_OBTENEZ.map((item, i) => (
                 <article
                   key={i}
-                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06]"
                 >
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                    className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/22"
                   />
                   <div className="relative">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
                       <Check className="h-5 w-5" />
                     </div>
                     <h3 className="mt-4 font-display text-base font-bold leading-tight text-white">
@@ -999,18 +999,18 @@ export default function VisaPage() {
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Sélectivité
               </span>
               <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Pour qui ce service est{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     conçu
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 .
@@ -1109,27 +1109,27 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-40 bottom-32 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-40 bottom-32 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-14 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Notre méthodologie
               </span>
               <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Un parcours en{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     sept phases
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 .
@@ -1145,7 +1145,7 @@ export default function VisaPage() {
             <div className="relative">
               <div
                 aria-hidden
-                className="pointer-events-none absolute left-8 top-4 bottom-4 w-px bg-gradient-to-b from-nexus-orange-500/40 via-nexus-orange-500/20 to-transparent sm:left-[3.75rem]"
+                className="pointer-events-none absolute left-8 top-4 bottom-4 w-px bg-gradient-to-b from-brand/40 via-brand/20 to-transparent sm:left-[3.75rem]"
               />
 
               <div className="space-y-7">
@@ -1160,24 +1160,24 @@ export default function VisaPage() {
                         <div className="relative">
                           <div
                             aria-hidden
-                            className="absolute inset-0 rounded-3xl bg-nexus-orange-500/40 blur-md transition-all duration-500 group-hover:bg-nexus-orange-500/60"
+                            className="absolute inset-0 rounded-3xl bg-brand/40 blur-md transition-all duration-500 group-hover:bg-brand/60"
                           />
-                          <span className="relative inline-flex h-16 w-16 items-center justify-center rounded-3xl border border-nexus-orange-400/30 bg-nexus-blue-900/60 backdrop-blur-md font-display text-5xl font-bold tabular-nums shadow-[0_10px_28px_-10px_rgba(255,102,0,0.4)] sm:h-[7.5rem] sm:w-[7.5rem] sm:text-7xl">
-                            <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                          <span className="relative inline-flex h-16 w-16 items-center justify-center rounded-3xl border border-brand/30 bg-nexus-blue-900/60 backdrop-blur-md font-display text-5xl font-bold tabular-nums shadow-[0_10px_28px_-10px_rgba(185,151,96,0.4)] sm:h-[7.5rem] sm:w-[7.5rem] sm:text-7xl">
+                            <span className="bg-brand bg-clip-text text-transparent">
                               {etape.num}
                             </span>
                           </span>
                         </div>
                       </div>
 
-                      <article className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out group-hover:-translate-y-1 group-hover:border-nexus-orange-400/40 group-hover:bg-white/[0.06] sm:p-7">
+                      <article className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out group-hover:-translate-y-1 group-hover:border-brand/40 group-hover:bg-white/[0.06] sm:p-7">
                         <div
                           aria-hidden
-                          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/22"
                         />
                         <div className="relative">
                           <div className="flex items-center gap-2.5">
-                            <Icon className="h-4 w-4 shrink-0 text-nexus-orange-300" />
+                            <Icon className="h-4 w-4 shrink-0 text-brand" />
                             <h3 className="font-display text-lg font-bold leading-tight text-white sm:text-xl">
                               {etape.title}
                             </h3>
@@ -1194,10 +1194,10 @@ export default function VisaPage() {
             </div>
 
             {/* CTA méthodologie */}
-            <div className="mt-12 overflow-hidden rounded-3xl border border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)] sm:p-8">
+            <div className="mt-12 overflow-hidden rounded-3xl border border-brand/40 bg-gradient-to-br from-brand/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.30)] sm:p-8">
               <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+                  <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                     Démarrer la démarche
                   </span>
                   <p className="mt-3 font-display text-xl font-bold leading-tight tracking-tight text-white sm:text-2xl">
@@ -1210,7 +1210,7 @@ export default function VisaPage() {
                 <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:gap-3">
                   <Link
                     href="/services/visa/demarrer"
-                    className="group/btn relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-6 py-3 text-sm font-bold text-white shadow-[0_10px_30px_-10px_rgba(255,102,0,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_16px_40px_-10px_rgba(255,102,0,0.6)]"
+                    className="group/btn relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-6 py-3 text-sm font-bold text-on-brand shadow-[0_10px_30px_-10px_rgba(185,151,96,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_16px_40px_-10px_rgba(185,151,96,0.6)]"
                   >
                     <span
                       aria-hidden
@@ -1244,7 +1244,7 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -1252,23 +1252,23 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Zones de compétence
               </span>
               <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Nos domaines{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     d&apos;intervention
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 .
@@ -1283,7 +1283,7 @@ export default function VisaPage() {
             <div className="relative mx-auto mb-12 max-w-4xl overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] sm:p-8">
               <div
                 aria-hidden
-                className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/15 blur-[100px]"
+                className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand/15 blur-[100px]"
               />
               <div
                 aria-hidden
@@ -1520,23 +1520,23 @@ export default function VisaPage() {
                 return (
                   <article
                     key={zone.id}
-                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06]"
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/22"
                     />
                     <div className="relative">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
                         <Icon className="h-5 w-5" />
                       </div>
-                      <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                      <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
                         Zone
                       </p>
                       <h3 className="mt-1 font-display text-lg font-bold leading-tight text-white">
                         {zone.region}
                       </h3>
-                      <p className="mt-1 font-display text-sm font-bold tabular-nums text-nexus-orange-300">
+                      <p className="mt-1 font-display text-sm font-bold tabular-nums text-brand">
                         {zone.count}
                       </p>
                       <p className="mt-3 text-sm leading-relaxed text-slate-300">
@@ -1564,7 +1564,7 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 top-1/4 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-32 top-1/4 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -1572,7 +1572,7 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
@@ -1580,24 +1580,24 @@ export default function VisaPage() {
               <div className="relative mx-auto mb-4 inline-flex">
                 <div
                   aria-hidden
-                  className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 opacity-50 blur-md"
+                  className="absolute inset-0 rounded-2xl bg-brand/40 opacity-50 blur-md"
                 />
-                <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_12px_30px_-8px_rgba(255,102,0,0.55)] ring-1 ring-white/10">
+                <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_12px_30px_-8px_rgba(185,151,96,0.55)] ring-1 ring-white/10">
                   <Smartphone className="h-6 w-6" />
                 </div>
               </div>
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Visa électronique
               </span>
               <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Le e-Visa, procédure{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     simplifiée
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 .
@@ -1621,10 +1621,10 @@ export default function VisaPage() {
                     >
                       <div
                         aria-hidden
-                        className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-nexus-orange-500/10 blur-2xl"
+                        className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-brand/10 blur-2xl"
                       />
                       <div className="relative">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)] ring-1 ring-white/10">
                           <Icon className="h-5 w-5 text-white" />
                         </div>
                         <h3 className="mt-4 font-display text-base font-bold text-white">
@@ -1655,14 +1655,14 @@ export default function VisaPage() {
                 return (
                   <article
                     key={avantage.title}
-                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06]"
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                      className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/22"
                     />
                     <div className="relative">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
                         <Icon className="h-5 w-5 text-white" />
                       </div>
                       <h3 className="mt-4 font-display text-base font-bold text-white">
@@ -1678,9 +1678,9 @@ export default function VisaPage() {
             </div>
 
             {/* Note glass orange */}
-            <div className="mt-10 overflow-hidden rounded-3xl border border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/15 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.25)] sm:p-8">
+            <div className="mt-10 overflow-hidden rounded-3xl border border-brand/40 bg-gradient-to-br from-brand/15 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.25)] sm:p-8">
               <p className="text-base leading-relaxed text-white sm:text-lg">
-                <strong className="text-nexus-orange-300">À savoir : </strong>
+                <strong className="text-brand">À savoir : </strong>
                 tous les pays ne proposent pas le e-Visa. La procédure adaptée
                 à votre destination vous sera indiquée à l&apos;étape
                 d&apos;analyse.
@@ -1702,23 +1702,23 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-40 bottom-1/4 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-40 bottom-1/4 h-[28rem] w-[28rem] rounded-full bg-brand/15 blur-[140px]"
           />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-10 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Documents fréquents
               </span>
               <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Pièces requises selon votre{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     type de visa
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 .
@@ -1734,7 +1734,7 @@ export default function VisaPage() {
             <div className="relative overflow-hidden rounded-3xl border border-white/30 bg-white/[0.92] p-1 ring-1 ring-white/5 backdrop-blur-xl shadow-[0_24px_48px_-16px_rgba(0,0,0,0.4)]">
               <div
                 aria-hidden
-                className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/15 blur-[100px]"
+                className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand/15 blur-[100px]"
               />
               <div className="relative">
                 <VisaDocumentChecklist />
@@ -1752,7 +1752,7 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -1760,23 +1760,23 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-14 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Cas types traités
               </span>
               <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Voici comment ça se passe{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     concrètement
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 .
@@ -1789,14 +1789,14 @@ export default function VisaPage() {
                 {CAS.map((cas, idx) => (
                   <article
                     key={idx}
-                    className="group relative w-[85vw] shrink-0 snap-center overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06] sm:w-auto sm:p-7"
+                    className="group relative w-[85vw] shrink-0 snap-center overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06] sm:w-auto sm:p-7"
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-nexus-orange-500/10 blur-[80px] transition-all duration-500 group-hover:bg-nexus-orange-500/25"
+                      className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-brand/10 blur-[80px] transition-all duration-500 group-hover:bg-brand/25"
                     />
                     <div className="relative flex h-full flex-col">
-                      <span className="inline-flex w-fit items-center gap-2 rounded-full border border-nexus-orange-400/40 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur">
+                      <span className="inline-flex w-fit items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur">
                         <Sparkles className="h-3 w-3" />
                         {cas.badge}
                       </span>
@@ -1810,7 +1810,7 @@ export default function VisaPage() {
                             key={s.label}
                             className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur"
                           >
-                            <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-nexus-orange-300">
+                            <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-brand">
                               {s.label}
                             </p>
                             <p className="mt-1 font-display text-xs font-bold leading-tight text-white">
@@ -1825,10 +1825,10 @@ export default function VisaPage() {
                       </p>
 
                       <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
-                        <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+                        <span className="bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                           Approche méthodologique
                         </span>
-                        <ArrowRight className="h-4 w-4 text-nexus-orange-300 transition-transform duration-300 group-hover:translate-x-0.5" />
+                        <ArrowRight className="h-4 w-4 text-brand transition-transform duration-300 group-hover:translate-x-0.5" />
                       </div>
                     </div>
                   </article>
@@ -1841,14 +1841,14 @@ export default function VisaPage() {
               {CAS.map((cas, idx) => (
                 <article
                   key={idx}
-                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)]"
+                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.30)]"
                 >
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/10 blur-[100px] transition-all duration-500 group-hover:bg-nexus-orange-500/30"
+                    className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand/10 blur-[100px] transition-all duration-500 group-hover:bg-brand/30"
                   />
                   <div className="relative flex h-full flex-col">
-                    <span className="inline-flex w-fit items-center gap-2 rounded-full border border-nexus-orange-400/40 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur">
+                    <span className="inline-flex w-fit items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur">
                       <Sparkles className="h-3 w-3" />
                       {cas.badge}
                     </span>
@@ -1860,9 +1860,9 @@ export default function VisaPage() {
                       {cas.stats.map((s) => (
                         <div
                           key={s.label}
-                          className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur transition-all duration-300 group-hover:border-nexus-orange-400/30"
+                          className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur transition-all duration-300 group-hover:border-brand/30"
                         >
-                          <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-nexus-orange-300">
+                          <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-brand">
                             {s.label}
                           </p>
                           <p className="mt-1 font-display text-xs font-bold leading-tight text-white">
@@ -1877,10 +1877,10 @@ export default function VisaPage() {
                     </p>
 
                     <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-5">
-                      <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+                      <span className="bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                         Approche méthodologique
                       </span>
-                      <ArrowRight className="h-4 w-4 text-nexus-orange-300 transition-transform duration-300 group-hover:translate-x-0.5" />
+                      <ArrowRight className="h-4 w-4 text-brand transition-transform duration-300 group-hover:translate-x-0.5" />
                     </div>
                   </div>
                 </article>
@@ -1898,7 +1898,7 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-40 top-1/3 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-40 top-1/3 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -1907,18 +1907,18 @@ export default function VisaPage() {
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Engagement
               </span>
               <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Aucune agence sérieuse ne peut{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     garantir un visa
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 .
@@ -1959,23 +1959,23 @@ export default function VisaPage() {
               </article>
 
               {/* Ce que nous garantissons — 2 col orange highlight */}
-              <article className="group relative overflow-hidden rounded-3xl border border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/60 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_30px_60px_-16px_rgba(255,102,0,0.40)] sm:p-9 lg:col-span-2">
+              <article className="group relative overflow-hidden rounded-3xl border border-brand/40 bg-gradient-to-br from-brand/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.30)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/60 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_30px_60px_-16px_rgba(185,151,96,0.40)] sm:p-9 lg:col-span-2">
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/25 blur-[100px] transition-all duration-500 group-hover:bg-nexus-orange-500/40"
+                  className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand/25 blur-[100px] transition-all duration-500 group-hover:bg-brand/40"
                 />
                 <div className="relative">
                   <div className="mb-4 flex items-center gap-3">
                     <div className="relative">
                       <div
                         aria-hidden
-                        className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 blur-md"
+                        className="absolute inset-0 rounded-2xl bg-brand/40 blur-md"
                       />
-                      <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/10">
+                      <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.6)] ring-1 ring-white/10">
                         <ShieldCheck className="h-6 w-6" />
                       </div>
                     </div>
-                    <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+                    <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                       Ce que nous garantissons
                     </span>
                   </div>
@@ -1985,7 +1985,7 @@ export default function VisaPage() {
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-slate-200 sm:text-base"
                       >
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-300" />
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -2005,7 +2005,7 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-40 bottom-32 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -left-40 bottom-32 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -2014,18 +2014,18 @@ export default function VisaPage() {
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Cadre tarifaire
               </span>
               <h2 className="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Une transparence économique{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     complète
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 .
@@ -2050,13 +2050,13 @@ export default function VisaPage() {
                     ? "bg-emerald-500/10 text-emerald-300 ring-1 ring-emerald-400/30"
                     : tarif.accent === "blue"
                       ? "bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900 text-white ring-1 ring-white/10"
-                      : "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/10";
+                      : "bg-brand text-on-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.6)] ring-1 ring-white/10";
                 const accentEyebrow =
                   tarif.accent === "emerald"
                     ? "text-emerald-300"
                     : tarif.accent === "blue"
                       ? "text-slate-200"
-                      : "text-nexus-orange-300";
+                      : "text-brand";
                 const eyebrowLabel =
                   tarif.accent === "emerald"
                     ? "Gratuit"
@@ -2068,15 +2068,15 @@ export default function VisaPage() {
                     key={tarif.title}
                     className={`group relative overflow-hidden rounded-3xl border p-7 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 ${
                       isHi
-                        ? `border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/15 via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)] hover:border-nexus-orange-400/60`
-                        : `border-white/10 bg-white/[0.04] ring-1 ${accentRing} hover:border-nexus-orange-400/40 hover:bg-white/[0.06]`
+                        ? `border-brand/40 bg-gradient-to-br from-brand/15 via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.30)] hover:border-brand/60`
+                        : `border-white/10 bg-white/[0.04] ring-1 ${accentRing} hover:border-brand/40 hover:bg-white/[0.06]`
                     }`}
                   >
                     <div
                       aria-hidden
                       className={`pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full ${
-                        isHi ? "bg-nexus-orange-500/25" : "bg-nexus-orange-500/0"
-                      } blur-[80px] transition-all duration-500 group-hover:bg-nexus-orange-500/30`}
+                        isHi ? "bg-brand/25" : "bg-brand/0"
+                      } blur-[80px] transition-all duration-500 group-hover:bg-brand/30`}
                     />
                     <div className="relative">
                       <div
@@ -2112,7 +2112,7 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-32 top-1/4 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -left-32 top-1/4 h-[36rem] w-[36rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -2120,27 +2120,27 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/8 blur-[120px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/8 blur-[120px]"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Le cabinet
               </span>
               <h2 className="mt-4 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Nexus Visa :{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     excellence
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>{" "}
                 documentée.
@@ -2161,23 +2161,23 @@ export default function VisaPage() {
                 return (
                   <article
                     key={p.title}
-                    className="group relative overflow-hidden rounded-3xl border border-nexus-orange-400/30 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.18)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/60 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_30px_60px_-16px_rgba(255,102,0,0.35)] sm:p-8"
+                    className="group relative overflow-hidden rounded-3xl border border-brand/30 bg-gradient-to-br from-brand/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.18)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/60 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_30px_60px_-16px_rgba(185,151,96,0.35)] sm:p-8"
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/15 blur-[100px] transition-all duration-500 group-hover:bg-nexus-orange-500/35"
+                      className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand/15 blur-[100px] transition-all duration-500 group-hover:bg-brand/35"
                     />
                     <div className="relative">
                       <div className="relative inline-flex">
                         <div
                           aria-hidden
-                          className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 blur-md transition-all duration-500 group-hover:bg-nexus-orange-500/60"
+                          className="absolute inset-0 rounded-2xl bg-brand/40 blur-md transition-all duration-500 group-hover:bg-brand/60"
                         />
-                        <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
+                        <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.6)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
                           <Icon className="h-6 w-6" />
                         </div>
                       </div>
-                      <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                      <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
                         {p.eyebrow}
                       </p>
                       <h3 className="mt-1 font-display text-xl font-bold leading-tight text-white sm:text-2xl">
@@ -2206,7 +2206,7 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-32 top-32 h-[36rem] w-[36rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -2214,32 +2214,32 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
             {/* Header institutionnel */}
             <div className="mx-auto mb-14 max-w-3xl text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
                 </span>
                 Démarche officielle
               </span>
               <h2 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Soumettez votre{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     dossier
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 .
@@ -2264,7 +2264,7 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -top-40 -right-40 h-[40rem] w-[40rem] rounded-full bg-nexus-orange-500/20 blur-[140px]"
+            className="pointer-events-none absolute -top-40 -right-40 h-[40rem] w-[40rem] rounded-full bg-brand/20 blur-[140px]"
           />
           <div
             aria-hidden
@@ -2272,22 +2272,22 @@ export default function VisaPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/8 blur-[120px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/8 blur-[120px]"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
               <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
               </span>
               Une question avant de démarrer
             </span>
@@ -2295,12 +2295,12 @@ export default function VisaPage() {
             <h2 className="mt-6 font-display text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
               Parlons de votre{" "}
               <span className="relative inline-block">
-                <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                <span className="bg-brand bg-clip-text text-transparent">
                   projet
                 </span>
                 <span
                   aria-hidden
-                  className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                 />
               </span>
               .
@@ -2318,7 +2318,7 @@ export default function VisaPage() {
                 )}
                 target="_blank"
                 rel="noreferrer"
-                className="group/wa relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+                className="group/wa relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)]"
               >
                 <span
                   aria-hidden
@@ -2355,9 +2355,9 @@ export default function VisaPage() {
                 return (
                   <div
                     key={i}
-                    className="flex flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-4 text-center backdrop-blur-md ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                    className="flex flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-4 text-center backdrop-blur-md ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06]"
                   >
-                    <Icon className="h-4 w-4 text-nexus-orange-300" />
+                    <Icon className="h-4 w-4 text-brand" />
                     <span className="text-[10px] font-bold uppercase leading-tight tracking-[0.16em] text-white/80">
                       {s.label}
                     </span>

@@ -38,7 +38,7 @@ export default function AssuranceDevisPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -46,7 +46,7 @@ export default function AssuranceDevisPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
@@ -61,10 +61,10 @@ export default function AssuranceDevisPage() {
 
             {/* Header */}
             <div className="mt-8 max-w-3xl">
-              <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
                 </span>
                 Cabinet de courtage · Devis personnalisé
               </span>
@@ -72,12 +72,12 @@ export default function AssuranceDevisPage() {
               <h1 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-[3.4rem]">
                 Construisons votre{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     couverture sur mesure
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 .
@@ -92,17 +92,17 @@ export default function AssuranceDevisPage() {
               {/* Trust line */}
               <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] uppercase tracking-[0.18em] text-white/55">
                 <span className="inline-flex items-center gap-1.5">
-                  <Lock className="h-3 w-3 text-nexus-orange-300" />
+                  <Lock className="h-3 w-3 text-brand" />
                   Données confidentielles
                 </span>
                 <span className="h-1 w-1 rounded-full bg-white/20" />
                 <span className="inline-flex items-center gap-1.5">
-                  <ShieldCheck className="h-3 w-3 text-nexus-orange-300" />
+                  <ShieldCheck className="h-3 w-3 text-brand" />
                   Conforme code visas UE
                 </span>
                 <span className="h-1 w-1 rounded-full bg-white/20" />
                 <span className="inline-flex items-center gap-1.5">
-                  <Sparkles className="h-3 w-3 text-nexus-orange-300" />
+                  <Sparkles className="h-3 w-3 text-brand" />
                   Accompagnement cabinet
                 </span>
               </div>
