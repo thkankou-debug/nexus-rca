@@ -66,6 +66,24 @@ function tk(text: string): string {
 const WIDTH_MM = 80;
 const MARGIN_MM = 5;
 
+// Logo officiel Nexus RCA (demande Thierry 12/09 : « le logo sur les
+// factures et PDF ») — même fichier que le BrandMark de l'interface.
+// Chargé une fois côté navigateur ; en cas d'échec (offline), le reçu se
+// génère SANS logo : l'impression n'est jamais bloquée.
+const LOGO_URL = "/icones/icon-192.png";
+let logoCache: Uint8Array | null | undefined;
+
+async function loadLogo(): Promise<Uint8Array | null> {
+  if (logoCache !== undefined) return logoCache;
+  try {
+    const res = await fetch(LOGO_URL);
+    logoCache = res.ok ? new Uint8Array(await res.arrayBuffer()) : null;
+  } catch {
+    logoCache = null;
+  }
+  return logoCache;
+}
+
 function txt(
   page: PDFPage | null,
   pageHeight: number,
@@ -121,6 +139,15 @@ export async function generatePosTicketPdf(data: PosTicketData): Promise<Uint8Ar
   const bold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const courier = await pdfDoc.embedFont(StandardFonts.Courier);
 
+  // Logo en tête (facultatif : jamais bloquant pour l'impression).
+  let logo: Awaited<ReturnType<typeof pdfDoc.embedPng>> | null = null;
+  try {
+    const logoBytes = await loadLogo();
+    if (logoBytes) logo = await pdfDoc.embedPng(logoBytes);
+  } catch {
+    logo = null;
+  }
+
   const cx = WIDTH_MM / 2;
   const m = MARGIN_MM;
   const innerPt = mm(WIDTH_MM - 2 * m);
@@ -133,6 +160,17 @@ export async function generatePosTicketPdf(data: PosTicketData): Promise<Uint8Ar
   let y = 8;
 
   // ── En-tête institutionnel (coordonnées validées §11) ──
+  if (logo) {
+    if (page) {
+      page.drawImage(logo, {
+        x: mm(cx - 6),
+        y: pageHeight - mm(y + 12),
+        width: mm(12),
+        height: mm(12),
+      });
+    }
+    y += 13;
+  }
   txt(page, pageHeight, bold, "NEXUS RCA", cx, y, 15, "center");
   y += 5;
   txt(page, pageHeight, helvetica, "Agence Internationale", cx, y, 8, "center");

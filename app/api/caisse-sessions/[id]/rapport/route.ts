@@ -10,6 +10,8 @@
 // WinAnsi, bug connu) — formatage manuel des milliers.
 // ============================================================================
 
+import { readFileSync } from "fs";
+import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
@@ -197,8 +199,19 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
 
     const operatrice =
       [s.profiles?.prenom, s.profiles?.nom].filter(Boolean).join(" ") || s.agent_id.slice(0, 8);
-    line("NEXUS RCA — Rapport de session de caisse", { b: true, size: 16 });
-    line(`Session ${s.id.slice(0, 8)} · ${s.status === "cloturee" ? "Clôturée" : s.status === "a_cloturer" ? "Soumise, en attente de validation" : "Ouverte"}`, { size: 10 });
+    // Logo officiel Nexus RCA (demande Thierry 12/09) — jamais bloquant.
+    let logoIndent = 0;
+    try {
+      const logo = await pdf.embedPng(
+        readFileSync(path.join(process.cwd(), "public", "icones", "icon-192.png"))
+      );
+      page.drawImage(logo, { x: M, y: y - 22, width: 38, height: 38 });
+      logoIndent = 48;
+    } catch {
+      logoIndent = 0;
+    }
+    line("NEXUS RCA — Rapport de session de caisse", { b: true, size: 16, indent: logoIndent });
+    line(`Session ${s.id.slice(0, 8)} · ${s.status === "cloturee" ? "Clôturée" : s.status === "a_cloturer" ? "Soumise, en attente de validation" : "Ouverte"}`, { size: 10, indent: logoIndent });
     rule();
     line(`Opératrice : ${operatrice}`, { right: `Poste : ${s.poste || "Réception"}` });
     line(`Ouverte le : ${dateStr(s.opened_at)}`, { right: `Clôturée le : ${dateStr(s.closed_at)}` });

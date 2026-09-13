@@ -9,6 +9,8 @@
 // toLocaleString pour les nombres (bug espace insécable connu).
 // ============================================================================
 
+import { readFileSync } from "fs";
+import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
 import { assertPermission, ForbiddenError } from "@/lib/permissions";
@@ -98,6 +100,19 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
     const pdf = await PDFDocument.create();
     const font = await pdf.embedFont(StandardFonts.Helvetica);
     const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
+
+    // Logo officiel Nexus RCA (demande Thierry 12/09) — même fichier que le
+    // BrandMark de l'interface ; si la lecture échoue, la facture sort sans
+    // logo (jamais bloquant).
+    let logo: Awaited<ReturnType<typeof pdf.embedPng>> | null = null;
+    try {
+      logo = await pdf.embedPng(
+        readFileSync(path.join(process.cwd(), "public", "icones", "icon-192.png"))
+      );
+    } catch {
+      logo = null;
+    }
+
     let page: PDFPage = pdf.addPage([595, 842]);
     const M = 50;
     const RIGHT = 545;
@@ -123,20 +138,25 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
       y -= h;
     };
 
-    // ── En-tête ──
-    text(FACTURE_IDENTITE.raisonSociale, { b: true, size: 22 });
+    // ── En-tête (logo + identité décalée quand le logo est présent) ──
+    const LOGO_SIZE = 46;
+    const HX = logo ? M + LOGO_SIZE + 12 : M;
+    if (logo) {
+      page.drawImage(logo, { x: M, y: y - LOGO_SIZE + 16, width: LOGO_SIZE, height: LOGO_SIZE });
+    }
+    text(FACTURE_IDENTITE.raisonSociale, { b: true, size: 22, x: HX });
     text(f.type === "avoir" ? "AVOIR" : "FACTURE", { b: true, size: 22, right: true });
     nl(16);
-    text("Agence Internationale", { size: 9, color: GREY });
+    text("Agence Internationale", { size: 9, color: GREY, x: HX });
     text(f.reference, { b: true, size: 12, right: true });
     nl(12);
     for (const lineTxt of wrap(font, FACTURE_IDENTITE.adresse, 300, 8)) {
-      text(lineTxt, { size: 8, color: GREY });
+      text(lineTxt, { size: 8, color: GREY, x: HX });
       nl(10);
     }
-    text(`Tél : ${FACTURE_IDENTITE.telephone} · ${FACTURE_IDENTITE.email}`, { size: 8, color: GREY });
+    text(`Tél : ${FACTURE_IDENTITE.telephone} · ${FACTURE_IDENTITE.email}`, { size: 8, color: GREY, x: HX });
     nl(10);
-    text(FACTURE_IDENTITE.siteWeb, { size: 8, color: GREY });
+    text(FACTURE_IDENTITE.siteWeb, { size: 8, color: GREY, x: HX });
     // NIF / RCCM : uniquement s'ils sont renseignés (jamais inventés).
     if (FACTURE_IDENTITE.nif || FACTURE_IDENTITE.rccm) {
       nl(10);
