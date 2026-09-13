@@ -6,6 +6,7 @@
 // WinAnsi, mais PRESERVE les accents (é è à ç ô etc.) et apostrophes.
 // ============================================================================
 
+import { embedNexusLogo } from "@/lib/pdf-logo";
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
 import type { Employee } from "@/types";
 
@@ -108,7 +109,10 @@ export async function buildContractPdf(opts: BuildContractOptions): Promise<Uint
   const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
   const nexusBlue = rgb(0.047, 0.11, 0.251);
-  const nexusOrange = rgb(1, 0.4, 0);
+  // M12-bis (08/09) : l'orange ne subsiste sur aucun PDF (seul le logo le
+  // conserve). Or en remplissage/filet uniquement ; le texte reste en
+  // bleu nuit, jamais en or (meme regle de contraste qu'a l'ecran, A1).
+  const nexusGold = rgb(0.725, 0.592, 0.376);
   const grayDark = rgb(0.15, 0.2, 0.3);
   const grayMid = rgb(0.4, 0.45, 0.5);
   const grayLight = rgb(0.85, 0.87, 0.9);
@@ -186,22 +190,24 @@ export async function buildContractPdf(opts: BuildContractOptions): Promise<Uint
 
   // ─── Header navy ───────────────────────────────────────────────────────
   drawRect(0, PAGE_H - 110, PAGE_W, 110, nexusBlue);
-  drawRect(0, PAGE_H - 110, 6, 110, nexusOrange);
+  drawRect(0, PAGE_H - 110, 6, 110, nexusGold);
 
+  const nexusLogo = await embedNexusLogo(pdfDoc);
+  if (nexusLogo) page.drawImage(nexusLogo, { x: MARGIN_X, y: PAGE_H - 85, width: 40, height: 40 });
   drawText("NEXUS RCA", {
-    x: MARGIN_X,
+    x: MARGIN_X + 52,
     y: PAGE_H - 50,
     size: 22,
     font: helveticaBold,
     color: white,
   });
   drawText("Agence internationale - Bangui, République Centrafricaine", {
-    x: MARGIN_X,
+    x: MARGIN_X + 52,
     y: PAGE_H - 70,
     size: 9,
     color: rgb(0.7, 0.78, 0.9),
   });
-  drawText("Relais Sica, vers Hôpital Général - contact@nexusrca.com", {
+  drawText("Croisement Marabena, Route de l'Aéroport - contact@nexusrca.com", {
     x: MARGIN_X,
     y: PAGE_H - 84,
     size: 8,
@@ -246,7 +252,7 @@ export async function buildContractPdf(opts: BuildContractOptions): Promise<Uint
     color: nexusBlue,
   });
   cursorY -= 8;
-  drawRect(MARGIN_X, cursorY, 60, 2, nexusOrange);
+  drawRect(MARGIN_X, cursorY, 60, 2, nexusGold);
   cursorY -= 30;
 
   // ─── Bloc Entre les soussignés ───────────────────────────────────────────
@@ -255,7 +261,7 @@ export async function buildContractPdf(opts: BuildContractOptions): Promise<Uint
     y: cursorY,
     size: 9,
     font: helveticaBold,
-    color: nexusOrange,
+    color: nexusBlue,
   });
   cursorY -= 18;
 
@@ -276,7 +282,7 @@ export async function buildContractPdf(opts: BuildContractOptions): Promise<Uint
   });
   cursorY -= 14;
   drawParagraph(
-    "Société à responsabilité limitée de droit centrafricain. Siège social : Relais Sica, vers Hôpital Général, Bangui, République Centrafricaine. Représentée par sa Direction.",
+    "Société à responsabilité limitée de droit centrafricain. Siège social : Croisement Marabena, Route de l'Aéroport, PO.BOX 1204, Bangui, République Centrafricaine. Représentée par sa Direction.",
     { size: 9, color: grayDark }
   );
   cursorY -= 6;
@@ -332,7 +338,7 @@ export async function buildContractPdf(opts: BuildContractOptions): Promise<Uint
     y: cursorY,
     size: 9,
     font: helveticaBold,
-    color: nexusOrange,
+    color: nexusBlue,
   });
   cursorY -= 22;
 
@@ -346,7 +352,7 @@ export async function buildContractPdf(opts: BuildContractOptions): Promise<Uint
       color: nexusBlue,
     });
     cursorY -= 6;
-    drawRect(MARGIN_X, cursorY, 40, 1, nexusOrange);
+    drawRect(MARGIN_X, cursorY, 40, 1, nexusGold);
     cursorY -= 14;
   };
 
@@ -459,7 +465,7 @@ export async function buildContractPdf(opts: BuildContractOptions): Promise<Uint
     y: sigY,
     size: 9,
     font: helveticaBold,
-    color: nexusOrange,
+    color: nexusBlue,
   });
   drawText("NEXUS RCA SARL", {
     x: MARGIN_X,
@@ -482,7 +488,7 @@ export async function buildContractPdf(opts: BuildContractOptions): Promise<Uint
     y: sigY,
     size: 9,
     font: helveticaBold,
-    color: nexusOrange,
+    color: nexusBlue,
   });
   drawText(employee.nom_complet, {
     x: xR,

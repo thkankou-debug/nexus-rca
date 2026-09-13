@@ -56,36 +56,36 @@ export default async function AdminRdvPage() {
   const future90 = new Date(today);
   future90.setDate(future90.getDate() + 90);
 
+  // D3 : appointments est la table canonique (rendez_vous est obsolète,
+  // voir migration 054 ; cette page lisait auparavant appointment_requests
+  // avec des colonnes inexistantes — toujours vide en silence).
   const { data: rdvData, error } = await supabase
-    .from("appointment_requests")
-    .select("*")
-    .gte("appointment_date", past30.toISOString().split("T")[0])
-    .lte("appointment_date", future90.toISOString().split("T")[0])
-    .order("appointment_date", { ascending: true })
-    .order("appointment_time", { ascending: true });
+    .from("appointments")
+    .select("id, rdv_date, rdv_heure, client_nom, client_telephone, service_type, statut")
+    .gte("rdv_date", past30.toISOString().split("T")[0])
+    .lte("rdv_date", future90.toISOString().split("T")[0])
+    .order("rdv_date", { ascending: true })
+    .order("rdv_heure", { ascending: true });
 
   if (error) {
-    // Fallback : la table peut s'appeler rendez_vous selon les déploiements
-    console.warn("Erreur RDV (appointment_requests) :", error.message);
+    console.error("Erreur RDV (appointments) :", error.message);
   }
 
   type RdvRow = {
     id: string;
-    appointment_date: string;
-    appointment_time: string;
-    nom_complet?: string | null;
-    email?: string | null;
-    telephone?: string | null;
-    service?: string | null;
+    rdv_date: string;
+    rdv_heure: string;
+    client_nom: string;
+    client_telephone: string | null;
+    service_type: string;
     statut: string;
-    notes?: string | null;
   };
   const rdvs = (rdvData || []) as RdvRow[];
 
   // Grouper par date
   const byDate = new Map<string, RdvRow[]>();
   for (const r of rdvs) {
-    const key = r.appointment_date;
+    const key = r.rdv_date;
     if (!byDate.has(key)) byDate.set(key, []);
     byDate.get(key)!.push(r);
   }
@@ -138,14 +138,14 @@ export default async function AdminRdvPage() {
                       >
                         <div className="flex items-center gap-3 min-w-0">
                           <span className="rounded-lg bg-brand-subtle px-2.5 py-1 text-overline text-brand">
-                            {r.appointment_time?.slice(0, 5) ?? "—"}
+                            {r.rdv_heure}
                           </span>
                           <div className="min-w-0">
                             <p className="truncate text-body-sm font-semibold text-ink">
-                              {r.nom_complet || "Anonyme"}
+                              {r.client_nom || "Anonyme"}
                             </p>
                             <p className="truncate text-caption text-ink-muted">
-                              {r.service || "—"} {r.telephone ? `· ${r.telephone}` : ""}
+                              {r.service_type || "—"} {r.client_telephone ? `· ${r.client_telephone}` : ""}
                             </p>
                           </div>
                         </div>

@@ -99,7 +99,7 @@ export function RequestDocumentModal({
       >
         <div className="flex items-center justify-between border-b border-slate-100 p-5">
           <div className="flex items-center gap-2">
-            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-nexus-orange-100 text-nexus-orange-700">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-brand-subtle text-brand-hover">
               <FileQuestion className="h-4 w-4" />
             </span>
             <h2 className="font-display text-lg font-bold text-nexus-blue-950">
@@ -144,7 +144,7 @@ export function RequestDocumentModal({
                   value={item.type_document}
                   onChange={(e) => updateItem(item.id, { type_document: e.target.value })}
                   placeholder="Type de document"
-                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-400 focus:outline-none"
+                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none"
                 />
                 <datalist id={`types-${item.id}`}>
                   {PREDEFINED_TYPES.map((t) => (
@@ -158,7 +158,7 @@ export function RequestDocumentModal({
                   }
                   placeholder="Précisions / contexte (optionnel)"
                   rows={2}
-                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-400 focus:outline-none"
+                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none"
                 />
               </div>
             </div>
@@ -168,7 +168,7 @@ export function RequestDocumentModal({
             type="button"
             onClick={addItem}
             className={cn(
-              "flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 px-3 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-500 transition hover:border-nexus-orange-300 hover:text-nexus-orange-700"
+              "flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 px-3 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-500 transition hover:border-brand/40 hover:text-brand-hover"
             )}
           >
             <Plus className="h-3.5 w-3.5" />
@@ -188,7 +188,7 @@ export function RequestDocumentModal({
             type="button"
             onClick={handleSubmit}
             disabled={sending}
-            className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2 text-sm font-bold text-white transition hover:bg-nexus-orange-600 disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-xl bg-brand px-5 py-2 text-sm font-bold text-on-brand transition hover:bg-brand-hover disabled:opacity-50"
           >
             {sending ? (
               <Loader2 className="h-4 w-4 animate-spin" />

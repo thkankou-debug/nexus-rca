@@ -285,7 +285,7 @@ export default function BilletsPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -293,17 +293,17 @@ export default function BilletsPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
             <div className="grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-10 xl:gap-14">
               {/* ─── Colonne principale (gauche) ─── */}
               <div className="text-center lg:col-span-7 lg:text-left">
-                <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md transition-all duration-300 hover:border-nexus-orange-500/50">
+                <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md transition-all duration-300 hover:border-brand/50">
                   <span className="relative flex h-1.5 w-1.5">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
                   </span>
                   {t("hero_eyebrow")}
                 </span>
@@ -311,12 +311,12 @@ export default function BilletsPage() {
                 <h1 className="mt-6 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-[3.6rem] xl:text-6xl">
                   {t("hero_title_before")}{" "}
                   <span className="relative inline-block">
-                    <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                    <span className="bg-brand bg-clip-text text-transparent">
                       {t("hero_title_highlight")}
                     </span>
                     <span
                       aria-hidden
-                      className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                      className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                     />
                   </span>
                 </h1>
@@ -328,7 +328,7 @@ export default function BilletsPage() {
                 <div className="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4 lg:justify-start">
                   <Link
                     href="/services/billets/demarrer"
-                    className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+                    className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)]"
                   >
                     <span
                       aria-hidden
@@ -353,7 +353,7 @@ export default function BilletsPage() {
                     href={whatsappLink(t("wa_question"))}
                     target="_blank"
                     rel="noreferrer"
-                    className="font-bold text-nexus-orange-300 underline-offset-4 hover:underline"
+                    className="font-bold text-brand underline-offset-4 hover:underline"
                   >
                     {t("hero_trust_link")}
                   </a>
@@ -366,17 +366,17 @@ export default function BilletsPage() {
                       key={n}
                       className={`group/stat relative overflow-hidden rounded-2xl border bg-white/[0.04] px-5 py-4 backdrop-blur-md ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/[0.07] ${
                         i === 0
-                          ? "border-nexus-orange-400/30 hover:border-nexus-orange-400/60"
+                          ? "border-brand/30 hover:border-brand/60"
                           : "border-white/10 hover:border-white/25"
                       }`}
                     >
                       <div
                         aria-hidden
-                        className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover/stat:bg-nexus-orange-500/20"
+                        className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover/stat:bg-brand/20"
                       />
                       <div className="relative">
                         <p className="font-display text-xl font-bold leading-none text-white sm:text-2xl">
-                          <span className="bg-gradient-to-r from-nexus-orange-300 to-nexus-orange-500 bg-clip-text text-transparent">
+                          <span className="bg-brand bg-clip-text text-transparent">
                             {t(`stat${n}_value`)}
                           </span>
                         </p>
@@ -406,7 +406,7 @@ export default function BilletsPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -414,27 +414,27 @@ export default function BilletsPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-10 max-w-3xl text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
                 </span>
                 Outil de recherche
               </span>
               <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                 Composez votre vol{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     en quelques clics
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 .
@@ -458,7 +458,7 @@ export default function BilletsPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -466,31 +466,31 @@ export default function BilletsPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-3xl text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
                 </span>
                 Routes principales
               </span>
               <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                 De Bangui vers{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     le monde
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 .
@@ -519,8 +519,8 @@ export default function BilletsPage() {
                     x2="100%"
                     y2="0%"
                   >
-                    <stop offset="0%" stopColor="rgba(255,102,0,0.65)" />
-                    <stop offset="100%" stopColor="rgba(255,102,0,0.10)" />
+                    <stop offset="0%" stopColor="rgba(185,151,96,0.65)" />
+                    <stop offset="100%" stopColor="rgba(185,151,96,0.10)" />
                   </linearGradient>
                   <linearGradient
                     id="routeGradBlue"
@@ -533,8 +533,8 @@ export default function BilletsPage() {
                     <stop offset="100%" stopColor="rgba(96,138,255,0.10)" />
                   </linearGradient>
                   <radialGradient id="routeCoreGlow" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="rgba(255,102,0,0.30)" />
-                    <stop offset="100%" stopColor="rgba(255,102,0,0)" />
+                    <stop offset="0%" stopColor="rgba(185,151,96,0.30)" />
+                    <stop offset="100%" stopColor="rgba(185,151,96,0)" />
                   </radialGradient>
                 </defs>
 
@@ -592,25 +592,25 @@ export default function BilletsPage() {
                 <div className="relative">
                   <div
                     aria-hidden
-                    className="absolute inset-0 rounded-3xl bg-nexus-orange-500/40 blur-2xl"
+                    className="absolute inset-0 rounded-3xl bg-brand/40 blur-2xl"
                   />
-                  <div className="relative rounded-3xl border border-nexus-orange-400/50 bg-gradient-to-br from-nexus-orange-500/20 via-white/[0.06] to-white/[0.02] px-5 py-4 ring-1 ring-orange-400/30 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_24px_48px_-16px_rgba(255,102,0,0.40)] sm:px-7 sm:py-5">
+                  <div className="relative rounded-3xl border border-brand/50 bg-gradient-to-br from-brand/20 via-white/[0.06] to-white/[0.02] px-5 py-4 ring-1 ring-orange-400/30 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10),0_24px_48px_-16px_rgba(185,151,96,0.40)] sm:px-7 sm:py-5">
                     <div className="flex items-center gap-3">
                       <div className="relative">
                         <div
                           aria-hidden
-                          className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 blur-md"
+                          className="absolute inset-0 rounded-2xl bg-brand/40 blur-md"
                         />
-                        <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/10">
+                        <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.6)] ring-1 ring-white/10">
                           <span className="text-2xl">🇨🇫</span>
                         </div>
                         <span className="absolute -right-1 -top-1 flex h-3 w-3">
-                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                          <span className="relative inline-flex h-3 w-3 rounded-full bg-nexus-orange-400" />
+                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                          <span className="relative inline-flex h-3 w-3 rounded-full bg-brand" />
                         </span>
                       </div>
                       <div>
-                        <p className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text font-display text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+                        <p className="bg-brand bg-clip-text font-display text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                           Hub principal
                         </p>
                         <p className="font-display text-lg font-bold leading-tight text-white sm:text-xl">
@@ -629,7 +629,7 @@ export default function BilletsPage() {
                   className="absolute -translate-x-1/2 -translate-y-1/2"
                   style={{ left: `${n.x}%`, top: `${n.y}%` }}
                 >
-                  <div className="group relative flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1.5 ring-1 ring-white/5 backdrop-blur-md shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:border-nexus-orange-400/40 hover:bg-white/[0.10]">
+                  <div className="group relative flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1.5 ring-1 ring-white/5 backdrop-blur-md shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:border-brand/40 hover:bg-white/[0.10]">
                     <span className="text-base leading-none">{n.flag}</span>
                     <span className="font-display text-[11px] font-bold uppercase tracking-[0.12em] text-white">
                       {n.label}
@@ -658,7 +658,7 @@ export default function BilletsPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-40 top-1/3 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -left-40 top-1/3 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -667,18 +667,18 @@ export default function BilletsPage() {
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-3xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Compagnies aériennes
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                 Un réseau{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     multi-compagnies
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>{" "}
                 pertinent.
@@ -697,13 +697,13 @@ export default function BilletsPage() {
                     key={a.id}
                     className="relative w-[85vw] shrink-0 snap-center overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]"
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)] ring-1 ring-white/10">
                       <Plane className="h-5 w-5" />
                     </div>
                     <h3 className="mt-4 font-display text-base font-bold leading-tight text-white">
                       {a.name} <span className="text-base">{a.emoji}</span>
                     </h3>
-                    <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+                    <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
                       Hub · {a.hub}
                     </p>
                     <p className="mt-3 text-sm leading-relaxed text-slate-200">
@@ -717,24 +717,24 @@ export default function BilletsPage() {
             {/* Desktop : bento varié */}
             <div className="hidden sm:grid sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
               {/* Master card 2x large */}
-              <article className="group relative overflow-hidden rounded-3xl border border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/15 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/60 sm:col-span-3 sm:row-span-2 sm:p-9 lg:col-span-2 lg:row-span-2">
+              <article className="group relative overflow-hidden rounded-3xl border border-brand/40 bg-gradient-to-br from-brand/15 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.30)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/60 sm:col-span-3 sm:row-span-2 sm:p-9 lg:col-span-2 lg:row-span-2">
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-nexus-orange-500/25 blur-[100px] transition-all duration-500 group-hover:bg-nexus-orange-500/35"
+                  className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-brand/25 blur-[100px] transition-all duration-500 group-hover:bg-brand/35"
                 />
                 <div className="relative">
                   <div className="flex items-center gap-3">
                     <div className="relative">
                       <div
                         aria-hidden
-                        className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 blur-md"
+                        className="absolute inset-0 rounded-2xl bg-brand/40 blur-md"
                       />
-                      <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/10">
+                      <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.6)] ring-1 ring-white/10">
                         <Plane className="h-8 w-8" />
                       </div>
                     </div>
                     <div>
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-nexus-orange-400/40 bg-nexus-orange-500/10 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-brand/40 bg-brand/10 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.18em] text-brand backdrop-blur">
                         <Star className="h-2.5 w-2.5" />
                         Partenaire principal
                       </span>
@@ -746,7 +746,7 @@ export default function BilletsPage() {
                       </h3>
                     </div>
                   </div>
-                  <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+                  <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
                     Hub · {AIRLINES_MASTER.hub}
                   </p>
                   <p className="mt-5 text-base leading-relaxed text-slate-200">
@@ -764,7 +764,7 @@ export default function BilletsPage() {
                         key={s.label}
                         className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur"
                       >
-                        <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-nexus-orange-300">
+                        <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-brand">
                           {s.label}
                         </p>
                         <p className="mt-1 font-display text-xs font-bold leading-tight text-white">
@@ -780,20 +780,20 @@ export default function BilletsPage() {
               {AIRLINES_SMALL.map((a) => (
                 <article
                   key={a.id}
-                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06]"
                 >
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                    className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/22"
                   />
                   <div className="relative">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
                       <Plane className="h-5 w-5" />
                     </div>
                     <h3 className="mt-4 font-display text-base font-bold leading-tight text-white">
                       {a.name} <span className="text-base">{a.emoji}</span>
                     </h3>
-                    <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+                    <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
                       Hub · {a.hub}
                     </p>
                     <p className="mt-3 text-sm leading-relaxed text-slate-200">
@@ -815,19 +815,19 @@ export default function BilletsPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[24rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/8 blur-[120px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[24rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/8 blur-[120px]"
           />
 
           <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
             <p className="font-display text-2xl font-bold leading-snug tracking-tight text-white sm:text-3xl lg:text-4xl">
               {t("intro_before")}
               <span className="relative inline-block">
-                <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                <span className="bg-brand bg-clip-text text-transparent">
                   {t("intro_highlight")}
                 </span>
                 <span
                   aria-hidden
-                  className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                 />
               </span>
               {t("intro_after")}
@@ -844,7 +844,7 @@ export default function BilletsPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 top-1/4 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/12 blur-[140px]"
+            className="pointer-events-none absolute -right-32 top-1/4 h-[28rem] w-[28rem] rounded-full bg-brand/12 blur-[140px]"
           />
           <div
             aria-hidden
@@ -854,7 +854,7 @@ export default function BilletsPage() {
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mb-12 grid gap-10 lg:grid-cols-[1fr_2fr] lg:items-start lg:gap-16">
               <div>
-                <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+                <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                   {t("scope_eyebrow")}
                 </span>
                 <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
@@ -869,14 +869,14 @@ export default function BilletsPage() {
                 {SCOPE_ITEMS.map((item, i) => (
                   <li
                     key={i}
-                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-5 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-5 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06]"
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/20"
+                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/20"
                     />
                     <div className="relative flex items-start gap-4">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
                         <span className="font-display text-xs font-bold tabular-nums">
                           0{i + 1}
                         </span>
@@ -906,7 +906,7 @@ export default function BilletsPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 top-32 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-32 top-32 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -914,12 +914,12 @@ export default function BilletsPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 {t("result_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
@@ -935,14 +935,14 @@ export default function BilletsPage() {
               {RESULT_ITEMS.map((item, i) => (
                 <article
                   key={i}
-                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06] sm:p-7"
+                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06] sm:p-7"
                 >
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                    className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/22"
                   />
                   <div className="relative">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)] ring-1 ring-white/10">
                       <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <h3 className="mt-4 font-display text-base font-bold leading-tight text-white sm:text-lg">
@@ -964,7 +964,7 @@ export default function BilletsPage() {
                     key={i}
                     className="relative w-[85vw] shrink-0 snap-center overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)] ring-1 ring-white/10">
                       <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <h3 className="mt-4 font-display text-base font-bold leading-tight text-white">
@@ -998,7 +998,7 @@ export default function BilletsPage() {
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 {t("pourqui_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
@@ -1085,23 +1085,23 @@ export default function BilletsPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-40 bottom-32 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-40 bottom-32 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-14 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 {t("metho_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                 {t("metho_title_before")}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     {t("metho_title_highlight")}
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 {t("metho_title_after")}
@@ -1114,7 +1114,7 @@ export default function BilletsPage() {
             <div className="relative">
               <div
                 aria-hidden
-                className="pointer-events-none absolute left-8 top-4 bottom-4 w-px bg-gradient-to-b from-nexus-orange-500/40 via-nexus-orange-500/20 to-transparent sm:left-[3.75rem]"
+                className="pointer-events-none absolute left-8 top-4 bottom-4 w-px bg-gradient-to-b from-brand/40 via-brand/20 to-transparent sm:left-[3.75rem]"
               />
 
               <div className="space-y-7">
@@ -1129,24 +1129,24 @@ export default function BilletsPage() {
                         <div className="relative">
                           <div
                             aria-hidden
-                            className="absolute inset-0 rounded-3xl bg-nexus-orange-500/40 blur-md transition-all duration-500 group-hover:bg-nexus-orange-500/60"
+                            className="absolute inset-0 rounded-3xl bg-brand/40 blur-md transition-all duration-500 group-hover:bg-brand/60"
                           />
-                          <span className="relative inline-flex h-16 w-16 items-center justify-center rounded-3xl border border-nexus-orange-400/30 bg-nexus-blue-900/60 backdrop-blur-md font-display text-5xl font-bold tabular-nums shadow-[0_10px_28px_-10px_rgba(255,102,0,0.4)] sm:h-[7.5rem] sm:w-[7.5rem] sm:text-7xl">
-                            <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                          <span className="relative inline-flex h-16 w-16 items-center justify-center rounded-3xl border border-brand/30 bg-nexus-blue-900/60 backdrop-blur-md font-display text-5xl font-bold tabular-nums shadow-[0_10px_28px_-10px_rgba(185,151,96,0.4)] sm:h-[7.5rem] sm:w-[7.5rem] sm:text-7xl">
+                            <span className="bg-brand bg-clip-text text-transparent">
                               {etape.num}
                             </span>
                           </span>
                         </div>
                       </div>
 
-                      <article className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out group-hover:-translate-y-1 group-hover:border-nexus-orange-400/40 group-hover:bg-white/[0.06] sm:p-7">
+                      <article className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out group-hover:-translate-y-1 group-hover:border-brand/40 group-hover:bg-white/[0.06] sm:p-7">
                         <div
                           aria-hidden
-                          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/22"
                         />
                         <div className="relative">
                           <div className="flex items-center gap-2.5">
-                            <Icon className="h-4 w-4 shrink-0 text-nexus-orange-300" />
+                            <Icon className="h-4 w-4 shrink-0 text-brand" />
                             <h3 className="font-display text-lg font-bold leading-tight text-white sm:text-xl">
                               {t(`${etape.key}_title`)}
                             </h3>
@@ -1163,10 +1163,10 @@ export default function BilletsPage() {
             </div>
 
             {/* CTA milieu glass orange */}
-            <div className="mt-12 overflow-hidden rounded-3xl border border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)] sm:p-8">
+            <div className="mt-12 overflow-hidden rounded-3xl border border-brand/40 bg-gradient-to-br from-brand/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.30)] sm:p-8">
               <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+                  <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                     {t("metho_cta_eyebrow")}
                   </span>
                   <p className="mt-3 font-display text-xl font-bold leading-tight tracking-tight text-white sm:text-2xl">
@@ -1179,7 +1179,7 @@ export default function BilletsPage() {
                 <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:gap-3">
                   <Link
                     href="/services/billets/demarrer"
-                    className="group/btn relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-6 py-3 text-sm font-bold text-white shadow-[0_10px_30px_-10px_rgba(255,102,0,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_16px_40px_-10px_rgba(255,102,0,0.6)]"
+                    className="group/btn relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-6 py-3 text-sm font-bold text-on-brand shadow-[0_10px_30px_-10px_rgba(185,151,96,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_16px_40px_-10px_rgba(185,151,96,0.6)]"
                   >
                     <span
                       aria-hidden
@@ -1211,7 +1211,7 @@ export default function BilletsPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -1223,24 +1223,24 @@ export default function BilletsPage() {
               <div className="relative mx-auto mb-4 inline-flex">
                 <div
                   aria-hidden
-                  className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 blur-md"
+                  className="absolute inset-0 rounded-2xl bg-brand/40 blur-md"
                 />
-                <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-8px_rgba(255,102,0,0.55)] ring-1 ring-white/10">
+                <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_10px_28px_-8px_rgba(185,151,96,0.55)] ring-1 ring-white/10">
                   <Building2 className="h-6 w-6" />
                 </div>
               </div>
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Hôtels partenaires
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
                 Des établissements{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     vérifiés
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>{" "}
                 par région.
@@ -1265,7 +1265,7 @@ export default function BilletsPage() {
                         <h3 className="font-display text-base font-bold leading-tight text-white">
                           {h.region}
                         </h3>
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
                           <Star className="h-2.5 w-2.5" />
                           {h.standing}
                         </span>
@@ -1284,11 +1284,11 @@ export default function BilletsPage() {
               {HOTELS.map((h) => (
                 <article
                   key={h.region}
-                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06]"
                 >
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                    className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/22"
                   />
                   <div className="relative">
                     <div className="flex items-center gap-3">
@@ -1299,7 +1299,7 @@ export default function BilletsPage() {
                         <h3 className="font-display text-base font-bold leading-tight text-white sm:text-lg">
                           {h.region}
                         </h3>
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
                           <Star className="h-2.5 w-2.5" />
                           Standing {h.standing}
                         </span>
@@ -1320,14 +1320,14 @@ export default function BilletsPage() {
                 return (
                   <article
                     key={item.key}
-                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06]"
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/22"
                     />
                     <div className="relative">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105">
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="mt-5 font-display text-base font-bold leading-tight text-white sm:text-lg">
@@ -1353,7 +1353,7 @@ export default function BilletsPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -1362,7 +1362,7 @@ export default function BilletsPage() {
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 {t("cas_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
@@ -1376,14 +1376,14 @@ export default function BilletsPage() {
                 {CAS.map((cas, idx) => (
                   <article
                     key={idx}
-                    className="group relative w-[85vw] shrink-0 snap-start overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06] sm:w-auto sm:p-7"
+                    className="group relative w-[85vw] shrink-0 snap-start overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06] sm:w-auto sm:p-7"
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-nexus-orange-500/10 blur-[80px] transition-all duration-500 group-hover:bg-nexus-orange-500/25"
+                      className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-brand/10 blur-[80px] transition-all duration-500 group-hover:bg-brand/25"
                     />
                     <div className="relative flex h-full flex-col">
-                      <span className="inline-flex w-fit items-center gap-2 rounded-full border border-nexus-orange-400/40 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur">
+                      <span className="inline-flex w-fit items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-brand backdrop-blur">
                         <Sparkles className="h-3 w-3" />
                         {cas.badge}
                       </span>
@@ -1397,7 +1397,7 @@ export default function BilletsPage() {
                             key={s.label}
                             className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur"
                           >
-                            <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-nexus-orange-300">
+                            <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-brand">
                               {s.label}
                             </p>
                             <p className="mt-1 font-display text-xs font-bold leading-tight text-white">
@@ -1412,10 +1412,10 @@ export default function BilletsPage() {
                       </p>
 
                       <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4">
-                        <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.18em] text-transparent">
+                        <span className="bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.18em] text-transparent">
                           Approche méthodologique
                         </span>
-                        <ArrowRight className="h-4 w-4 text-nexus-orange-300 transition-transform duration-300 group-hover:translate-x-0.5" />
+                        <ArrowRight className="h-4 w-4 text-brand transition-transform duration-300 group-hover:translate-x-0.5" />
                       </div>
                     </div>
                   </article>
@@ -1427,14 +1427,14 @@ export default function BilletsPage() {
               {CAS.map((cas, idx) => (
                 <article
                   key={idx}
-                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)]"
+                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.30)]"
                 >
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/10 blur-[100px] transition-all duration-500 group-hover:bg-nexus-orange-500/30"
+                    className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand/10 blur-[100px] transition-all duration-500 group-hover:bg-brand/30"
                   />
                   <div className="relative flex h-full flex-col">
-                    <span className="inline-flex w-fit items-center gap-2 rounded-full border border-nexus-orange-400/40 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur">
+                    <span className="inline-flex w-fit items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-brand backdrop-blur">
                       <Sparkles className="h-3 w-3" />
                       {cas.badge}
                     </span>
@@ -1446,9 +1446,9 @@ export default function BilletsPage() {
                       {cas.stats.map((s) => (
                         <div
                           key={s.label}
-                          className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur transition-all duration-300 group-hover:border-nexus-orange-400/30"
+                          className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur transition-all duration-300 group-hover:border-brand/30"
                         >
-                          <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-nexus-orange-300">
+                          <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-brand">
                             {s.label}
                           </p>
                           <p className="mt-1 font-display text-xs font-bold leading-tight text-white">
@@ -1463,10 +1463,10 @@ export default function BilletsPage() {
                     </p>
 
                     <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-5">
-                      <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.18em] text-transparent">
+                      <span className="bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.18em] text-transparent">
                         Approche méthodologique
                       </span>
-                      <ArrowRight className="h-4 w-4 text-nexus-orange-300 transition-transform duration-300 group-hover:translate-x-0.5" />
+                      <ArrowRight className="h-4 w-4 text-brand transition-transform duration-300 group-hover:translate-x-0.5" />
                     </div>
                   </div>
                 </article>
@@ -1484,7 +1484,7 @@ export default function BilletsPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-40 top-1/3 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-40 top-1/3 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -1493,18 +1493,18 @@ export default function BilletsPage() {
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 {t("engagement_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                 {t("engagement_title_before")}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     {t("engagement_title_highlight")}
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 {t("engagement_title_after")}
@@ -1541,23 +1541,23 @@ export default function BilletsPage() {
                 </div>
               </article>
 
-              <article className="group relative overflow-hidden rounded-3xl border border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/60 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_30px_60px_-16px_rgba(255,102,0,0.40)] sm:p-9 lg:col-span-2">
+              <article className="group relative overflow-hidden rounded-3xl border border-brand/40 bg-gradient-to-br from-brand/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.30)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/60 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_30px_60px_-16px_rgba(185,151,96,0.40)] sm:p-9 lg:col-span-2">
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/25 blur-[100px] transition-all duration-500 group-hover:bg-nexus-orange-500/40"
+                  className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand/25 blur-[100px] transition-all duration-500 group-hover:bg-brand/40"
                 />
                 <div className="relative">
                   <div className="mb-4 flex items-center gap-3">
                     <div className="relative">
                       <div
                         aria-hidden
-                        className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 blur-md"
+                        className="absolute inset-0 rounded-2xl bg-brand/40 blur-md"
                       />
-                      <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/10">
+                      <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.6)] ring-1 ring-white/10">
                         <ShieldCheck className="h-6 w-6" />
                       </div>
                     </div>
-                    <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+                    <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                       {t("engagement_yes_title")}
                     </span>
                   </div>
@@ -1567,7 +1567,7 @@ export default function BilletsPage() {
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-slate-200 sm:text-base"
                       >
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-300" />
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -1591,12 +1591,12 @@ export default function BilletsPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-40 bottom-1/4 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-40 bottom-1/4 h-[28rem] w-[28rem] rounded-full bg-brand/15 blur-[140px]"
           />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 {t("tarif_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
@@ -1616,23 +1616,23 @@ export default function BilletsPage() {
                     key={tarif.key}
                     className={`group relative overflow-hidden rounded-3xl border p-6 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 sm:p-7 ${
                       isHi
-                        ? "border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/15 via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)] hover:border-nexus-orange-400/60"
-                        : "border-white/10 bg-white/[0.04] ring-1 ring-white/5 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                        ? "border-brand/40 bg-gradient-to-br from-brand/15 via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.30)] hover:border-brand/60"
+                        : "border-white/10 bg-white/[0.04] ring-1 ring-white/5 hover:border-brand/40 hover:bg-white/[0.06]"
                     }`}
                   >
                     <div
                       aria-hidden
                       className={`pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full ${
                         isHi
-                          ? "bg-nexus-orange-500/20"
-                          : "bg-nexus-orange-500/0"
-                      } blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/25`}
+                          ? "bg-brand/20"
+                          : "bg-brand/0"
+                      } blur-2xl transition-all duration-500 group-hover:bg-brand/25`}
                     />
                     <div className="relative">
                       <div
                         className={`flex items-center justify-center rounded-2xl text-white shadow-sm ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105 ${
                           isHi
-                            ? "h-14 w-14 bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)]"
+                            ? "h-14 w-14 bg-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.6)]"
                             : "h-11 w-11 bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900"
                         }`}
                       >
@@ -1661,7 +1661,7 @@ export default function BilletsPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -top-40 -right-40 h-[40rem] w-[40rem] rounded-full bg-nexus-orange-500/20 blur-[140px]"
+            className="pointer-events-none absolute -top-40 -right-40 h-[40rem] w-[40rem] rounded-full bg-brand/20 blur-[140px]"
           />
           <div
             aria-hidden
@@ -1669,22 +1669,22 @@ export default function BilletsPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/8 blur-[120px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/8 blur-[120px]"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
               <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
               </span>
               {t("cta_final_eyebrow")}
             </span>
@@ -1699,15 +1699,15 @@ export default function BilletsPage() {
 
             <div className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-3">
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
-                <Compass className="mx-auto mb-1 h-4 w-4 text-nexus-orange-300" />
+                <Compass className="mx-auto mb-1 h-4 w-4 text-brand" />
                 {t("cta_final_chip1")}
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
-                <Calendar className="mx-auto mb-1 h-4 w-4 text-nexus-orange-300" />
+                <Calendar className="mx-auto mb-1 h-4 w-4 text-brand" />
                 {t("cta_final_chip2")}
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
-                <Wallet className="mx-auto mb-1 h-4 w-4 text-nexus-orange-300" />
+                <Wallet className="mx-auto mb-1 h-4 w-4 text-brand" />
                 {t("cta_final_chip3")}
               </div>
             </div>
@@ -1717,7 +1717,7 @@ export default function BilletsPage() {
                 href={whatsappLink(t("cta_final_wa_msg"))}
                 target="_blank"
                 rel="noreferrer"
-                className="group/wa relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+                className="group/wa relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)]"
               >
                 <span
                   aria-hidden
@@ -1739,7 +1739,7 @@ export default function BilletsPage() {
             <div className="relative mx-auto mt-14 max-w-2xl">
               <p className="font-display text-xl font-bold leading-snug text-white sm:text-2xl lg:text-3xl">
                 Devis +{" "}
-                <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                <span className="bg-brand bg-clip-text text-transparent">
                   réservation
                 </span>{" "}
                 + suivi avant et pendant le voyage.
@@ -1749,24 +1749,24 @@ export default function BilletsPage() {
             {/* 3 trust signals */}
             <div className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[11px] uppercase tracking-[0.18em] text-white/60">
               <span className="flex items-center gap-1.5">
-                <Headphones className="h-3.5 w-3.5 text-nexus-orange-300" />
+                <Headphones className="h-3.5 w-3.5 text-brand" />
                 {t("cta_final_foot1")}
               </span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
               <span className="flex items-center gap-1.5">
-                <Globe className="h-3.5 w-3.5 text-nexus-orange-300" />
+                <Globe className="h-3.5 w-3.5 text-brand" />
                 {t("cta_final_foot2")}
               </span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
               <span className="flex items-center gap-1.5">
-                <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-300" />
+                <ShieldCheck className="h-3.5 w-3.5 text-brand" />
                 {t("cta_final_foot3")}
               </span>
             </div>
 
             {/* Adresse de précision */}
             <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-white/60 backdrop-blur">
-              <MapPin className="h-3 w-3 text-nexus-orange-300" />
+              <MapPin className="h-3 w-3 text-brand" />
               Bangui, République Centrafricaine
             </div>
           </div>

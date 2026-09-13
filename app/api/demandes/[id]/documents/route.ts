@@ -114,6 +114,28 @@ export async function POST(
     }
 
     const admin = getAdminClient();
+
+    // §11 (lot G4) : remplacement VERSIONNÉ — le nouveau fichier porte
+    // version+1 et référence l'ancien ; l'ancien passe en « remplacé » et
+    // reste consultable. Jamais d'effacement.
+    const replacesDocId = (formData.get("replaces_doc_id") as string | null) || null;
+    let version = 1;
+    if (replacesDocId) {
+      const { data: previous } = await admin
+        .from("demande_documents")
+        .select("id, demande_id, version")
+        .eq("id", replacesDocId)
+        .single();
+      const prev = previous as { id: string; demande_id: string; version: number | null } | null;
+      if (!prev || prev.demande_id !== params.id) {
+        return NextResponse.json(
+          { success: false, error: "Document à remplacer introuvable sur ce dossier" },
+          { status: 404 }
+        );
+      }
+      version = Number(prev.version || 1) + 1;
+    }
+
     const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 80);
     const path = `${params.id}/${categorie}/${crypto.randomUUID()}-${safeName}`;
     const buffer = Buffer.from(await file.arrayBuffer());
@@ -133,16 +155,25 @@ export async function POST(
       );
     }
 
+    // uploaded_by_role dérivé du rôle réel de l'appelant, jamais du corps de
+    // la requête (P9, Lot 3) : un client ne peut pas se faire passer pour
+    // l'agence en falsifiant ce champ, il n'existe même pas côté client.
+    const actorRole = (profile as { role: string }).role;
+    const uploadedByRole = actorRole === "client" ? "client" : "agence";
+
     const { data: doc, error: insErr } = await admin
       .from("demande_documents")
       .insert({
         demande_id: params.id,
         uploaded_by: user.id,
+        uploaded_by_role: uploadedByRole,
         storage_path: path,
         file_name: file.name,
         file_size_bytes: file.size,
         mime_type: file.type || "application/octet-stream",
         categorie,
+        version,
+        replaces_id: replacesDocId,
       })
       .select("id")
       .single();
@@ -154,6 +185,14 @@ export async function POST(
         { success: false, error: insErr?.message || "Insert échoué" },
         { status: 500 }
       );
+    }
+
+    // L'ancien document est marqué « remplacé » — historique conservé.
+    if (replacesDocId) {
+      await admin
+        .from("demande_documents")
+        .update({ statut_controle: "remplace" })
+        .eq("id", replacesDocId);
     }
 
     // Mark fulfilled requests
@@ -235,7 +274,7 @@ export async function DELETE(
     const admin = getAdminClient();
     const { data: doc } = await admin
       .from("demande_documents")
-      .select("id, storage_path, demande_id, uploaded_by")
+      .select("id, storage_path, demande_id, uploaded_by, uploaded_by_role")
       .eq("id", docId)
       .single();
 
@@ -243,6 +282,21 @@ export async function DELETE(
       return NextResponse.json(
         { success: false, error: "Document introuvable" },
         { status: 404 }
+      );
+    }
+
+    const docRole = (profile as { role: string }).role;
+    const isStaffRole = docRole !== "client";
+    // Un document officiel (délivré par l'agence) ne se supprime jamais
+    // depuis le portail client — même contrôle que l'absence de bouton
+    // dans DocumentsManager.tsx, mais posé côté serveur (P9 Lot 3).
+    if (
+      (doc as { uploaded_by_role: string | null }).uploaded_by_role === "agence" &&
+      !isStaffRole
+    ) {
+      return NextResponse.json(
+        { success: false, error: "Un document officiel ne peut pas être supprimé" },
+        { status: 403 }
       );
     }
 

@@ -127,25 +127,28 @@ export default async function SuperAdminDashboard() {
     payslipsPendingDetailsRes,
     payslipsValidatedMonthRes,
   ] = await Promise.all([
+    
+      supabase
+        .from("payments")
+        .select("montant_recu, montant_total")
+        .gte("date_paiement", todayISO).eq("is_test", false),
+    
+      supabase
+        .from("payments")
+        .select("montant_recu, montant_total")
+        .gte("date_paiement", monthStartISO).eq("is_test", false),
+    supabase.from("payments").select("montant_recu, montant_total").eq("is_test", false),
+    
+      supabase
+        .from("payments")
+        .select("montant_recu")
+        .gte("date_paiement", prevMonthStartISO)
+        .lt("date_paiement", monthStartISO).eq("is_test", false),
     supabase
-      .from("payments")
-      .select("montant_recu, montant_total")
+      .from("quick_sales")
+      .select("montant_total")
       .gte("date_paiement", todayISO),
     supabase
-      .from("payments")
-      .select("montant_recu, montant_total")
-      .gte("date_paiement", monthStartISO),
-    supabase.from("payments").select("montant_recu, montant_total, statut"),
-    supabase
-      .from("payments")
-      .select("montant_recu")
-      .gte("date_paiement", prevMonthStartISO)
-      .lt("date_paiement", monthStartISO),
-    supabase
-      .from("quick_sales")
-      .select("montant_total")
-      .gte("date_paiement", todayISO),
-    supabase
       .from("quick_sales")
       .select("montant_total")
       .gte("date_paiement", monthStartISO),
@@ -154,51 +157,63 @@ export default async function SuperAdminDashboard() {
       .select("montant_total")
       .gte("date_paiement", prevMonthStartISO)
       .lt("date_paiement", monthStartISO),
-    supabase.from("expenses").select("montant").eq("statut", "en_attente"),
-    supabase
-      .from("expenses")
-      .select("montant")
-      .eq("statut", "valide")
-      .gte("date_depense", monthStartISO),
-    supabase
-      .from("demandes")
-      .select("id", { count: "exact", head: true })
-      .eq("statut", "nouveau"),
-    supabase
-      .from("demandes")
-      .select("id", { count: "exact", head: true })
-      .in("statut", ["en_cours", "en_traitement"]),
-    supabase
-      .from("demandes")
-      .select("id, objet, service, statut, created_at")
-      .in("statut", ["nouveau", "en_cours"])
-      .order("created_at", { ascending: false })
-      .limit(5),
-    supabase
-      .from("appointments")
-      .select("id, nom, prenom, service, date_heure")
-      .gte("date_heure", todayISO)
-      .lt(
-        "date_heure",
-        new Date(today.getTime() + 24 * 60 * 60 * 1000).toISOString()
-      )
-      .order("date_heure"),
+    
+      supabase.from("expenses").select("montant").eq("statut", "en_attente").eq("is_test", false),
+    
+      supabase
+        .from("expenses")
+        .select("montant")
+        .eq("statut", "valide")
+        .gte("date_depense", monthStartISO).eq("is_test", false),
+    // P3 (migration 049a/049b) : "nouveau"/"en_cours"/"en_traitement" ont
+    // été réassignés vers la nouvelle machine à états — plus aucun dossier
+    // réel ne les porte (voir docs/AUDIT_CRM.md). Requêtes mises à jour pour
+    // ne pas afficher des zéros silencieux.
+    
+      supabase
+        .from("demandes")
+        .select("id", { count: "exact", head: true })
+        .eq("statut", "nouvelle_demande").eq("is_test", false),
+    
+      supabase
+        .from("demandes")
+        .select("id", { count: "exact", head: true })
+        .in("statut", ["traitement", "qualification", "documents_demandes"]).eq("is_test", false),
+    
+      supabase
+        .from("demandes")
+        .select("id, objet, service, statut, created_at")
+        .in("statut", ["nouvelle_demande", "traitement", "qualification"])
+        .order("created_at", { ascending: false })
+        .limit(5).eq("is_test", false),
+    
+      supabase
+        .from("appointments")
+        .select("id, nom, prenom, service, date_heure")
+        .gte("date_heure", todayISO)
+        .lt(
+          "date_heure",
+          new Date(today.getTime() + 24 * 60 * 60 * 1000).toISOString()
+        )
+        .order("date_heure").eq("is_test", false),
     supabase
       .from("transferts")
       .select("id", { count: "exact", head: true })
       .eq("statut", "en_attente"),
-    supabase.from("clients").select("id", { count: "exact", head: true }),
-    supabase
-      .from("profiles")
-      .select("id", { count: "exact", head: true })
-      .in("role", ["agent", "admin", "super_admin"])
-      .eq("actif", true),
-    supabase
-      .from("payments")
-      .select("created_at, agent_id")
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .single(),
+    
+      supabase.from("clients").select("id", { count: "exact", head: true }).eq("is_test", false),
+    
+      supabase
+        .from("profiles")
+        .select("id", { count: "exact", head: true })
+        .in("role", ["agent", "admin", "super_admin"])
+        .eq("actif", true).eq("is_test", false),
+    
+      supabase
+        .from("payments")
+        .select("created_at, agent_id")
+        .order("created_at", { ascending: false })
+        .limit(1).eq("is_test", false).single(),
     supabase
       .from("transferts")
       .select(
@@ -207,39 +222,45 @@ export default async function SuperAdminDashboard() {
       .eq("statut", "en_attente")
       .order("created_at", { ascending: false })
       .limit(3),
-    supabase
-      .from("payments")
-      .select(
-        "id, reference, client_nom, montant_total, montant_recu, devise, created_at"
-      )
-      .eq("statut", "partiel")
-      .order("created_at", { ascending: false })
-      .limit(3),
-    supabase
-      .from("payments")
-      .select("date_paiement, montant_recu")
-      .gte("date_paiement", sevenDaysAgoISO),
+    
+      supabase
+        .from("payments")
+        .select(
+          "id, reference, client_nom, montant_total, montant_recu, devise, created_at"
+        )
+        .eq("status", "partial")
+        .order("created_at", { ascending: false })
+        .limit(3).eq("is_test", false),
+    
+      supabase
+        .from("payments")
+        .select("date_paiement, montant_recu")
+        .gte("date_paiement", sevenDaysAgoISO).eq("is_test", false),
     supabase
       .from("quick_sales")
       .select("date_paiement, montant_total")
       .gte("date_paiement", sevenDaysAgoISO),
-    supabase
-      .from("demandes")
-      .select("created_at")
-      .gte("created_at", sevenDaysAgoISO),
-    supabase
-      .from("appointments")
-      .select("date_heure")
-      .gte("date_heure", sevenDaysAgoISO),
-    supabase
-      .from("expenses")
-      .select("date_depense, montant")
-      .eq("statut", "valide")
-      .gte("date_depense", sevenDaysAgoISO),
-    supabase
-      .from("employees")
-      .select("id, salaire_base", { count: "exact" })
-      .eq("statut", "actif"),
+    
+      supabase
+        .from("demandes")
+        .select("created_at")
+        .gte("created_at", sevenDaysAgoISO).eq("is_test", false),
+    
+      supabase
+        .from("appointments")
+        .select("date_heure")
+        .gte("date_heure", sevenDaysAgoISO).eq("is_test", false),
+    
+      supabase
+        .from("expenses")
+        .select("date_depense, montant")
+        .eq("statut", "valide")
+        .gte("date_depense", sevenDaysAgoISO).eq("is_test", false),
+    
+      supabase
+        .from("employees")
+        .select("id, salaire_base", { count: "exact" })
+        .eq("statut", "actif").eq("is_test", false),
     supabase
       .from("payslips")
       .select("id", { count: "exact", head: true })
@@ -576,7 +597,7 @@ export default async function SuperAdminDashboard() {
             <div className="mt-4 text-center">
               <Link
                 href="/dashboard/super-admin/rh/paie/a-valider"
-                className="inline-flex items-center gap-1 text-sm font-semibold text-nexus-orange-600 hover:text-nexus-orange-700"
+                className="inline-flex items-center gap-1 text-sm font-semibold text-brand-hover hover:text-brand-hover"
               >
                 Voir les {totalAlertes - 8} autres alertes
                 <ArrowUpRight className="h-4 w-4" />
@@ -823,7 +844,7 @@ export default async function SuperAdminDashboard() {
                   <span
                     className={cn(
                       "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase",
-                      d.statut === "nouveau"
+                      d.statut === "nouvelle_demande"
                         ? "bg-blue-100 text-blue-700"
                         : "bg-amber-100 text-amber-700"
                     )}
@@ -959,7 +980,7 @@ function Section({
     purple: "from-purple-500 to-purple-700",
     blue: "from-blue-500 to-blue-700",
     slate: "from-slate-500 to-slate-700",
-    orange: "from-nexus-orange-500 to-nexus-orange-700",
+    orange: "from-brand to-brand",
     rose: "from-rose-500 to-rose-700",
   };
 
@@ -969,7 +990,7 @@ function Section({
     purple: "text-purple-600",
     blue: "text-blue-600",
     slate: "text-slate-500",
-    orange: "text-nexus-orange-600",
+    orange: "text-brand-hover",
     rose: "text-rose-600",
   };
 
@@ -1034,13 +1055,13 @@ function MetricCard({
   const colorMap = {
     green: "from-emerald-400 to-emerald-600",
     emerald: "from-teal-400 to-emerald-600",
-    orange: "from-nexus-orange-400 to-nexus-orange-600",
+    orange: "from-brand to-brand",
     amber: "from-amber-400 to-amber-600",
   };
   const sparkColorMap = {
     green: "text-emerald-500",
     emerald: "text-teal-500",
-    orange: "text-nexus-orange-500",
+    orange: "text-brand",
     amber: "text-amber-500",
   };
 
@@ -1053,16 +1074,16 @@ function MetricCard({
     <Link
       href={href}
       className={cn(
-        "group relative overflow-hidden rounded-2xl border bg-white p-4 ring-1 ring-slate-100/80 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/40 hover:shadow-lg",
+        "group relative overflow-hidden rounded-2xl border bg-white p-4 ring-1 ring-slate-100/80 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-lg",
         highlight
-          ? "border-nexus-orange-200 bg-gradient-to-br from-white via-white to-nexus-orange-50/40"
+          ? "border-brand/30 bg-gradient-to-br from-white via-white to-brand-subtle/40"
           : "border-slate-200"
       )}
     >
       {highlight && (
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/10 blur-2xl transition-opacity duration-500 group-hover:bg-nexus-orange-500/20"
+          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/10 blur-2xl transition-opacity duration-500 group-hover:bg-brand/20"
         />
       )}
       <div className="relative flex items-start justify-between">
@@ -1074,7 +1095,7 @@ function MetricCard({
             className={cn(
               "mt-1 truncate font-display text-xl font-bold tabular-nums sm:text-2xl",
               highlight
-                ? "bg-gradient-to-r from-nexus-orange-600 to-nexus-orange-800 bg-clip-text text-transparent"
+                ? "bg-brand bg-clip-text text-transparent"
                 : "text-nexus-blue-950"
             )}
           >
@@ -1143,7 +1164,7 @@ function OpCard({
         "group rounded-2xl border bg-white p-4 ring-1 ring-slate-100/80 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md",
         urgent
           ? "border-rose-300 bg-rose-50/60"
-          : "border-slate-200 hover:border-nexus-orange-300/40"
+          : "border-slate-200 hover:border-brand/40"
       )}
     >
       <div className="flex items-start justify-between">
@@ -1216,7 +1237,7 @@ function RhStatCard({
           ? "border-emerald-300 bg-emerald-50/60"
           : highlight
             ? "border-yellow-300 bg-gradient-to-br from-yellow-50/60 via-white to-white"
-            : "border-slate-200 hover:border-nexus-orange-300/40"
+            : "border-slate-200 hover:border-brand/40"
       )}
     >
       <div className="flex items-center justify-between">
@@ -1304,7 +1325,7 @@ function NavLink({
   return (
     <Link
       href={href}
-      className="group flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-3 ring-1 ring-slate-100/80 transition hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-sm"
+      className="group flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-3 ring-1 ring-slate-100/80 transition hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-sm"
     >
       <Icon className="h-4 w-4 text-slate-500 transition group-hover:text-nexus-blue-950" />
       <span className="truncate text-xs font-semibold text-slate-700 group-hover:text-nexus-blue-950">

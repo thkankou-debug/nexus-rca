@@ -14,11 +14,18 @@ import {
   getCurrentStepLabel,
 } from "@/lib/demande-status";
 import { isCategorieDossier } from "@/lib/demande-categories";
+import { canTransition, type DossierStatus } from "@/lib/dossier-transitions";
+import { logAudit } from "@/lib/audit";
 import type { CategorieDossierSlug, DemandeStatus } from "@/types";
 
 export const dynamic = "force-dynamic";
 
-const VALID_STATUTS: DemandeStatus[] = [
+// Valeurs 2026-04, conservees pour compatibilite (l'enum ne les retire
+// jamais) — mais plus aucun dossier reel ne les porte depuis la
+// reassignation P3 (migration 049b). Une nouvelle demande créée hors de ce
+// vocabulaire (ex. "nouveau") reste acceptee ici, sans validation de
+// transition (canTransition ne connait que le nouveau graphe).
+const LEGACY_STATUTS: DemandeStatus[] = [
   "nouveau",
   "en_cours",
   "en_attente",
@@ -27,6 +34,30 @@ const VALID_STATUTS: DemandeStatus[] = [
   "complete",
   "annule",
 ];
+
+const DOSSIER_STATUTS: DossierStatus[] = [
+  "nouvelle_demande",
+  "qualification",
+  "documents_demandes",
+  "dossier_incomplet",
+  "etude_faisabilite",
+  "devis_envoye",
+  "devis_accepte",
+  "paiement_attente",
+  "traitement",
+  "transmis_partenaire",
+  "decision_recue",
+  "termine",
+  "refuse",
+  "annule",
+  "archive",
+];
+
+const VALID_STATUTS: DemandeStatus[] = [...LEGACY_STATUTS, ...DOSSIER_STATUTS];
+
+function isDossierStatus(value: string): value is DossierStatus {
+  return (DOSSIER_STATUTS as string[]).includes(value);
+}
 
 function getAdminClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -41,6 +72,10 @@ interface StatusBody {
   current_step?: number;
   statut?: DemandeStatus;
   notes?: string;
+  // Retour arrière (P3) : reservé admin/super_admin, motif obligatoire —
+  // voir lib/dossier-transitions.ts.
+  isReverseOverride?: boolean;
+  reason?: string;
 }
 
 export async function POST(
@@ -156,6 +191,34 @@ export async function POST(
       update.current_step_label = newStepLabel;
     }
     if (body.statut && body.statut !== demande.statut) {
+      // Validation de transition : uniquement quand depart ET arrivee sont
+      // deux valeurs du nouveau graphe (P3). Une valeur legacy (2026-04) de
+      // part ou d'autre n'a pas de regle definie ici — on laisse passer,
+      // hors perimetre du graphe plutot qu'une erreur.
+      if (isDossierStatus(demande.statut) && isDossierStatus(body.statut)) {
+        if (body.isReverseOverride && !(actorRole === "admin" || actorRole === "super_admin")) {
+          return NextResponse.json(
+            { success: false, error: "Retour arrière réservé admin/super_admin" },
+            { status: 403 }
+          );
+        }
+        if (
+          !canTransition(demande.statut, body.statut, {
+            isReverseOverride: body.isReverseOverride,
+            reason: body.reason,
+          })
+        ) {
+          return NextResponse.json(
+            {
+              success: false,
+              error: body.isReverseOverride
+                ? "Retour arrière : motif obligatoire"
+                : `Transition ${demande.statut} → ${body.statut} non autorisée`,
+            },
+            { status: 400 }
+          );
+        }
+      }
       update.statut = body.statut;
     }
 
@@ -186,6 +249,21 @@ export async function POST(
       changed_by: user.id,
       notes: body.notes || null,
     });
+
+    // audit_log : appel explicite en plus du trigger DB (§P3 audit_log —
+    // les deux sont necessaires, l'un capture l'intention metier, l'autre
+    // le fait brut). Uniquement si `statut` a reellement change.
+    if (update.statut) {
+      await logAudit({
+        userId: user.id,
+        userRole: actorRole,
+        action: "demande.statut.change",
+        entityType: "demandes",
+        entityId: params.id,
+        oldValue: { statut: demande.statut },
+        newValue: { statut: update.statut, reason: body.reason ?? null },
+      });
+    }
 
     // Email au client si l'étape a réellement bougé et qu'on a un email
     if (

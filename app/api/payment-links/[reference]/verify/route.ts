@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { Resend } from "resend";
+import { embedNexusLogo } from "@/lib/pdf-logo";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { sanitizeForPdf } from "@/lib/pdf-layout";
 
 // ============================================================================
 // API : POST /api/payment-links/[reference]/verify
@@ -21,39 +23,16 @@ const METHOD_LABELS: Record<string, string> = {
   stripe_card: "Carte bancaire",
 };
 
-// CRITICAL : sanitize text pour pdf-lib WinAnsi
-// Remplace tous les caractères Unicode hors WinAnsi (espaces insécables, etc.)
-function sanitizeForPdf(text: string): string {
-  if (!text) return "";
-  return text
-    .replace(/\u202f/g, " ")  // espace insécable étroit (le bug)
-    .replace(/\u00a0/g, " ")  // espace insécable normal
-    .replace(/\u2009/g, " ")  // espace fin
-    .replace(/\u200a/g, " ")  // espace très fin
-    .replace(/\u2007/g, " ")  // espace de chiffre
-    .replace(/\u2060/g, "")   // word joiner
-    .replace(/\u00e9/g, "e")  // é → e (helvetica peut, mais sécurité)
-    .replace(/\u00e8/g, "e")  // è → e
-    .replace(/\u00ea/g, "e")  // ê → e
-    .replace(/\u00eb/g, "e")  // ë → e
-    .replace(/\u00e0/g, "a")  // à → a
-    .replace(/\u00e2/g, "a")  // â → a
-    .replace(/\u00ee/g, "i")  // î → i
-    .replace(/\u00ef/g, "i")  // ï → i
-    .replace(/\u00f4/g, "o")  // ô → o
-    .replace(/\u00f6/g, "o")  // ö → o
-    .replace(/\u00f9/g, "u")  // ù → u
-    .replace(/\u00fb/g, "u")  // û → u
-    .replace(/\u00fc/g, "u")  // ü → u
-    .replace(/\u00e7/g, "c")  // ç → c
-    .replace(/\u00c9/g, "E")  // É → E
-    .replace(/\u00c8/g, "E")  // È → E
-    .replace(/\u00ca/g, "E")  // Ê → E
-    .replace(/\u00c0/g, "A")  // À → A
-    .replace(/\u00c7/g, "C")  // Ç → C
-    // Filtre tout autre caractère non-ASCII restant
-    .replace(/[^\x20-\x7E]/g, "?");
-}
+// P6-0 : traduit methode_choisie (payment_links, texte libre) vers
+// mode_paiement (payments, enum payment_method partage avec method).
+const METHODE_CHOISIE_TO_MODE_PAIEMENT: Record<string, string> = {
+  orange_money: "orange_money",
+  mtn_money: "mtn_money",
+  express_union: "express_union",
+  virement: "virement",
+  especes: "especes",
+  stripe_card: "stripe",
+};
 
 function formatMoney(amount: number, currency = "XAF"): string {
   // ATTENTION: toLocaleString("fr-FR") insère des espaces insécables (0x202f)
@@ -141,15 +120,6 @@ export async function POST(
     try {
       console.log("[PAY-VERIFY] Tentative creation payments...");
 
-      // STRUCTURE MINIMALE - colonnes les plus communes
-      const minimalInsert: Record<string, unknown> = {
-        client_id: paymentLink.client_id,
-        montant: paymentLink.montant,
-        devise: paymentLink.devise,
-        statut: "complete",
-        created_by: profile.id,
-      };
-
       // Notes contiennent toutes les infos auxiliaires
       const notesContent = [
         `Paiement via lien public ${paymentLink.reference}`,
@@ -160,46 +130,42 @@ export async function POST(
         notesStaff ? `Staff: ${notesStaff}` : "",
       ].filter(Boolean).join("\n");
 
-      // Essai 1 : avec colonne 'notes'
-      const { data: data1, error: err1 } = await supabase
+      const montant = Number(paymentLink.montant);
+      const modePaiement =
+        METHODE_CHOISIE_TO_MODE_PAIEMENT[paymentLink.methode_choisie] || "autre";
+
+      // P6-0 : ecrit le schema francais (montant_total/montant_recu/
+      // mode_paiement) - un paiement par lien public est toujours integralement
+      // encaisse en une fois, donc montant_recu = montant_total = montant. Le
+      // trigger calculate_payment_status derive automatiquement status/amount/
+      // amount_xaf/method canoniques a partir de ces colonnes.
+      const { data, error: insertErr } = await supabase
         .from("payments")
-        .insert({ ...minimalInsert, notes: notesContent })
+        .insert({
+          client_id: paymentLink.client_id,
+          demande_id: paymentLink.demande_id,
+          dossier_id: paymentLink.demande_id,
+          client_nom: paymentLink.client_nom,
+          client_email: paymentLink.client_email,
+          client_telephone: paymentLink.client_telephone,
+          service: paymentLink.service,
+          description: notesContent.substring(0, 500),
+          montant_total: montant,
+          montant_recu: montant,
+          devise: paymentLink.devise,
+          mode_paiement: modePaiement,
+          date_paiement: now.toISOString(),
+          created_by: profile.id,
+          is_test: paymentLink.is_test,
+        })
         .select("id")
         .single();
 
-      if (!err1 && data1) {
-        newPayment = data1;
-        console.log("[PAY-VERIFY] ✅ Payment cree (essai 1):", newPayment?.id);
+      if (!insertErr && data) {
+        newPayment = data;
+        console.log("[PAY-VERIFY] ✅ Payment cree:", newPayment?.id);
       } else {
-        console.warn("[PAY-VERIFY] Essai 1 failed:", err1?.message);
-
-        // Essai 2 : sans 'notes', avec 'description'
-        const { data: data2, error: err2 } = await supabase
-          .from("payments")
-          .insert({ ...minimalInsert, description: notesContent.substring(0, 500) })
-          .select("id")
-          .single();
-
-        if (!err2 && data2) {
-          newPayment = data2;
-          console.log("[PAY-VERIFY] ✅ Payment cree (essai 2):", newPayment?.id);
-        } else {
-          console.warn("[PAY-VERIFY] Essai 2 failed:", err2?.message);
-
-          // Essai 3 : structure ultra-minimale
-          const { data: data3, error: err3 } = await supabase
-            .from("payments")
-            .insert(minimalInsert)
-            .select("id")
-            .single();
-
-          if (!err3 && data3) {
-            newPayment = data3;
-            console.log("[PAY-VERIFY] ✅ Payment cree (essai 3 minimal):", newPayment?.id);
-          } else {
-            console.warn("[PAY-VERIFY] Tous essais payments failed - on continue sans");
-          }
-        }
+        console.error("[PAY-VERIFY] Creation payment failed:", insertErr?.message);
       }
     } catch (e) {
       console.warn("[PAY-VERIFY] Exception payments:", e instanceof Error ? e.message : e);
@@ -258,7 +224,9 @@ export async function POST(
     let emailError: unknown = null;
     let fromUsed: string | null = null;
 
-    if (!process.env.RESEND_API_KEY) {
+    if (paymentLink.is_test) {
+      console.log("[PAY-VERIFY] Lien de test — email non envoyé.");
+    } else if (!process.env.RESEND_API_KEY) {
       console.error("[PAY-VERIFY] ❌ RESEND_API_KEY manquante");
     } else {
       console.log("[PAY-VERIFY] EMAIL START -> ", paymentLink.client_email);
@@ -393,8 +361,11 @@ async function generateReceiptPDF(data: {
   // HEADER
   page.drawRectangle({ x: 0, y: height - 130, width, height: 130, color: nexusBlue });
   page.drawRectangle({ x: 0, y: height - 130, width: 6, height: 130, color: nexusOrange });
-  drawSafeText("NEXUS RCA", { x: 50, y: height - 55, size: 24, font: helveticaBold, color: white });
-  drawSafeText("Agence Internationale - Bangui", { x: 50, y: height - 78, size: 11, font: helvetica, color: rgb(0.7, 0.75, 0.85) });
+  // Logo officiel (demande Thierry 12/09) — jamais bloquant.
+  const nexusLogo = await embedNexusLogo(pdfDoc);
+  if (nexusLogo) page.drawImage(nexusLogo, { x: 50, y: height - 88, width: 44, height: 44 });
+  drawSafeText("NEXUS RCA", { x: 106, y: height - 55, size: 24, font: helveticaBold, color: white });
+  drawSafeText("Agence Internationale - Bangui", { x: 106, y: height - 78, size: 11, font: helvetica, color: rgb(0.7, 0.75, 0.85) });
   page.drawRectangle({ x: width - 175, y: height - 60, width: 125, height: 24, color: nexusOrange });
   drawSafeText("RECU OFFICIEL", { x: width - 162, y: height - 53, size: 11, font: helveticaBold, color: white });
   drawSafeText(`No ${data.reference}`, { x: width - 175, y: height - 80, size: 10, font: helvetica, color: white });
@@ -447,7 +418,7 @@ async function generateReceiptPDF(data: {
   const footerY = 80;
   page.drawLine({ start: { x: 50, y: footerY + 50 }, end: { x: width - 50, y: footerY + 50 }, thickness: 1, color: rgb(0.85, 0.87, 0.9) });
   drawSafeText("NEXUS RCA - Agence Internationale", { x: 50, y: footerY + 30, size: 10, font: helveticaBold, color: nexusBlue });
-  drawSafeText("Relais Sica, vers Hopital General, Bangui, Republique Centrafricaine", { x: 50, y: footerY + 15, size: 8, font: helvetica, color: grayDark });
+  drawSafeText("Croisement Marabena, Route de l'Aeroport, PO.BOX 1204, Bangui", { x: 50, y: footerY + 15, size: 8, font: helvetica, color: grayDark });
   drawSafeText("Tel: +236 73 26 96 92  -  Email: contact@nexusrca.com  -  www.nexusrca.com", { x: 50, y: footerY, size: 8, font: helvetica, color: grayDark });
   drawSafeText(`Recu genere le ${data.verifiedAt.toLocaleString("fr-FR")} - Document officiel`, { x: 50, y: footerY - 18, size: 7, font: helvetica, color: grayMid });
 

@@ -70,9 +70,9 @@ export function AssuranceStatusTracker({
               <div
                 className={`relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full ring-2 transition-all duration-500 ${
                   state === "done"
-                    ? "bg-nexus-orange-500 text-white ring-nexus-orange-400/40 shadow-[0_0_18px_-4px_rgba(255,102,0,0.6)]"
+                    ? "bg-brand text-on-brand ring-brand/40 shadow-[0_0_18px_-4px_rgba(185,151,96,0.6)]"
                     : state === "active"
-                      ? "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white ring-nexus-orange-400/60 shadow-[0_0_24px_-4px_rgba(255,102,0,0.8)]"
+                      ? "bg-brand text-on-brand ring-brand/60 shadow-[0_0_24px_-4px_rgba(185,151,96,0.8)]"
                       : "bg-white/[0.04] text-white/40 ring-white/10"
                 }`}
               >
@@ -84,7 +84,7 @@ export function AssuranceStatusTracker({
                 {state === "active" && (
                   <span
                     aria-hidden
-                    className="absolute inset-0 rounded-full bg-nexus-orange-500/40 animate-ping"
+                    className="absolute inset-0 rounded-full bg-brand/40 animate-ping"
                   />
                 )}
               </div>
@@ -92,7 +92,7 @@ export function AssuranceStatusTracker({
               <div className="min-w-0 flex-1 pt-0.5">
                 <p
                   className={`text-xs font-bold uppercase tracking-[0.18em] ${
-                    state === "todo" ? "text-white/40" : "text-nexus-orange-300"
+                    state === "todo" ? "text-white/40" : "text-brand"
                   }`}
                 >
                   {STATUS_LABELS[step]}
@@ -121,7 +121,7 @@ export function AssuranceStatusTracker({
       {/* Ligne de progression remplie */}
       <div
         aria-hidden
-        className="absolute left-4 top-5 h-0.5 bg-gradient-to-r from-nexus-orange-500 via-nexus-orange-400 to-nexus-orange-300 transition-all duration-700 ease-out sm:left-6"
+        className="absolute left-4 top-5 h-0.5 bg-brand transition-all duration-700 ease-out sm:left-6"
         style={{
           width: `calc(${(PUBLIC_STATUSES.indexOf(current === "envoye" || current === "archive" ? "devis_pret" : current) / (PUBLIC_STATUSES.length - 1)) * 100}% - 1.5rem)`,
         }}
@@ -136,9 +136,9 @@ export function AssuranceStatusTracker({
               <div
                 className={`relative flex h-10 w-10 items-center justify-center rounded-full ring-2 transition-all duration-500 sm:h-12 sm:w-12 ${
                   state === "done"
-                    ? "bg-nexus-orange-500 text-white ring-nexus-orange-400/40 shadow-[0_0_24px_-4px_rgba(255,102,0,0.6)]"
+                    ? "bg-brand text-on-brand ring-brand/40 shadow-[0_0_24px_-4px_rgba(185,151,96,0.6)]"
                     : state === "active"
-                      ? "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white ring-nexus-orange-400/70 shadow-[0_0_32px_-4px_rgba(255,102,0,0.9)]"
+                      ? "bg-brand text-on-brand ring-brand/70 shadow-[0_0_32px_-4px_rgba(185,151,96,0.9)]"
                       : "bg-nexus-blue-950 text-white/40 ring-white/10 backdrop-blur-md"
                 }`}
               >
@@ -150,7 +150,7 @@ export function AssuranceStatusTracker({
                 {state === "active" && (
                   <span
                     aria-hidden
-                    className="absolute inset-0 rounded-full bg-nexus-orange-500/40 animate-ping"
+                    className="absolute inset-0 rounded-full bg-brand/40 animate-ping"
                   />
                 )}
               </div>

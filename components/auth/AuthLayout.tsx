@@ -65,7 +65,7 @@ export function AuthLayout({
           {/* Blobs glow agrandis */}
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-24 -top-24 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/12 blur-[120px]"
+            className="pointer-events-none absolute -right-24 -top-24 h-[28rem] w-[28rem] rounded-full bg-brand/12 blur-[120px]"
           />
           <div
             aria-hidden
@@ -83,10 +83,10 @@ export function AuthLayout({
 
             {/* Bloc central */}
             <div className="my-12 lg:my-auto lg:py-12">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md transition-all duration-300 hover:border-nexus-orange-500/40 hover:bg-white/10">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md transition-all duration-300 hover:border-brand/40 hover:bg-white/10">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
                 </span>
                 {leftEyebrow}
               </span>
@@ -106,7 +106,7 @@ export function AuthLayout({
                       key={i}
                       className="group/vp -mx-2 flex items-start gap-4 rounded-2xl px-2 py-2.5 transition-all duration-300 hover:bg-white/5"
                     >
-                      <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-nexus-orange-300 backdrop-blur-md transition-all duration-300 ease-out group-hover/vp:bg-white/15 group-hover/vp:text-nexus-orange-200">
+                      <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-brand backdrop-blur-md transition-all duration-300 ease-out group-hover/vp:bg-white/15 group-hover/vp:text-brand">
                         <Icon className="h-4 w-4 transition-transform duration-300 ease-out group-hover/vp:scale-110" />
                       </div>
                       <div className="min-w-0">
@@ -125,7 +125,7 @@ export function AuthLayout({
 
             {/* Trust signal bas */}
             <p className="hidden text-[11px] uppercase tracking-[0.18em] text-slate-500 lg:block">
-              Bureau Nexus RCA · Bangui · Relais Sica
+              Bureau Nexus RCA · Bangui · Croisement Marabena
             </p>
           </div>
         </aside>
@@ -137,13 +137,13 @@ export function AuthLayout({
             aria-hidden
             className="pointer-events-none absolute inset-0 overflow-hidden"
           >
-            <div className="absolute right-1/4 top-1/3 h-72 w-72 rounded-full bg-nexus-orange-500/4 blur-[100px]" />
+            <div className="absolute right-1/4 top-1/3 h-72 w-72 rounded-full bg-brand/4 blur-[100px]" />
           </div>
 
           <div className="relative w-full max-w-md">
             {/* Header form */}
             <div className="mb-8">
-              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-brand-hover">
                 {formEyebrow}
               </span>
               <h1 className="mt-3 font-display text-2xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-3xl">
@@ -169,7 +169,7 @@ export function AuthLayout({
                 {footerLink.label}{" "}
                 <Link
                   href={footerLink.href}
-                  className="font-bold text-nexus-orange-600 transition-colors duration-200 hover:text-nexus-orange-700"
+                  className="font-bold text-brand-hover transition-colors duration-200 hover:text-brand-hover"
                 >
                   {footerLink.cta}
                 </Link>

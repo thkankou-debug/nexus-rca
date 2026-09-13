@@ -43,6 +43,20 @@ export default async function SuperAdminDossierDetailPage({
     .eq("demande_id", params.id)
     .order("created_at", { ascending: true });
 
+  const { data: paymentsRows } = await supabase
+    .from("payments")
+    .select("id, reference, amount, currency, status, method, created_at")
+    .eq("demande_id", params.id)
+    .order("created_at", { ascending: false });
+
+  const { data: appointmentsRows } = demande.client_id
+    ? await supabase
+        .from("appointments")
+        .select("id, reference, rdv_date, rdv_heure, statut, service_type")
+        .eq("client_id", demande.client_id)
+        .order("rdv_date", { ascending: false })
+    : { data: [] };
+
   return (
     <DashboardShell profile={profile}>
       <StaffDossierDetail
@@ -53,6 +67,8 @@ export default async function SuperAdminDossierDetailPage({
         backHref={`/dashboard/super-admin/dossiers/${params.categorie}`}
         agentInfo={agentInfo}
         history={(historyRows || []) as Array<{ step: number; created_at: string }>}
+        payments={paymentsRows ?? []}
+        appointments={appointmentsRows ?? []}
       />
     </DashboardShell>
   );

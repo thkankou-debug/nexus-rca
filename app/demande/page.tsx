@@ -25,7 +25,7 @@ export default function DemandePage() {
           <div className="grain pointer-events-none absolute inset-0 opacity-20" />
 
           <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-overline text-nexus-orange-300 backdrop-blur">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-overline text-brand backdrop-blur">
               <Sparkles className="h-3.5 w-3.5" />
               Demande de service
             </div>
@@ -65,9 +65,9 @@ export default function DemandePage() {
             <aside className="space-y-4">
               {/* Dossier complet (recommandé) */}
               <div className="relative overflow-hidden rounded-3xl border-2 border-brand/40 bg-gradient-to-br from-surface-elevated to-brand-subtle/40 p-6 shadow-elev-3">
-                <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-nexus-orange-200/40 blur-2xl" />
+                <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-brand/40 blur-2xl" />
                 <div className="relative">
-                  <span className="inline-block rounded-full bg-brand px-2.5 py-0.5 text-overline text-white">
+                  <span className="inline-block rounded-full bg-brand px-2.5 py-0.5 text-overline text-on-brand">
                     Recommandé
                   </span>
                   <h3 className="mt-3 font-display text-headline text-ink">
@@ -134,12 +134,12 @@ export default function DemandePage() {
 
               {/* Conseil */}
               <div className="rounded-3xl border border-brand/30 bg-brand-subtle/40 p-6">
-                <h3 className="mb-2 font-display text-headline text-nexus-orange-700 dark:text-brand">
+                <h3 className="mb-2 font-display text-headline text-brand-hover dark:text-brand">
                   💡 Conseil
                 </h3>
                 <p className="text-body-sm text-ink-muted">
                   Plus votre description est précise, plus vite nous pourrons
-                  vous proposer une solution adaptée. N'hésitez pas à détailler
+                  vous proposer une solution adaptée. N&apos;hésitez pas à détailler
                   dates, objectifs et contraintes.
                 </p>
               </div>

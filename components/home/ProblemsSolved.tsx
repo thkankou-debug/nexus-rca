@@ -91,7 +91,7 @@ export function ProblemsSolved() {
       {/* Blobs glow */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-32 top-32 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/12 blur-[120px]"
+        className="pointer-events-none absolute -right-32 top-32 h-[28rem] w-[28rem] rounded-full bg-brand/12 blur-[120px]"
       />
       <div
         aria-hidden
@@ -100,32 +100,32 @@ export function ProblemsSolved() {
       {/* Bordures eclairees */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/30 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/30 to-transparent"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
       />
 
       <div className="relative">
         {/* Header */}
         <div className="mx-auto mb-12 max-w-2xl px-4 text-center sm:mb-14 lg:px-8">
-          <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+          <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
             <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
             </span>
             Situations fréquentes
           </span>
           <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
             Ce que Nexus RCA{" "}
             <span className="relative inline-block">
-              <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+              <span className="bg-brand bg-clip-text text-transparent">
                 résout
               </span>
               <span
                 aria-hidden
-                className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
               />
             </span>
             .
@@ -167,7 +167,7 @@ export function ProblemsSolved() {
                 aria-hidden
                 className={`h-1.5 rounded-full transition-all duration-300 ${
                   i === 0
-                    ? "w-6 bg-nexus-orange-500"
+                    ? "w-6 bg-brand"
                     : "w-1.5 bg-white/20"
                 }`}
               />
@@ -187,11 +187,11 @@ function ProblemCard({ item }: { item: ProblemSolution }) {
   const PIcon = item.problem.icon;
   const SIcon = item.solution.icon;
   return (
-    <article className="group relative h-full overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04),_0_20px_40px_-20px_rgba(0,0,0,0.4)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/30 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),_0_24px_48px_-16px_rgba(255,102,0,0.18)] sm:p-7">
+    <article className="group relative h-full overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04),_0_20px_40px_-20px_rgba(0,0,0,0.4)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/30 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),_0_24px_48px_-16px_rgba(185,151,96,0.18)] sm:p-7">
       {/* Glow blob orange (apparait au hover) */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/18"
+        className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/18"
       />
 
       <div className="relative flex h-full flex-col">
@@ -212,18 +212,18 @@ function ProblemCard({ item }: { item: ProblemSolution }) {
 
         {/* Connector vertical */}
         <div className="my-5 ml-[22px] flex flex-col items-center gap-1">
-          <span className="h-1.5 w-1.5 rounded-full bg-nexus-orange-400/60" />
-          <span className="h-6 w-px bg-gradient-to-b from-nexus-orange-400/40 via-nexus-orange-400/20 to-transparent" />
-          <span className="h-1.5 w-1.5 rounded-full bg-nexus-orange-400/40" />
+          <span className="h-1.5 w-1.5 rounded-full bg-brand/60" />
+          <span className="h-6 w-px bg-gradient-to-b from-brand/40 via-brand/20 to-transparent" />
+          <span className="h-1.5 w-1.5 rounded-full bg-brand/40" />
         </div>
 
         {/* REPONSE NEXUS */}
         <div className="flex items-start gap-3">
-          <div className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-nexus-orange-500/15 text-nexus-orange-300 ring-1 ring-nexus-orange-400/30">
+          <div className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand/15 text-brand ring-1 ring-brand/30">
             <SIcon className="h-5 w-5" />
           </div>
           <div className="min-w-0 pt-0.5">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
               Réponse Nexus
             </p>
             <p className="mt-1 font-display text-base font-semibold leading-snug text-white sm:text-lg">
@@ -239,7 +239,7 @@ function ProblemCard({ item }: { item: ProblemSolution }) {
 
         {/* Footer */}
         <div className="mt-auto flex items-center justify-end border-t border-white/10 pt-4">
-          <span className="inline-flex items-center gap-1 text-xs font-bold text-nexus-orange-400 transition-all duration-200 group-hover:gap-2">
+          <span className="inline-flex items-center gap-1 text-xs font-bold text-brand transition-all duration-200 group-hover:gap-2">
             Lire la méthode
             <ArrowRight className="h-3.5 w-3.5" />
           </span>

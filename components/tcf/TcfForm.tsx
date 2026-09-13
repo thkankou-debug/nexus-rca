@@ -231,7 +231,7 @@ export function TcfForm() {
         consentement_examen: form.consentement_examen,
         consentement_documents: form.consentement_traitement,
         consentement_recontact: true,
-        statut: "nouveau",
+        statut: "nouvelle_demande",
       });
 
       if (error) throw error;
@@ -308,7 +308,7 @@ export function TcfForm() {
           <button
             type="button"
             onClick={handleNext}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-3 text-body-sm font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-3 text-body-sm font-semibold text-on-brand shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
           >
             Continuer
             <ArrowRight className="h-4 w-4" />
@@ -350,8 +350,8 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
           Test de positionnement & plan de préparation
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-body-lg text-ink-muted">
-          Environ 5 minutes. Vos réponses nous permettent d'établir votre
-          niveau cible et un plan d'entraînement réaliste. Un coach Nexus
+          Environ 5 minutes. Vos réponses nous permettent d&apos;établir votre
+          niveau cible et un plan d&apos;entraînement réaliste. Un coach Nexus
           reprend contact sous 48 heures ouvrées.
         </p>
 
@@ -365,14 +365,14 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
           <button
             type="button"
             onClick={onStart}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-on-brand shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
           >
             <FileText className="h-5 w-5" />
             Commencer mon évaluation
             <ArrowRight className="h-5 w-5" />
           </button>
           <p className="text-caption text-ink-muted">
-            Vous préférez parler à quelqu'un d'abord ?{" "}
+            Vous préférez parler à quelqu&apos;un d&apos;abord ?{" "}
             <Link
               href="/rendez-vous?service=tcf"
               className="font-semibold text-brand underline-offset-4 hover:underline"
@@ -432,7 +432,7 @@ function Stepper({
                   onClick={() => onStepClick(step.id as 1 | 2 | 3 | 4 | 5)}
                   className={cn(
                     "flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all",
-                    done && "border-brand bg-brand text-white shadow-elev-2",
+                    done && "border-brand bg-brand text-on-brand shadow-elev-2",
                     current &&
                       "border-brand bg-surface-elevated text-brand shadow-glow-orange ring-4 ring-brand-subtle",
                     !done &&
@@ -702,8 +702,8 @@ function Step2({
         {showStudyHint && (
           <Notice tone="info">
             <strong>Score à définir.</strong> Pour une admission études, le
-            score utile dépend de l'établissement et du programme. Notre
-            coach précise l'objectif après votre test de positionnement.
+            score utile dépend de l&apos;établissement et du programme. Notre
+            coach précise l&apos;objectif après votre test de positionnement.
           </Notice>
         )}
       </div>
@@ -799,7 +799,7 @@ function Step3({
             Points faibles ressentis
           </p>
           <p className="mb-3 text-caption text-ink-muted">
-            Cochez les épreuves où vous vous sentez le moins à l'aise.
+            Cochez les épreuves où vous vous sentez le moins à l&apos;aise.
           </p>
           <div className="grid gap-2 sm:grid-cols-3">
             <CheckboxItem
@@ -841,7 +841,7 @@ function Step3({
         {form.point_faible_oral && (
           <Notice tone="info">
             <strong>Oral signalé comme point faible.</strong> Bonne lucidité.
-            C'est l'épreuve la plus discriminante du TCF — nous y consacrerons
+            C&apos;est l&apos;épreuve la plus discriminante du TCF — nous y consacrerons
             un coaching individuel structuré.
           </Notice>
         )}
@@ -1099,7 +1099,7 @@ function Step5({
             <h3 className="text-title text-ink">Coaching oral inclus</h3>
           </div>
           <p className="text-body-sm text-ink-muted">
-            Quel que soit votre profil, l'expression orale est l'épreuve la
+            Quel que soit votre profil, l&apos;expression orale est l&apos;épreuve la
             plus discriminante du TCF. Le programme inclut un coaching
             individuel sur cette épreuve, distinct du travail en groupe.
           </p>
@@ -1148,7 +1148,7 @@ function Step5({
             type="button"
             onClick={onSubmit}
             disabled={loading}
-            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-on-brand shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? (
               <Loader2 className="h-5 w-5 animate-spin" />
@@ -1340,7 +1340,7 @@ function SuccessScreen({
         <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
           <Link
             href="/dashboard"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-body-sm font-semibold text-white shadow-elev-2 transition hover:bg-brand-hover hover:shadow-glow-orange"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-body-sm font-semibold text-on-brand shadow-elev-2 transition hover:bg-brand-hover hover:shadow-glow-orange"
           >
             Mon espace client
             <ArrowRight className="h-4 w-4" />
@@ -1350,7 +1350,7 @@ function SuccessScreen({
             onClick={() => router.push("/")}
             className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-line-strong bg-surface-elevated px-6 py-3 text-body-sm font-semibold text-ink transition hover:bg-surface-sunken"
           >
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </button>
         </div>
 

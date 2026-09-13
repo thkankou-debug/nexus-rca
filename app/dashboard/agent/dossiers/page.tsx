@@ -1,6 +1,5 @@
-import { FolderOpen, AlertTriangle, UserX } from "lucide-react";
+import { FolderOpen, AlertTriangle, UserX, Inbox } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { DossiersIndexGrid } from "@/components/dossiers/DossiersIndexGrid";
 import {
   getCategoryCounters,
@@ -21,11 +20,11 @@ export default async function AgentDossiersIndexPage() {
   ]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <header className="mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-6 sm:p-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-400">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
               Espace conseiller
             </p>
             <h1 className="mt-2 font-display text-3xl font-bold text-white sm:text-4xl">
@@ -41,6 +40,7 @@ export default async function AgentDossiersIndexPage() {
             actifs={stats.actifs}
             urgents={stats.urgents}
             nonAssignes={stats.nonAssignes}
+            demandesRecues={stats.demandesRecues}
           />
         </div>
       </header>
@@ -50,7 +50,7 @@ export default async function AgentDossiersIndexPage() {
         baseHref="/dashboard/agent/dossiers"
         agentSpecialites={specialites}
       />
-    </DashboardShell>
+    </>
   );
 }
 
@@ -58,13 +58,16 @@ function GlobalCounters({
   actifs,
   urgents,
   nonAssignes,
+  demandesRecues,
 }: {
   actifs: number;
   urgents: number;
   nonAssignes: number;
+  demandesRecues: number;
 }) {
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+      <Counter label="Demandes reçues" value={demandesRecues} icon={Inbox} />
       <Counter label="Actifs" value={actifs} icon={FolderOpen} />
       <Counter label="Urgents" value={urgents} icon={AlertTriangle} />
       <Counter label="Non assignés" value={nonAssignes} icon={UserX} />

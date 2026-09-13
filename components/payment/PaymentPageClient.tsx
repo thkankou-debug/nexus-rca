@@ -106,7 +106,7 @@ const PAYMENT_METHODS = [
     bgColor: "bg-green-50",
     instructions: [
       `Rendez-vous à notre bureau Nexus RCA`,
-      `Adresse : **Relais Sica, vers Hôpital Général, Bangui**`,
+      `Adresse : **Croisement Marabena, Route de l'Aéroport, Bangui**`,
       `Sur rendez-vous : ${NEXUS_PAYMENT_PHONE}`,
       `Mentionnez votre **référence de paiement** à l'accueil`,
       `Vous recevrez un reçu officiel après paiement`,
@@ -148,32 +148,31 @@ function formatDate(dateStr: string): string {
   }
 }
 
+// Migration 034 : ce type reflète le contrat minimal exposé par /payer/[token]
+// (service_role + colonnes publiques uniquement, voir app/payer/[token]/page.tsx).
+// client_email, numero_transaction et verified_at ne font plus partie du
+// payload public — ne pas les réintroduire sans revalider avec docs/RLS_ETAT_REEL.md.
 interface PaymentLink {
-  id: string;
   reference: string;
   client_nom: string;
-  client_email: string;
-  client_telephone: string | null;
   service: string;
   description: string | null;
   montant: number;
   devise: string;
   statut: string;
-  methode_choisie: string | null;
-  numero_transaction: string | null;
-  notes_client: string | null;
-  created_at: string;
   expires_at: string;
-  paid_declared_at: string | null;
-  verified_at: string | null;
 }
 
 interface Props {
   paymentLink: PaymentLink;
   isExpired: boolean;
+  // Optionnel le temps de la transition : la page /payer/[reference], encore
+  // active jusqu'à confirmation de Thierry, n'a pas de jeton et continue de
+  // déclarer par référence (route existante, déjà en service_role depuis 033).
+  token?: string;
 }
 
-export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
+export default function PaymentPageClient({ paymentLink, isExpired, token }: Props) {
   const [step, setStep] = useState<"choose" | "instructions" | "submit" | "success">("choose");
   const [selectedMethod, setSelectedMethod] = useState<string>("");
   const [transactionNumber, setTransactionNumber] = useState("");
@@ -201,7 +200,9 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
 
     try {
       const res = await fetch(
-        `/api/payment-links/${paymentLink.reference}/declare`,
+        token
+          ? `/api/payment-links/t/${token}/declare`
+          : `/api/payment-links/${paymentLink.reference}/declare`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -262,7 +263,7 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
         icon={CheckCircle2}
         iconColor="bg-green-500"
         title="Paiement déjà reçu ✓"
-        description={`Ce paiement a été vérifié et reçu par Nexus le ${formatDate(paymentLink.verified_at || "")}.`}
+        description="Ce paiement a été vérifié et reçu par Nexus."
         bgGradient="from-green-50 to-green-100"
       />
     );
@@ -337,7 +338,7 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
                 </p>
                 <ul className="mt-2 space-y-1 text-sm text-blue-900">
                   <li>1. Notre équipe vérifie votre paiement (sous 1-24h)</li>
-                  <li>2. Vous recevez un email de confirmation à <strong>{paymentLink.client_email}</strong></li>
+                  <li>2. Vous recevez un email de confirmation à l&apos;adresse enregistrée pour ce paiement</li>
                   <li>3. Le reçu officiel Nexus vous est envoyé en PDF</li>
                 </ul>
               </div>
@@ -363,7 +364,7 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
         {/* HEADER NEXUS */}
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-on-brand shadow">
               <CreditCard className="h-5 w-5" />
             </div>
             <div>
@@ -384,7 +385,7 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
         <div className="overflow-hidden rounded-3xl bg-white shadow-xl">
           {/* HEADER PAIEMENT */}
           <div className="bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-6 sm:p-8">
-            <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-400">
+            <p className="text-xs font-bold uppercase tracking-wider text-brand">
               Paiement à effectuer
             </p>
             <h1 className="mt-2 font-display text-2xl font-bold text-white sm:text-3xl">
@@ -413,7 +414,6 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
             <p className="mt-0.5 text-sm font-semibold text-nexus-blue-950">
               {paymentLink.client_nom}
             </p>
-            <p className="text-xs text-slate-500">{paymentLink.client_email}</p>
           </div>
 
           {/* CONTENU */}
@@ -422,7 +422,7 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
             {step === "choose" && (
               <>
                 <div className="mb-6">
-                  <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+                  <p className="text-xs font-bold uppercase tracking-wider text-brand-hover">
                     Étape 1 / 3
                   </p>
                   <h2 className="mt-1 font-display text-xl font-bold text-nexus-blue-950">
@@ -500,7 +500,7 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
                                   "rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider",
                                   m.disabled
                                     ? "bg-slate-200 text-slate-600"
-                                    : "bg-nexus-orange-100 text-nexus-orange-700"
+                                    : "bg-brand-subtle text-brand-hover"
                                 )}
                               >
                                 {m.badge}
@@ -523,7 +523,7 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
                   💡 Si vous avez des questions, contactez-nous au{" "}
                   <a
                     href={`tel:${NEXUS_PAYMENT_PHONE_RAW}`}
-                    className="font-semibold text-nexus-blue-950 hover:text-nexus-orange-600"
+                    className="font-semibold text-nexus-blue-950 hover:text-brand-hover"
                   >
                     {NEXUS_PAYMENT_PHONE}
                   </a>
@@ -544,7 +544,7 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
                 </button>
 
                 <div className="mb-6">
-                  <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+                  <p className="text-xs font-bold uppercase tracking-wider text-brand-hover">
                     Étape 2 / 3
                   </p>
                   <h2 className="mt-1 font-display text-xl font-bold text-nexus-blue-950">
@@ -557,10 +557,10 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
                 </div>
 
                 {/* MONTANT À PAYER (rappel + copy) */}
-                <div className="mb-4 rounded-2xl border-2 border-nexus-orange-300 bg-nexus-orange-50 p-4">
+                <div className="mb-4 rounded-2xl border-2 border-brand/40 bg-brand-subtle p-4">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-700">
+                      <p className="text-xs font-bold uppercase tracking-wider text-brand-hover">
                         Montant à payer exactement
                       </p>
                       <p className="mt-1 font-display text-2xl font-bold text-nexus-blue-950">
@@ -629,9 +629,9 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
                   type="button"
                   onClick={() => setStep("submit")}
                   disabled={selectedMethodData.disabled}
-                  className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-6 py-3.5 text-sm font-semibold text-white shadow-lg hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-brand px-6 py-3.5 text-sm font-semibold text-on-brand shadow-lg hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  J'ai effectué le paiement
+                  J&apos;ai effectué le paiement
                   <ChevronRight className="h-4 w-4" />
                 </button>
               </>
@@ -650,7 +650,7 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
                 </button>
 
                 <div className="mb-6">
-                  <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+                  <p className="text-xs font-bold uppercase tracking-wider text-brand-hover">
                     Étape 3 / 3
                   </p>
                   <h2 className="mt-1 font-display text-xl font-bold text-nexus-blue-950">
@@ -677,7 +677,7 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
                             ? "Ex: Reçu en agence le DD/MM/YYYY"
                             : "Ex: MP123456789"
                       }
-                      className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                      className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
                     />
                     <p className="mt-1 text-xs text-slate-500">
                       {selectedMethodData.id === "orange_money" && "Le numéro reçu par SMS d'Orange Money"}
@@ -697,7 +697,7 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
                       onChange={(e) => setClientNotes(e.target.value)}
                       rows={2}
                       placeholder="Précisions sur votre paiement..."
-                      className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                      className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
                     />
                   </div>
 
@@ -712,7 +712,7 @@ export default function PaymentPageClient({ paymentLink, isExpired }: Props) {
                     type="button"
                     onClick={handleSubmit}
                     disabled={submitting || !transactionNumber.trim()}
-                    className="flex w-full items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-6 py-3.5 text-sm font-semibold text-white shadow-lg hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex w-full items-center justify-center gap-2 rounded-full bg-brand px-6 py-3.5 text-sm font-semibold text-on-brand shadow-lg hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {submitting ? (
                       <>
@@ -821,14 +821,6 @@ function StatusPage({
                       {formatMoney(paymentLink.montant, paymentLink.devise)}
                     </span>
                   </div>
-                  {paymentLink.numero_transaction && (
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">N° transaction</span>
-                      <span className="font-mono text-nexus-blue-950">
-                        {paymentLink.numero_transaction}
-                      </span>
-                    </div>
-                  )}
                 </div>
               </div>
             )}

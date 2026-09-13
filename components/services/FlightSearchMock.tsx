@@ -64,13 +64,13 @@ export function FlightSearchMock() {
       {/* Halo orange autour de la card */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-2 rounded-[2rem] bg-nexus-orange-500/15 blur-2xl"
+        className="pointer-events-none absolute -inset-2 rounded-[2rem] bg-brand/15 blur-2xl"
       />
 
-      <article className="relative overflow-hidden rounded-3xl border border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-orange-400/20 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)] sm:p-8">
+      <article className="relative overflow-hidden rounded-3xl border border-brand/40 bg-gradient-to-br from-brand/10 via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-orange-400/20 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.30)] sm:p-8">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-nexus-orange-500/25 blur-[100px]"
+          className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-brand/25 blur-[100px]"
         />
         <div
           aria-hidden
@@ -83,14 +83,14 @@ export function FlightSearchMock() {
             <div className="relative">
               <div
                 aria-hidden
-                className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 blur-md"
+                className="absolute inset-0 rounded-2xl bg-brand/40 blur-md"
               />
-              <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/10">
+              <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.6)] ring-1 ring-white/10">
                 <Plane className="h-6 w-6" />
               </div>
             </div>
             <div>
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Recherche de vol
               </span>
               <h3 className="font-display text-xl font-bold leading-tight text-white sm:text-2xl">
@@ -107,7 +107,7 @@ export function FlightSearchMock() {
                 onClick={() => setTripType("round")}
                 className={`rounded-xl px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] transition-all duration-300 ${
                   tripType === "round"
-                    ? "bg-nexus-orange-500 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)]"
+                    ? "bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)]"
                     : "text-white/70 hover:text-white"
                 }`}
               >
@@ -118,7 +118,7 @@ export function FlightSearchMock() {
                 onClick={() => setTripType("oneway")}
                 className={`rounded-xl px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] transition-all duration-300 ${
                   tripType === "oneway"
-                    ? "bg-nexus-orange-500 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)]"
+                    ? "bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)]"
                     : "text-white/70 hover:text-white"
                 }`}
               >
@@ -152,11 +152,11 @@ export function FlightSearchMock() {
             </div>
 
             <div className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-1.5 ring-1 ring-white/5 backdrop-blur-md">
-              <Users className="h-3.5 w-3.5 text-nexus-orange-300" />
+              <Users className="h-3.5 w-3.5 text-brand" />
               <button
                 type="button"
                 onClick={() => setPassengers(Math.max(1, passengers - 1))}
-                className="h-5 w-5 rounded-full border border-white/15 text-xs font-bold text-white/80 transition-all hover:border-nexus-orange-400/50 hover:text-white"
+                className="h-5 w-5 rounded-full border border-white/15 text-xs font-bold text-white/80 transition-all hover:border-brand/50 hover:text-white"
                 aria-label="Diminuer passagers"
               >
                 −
@@ -167,7 +167,7 @@ export function FlightSearchMock() {
               <button
                 type="button"
                 onClick={() => setPassengers(Math.min(9, passengers + 1))}
-                className="h-5 w-5 rounded-full border border-white/15 text-xs font-bold text-white/80 transition-all hover:border-nexus-orange-400/50 hover:text-white"
+                className="h-5 w-5 rounded-full border border-white/15 text-xs font-bold text-white/80 transition-all hover:border-brand/50 hover:text-white"
                 aria-label="Augmenter passagers"
               >
                 +
@@ -178,8 +178,8 @@ export function FlightSearchMock() {
           {/* Inputs grille 4 col desktop / stack mobile */}
           <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {/* Départ */}
-            <label className="group relative block overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-3 ring-1 ring-white/5 backdrop-blur-md transition-all duration-300 focus-within:border-nexus-orange-400/50 focus-within:bg-white/[0.06]">
-              <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+            <label className="group relative block overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-3 ring-1 ring-white/5 backdrop-blur-md transition-all duration-300 focus-within:border-focus focus-within:bg-white/[0.06]">
+              <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-brand">
                 <PlaneTakeoff className="h-3 w-3" />
                 Départ
               </span>
@@ -192,8 +192,8 @@ export function FlightSearchMock() {
             </label>
 
             {/* Arrivée */}
-            <label className="group relative block overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-3 ring-1 ring-white/5 backdrop-blur-md transition-all duration-300 focus-within:border-nexus-orange-400/50 focus-within:bg-white/[0.06]">
-              <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+            <label className="group relative block overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-3 ring-1 ring-white/5 backdrop-blur-md transition-all duration-300 focus-within:border-focus focus-within:bg-white/[0.06]">
+              <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-brand">
                 <PlaneLanding className="h-3 w-3" />
                 Arrivée
               </span>
@@ -206,8 +206,8 @@ export function FlightSearchMock() {
             </label>
 
             {/* Date départ */}
-            <label className="group relative block overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-3 ring-1 ring-white/5 backdrop-blur-md transition-all duration-300 focus-within:border-nexus-orange-400/50 focus-within:bg-white/[0.06]">
-              <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+            <label className="group relative block overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-3 ring-1 ring-white/5 backdrop-blur-md transition-all duration-300 focus-within:border-focus focus-within:bg-white/[0.06]">
+              <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-brand">
                 <Calendar className="h-3 w-3" />
                 Aller
               </span>
@@ -221,11 +221,11 @@ export function FlightSearchMock() {
 
             {/* Date retour */}
             <label
-              className={`group relative block overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-3 ring-1 ring-white/5 backdrop-blur-md transition-all duration-300 focus-within:border-nexus-orange-400/50 focus-within:bg-white/[0.06] ${
+              className={`group relative block overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-3 ring-1 ring-white/5 backdrop-blur-md transition-all duration-300 focus-within:border-focus focus-within:bg-white/[0.06] ${
                 tripType === "oneway" ? "opacity-50" : ""
               }`}
             >
-              <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+              <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-brand">
                 <Calendar className="h-3 w-3" />
                 Retour {tripType === "oneway" ? "(désactivé)" : ""}
               </span>
@@ -243,7 +243,7 @@ export function FlightSearchMock() {
           <div className="mt-6">
             <Link
               href="/demande/complet"
-              className="group/cta relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)] sm:w-auto"
+              className="group/cta relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)] sm:w-auto"
             >
               <span
                 aria-hidden
@@ -262,8 +262,8 @@ export function FlightSearchMock() {
           {/* Suggestions populaires */}
           <div className="mt-7 border-t border-white/10 pt-6">
             <div className="mb-4 flex items-center gap-2">
-              <Sparkles className="h-3.5 w-3.5 text-nexus-orange-300" />
-              <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <Sparkles className="h-3.5 w-3.5 text-brand" />
+              <span className="bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Routes populaires depuis Bangui
               </span>
             </div>
@@ -273,15 +273,15 @@ export function FlightSearchMock() {
                 <Link
                   key={s.to}
                   href="/demande/complet"
-                  className="group/sug relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-4 ring-1 ring-white/5 backdrop-blur-md transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                  className="group/sug relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-4 ring-1 ring-white/5 backdrop-blur-md transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-brand/40 hover:bg-white/[0.06]"
                 >
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover/sug:bg-nexus-orange-500/20"
+                    className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover/sug:bg-brand/20"
                   />
                   <div className="relative">
                     <div className="flex items-center gap-2">
-                      <MapPin className="h-3 w-3 text-nexus-orange-300" />
+                      <MapPin className="h-3 w-3 text-brand" />
                       <span className="font-display text-[11px] font-bold uppercase tracking-[0.14em] text-white/70">
                         {s.from} → {s.to}
                       </span>

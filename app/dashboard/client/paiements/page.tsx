@@ -7,6 +7,7 @@ import {
   AlertCircle,
   XCircle,
   TrendingUp,
+  Download,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
@@ -35,46 +36,68 @@ function formatDate(dateStr: string): string {
   }
 }
 
-function getStatusInfo(statut: string): {
+// P6-0 : status (canonique, D1).
+function getStatusInfo(status: string): {
   label: string;
   color: string;
   icon: React.ComponentType<{ className?: string }>;
 } {
-  const lower = (statut || "").toLowerCase();
-  if (lower === "paye" || lower === "payé" || lower === "complete") {
+  if (status === "paid" || status === "validated") {
     return {
       label: "Payé",
       color: "bg-green-100 text-green-700 border-green-200",
       icon: CheckCircle2,
     };
   }
-  if (lower === "partiel") {
+  if (status === "partial") {
     return {
       label: "Partiel",
       color: "bg-amber-100 text-amber-700 border-amber-200",
       icon: Clock,
     };
   }
-  if (lower === "en_attente" || lower === "attente") {
+  if (status === "pending") {
     return {
       label: "En attente",
       color: "bg-blue-100 text-blue-700 border-blue-200",
       icon: Clock,
     };
   }
-  if (lower === "annule" || lower === "annulé") {
+  if (status === "voided" || status === "failed") {
     return {
       label: "Annulé",
       color: "bg-red-100 text-red-700 border-red-200",
       icon: XCircle,
     };
   }
+  if (status === "refunded") {
+    return {
+      label: "Remboursé",
+      color: "bg-slate-100 text-slate-700 border-slate-200",
+      icon: XCircle,
+    };
+  }
   return {
-    label: statut || "—",
+    label: status || "—",
     color: "bg-slate-100 text-slate-700 border-slate-200",
     icon: AlertCircle,
   };
 }
+
+const METHOD_LABELS: Record<string, string> = {
+  cash: "Espèces",
+  bank_transfer: "Virement",
+  card: "Carte",
+  other: "Autre",
+  mobile_money: "Mobile Money",
+  western_union: "Western Union",
+  moneygram: "MoneyGram",
+  cheque: "Chèque",
+  orange_money: "Orange Money",
+  mtn_money: "MTN Mobile Money",
+  express_union: "Express Union",
+  stripe: "Carte (Stripe)",
+};
 
 export default async function ClientPaiementsPage() {
   const profile = await requireProfile([
@@ -116,7 +139,7 @@ export default async function ClientPaiementsPage() {
     return acc;
   }, {});
 
-  const partiels = paiements.filter((p) => p.statut === "partiel");
+  const partiels = paiements.filter((p) => p.status === "partial");
 
   return (
     <DashboardShell profile={profile}>
@@ -167,14 +190,14 @@ export default async function ClientPaiementsPage() {
             className={cn(
               "rounded-2xl border p-5 shadow-sm",
               totalRestant > 0
-                ? "border-nexus-orange-200 bg-nexus-orange-50"
+                ? "border-brand/30 bg-brand-subtle"
                 : "border-slate-200 bg-white"
             )}
           >
             <p
               className={cn(
                 "text-xs font-medium",
-                totalRestant > 0 ? "text-nexus-orange-700" : "text-slate-500"
+                totalRestant > 0 ? "text-brand-hover" : "text-slate-500"
               )}
             >
               Reste à régler
@@ -182,7 +205,7 @@ export default async function ClientPaiementsPage() {
             <p
               className={cn(
                 "mt-1 font-display text-2xl font-bold",
-                totalRestant > 0 ? "text-nexus-orange-700" : "text-slate-700"
+                totalRestant > 0 ? "text-brand-hover" : "text-slate-700"
               )}
             >
               {formatMoney(totalRestant)}
@@ -190,7 +213,7 @@ export default async function ClientPaiementsPage() {
             <p
               className={cn(
                 "mt-0.5 text-xs",
-                totalRestant > 0 ? "text-nexus-orange-600" : "text-slate-500"
+                totalRestant > 0 ? "text-brand-hover" : "text-slate-500"
               )}
             >
               {partiels.length > 0
@@ -205,7 +228,7 @@ export default async function ClientPaiementsPage() {
       {Object.keys(byDevise).length > 1 && (
         <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="mb-3 flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-nexus-orange-600" />
+            <TrendingUp className="h-5 w-5 text-brand-hover" />
             <h2 className="font-display text-base font-bold text-nexus-blue-950">
               Répartition par devise
             </h2>
@@ -233,12 +256,12 @@ export default async function ClientPaiementsPage() {
                     </p>
                   </div>
                   <div>
-                    <p className="text-[10px] text-nexus-orange-600">Restant</p>
+                    <p className="text-[10px] text-brand-hover">Restant</p>
                     <p
                       className={cn(
                         "text-sm font-bold",
                         stats.restant > 0
-                          ? "text-nexus-orange-700"
+                          ? "text-brand-hover"
                           : "text-green-700"
                       )}
                     >
@@ -269,7 +292,7 @@ export default async function ClientPaiementsPage() {
               Aucun paiement enregistré
             </p>
             <p className="mt-1 text-sm text-slate-500">
-              Vos paiements apparaîtront ici dès qu'ils seront enregistrés par
+              Vos paiements apparaîtront ici dès qu&apos;ils seront enregistrés par
               votre agent.
             </p>
             <Link
@@ -282,7 +305,7 @@ export default async function ClientPaiementsPage() {
         ) : (
           <div className="divide-y divide-slate-100">
             {paiements.map((p) => {
-              const status = getStatusInfo(p.statut || "");
+              const status = getStatusInfo(p.status || "");
               const StatusIcon = status.icon;
               const restant =
                 Number(p.montant_total || 0) - Number(p.montant_recu || 0);
@@ -310,7 +333,7 @@ export default async function ClientPaiementsPage() {
                       </p>
                       <p className="text-xs text-slate-500">
                         {formatDate(p.date_paiement)}
-                        {p.mode_paiement && ` · ${p.mode_paiement}`}
+                        {p.method && ` · ${METHOD_LABELS[p.method] || p.method}`}
                       </p>
                     </div>
 
@@ -324,9 +347,20 @@ export default async function ClientPaiementsPage() {
                         </p>
                       )}
                       {restant > 0 && (
-                        <p className="mt-1 inline-block rounded-full bg-nexus-orange-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-nexus-orange-700">
+                        <p className="mt-1 inline-block rounded-full bg-brand-subtle px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-hover">
                           Reste : {formatMoney(restant, p.devise || "XAF")}
                         </p>
+                      )}
+                      {["paid", "validated", "partial"].includes(p.status || "") && (
+                        <a
+                          href={`/api/payments/${p.id}/receipt`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-nexus-blue-700 hover:text-nexus-blue-950"
+                        >
+                          <Download className="h-3 w-3" />
+                          Reçu PDF
+                        </a>
                       )}
                     </div>
                   </div>

@@ -116,10 +116,14 @@ export async function POST(
       );
     }
 
+    const previousAgentId = demande.agent_id;
+
     // Mise à jour
     const { error: updErr } = await admin
       .from("demandes")
-      .update({ agent_id: newAgentId })
+      // §7.3 (lot G1) : toute affectation attend l'ACCEPTATION de l'agent —
+      // escalade par le cron quotidien si silence.
+      .update({ agent_id: newAgentId, acceptation_status: "en_attente", acceptation_at: null, acceptation_motif: null })
       .eq("id", params.id);
 
     if (updErr) {
@@ -129,6 +133,13 @@ export async function POST(
         { status: 500 }
       );
     }
+
+    await admin.from("affectations_hist").insert({
+      demande_id: params.id,
+      previous_agent_id: previousAgentId,
+      new_agent_id: newAgentId,
+      changed_by: user.id,
+    });
 
     // Historique
     const actorName =

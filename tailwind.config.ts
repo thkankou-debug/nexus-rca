@@ -42,6 +42,10 @@ const config: Config = {
           elevated: "rgb(var(--surface-elevated) / <alpha-value>)",
           sunken: "rgb(var(--surface-sunken) / <alpha-value>)",
           overlay: "rgb(var(--surface-overlay) / <alpha-value>)",
+          // D8/P10 — surface ivoire du site public (#F5F3F0), distincte
+          // du blanc. Jamais de texte or ni blanc dessus (contrastes
+          // insuffisants, voir globals.css).
+          ivory: "rgb(var(--surface-ivory) / <alpha-value>)",
         },
         ink: {
           DEFAULT: "rgb(var(--ink) / <alpha-value>)",
@@ -58,6 +62,39 @@ const config: Config = {
           hover: "rgb(var(--brand-hover) / <alpha-value>)",
           subtle: "rgb(var(--brand-subtle) / <alpha-value>)",
         },
+        // Texte pose sur un fond --brand (bouton or) : toujours bleu nuit,
+        // constant en clair/sombre — distinct de `ink` qui s'inverse avec
+        // le theme (D8 : "texte bleu nuit sur bouton or, jamais blanc").
+        "on-brand": "rgb(var(--on-brand) / <alpha-value>)",
+        // A1 — anneau de focus clavier, distinct de brand (voir globals.css)
+        focus: "rgb(var(--focus) / <alpha-value>)",
+        // Barre latérale d'administration — bleu nuit fixe (maquettes
+        // Dashboard Administration), extension du même système de tokens.
+        sidebar: {
+          DEFAULT: "rgb(var(--sidebar-surface) / <alpha-value>)",
+          raised: "rgb(var(--sidebar-surface-raised) / <alpha-value>)",
+          ink: "rgb(var(--sidebar-ink) / <alpha-value>)",
+          "ink-muted": "rgb(var(--sidebar-ink-muted) / <alpha-value>)",
+          "ink-subtle": "rgb(var(--sidebar-ink-subtle) / <alpha-value>)",
+          line: "rgb(var(--sidebar-line) / <alpha-value>)",
+        },
+        // A1 — six familles de statuts (admin), jamais quinze couleurs
+        status: {
+          neutral: "rgb(var(--status-neutral) / <alpha-value>)",
+          waiting: "rgb(var(--status-waiting) / <alpha-value>)",
+          progress: "rgb(var(--status-progress) / <alpha-value>)",
+          success: "rgb(var(--status-success) / <alpha-value>)",
+          failure: "rgb(var(--status-failure) / <alpha-value>)",
+          inert: "rgb(var(--status-inert) / <alpha-value>)",
+        },
+        // A1 (07/09/2026) — sémantiques génériques d'alerte (toasts,
+        // bannières), distinctes des 6 statuts ci-dessus (badges de cycle
+        // de vie). warning volontairement rouge-orangé, pas ambre : un
+        // ambre serait confondu avec l'accent or (voir globals.css).
+        danger: "rgb(var(--danger) / <alpha-value>)",
+        warning: "rgb(var(--warning) / <alpha-value>)",
+        success: "rgb(var(--success) / <alpha-value>)",
+        info: "rgb(var(--info) / <alpha-value>)",
       },
       fontFamily: {
         sans: ["var(--font-plus-jakarta)", "system-ui", "sans-serif"],
@@ -154,19 +191,19 @@ const config: Config = {
         },
       },
       backgroundImage: {
-        // v1 — preserved for homepage flagship hero only
+        // v1 — preserved for homepage flagship hero only (accent or depuis L12 lot 2, 13/09/2026)
         "nexus-gradient":
-          "linear-gradient(135deg, #050f3d 0%, #0a1a6b 50%, #f97316 100%)",
+          "linear-gradient(135deg, #050f3d 0%, #0a1a6b 50%, #B99760 100%)",
         "nexus-hero":
-          "linear-gradient(135deg, rgba(5,15,61,0.95) 0%, rgba(10,26,107,0.85) 50%, rgba(249,115,22,0.3) 100%)",
-        // v2 — institutional dark for service pages (no orange dominance)
+          "linear-gradient(135deg, rgba(5,15,61,0.95) 0%, rgba(10,26,107,0.85) 50%, rgba(185,151,96,0.3) 100%)",
+        // v2 — institutional dark for service pages (no accent dominance)
         "nexus-hero-institutional":
           "linear-gradient(180deg, rgba(2,7,31,1) 0%, rgba(5,15,61,1) 100%)",
         "mesh-gradient":
-          "radial-gradient(at 20% 20%, rgba(249,115,22,0.06) 0px, transparent 55%), radial-gradient(at 80% 80%, rgba(31,63,245,0.08) 0px, transparent 55%)",
+          "radial-gradient(at 20% 20%, rgba(185,151,96,0.06) 0px, transparent 55%), radial-gradient(at 80% 80%, rgba(31,63,245,0.08) 0px, transparent 55%)",
         // Subtler accent variant for institutional sections
         "mesh-gradient-subtle":
-          "radial-gradient(at 30% 0%, rgba(249,115,22,0.04) 0px, transparent 60%), radial-gradient(at 70% 100%, rgba(31,63,245,0.05) 0px, transparent 60%)",
+          "radial-gradient(at 30% 0%, rgba(185,151,96,0.04) 0px, transparent 60%), radial-gradient(at 70% 100%, rgba(31,63,245,0.05) 0px, transparent 60%)",
       },
       // Vocabulaire d'ombres élargi — layered shadows premium
       boxShadow: {
@@ -180,14 +217,15 @@ const config: Config = {
           "0 8px 16px rgb(15 23 42 / 0.05), 0 24px 48px rgb(15 23 42 / 0.12)",
         "elev-5":
           "0 12px 24px rgb(15 23 42 / 0.06), 0 32px 64px rgb(15 23 42 / 0.16)",
-        // v2 — glows atténués pour ton institutionnel (orange en accent, pas dominant)
+        // v2 — glows atténués pour ton institutionnel (accent or D8 depuis le 13/09/2026,
+        // le nom "glow-orange" est hérité et conservé pour ne pas casser les consommateurs)
         "glow-orange":
-          "0 0 0 1px rgb(249 115 22 / 0.08), 0 4px 12px rgb(249 115 22 / 0.12), 0 8px 24px rgb(249 115 22 / 0.08)",
+          "0 0 0 1px rgb(185 151 96 / 0.08), 0 4px 12px rgb(185 151 96 / 0.12), 0 8px 24px rgb(185 151 96 / 0.08)",
         "glow-blue":
           "0 0 0 1px rgb(31 63 245 / 0.08), 0 4px 12px rgb(31 63 245 / 0.12), 0 8px 24px rgb(31 63 245 / 0.08)",
         "inset-line": "inset 0 0 0 1px rgb(255 255 255 / 0.08)",
         // Backwards-compat — atténués aussi
-        glow: "0 0 24px rgba(249, 115, 22, 0.18)",
+        glow: "0 0 24px rgba(185, 151, 96, 0.18)",
         card: "0 8px 30px rgba(0, 0, 0, 0.06)",
         "card-hover": "0 20px 40px rgba(0, 0, 0, 0.12)",
       },

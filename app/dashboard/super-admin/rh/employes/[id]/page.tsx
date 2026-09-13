@@ -1,5 +1,4 @@
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { EmployeeDetailView } from "@/components/dashboard/rh/EmployeeDetailView";
 
@@ -16,7 +15,7 @@ export default async function EmployeDetailPage({
 }) {
   const profile = await requireProfile(["super_admin"]);
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin/rh/employes"
         label="Retour à la liste"
@@ -28,6 +27,6 @@ export default async function EmployeDetailPage({
         canSeeNotes
         canDelete
       />
-    </DashboardShell>
+    </>
   );
 }

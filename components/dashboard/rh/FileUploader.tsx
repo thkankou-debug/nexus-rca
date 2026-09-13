@@ -76,8 +76,8 @@ export function FileUploader({
         className={cn(
           "flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed p-6 text-center transition",
           dragOver
-            ? "border-nexus-orange-400 bg-nexus-orange-50/40"
-            : "border-slate-300 bg-slate-50/60 hover:border-nexus-orange-300 hover:bg-slate-50"
+            ? "border-brand bg-brand-subtle/40"
+            : "border-slate-300 bg-slate-50/60 hover:border-brand/40 hover:bg-slate-50"
         )}
       >
         {selected ? (
@@ -105,12 +105,12 @@ export function FileUploader({
         ) : (
           <>
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm">
-              <Upload className="h-5 w-5 text-nexus-orange-500" />
+              <Upload className="h-5 w-5 text-brand" />
             </div>
             <button
               type="button"
               onClick={() => inputRef.current?.click()}
-              className="text-sm font-semibold text-nexus-blue-950 underline-offset-2 hover:text-nexus-orange-600 hover:underline"
+              className="text-sm font-semibold text-nexus-blue-950 underline-offset-2 hover:text-brand-hover hover:underline"
             >
               Cliquez pour sélectionner un fichier
             </button>

@@ -312,7 +312,7 @@ export default function NewAppointmentForm({
           Réserver un rendez-vous
         </h1>
         <p className="mt-2 text-slate-600">
-          Choisissez le service, la date et l'heure qui vous conviennent.
+          Choisissez le service, la date et l&apos;heure qui vous conviennent.
         </p>
       </div>
 
@@ -350,7 +350,7 @@ export default function NewAppointmentForm({
         {step === 1 && (
           <>
             <div className="mb-6">
-              <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+              <p className="text-xs font-bold uppercase tracking-wider text-brand-hover">
                 Étape 1 / 3
               </p>
               <h2 className="mt-1 font-display text-2xl font-bold text-nexus-blue-950">
@@ -370,7 +370,7 @@ export default function NewAppointmentForm({
                     className={cn(
                       "flex items-start gap-3 rounded-2xl border-2 p-4 text-left transition",
                       isSelected
-                        ? "border-nexus-orange-500 bg-nexus-orange-50 shadow"
+                        ? "border-brand bg-brand-subtle shadow"
                         : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
                     )}
                   >
@@ -378,7 +378,7 @@ export default function NewAppointmentForm({
                       className={cn(
                         "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition",
                         isSelected
-                          ? "bg-nexus-orange-500 text-white"
+                          ? "bg-brand text-on-brand"
                           : "bg-slate-100 text-slate-600"
                       )}
                     >
@@ -411,7 +411,7 @@ export default function NewAppointmentForm({
         {step === 2 && (
           <>
             <div className="mb-6">
-              <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+              <p className="text-xs font-bold uppercase tracking-wider text-brand-hover">
                 Étape 2 / 3
               </p>
               <h2 className="mt-1 font-display text-2xl font-bold text-nexus-blue-950">
@@ -485,7 +485,7 @@ export default function NewAppointmentForm({
                             ? "bg-nexus-blue-950 text-white shadow-lg"
                             : isDisabled
                               ? "cursor-not-allowed text-slate-300"
-                              : "text-slate-700 hover:bg-nexus-orange-100 hover:text-nexus-orange-700"
+                              : "text-slate-700 hover:bg-brand-subtle hover:text-brand-hover"
                         )}
                       >
                         {d.day}
@@ -500,7 +500,7 @@ export default function NewAppointmentForm({
                     Sélectionné
                   </span>
                   <span className="flex items-center gap-1">
-                    <span className="h-3 w-3 rounded bg-nexus-orange-100" />
+                    <span className="h-3 w-3 rounded bg-brand-subtle" />
                     Disponible
                   </span>
                   <span className="flex items-center gap-1">
@@ -513,7 +513,7 @@ export default function NewAppointmentForm({
               {/* CRÉNEAUX */}
               <div className="rounded-2xl border border-slate-200 bg-white p-4">
                 <div className="mb-3 flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-nexus-orange-600" />
+                  <Clock className="h-4 w-4 text-brand-hover" />
                   <p className="font-display text-base font-bold text-nexus-blue-950">
                     Créneaux disponibles
                   </p>
@@ -522,7 +522,7 @@ export default function NewAppointmentForm({
                 {!selectedDate ? (
                   <div className="flex h-48 items-center justify-center rounded-xl bg-slate-50 p-4 text-center">
                     <p className="text-sm text-slate-500">
-                      ← Sélectionnez d'abord une date
+                      ← Sélectionnez d&apos;abord une date
                     </p>
                   </div>
                 ) : loadingSlots ? (
@@ -562,7 +562,7 @@ export default function NewAppointmentForm({
                               isSelected
                                 ? "border-nexus-blue-950 bg-nexus-blue-950 text-white shadow"
                                 : isAvailable
-                                  ? "border-slate-200 bg-white text-slate-700 hover:border-nexus-orange-300 hover:bg-nexus-orange-50"
+                                  ? "border-slate-200 bg-white text-slate-700 hover:border-brand/40 hover:bg-brand-subtle"
                                   : "cursor-not-allowed border-slate-100 bg-slate-50 text-slate-300 line-through"
                             )}
                             title={isOccupied ? "Créneau occupé" : ""}
@@ -603,7 +603,7 @@ export default function NewAppointmentForm({
         {step === 3 && (
           <>
             <div className="mb-6">
-              <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+              <p className="text-xs font-bold uppercase tracking-wider text-brand-hover">
                 Étape 3 / 3
               </p>
               <h2 className="mt-1 font-display text-2xl font-bold text-nexus-blue-950">
@@ -649,7 +649,7 @@ export default function NewAppointmentForm({
                   onChange={(e) => setNotes(e.target.value)}
                   rows={3}
                   placeholder="Précisez votre demande, vos questions..."
-                  className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                  className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
                 />
               </div>
 
@@ -675,7 +675,7 @@ export default function NewAppointmentForm({
                 type="button"
                 onClick={handleSubmit}
                 disabled={submitting}
-                className="inline-flex items-center gap-1.5 rounded-full bg-nexus-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-lg hover:bg-nexus-orange-600 disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-on-brand shadow-lg hover:bg-brand-hover disabled:opacity-50"
               >
                 {submitting ? (
                   <>

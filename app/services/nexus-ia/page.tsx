@@ -225,7 +225,7 @@ export default function NexusIAPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -233,31 +233,31 @@ export default function NexusIAPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-3xl text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
                 </span>
                 Conversation type
               </span>
               <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                 Voici{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     Nexus IA en action
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 .
@@ -272,7 +272,7 @@ export default function NexusIAPage() {
             <div className="relative mx-auto max-w-2xl">
               <div
                 aria-hidden
-                className="pointer-events-none absolute -inset-4 rounded-[2rem] bg-nexus-orange-500/10 blur-3xl"
+                className="pointer-events-none absolute -inset-4 rounded-[2rem] bg-brand/10 blur-3xl"
               />
               <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_30px_60px_-20px_rgba(0,0,0,0.5)]">
                 {/* Header */}
@@ -281,9 +281,9 @@ export default function NexusIAPage() {
                     <div className="relative">
                       <div
                         aria-hidden
-                        className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 blur-md"
+                        className="absolute inset-0 rounded-2xl bg-brand/40 blur-md"
                       />
-                      <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-6px_rgba(255,102,0,0.5)] ring-1 ring-white/10">
+                      <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_8px_20px_-6px_rgba(185,151,96,0.5)] ring-1 ring-white/10">
                         <Bot className="h-5 w-5" />
                       </div>
                     </div>
@@ -301,7 +301,7 @@ export default function NexusIAPage() {
                     </div>
                   </div>
                   <div className="hidden items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-white/60 backdrop-blur sm:inline-flex">
-                    <Sparkles className="h-3 w-3 text-nexus-orange-300" />
+                    <Sparkles className="h-3 w-3 text-brand" />
                     Démo
                   </div>
                 </div>
@@ -310,7 +310,7 @@ export default function NexusIAPage() {
                 <div className="space-y-4 px-5 py-6 sm:px-6">
                   {/* AI message 1 */}
                   <div className="flex items-end gap-2.5">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white ring-1 ring-white/10">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-brand text-on-brand ring-1 ring-white/10">
                       <Bot className="h-3.5 w-3.5" />
                     </div>
                     <div className="max-w-[80%] rounded-2xl rounded-bl-md border border-white/10 bg-white/[0.06] px-4 py-2.5 text-sm leading-relaxed text-slate-100 backdrop-blur">
@@ -320,14 +320,14 @@ export default function NexusIAPage() {
 
                   {/* User message 1 */}
                   <div className="flex justify-end">
-                    <div className="max-w-[80%] rounded-2xl rounded-br-md bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 px-4 py-2.5 text-sm leading-relaxed text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)]">
+                    <div className="max-w-[80%] rounded-2xl rounded-br-md bg-brand px-4 py-2.5 text-sm leading-relaxed text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)]">
                       Quelle bourse pour étudier au Canada ?
                     </div>
                   </div>
 
                   {/* AI message 2 */}
                   <div className="flex items-end gap-2.5">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white ring-1 ring-white/10">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-brand text-on-brand ring-1 ring-white/10">
                       <Bot className="h-3.5 w-3.5" />
                     </div>
                     <div className="max-w-[80%] rounded-2xl rounded-bl-md border border-white/10 bg-white/[0.06] px-4 py-2.5 text-sm leading-relaxed text-slate-100 backdrop-blur">
@@ -338,28 +338,28 @@ export default function NexusIAPage() {
 
                   {/* User message 2 */}
                   <div className="flex justify-end">
-                    <div className="max-w-[80%] rounded-2xl rounded-br-md bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 px-4 py-2.5 text-sm leading-relaxed text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)]">
+                    <div className="max-w-[80%] rounded-2xl rounded-br-md bg-brand px-4 py-2.5 text-sm leading-relaxed text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)]">
                       Quelle est la différence ?
                     </div>
                   </div>
 
                   {/* AI typing indicator */}
                   <div className="flex items-end gap-2.5">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white ring-1 ring-white/10">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-brand text-on-brand ring-1 ring-white/10">
                       <Bot className="h-3.5 w-3.5" />
                     </div>
                     <div className="rounded-2xl rounded-bl-md border border-white/10 bg-white/[0.06] px-4 py-3 backdrop-blur">
                       <div className="flex items-center gap-1.5">
                         <span
-                          className="inline-block h-1.5 w-1.5 rounded-full bg-nexus-orange-300 animate-typing-dot"
+                          className="inline-block h-1.5 w-1.5 rounded-full bg-brand animate-typing-dot"
                           style={{ animationDelay: "0s" }}
                         />
                         <span
-                          className="inline-block h-1.5 w-1.5 rounded-full bg-nexus-orange-300 animate-typing-dot"
+                          className="inline-block h-1.5 w-1.5 rounded-full bg-brand animate-typing-dot"
                           style={{ animationDelay: "0.2s" }}
                         />
                         <span
-                          className="inline-block h-1.5 w-1.5 rounded-full bg-nexus-orange-300 animate-typing-dot"
+                          className="inline-block h-1.5 w-1.5 rounded-full bg-brand animate-typing-dot"
                           style={{ animationDelay: "0.4s" }}
                         />
                       </div>
@@ -376,7 +376,7 @@ export default function NexusIAPage() {
                     <button
                       type="button"
                       aria-label="Envoyer"
-                      className="group/send relative inline-flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-nexus-orange-500 text-white shadow-[0_8px_20px_-6px_rgba(255,102,0,0.5)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-nexus-orange-600"
+                      className="group/send relative inline-flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-brand text-on-brand shadow-[0_8px_20px_-6px_rgba(185,151,96,0.5)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-hover"
                     >
                       <span
                         aria-hidden
@@ -405,7 +405,7 @@ export default function NexusIAPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -414,18 +414,18 @@ export default function NexusIAPage() {
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Sujets fréquents
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                 Pas d&apos;idée ?{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     Commencez ici
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 .
@@ -445,14 +445,14 @@ export default function NexusIAPage() {
                     <Link
                       key={s.label}
                       href={s.href}
-                      className="group relative w-[60vw] shrink-0 snap-start overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-5 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                      className="group relative w-[60vw] shrink-0 snap-start overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-5 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:border-brand/40 hover:bg-white/[0.06]"
                     >
                       <div
                         aria-hidden
-                        className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/25"
+                        className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/25"
                       />
                       <div className="relative flex items-center gap-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white ring-1 ring-white/10 shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)]">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand text-on-brand ring-1 ring-white/10 shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)]">
                           <Icon className="h-5 w-5" />
                         </div>
                         <span className="font-display text-sm font-bold leading-tight text-white">
@@ -473,22 +473,22 @@ export default function NexusIAPage() {
                   <Link
                     key={s.label}
                     href={s.href}
-                    className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-5 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                    className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-5 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06]"
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/25"
+                      className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/25"
                     />
                     <div className="relative flex items-center justify-between gap-4">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white ring-1 ring-white/10 shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] transition-transform duration-300 ease-out group-hover:scale-105">
+                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand text-on-brand ring-1 ring-white/10 shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)] transition-transform duration-300 ease-out group-hover:scale-105">
                           <Icon className="h-5 w-5" />
                         </div>
                         <span className="font-display text-sm font-bold leading-tight text-white sm:text-base">
                           {s.label}
                         </span>
                       </div>
-                      <ArrowRight className="h-4 w-4 shrink-0 text-nexus-orange-300 transition-transform duration-300 group-hover:translate-x-0.5" />
+                      <ArrowRight className="h-4 w-4 shrink-0 text-brand transition-transform duration-300 group-hover:translate-x-0.5" />
                     </div>
                   </Link>
                 );
@@ -506,7 +506,7 @@ export default function NexusIAPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 top-1/4 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-32 top-1/4 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -515,18 +515,18 @@ export default function NexusIAPage() {
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 Cas d&apos;usage
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                 Pour qui Nexus IA est{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     le plus utile
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 .
@@ -546,7 +546,7 @@ export default function NexusIAPage() {
                       key={c.title}
                       className="relative w-[85vw] shrink-0 snap-center overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]"
                     >
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)] ring-1 ring-white/10">
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="mt-4 font-display text-base font-bold leading-tight text-white">
@@ -575,21 +575,21 @@ export default function NexusIAPage() {
                     key={c.title}
                     className={`group relative overflow-hidden rounded-3xl border backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 ${span} ${
                       isMaster
-                        ? "border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/15 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)] hover:border-nexus-orange-400/60 sm:p-9"
-                        : "border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 hover:border-nexus-orange-400/40 hover:bg-white/[0.06] sm:p-7"
+                        ? "border-brand/40 bg-gradient-to-br from-brand/15 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.30)] hover:border-brand/60 sm:p-9"
+                        : "border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 hover:border-brand/40 hover:bg-white/[0.06] sm:p-7"
                     }`}
                   >
                     <div
                       aria-hidden
                       className={`pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full ${
                         isMaster
-                          ? "bg-nexus-orange-500/25"
-                          : "bg-nexus-orange-500/0"
-                      } blur-[80px] transition-all duration-500 group-hover:bg-nexus-orange-500/30`}
+                          ? "bg-brand/25"
+                          : "bg-brand/0"
+                      } blur-[80px] transition-all duration-500 group-hover:bg-brand/30`}
                     />
                     <div className="relative flex h-full flex-col">
                       <div
-                        className={`flex items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105 ${
+                        className={`flex items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)] ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105 ${
                           isMaster ? "h-16 w-16" : "h-12 w-12"
                         }`}
                       >
@@ -615,7 +615,7 @@ export default function NexusIAPage() {
                             key={b}
                             className="flex items-start gap-2 text-sm leading-relaxed text-slate-200"
                           >
-                            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-300" />
+                            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
                             <span>{b}</span>
                           </li>
                         ))}
@@ -637,19 +637,19 @@ export default function NexusIAPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[24rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/8 blur-[120px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[24rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/8 blur-[120px]"
           />
 
           <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
             <p className="font-display text-2xl font-bold leading-snug tracking-tight text-white sm:text-3xl lg:text-4xl">
               {t("intro_before")}
               <span className="relative inline-block">
-                <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                <span className="bg-brand bg-clip-text text-transparent">
                   {t("intro_highlight")}
                 </span>
                 <span
                   aria-hidden
-                  className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                  className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                 />
               </span>
               {t("intro_after")}
@@ -670,12 +670,12 @@ export default function NexusIAPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-40 bottom-32 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-40 bottom-32 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-14 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 {t("metho_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
@@ -689,7 +689,7 @@ export default function NexusIAPage() {
             <div className="relative">
               <div
                 aria-hidden
-                className="pointer-events-none absolute left-8 top-4 bottom-4 w-px bg-gradient-to-b from-nexus-orange-500/40 via-nexus-orange-500/20 to-transparent sm:left-[3.75rem]"
+                className="pointer-events-none absolute left-8 top-4 bottom-4 w-px bg-gradient-to-b from-brand/40 via-brand/20 to-transparent sm:left-[3.75rem]"
               />
 
               <div className="space-y-7">
@@ -704,24 +704,24 @@ export default function NexusIAPage() {
                         <div className="relative">
                           <div
                             aria-hidden
-                            className="absolute inset-0 rounded-3xl bg-nexus-orange-500/40 blur-md transition-all duration-500 group-hover:bg-nexus-orange-500/60"
+                            className="absolute inset-0 rounded-3xl bg-brand/40 blur-md transition-all duration-500 group-hover:bg-brand/60"
                           />
-                          <span className="relative inline-flex h-16 w-16 items-center justify-center rounded-3xl border border-nexus-orange-400/30 bg-nexus-blue-900/60 backdrop-blur-md font-display text-5xl font-bold tabular-nums shadow-[0_10px_28px_-10px_rgba(255,102,0,0.4)] sm:h-[7.5rem] sm:w-[7.5rem] sm:text-7xl">
-                            <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                          <span className="relative inline-flex h-16 w-16 items-center justify-center rounded-3xl border border-brand/30 bg-nexus-blue-900/60 backdrop-blur-md font-display text-5xl font-bold tabular-nums shadow-[0_10px_28px_-10px_rgba(185,151,96,0.4)] sm:h-[7.5rem] sm:w-[7.5rem] sm:text-7xl">
+                            <span className="bg-brand bg-clip-text text-transparent">
                               {etape.num}
                             </span>
                           </span>
                         </div>
                       </div>
 
-                      <article className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out group-hover:-translate-y-1 group-hover:border-nexus-orange-400/40 group-hover:bg-white/[0.06] sm:p-7">
+                      <article className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out group-hover:-translate-y-1 group-hover:border-brand/40 group-hover:bg-white/[0.06] sm:p-7">
                         <div
                           aria-hidden
-                          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/22"
                         />
                         <div className="relative">
                           <div className="flex items-center gap-2.5">
-                            <Icon className="h-4 w-4 shrink-0 text-nexus-orange-300" />
+                            <Icon className="h-4 w-4 shrink-0 text-brand" />
                             <h3 className="font-display text-lg font-bold leading-tight text-white sm:text-xl">
                               {t(`${etape.key}_title`)}
                             </h3>
@@ -738,10 +738,10 @@ export default function NexusIAPage() {
             </div>
 
             {/* CTA milieu glass orange */}
-            <div className="mt-12 overflow-hidden rounded-3xl border border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)] sm:p-8">
+            <div className="mt-12 overflow-hidden rounded-3xl border border-brand/40 bg-gradient-to-br from-brand/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.30)] sm:p-8">
               <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+                  <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                     {t("metho_cta_eyebrow")}
                   </span>
                   <p className="mt-3 font-display text-xl font-bold leading-tight tracking-tight text-white sm:text-2xl">
@@ -754,7 +754,7 @@ export default function NexusIAPage() {
                 <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:gap-3">
                   <Link
                     href="#chat"
-                    className="group/btn relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-6 py-3 text-sm font-bold text-white shadow-[0_10px_30px_-10px_rgba(255,102,0,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_16px_40px_-10px_rgba(255,102,0,0.6)]"
+                    className="group/btn relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-6 py-3 text-sm font-bold text-on-brand shadow-[0_10px_30px_-10px_rgba(185,151,96,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_16px_40px_-10px_rgba(185,151,96,0.6)]"
                   >
                     <span
                       aria-hidden
@@ -786,7 +786,7 @@ export default function NexusIAPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 top-32 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-32 top-32 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -794,12 +794,12 @@ export default function NexusIAPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 {t("result_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
@@ -815,14 +815,14 @@ export default function NexusIAPage() {
               {RESULT_ITEMS.map((item, i) => (
                 <article
                   key={i}
-                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06] sm:p-7"
+                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06] sm:p-7"
                 >
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/22"
+                    className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/22"
                   />
                   <div className="relative">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)] ring-1 ring-white/10">
                       <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <h3 className="mt-4 font-display text-base font-bold leading-tight text-white sm:text-lg">
@@ -844,7 +844,7 @@ export default function NexusIAPage() {
                     key={i}
                     className="relative w-[85vw] shrink-0 snap-center overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)] ring-1 ring-white/10">
                       <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <h3 className="mt-4 font-display text-base font-bold leading-tight text-white">
@@ -878,7 +878,7 @@ export default function NexusIAPage() {
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 {t("pourqui_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
@@ -961,7 +961,7 @@ export default function NexusIAPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-40 top-1/3 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -left-40 top-1/3 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -970,7 +970,7 @@ export default function NexusIAPage() {
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 {t("chat_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
@@ -991,14 +991,14 @@ export default function NexusIAPage() {
                 return (
                   <article
                     key={f.key}
-                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 text-center ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 text-center ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06]"
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/25"
+                      className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/25"
                     />
                     <div className="relative">
-                      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_8px_20px_-8px_rgba(255,102,0,0.5)] ring-1 ring-white/10">
+                      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_8px_20px_-8px_rgba(185,151,96,0.5)] ring-1 ring-white/10">
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="mt-4 font-display text-base font-bold leading-tight text-white">
@@ -1024,7 +1024,7 @@ export default function NexusIAPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-40 top-1/3 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-40 top-1/3 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -1033,7 +1033,7 @@ export default function NexusIAPage() {
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 {t("engagement_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
@@ -1073,23 +1073,23 @@ export default function NexusIAPage() {
               </article>
 
               {/* Ce que nous garantissons — 2 col orange */}
-              <article className="group relative overflow-hidden rounded-3xl border border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/60 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_30px_60px_-16px_rgba(255,102,0,0.40)] sm:p-9 lg:col-span-2">
+              <article className="group relative overflow-hidden rounded-3xl border border-brand/40 bg-gradient-to-br from-brand/10 via-white/[0.04] to-white/[0.02] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.30)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/60 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_30px_60px_-16px_rgba(185,151,96,0.40)] sm:p-9 lg:col-span-2">
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/25 blur-[100px] transition-all duration-500 group-hover:bg-nexus-orange-500/40"
+                  className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand/25 blur-[100px] transition-all duration-500 group-hover:bg-brand/40"
                 />
                 <div className="relative">
                   <div className="mb-4 flex items-center gap-3">
                     <div className="relative">
                       <div
                         aria-hidden
-                        className="absolute inset-0 rounded-2xl bg-nexus-orange-500/40 blur-md"
+                        className="absolute inset-0 rounded-2xl bg-brand/40 blur-md"
                       />
-                      <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] ring-1 ring-white/10">
+                      <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.6)] ring-1 ring-white/10">
                         <ShieldCheck className="h-6 w-6" />
                       </div>
                     </div>
-                    <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+                    <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                       {t("engagement_yes_title")}
                     </span>
                   </div>
@@ -1099,7 +1099,7 @@ export default function NexusIAPage() {
                         key={i}
                         className="flex items-start gap-3 text-sm leading-relaxed text-slate-200 sm:text-base"
                       >
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-300" />
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -1115,10 +1115,10 @@ export default function NexusIAPage() {
                 return (
                   <div
                     key={it.key}
-                    className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-5 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                    className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-5 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:border-brand/40 hover:bg-white/[0.06]"
                   >
                     <div className="flex items-start gap-3">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-nexus-blue-900/60 text-nexus-orange-300 ring-1 ring-nexus-orange-400/20 backdrop-blur">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-nexus-blue-900/60 text-brand ring-1 ring-brand/20 backdrop-blur">
                         <Icon className="h-4 w-4" />
                       </div>
                       <div className="min-w-0">
@@ -1146,7 +1146,7 @@ export default function NexusIAPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -left-40 top-1/4 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -1155,7 +1155,7 @@ export default function NexusIAPage() {
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 {t("usages_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
@@ -1172,14 +1172,14 @@ export default function NexusIAPage() {
                 {CAS.map((cas, idx) => (
                   <article
                     key={idx}
-                    className="group relative w-[85vw] shrink-0 snap-start overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06] sm:w-auto sm:p-7"
+                    className="group relative w-[85vw] shrink-0 snap-start overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06] sm:w-auto sm:p-7"
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-nexus-orange-500/10 blur-[80px] transition-all duration-500 group-hover:bg-nexus-orange-500/25"
+                      className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-brand/10 blur-[80px] transition-all duration-500 group-hover:bg-brand/25"
                     />
                     <div className="relative flex h-full flex-col">
-                      <span className="inline-flex w-fit items-center gap-2 rounded-full border border-nexus-orange-400/40 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur">
+                      <span className="inline-flex w-fit items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-brand backdrop-blur">
                         <Sparkles className="h-3 w-3" />
                         {cas.badge}
                       </span>
@@ -1193,7 +1193,7 @@ export default function NexusIAPage() {
                             key={s.label}
                             className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur"
                           >
-                            <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-nexus-orange-300">
+                            <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-brand">
                               {s.label}
                             </p>
                             <p className="mt-1 font-display text-xs font-bold leading-tight text-white">
@@ -1208,10 +1208,10 @@ export default function NexusIAPage() {
                       </p>
 
                       <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4">
-                        <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.18em] text-transparent">
+                        <span className="bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.18em] text-transparent">
                           Approche méthodologique
                         </span>
-                        <ArrowRight className="h-4 w-4 text-nexus-orange-300 transition-transform duration-300 group-hover:translate-x-0.5" />
+                        <ArrowRight className="h-4 w-4 text-brand transition-transform duration-300 group-hover:translate-x-0.5" />
                       </div>
                     </div>
                   </article>
@@ -1223,14 +1223,14 @@ export default function NexusIAPage() {
               {CAS.map((cas, idx) => (
                 <article
                   key={idx}
-                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)]"
+                  className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.30)]"
                 >
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/10 blur-[100px] transition-all duration-500 group-hover:bg-nexus-orange-500/30"
+                    className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand/10 blur-[100px] transition-all duration-500 group-hover:bg-brand/30"
                   />
                   <div className="relative flex h-full flex-col">
-                    <span className="inline-flex w-fit items-center gap-2 rounded-full border border-nexus-orange-400/40 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur">
+                    <span className="inline-flex w-fit items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-brand backdrop-blur">
                       <Sparkles className="h-3 w-3" />
                       {cas.badge}
                     </span>
@@ -1242,9 +1242,9 @@ export default function NexusIAPage() {
                       {cas.stats.map((s) => (
                         <div
                           key={s.label}
-                          className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur transition-all duration-300 group-hover:border-nexus-orange-400/30"
+                          className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur transition-all duration-300 group-hover:border-brand/30"
                         >
-                          <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-nexus-orange-300">
+                          <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-brand">
                             {s.label}
                           </p>
                           <p className="mt-1 font-display text-xs font-bold leading-tight text-white">
@@ -1259,10 +1259,10 @@ export default function NexusIAPage() {
                     </p>
 
                     <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-5">
-                      <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.18em] text-transparent">
+                      <span className="bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.18em] text-transparent">
                         Approche méthodologique
                       </span>
-                      <ArrowRight className="h-4 w-4 text-nexus-orange-300 transition-transform duration-300 group-hover:translate-x-0.5" />
+                      <ArrowRight className="h-4 w-4 text-brand transition-transform duration-300 group-hover:translate-x-0.5" />
                     </div>
                   </div>
                 </article>
@@ -1284,12 +1284,12 @@ export default function NexusIAPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-40 bottom-1/4 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-40 bottom-1/4 h-[28rem] w-[28rem] rounded-full bg-brand/15 blur-[140px]"
           />
 
           <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <span className="inline-block bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
+              <span className="inline-block bg-brand bg-clip-text text-[10px] font-bold uppercase tracking-[0.22em] text-transparent">
                 {t("tarif_eyebrow")}
               </span>
               <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
@@ -1313,23 +1313,23 @@ export default function NexusIAPage() {
                     key={tarif.key}
                     className={`group relative overflow-hidden rounded-3xl border p-6 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 sm:p-7 ${
                       isHi
-                        ? "border-nexus-orange-400/40 bg-gradient-to-br from-nexus-orange-500/15 via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.30)] hover:border-nexus-orange-400/60"
-                        : "border-white/10 bg-white/[0.04] ring-1 ring-white/5 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                        ? "border-brand/40 bg-gradient-to-br from-brand/15 via-white/[0.04] to-white/[0.02] ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.30)] hover:border-brand/60"
+                        : "border-white/10 bg-white/[0.04] ring-1 ring-white/5 hover:border-brand/40 hover:bg-white/[0.06]"
                     }`}
                   >
                     <div
                       aria-hidden
                       className={`pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full ${
                         isHi
-                          ? "bg-nexus-orange-500/20"
-                          : "bg-nexus-orange-500/0"
-                      } blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/25`}
+                          ? "bg-brand/20"
+                          : "bg-brand/0"
+                      } blur-2xl transition-all duration-500 group-hover:bg-brand/25`}
                     />
                     <div className="relative">
                       <div
                         className={`flex items-center justify-center rounded-2xl text-white shadow-sm ring-1 ring-white/10 transition-transform duration-300 ease-out group-hover:scale-105 ${
                           isHi
-                            ? "h-14 w-14 bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)]"
+                            ? "h-14 w-14 bg-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.6)]"
                             : "h-11 w-11 bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900"
                         }`}
                       >
@@ -1358,7 +1358,7 @@ export default function NexusIAPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -top-40 -right-40 h-[40rem] w-[40rem] rounded-full bg-nexus-orange-500/20 blur-[140px]"
+            className="pointer-events-none absolute -top-40 -right-40 h-[40rem] w-[40rem] rounded-full bg-brand/20 blur-[140px]"
           />
           <div
             aria-hidden
@@ -1366,22 +1366,22 @@ export default function NexusIAPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/8 blur-[120px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/8 blur-[120px]"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
               <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
               </span>
               {t("cta_final_eyebrow")}
             </span>
@@ -1421,7 +1421,7 @@ export default function NexusIAPage() {
             <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
               <Link
                 href="#chat"
-                className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+                className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)]"
               >
                 <span
                   aria-hidden
@@ -1461,9 +1461,9 @@ export default function NexusIAPage() {
                 return (
                   <div
                     key={i}
-                    className="flex flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-4 text-center backdrop-blur-md ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                    className="flex flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-4 text-center backdrop-blur-md ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06]"
                   >
-                    <Icon className="h-4 w-4 text-nexus-orange-300" />
+                    <Icon className="h-4 w-4 text-brand" />
                     <span className="text-[10px] font-bold uppercase leading-tight tracking-[0.16em] text-white/80">
                       {s.label}
                     </span>

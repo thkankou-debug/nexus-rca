@@ -27,7 +27,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           className={cn(
             "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400 transition-all",
-            "focus:border-nexus-orange-500 focus:outline-none focus:ring-4 focus:ring-nexus-orange-100",
+            "focus:border-focus focus:outline-none focus:ring-4 focus:ring-focus/25",
             error && "border-red-500 focus:border-red-500 focus:ring-red-100",
             className
           )}
@@ -63,7 +63,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           className={cn(
             "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400 transition-all min-h-[120px] resize-y",
-            "focus:border-nexus-orange-500 focus:outline-none focus:ring-4 focus:ring-nexus-orange-100",
+            "focus:border-focus focus:outline-none focus:ring-4 focus:ring-focus/25",
             error && "border-red-500 focus:border-red-500 focus:ring-red-100",
             className
           )}
@@ -99,7 +99,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ref={ref}
           className={cn(
             "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 transition-all appearance-none bg-no-repeat pr-10",
-            "focus:border-nexus-orange-500 focus:outline-none focus:ring-4 focus:ring-nexus-orange-100",
+            "focus:border-focus focus:outline-none focus:ring-4 focus:ring-focus/25",
             error && "border-red-500 focus:border-red-500 focus:ring-red-100",
             className
           )}

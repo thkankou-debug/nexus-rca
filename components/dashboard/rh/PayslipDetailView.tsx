@@ -316,7 +316,7 @@ export function PayslipDetailView({
               type="button"
               onClick={handleSubmitForValidation}
               disabled={actionBusy}
-              className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:opacity-60"
+              className="inline-flex items-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:opacity-60"
             >
               {actionBusy ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -396,7 +396,7 @@ export function PayslipDetailView({
                 ? "Note (optionnel)…"
                 : "Motif du refus (recommandé)…"
             }
-            className="mt-3 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+            className="mt-3 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
           />
           <div className="mt-4 flex justify-end gap-2">
             <button

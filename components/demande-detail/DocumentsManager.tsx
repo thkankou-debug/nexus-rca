@@ -30,6 +30,19 @@ type Doc = {
   mime_type: string;
   categorie: string | null;
   created_at: string;
+  uploaded_by_role: "client" | "agence" | null;
+  // DOC-02 (migration 087) : statut de contrôle de la pièce.
+  statut_controle: "recu" | "verifie" | "rejete" | "remplace";
+  controle_motif: string | null;
+  /** §11 (lot G4) : versionnage — v1 par défaut, +1 à chaque remplacement. */
+  version: number | null;
+};
+
+const CONTROLE_BADGES: Record<Doc["statut_controle"], { label: string; cls: string }> = {
+  recu: { label: "Reçu", cls: "bg-slate-100 text-slate-600" },
+  verifie: { label: "Vérifié", cls: "bg-green-100 text-green-700" },
+  rejete: { label: "Rejeté", cls: "bg-red-100 text-red-700" },
+  remplace: { label: "Remplacé", cls: "bg-amber-100 text-amber-700" },
 };
 
 type DocRequest = {
@@ -56,22 +69,97 @@ function formatSize(bytes: number): string {
 export function DocumentsManager({
   demandeId,
   canDelete,
+  isStaff = false,
 }: {
   demandeId: string;
   canDelete: boolean;
+  isStaff?: boolean;
 }) {
   const supabase = createClient();
   const [docs, setDocs] = useState<Doc[] | null>(null);
   const [requests, setRequests] = useState<DocRequest[] | null>(null);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [controlingId, setControlingId] = useState<string | null>(null);
+
+  // DOC-02 : contrôle d'une pièce reçue (vérifiée / rejetée avec motif) —
+  // route serveur gardée (agent affecté, chef, admin), motif conservé.
+  const handleControle = async (d: Doc, decision: "verifie" | "rejete") => {
+    let motif: string | undefined;
+    if (decision === "rejete") {
+      const answer = window.prompt(`Motif du rejet de « ${d.file_name} » (obligatoire) :`);
+      if (!answer?.trim()) return;
+      motif = answer.trim();
+    }
+    setControlingId(d.id);
+    try {
+      const res = await fetch(`/api/demandes/${demandeId}/documents/${d.id}/controle`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ decision, motif }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || json.success === false) {
+        alert(json.error || "Échec du contrôle");
+        return;
+      }
+      setDocs((prev) =>
+        (prev || []).map((x) =>
+          x.id === d.id
+            ? { ...x, statut_controle: decision, controle_motif: motif || null }
+            : x
+        )
+      );
+    } finally {
+      setControlingId(null);
+    }
+  };
+  // §11 (lot G4) : lien temporaire 1 h (URL signée, auditée) copié dans le
+  // presse-papiers ; remplacement versionné (l'ancien reste consultable).
+  const [linkingId, setLinkingId] = useState<string | null>(null);
+  const replaceInputRef = useRef<HTMLInputElement>(null);
+  const [replacingDoc, setReplacingDoc] = useState<Doc | null>(null);
+
+  const handleLienTemporaire = async (d: Doc) => {
+    setLinkingId(d.id);
+    try {
+      const res = await fetch(`/api/demandes/${demandeId}/documents/${d.id}/lien-temporaire`, { method: "POST" });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || !json.success) {
+        alert(json.error || "Échec de la génération du lien");
+        return;
+      }
+      await navigator.clipboard.writeText(json.url).catch(() => {});
+      window.prompt("Lien temporaire (valable 1 h) — copié dans le presse-papiers :", json.url);
+    } finally {
+      setLinkingId(null);
+    }
+  };
+
+  const handleReplaceFile = async (file: File) => {
+    if (!replacingDoc) return;
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("categorie", replacingDoc.categorie || "autre");
+    fd.append("replaces_doc_id", replacingDoc.id);
+    const res = await fetch(`/api/demandes/${demandeId}/documents`, { method: "POST", body: fd });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok || !json.success) {
+      alert(json.error || "Échec du remplacement");
+      return;
+    }
+    setReplacingDoc(null);
+    await refresh();
+  };
+
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [resolvingId, setResolvingId] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
 
   const refresh = async () => {
     const [{ data: docsData }, { data: reqsData }] = await Promise.all([
       supabase
         .from("demande_documents")
-        .select("id, storage_path, file_name, file_size_bytes, mime_type, categorie, created_at")
+        .select("id, storage_path, file_name, file_size_bytes, mime_type, categorie, created_at, uploaded_by_role, statut_controle, controle_motif, version")
         .eq("demande_id", demandeId)
         .order("created_at", { ascending: false }),
       supabase
@@ -104,6 +192,32 @@ export function DocumentsManager({
     }
   };
 
+  const handleResolveRequest = async (r: DocRequest, statut: "fourni" | "annule") => {
+    const label = statut === "fourni" ? "marquer résolue" : "annuler";
+    if (!confirm(`Confirmer : ${label} la demande "${r.type_document}" ?`)) return;
+    setResolvingId(r.id);
+    try {
+      const res = await fetch(
+        `/api/demandes/${demandeId}/documents-requests/${r.id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ statut }),
+        }
+      );
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Action impossible");
+      }
+      toast.success(statut === "fourni" ? "Demande marquée résolue" : "Demande annulée");
+      await refresh();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Action impossible");
+    } finally {
+      setResolvingId(null);
+    }
+  };
+
   const handleDelete = async (d: Doc) => {
     if (!confirm(`Supprimer "${d.file_name}" ?`)) return;
     setDeletingId(d.id);
@@ -125,9 +239,16 @@ export function DocumentsManager({
     }
   };
 
-  // Group docs by categorie
+  // Documents officiels (délivrés par l'agence) séparés des pièces fournies
+  // par le client — P9 Lot 3. Un document sans uploaded_by_role (ancien,
+  // avant la migration 071) est traité comme "client", comportement
+  // identique à avant ce lot.
+  const officiels = (docs || []).filter((d) => d.uploaded_by_role === "agence");
+  const fournis = (docs || []).filter((d) => d.uploaded_by_role !== "agence");
+
+  // Group docs by categorie (uniquement les pièces fournies par le client)
   const docsByCategorie = new Map<string, Doc[]>();
-  (docs || []).forEach((d) => {
+  fournis.forEach((d) => {
     const cat = d.categorie || "documents_complementaires";
     const list = docsByCategorie.get(cat) || [];
     list.push(d);
@@ -136,12 +257,72 @@ export function DocumentsManager({
 
   return (
     <div className="space-y-4">
+      {/* §11 (lot G4) : sélection du fichier de remplacement (versionné) */}
+      <input
+        ref={replaceInputRef}
+        type="file"
+        className="hidden"
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          e.target.value = "";
+          if (f) handleReplaceFile(f);
+        }}
+      />
+      {/* === Documents officiels délivrés par l'agence (P9 Lot 3) === */}
+      {officiels.length > 0 && (
+        <div className="rounded-2xl border-2 border-nexus-blue-200 bg-nexus-blue-50/40 p-5 shadow-sm">
+          <div className="mb-3 flex items-center gap-2">
+            <FileText className="h-4 w-4 text-nexus-blue-700" />
+            <h3 className="font-display text-sm font-bold text-nexus-blue-950">
+              Documents officiels de Nexus RCA
+            </h3>
+          </div>
+          <ul className="space-y-1.5">
+            {officiels.map((d) => {
+              const Icon = iconFor(d.mime_type);
+              return (
+                <li
+                  key={d.id}
+                  className="flex items-center gap-3 rounded-md border border-nexus-blue-100 bg-white px-3 py-2"
+                >
+                  <Icon className="h-4 w-4 shrink-0 text-nexus-blue-700" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-xs font-semibold text-nexus-blue-950">
+                      {d.file_name}
+                    </p>
+                    <p className="text-[10px] text-slate-500">
+                      {formatSize(d.file_size_bytes)} ·{" "}
+                      {new Date(d.created_at).toLocaleDateString("fr-FR")}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleDownload(d)}
+                    disabled={downloadingId === d.id}
+                    className="rounded-md border border-slate-200 bg-white p-1.5 text-slate-600 transition hover:bg-slate-50 disabled:opacity-50"
+                    aria-label="Télécharger"
+                  >
+                    {downloadingId === d.id ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Download className="h-3.5 w-3.5" />
+                    )}
+                  </button>
+                  {/* Pas de suppression ici : un document officiel ne se
+                      supprime pas depuis le portail client. */}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
       {/* === D2 — Documents demandés par le conseiller === */}
       {requests && requests.length > 0 && (
-        <div className="rounded-2xl border-2 border-nexus-orange-300 bg-nexus-orange-50/40 p-5 shadow-sm">
+        <div className="rounded-2xl border-2 border-brand/40 bg-brand-subtle/40 p-5 shadow-sm">
           <div className="mb-3 flex items-center gap-2">
-            <AlertCircle className="h-4 w-4 text-nexus-orange-600" />
-            <h3 className="font-display text-sm font-bold text-nexus-orange-900">
+            <AlertCircle className="h-4 w-4 text-brand-hover" />
+            <h3 className="font-display text-sm font-bold text-brand">
               Documents demandés par votre conseiller
             </h3>
           </div>
@@ -151,10 +332,10 @@ export function DocumentsManager({
               .map((r) => (
                 <li
                   key={r.id}
-                  className="rounded-lg border border-nexus-orange-200 bg-white p-3"
+                  className="rounded-lg border border-brand/30 bg-white p-3"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-nexus-orange-100 text-nexus-orange-700">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-brand-subtle text-brand-hover">
                       {r.statut === "fourni" ? (
                         <CheckCircle2 className="h-4 w-4" />
                       ) : (
@@ -178,13 +359,35 @@ export function DocumentsManager({
                         ✓ Fourni
                       </span>
                     ) : (
-                      <button
-                        type="button"
-                        onClick={() => setShowAddModal(true)}
-                        className="shrink-0 rounded-md bg-nexus-orange-500 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white hover:bg-nexus-orange-600"
-                      >
-                        Téléverser
-                      </button>
+                      <div className="flex shrink-0 flex-col items-end gap-1">
+                        <button
+                          type="button"
+                          onClick={() => setShowAddModal(true)}
+                          className="rounded-md bg-brand px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-on-brand hover:bg-brand-hover"
+                        >
+                          Téléverser
+                        </button>
+                        {isStaff && (
+                          <div className="flex gap-1">
+                            <button
+                              type="button"
+                              onClick={() => handleResolveRequest(r, "fourni")}
+                              disabled={resolvingId === r.id}
+                              className="rounded-md border border-green-200 bg-white px-2 py-0.5 text-[10px] font-semibold text-green-700 hover:bg-green-50 disabled:opacity-50"
+                            >
+                              Résolu
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleResolveRequest(r, "annule")}
+                              disabled={resolvingId === r.id}
+                              className="rounded-md border border-slate-200 bg-white px-2 py-0.5 text-[10px] font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+                            >
+                              Annuler
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     )}
                   </div>
                 </li>
@@ -199,7 +402,12 @@ export function DocumentsManager({
         </div>
       )}
 
-      {/* === D1 — Documents fournis par catégorie === */}
+      {/* === D1 — Documents fournis par catégorie (le client) === */}
+      {fournis.length > 0 && (
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+          Mes documents
+        </p>
+      )}
       <div className="space-y-3">
         {DOCUMENT_CATEGORIES.map((cat) => {
           const list = docsByCategorie.get(cat.value) || [];
@@ -231,8 +439,67 @@ export function DocumentsManager({
                         <p className="text-[10px] text-slate-500">
                           {formatSize(d.file_size_bytes)} ·{" "}
                           {new Date(d.created_at).toLocaleDateString("fr-FR")}
+                          {Number(d.version || 1) > 1 && (
+                            <span className="font-bold text-nexus-blue-950"> · v{d.version}</span>
+                          )}
+                          {d.statut_controle === "rejete" && d.controle_motif && (
+                            <span className="text-red-600"> · {d.controle_motif}</span>
+                          )}
                         </p>
                       </div>
+                      <span
+                        className={cn(
+                          "rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
+                          CONTROLE_BADGES[d.statut_controle]?.cls || CONTROLE_BADGES.recu.cls
+                        )}
+                      >
+                        {CONTROLE_BADGES[d.statut_controle]?.label || "Reçu"}
+                      </span>
+                      {isStaff && d.statut_controle === "recu" && (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => handleControle(d, "verifie")}
+                            disabled={controlingId === d.id}
+                            className="rounded-md border border-green-200 bg-white px-2 py-1 text-[10px] font-bold text-green-700 transition hover:bg-green-50 disabled:opacity-50"
+                          >
+                            Vérifier
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleControle(d, "rejete")}
+                            disabled={controlingId === d.id}
+                            className="rounded-md border border-red-200 bg-white px-2 py-1 text-[10px] font-bold text-red-600 transition hover:bg-red-50 disabled:opacity-50"
+                          >
+                            Rejeter
+                          </button>
+                        </>
+                      )}
+                      {isStaff && d.statut_controle !== "remplace" && (
+                        <>
+                          {/* §11 (lot G4) : lien signé 1 h, audité */}
+                          <button
+                            type="button"
+                            onClick={() => handleLienTemporaire(d)}
+                            disabled={linkingId === d.id}
+                            className="whitespace-nowrap rounded-md border border-slate-200 bg-white px-2 py-1 text-[10px] font-bold text-slate-600 transition hover:bg-slate-50 disabled:opacity-50"
+                            title="Générer un lien temporaire (1 h) — copié dans le presse-papiers"
+                          >
+                            Lien 1 h
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setReplacingDoc(d);
+                              replaceInputRef.current?.click();
+                            }}
+                            className="whitespace-nowrap rounded-md border border-slate-200 bg-white px-2 py-1 text-[10px] font-bold text-slate-600 transition hover:bg-slate-50"
+                            title="Remplacer par une nouvelle version — l'ancienne reste consultable"
+                          >
+                            Remplacer
+                          </button>
+                        </>
+                      )}
                       <button
                         type="button"
                         onClick={() => handleDownload(d)}
@@ -274,7 +541,7 @@ export function DocumentsManager({
       <button
         type="button"
         onClick={() => setShowAddModal(true)}
-        className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-nexus-orange-300 bg-nexus-orange-50 px-4 py-3 text-sm font-bold text-nexus-orange-700 transition hover:bg-nexus-orange-100"
+        className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-brand/40 bg-brand-subtle px-4 py-3 text-sm font-bold text-brand-hover transition hover:bg-brand-subtle"
       >
         <Plus className="h-4 w-4" />
         Ajouter un document
@@ -366,7 +633,7 @@ function UploadModal({
             <select
               value={categorie}
               onChange={(e) => setCategorie(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-nexus-orange-400 focus:outline-none"
+              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-focus focus:outline-none"
             >
               {DOCUMENT_CATEGORIES.map((c) => (
                 <option key={c.value} value={c.value}>
@@ -409,7 +676,7 @@ function UploadModal({
               type="button"
               onClick={handleUpload}
               disabled={uploading || !file}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-nexus-orange-500 px-4 py-2 text-sm font-bold text-white hover:bg-nexus-orange-600 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2 text-sm font-bold text-on-brand hover:bg-brand-hover disabled:opacity-50"
             >
               {uploading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />

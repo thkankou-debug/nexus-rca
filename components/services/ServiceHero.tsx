@@ -28,7 +28,7 @@ export function ServiceHero({
     <section className="relative overflow-hidden bg-nexus-blue-950 pt-40 pb-20 text-white sm:pt-48">
       {/* Décor : mesh gradient + 2 orbes */}
       <div className="absolute inset-0 bg-mesh-gradient opacity-60" />
-      <div className="absolute -right-40 -top-40 h-[500px] w-[500px] rounded-full bg-nexus-orange-500/20 blur-3xl" />
+      <div className="absolute -right-40 -top-40 h-[500px] w-[500px] rounded-full bg-brand/20 blur-3xl" />
       <div className="absolute -left-40 bottom-0 h-[400px] w-[400px] rounded-full bg-nexus-blue-500/20 blur-3xl" />
       <div className="grain pointer-events-none absolute inset-0 opacity-20" />
 
@@ -36,7 +36,7 @@ export function ServiceHero({
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
             {badge && (
-              <span className="mb-6 inline-flex items-center rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-overline text-nexus-orange-300 backdrop-blur">
+              <span className="mb-6 inline-flex items-center rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-overline text-brand backdrop-blur">
                 {badge}
               </span>
             )}
@@ -55,7 +55,7 @@ export function ServiceHero({
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <Link
                 href={ctaHref}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-7 py-3.5 text-body-sm font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-7 py-3.5 text-body-sm font-semibold text-on-brand shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
               >
                 {ctaLabel}
                 <ArrowRight className="h-4 w-4" />

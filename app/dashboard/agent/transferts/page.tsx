@@ -1,7 +1,6 @@
 import { Send, Info } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { TransfertsManager } from "@/components/dashboard/TransfertsManager";
 import type { Transfert } from "@/components/dashboard/TransfertForm";
@@ -28,7 +27,7 @@ export default async function AgentTransfertsPage() {
   const transferts = (transfertsData || []) as Transfert[];
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/agent"
         label="Retour au tableau de bord"
@@ -40,7 +39,7 @@ export default async function AgentTransfertsPage() {
         </div>
         <div>
           <h1 className="font-display text-3xl font-bold text-nexus-blue-950">
-            Transferts d'argent
+            Transferts d&apos;argent
           </h1>
           <p className="mt-1 text-slate-600">
             Initiez un transfert. Il sera validé par un super-admin avant exécution.
@@ -53,7 +52,7 @@ export default async function AgentTransfertsPage() {
         <div className="text-sm text-blue-900">
           <strong>Workflow :</strong> chaque transfert que tu remplis est envoyé
           en validation au super-admin. Une fois validé, tu peux procéder à
-          l'envoi via Western Union, MoneyGram, etc. puis marquer comme effectué.
+          l&apos;envoi via Western Union, MoneyGram, etc. puis marquer comme effectué.
         </div>
       </div>
 
@@ -62,6 +61,6 @@ export default async function AgentTransfertsPage() {
         currentUserId={profile.id}
         canValidate={false}
       />
-    </DashboardShell>
+    </>
   );
 }

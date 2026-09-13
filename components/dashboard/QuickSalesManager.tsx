@@ -1,5 +1,7 @@
 "use client";
 
+import { embedNexusLogoClient } from "@/lib/pdf-logo-client";
+
 import { useState, useMemo } from "react";
 import {
   Plus,
@@ -11,7 +13,8 @@ import {
   FileSpreadsheet,
   FileDown,
 } from "lucide-react";
-import jsPDF from "jspdf";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { drawText, drawFilledRect } from "@/lib/pdf-layout";
 import { cn } from "@/lib/utils";
 import {
   QuickSaleForm,
@@ -134,51 +137,77 @@ function exportCSV(sales: QuickSale[], agents: AgentInfo[]) {
   URL.revokeObjectURL(url);
 }
 
-function exportPDF(sales: QuickSale[], agents: AgentInfo[], period: Period) {
-  const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
-  const pageWidth = 297;
-  const margin = 12;
-  let y = margin;
+// P6, D5 : migre de jsPDF vers pdf-lib. Page A4 paysage en points
+// (841.89 x 595.28). pdf-lib mesure depuis le bas a gauche (jsPDF depuis
+// le haut a gauche) : on garde une variable topY qui se comporte comme le
+// y de jsPDF (croissant vers le bas), et on convertit uniquement au
+// moment de dessiner (pdfY = PAGE_HEIGHT - topY). sanitizeForPdf()
+// applique systematiquement (formatMoney/toLocaleString injectent des
+// espaces insecables qui font planter pdf-lib en WinAnsi).
+const PAGE_WIDTH = 841.89;
+const PAGE_HEIGHT = 595.28;
+const MARGIN = 34;
 
-  doc.setFillColor(255, 102, 0);
-  doc.rect(0, 0, pageWidth, 6, "F");
+async function exportPDF(sales: QuickSale[], agents: AgentInfo[], period: Period) {
+  const pdfDoc = await PDFDocument.create();
+  const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-  y = 16;
-  doc.setFontSize(16);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(12, 28, 64);
-  doc.text("NEXUS RCA - Caisse rapide", margin, y);
+  // M12-bis (08/09) : l'orange ne subsiste sur aucun PDF, seul le logo le
+  // conserve. Bandeau plein -> or (remplissage), jamais du texte (A1).
+  const nexusGold = rgb(0.725, 0.592, 0.376);
+  const nexusBlue = rgb(0.047, 0.11, 0.251);
+  const grayMid = rgb(0.392, 0.455, 0.545);
+  const grayHeaderBg = rgb(0.973, 0.98, 0.988);
+  const grayRowBg = rgb(0.988, 0.988, 0.992);
+  const grayDark = rgb(0.118, 0.161, 0.231);
 
-  doc.setFontSize(8);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(100, 116, 139);
-  doc.text(
+  let page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
+  let topY = MARGIN;
+
+  const newPage = () => {
+    page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
+    topY = MARGIN;
+  };
+
+  drawFilledRect(page, PAGE_HEIGHT, 0, 0, PAGE_WIDTH, 17, nexusGold);
+
+  topY = 45;
+  const nexusLogo = await embedNexusLogoClient(pdfDoc);
+  if (nexusLogo) page.drawImage(nexusLogo, { x: MARGIN, y: PAGE_HEIGHT - 66, width: 34, height: 34 });
+  drawText(page, PAGE_HEIGHT, helveticaBold, "NEXUS RCA - Caisse rapide", MARGIN + 44, topY, 16, nexusBlue);
+
+  drawText(
+    page,
+    PAGE_HEIGHT,
+    helvetica,
     `Genere le ${new Date().toLocaleString("fr-FR")}`,
-    pageWidth - margin,
-    y - 2,
-    { align: "right" }
+    PAGE_WIDTH - MARGIN,
+    topY - 6,
+    8,
+    grayMid,
+    "right"
   );
-  doc.text(
+  drawText(
+    page,
+    PAGE_HEIGHT,
+    helvetica,
     `Periode : ${period === "today" ? "Aujourd hui" : period === "week" ? "7 jours" : period === "month" ? "30 jours" : "Tout"}`,
-    pageWidth - margin,
-    y + 3,
-    { align: "right" }
+    PAGE_WIDTH - MARGIN,
+    topY + 8,
+    8,
+    grayMid,
+    "right"
   );
 
   // Total
-  const total = sales.reduce(
-    (s, x) => s + Number(x.montant_total || 0),
-    0
-  );
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(12, 28, 64);
-  doc.text(`Total : ${formatMoney(total)}`, margin, y + 8);
+  const total = sales.reduce((s, x) => s + Number(x.montant_total || 0), 0);
+  drawText(page, PAGE_HEIGHT, helveticaBold, `Total : ${formatMoney(total)}`, MARGIN, topY + 23, 11, nexusBlue);
 
-  y += 18;
+  topY += 51;
 
   // Tableau
-  const colWidths = [22, 28, 30, 60, 18, 25, 28, 25, 35];
+  const colWidths = [62, 79, 85, 170, 51, 71, 79, 71, 99];
   const headers = [
     "Ref.",
     "Date",
@@ -191,63 +220,68 @@ function exportPDF(sales: QuickSale[], agents: AgentInfo[], period: Period) {
     "Agent",
   ];
 
-  doc.setFillColor(248, 250, 252);
-  doc.rect(margin, y, pageWidth - 2 * margin, 7, "F");
+  drawFilledRect(page, PAGE_HEIGHT, MARGIN, topY, PAGE_WIDTH - 2 * MARGIN, 20, grayHeaderBg);
 
-  doc.setFontSize(8);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(30, 41, 59);
-  let x = margin + 2;
+  let x = MARGIN + 6;
   headers.forEach((h, i) => {
-    doc.text(h, x, y + 5);
+    drawText(page, PAGE_HEIGHT, helveticaBold, h, x, topY + 14, 8, grayDark);
     x += colWidths[i];
   });
-  y += 8;
+  topY += 22;
 
-  doc.setFont("helvetica", "normal");
   sales.forEach((s, i) => {
-    if (y > 195) {
-      doc.addPage();
-      y = margin;
+    if (topY > 552) {
+      newPage();
     }
     if (i % 2 === 1) {
-      doc.setFillColor(252, 252, 253);
-      doc.rect(margin, y, pageWidth - 2 * margin, 6, "F");
+      drawFilledRect(page, PAGE_HEIGHT, MARGIN, topY, PAGE_WIDTH - 2 * MARGIN, 17, grayRowBg);
     }
     const agent = agents.find((a) => a.id === s.agent_id);
     const agentName = agent
       ? [agent.prenom?.[0], agent.nom].filter(Boolean).join(". ")
       : "—";
 
-    x = margin + 2;
-    doc.setFontSize(7);
-    doc.text((s.reference || "").substring(0, 14), x, y + 4);
+    x = MARGIN + 6;
+    const rowTextY = topY + 11;
+    drawText(page, PAGE_HEIGHT, helvetica, (s.reference || "").substring(0, 14), x, rowTextY, 7, grayDark);
     x += colWidths[0];
-    doc.text(
+    drawText(
+      page,
+      PAGE_HEIGHT,
+      helvetica,
       new Date(s.date_paiement).toLocaleDateString("fr-FR"),
       x,
-      y + 4
+      rowTextY,
+      7,
+      grayDark
     );
     x += colWidths[1];
-    doc.text(SERVICE_LABELS[s.type_service], x, y + 4);
+    drawText(page, PAGE_HEIGHT, helvetica, SERVICE_LABELS[s.type_service], x, rowTextY, 7, grayDark);
     x += colWidths[2];
-    doc.text((s.description || "—").substring(0, 35), x, y + 4);
+    drawText(page, PAGE_HEIGHT, helvetica, (s.description || "—").substring(0, 35), x, rowTextY, 7, grayDark);
     x += colWidths[3];
-    doc.text(String(s.quantite), x, y + 4);
+    drawText(page, PAGE_HEIGHT, helvetica, String(s.quantite), x, rowTextY, 7, grayDark);
     x += colWidths[4];
-    doc.text(formatMoney(s.prix_unitaire, "").trim(), x, y + 4);
+    drawText(page, PAGE_HEIGHT, helvetica, formatMoney(s.prix_unitaire, "").trim(), x, rowTextY, 7, grayDark);
     x += colWidths[5];
-    doc.setFont("helvetica", "bold");
-    doc.text(formatMoney(s.montant_total, ""), x, y + 4);
-    doc.setFont("helvetica", "normal");
+    drawText(page, PAGE_HEIGHT, helveticaBold, formatMoney(s.montant_total, ""), x, rowTextY, 7, grayDark);
     x += colWidths[6];
-    doc.text(PAYMENT_LABELS[s.mode_paiement], x, y + 4);
+    drawText(page, PAGE_HEIGHT, helvetica, PAYMENT_LABELS[s.mode_paiement], x, rowTextY, 7, grayDark);
     x += colWidths[7];
-    doc.text(agentName.substring(0, 15), x, y + 4);
-    y += 6;
+    drawText(page, PAGE_HEIGHT, helvetica, agentName.substring(0, 15), x, rowTextY, 7, grayDark);
+    topY += 17;
   });
 
-  doc.save(`Caisse_${new Date().toISOString().split("T")[0]}.pdf`);
+  const bytes = await pdfDoc.save();
+  const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `Caisse_${new Date().toISOString().split("T")[0]}.pdf`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
 
 // ============================================================================
@@ -259,12 +293,19 @@ export function QuickSalesManager({
   currentUserId,
   showAgentColumn = false,
   showStats = false,
+  // AR-01 (12/09/2026, décision Thierry) : la réception habilitée est le
+  // SEUL point d'encaissement humain au comptoir (EX-06). Ces pages
+  // deviennent consultation/reçus — la création passe par le Comptoir POS
+  // (/dashboard/accueil/pos). Prop conservée pour un éventuel usage futur
+  // explicitement autorisé, jamais passée à true aujourd'hui.
+  allowCreate = false,
 }: {
   initialSales: QuickSale[];
   agents: AgentInfo[];
   currentUserId: string;
   showAgentColumn?: boolean;
   showStats?: boolean;
+  allowCreate?: boolean;
 }) {
   const [sales, setSales] = useState<QuickSale[]>(initialSales);
   const [showForm, setShowForm] = useState(false);
@@ -385,14 +426,20 @@ export function QuickSalesManager({
               </button>
             </>
           )}
-          <button
-            type="button"
-            onClick={() => setShowForm(true)}
-            className="inline-flex items-center gap-2 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
-          >
-            <Plus className="h-4 w-4" />
-            Nouvelle vente
-          </button>
+          {allowCreate ? (
+            <button
+              type="button"
+              onClick={() => setShowForm(true)}
+              className="inline-flex items-center gap-2 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 transition hover:bg-brand-hover"
+            >
+              <Plus className="h-4 w-4" />
+              Nouvelle vente
+            </button>
+          ) : (
+            <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-semibold text-slate-500">
+              Encaissement réservé au Comptoir POS (Accueil &amp; caisse)
+            </span>
+          )}
         </div>
       </div>
 
@@ -434,7 +481,7 @@ export function QuickSalesManager({
         <div className="grid gap-4 lg:grid-cols-2">
           {/* Top services */}
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-            <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+            <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-brand-hover">
               Ventes par service
             </h3>
             <div className="space-y-2">
@@ -454,7 +501,7 @@ export function QuickSalesManager({
                     </div>
                     <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-slate-200">
                       <div
-                        className="h-full bg-gradient-to-r from-nexus-orange-400 to-nexus-orange-600"
+                        className="h-full bg-brand"
                         style={{ width: `${Math.max(2, pct)}%` }}
                       />
                     </div>
@@ -469,7 +516,7 @@ export function QuickSalesManager({
 
           {/* Top agents */}
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-            <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+            <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-brand-hover">
               Ventes par agent
             </h3>
             <div className="space-y-2">
@@ -516,7 +563,7 @@ export function QuickSalesManager({
             placeholder="Rechercher par référence, description, client..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-10 pr-4 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+            className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-10 pr-4 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
           />
         </div>
         <select
@@ -608,7 +655,7 @@ function SaleRow({
 
   return (
     <div className="flex items-center gap-3 p-4 transition hover:bg-slate-50">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-100 to-nexus-orange-50 text-nexus-orange-700">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-subtle text-brand-hover">
         <Icon className="h-5 w-5" />
       </div>
       <div className="min-w-0 flex-1">
@@ -662,7 +709,7 @@ function StatBlock({
 }) {
   const colorMap = {
     green: "from-emerald-400 to-emerald-600",
-    orange: "from-nexus-orange-400 to-nexus-orange-600",
+    orange: "from-brand to-brand",
     blue: "from-nexus-blue-600 to-nexus-blue-800",
   };
   return (

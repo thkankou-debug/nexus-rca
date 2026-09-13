@@ -99,13 +99,13 @@ export function FileUploader({ files, onChange, disabled }: FileUploaderProps) {
         className={cn(
           "flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-8 text-center transition-all",
           dragActive
-            ? "border-nexus-orange-500 bg-nexus-orange-50"
-            : "border-slate-300 bg-slate-50 hover:border-nexus-orange-400 hover:bg-nexus-orange-50/50",
+            ? "border-brand bg-brand-subtle"
+            : "border-slate-300 bg-slate-50 hover:border-brand hover:bg-brand-subtle/50",
           disabled && "pointer-events-none opacity-60"
         )}
       >
         <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-sm">
-          <Upload className="h-5 w-5 text-nexus-orange-600" />
+          <Upload className="h-5 w-5 text-brand-hover" />
         </div>
         <p className="text-sm font-semibold text-nexus-blue-950">
           Cliquez ou glissez vos fichiers ici

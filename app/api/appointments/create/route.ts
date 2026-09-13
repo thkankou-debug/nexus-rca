@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createNotification } from "@/lib/notifications";
 import { sendWhatsApp } from "@/lib/whatsapp";
 import { tplRdvConfirmation } from "@/lib/whatsapp-templates";
+import { rateLimitOrNull } from "@/lib/rate-limit";
 
 // ============================================================================
 // API : POST /api/appointments/create
@@ -41,6 +42,9 @@ interface CreateAppointmentBody {
 }
 
 export async function POST(request: NextRequest) {
+  const limited = await rateLimitOrNull(request, "appointments-create");
+  if (limited) return limited;
+
   try {
     const supabase = createClient();
     const body: CreateAppointmentBody = await request.json();

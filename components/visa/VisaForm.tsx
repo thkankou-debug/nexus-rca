@@ -253,7 +253,7 @@ export function VisaForm() {
         consentement_examen: form.consentement_examen,
         consentement_documents: form.consentement_traitement,
         consentement_recontact: true,
-        statut: "nouveau",
+        statut: "nouvelle_demande",
       });
 
       if (error) throw error;
@@ -346,7 +346,7 @@ export function VisaForm() {
           <button
             type="button"
             onClick={handleNext}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-3 text-body-sm font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-3 text-body-sm font-semibold text-on-brand shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
           >
             Continuer
             <ArrowRight className="h-4 w-4" />
@@ -388,7 +388,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
           Étude de faisabilité visa
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-body-lg text-ink-muted">
-          Environ 5 minutes. Vos réponses nous permettent d'établir un bilan de
+          Environ 5 minutes. Vos réponses nous permettent d&apos;établir un bilan de
           faisabilité honnête. Un conseiller Nexus reprend contact sous
           24 heures ouvrées.
         </p>
@@ -403,14 +403,14 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
           <button
             type="button"
             onClick={onStart}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-on-brand shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
           >
             <FileText className="h-5 w-5" />
-            Commencer l'analyse
+            Commencer l&apos;analyse
             <ArrowRight className="h-5 w-5" />
           </button>
           <p className="text-caption text-ink-muted">
-            Vous préférez parler à quelqu'un d'abord ?{" "}
+            Vous préférez parler à quelqu&apos;un d&apos;abord ?{" "}
             <Link
               href="/rendez-vous?service=visa"
               className="font-semibold text-brand underline-offset-4 hover:underline"
@@ -470,7 +470,7 @@ function Stepper({
                   onClick={() => onStepClick(step.id as 1 | 2 | 3 | 4 | 5)}
                   className={cn(
                     "flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all",
-                    done && "border-brand bg-brand text-white shadow-elev-2",
+                    done && "border-brand bg-brand text-on-brand shadow-elev-2",
                     current &&
                       "border-brand bg-surface-elevated text-brand shadow-glow-orange ring-4 ring-brand-subtle",
                     !done &&
@@ -651,7 +651,7 @@ function Step1({
         <div className="mt-6">
           <Notice tone="info">
             <strong>Service basé à Bangui.</strong> Accompagnement à distance
-            disponible. Précisez votre situation à l'étape suivante.
+            disponible. Précisez votre situation à l&apos;étape suivante.
           </Notice>
         </div>
       )}
@@ -770,7 +770,7 @@ function Step2({
         )}
         {showEtudesRedirect && (
           <Notice tone="info">
-            <strong>Projet d'études ?</strong> Notre service{" "}
+            <strong>Projet d&apos;études ?</strong> Notre service{" "}
             <Link
               href="/services/bourses"
               className="font-semibold underline underline-offset-4"
@@ -967,7 +967,7 @@ function Step4({
             Documents déjà disponibles
           </p>
           <p className="mb-3 text-caption text-ink-muted">
-            Cochez ce que vous avez déjà. Pas grave si vous n'avez rien — nous
+            Cochez ce que vous avez déjà. Pas grave si vous n&apos;avez rien — nous
             vous accompagnons dans la constitution.
           </p>
           <div className="grid gap-2 sm:grid-cols-2">
@@ -1193,7 +1193,7 @@ function Step5({
             type="button"
             onClick={onSubmit}
             disabled={loading}
-            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-on-brand shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? (
               <Loader2 className="h-5 w-5 animate-spin" />
@@ -1429,7 +1429,7 @@ function SuccessScreen({
         <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
           <Link
             href="/dashboard"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-body-sm font-semibold text-white shadow-elev-2 transition hover:bg-brand-hover hover:shadow-glow-orange"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-body-sm font-semibold text-on-brand shadow-elev-2 transition hover:bg-brand-hover hover:shadow-glow-orange"
           >
             Mon espace client
             <ArrowRight className="h-4 w-4" />
@@ -1439,7 +1439,7 @@ function SuccessScreen({
             onClick={() => router.push("/")}
             className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-line-strong bg-surface-elevated px-6 py-3 text-body-sm font-semibold text-ink transition hover:bg-surface-sunken"
           >
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </button>
         </div>
 

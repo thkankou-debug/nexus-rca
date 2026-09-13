@@ -301,11 +301,11 @@ export function OnboardingDetailView({ employeeId, basePath, canReset }: Props) 
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 px-6 py-7 shadow-lg sm:px-9 sm:py-8">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
+          className="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-brand/15 blur-[120px]"
         />
         <div className="relative grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur-md">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-brand backdrop-blur-md">
               <Rocket className="h-3 w-3" />
               Parcours d&apos;intégration
             </span>
@@ -321,7 +321,7 @@ export function OnboardingDetailView({ employeeId, basePath, canReset }: Props) 
             <div className="mt-4 h-3 w-full max-w-xl overflow-hidden rounded-full bg-white/10">
               <div
                 className={`h-full rounded-full transition-all ${
-                  done ? "bg-emerald-400" : "bg-nexus-orange-500"
+                  done ? "bg-emerald-400" : "bg-brand"
                 }`}
                 style={{ width: `${Math.max(2, Math.min(100, pct))}%` }}
               />
@@ -426,7 +426,7 @@ export function OnboardingDetailView({ employeeId, basePath, canReset }: Props) 
                       </div>
                       <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-slate-100">
                         <div
-                          className="h-full rounded-full bg-nexus-orange-500 transition-all"
+                          className="h-full rounded-full bg-brand transition-all"
                           style={{ width: `${catPct}%` }}
                         />
                       </div>
@@ -477,7 +477,7 @@ export function OnboardingDetailView({ employeeId, basePath, canReset }: Props) 
           {/* Prochaines deadlines */}
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm ring-1 ring-slate-100/80">
             <h3 className="mb-3 flex items-center gap-2 font-display text-sm font-bold text-nexus-blue-950">
-              <CalendarClock className="h-4 w-4 text-nexus-orange-500" />
+              <CalendarClock className="h-4 w-4 text-brand" />
               Prochaines deadlines
             </h3>
             {upcomingDeadlines.length === 0 ? (
@@ -601,7 +601,7 @@ export function TaskItem({
           className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition ${
             completed
               ? "border-emerald-500 bg-emerald-500 text-white"
-              : "border-slate-300 bg-white hover:border-nexus-orange-400"
+              : "border-slate-300 bg-white hover:border-brand"
           } ${!canEdit ? "cursor-default opacity-80" : ""} ${busy ? "opacity-50" : ""}`}
         >
           {busy ? (
@@ -655,7 +655,7 @@ export function TaskItem({
               onChange={(e) => setNotesDraft(e.target.value)}
               onBlur={() => onNotesBlur(notesDraft)}
               placeholder="Ajouter une note (optionnel)…"
-              className="mt-2 w-full rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-nexus-blue-950 shadow-sm placeholder:text-slate-400 focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+              className="mt-2 w-full rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-nexus-blue-950 shadow-sm placeholder:text-slate-400 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
             />
           )}
           {!canEdit && task.notes && (

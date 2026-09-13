@@ -1,6 +1,5 @@
 import { Wallet } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { PayslipsListView } from "@/components/dashboard/rh/PayslipsListView";
 
@@ -13,11 +12,11 @@ export const dynamic = "force-dynamic";
 export default async function PaieListPage() {
   const profile = await requireProfile(["super_admin"]);
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/super-admin/rh" label="Retour RH" />
 
       <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-md">
           <Wallet className="h-6 w-6" />
         </div>
         <div>
@@ -31,6 +30,6 @@ export default async function PaieListPage() {
       </div>
 
       <PayslipsListView basePath="/dashboard/super-admin/rh" />
-    </DashboardShell>
+    </>
   );
 }

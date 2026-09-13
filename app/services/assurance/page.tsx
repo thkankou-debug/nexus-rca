@@ -221,28 +221,28 @@ export default function AssurancePage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                 <Globe2 className="h-3 w-3" />
                 Réseau international
               </span>
               <h2 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Une couverture{" "}
                 <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-nexus-orange-400 via-nexus-orange-500 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     mondiale
                   </span>
                   <span
                     aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/60 to-transparent"
+                    className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"
                   />
                 </span>
                 , pilotée depuis Bangui.
@@ -269,19 +269,19 @@ export default function AssurancePage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 top-20 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/12 blur-[120px]"
+            className="pointer-events-none absolute -right-32 top-20 h-[28rem] w-[28rem] rounded-full bg-brand/12 blur-[120px]"
           />
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
               {/* Colonne titre */}
               <div className="lg:col-span-5">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                   Conformité consulaire
                 </span>
                 <h2 className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                   Le standard exigé par les{" "}
-                  <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                  <span className="bg-brand bg-clip-text text-transparent">
                     consulats Schengen
                   </span>
                   .
@@ -300,8 +300,8 @@ export default function AssurancePage() {
 
               {/* Colonne checklist standard */}
               <div className="lg:col-span-7">
-                <div className="rounded-3xl border border-nexus-orange-400/25 bg-gradient-to-br from-nexus-orange-500/8 via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(255,102,0,0.20)] sm:p-8">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                <div className="rounded-3xl border border-brand/25 bg-gradient-to-br from-brand/8 via-white/[0.04] to-white/[0.02] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_24px_48px_-16px_rgba(185,151,96,0.20)] sm:p-8">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
                     Critères réglementaires
                   </p>
                   <h3 className="mt-2 font-display text-xl font-bold text-white sm:text-2xl">
@@ -358,7 +358,7 @@ export default function AssurancePage() {
                   </dl>
 
                   <div className="mt-7 inline-flex items-center gap-2 rounded-full border border-white/10 bg-nexus-blue-950/40 px-4 py-2 text-xs text-slate-300 backdrop-blur">
-                    <Award className="h-3.5 w-3.5 text-nexus-orange-300" />
+                    <Award className="h-3.5 w-3.5 text-brand" />
                     <span>
                       Toutes nos polices Schengen sont auditées avant
                       délivrance.
@@ -386,17 +386,17 @@ export default function AssurancePage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-40 bottom-40 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/10 blur-[140px]"
+            className="pointer-events-none absolute -right-40 bottom-40 h-[36rem] w-[36rem] rounded-full bg-brand/10 blur-[140px]"
           />
 
           <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                 Domaines de couverture
               </span>
               <h2 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl">
                 Cinq{" "}
-                <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                <span className="bg-brand bg-clip-text text-transparent">
                   univers
                 </span>
                 , conseillés au cas par cas.
@@ -424,12 +424,12 @@ export default function AssurancePage() {
 
           <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                 Pour qui
               </span>
               <h2 className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                 Quatre profils, quatre{" "}
-                <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                <span className="bg-brand bg-clip-text text-transparent">
                   recommandations
                 </span>
                 .
@@ -448,17 +448,17 @@ export default function AssurancePage() {
                   return (
                     <article
                       key={p.titre}
-                      className="group relative w-[85%] shrink-0 snap-center overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06] sm:w-[60%] lg:w-auto"
+                      className="group relative w-[85%] shrink-0 snap-center overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06] sm:w-[60%] lg:w-auto"
                     >
                       <div
                         aria-hidden
-                        className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
+                        className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/15"
                       />
                       <div className="relative flex h-full flex-col">
                         <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900 text-white ring-1 ring-white/10">
                           <Icon className="h-5 w-5" />
                         </div>
-                        <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                        <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
                           {p.eyebrow}
                         </p>
                         <h3 className="mt-1.5 font-display text-lg font-bold leading-tight text-white sm:text-xl">
@@ -496,17 +496,17 @@ export default function AssurancePage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-40 top-1/2 h-[32rem] w-[32rem] -translate-y-1/2 rounded-full bg-nexus-orange-500/10 blur-[140px]"
+            className="pointer-events-none absolute -left-40 top-1/2 h-[32rem] w-[32rem] -translate-y-1/2 rounded-full bg-brand/10 blur-[140px]"
           />
 
           <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                 Méthodologie
               </span>
               <h2 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl">
                 Quatre étapes, un{" "}
-                <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                <span className="bg-brand bg-clip-text text-transparent">
                   accompagnement
                 </span>{" "}
                 continu.
@@ -523,19 +523,19 @@ export default function AssurancePage() {
                 return (
                   <div
                     key={etape.n}
-                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06]"
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-nexus-orange-500/0 blur-3xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
+                      className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-brand/0 blur-3xl transition-all duration-500 group-hover:bg-brand/15"
                     />
                     <div className="relative">
                       <div className="flex items-center justify-between">
-                        <span className="font-display text-5xl font-bold leading-none text-transparent [-webkit-text-stroke:1px_rgba(251,146,60,0.4)] sm:text-6xl">
+                        <span className="font-display text-5xl font-bold leading-none text-transparent [-webkit-text-stroke:1px_rgba(185,151,96,0.4)] sm:text-6xl">
                           {etape.n}
                         </span>
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500/30 to-nexus-orange-700/20 ring-1 ring-nexus-orange-400/30">
-                          <Icon className="h-4 w-4 text-nexus-orange-300" />
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand/30 to-brand/20 ring-1 ring-brand/30">
+                          <Icon className="h-4 w-4 text-brand" />
                         </div>
                       </div>
                       <h3 className="mt-5 font-display text-base font-bold leading-tight text-white sm:text-lg">
@@ -549,7 +549,7 @@ export default function AssurancePage() {
                     {i < METHODOLOGIE.length - 1 && (
                       <span
                         aria-hidden
-                        className="pointer-events-none absolute right-0 top-1/2 hidden h-px w-6 -translate-y-1/2 translate-x-3 bg-gradient-to-r from-nexus-orange-500/40 to-transparent lg:block"
+                        className="pointer-events-none absolute right-0 top-1/2 hidden h-px w-6 -translate-y-1/2 translate-x-3 bg-gradient-to-r from-brand/40 to-transparent lg:block"
                       />
                     )}
                   </div>
@@ -569,12 +569,12 @@ export default function AssurancePage() {
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                 Notre différence
               </span>
               <h2 className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                 Pourquoi confier votre assurance à{" "}
-                <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                <span className="bg-brand bg-clip-text text-transparent">
                   notre cabinet
                 </span>
                 ?
@@ -587,15 +587,15 @@ export default function AssurancePage() {
                 return (
                   <div
                     key={r.title}
-                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-nexus-orange-400/40 hover:bg-white/[0.06] sm:p-8"
+                    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-7 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-brand/40 hover:bg-white/[0.06] sm:p-8"
                   >
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-nexus-orange-500/0 blur-3xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
+                      className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-brand/0 blur-3xl transition-all duration-500 group-hover:bg-brand/15"
                     />
                     <div className="relative flex gap-5">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500/30 to-nexus-orange-700/20 ring-1 ring-nexus-orange-400/30">
-                        <Icon className="h-5 w-5 text-nexus-orange-300" />
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand/30 to-brand/20 ring-1 ring-brand/30">
+                        <Icon className="h-5 w-5 text-brand" />
                       </div>
                       <div>
                         <h3 className="font-display text-lg font-bold leading-tight text-white sm:text-xl">
@@ -622,12 +622,12 @@ export default function AssurancePage() {
           />
 
           <div className="relative mx-auto max-w-5xl px-4 text-center lg:px-8">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
               Notre réseau
             </span>
             <h2 className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
               Un{" "}
-              <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+              <span className="bg-brand bg-clip-text text-transparent">
                 écosystème de partenaires
               </span>{" "}
               sélectionnés.
@@ -644,7 +644,7 @@ export default function AssurancePage() {
                   key={p}
                   className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]"
                 >
-                  <Network className="mx-auto h-5 w-5 text-nexus-orange-300" />
+                  <Network className="mx-auto h-5 w-5 text-brand" />
                   <p className="mt-3 text-xs font-semibold leading-relaxed text-white">
                     {p}
                   </p>
@@ -670,7 +670,7 @@ export default function AssurancePage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 top-1/2 h-[36rem] w-[36rem] -translate-y-1/2 rounded-full bg-nexus-orange-500/15 blur-[140px]"
+            className="pointer-events-none absolute -right-32 top-1/2 h-[36rem] w-[36rem] -translate-y-1/2 rounded-full bg-brand/15 blur-[140px]"
           />
           <div
             aria-hidden
@@ -678,20 +678,20 @@ export default function AssurancePage() {
           />
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
-            <div className="overflow-hidden rounded-[2.25rem] border border-nexus-orange-400/30 bg-gradient-to-br from-nexus-orange-500/10 via-white/[0.05] to-white/[0.02] ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_36px_72px_-24px_rgba(255,102,0,0.30)]">
+            <div className="overflow-hidden rounded-[2.25rem] border border-brand/30 bg-gradient-to-br from-brand/10 via-white/[0.05] to-white/[0.02] ring-1 ring-white/5 backdrop-blur-2xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_36px_72px_-24px_rgba(185,151,96,0.30)]">
               <div className="grid gap-10 p-8 sm:p-10 lg:grid-cols-12 lg:items-center lg:gap-14 lg:p-14">
                 <div className="lg:col-span-7">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                     <span className="relative flex h-1.5 w-1.5">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
                     </span>
                     Demande de devis · 4 étapes guidées
                   </span>
 
                   <h2 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                     Construisons votre{" "}
-                    <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                    <span className="bg-brand bg-clip-text text-transparent">
                       couverture sur mesure
                     </span>
                     .
@@ -716,7 +716,7 @@ export default function AssurancePage() {
                         key={s.n}
                         className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5 backdrop-blur-md"
                       >
-                        <p className="font-display text-base font-bold text-nexus-orange-300">
+                        <p className="font-display text-base font-bold text-brand">
                           {s.n}
                         </p>
                         <p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.16em] text-white/85">
@@ -729,7 +729,7 @@ export default function AssurancePage() {
                   <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
                     <Link
                       href="/services/assurance/devis"
-                      className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+                      className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)]"
                     >
                       <span
                         aria-hidden
@@ -740,7 +740,7 @@ export default function AssurancePage() {
                       <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
                     </Link>
                     <span className="inline-flex items-center gap-1.5 self-start rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/65 backdrop-blur sm:self-center">
-                      <Award className="h-3 w-3 text-nexus-orange-300" />
+                      <Award className="h-3 w-3 text-brand" />
                       Référence NX-ASS-2026-XXXX dédiée
                     </span>
                   </div>
@@ -749,7 +749,7 @@ export default function AssurancePage() {
                 {/* Visualisation des 4 statuts dossier */}
                 <div className="lg:col-span-5">
                   <div className="rounded-3xl border border-white/10 bg-nexus-blue-950/40 p-6 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
                       Suivi du dossier
                     </p>
                     <p className="mt-1 text-xs text-white/55">
@@ -766,7 +766,7 @@ export default function AssurancePage() {
                           <div
                             className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ring-2 ${
                               i === 0
-                                ? "bg-nexus-orange-500 text-white ring-nexus-orange-400/60 shadow-[0_0_24px_-4px_rgba(255,102,0,0.7)]"
+                                ? "bg-brand text-on-brand ring-brand/60 shadow-[0_0_24px_-4px_rgba(185,151,96,0.7)]"
                                 : "bg-white/[0.04] text-white/40 ring-white/10"
                             }`}
                           >
@@ -775,7 +775,7 @@ export default function AssurancePage() {
                           <div className="flex-1">
                             <p
                               className={`text-xs font-bold uppercase tracking-[0.18em] ${
-                                i === 0 ? "text-nexus-orange-300" : "text-white/40"
+                                i === 0 ? "text-brand" : "text-white/40"
                               }`}
                             >
                               {s.label}
@@ -804,12 +804,12 @@ export default function AssurancePage() {
 
           <div className="relative mx-auto max-w-4xl px-4 lg:px-8">
             <div className="text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                 FAQ — questions d&rsquo;expert
               </span>
               <h2 className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
                 Les{" "}
-                <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+                <span className="bg-brand bg-clip-text text-transparent">
                   bonnes questions
                 </span>{" "}
                 à se poser.
@@ -820,13 +820,13 @@ export default function AssurancePage() {
               {FAQ.map((item, i) => (
                 <details
                   key={i}
-                  className="group rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-colors hover:border-nexus-orange-400/40"
+                  className="group rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl ring-1 ring-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-colors hover:border-brand/40"
                 >
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 sm:p-6">
                     <span className="font-display text-base font-bold leading-snug text-white sm:text-lg">
                       {item.q}
                     </span>
-                    <ChevronDown className="h-5 w-5 shrink-0 text-nexus-orange-300 transition-transform duration-300 group-open:rotate-180" />
+                    <ChevronDown className="h-5 w-5 shrink-0 text-brand transition-transform duration-300 group-open:rotate-180" />
                   </summary>
                   <div className="px-5 pb-6 pt-0 text-sm leading-relaxed text-slate-300 sm:px-6">
                     {item.a}
@@ -846,7 +846,7 @@ export default function AssurancePage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -top-40 -right-40 h-[40rem] w-[40rem] rounded-full bg-nexus-orange-500/20 blur-[140px]"
+            className="pointer-events-none absolute -top-40 -right-40 h-[40rem] w-[40rem] rounded-full bg-brand/20 blur-[140px]"
           />
           <div
             aria-hidden
@@ -854,25 +854,25 @@ export default function AssurancePage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/8 blur-[120px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/8 blur-[120px]"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-8">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
               <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
               </span>
               Diagnostic personnalisé
             </span>
 
             <h2 className="mt-6 font-display text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
               Construisons ensemble votre{" "}
-              <span className="bg-gradient-to-r from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+              <span className="bg-brand bg-clip-text text-transparent">
                 couverture
               </span>
               .
@@ -886,15 +886,15 @@ export default function AssurancePage() {
 
             <div className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-3">
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
-                <Compass className="mx-auto mb-1 h-4 w-4 text-nexus-orange-300" />
+                <Compass className="mx-auto mb-1 h-4 w-4 text-brand" />
                 Diagnostic offert
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
-                <Calendar className="mx-auto mb-1 h-4 w-4 text-nexus-orange-300" />
+                <Calendar className="mx-auto mb-1 h-4 w-4 text-brand" />
                 Réponse 24 h ouvrées
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
-                <Headphones className="mx-auto mb-1 h-4 w-4 text-nexus-orange-300" />
+                <Headphones className="mx-auto mb-1 h-4 w-4 text-brand" />
                 Suivi 24 / 7
               </div>
             </div>
@@ -902,7 +902,7 @@ export default function AssurancePage() {
             <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
               <Link
                 href="/services/assurance/devis"
-                className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+                className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)]"
               >
                 <span
                   aria-hidden
@@ -927,23 +927,23 @@ export default function AssurancePage() {
 
             <div className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[11px] uppercase tracking-[0.18em] text-white/60">
               <span className="flex items-center gap-1.5">
-                <Headphones className="h-3.5 w-3.5 text-nexus-orange-300" />
+                <Headphones className="h-3.5 w-3.5 text-brand" />
                 Assistance multilingue 24/7
               </span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
               <span className="flex items-center gap-1.5">
-                <Globe2 className="h-3.5 w-3.5 text-nexus-orange-300" />
+                <Globe2 className="h-3.5 w-3.5 text-brand" />
                 Réseau 150+ pays
               </span>
               <span className="h-1 w-1 rounded-full bg-white/20" />
               <span className="flex items-center gap-1.5">
-                <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-300" />
+                <ShieldCheck className="h-3.5 w-3.5 text-brand" />
                 Conforme code visas UE
               </span>
             </div>
 
             <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-white/60 backdrop-blur">
-              <MapPin className="h-3 w-3 text-nexus-orange-300" />
+              <MapPin className="h-3 w-3 text-brand" />
               Bangui, République Centrafricaine
             </div>
           </div>

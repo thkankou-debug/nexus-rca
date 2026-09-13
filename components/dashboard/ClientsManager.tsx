@@ -183,7 +183,7 @@ export function ClientsManager({
             placeholder="Rechercher par nom, email, téléphone, ville..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
           />
         </div>
         <button
@@ -192,7 +192,7 @@ export function ClientsManager({
             setEditingClient(null);
             setShowForm(true);
           }}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 transition hover:bg-brand-hover"
         >
           <Plus className="h-4 w-4" />
           Nouveau client
@@ -243,7 +243,7 @@ export function ClientsManager({
             <button
               type="button"
               onClick={() => setShowForm(true)}
-              className="mt-4 inline-flex items-center gap-2 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white hover:bg-nexus-orange-600"
+              className="mt-4 inline-flex items-center gap-2 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-on-brand hover:bg-brand-hover"
             >
               <Plus className="h-4 w-4" />
               Créer le premier client
@@ -305,7 +305,7 @@ export function ClientsManager({
                   ⚠️ Si ce client a des paiements ou des dossiers liés, ils
                   seront orphelinés (mais pas supprimés). Pense à plutôt le
                   marquer comme <strong>inactif</strong> si tu veux préserver
-                  l'historique.
+                  l&apos;historique.
                 </div>
               </div>
             </div>
@@ -375,6 +375,11 @@ function ClientCard({
                     Inactif
                   </span>
                 )}
+                {client.merged_into_id && (
+                  <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-700">
+                    Fusionné
+                  </span>
+                )}
               </div>
               <h3 className="mt-1 font-display text-lg font-bold text-nexus-blue-950">
                 {displayName}
@@ -412,7 +417,7 @@ function ClientCard({
 
         <div className="mt-4 flex flex-wrap gap-2 border-t border-slate-100 pt-4">
           <Link
-            href={`/dashboard/super-admin/clients/${client.id}`}
+            href={`/dashboard/clients/${client.id}`}
             className="inline-flex items-center gap-1.5 rounded-full bg-nexus-blue-950 px-3 py-1.5 text-xs font-semibold text-white hover:bg-nexus-blue-900"
           >
             <Eye className="h-3.5 w-3.5" />

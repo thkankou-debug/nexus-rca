@@ -55,7 +55,7 @@ export default async function EquipeNexusPage() {
               Équipe Nexus
             </h1>
             <p className="mt-1 text-sm text-slate-600">
-              Agents, administrateurs et super-admins de l'agence.
+              Agents, administrateurs et super-admins de l&apos;agence.
             </p>
           </div>
         </div>
@@ -63,7 +63,7 @@ export default async function EquipeNexusPage() {
         {profile.role === "super_admin" && (
           <Link
             href="/dashboard/super-admin/equipe/nouveau"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 transition hover:bg-brand-hover"
           >
             <Plus className="h-4 w-4" />
             Créer un employé Nexus
@@ -91,13 +91,13 @@ export default async function EquipeNexusPage() {
         <StatCard
           label="Agents"
           value={counts.agents}
-          accent="from-nexus-orange-400 to-nexus-orange-600"
+          accent="from-brand to-brand"
         />
       </div>
 
       {/* Bandeau d'info */}
       <div className="mb-6 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
-        <strong>👥 Équipe interne uniquement :</strong> cette page n'affiche que
+        <strong>👥 Équipe interne uniquement :</strong> cette page n&apos;affiche que
         les comptes <strong>agent</strong>, <strong>admin</strong> et{" "}
         <strong>super-admin</strong>. Les comptes clients sont gérés dans la page{" "}
         <Link

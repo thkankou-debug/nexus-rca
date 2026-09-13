@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
+import { AttachClientAction } from "@/components/dashboard/AttachClientAction";
 
 // ============================================================================
 // TYPES
@@ -62,6 +63,7 @@ export interface AppointmentRequest {
   status: AppointmentStatus;
   admin_notes: string | null;
   assigned_to: string | null;
+  client_record_id: string | null;
 }
 
 // ============================================================================
@@ -99,7 +101,7 @@ const URGENCY_LABELS: Record<string, string> = {
 
 const URGENCY_COLORS: Record<string, string> = {
   normal: "bg-slate-100 text-slate-700",
-  prioritaire: "bg-nexus-orange-100 text-nexus-orange-700",
+  prioritaire: "bg-brand-subtle text-brand-hover",
   tres_urgent: "bg-red-100 text-red-700",
 };
 
@@ -182,6 +184,22 @@ export function AppointmentRequestsManager({
       list.map((r) => (r.id === id ? { ...r, status } : r))
     );
     toast.success("Statut mis à jour");
+  };
+
+  const attachClient = async (id: string, clientId: string) => {
+    const { error } = await supabase
+      .from("appointment_requests")
+      .update({ client_record_id: clientId })
+      .eq("id", id);
+    if (error) {
+      console.error("Erreur rattachement :", error);
+      toast.error("Rattachement impossible");
+      return;
+    }
+    setRequests((list) =>
+      list.map((r) => (r.id === id ? { ...r, client_record_id: clientId } : r))
+    );
+    toast.success("Client rattaché");
   };
 
   const deleteRequest = async (id: string) => {
@@ -376,6 +394,20 @@ export function AppointmentRequestsManager({
                     </div>
                   )}
 
+                  {/* Rattachement client */}
+                  <div>
+                    <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Fiche client
+                    </h4>
+                    <AttachClientAction
+                      clientRecordId={req.client_record_id}
+                      nom={req.full_name}
+                      email={req.email}
+                      telephone={req.phone}
+                      onAttached={(clientId) => attachClient(req.id, clientId)}
+                    />
+                  </div>
+
                   {/* Actions */}
                   <div>
                     <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">
@@ -464,7 +496,7 @@ function InfoRow({
 }) {
   const content = (
     <div className="flex items-start gap-2">
-      <Icon className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-500" />
+      <Icon className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
       <div className="min-w-0">
         <p className="text-xs font-semibold text-slate-500">{label}</p>
         <p className="truncate text-sm text-slate-800">{value}</p>

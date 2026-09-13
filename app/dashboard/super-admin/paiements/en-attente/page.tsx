@@ -13,6 +13,7 @@ import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { PaymentVerifyActions } from "@/components/payment/PaymentVerifyActions";
 import { cn } from "@/lib/utils";
+import { canIncludeTestData } from "@/lib/exclude-test-data";
 
 export const metadata = {
   title: "Paiements en attente - Nexus",
@@ -72,15 +73,28 @@ function getStatusInfo(statut: string) {
   }
 }
 
-export default async function PaiementsEnAttentePage() {
+export default async function PaiementsEnAttentePage({
+  searchParams,
+}: {
+  searchParams: { includeTest?: string };
+}) {
   const profile = await requireProfile(["agent", "admin", "super_admin"]);
   const supabase = createClient();
+  const includeTest = canIncludeTestData(
+    profile.role,
+    new URLSearchParams(searchParams as Record<string, string>)
+  );
 
-  // Tous les liens de paiement, ordonnés par récence
-  const { data: paymentLinks } = await supabase
+  // Tous les liens de paiement, ordonnés par récence (données TEST_ exclues
+  // par défaut — interrupteur super_admin ?includeTest=1)
+  let paymentLinksQuery = supabase
     .from("payment_links")
     .select("*")
     .order("created_at", { ascending: false });
+  if (!includeTest) {
+    paymentLinksQuery = paymentLinksQuery.eq("is_test", false);
+  }
+  const { data: paymentLinks } = await paymentLinksQuery;
 
   const all = paymentLinks || [];
   const aVerifier = all.filter((p) => p.statut === "paiement_declare");
@@ -97,7 +111,7 @@ export default async function PaiementsEnAttentePage() {
     <DashboardShell profile={profile}>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-lg">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand text-on-brand shadow-lg">
             <Wallet className="h-6 w-6" />
           </div>
           <div>
@@ -110,13 +124,32 @@ export default async function PaiementsEnAttentePage() {
           </div>
         </div>
 
-        <Link
-          href="/dashboard/super-admin/paiements/nouveau-lien"
-          className="inline-flex items-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:bg-nexus-orange-600"
-        >
-          <Wallet className="h-4 w-4" />
-          Générer un nouveau lien
-        </Link>
+        <div className="flex items-center gap-3">
+          {profile.role === "super_admin" && (
+            <Link
+              href={
+                includeTest
+                  ? "/dashboard/super-admin/paiements/en-attente"
+                  : "/dashboard/super-admin/paiements/en-attente?includeTest=1"
+              }
+              className={cn(
+                "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold",
+                includeTest
+                  ? "border-amber-300 bg-amber-100 text-amber-800"
+                  : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+              )}
+            >
+              {includeTest ? "Données de test affichées" : "Afficher les données de test"}
+            </Link>
+          )}
+          <Link
+            href="/dashboard/super-admin/paiements/nouveau-lien"
+            className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg hover:bg-brand-hover"
+          >
+            <Wallet className="h-4 w-4" />
+            Générer un nouveau lien
+          </Link>
+        </div>
       </div>
 
       {/* STATS */}
@@ -215,7 +248,7 @@ export default async function PaiementsEnAttentePage() {
           </p>
           <Link
             href="/dashboard/super-admin/paiements/nouveau-lien"
-            className="mt-5 inline-flex items-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:bg-nexus-orange-600"
+            className="mt-5 inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg hover:bg-brand-hover"
           >
             <Wallet className="h-4 w-4" />
             Créer le premier lien
@@ -246,7 +279,7 @@ function StatCard({
     blue: "from-nexus-blue-700 to-nexus-blue-900",
     amber: "from-amber-500 to-amber-700",
     green: "from-green-500 to-green-700",
-    orange: "from-nexus-orange-500 to-nexus-orange-700",
+    orange: "from-brand to-brand",
   };
   return (
     <div

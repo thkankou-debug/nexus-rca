@@ -9,14 +9,24 @@
   /* Brand (constants — same in light/dark) */
   --nexus-blue: #050f3d;
   --nexus-blue-mid: #0a1a6b;
-  --nexus-orange: #f97316;
-  --nexus-orange-dark: #ea580c;
+  /* --nexus-orange / --nexus-orange-dark supprimées le 13/09/2026 (L12 lot 2) :
+     plus aucun consommateur — l'accent passe par --brand (or, D8). */
 
   /* Surfaces (rgb triplets, consumed via rgb(var(--…) / α)) */
   --surface: 255 255 255;            /* page background */
   --surface-elevated: 255 255 255;   /* cards */
   --surface-sunken: 248 250 252;     /* inputs, sub-blocs */
   --surface-overlay: 255 255 255;    /* modals, popovers */
+  /* Surface ivoire (D8, site public) — #F5F3F0, valeur du jeu de palette
+     déjà validé par Thierry (07/09/2026), pas une teinte inventée pour ce
+     token. Comblait un vide explicitement laissé ouvert en A1
+     (docs/DETTE.md : "surfaces ivoire vs blanc ... pour le site public").
+     Contrastes mesurés (07/09/2026) : texte navy dessus 18,01:1, ink-muted
+     6,84:1 — tous deux ≥ AA. L'or reste interdit en texte/icône fine
+     dessus (2,48:1, échec même au seuil composant ≥3:1) : uniquement en
+     fond de bouton plein (texte navy dessus), jamais en avant-plan ici.
+     Blanc sur ivoire est quasi invisible (1,11:1) : ne jamais superposer. */
+  --surface-ivory: 245 243 240;       /* #F5F3F0 */
 
   /* Ink (texte) */
   --ink: 15 23 42;                   /* slate-900 */
@@ -28,10 +38,57 @@
   --line: 226 232 240;               /* slate-200 */
   --line-strong: 203 213 225;        /* slate-300 */
 
-  /* Brand sémantique */
-  --brand: 249 115 22;               /* orange-500 */
-  --brand-hover: 234 88 12;          /* orange-600 */
-  --brand-subtle: 255 237 213;       /* orange-100 */
+  /* Brand sémantique — or échantillonné sur la maquette approuvée
+     (06/09/2026), corrigé et validé par Thierry le 07/09/2026 : un seul or
+     dans toute la plateforme, prélevé sur un aplat large (le bouton), pas
+     sur du texte ni une photo. Voir NEXUS_RCA_A1_TOKENS_VALIDATION.md. */
+  --brand: 185 151 96;               /* #B99760 */
+  --brand-hover: 163 133 74;         /* #A3854A, plus sombre pour le survol */
+  --brand-subtle: 241 234 223;       /* #F1EADF — teinte ivoire-or pâle, dérivée */
+
+  /* Texte sur bouton/fond --brand : toujours bleu nuit (D8), jamais blanc,
+     constant en clair comme en sombre — ce n'est pas --ink (qui s'inverse
+     avec le thème), c'est la couleur du texte POSÉ SUR l'or lui-même.
+     #021030 = nexus-navy, validé le 07/09/2026 (échantillonné sur le texte
+     de la maquette, pas sur une photo) — 6,84:1 sur --brand. */
+  --on-brand: 2 16 48;                /* #021030 */
+
+  /* Focus clavier — distinct de --brand : l'accent or reste réservé à
+     une seule action par écran (A1), l'anneau de focus ne doit pas compter
+     comme cet accent. */
+  --focus: 59 99 255;                /* nexus-blue-500 */
+
+  /* Barre latérale d'administration — bleu nuit FIXE, identique en clair
+     et en sombre (maquettes NEXUS_RCA_DASHBOARD_ADMINISTRATION : la barre
+     latérale est toujours navy, le contenu suit le thème). Extension du
+     même système de tokens (comme --focus), pas un deuxième système. */
+  --sidebar-surface: 2 7 31;         /* nexus-blue-950 */
+  --sidebar-surface-raised: 8 18 66; /* survol / actif */
+  --sidebar-ink: 226 232 240;        /* slate-200 */
+  --sidebar-ink-muted: 148 163 184;  /* slate-400 */
+  --sidebar-ink-subtle: 100 116 139; /* slate-500 — labels de groupes */
+  --sidebar-line: 27 37 75;          /* séparateurs sur navy */
+
+  /* Statuts — six familles, jamais quinze couleurs (A1). Un point coloré
+     + libellé sur fond neutre, jamais une pastille pleine. */
+  --status-neutral: 100 116 139;     /* slate-500 — nouvelle demande, qualification */
+  --status-waiting: 245 158 11;      /* amber-500 — attente côté client */
+  --status-progress: 59 130 246;     /* blue-500 — en cours côté agence */
+  --status-success: 16 185 129;      /* emerald-500 — devis accepté, terminé */
+  --status-failure: 239 68 68;       /* red-500 — refusé, annulé */
+  --status-inert: 148 163 184;       /* slate-400 — archivé, plus washed-out que neutral */
+
+  /* Sémantiques génériques (alertes, toasts) — distinctes des 6 statuts
+     ci-dessus (badges de cycle de vie d'une demande). --warning est
+     volontairement rouge-orangé et nettement plus saturé que --brand : un
+     ambre classique aurait été confondu avec l'accent or "action
+     principale" (option 1, tranchée par Thierry le 07/09/2026). Contrastes
+     mesurés : danger 4,83:1, warning 5,18:1, success/info repris des
+     statuts déjà mesurés — tous ≥ AA sur fond clair. */
+  --danger: 220 38 38;                /* #DC2626 */
+  --warning: 194 65 12;               /* #C2410C */
+  --success: 16 185 129;              /* #10B981, identique à --status-success */
+  --info: 59 130 246;                 /* #3B82F6, identique à --status-progress */
 
   /* Effets */
   --grain-opacity: 0.08;
@@ -43,6 +100,9 @@
   --surface-elevated: 5 15 61;       /* nexus-blue-900 */
   --surface-sunken: 4 11 47;
   --surface-overlay: 10 26 107;      /* nexus-blue-800 */
+  /* Symétrie structurelle uniquement — le mode sombre n'est pas livré en
+     V3 (interdit, A1). Réutilise --brand-subtle sombre déjà défini. */
+  --surface-ivory: 59 46 9;
 
   --ink: 241 245 249;                /* slate-100 */
   --ink-muted: 148 163 184;          /* slate-400 */
@@ -52,9 +112,24 @@
   --line: 30 41 59;                  /* slate-800 */
   --line-strong: 51 65 85;           /* slate-700 */
 
-  --brand: 251 146 60;               /* orange-400 — plus lumineux sur sombre */
-  --brand-hover: 249 115 22;
-  --brand-subtle: 67 20 7;
+  --brand: 185 151 96;               /* #B99760 — un seul or, identique au clair (07/09/2026) */
+  --brand-hover: 163 133 74;          /* #A3854A */
+  --brand-subtle: 59 46 9;            /* brun-or sourd, adapté fond sombre */
+  --on-brand: 2 16 48;                 /* #021030 — constant : toujours bleu nuit sur bouton or */
+
+  --focus: 96 138 255;               /* nexus-blue-400 — plus lumineux sur sombre */
+
+  --status-neutral: 148 163 184;     /* slate-400 */
+  --status-waiting: 251 191 36;      /* amber-400 */
+  --status-progress: 96 165 250;     /* blue-400 */
+  --status-success: 52 211 153;      /* emerald-400 */
+  --status-failure: 248 113 113;     /* red-400 */
+  --status-inert: 100 116 139;       /* slate-500 — plus washed-out que neutral sur fond sombre */
+
+  --danger: 248 113 113;              /* #F87171, identique à --status-failure */
+  --warning: 251 146 60;              /* #FB923C — rouge-orangé lumineux, distinct de l'or sur fond sombre (7,15:1) */
+  --success: 52 211 153;              /* #34D399, identique à --status-success */
+  --info: 96 165 250;                 /* #60A5FA, identique à --status-progress */
 
   --grain-opacity: 0.05;
   --grain-blend: soft-light;
@@ -103,12 +178,12 @@ body {
   background: rgb(var(--surface-sunken));
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--nexus-blue-mid), var(--nexus-orange));
+  background: linear-gradient(180deg, var(--nexus-blue-mid), rgb(var(--brand)));
   border-radius: 10px;
   border: 2px solid rgb(var(--surface-sunken));
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, var(--nexus-blue), var(--nexus-orange-dark));
+  background: linear-gradient(180deg, var(--nexus-blue), rgb(var(--brand-hover)));
 }
 
 /* ============================================================
@@ -116,20 +191,21 @@ body {
    ============================================================ */
 
 .text-gradient-nexus {
-  background: linear-gradient(135deg, #0a1a6b 0%, #f97316 100%);
+  background: linear-gradient(135deg, #0a1a6b 0%, #B99760 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 .dark .text-gradient-nexus {
-  background: linear-gradient(135deg, #608aff 0%, #fb923c 100%);
+  background: linear-gradient(135deg, #608aff 0%, #B99760 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
+/* Nom hérité — rend désormais l'or de marque (D8, 13/09/2026) */
 .text-gradient-orange {
-  background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+  background: linear-gradient(135deg, #B99760 0%, #A3854A 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -176,7 +252,7 @@ body {
     #050f3d,
     #0a1a6b,
     #182fd8,
-    #f97316
+    #B99760
   );
   background-size: 400% 400%;
   animation: gradientX 15s ease infinite;

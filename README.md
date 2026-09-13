@@ -6,7 +6,7 @@ Plateforme digitale complète pour l'agence **Nexus RCA** basée à Bangui, Rép
 
 ## 📍 Coordonnées de l'agence
 
-- **Adresse :** Relais Sica, vers Hôpital Général, Bangui, Centrafrique
+- **Adresse :** Croisement Marabena, Route de l'Aéroport, PO.BOX 1204, Bangui, Centrafrique
 - **WhatsApp :** +1 587 327 6344
 
 ---
@@ -286,7 +286,7 @@ Testez rapidement en soumettant une demande via `/demande/complet` avec 1 ou 2 f
 
 Pour toute question technique sur ce projet, contactez Nexus RCA :
 - WhatsApp : [+1 587 327 6344](https://wa.me/15873276344)
-- Adresse : Relais Sica, vers Hôpital Général, Bangui
+- Adresse : Croisement Marabena, Route de l'Aéroport, PO.BOX 1204, Bangui
 
 ---
 

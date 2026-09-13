@@ -44,7 +44,7 @@ export default async function SuperAdminExpensesPage() {
             Dépenses internes
           </h1>
           <p className="mt-1 text-slate-600">
-            Suivi des dépenses de l'équipe Nexus : validation, rejet, traçabilité.
+            Suivi des dépenses de l&apos;équipe Nexus : validation, rejet, traçabilité.
           </p>
         </div>
       </div>

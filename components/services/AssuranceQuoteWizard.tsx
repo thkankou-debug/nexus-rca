@@ -222,7 +222,7 @@ export function AssuranceQuoteWizard() {
           />
           <div
             aria-hidden
-            className="absolute left-0 top-5 h-0.5 rounded-full bg-gradient-to-r from-nexus-orange-500 via-nexus-orange-400 to-nexus-orange-300 shadow-[0_0_18px_-2px_rgba(255,102,0,0.7)] transition-all duration-700 ease-out"
+            className="absolute left-0 top-5 h-0.5 rounded-full bg-brand shadow-[0_0_18px_-2px_rgba(185,151,96,0.7)] transition-all duration-700 ease-out"
             style={{ width: `${((step - 1) / 3) * 100}%` }}
           />
           <ol className="relative grid grid-cols-4 gap-2">
@@ -242,9 +242,9 @@ export function AssuranceQuoteWizard() {
                   <div
                     className={`relative flex h-10 w-10 items-center justify-center rounded-full ring-2 transition-all duration-500 sm:h-12 sm:w-12 ${
                       state === "done"
-                        ? "bg-nexus-orange-500 text-white ring-nexus-orange-400/40"
+                        ? "bg-brand text-on-brand ring-brand/40"
                         : state === "active"
-                          ? "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white ring-nexus-orange-400/70 shadow-[0_0_28px_-4px_rgba(255,102,0,0.9)]"
+                          ? "bg-brand text-on-brand ring-brand/70 shadow-[0_0_28px_-4px_rgba(185,151,96,0.9)]"
                           : "bg-nexus-blue-950 text-white/40 ring-white/10 backdrop-blur-md"
                     }`}
                   >
@@ -258,7 +258,7 @@ export function AssuranceQuoteWizard() {
                     {state === "active" && (
                       <span
                         aria-hidden
-                        className="absolute inset-0 rounded-full bg-nexus-orange-500/40 animate-ping"
+                        className="absolute inset-0 rounded-full bg-brand/40 animate-ping"
                       />
                     )}
                   </div>
@@ -326,7 +326,7 @@ export function AssuranceQuoteWizard() {
                 type="button"
                 onClick={handleNext}
                 disabled={submitting}
-                className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-nexus-orange-500 px-6 py-3 text-sm font-bold text-white shadow-[0_10px_28px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-nexus-orange-600"
+                className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-brand px-6 py-3 text-sm font-bold text-on-brand shadow-[0_10px_28px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-hover"
               >
                 <span
                   aria-hidden
@@ -340,7 +340,7 @@ export function AssuranceQuoteWizard() {
                 type="button"
                 onClick={handleSubmit}
                 disabled={submitting || !formData.acceptation}
-                className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_32px_-10px_rgba(255,102,0,0.7)] transition-all duration-300 hover:-translate-y-0.5 hover:from-nexus-orange-600 hover:to-nexus-orange-700 disabled:cursor-not-allowed disabled:opacity-40"
+                className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_32px_-10px_rgba(185,151,96,0.7)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {submitting ? (
                   <>
@@ -409,10 +409,10 @@ function StepHeader({ icon: Icon, eyebrow, title, description }: {
   return (
     <div>
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500/30 to-nexus-orange-700/20 ring-1 ring-nexus-orange-400/30">
-          <Icon className="h-5 w-5 text-nexus-orange-300" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand/30 to-brand/20 ring-1 ring-brand/30">
+          <Icon className="h-5 w-5 text-brand" />
         </div>
-        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
           {eyebrow}
         </p>
       </div>
@@ -547,7 +547,7 @@ function Step3({
             onClick={() =>
               update("num_travelers", Math.max(1, formData.num_travelers - 1))
             }
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-white/85 hover:border-nexus-orange-400/40"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-white/85 hover:border-brand/40"
             aria-label="Diminuer"
           >
             <MinusCircle className="h-4 w-4" />
@@ -560,7 +560,7 @@ function Step3({
             onClick={() =>
               update("num_travelers", Math.min(50, formData.num_travelers + 1))
             }
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-white/85 hover:border-nexus-orange-400/40"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-white/85 hover:border-brand/40"
             aria-label="Augmenter"
           >
             <PlusCircle className="h-4 w-4" />
@@ -612,15 +612,15 @@ function Step3({
                 onClick={() => toggleCoverage(c)}
                 className={`group/cov text-left relative overflow-hidden rounded-2xl border p-4 transition-all duration-300 ${
                   selected
-                    ? "border-nexus-orange-400/60 bg-gradient-to-br from-nexus-orange-500/15 via-nexus-orange-500/5 to-transparent shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_18px_36px_-16px_rgba(255,102,0,0.30)]"
-                    : "border-white/10 bg-white/[0.04] hover:border-nexus-orange-400/30 hover:bg-white/[0.06]"
+                    ? "border-brand/60 bg-gradient-to-br from-brand/15 via-brand/5 to-transparent shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_18px_36px_-16px_rgba(185,151,96,0.30)]"
+                    : "border-white/10 bg-white/[0.04] hover:border-brand/30 hover:bg-white/[0.06]"
                 }`}
               >
                 <div className="flex items-start gap-3">
                   <div
                     className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-all duration-300 ${
                       selected
-                        ? "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white ring-1 ring-white/15 shadow-[0_10px_24px_-8px_rgba(255,102,0,0.7)]"
+                        ? "bg-brand text-on-brand ring-1 ring-white/15 shadow-[0_10px_24px_-8px_rgba(185,151,96,0.7)]"
                         : "bg-white/[0.04] text-white/60 ring-1 ring-white/10"
                     }`}
                   >
@@ -637,7 +637,7 @@ function Step3({
                   <div
                     className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md transition-colors ${
                       selected
-                        ? "bg-nexus-orange-500 ring-1 ring-white/20"
+                        ? "bg-brand ring-1 ring-white/20"
                         : "border border-white/15"
                     }`}
                   >
@@ -665,7 +665,7 @@ function Step3({
             onClick={() => update("visa_certificate_required", true)}
             className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
               formData.visa_certificate_required
-                ? "bg-nexus-orange-500 text-white shadow-[0_4px_14px_-4px_rgba(255,102,0,0.6)]"
+                ? "bg-brand text-on-brand shadow-[0_4px_14px_-4px_rgba(185,151,96,0.6)]"
                 : "text-white/65 hover:text-white"
             }`}
           >
@@ -718,7 +718,7 @@ function Step4({ formData, update }: StepProps) {
                       ? "border-rose-400/60 bg-rose-500/15 shadow-[0_18px_36px_-16px_rgba(244,63,94,0.30)]"
                       : opt.value === "urgent"
                         ? "border-amber-400/60 bg-amber-500/15 shadow-[0_18px_36px_-16px_rgba(251,191,36,0.30)]"
-                        : "border-nexus-orange-400/60 bg-nexus-orange-500/10 shadow-[0_18px_36px_-16px_rgba(255,102,0,0.30)]"
+                        : "border-brand/60 bg-brand/10 shadow-[0_18px_36px_-16px_rgba(185,151,96,0.30)]"
                     : "border-white/10 bg-white/[0.04] hover:border-white/20"
                 }`}
               >
@@ -762,7 +762,7 @@ function Step4({ formData, update }: StepProps) {
           value={formData.comments}
           onChange={(e) => update("comments", e.target.value)}
           placeholder="ex : conditions médicales particulières, voyage avec sport extrême, exigences spécifiques de l'employeur, etc."
-          className="mt-2 w-full rounded-xl border border-white/10 bg-nexus-blue-950/40 px-4 py-3 text-sm text-white placeholder:text-white/35 focus:border-nexus-orange-400/40 focus:outline-none"
+          className="mt-2 w-full rounded-xl border border-white/10 bg-nexus-blue-950/40 px-4 py-3 text-sm text-white placeholder:text-white/35 focus:border-focus focus:outline-none"
         />
       </div>
 
@@ -772,7 +772,7 @@ function Step4({ formData, update }: StepProps) {
           type="checkbox"
           checked={formData.acceptation}
           onChange={(e) => update("acceptation", e.target.checked)}
-          className="mt-1 h-4 w-4 shrink-0 rounded border-white/30 bg-transparent accent-nexus-orange-500"
+          className="mt-1 h-4 w-4 shrink-0 rounded border-white/30 bg-transparent accent-brand"
         />
         <span className="text-xs leading-relaxed text-slate-300">
           J&rsquo;autorise Nexus RCA à traiter mes informations pour me
@@ -810,7 +810,7 @@ function Field({
     <label className="block">
       <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55">
         {label}
-        {required && <span className="ml-1 text-nexus-orange-400">*</span>}
+        {required && <span className="ml-1 text-brand">*</span>}
       </span>
       <div className="relative mt-2">
         {Icon && (
@@ -821,7 +821,7 @@ function Field({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className={`w-full rounded-xl border border-white/10 bg-nexus-blue-950/40 py-3 text-sm text-white placeholder:text-white/35 focus:border-nexus-orange-400/40 focus:outline-none ${
+          className={`w-full rounded-xl border border-white/10 bg-nexus-blue-950/40 py-3 text-sm text-white placeholder:text-white/35 focus:border-focus focus:outline-none ${
             Icon ? "pl-10 pr-4" : "px-4"
           }`}
         />

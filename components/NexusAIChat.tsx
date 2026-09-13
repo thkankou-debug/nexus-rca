@@ -134,7 +134,7 @@ function generateResponse(input: string): {
         "• Envoyer de l'argent dans le monde entier\n" +
         "• Recevoir un transfert en quelques minutes\n" +
         "• Payer en FCFA ou en devises\n\n" +
-        "Passez directement en agence (Relais Sica, Bangui) avec une pièce d'identité. Pour un transfert important, prévenez-nous par WhatsApp.",
+        "Passez directement en agence (Croisement Marabena, Bangui) avec une pièce d'identité. Pour un transfert important, prévenez-nous par WhatsApp.",
       suggestions: ["Voir l'adresse", "WhatsApp"],
     };
   }
@@ -182,7 +182,7 @@ function generateResponse(input: string): {
   if (/(contact|adresse|téléphone|telephone|whatsapp|horaire|agence)/.test(q)) {
     return {
       text:
-        "📍 Adresse : Relais Sica, vers Hôpital Général, Bangui, RCA\n" +
+        "📍 Adresse : Croisement Marabena, Route de l'Aéroport, Bangui, RCA\n" +
         "📞 WhatsApp : +1 587 327 6344\n\n" +
         "Nous répondons rapidement sur WhatsApp. Passez en agence sans rendez-vous pour un premier contact.",
       suggestions: ["Ouvrir WhatsApp", "Faire une demande en ligne"],
@@ -329,7 +329,7 @@ export function NexusAIChat() {
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col rounded-3xl border border-slate-200 bg-white shadow-2xl overflow-hidden" style={{ height: "min(80vh, 700px)" }}>
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-200 bg-gradient-to-r from-nexus-blue-900 via-nexus-blue-800 to-nexus-orange-600 p-4 text-white">
+      <div className="flex items-center justify-between border-b border-slate-200 bg-gradient-to-r from-nexus-blue-900 via-nexus-blue-800 to-brand p-4 text-white">
         <div className="flex items-center gap-3">
           <div className="relative">
             <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/15 backdrop-blur">
@@ -345,7 +345,7 @@ export function NexusAIChat() {
           </div>
         </div>
         <div className="hidden items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-xs sm:flex">
-          <Zap className="h-3.5 w-3.5 text-nexus-orange-300" /> Propulsé par Nexus
+          <Zap className="h-3.5 w-3.5 text-brand" /> Propulsé par Nexus
         </div>
       </div>
 
@@ -364,7 +364,7 @@ export function NexusAIChat() {
               className={cn("flex gap-2.5", m.role === "user" ? "justify-end" : "justify-start")}
             >
               {m.role === "bot" && (
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-700 to-nexus-orange-500 text-white shadow">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-700 to-brand text-white shadow">
                   <Bot className="h-4 w-4" />
                 </div>
               )}
@@ -384,22 +384,22 @@ export function NexusAIChat() {
                 {m.role === "bot" && m.serviceDetected && m.serviceLabel && (
                   <button
                     onClick={() => (window.location.href = buildCompleteFormUrl(m.serviceDetected))}
-                    className="group flex w-full items-center justify-between gap-3 rounded-2xl border-2 border-nexus-orange-300 bg-gradient-to-r from-nexus-orange-50 to-white p-3 text-left shadow-sm transition-all hover:border-nexus-orange-500 hover:shadow-md"
+                    className="group flex w-full items-center justify-between gap-3 rounded-2xl border-2 border-brand/40 bg-gradient-to-r from-brand to-white p-3 text-left shadow-sm transition-all hover:border-brand hover:shadow-md"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-nexus-orange-500 text-white">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand text-on-brand">
                         <FilePlus className="h-4 w-4" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
-                          Ouvrir un dossier
+                        <p className="text-xs font-bold uppercase tracking-wider text-brand-hover">
+                          Soumettre une demande
                         </p>
                         <p className="text-sm font-semibold text-nexus-blue-950 truncate">
                           {m.serviceLabel}
                         </p>
                       </div>
                     </div>
-                    <ArrowRight className="h-4 w-4 shrink-0 text-nexus-orange-600 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="h-4 w-4 shrink-0 text-brand-hover transition-transform group-hover:translate-x-1" />
                   </button>
                 )}
 
@@ -409,7 +409,7 @@ export function NexusAIChat() {
                       <button
                         key={i}
                         onClick={() => handleSuggestion(s)}
-                        className="rounded-full border border-nexus-orange-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-nexus-orange-700 transition-all hover:-translate-y-0.5 hover:bg-nexus-orange-500 hover:text-white hover:shadow"
+                        className="rounded-full border border-brand/40 bg-white px-3.5 py-1.5 text-xs font-semibold text-brand-hover transition-all hover:-translate-y-0.5 hover:bg-brand hover:text-on-brand hover:shadow"
                       >
                         {s}
                       </button>
@@ -428,13 +428,13 @@ export function NexusAIChat() {
 
         {isTyping && (
           <div className="flex gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-700 to-nexus-orange-500 text-white">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-700 to-brand text-white">
               <Bot className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-1 rounded-2xl bg-white border border-slate-200 px-4 py-3 shadow-sm">
-              <span className="h-2 w-2 animate-bounce rounded-full bg-nexus-orange-500" style={{ animationDelay: "0ms" }} />
-              <span className="h-2 w-2 animate-bounce rounded-full bg-nexus-orange-500" style={{ animationDelay: "120ms" }} />
-              <span className="h-2 w-2 animate-bounce rounded-full bg-nexus-orange-500" style={{ animationDelay: "240ms" }} />
+              <span className="h-2 w-2 animate-bounce rounded-full bg-brand" style={{ animationDelay: "0ms" }} />
+              <span className="h-2 w-2 animate-bounce rounded-full bg-brand" style={{ animationDelay: "120ms" }} />
+              <span className="h-2 w-2 animate-bounce rounded-full bg-brand" style={{ animationDelay: "240ms" }} />
             </div>
           </div>
         )}
@@ -448,8 +448,8 @@ export function NexusAIChat() {
         }}
         className="border-t border-slate-200 bg-white p-3"
       >
-        <div className="flex items-center gap-2 rounded-full border border-slate-300 bg-slate-50 px-4 py-2 focus-within:border-nexus-orange-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-nexus-orange-100">
-          <Sparkles className="h-4 w-4 text-nexus-orange-500" />
+        <div className="flex items-center gap-2 rounded-full border border-slate-300 bg-slate-50 px-4 py-2 focus-within:border-focus focus-within:bg-white focus-within:ring-4 focus-within:ring-focus/25">
+          <Sparkles className="h-4 w-4 text-brand" />
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -459,7 +459,7 @@ export function NexusAIChat() {
           <button
             type="submit"
             disabled={!input.trim()}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-600 text-white transition-all hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-brand text-on-brand transition-all hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
             aria-label="Envoyer"
           >
             <Send className="h-4 w-4" />
@@ -476,14 +476,14 @@ export function NexusAIChat() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="border-t border-nexus-orange-200 bg-gradient-to-r from-nexus-orange-50 via-white to-nexus-blue-50 p-3"
+          className="border-t border-brand/30 bg-gradient-to-r from-brand via-white to-nexus-blue-50 p-3"
         >
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 min-w-0">
-              <Sparkles className="h-4 w-4 shrink-0 text-nexus-orange-600" />
+              <Sparkles className="h-4 w-4 shrink-0 text-brand-hover" />
               <p className="truncate text-xs text-nexus-blue-900 sm:text-sm">
                 <strong>Prêt·e ?</strong> Ouvrez votre dossier{" "}
-                <strong className="text-nexus-orange-700">
+                <strong className="text-brand-hover">
                   {SERVICE_LABELS[currentService]}
                 </strong>
                 , je récupère notre échange.
@@ -491,7 +491,7 @@ export function NexusAIChat() {
             </div>
             <button
               onClick={() => (window.location.href = buildCompleteFormUrl())}
-              className="flex shrink-0 items-center gap-1.5 rounded-full bg-nexus-orange-500 px-4 py-2 text-xs font-semibold text-white shadow transition hover:bg-nexus-orange-600 sm:text-sm"
+              className="flex shrink-0 items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-xs font-semibold text-on-brand shadow transition hover:bg-brand-hover sm:text-sm"
             >
               <FilePlus className="h-3.5 w-3.5" />
               Ouvrir le dossier

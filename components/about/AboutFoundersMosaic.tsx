@@ -37,12 +37,12 @@ export function AboutFoundersMosaic({ founders }: Props) {
       {founders.map((founder, idx) => (
         <article
           key={founder.name}
-          className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-500 ease-out hover:-translate-y-1 hover:border-nexus-orange-400/40 hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_28px_60px_-24px_rgba(255,102,0,0.30)]"
+          className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-500 ease-out hover:-translate-y-1 hover:border-brand/40 hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_28px_60px_-24px_rgba(185,151,96,0.30)]"
         >
           {/* Glow décoratif */}
           <div
             aria-hidden
-            className={`pointer-events-none absolute h-44 w-44 rounded-full bg-nexus-orange-500/0 blur-3xl transition-all duration-700 group-hover:bg-nexus-orange-500/15 ${
+            className={`pointer-events-none absolute h-44 w-44 rounded-full bg-brand/0 blur-3xl transition-all duration-700 group-hover:bg-brand/15 ${
               idx === 0
                 ? "-right-12 -top-12"
                 : "-left-12 -bottom-12"
@@ -52,7 +52,7 @@ export function AboutFoundersMosaic({ founders }: Props) {
           {/* Liseré supérieur */}
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-300/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+            className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
           />
 
           <div className="relative flex flex-col sm:flex-row">
@@ -81,14 +81,14 @@ export function AboutFoundersMosaic({ founders }: Props) {
 
               {/* Pill location en bas de la photo */}
               <div className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-nexus-blue-950/80 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-white/85 backdrop-blur-md">
-                <MapPin className="h-3 w-3 text-nexus-orange-300" />
+                <MapPin className="h-3 w-3 text-brand" />
                 {founder.location}
               </div>
             </div>
 
             {/* ─── Bio ─── */}
             <div className="flex flex-1 flex-col p-6 sm:p-7">
-              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
                 {founder.role}
               </p>
               <h3 className="mt-2 font-display text-xl font-bold leading-tight text-white sm:text-2xl">
@@ -99,7 +99,7 @@ export function AboutFoundersMosaic({ founders }: Props) {
               <div className="mt-5 flex gap-3">
                 <Quote
                   aria-hidden
-                  className="h-4 w-4 shrink-0 text-nexus-orange-300/60"
+                  className="h-4 w-4 shrink-0 text-brand/60"
                 />
                 <p className="flex-1 text-sm leading-relaxed text-slate-300">
                   {founder.bio}
@@ -113,7 +113,7 @@ export function AboutFoundersMosaic({ founders }: Props) {
                     <Link
                       href={`mailto:${founder.email}`}
                       aria-label={`Email à ${founder.name}`}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-white/70 backdrop-blur-md transition-all duration-200 hover:border-nexus-orange-400/40 hover:bg-white/[0.07] hover:text-white"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-white/70 backdrop-blur-md transition-all duration-200 hover:border-brand/40 hover:bg-white/[0.07] hover:text-white"
                     >
                       <Mail className="h-3 w-3" />
                       Email

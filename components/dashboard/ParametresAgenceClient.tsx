@@ -187,7 +187,7 @@ export function ParametresAgenceClient({
           className={cn(
             "inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-body-sm font-semibold shadow-elev-2 transition",
             hasChanges && !saving
-              ? "bg-brand text-white hover:bg-brand-hover hover:shadow-glow-orange"
+              ? "bg-brand text-on-brand hover:bg-brand-hover hover:shadow-glow-orange"
               : "cursor-not-allowed bg-surface-sunken text-ink-muted"
           )}
         >
@@ -483,8 +483,8 @@ function IntegrationsTab({ value }: { value: AgencySettings["integrations"] }) {
 
       <div className="rounded-2xl border border-line bg-surface-sunken p-4 text-caption text-ink-muted">
         <strong>Note sécurité.</strong> Les clés (API, tokens) sont gérées exclusivement via les
-        variables d'environnement (<code className="font-mono">.env.local</code> en dev,
-        Vercel env vars en prod). Aucune clé n'est stockée en base de données ni n'est éditable
+        variables d&apos;environnement (<code className="font-mono">.env.local</code> en dev,
+        Vercel env vars en prod). Aucune clé n&apos;est stockée en base de données ni n&apos;est éditable
         depuis cette interface.
       </div>
     </div>

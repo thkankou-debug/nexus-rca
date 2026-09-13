@@ -6,7 +6,7 @@
 // inutilement, sauf pour les sous-blocs qui ont besoin d'interactivité.
 // ============================================================================
 
-import { Download, FileText, Hash, MessageCircle } from "lucide-react";
+import { Download, Hash } from "lucide-react";
 import { BackButton } from "@/components/ui/BackButton";
 import { StatusBadge, UrgenceBadge } from "@/components/dashboard/StatCard";
 import { Timeline } from "@/components/demande-detail/Timeline";
@@ -16,7 +16,12 @@ import { MessagesList } from "@/components/demande-detail/MessagesList";
 import { RecapAccordion } from "@/components/demande-detail/RecapAccordion";
 import { DossierStaffActions } from "./DossierStaffActions";
 import { StaffNotes } from "./StaffNotes";
+import { PartageDossier } from "@/components/dossiers/PartageDossier";
 import { StaffHistoryTimeline } from "./StaffHistoryTimeline";
+import { DossierTabs } from "./DossierTabs";
+import { DossierPaiementsTab, type DossierPayment } from "./DossierPaiementsTab";
+import { DossierRendezVousTab, type DossierAppointment } from "./DossierRendezVousTab";
+import { DossierTachesTab } from "./DossierTachesTab";
 import { CATEGORIE_META } from "@/lib/demande-categories";
 import { formatDate } from "@/lib/utils";
 import type {
@@ -47,7 +52,28 @@ interface StaffDossierDetailProps {
   } | null;
   /** History déjà chargé pour la Timeline */
   history: Array<{ step: number; created_at: string }>;
+  /** A5 : paiements réels liés (payments.demande_id) — voir docs/DETTE.md */
+  payments: DossierPayment[];
+  /** A5 : rendez-vous du même client (appointments n'a pas de demande_id) */
+  appointments: DossierAppointment[];
+  /** §5.10 : retours des partenaires sur ce dossier (partner_returns) —
+   * vérification interne avant toute décision, le retour ne change jamais
+   * le dossier lui-même. Optionnel : les anciennes pages n'en passent pas. */
+  partnerReturns?: Array<{
+    id: string;
+    type: string;
+    content: string;
+    created_at: string;
+    partenaire_nom: string;
+  }>;
 }
+
+const PARTNER_RETURN_LABELS: Record<string, string> = {
+  accuse: "Accusé de réception",
+  avis: "Avis",
+  decision: "Décision",
+  complement_demande: "Demande de complément",
+};
 
 export function StaffDossierDetail({
   demande,
@@ -57,6 +83,9 @@ export function StaffDossierDetail({
   backHref,
   agentInfo,
   history,
+  payments,
+  appointments,
+  partnerReturns = [],
 }: StaffDossierDetailProps) {
   const meta = CATEGORIE_META[categorieSlug];
   const reference = demande.reference || `NX-${demande.id.slice(0, 8).toUpperCase()}`;
@@ -68,7 +97,7 @@ export function StaffDossierDetail({
       <header className="mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-6 shadow-lg sm:p-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-400">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
               <Hash className="h-3 w-3" />
               {meta.label}
             </div>
@@ -114,7 +143,7 @@ export function StaffDossierDetail({
       {/* Timeline (réutilise composant client existant) */}
       <section className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
         <div className="mb-4">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
             Avancement
           </p>
           <h2 className="font-display text-lg font-bold text-nexus-blue-950">
@@ -130,44 +159,100 @@ export function StaffDossierDetail({
       </section>
 
       <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
-        {/* Colonne gauche */}
-        <div className="space-y-6 lg:col-span-8">
-          <section>
-            <div className="mb-3 flex items-center gap-2">
-              <FileText className="h-4 w-4 text-nexus-orange-500" />
-              <h2 className="font-display text-lg font-bold text-nexus-blue-950">
-                Documents
-              </h2>
-            </div>
-            <DocumentsManager demandeId={demande.id} canDelete={true} />
-          </section>
-
-          <section id="messages">
-            <div className="mb-3 flex items-center gap-2">
-              <MessageCircle className="h-4 w-4 text-nexus-orange-500" />
-              <h2 className="font-display text-lg font-bold text-nexus-blue-950">
-                Messages
-              </h2>
-            </div>
-            <MessagesList demandeId={demande.id} currentUserId={currentUserId} />
-          </section>
-
-          <section>
-            <div className="mb-3 flex items-center gap-2">
-              <FileText className="h-4 w-4 text-nexus-orange-500" />
-              <h2 className="font-display text-lg font-bold text-nexus-blue-950">
-                Récapitulatif du dossier
-              </h2>
-            </div>
-            <RecapAccordion demande={demande as never} />
-          </section>
+        {/* Colonne gauche — onglets (A5) */}
+        <div className="lg:col-span-8">
+          <DossierTabs
+            tabs={[
+              {
+                id: "resume",
+                label: "Résumé",
+                content: <RecapAccordion demande={demande as never} />,
+              },
+              {
+                id: "documents",
+                label: "Documents",
+                content: (
+                  <DocumentsManager
+                    demandeId={demande.id}
+                    canDelete={true}
+                    isStaff={true}
+                  />
+                ),
+              },
+              {
+                id: "messages",
+                label: "Messages",
+                content: <MessagesList demandeId={demande.id} currentUserId={currentUserId} />,
+              },
+              {
+                id: "paiements",
+                label: "Paiements",
+                badge: payments.length,
+                content: <DossierPaiementsTab payments={payments} />,
+              },
+              {
+                id: "rdv",
+                label: "Rendez-vous",
+                badge: appointments.length,
+                content: <DossierRendezVousTab appointments={appointments} />,
+              },
+              {
+                id: "taches",
+                label: "Tâches",
+                content: <DossierTachesTab demandeId={demande.id} />,
+              },
+              // §5.10 : onglet visible seulement s'il y a des retours — pas
+              // d'onglet vide décoratif.
+              ...(partnerReturns.length > 0
+                ? [
+                    {
+                      id: "partenaire",
+                      label: "Retours partenaire",
+                      badge: partnerReturns.length,
+                      content: (
+                        <ul className="space-y-3">
+                          {partnerReturns.map((r) => (
+                            <li
+                              key={r.id}
+                              className="rounded-xl border border-slate-200 bg-white p-4"
+                            >
+                              <p className="text-xs font-bold uppercase tracking-wide text-nexus-blue-950">
+                                {PARTNER_RETURN_LABELS[r.type] || r.type}
+                                <span className="ml-2 font-medium normal-case tracking-normal text-slate-500">
+                                  {r.partenaire_nom} · {formatDate(r.created_at)}
+                                </span>
+                              </p>
+                              <p className="mt-2 whitespace-pre-wrap text-sm text-slate-700">
+                                {r.content}
+                              </p>
+                            </li>
+                          ))}
+                          <li className="text-xs text-slate-500">
+                            Le retour partenaire est une information à vérifier — il ne modifie
+                            jamais le dossier lui-même.
+                          </li>
+                        </ul>
+                      ),
+                    },
+                  ]
+                : []),
+              {
+                id: "historique",
+                label: "Historique",
+                content: <StaffHistoryTimeline demandeId={demande.id} />,
+              },
+            ]}
+          />
         </div>
 
-        {/* Colonne droite */}
+        {/* Colonne droite — persistante (conseiller + notes internes) */}
         <aside className="space-y-4 lg:col-span-4">
           <ConseillerCard agent={agentInfo} demandeRef={reference} />
-          <StaffHistoryTimeline demandeId={demande.id} />
           <StaffNotes demandeId={demande.id} role={role} />
+          {/* §12 (lot G5) : partage partenaire — acte de direction. */}
+          {(role === "admin" || role === "super_admin") && (
+            <PartageDossier demandeId={demande.id} />
+          )}
         </aside>
       </div>
     </>

@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { DossiersListClient } from "@/components/dossiers/DossiersListClient";
 import {
   CATEGORIE_META,
@@ -32,7 +31,7 @@ export default async function AgentDossiersListPage({
   ]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <Link
         href="/dashboard/agent/dossiers"
         className="mb-4 inline-flex items-center gap-1 text-sm font-semibold text-slate-600 hover:text-nexus-blue-950"
@@ -48,7 +47,7 @@ export default async function AgentDossiersListPage({
           <Icon className={`h-7 w-7 ${meta.iconColor}`} />
         </div>
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
             Catégorie
           </p>
           <h1 className="font-display text-3xl font-bold text-nexus-blue-950">
@@ -64,8 +63,9 @@ export default async function AgentDossiersListPage({
         demandes={demandes}
         agents={agents.map((a) => ({ id: a.id, nom: a.nom, prenom: a.prenom }))}
         role={profile.role}
+        currentUserId={profile.id}
         baseDetailHref={`/dashboard/agent/dossiers/${params.categorie}`}
       />
-    </DashboardShell>
+    </>
   );
 }

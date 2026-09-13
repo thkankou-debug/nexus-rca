@@ -31,14 +31,26 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
+// P3 (migration 049a/049b) : machine à états à 15 valeurs remplace les 7
+// valeurs 2026-04 — les 16 dossiers réels ont été réassignés, ces libellés
+// doivent suivre sous peine d'afficher des zéros partout. Panneau simple,
+// pas redessiné : la vraie refonte du pipeline (étapes cliquables) est A4.
 const STATUSES_PIPELINE: { key: DemandeStatus; label: string; tone: string }[] = [
-  { key: "nouveau", label: "Nouveau", tone: "bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-300" },
-  { key: "en_cours", label: "En cours", tone: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300" },
-  { key: "en_attente", label: "En attente", tone: "bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-300" },
-  { key: "incomplet", label: "Incomplet", tone: "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300" },
-  { key: "en_traitement", label: "En traitement", tone: "bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300" },
-  { key: "complete", label: "Complétée", tone: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300" },
+  { key: "nouvelle_demande", label: "Nouvelle demande", tone: "bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-300" },
+  { key: "qualification", label: "Qualification", tone: "bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-300" },
+  { key: "documents_demandes", label: "Documents demandés", tone: "bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-300" },
+  { key: "dossier_incomplet", label: "Dossier incomplet", tone: "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300" },
+  { key: "etude_faisabilite", label: "Étude de faisabilité", tone: "bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300" },
+  { key: "devis_envoye", label: "Devis envoyé", tone: "bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300" },
+  { key: "devis_accepte", label: "Devis accepté", tone: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300" },
+  { key: "paiement_attente", label: "Paiement en attente", tone: "bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-300" },
+  { key: "traitement", label: "Traitement", tone: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300" },
+  { key: "transmis_partenaire", label: "Transmis partenaire", tone: "bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300" },
+  { key: "decision_recue", label: "Décision reçue", tone: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300" },
+  { key: "termine", label: "Terminée", tone: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300" },
+  { key: "refuse", label: "Refusée", tone: "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300" },
   { key: "annule", label: "Annulée", tone: "bg-slate-100 text-slate-600 dark:bg-slate-500/15 dark:text-slate-300" },
+  { key: "archive", label: "Archivée", tone: "bg-slate-100 text-slate-600 dark:bg-slate-500/15 dark:text-slate-300" },
 ];
 
 function formatMoney(amount: number, currency = "XAF"): string {
@@ -80,13 +92,13 @@ export default async function AdminDashboardPage() {
       .neq("statut", "complete")
       .order("created_at", { ascending: false })
       .limit(5),
-    // RDV aujourd'hui
+    // RDV aujourd'hui (D3 : appointments est la table canonique, rendez_vous
+    // est obsolète — voir migration 054)
     supabase
-      .from("rendez_vous")
-      .select("id, date_rdv, sujet, statut, client_id")
-      .gte("date_rdv", todayISO)
-      .lt("date_rdv", tomorrowISO)
-      .order("date_rdv", { ascending: true }),
+      .from("appointments")
+      .select("id, rdv_date, rdv_heure, service_type, statut, client_id")
+      .eq("rdv_date", todayISO.split("T")[0])
+      .order("rdv_heure", { ascending: true }),
     // Paiements aujourd'hui
     supabase
       .from("payments")
@@ -114,6 +126,9 @@ export default async function AdminDashboardPage() {
   // ─── Aggrégations ────────────────────────────────────────────────────────
   const allStatuts = (pipelineRes.data || []) as { statut: DemandeStatus }[];
   const pipelineCounts: Record<DemandeStatus, number> = {
+    // Valeurs 2026-04 : conservees pour le typage (l'enum ne les retire
+    // jamais), plus aucun dossier reel ne les porte depuis la reassignation
+    // P3 (migration 049b) — voir docs/AUDIT_CRM.md.
     nouveau: 0,
     en_cours: 0,
     en_attente: 0,
@@ -121,10 +136,32 @@ export default async function AdminDashboardPage() {
     en_traitement: 0,
     complete: 0,
     annule: 0,
+    nouvelle_demande: 0,
+    qualification: 0,
+    documents_demandes: 0,
+    dossier_incomplet: 0,
+    etude_faisabilite: 0,
+    devis_envoye: 0,
+    devis_accepte: 0,
+    paiement_attente: 0,
+    traitement: 0,
+    transmis_partenaire: 0,
+    decision_recue: 0,
+    termine: 0,
+    refuse: 0,
+    archive: 0,
   };
   for (const d of allStatuts) pipelineCounts[d.statut] = (pipelineCounts[d.statut] ?? 0) + 1;
   const totalDemandes = allStatuts.length;
-  const aTraiter = pipelineCounts.nouveau + pipelineCounts.en_cours + pipelineCounts.en_attente + pipelineCounts.incomplet + pipelineCounts.en_traitement;
+  // "À traiter" = tout dossier qui n'est pas dans un état final — plus
+  // robuste qu'une liste d'états actifs a maintenir a la main (P3).
+  const aTraiter =
+    totalDemandes -
+    (pipelineCounts.termine +
+      pipelineCounts.refuse +
+      pipelineCounts.annule +
+      pipelineCounts.archive +
+      pipelineCounts.complete);
 
   const nonAssignees = (nonAssigneesRes.data || []) as Demande[];
   const rdvToday = rdvTodayRes.data || [];
@@ -361,31 +398,24 @@ export default async function AdminDashboardPage() {
             />
           ) : (
             <ul className="space-y-2">
-              {rdvToday.map((r) => {
-                const date = new Date(r.date_rdv);
-                const heure = date.toLocaleTimeString("fr-FR", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                });
-                return (
-                  <li
-                    key={r.id}
-                    className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50/60 px-4 py-3"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <span className="rounded-lg bg-nexus-orange-100 px-2 py-1 text-[10px] font-bold text-nexus-orange-700 tabular-nums">
-                        {heure}
-                      </span>
-                      <p className="truncate text-sm font-semibold text-nexus-blue-950">
-                        {r.sujet || "RDV"}
-                      </p>
-                    </div>
-                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                      {r.statut}
+              {rdvToday.map((r) => (
+                <li
+                  key={r.id}
+                  className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50/60 px-4 py-3"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="rounded-lg bg-brand-subtle px-2 py-1 text-[10px] font-bold text-brand-hover tabular-nums">
+                      {r.rdv_heure}
                     </span>
-                  </li>
-                );
-              })}
+                    <p className="truncate text-sm font-semibold text-nexus-blue-950">
+                      {r.service_type || "RDV"}
+                    </p>
+                  </div>
+                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                    {r.statut}
+                  </span>
+                </li>
+              ))}
             </ul>
           )}
         </SectionPanel>
@@ -429,7 +459,7 @@ export default async function AdminDashboardPage() {
                       </p>
                     </div>
                   </div>
-                  <p className="font-display text-sm font-bold text-nexus-orange-600 tabular-nums">
+                  <p className="font-display text-sm font-bold text-brand-hover tabular-nums">
                     {formatMoney(a.total)}
                   </p>
                 </li>
@@ -500,7 +530,7 @@ function SectionPanel({
 }) {
   const accentClass = {
     orange:
-      "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white",
+      "bg-brand text-on-brand",
     rose: "bg-gradient-to-br from-rose-500 to-rose-700 text-white",
     blue: "bg-gradient-to-br from-blue-500 to-blue-700 text-white",
     emerald:
@@ -536,7 +566,7 @@ function SectionPanel({
         {link && (
           <Link
             href={link.href}
-            className="shrink-0 text-xs font-semibold text-nexus-orange-600 hover:underline"
+            className="shrink-0 text-xs font-semibold text-brand-hover hover:underline"
           >
             {link.label}
           </Link>

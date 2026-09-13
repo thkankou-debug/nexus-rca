@@ -145,7 +145,7 @@ export function AssuranceWorldMap() {
             {/* Glow d'ambiance derrière la carte */}
             <div
               aria-hidden
-              className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nexus-orange-500/10 blur-[120px]"
+              className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/10 blur-[120px]"
             />
             <div
               aria-hidden
@@ -162,15 +162,15 @@ export function AssuranceWorldMap() {
               <defs>
                 <radialGradient id="hub-glow" cx="50%" cy="50%" r="50%">
                   <stop offset="0%" stopColor="#fb923c" stopOpacity="0.6" />
-                  <stop offset="60%" stopColor="#f97316" stopOpacity="0.18" />
-                  <stop offset="100%" stopColor="#f97316" stopOpacity="0" />
+                  <stop offset="60%" stopColor="#B99760" stopOpacity="0.18" />
+                  <stop offset="100%" stopColor="#B99760" stopOpacity="0" />
                 </radialGradient>
                 <radialGradient id="capital-glow-orange" cx="50%" cy="50%" r="50%">
                   <stop offset="0%" stopColor="#fdba74" stopOpacity="0.55" />
-                  <stop offset="80%" stopColor="#f97316" stopOpacity="0" />
+                  <stop offset="80%" stopColor="#B99760" stopOpacity="0" />
                 </radialGradient>
                 <linearGradient id="route-grad" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="#f97316" stopOpacity="0.55" />
+                  <stop offset="0%" stopColor="#B99760" stopOpacity="0.55" />
                   <stop offset="50%" stopColor="#fb923c" stopOpacity="0.35" />
                   <stop offset="100%" stopColor="#fb923c" stopOpacity="0.1" />
                 </linearGradient>
@@ -290,7 +290,7 @@ export function AssuranceWorldMap() {
                   cx={HUB.x}
                   cy={HUB.y}
                   r="7"
-                  fill="#f97316"
+                  fill="#B99760"
                   stroke="#fff7ed"
                   strokeWidth="1.5"
                 />
@@ -326,7 +326,7 @@ export function AssuranceWorldMap() {
                   height="18"
                   rx="9"
                   fill="rgba(2,7,31,0.85)"
-                  stroke="rgba(249,115,22,0.4)"
+                  stroke="rgba(185,151,96,0.4)"
                   strokeWidth="0.8"
                 />
                 <text
@@ -347,15 +347,15 @@ export function AssuranceWorldMap() {
             {/* Légende sous la carte */}
             <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-[10px] font-bold uppercase tracking-[0.18em] text-white/50 sm:gap-6">
               <span className="inline-flex items-center gap-2">
-                <span className="inline-block h-2 w-2 rounded-full bg-nexus-orange-500 ring-2 ring-nexus-orange-500/30" />
+                <span className="inline-block h-2 w-2 rounded-full bg-brand ring-2 ring-brand/30" />
                 Hub Bangui
               </span>
               <span className="inline-flex items-center gap-2">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-nexus-orange-300" />
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-brand" />
                 Capitales partenaires
               </span>
               <span className="inline-flex items-center gap-2">
-                <span className="inline-block h-px w-6 bg-gradient-to-r from-nexus-orange-500/60 to-nexus-orange-300/0" />
+                <span className="inline-block h-px w-6 bg-gradient-to-r from-brand/60 to-brand/0" />
                 Réseau d&rsquo;assistance
               </span>
             </div>
@@ -369,20 +369,20 @@ export function AssuranceWorldMap() {
             return (
               <div
                 key={kpi.label}
-                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-5 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-nexus-orange-400/40 hover:bg-white/[0.06]"
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-5 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-brand/40 hover:bg-white/[0.06]"
               >
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
+                  className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/15"
                 />
                 <div className="relative">
-                  <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500/30 to-nexus-orange-700/20 ring-1 ring-nexus-orange-400/30">
-                    <Icon className="h-4 w-4 text-nexus-orange-300" />
+                  <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand/30 to-brand/20 ring-1 ring-brand/30">
+                    <Icon className="h-4 w-4 text-brand" />
                   </div>
                   <div className="mt-4 font-display text-3xl font-bold leading-none text-white sm:text-4xl">
                     {kpi.value}
                   </div>
-                  <div className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300">
+                  <div className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
                     {kpi.label}
                   </div>
                   <p className="mt-2 text-xs leading-relaxed text-slate-400">

@@ -221,7 +221,7 @@ export function ChangeForm() {
         consentement_examen: form.consentement_examen,
         consentement_documents: form.consentement_traitement,
         consentement_recontact: true,
-        statut: "nouveau",
+        statut: "nouvelle_demande",
       });
 
       if (error) throw error;
@@ -298,7 +298,7 @@ export function ChangeForm() {
           <button
             type="button"
             onClick={handleNext}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-3 text-body-sm font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-3 text-body-sm font-semibold text-on-brand shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
           >
             Continuer
             <ArrowRight className="h-4 w-4" />
@@ -340,7 +340,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
           Devis de change — taux du jour annoncé avant déplacement
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-body-lg text-ink-muted">
-          Environ 3 minutes. Vos réponses nous permettent d'établir un devis
+          Environ 3 minutes. Vos réponses nous permettent d&apos;établir un devis
           précis avec le taux du jour. Un conseiller Nexus reprend contact
           sous 30 minutes en heures ouvrées.
         </p>
@@ -355,14 +355,14 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
           <button
             type="button"
             onClick={onStart}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-on-brand shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange"
           >
             <FileText className="h-5 w-5" />
             Demander mon devis
             <ArrowRight className="h-5 w-5" />
           </button>
           <p className="text-caption text-ink-muted">
-            Vous préférez parler à quelqu'un d'abord ?{" "}
+            Vous préférez parler à quelqu&apos;un d&apos;abord ?{" "}
             <Link
               href="/rendez-vous?service=change"
               className="font-semibold text-brand underline-offset-4 hover:underline"
@@ -422,7 +422,7 @@ function Stepper({
                   onClick={() => onStepClick(step.id as 1 | 2 | 3 | 4 | 5)}
                   className={cn(
                     "flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all",
-                    done && "border-brand bg-brand text-white shadow-elev-2",
+                    done && "border-brand bg-brand text-on-brand shadow-elev-2",
                     current &&
                       "border-brand bg-surface-elevated text-brand shadow-glow-orange ring-4 ring-brand-subtle",
                     !done &&
@@ -570,9 +570,9 @@ function Step1({
 
       <div className="mt-6">
         <Notice tone="neutral">
-          <strong>Information.</strong> Une pièce d'identité est requise au-delà
+          <strong>Information.</strong> Une pièce d&apos;identité est requise au-delà
           du seuil réglementaire applicable. Pour les petites transactions
-          courantes, ce n'est généralement pas exigé.
+          courantes, ce n&apos;est généralement pas exigé.
         </Notice>
       </div>
     </StepCard>
@@ -672,7 +672,7 @@ function Step2({
       <div className="mt-6 space-y-3">
         {showSameDeviseHint && (
           <Notice tone="warn">
-            <strong>Devise identique.</strong> La devise de départ et d'arrivée
+            <strong>Devise identique.</strong> La devise de départ et d&apos;arrivée
             doivent être différentes pour une opération de change.
           </Notice>
         )}
@@ -772,8 +772,8 @@ function Step3({
         )}
         {showSameDayLargeWarning && (
           <Notice tone="warn">
-            <strong>Gros montant + aujourd'hui.</strong> La disponibilité du
-            cash en agence n'est pas toujours immédiate sur ces tranches. Le
+            <strong>Gros montant + aujourd&apos;hui.</strong> La disponibilité du
+            cash en agence n&apos;est pas toujours immédiate sur ces tranches. Le
             conseiller vous confirmera la faisabilité dans la journée.
           </Notice>
         )}
@@ -967,7 +967,7 @@ function Step5({
             type="button"
             onClick={onSubmit}
             disabled={loading}
-            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-white shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-body font-semibold text-on-brand shadow-elev-3 transition hover:bg-brand-hover hover:shadow-glow-orange disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? (
               <Loader2 className="h-5 w-5 animate-spin" />
@@ -1117,7 +1117,7 @@ function SuccessScreen({
         <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
           <Link
             href="/dashboard"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-body-sm font-semibold text-white shadow-elev-2 transition hover:bg-brand-hover hover:shadow-glow-orange"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-body-sm font-semibold text-on-brand shadow-elev-2 transition hover:bg-brand-hover hover:shadow-glow-orange"
           >
             Mon espace client
             <ArrowRight className="h-4 w-4" />
@@ -1127,7 +1127,7 @@ function SuccessScreen({
             onClick={() => router.push("/")}
             className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-line-strong bg-surface-elevated px-6 py-3 text-body-sm font-semibold text-ink transition hover:bg-surface-sunken"
           >
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </button>
         </div>
 

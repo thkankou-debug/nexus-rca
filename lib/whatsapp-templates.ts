@@ -27,7 +27,7 @@ export function tplRdvConfirmation(p: {
     `🎯 Service : ${p.service}`,
     `🔖 Référence : ${p.reference}`,
     "",
-    `Adresse : Relais Sica, vers Hôpital Général, Bangui.`,
+    `Adresse : Croisement Marabena, Route de l'Aéroport, Bangui.`,
     `Suivi : ${SITE_URL}/dashboard/client/rdv`,
   ].join("\n") + SIGNATURE;
 }
@@ -48,7 +48,7 @@ export function tplRdvReminder(p: {
     `🎯 ${p.service}`,
     `🔖 ${p.reference}`,
     "",
-    `📍 Relais Sica, vers Hôpital Général, Bangui.`,
+    `📍 Croisement Marabena, Route de l'Aéroport, Bangui.`,
     "",
     `Si empêchement, prévenez-nous au plus vite.`,
   ].join("\n") + SIGNATURE;

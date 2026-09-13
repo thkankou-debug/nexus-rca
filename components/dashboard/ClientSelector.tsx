@@ -128,8 +128,8 @@ export function ClientSelector({
     <div className="relative">
       {/* Si un client est sélectionné, on l'affiche avec option de retirer */}
       {selectedClient ? (
-        <div className="flex items-center gap-3 rounded-xl border-2 border-nexus-orange-300 bg-nexus-orange-50 p-3">
-          <CheckCircle2 className="h-5 w-5 shrink-0 text-nexus-orange-600" />
+        <div className="flex items-center gap-3 rounded-xl border-2 border-brand/40 bg-brand-subtle p-3">
+          <CheckCircle2 className="h-5 w-5 shrink-0 text-brand-hover" />
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <span className="font-semibold text-nexus-blue-950">
@@ -168,7 +168,7 @@ export function ClientSelector({
               }}
               onFocus={() => setShowDropdown(true)}
               placeholder="Rechercher un client par nom, email, téléphone..."
-              className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-10 pr-4 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+              className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-10 pr-4 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
             />
             {loading && (
               <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-slate-400" />

@@ -1,7 +1,6 @@
 import { Plane } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import {
   VisaExpressManager,
@@ -33,18 +32,18 @@ export default async function AgentDemandesVisaPage() {
   const rows = (data || []) as VisaExpressRow[];
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/agent"
         label="Retour au tableau de bord"
       />
 
       <header className="mb-10 flex flex-wrap items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-sm">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-sm">
           <Plane className="h-5 w-5" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
             Pipeline visa
           </p>
           <h1 className="mt-1 font-display text-2xl font-bold text-nexus-blue-950 sm:text-3xl">
@@ -58,6 +57,6 @@ export default async function AgentDemandesVisaPage() {
       </header>
 
       <VisaExpressManager initialRows={rows} readOnly />
-    </DashboardShell>
+    </>
   );
 }

@@ -27,7 +27,8 @@ import {
   PaymentForm,
   type Payment,
   type PaymentStatus,
-  type PaymentMethod,
+  type PaymentStatusCanonical,
+  type PaymentMethodCanonical,
 } from "./PaymentForm";
 import { ReceiptButtons } from "./PaymentReceipt";
 
@@ -53,15 +54,22 @@ const STATUS_COLORS: Record<PaymentStatus, string> = {
   annule: "bg-slate-100 text-slate-500 border-slate-200",
 };
 
-const METHOD_LABELS: Record<PaymentMethod, string> = {
-  especes: "Espèces",
-  virement: "Virement",
+// P6-0 : libelles pour payment.method (canonique, D1) - couvre aussi les
+// methodes venues du paiement par lien public (orange_money/mtn_money/
+// express_union/stripe), absentes du formulaire staff.
+const METHOD_LABELS_CANONICAL: Record<PaymentMethodCanonical, string> = {
+  cash: "Espèces",
+  bank_transfer: "Virement",
+  card: "Carte",
+  other: "Autre",
   mobile_money: "Mobile Money",
   western_union: "Western Union",
   moneygram: "MoneyGram",
-  carte: "Carte",
   cheque: "Chèque",
-  autre: "Autre",
+  orange_money: "Orange Money",
+  mtn_money: "MTN Mobile Money",
+  express_union: "Express Union",
+  stripe: "Carte (Stripe)",
 };
 
 const STATUSES: PaymentStatus[] = [
@@ -71,6 +79,35 @@ const STATUSES: PaymentStatus[] = [
   "rembourse",
   "annule",
 ];
+
+// P6-0 : le filtre UI et les libelles/couleurs restent en francais (labels
+// existants), la comparaison et la lecture se font desormais sur
+// payment.status (canonique, D1).
+const FILTER_TO_CANONICAL: Record<PaymentStatus, PaymentStatusCanonical> = {
+  non_paye: "pending",
+  partiel: "partial",
+  paye: "paid",
+  rembourse: "refunded",
+  annule: "voided",
+};
+
+const CANONICAL_TO_FILTER: Partial<Record<PaymentStatusCanonical, PaymentStatus>> = {
+  pending: "non_paye",
+  partial: "partiel",
+  paid: "paye",
+  refunded: "rembourse",
+  voided: "annule",
+};
+
+function statusLabel(status: PaymentStatusCanonical): string {
+  const key = CANONICAL_TO_FILTER[status];
+  return key ? STATUS_LABELS[key] : status;
+}
+
+function statusColor(status: PaymentStatusCanonical): string {
+  const key = CANONICAL_TO_FILTER[status];
+  return key ? STATUS_COLORS[key] : "bg-slate-100 text-slate-700 border-slate-200";
+}
 
 function formatMoney(amount: number, currency = "XAF"): string {
   return `${amount.toLocaleString("fr-FR")} ${currency}`;
@@ -121,7 +158,8 @@ export function PaymentsManager({
 
   const filtered = useMemo(() => {
     let list = payments;
-    if (filter !== "all") list = list.filter((p) => p.statut === filter);
+    if (filter !== "all")
+      list = list.filter((p) => p.status === FILTER_TO_CANONICAL[filter]);
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter(
@@ -138,11 +176,11 @@ export function PaymentsManager({
   const counts = useMemo(() => {
     return {
       all: payments.length,
-      non_paye: payments.filter((p) => p.statut === "non_paye").length,
-      partiel: payments.filter((p) => p.statut === "partiel").length,
-      paye: payments.filter((p) => p.statut === "paye").length,
-      rembourse: payments.filter((p) => p.statut === "rembourse").length,
-      annule: payments.filter((p) => p.statut === "annule").length,
+      non_paye: payments.filter((p) => p.status === "pending").length,
+      partiel: payments.filter((p) => p.status === "partial").length,
+      paye: payments.filter((p) => p.status === "paid").length,
+      rembourse: payments.filter((p) => p.status === "refunded").length,
+      annule: payments.filter((p) => p.status === "voided").length,
     };
   }, [payments]);
 
@@ -218,7 +256,7 @@ export function PaymentsManager({
             placeholder="Rechercher par client, référence, service..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
           />
         </div>
         <button
@@ -227,7 +265,7 @@ export function PaymentsManager({
             setEditingPayment(null);
             setShowForm(true);
           }}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 transition hover:bg-brand-hover"
         >
           <Plus className="h-4 w-4" />
           Nouveau paiement
@@ -262,7 +300,7 @@ export function PaymentsManager({
             <button
               type="button"
               onClick={() => setShowForm(true)}
-              className="mt-4 inline-flex items-center gap-2 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white hover:bg-nexus-orange-600"
+              className="mt-4 inline-flex items-center gap-2 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-on-brand hover:bg-brand-hover"
             >
               <Plus className="h-4 w-4" />
               Enregistrer le premier paiement
@@ -394,14 +432,14 @@ function PaymentCard({
               <span
                 className={cn(
                   "rounded-full border px-2.5 py-0.5 text-xs font-semibold",
-                  STATUS_COLORS[payment.statut]
+                  statusColor(payment.status)
                 )}
               >
-                {STATUS_LABELS[payment.statut]}
+                {statusLabel(payment.status)}
               </span>
               {payment.client_record_id && (
                 <Link
-                  href={`/dashboard/super-admin/clients/${payment.client_record_id}`}
+                  href={`/dashboard/clients/${payment.client_record_id}`}
                   className="inline-flex items-center gap-1 rounded-full bg-nexus-blue-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-nexus-blue-700 transition hover:bg-nexus-blue-200"
                 >
                   <UserCircle className="h-3 w-3" />
@@ -431,15 +469,15 @@ function PaymentCard({
             <div
               className={cn(
                 "h-full transition-all",
-                payment.statut === "paye"
+                payment.status === "paid"
                   ? "bg-green-500"
-                  : "bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600"
+                  : "bg-brand"
               )}
               style={{ width: `${Math.min(100, pct)}%` }}
             />
           </div>
           {restant > 0 && (
-            <p className="mt-1 text-xs text-nexus-orange-600">
+            <p className="mt-1 text-xs text-brand-hover">
               Restant : {formatMoney(restant, payment.devise)}
             </p>
           )}
@@ -450,7 +488,7 @@ function PaymentCard({
             <Calendar className="h-3.5 w-3.5" />
             {formatDate(payment.date_paiement)}
           </span>
-          <span>{METHOD_LABELS[payment.mode_paiement]}</span>
+          <span>{METHOD_LABELS_CANONICAL[payment.method]}</span>
           {agentInfo && (
             <span className="inline-flex items-center gap-1">
               <User className="h-3.5 w-3.5" />
@@ -555,7 +593,7 @@ function StatBlock({
   const colorMap = {
     blue: "from-nexus-blue-600 to-nexus-blue-800",
     green: "from-emerald-400 to-emerald-600",
-    orange: "from-nexus-orange-400 to-nexus-orange-600",
+    orange: "from-brand to-brand",
   };
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">

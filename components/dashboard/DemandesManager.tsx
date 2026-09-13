@@ -23,14 +23,24 @@ import { DemandeDocumentsList } from "@/components/dashboard/DemandeDocumentsLis
 import { formatDate, cn } from "@/lib/utils";
 import type { Demande, DemandeStatus } from "@/types";
 
+// P3 (migration 049a/049b) : 15 valeurs remplacent les 7 valeurs 2026-04 —
+// voir docs/AUDIT_CRM.md.
 const STATUSES: DemandeStatus[] = [
-  "nouveau",
-  "en_cours",
-  "en_attente",
-  "incomplet",
-  "en_traitement",
-  "complete",
+  "nouvelle_demande",
+  "qualification",
+  "documents_demandes",
+  "dossier_incomplet",
+  "etude_faisabilite",
+  "devis_envoye",
+  "devis_accepte",
+  "paiement_attente",
+  "traitement",
+  "transmis_partenaire",
+  "decision_recue",
+  "termine",
+  "refuse",
   "annule",
+  "archive",
 ];
 
 export function DemandesManager({
@@ -50,21 +60,30 @@ export function DemandesManager({
   const filtered =
     filter === "all" ? demandes : demandes.filter((d) => d.statut === filter);
 
+  // Cahier des charges §7.2 (12/09/2026) : toute transition passe par la
+  // route serveur — historique (demande_status_history), machine à états,
+  // audit et email client. L'ancienne écriture directe Supabase contournait
+  // tout cela et laissait l'historique vide (cause du constat A6 #11).
   const updateStatus = async (id: string, statut: DemandeStatus) => {
     setSavingId(id);
-    const { error } = await supabase
-      .from("demandes")
-      .update({ statut })
-      .eq("id", id);
-    setSavingId(null);
-    if (error) {
-      toast.error("Erreur de mise a jour");
-      return;
+    try {
+      const res = await fetch(`/api/demandes/${id}/status`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ statut }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || json.success === false) {
+        toast.error(json.error || "Erreur de mise a jour");
+        return;
+      }
+      setDemandes((list) =>
+        list.map((d) => (d.id === id ? { ...d, statut } : d))
+      );
+      toast.success("Statut mis a jour");
+    } finally {
+      setSavingId(null);
     }
-    setDemandes((list) =>
-      list.map((d) => (d.id === id ? { ...d, statut } : d))
-    );
-    toast.success("Statut mis a jour");
   };
 
   const saveNotes = async (id: string, notes: string) => {
@@ -149,7 +168,7 @@ export function DemandesManager({
                         <StatusBadge status={d.statut} />
                         <UrgenceBadge level={d.urgence} />
                         {d.traitement_prioritaire && (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600 px-2 py-0.5 text-xs font-semibold text-white">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-brand px-2 py-0.5 text-xs font-semibold text-on-brand">
                             <Zap className="h-3 w-3" />
                             Prioritaire
                           </span>
@@ -321,7 +340,7 @@ export function DemandesManager({
                             updateStatus(d.id, e.target.value as DemandeStatus)
                           }
                           disabled={savingId === d.id}
-                          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
                         >
                           {STATUSES.map((s) => (
                             <option key={s} value={s}>
@@ -490,7 +509,7 @@ function NotesEditor({
         onChange={(e) => setValue(e.target.value)}
         rows={3}
         placeholder="Notes pour l equipe (non visibles par le client)"
-        className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+        className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
       />
       <div className="mt-2 flex justify-end">
         <button

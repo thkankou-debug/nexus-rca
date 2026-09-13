@@ -1,7 +1,6 @@
 import { AlertTriangle, Plane } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { MyLeavesClient } from "@/components/dashboard/rh/MyLeavesClient";
 import type { Employee } from "@/types";
@@ -28,7 +27,7 @@ export default async function AgentMyLeavesPage() {
 
   if (!employee) {
     return (
-      <DashboardShell profile={profile}>
+      <>
         <BackButton
           fallbackHref="/dashboard/agent/mes-rh"
           label="Retour à mon espace RH"
@@ -60,19 +59,19 @@ export default async function AgentMyLeavesPage() {
             </div>
           </div>
         </div>
-      </DashboardShell>
+      </>
     );
   }
 
   const emp = employee as Employee;
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/agent/mes-rh"
         label="Retour à mon espace RH"
       />
       <MyLeavesClient employeeId={emp.id} employeeName={emp.nom_complet} />
-    </DashboardShell>
+    </>
   );
 }

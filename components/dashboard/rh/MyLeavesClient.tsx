@@ -172,15 +172,15 @@ export function MyLeavesClient({ employeeId, employeeName }: Props) {
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 px-6 py-8 shadow-lg sm:px-9 sm:py-10">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
+          className="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-brand/15 blur-[120px]"
         />
         <div className="relative flex flex-wrap items-start justify-between gap-4">
           <div className="flex items-start gap-3">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-md">
               <Plane className="h-6 w-6" />
             </div>
             <div className="min-w-0">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-brand backdrop-blur-md">
                 Mes congés
               </span>
               <h1 className="mt-3 font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
@@ -194,7 +194,7 @@ export function MyLeavesClient({ employeeId, employeeName }: Props) {
           <button
             type="button"
             onClick={() => setShowForm(true)}
-            className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-nexus-orange-600"
+            className="inline-flex items-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:-translate-y-0.5 hover:bg-brand-hover"
           >
             <Plus className="h-4 w-4" />
             Nouvelle demande
@@ -204,7 +204,7 @@ export function MyLeavesClient({ employeeId, employeeName }: Props) {
 
       {loading ? (
         <div className="flex items-center justify-center rounded-3xl border border-slate-200 bg-white p-12 shadow-sm">
-          <Loader2 className="h-6 w-6 animate-spin text-nexus-orange-500" />
+          <Loader2 className="h-6 w-6 animate-spin text-brand" />
         </div>
       ) : error ? (
         <div className="flex items-start gap-3 rounded-3xl border border-rose-200 bg-rose-50 p-6 text-sm text-rose-800">
@@ -501,7 +501,7 @@ function LeaveRequestForm({
       >
         <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
               Nouvelle demande
             </p>
             <p className="mt-1 font-display text-base font-bold text-nexus-blue-950">
@@ -526,7 +526,7 @@ function LeaveRequestForm({
             <select
               value={typeId}
               onChange={(e) => setTypeId(e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+              className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
             >
               {types.map((t) => (
                 <option key={t.id} value={t.id} disabled={!t.active}>
@@ -547,7 +547,7 @@ function LeaveRequestForm({
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
               />
             </div>
             <div>
@@ -558,7 +558,7 @@ function LeaveRequestForm({
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
               />
             </div>
           </div>
@@ -569,7 +569,7 @@ function LeaveRequestForm({
                 type="checkbox"
                 checked={halfStart}
                 onChange={(e) => setHalfStart(e.target.checked)}
-                className="h-4 w-4 rounded border-slate-300 text-nexus-orange-500 focus:ring-nexus-orange-200"
+                className="h-4 w-4 rounded border-slate-300 text-brand focus:ring-focus/25"
               />
               Demi-journée début
             </label>
@@ -578,7 +578,7 @@ function LeaveRequestForm({
                 type="checkbox"
                 checked={halfEnd}
                 onChange={(e) => setHalfEnd(e.target.checked)}
-                className="h-4 w-4 rounded border-slate-300 text-nexus-orange-500 focus:ring-nexus-orange-200"
+                className="h-4 w-4 rounded border-slate-300 text-brand focus:ring-focus/25"
               />
               Demi-journée fin
             </label>
@@ -605,7 +605,7 @@ function LeaveRequestForm({
               onChange={(e) => setReason(e.target.value)}
               rows={3}
               placeholder="Précisez le motif de la demande…"
-              className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm placeholder:text-slate-400 focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+              className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm placeholder:text-slate-400 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
             />
           </div>
 
@@ -615,7 +615,7 @@ function LeaveRequestForm({
                 Justificatif <span className="text-rose-600">*</span>
               </label>
               <div className="mt-1.5 flex items-center gap-3 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50/60 px-3 py-3">
-                <Upload className="h-5 w-5 text-nexus-orange-500" />
+                <Upload className="h-5 w-5 text-brand" />
                 <input
                   type="file"
                   accept="application/pdf,image/jpeg,image/png,image/webp"
@@ -648,7 +648,7 @@ function LeaveRequestForm({
             <button
               type="submit"
               disabled={submitting}
-              className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-on-brand shadow-sm hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               {submitting ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />

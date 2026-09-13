@@ -126,7 +126,7 @@ export default async function SuperAdminRdvPage({
   return (
     <DashboardShell profile={profile}>
       <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-lg">
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand text-on-brand shadow-lg">
           <Calendar className="h-6 w-6" />
         </div>
         <div>
@@ -134,7 +134,7 @@ export default async function SuperAdminRdvPage({
             Rendez-vous
           </h1>
           <p className="mt-1 text-sm text-slate-600">
-            Tous les rendez-vous de l'agence Nexus.
+            Tous les rendez-vous de l&apos;agence Nexus.
           </p>
         </div>
       </div>
@@ -220,7 +220,7 @@ function StatCard({
     blue: "from-nexus-blue-700 to-nexus-blue-900",
     amber: "from-amber-500 to-amber-700",
     green: "from-green-500 to-green-700",
-    orange: "from-nexus-orange-500 to-nexus-orange-700",
+    orange: "from-brand to-brand",
   };
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -315,11 +315,11 @@ function AppointmentRow({
 
           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-600">
             <span className="flex items-center gap-1.5">
-              <Calendar className="h-4 w-4 text-nexus-orange-600" />
+              <Calendar className="h-4 w-4 text-brand-hover" />
               {formatDateLong(rdv.rdv_date)}
             </span>
             <span className="flex items-center gap-1.5">
-              <Clock className="h-4 w-4 text-nexus-orange-600" />
+              <Clock className="h-4 w-4 text-brand-hover" />
               {rdv.rdv_heure}
             </span>
           </div>

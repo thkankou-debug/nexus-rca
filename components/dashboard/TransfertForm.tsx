@@ -199,7 +199,7 @@ export function TransfertForm({
         <div className="flex items-center justify-between border-b border-slate-200 p-6">
           <div>
             <h2 className="font-display text-xl font-bold text-nexus-blue-950">
-              Nouveau transfert d'argent
+              Nouveau transfert d&apos;argent
             </h2>
             <p className="mt-1 text-xs text-slate-500">
               Sera envoyé pour validation au super-admin avant exécution.
@@ -366,12 +366,12 @@ export function TransfertForm({
             </div>
 
             {montantTotal > 0 && (
-              <div className="mt-3 rounded-xl border border-nexus-orange-200 bg-nexus-orange-50 p-4">
+              <div className="mt-3 rounded-xl border border-brand/30 bg-brand-subtle p-4">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-slate-700">
                     Montant total à collecter du client :
                   </span>
-                  <span className="font-display text-lg font-bold text-nexus-orange-700">
+                  <span className="font-display text-lg font-bold text-brand-hover">
                     {montantTotal.toLocaleString("fr-FR")} {form.devise}
                   </span>
                 </div>
@@ -440,7 +440,7 @@ export function TransfertForm({
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 transition hover:bg-nexus-orange-600 disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 transition hover:bg-brand-hover disabled:opacity-50"
             >
               {saving ? (
                 <>
@@ -462,7 +462,7 @@ export function TransfertForm({
 }
 
 const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30";
+  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30";
 
 function Section({
   title,
@@ -473,7 +473,7 @@ function Section({
 }) {
   return (
     <div>
-      <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+      <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-brand-hover">
         {title}
       </h3>
       {children}

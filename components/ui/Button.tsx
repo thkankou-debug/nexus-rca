@@ -17,7 +17,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const variantClasses: Record<Variant, string> = {
   // CTA primaire — orange réservé à l'action principale
   primary:
-    "bg-brand hover:bg-brand-hover text-white shadow-elev-2",
+    "bg-brand hover:bg-brand-hover text-on-brand shadow-elev-2",
   // CTA secondaire — dark, neutre, jamais orange
   secondary:
     "bg-nexus-blue-900 hover:bg-nexus-blue-950 text-white shadow-elev-2",

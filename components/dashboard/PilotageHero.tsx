@@ -48,7 +48,7 @@ interface Props {
 
 const STAT_VALUE_CLASS: Record<NonNullable<PilotageStat["accent"]>, string> = {
   white: "text-white",
-  orange: "text-nexus-orange-300",
+  orange: "text-brand",
   rose: "text-rose-300",
   emerald: "text-emerald-300",
   amber: "text-amber-300",
@@ -95,7 +95,7 @@ export function PilotageHero({
       {/* Blobs glow */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
+        className="pointer-events-none absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-brand/15 blur-[120px]"
       />
       <div
         aria-hidden
@@ -105,21 +105,21 @@ export function PilotageHero({
       {/* Bottom orange line */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
       />
 
       <div className="relative">
         {/* TOP BAR — avatar + greeting + alertes badge */}
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-3 sm:gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-base font-bold text-white shadow-md sm:h-14 sm:w-14 sm:text-lg">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand text-base font-bold text-on-brand shadow-md sm:h-14 sm:w-14 sm:text-lg">
               {initials || "U"}
             </div>
             <div className="min-w-0">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300 backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
                 <span className="relative flex h-1 w-1">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                  <span className="relative inline-flex h-1 w-1 rounded-full bg-nexus-orange-400" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                  <span className="relative inline-flex h-1 w-1 rounded-full bg-brand" />
                 </span>
                 Centre de pilotage
               </span>
@@ -153,11 +153,11 @@ export function PilotageHero({
         <div className="mt-7 grid gap-6 sm:mt-9 lg:grid-cols-[1.5fr_1fr] lg:gap-10">
           {/* Main KPI géant */}
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
               {mainKpiLabel}
             </p>
             <p className="mt-2 font-display text-4xl font-bold leading-none tabular-nums text-white sm:text-5xl lg:text-6xl xl:text-7xl">
-              <span className="bg-gradient-to-br from-nexus-orange-300 via-nexus-orange-400 to-nexus-orange-600 bg-clip-text text-transparent">
+              <span className="bg-brand bg-clip-text text-transparent">
                 {mainKpiValue}
               </span>
             </p>
@@ -191,7 +191,7 @@ export function PilotageHero({
             )}
 
             {showSpark && (
-              <div className="mt-5 text-nexus-orange-300/80 sm:mt-6">
+              <div className="mt-5 text-brand/80 sm:mt-6">
                 <Sparkline
                   data={trend7d!}
                   height={64}
@@ -248,9 +248,9 @@ export function PilotageHero({
                 <Link
                   key={a.href}
                   href={a.href}
-                  className="group inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-nexus-orange-400/40 hover:bg-white/10 sm:px-4 sm:py-2 sm:text-sm"
+                  className="group inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-brand/40 hover:bg-white/10 sm:px-4 sm:py-2 sm:text-sm"
                 >
-                  <Icon className="h-3.5 w-3.5 text-nexus-orange-300 transition group-hover:text-nexus-orange-200 sm:h-4 sm:w-4" />
+                  <Icon className="h-3.5 w-3.5 text-brand transition group-hover:text-brand sm:h-4 sm:w-4" />
                   {a.label}
                 </Link>
               );

@@ -150,7 +150,7 @@ export default async function PaymentSuccessPage({
               <div className="rounded-2xl border border-slate-200 bg-slate-50/60 p-4">
                 <p className="text-sm text-slate-700">
                   💡 Conservez la référence{" "}
-                  <strong className="font-mono text-nexus-orange-600">
+                  <strong className="font-mono text-brand-hover">
                     {link.reference}
                   </strong>{" "}
                   pour toute question.

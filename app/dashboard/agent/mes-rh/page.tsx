@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import type { Employee } from "@/types";
 
@@ -59,7 +58,7 @@ export default async function MesRhPage() {
 
   if (!employee) {
     return (
-      <DashboardShell profile={profile}>
+      <>
         <BackButton
           fallbackHref="/dashboard/agent"
           label="Retour au tableau de bord"
@@ -87,20 +86,20 @@ export default async function MesRhPage() {
                 Aucun profil employé associé à votre compte.
               </p>
               <p className="mt-1">
-                Contactez votre administrateur pour qu'il rattache votre compte
+                Contactez votre administrateur pour qu&apos;il rattache votre compte
                 à votre fiche employé.
               </p>
             </div>
           </div>
         </div>
-      </DashboardShell>
+      </>
     );
   }
 
   const emp = employee as Employee;
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/agent"
         label="Retour au tableau de bord"
@@ -109,11 +108,11 @@ export default async function MesRhPage() {
       {/* Hero */}
       <div className="mb-8 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-7 shadow-lg sm:p-9">
         <div className="flex flex-wrap items-center gap-5">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-base font-bold text-white shadow-md">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-brand text-base font-bold text-on-brand shadow-md">
             {emp.nom_complet[0]?.toUpperCase() ?? "U"}
           </div>
           <div className="min-w-0 flex-1">
-            <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] text-nexus-orange-300">
+            <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] text-brand">
               Mon espace RH
             </span>
             <h1 className="mt-1.5 font-display text-xl font-bold leading-tight text-white sm:text-2xl">
@@ -164,7 +163,7 @@ export default async function MesRhPage() {
           description="Tous mes documents RH (diplômes, pièces…)."
         />
       </div>
-    </DashboardShell>
+    </>
   );
 }
 
@@ -198,7 +197,7 @@ function TileLink({
       className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:bg-slate-50/60"
     >
       <div className="flex items-center justify-between">
-        <Icon className="h-6 w-6 text-nexus-orange-500" />
+        <Icon className="h-6 w-6 text-brand" />
         <ArrowUpRight className="h-4 w-4 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-nexus-blue-950" />
       </div>
       <h3 className="mt-3 font-display text-lg font-bold text-nexus-blue-950">

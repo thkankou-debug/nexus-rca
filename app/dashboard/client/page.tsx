@@ -142,7 +142,7 @@ export default async function ClientDashboard() {
   const { data: paiementsData } = await supabase
     .from("payments")
     .select(
-      "id, reference, service, montant_total, montant_recu, devise, statut, date_paiement, client_email"
+      "id, reference, service, montant_total, montant_recu, devise, status, date_paiement, client_email"
     )
     .eq("client_email", userEmail)
     .order("date_paiement", { ascending: false })
@@ -184,7 +184,7 @@ export default async function ClientDashboard() {
   const totalPaye = paiements.reduce((s, p) => s + Number(p.montant_recu || 0), 0);
   const totalDu = paiements.reduce((s, p) => s + Number(p.montant_total || 0), 0);
   const totalRestant = Math.max(0, totalDu - totalPaye);
-  const partiels = paiements.filter((p) => p.statut === "partiel");
+  const partiels = paiements.filter((p) => p.status === "partial");
 
   const dossiersEnCours = demandes.filter((d) => isDossierEnCours(d.statut || "")).length;
   const dossiersTermines = demandes.filter((d) => {
@@ -217,9 +217,9 @@ export default async function ClientDashboard() {
       {/* HEADER */}
       <div className="mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-6 sm:p-8">
         <div className="relative">
-          <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-nexus-orange-500/20 blur-3xl" />
+          <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-brand/20 blur-3xl" />
           <div className="relative">
-            <div className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-nexus-orange-400 backdrop-blur">
+            <div className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand backdrop-blur">
               <Sparkles className="h-3 w-3" />
               NEXUS CONNECT
             </div>
@@ -291,7 +291,7 @@ export default async function ClientDashboard() {
                 action={
                   <Link
                     href="/demande/complet"
-                    className="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-body-sm font-semibold text-white shadow-elev-2 hover:bg-brand-hover"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-body-sm font-semibold text-on-brand shadow-elev-2 hover:bg-brand-hover"
                   >
                     Faire une demande
                     <ArrowRight className="h-3.5 w-3.5" />
@@ -351,7 +351,7 @@ export default async function ClientDashboard() {
                               {status.label}
                             </span>
                           </div>
-                          <p className="font-mono text-[11px] text-nexus-orange-600">
+                          <p className="font-mono text-[11px] text-brand-hover">
                             {ref}
                           </p>
                           <p className="text-xs text-slate-500">
@@ -364,7 +364,7 @@ export default async function ClientDashboard() {
                             </span>
                             <span className="h-1 w-24 overflow-hidden rounded-full bg-slate-100">
                               <span
-                                className="block h-full bg-nexus-orange-500"
+                                className="block h-full bg-brand"
                                 style={{
                                   width: `${Math.min(100, (step / 6) * 100)}%`,
                                 }}
@@ -383,7 +383,7 @@ export default async function ClientDashboard() {
                               </span>
                             )}
                             {docsReq > 0 && (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-nexus-orange-100 px-2 py-0.5 font-semibold text-nexus-orange-700">
+                              <span className="inline-flex items-center gap-1 rounded-full bg-brand-subtle px-2 py-0.5 font-semibold text-brand-hover">
                                 <AlertCircle className="h-3 w-3" />
                                 {docsReq} document{docsReq > 1 ? "s" : ""} à fournir
                               </span>
@@ -421,7 +421,7 @@ export default async function ClientDashboard() {
                   <FinanceBlock
                     label="Restant"
                     value={formatMoney(totalRestant)}
-                    color={totalRestant > 0 ? "text-nexus-orange-600" : "text-green-600"}
+                    color={totalRestant > 0 ? "text-brand-hover" : "text-green-600"}
                   />
                 </div>
                 {partiels.length > 0 && (
@@ -453,7 +453,7 @@ export default async function ClientDashboard() {
                             {formatMoney(Number(p.montant_recu), p.devise)}
                           </p>
                           {restant > 0 && (
-                            <p className="text-[10px] font-semibold text-nexus-orange-600">
+                            <p className="text-[10px] font-semibold text-brand-hover">
                               Reste : {formatMoney(restant, p.devise)}
                             </p>
                           )}
@@ -471,13 +471,13 @@ export default async function ClientDashboard() {
         <div className="space-y-6">
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div className="relative bg-gradient-to-br from-nexus-blue-950 to-nexus-blue-800 p-6">
-              <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-nexus-orange-500/20 blur-2xl" />
+              <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-brand/20 blur-2xl" />
               <div className="relative flex items-center gap-4">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 font-display text-xl font-bold text-white shadow-lg">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-brand font-display text-xl font-bold text-on-brand shadow-lg">
                   {agentInitials || <UserCircle className="h-8 w-8" />}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold uppercase tracking-wider text-nexus-orange-400">
+                  <p className="text-xs font-bold uppercase tracking-wider text-brand">
                     {hasAgent ? "Votre agent dédié" : "Nous sommes là pour vous"}
                   </p>
                   <h3 className="mt-1 font-display text-lg font-bold text-white">
@@ -521,14 +521,14 @@ export default async function ClientDashboard() {
 
               <a
                 href={`mailto:${agentEmail}?subject=Question concernant mon dossier Nexus`}
-                className="flex items-center gap-3 rounded-xl border border-nexus-orange-200 bg-nexus-orange-50 p-3 transition hover:bg-nexus-orange-100"
+                className="flex items-center gap-3 rounded-xl border border-brand/30 bg-brand-subtle p-3 transition hover:bg-brand-subtle"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-nexus-orange-500 text-white shadow">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-on-brand shadow">
                   <Mail className="h-5 w-5" />
                 </span>
                 <span>
-                  <span className="block text-sm font-bold text-nexus-orange-900">Email</span>
-                  <span className="block text-xs text-nexus-orange-700">Pour le détail</span>
+                  <span className="block text-sm font-bold text-brand-hover">Email</span>
+                  <span className="block text-xs text-brand-hover">Pour le détail</span>
                 </span>
               </a>
             </div>
@@ -537,7 +537,7 @@ export default async function ClientDashboard() {
           {rdvs.length > 0 && (
             <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
               <div className="flex items-center gap-2 border-b border-slate-100 p-4">
-                <Calendar className="h-5 w-5 text-nexus-orange-600" />
+                <Calendar className="h-5 w-5 text-brand-hover" />
                 <h3 className="font-display text-base font-bold text-nexus-blue-950">
                   Mes rendez-vous
                 </h3>
@@ -565,9 +565,9 @@ export default async function ClientDashboard() {
 
           <Link
             href="/demande/complet"
-            className="block rounded-2xl border-2 border-dashed border-nexus-orange-300 bg-nexus-orange-50 p-5 text-center transition hover:bg-nexus-orange-100"
+            className="block rounded-2xl border-2 border-dashed border-brand/40 bg-brand-subtle p-5 text-center transition hover:bg-brand-subtle"
           >
-            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-nexus-orange-500 text-white shadow-lg">
+            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-brand text-on-brand shadow-lg">
               <Plus className="h-6 w-6" />
             </span>
             <span className="mt-3 block font-display text-base font-bold text-nexus-blue-950">
@@ -602,13 +602,13 @@ function ClickableStat({
   href: string;
 }) {
   const colorMap = {
-    orange: "from-nexus-orange-500 to-nexus-orange-700",
+    orange: "from-brand to-brand",
     blue: "from-nexus-blue-700 to-nexus-blue-900",
   };
   return (
     <Link
       href={href}
-      className="group block rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-nexus-orange-200 hover:shadow-md"
+      className="group block rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-brand/30 hover:shadow-md"
     >
       <div className="flex items-start justify-between">
         <div className="min-w-0 flex-1">
@@ -627,7 +627,7 @@ function ClickableStat({
           <Icon className="h-5 w-5" />
         </span>
       </div>
-      <span className="mt-3 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 transition group-hover:text-nexus-orange-600">
+      <span className="mt-3 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 transition group-hover:text-brand-hover">
         Voir le détail
         <ArrowRight className="h-3 w-3" />
       </span>
@@ -654,7 +654,7 @@ function Section({
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="flex items-center justify-between border-b border-slate-100 p-4">
         <div className="flex items-center gap-2">
-          <Icon className="h-5 w-5 text-nexus-orange-600" />
+          <Icon className="h-5 w-5 text-brand-hover" />
           <h2 className="font-display text-base font-bold text-nexus-blue-950">{title}</h2>
           {count !== undefined && (
             <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-600">

@@ -22,7 +22,7 @@ export function VisaDocumentChecklist() {
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
       <div className="mb-5 flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow">
           <FileText className="h-5 w-5" />
         </div>
         <div>
@@ -104,7 +104,7 @@ export function VisaDocumentChecklist() {
       </ul>
 
       <p className="mt-5 text-xs text-slate-500">
-        Vous serez accompagné(e) sur l'intégralité de la liste exacte requise par le
+        Vous serez accompagné(e) sur l&apos;intégralité de la liste exacte requise par le
         consulat ciblé lors du cadrage Nexus.
       </p>
     </div>

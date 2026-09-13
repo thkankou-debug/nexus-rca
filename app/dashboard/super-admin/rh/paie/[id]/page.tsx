@@ -1,5 +1,4 @@
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { PayslipDetailView } from "@/components/dashboard/rh/PayslipDetailView";
 
@@ -16,13 +15,13 @@ export default async function PayslipDetailPage({
 }) {
   const profile = await requireProfile(["super_admin"]);
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin/rh/paie"
         label="Retour à la liste"
       />
 
       <PayslipDetailView payslipId={params.id} canValidate />
-    </DashboardShell>
+    </>
   );
 }

@@ -53,7 +53,7 @@ export function Timeline({
             aria-hidden
             className={cn(
               "absolute left-6 top-5 h-0.5 rounded-full transition-all duration-700",
-              cancelled ? "bg-red-500" : "bg-nexus-orange-500"
+              cancelled ? "bg-red-500" : "bg-brand"
             )}
             style={{
               width: `calc(${((currentStep - 1) / 5) * 100}% - 0.75rem)`,
@@ -82,7 +82,7 @@ export function Timeline({
                       state === "done" &&
                         "bg-green-600 text-white ring-green-100",
                       state === "active" &&
-                        "bg-nexus-orange-500 text-white ring-nexus-orange-100 shadow-lg shadow-nexus-orange-500/40",
+                        "bg-brand text-on-brand ring-brand/30 shadow-lg shadow-brand/40",
                       state === "cancelled" &&
                         "bg-red-600 text-white ring-red-100 shadow-lg",
                       state === "todo" &&
@@ -139,7 +139,7 @@ export function Timeline({
                   "flex h-8 w-8 shrink-0 items-center justify-center rounded-full ring-2",
                   state === "done" && "bg-green-600 text-white ring-green-200",
                   state === "active" &&
-                    "bg-nexus-orange-500 text-white ring-nexus-orange-200",
+                    "bg-brand text-on-brand ring-brand/30",
                   state === "cancelled" &&
                     "bg-red-600 text-white ring-red-200",
                   state === "todo" &&

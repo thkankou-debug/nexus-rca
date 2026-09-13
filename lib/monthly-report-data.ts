@@ -51,6 +51,43 @@ export function monthBoundsFor(year: number, month: number): MonthBounds {
   };
 }
 
+// ── Bornes journalières / annuelles (L9 résiduel, 13/09/2026) ──────────────
+// Réutilisent l'interface MonthBounds : aggregateMonth() ne dépend que de
+// start/end/label, les rapports journalier et annuel réutilisent donc le
+// même agrégateur et le même générateur PDF que le mensuel.
+
+const FR_DAYS = [
+  "Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi",
+];
+
+/** Bornes d'une journée (dateStr = "YYYY-MM-DD", interprétée en UTC —
+ *  cohérent avec le scope mensuel existant, lui aussi en UTC). */
+export function dayBoundsFor(dateStr: string): MonthBounds {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const start = new Date(Date.UTC(y, m - 1, d, 0, 0, 0, 0));
+  const end = new Date(Date.UTC(y, m - 1, d, 23, 59, 59, 999));
+  return {
+    year: y,
+    month: m,
+    start: start.toISOString(),
+    end: end.toISOString(),
+    label: `${FR_DAYS[start.getUTCDay()]} ${d} ${FR_MONTHS[m - 1].toLowerCase()} ${y}`,
+  };
+}
+
+/** Bornes d'une année civile complète. */
+export function yearBoundsFor(year: number): MonthBounds {
+  const start = new Date(Date.UTC(year, 0, 1, 0, 0, 0, 0));
+  const end = new Date(Date.UTC(year, 11, 31, 23, 59, 59, 999));
+  return {
+    year,
+    month: 12,
+    start: start.toISOString(),
+    end: end.toISOString(),
+    label: `Annee ${year}`,
+  };
+}
+
 export function previousMonthBounds(now: Date = new Date()): MonthBounds {
   const y = now.getUTCFullYear();
   const m = now.getUTCMonth(); // 0..11 → mois précédent en 1-based
@@ -135,6 +172,14 @@ export async function aggregateMonth(
   const { start, end } = bounds;
 
   // Toutes les requêtes en parallèle.
+  //
+  // Filtre is_test appliqué en `.eq("is_test", false)` inline ici (pas via
+  // excludeTestRows()) : ce fichier passe `supabase: SupabaseLike` (alias
+  // ReturnType<typeof getAdminSupabase>) à travers Promise.all — router cette
+  // valeur précise par la fonction générique excludeTestRows() fait exploser
+  // l'instanciation de type de TypeScript (TS2589), reproductible même avec
+  // un generique très permissif. Même filtre, même colonne, exception locale
+  // documentée plutôt qu'un `any` qui aurait cassé le typage de tout le fichier.
   const [
     paiementsRes,
     caisseRes,
@@ -155,6 +200,7 @@ export async function aggregateMonth(
     supabase
       .from("payments")
       .select("montant_recu, montant_total, devise, agent_id")
+      .eq("is_test", false)
       .gte("date_paiement", start)
       .lte("date_paiement", end),
     supabase
@@ -166,12 +212,14 @@ export async function aggregateMonth(
       .from("expenses")
       .select("montant, devise")
       .eq("statut", "valide")
+      .eq("is_test", false)
       .gte("date_depense", start)
       .lte("date_depense", end),
     supabase
       .from("expenses")
       .select("montant, devise")
       .eq("statut", "en_attente")
+      .eq("is_test", false)
       .gte("date_depense", start)
       .lte("date_depense", end),
     supabase
@@ -184,35 +232,41 @@ export async function aggregateMonth(
     supabase
       .from("payments")
       .select("reference, client_nom, service, montant_total, montant_recu, devise")
-      .eq("statut", "partiel")
+      .eq("status", "partial")
+      .eq("is_test", false)
       .order("created_at", { ascending: false })
       .limit(50),
-    supabase.from("profiles").select("id, nom, prenom"),
+    supabase.from("profiles").select("id, nom, prenom").eq("is_test", false),
     supabase
       .from("demandes")
       .select("id", { count: "exact", head: true })
+      .eq("is_test", false)
       .gte("created_at", start)
       .lte("created_at", end),
     supabase
       .from("demandes")
       .select("id", { count: "exact", head: true })
       .in("statut", ["complete", "termine"])
+      .eq("is_test", false)
       .gte("updated_at", start)
       .lte("updated_at", end),
     supabase
       .from("clients")
       .select("id", { count: "exact", head: true })
+      .eq("is_test", false)
       .gte("created_at", start)
       .lte("created_at", end),
     supabase
       .from("appointments")
       .select("id", { count: "exact", head: true })
+      .eq("is_test", false)
       .gte("created_at", start)
       .lte("created_at", end),
     supabase
       .from("appointments")
       .select("id", { count: "exact", head: true })
       .eq("statut", "termine")
+      .eq("is_test", false)
       .gte("created_at", start)
       .lte("created_at", end),
     // Pour le top agents (RDV terminés / agent)
@@ -220,12 +274,14 @@ export async function aggregateMonth(
       .from("appointments")
       .select("agent_id")
       .eq("statut", "termine")
+      .eq("is_test", false)
       .gte("created_at", start)
       .lte("created_at", end),
     // Paiements / agent (XAF only pour le top)
     supabase
       .from("payments")
       .select("created_by, montant_recu, devise")
+      .eq("is_test", false)
       .gte("date_paiement", start)
       .lte("date_paiement", end),
     // Caisse / agent (XAF only pour le top)

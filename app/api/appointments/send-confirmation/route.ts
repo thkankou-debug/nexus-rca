@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { Resend } from "resend";
+import { rateLimitOrNull } from "@/lib/rate-limit";
 
 // ============================================================================
 // API : POST /api/appointments/send-confirmation
@@ -35,6 +36,9 @@ function formatDateLong(dateStr: string): string {
 export async function POST(request: NextRequest) {
   console.log("===== [RDV EMAIL] START =====");
 
+  const limited = await rateLimitOrNull(request, "appointments-send-confirmation", { max: 20 });
+  if (limited) return limited;
+
   try {
     const body = await request.json();
     const { appointment_id } = body;
@@ -65,6 +69,12 @@ export async function POST(request: NextRequest) {
     }
 
     console.log("[RDV EMAIL] RDV trouvé:", appointment.reference, "→", appointment.client_email);
+
+    // L2 : jamais d'email reel pour un RDV TEST_
+    if (appointment.is_test) {
+      console.log("[RDV EMAIL] RDV de test — email non envoyé.");
+      return NextResponse.json({ success: true, skipped: "is_test", email_sent: false });
+    }
 
     // ========================================================================
     // VÉRIFICATION CONFIG RESEND
@@ -247,7 +257,7 @@ function buildEmailHTML(data: {
           <tr>
             <td style="background:#0C1C40;padding:24px 40px;text-align:center;">
               <p style="margin:0 0 8px 0;font-size:14px;font-weight:700;color:#ffffff;">NEXUS RCA — Agence Internationale</p>
-              <p style="margin:0 0 4px 0;font-size:12px;color:#94a3b8;">Relais Sica, vers Hôpital Général, Bangui, RCA</p>
+              <p style="margin:0 0 4px 0;font-size:12px;color:#94a3b8;">Croisement Marabena, Route de l'Aéroport, Bangui, RCA</p>
               <p style="margin:0 0 4px 0;font-size:12px;color:#94a3b8;">+236 73 26 96 92 · contact@nexusrca.com</p>
               <p style="margin:12px 0 0 0;font-size:11px;color:#64748b;">© ${new Date().getFullYear()} Nexus RCA. Tous droits réservés.</p>
             </td>

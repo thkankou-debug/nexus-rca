@@ -175,7 +175,7 @@ export function MessagerieClient({
               Conversations
             </h2>
             {totalUnread > 0 && (
-              <span className="inline-flex h-6 min-w-[24px] items-center justify-center rounded-full bg-nexus-orange-500 px-2 text-xs font-semibold text-white">
+              <span className="inline-flex h-6 min-w-[24px] items-center justify-center rounded-full bg-brand px-2 text-xs font-semibold text-on-brand">
                 {totalUnread}
               </span>
             )}
@@ -188,7 +188,7 @@ export function MessagerieClient({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Rechercher une conversation…"
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-sm text-slate-900 placeholder-slate-400 focus:border-nexus-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-nexus-orange-100"
+              className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-sm text-slate-900 placeholder-slate-400 focus:border-focus focus:bg-white focus:outline-none focus:ring-2 focus:ring-focus/25"
             />
           </div>
 
@@ -233,7 +233,7 @@ export function MessagerieClient({
                       className={cn(
                         "flex w-full items-start gap-3 px-4 py-3 text-left transition-colors",
                         isActive
-                          ? "bg-nexus-orange-50/70"
+                          ? "bg-brand-subtle/70"
                           : "hover:bg-slate-50"
                       )}
                     >
@@ -242,7 +242,7 @@ export function MessagerieClient({
                           "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold",
                           t.is_team_thread
                             ? "bg-violet-100 text-violet-700"
-                            : "bg-gradient-to-br from-nexus-orange-100 to-nexus-orange-200 text-nexus-orange-700"
+                            : "bg-gradient-to-br from-brand-subtle to-brand text-brand-hover"
                         )}
                       >
                         {t.is_team_thread ? <Users className="h-5 w-5" /> : initials(t.title)}
@@ -262,7 +262,7 @@ export function MessagerieClient({
                             {t.last_message}
                           </p>
                           {t.unread_count > 0 && (
-                            <span className="inline-flex h-5 min-w-[20px] flex-shrink-0 items-center justify-center rounded-full bg-nexus-orange-500 px-1.5 text-[10px] font-bold text-white">
+                            <span className="inline-flex h-5 min-w-[20px] flex-shrink-0 items-center justify-center rounded-full bg-brand px-1.5 text-[10px] font-bold text-on-brand">
                               {t.unread_count}
                             </span>
                           )}
@@ -292,7 +292,7 @@ export function MessagerieClient({
                   "flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold",
                   selectedThread.is_team_thread
                     ? "bg-violet-100 text-violet-700"
-                    : "bg-gradient-to-br from-nexus-orange-100 to-nexus-orange-200 text-nexus-orange-700"
+                    : "bg-gradient-to-br from-brand-subtle to-brand text-brand-hover"
                 )}
               >
                 {selectedThread.is_team_thread ? (
@@ -368,7 +368,7 @@ export function MessagerieClient({
                           className={cn(
                             "rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-sm",
                             isMe
-                              ? "rounded-tr-sm bg-nexus-orange-500 text-white"
+                              ? "rounded-tr-sm bg-brand text-on-brand"
                               : "rounded-tl-sm border border-slate-200 bg-white text-slate-800"
                           )}
                         >
@@ -382,7 +382,7 @@ export function MessagerieClient({
                         )}
                       </div>
                       {isMe && (
-                        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-nexus-orange-100 text-xs font-semibold text-nexus-orange-700">
+                        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-brand-subtle text-xs font-semibold text-brand-hover">
                           <UserIcon className="h-4 w-4" />
                         </div>
                       )}
@@ -394,7 +394,7 @@ export function MessagerieClient({
 
             {/* Composer */}
             <div className="border-t border-slate-200 bg-white p-4">
-              <div className="flex items-end gap-2 rounded-xl border border-slate-200 bg-slate-50 p-2 focus-within:border-nexus-orange-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-nexus-orange-100">
+              <div className="flex items-end gap-2 rounded-xl border border-slate-200 bg-slate-50 p-2 focus-within:border-focus focus-within:bg-white focus-within:ring-2 focus-within:ring-focus/25">
                 <button
                   type="button"
                   className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600"
@@ -429,7 +429,7 @@ export function MessagerieClient({
                   type="button"
                   onClick={handleSend}
                   disabled={!draft.trim() || sending}
-                  className="flex h-9 items-center gap-1.5 rounded-lg bg-nexus-orange-500 px-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:bg-slate-300"
+                  className="flex h-9 items-center gap-1.5 rounded-lg bg-brand px-3 text-sm font-semibold text-on-brand shadow-sm transition-colors hover:bg-brand-hover disabled:cursor-not-allowed disabled:bg-slate-300"
                 >
                   <Send className="h-4 w-4" />
                   Envoyer

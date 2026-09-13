@@ -87,7 +87,7 @@ export function AppointmentActions({
             type="button"
             onClick={() => callApi("assign", { agent_id: agentId })}
             disabled={loading}
-            className="inline-flex items-center gap-1 rounded-full bg-nexus-orange-500 px-3 py-1.5 text-xs font-semibold text-white shadow hover:bg-nexus-orange-600 disabled:opacity-50"
+            className="inline-flex items-center gap-1 rounded-full bg-brand px-3 py-1.5 text-xs font-semibold text-on-brand shadow hover:bg-brand-hover disabled:opacity-50"
           >
             {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <UserPlus className="h-3 w-3" />}
             Prendre ce RDV
@@ -186,7 +186,7 @@ export function AppointmentActions({
                           "block w-full rounded-lg px-3 py-2 text-left text-xs font-semibold transition",
                           isCurrent
                             ? "cursor-not-allowed bg-slate-100 text-slate-400"
-                            : "text-slate-700 hover:bg-nexus-orange-50"
+                            : "text-slate-700 hover:bg-brand-subtle"
                         )}
                       >
                         {name || "Agent sans nom"}

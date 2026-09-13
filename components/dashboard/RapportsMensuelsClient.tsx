@@ -313,14 +313,14 @@ export function RapportsMensuelsClient({ initialReports, initialConfig }: Props)
 
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-slate-50 px-4 py-3">
           <div className="flex items-center gap-2 text-sm text-slate-600">
-            <Sparkles className="h-4 w-4 text-nexus-orange-500" />
+            <Sparkles className="h-4 w-4 text-brand" />
             Vous pouvez générer un rapport manuellement à tout moment.
           </div>
           <button
             type="button"
             onClick={handleGenerateNow}
             disabled={generating}
-            className="inline-flex items-center gap-2 rounded-lg bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:bg-slate-300"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-on-brand shadow-sm transition-colors hover:bg-brand-hover disabled:cursor-not-allowed disabled:bg-slate-300"
           >
             {generating ? (
               <>
@@ -466,7 +466,7 @@ function StatTile({
     blue: "from-blue-500 to-blue-700",
     emerald: "from-emerald-500 to-emerald-700",
     rose: "from-rose-500 to-rose-700",
-    orange: "from-nexus-orange-500 to-nexus-orange-700",
+    orange: "from-brand to-brand",
   };
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">

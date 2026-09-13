@@ -12,7 +12,7 @@ export function Footer() {
     <footer className="relative overflow-hidden bg-nexus-blue-950 text-slate-300">
       {/* Mesh background */}
       <div className="absolute inset-0 bg-mesh-gradient opacity-50" />
-      <div className="absolute -left-32 -top-32 h-64 w-64 rounded-full bg-nexus-orange-500/20 blur-3xl" />
+      <div className="absolute -left-32 -top-32 h-64 w-64 rounded-full bg-brand/20 blur-3xl" />
       <div className="absolute -bottom-32 -right-32 h-64 w-64 rounded-full bg-nexus-blue-500/20 blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl px-4 pt-20 pb-10 lg:px-8">
@@ -26,21 +26,21 @@ export function Footer() {
             <div className="mt-5 flex gap-3">
               <a
                 href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-nexus-orange-500"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-brand hover:text-on-brand"
                 aria-label="Facebook"
               >
                 <Facebook className="h-4 w-4" />
               </a>
               <a
                 href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-nexus-orange-500"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-brand hover:text-on-brand"
                 aria-label="Instagram"
               >
                 <Instagram className="h-4 w-4" />
               </a>
               <a
                 href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-nexus-orange-500"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-brand hover:text-on-brand"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="h-4 w-4" />
@@ -56,7 +56,7 @@ export function Footer() {
                 <li key={s.id}>
                   <Link
                     href={`/services/${s.slug}`}
-                    className="text-slate-400 transition hover:text-nexus-orange-400"
+                    className="text-slate-400 transition hover:text-brand"
                   >
                     {s.title}
                   </Link>
@@ -70,32 +70,32 @@ export function Footer() {
             <h3 className="mb-4 font-display text-base font-bold text-white">{t("navigation_heading")}</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/" className="text-slate-400 hover:text-nexus-orange-400">
+                <Link href="/" className="text-slate-400 hover:text-brand">
                   {t("nav_home")}
                 </Link>
               </li>
               <li>
-                <Link href="/services" className="text-slate-400 hover:text-nexus-orange-400">
+                <Link href="/services" className="text-slate-400 hover:text-brand">
                   {t("nav_all_services")}
                 </Link>
               </li>
               <li>
-                <Link href="/services/nexus-ia" className="text-slate-400 hover:text-nexus-orange-400">
+                <Link href="/services/nexus-ia" className="text-slate-400 hover:text-brand">
                   {t("nav_nexus_ia")}
                 </Link>
               </li>
               <li>
-                <Link href="/rendez-vous" className="text-slate-400 hover:text-nexus-orange-400">
+                <Link href="/rendez-vous" className="text-slate-400 hover:text-brand">
                   {t("nav_rendezvous")}
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-slate-400 hover:text-nexus-orange-400">
+                <Link href="/contact" className="text-slate-400 hover:text-brand">
                   {t("nav_contact")}
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="text-slate-400 hover:text-nexus-orange-400">
+                <Link href="/login" className="text-slate-400 hover:text-brand">
                   {t("nav_client_space")}
                 </Link>
               </li>
@@ -108,7 +108,7 @@ export function Footer() {
             <ul className="space-y-3 text-sm">
               {/* Adresse */}
               <li className="flex items-start gap-3">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-400" />
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
                 <span className="text-slate-400">
                   {NEXUS_CONTACT.addressLine1}
                   <br />
@@ -122,14 +122,14 @@ export function Footer() {
 
               {/* Telephone RCA principal */}
               <li className="flex items-start gap-3">
-                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-400" />
+                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                     {t("label_rca")}
                   </p>
                   <a
                     href={`tel:+${NEXUS_CONTACT.phoneRcaRaw}`}
-                    className="text-slate-400 hover:text-nexus-orange-400"
+                    className="text-slate-400 hover:text-brand"
                   >
                     {NEXUS_CONTACT.phoneRca}
                   </a>
@@ -145,7 +145,7 @@ export function Footer() {
                   </p>
                   <a
                     href={`tel:+${NEXUS_CONTACT.phoneCanadaRaw}`}
-                    className="text-slate-400 hover:text-nexus-orange-400"
+                    className="text-slate-400 hover:text-brand"
                   >
                     {NEXUS_CONTACT.phoneCanada}
                   </a>
@@ -154,12 +154,12 @@ export function Footer() {
 
               {/* WhatsApp */}
               <li className="flex items-start gap-3">
-                <MessageCircle className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-400" />
+                <MessageCircle className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
                 <a
                   href={whatsappLink("Bonjour Nexus, j'aimerais obtenir plus d'informations.")}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-slate-400 hover:text-nexus-orange-400"
+                  className="text-slate-400 hover:text-brand"
                 >
                   {t("whatsapp_direct")}
                 </a>
@@ -167,10 +167,10 @@ export function Footer() {
 
               {/* Email */}
               <li className="flex items-start gap-3">
-                <Mail className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-400" />
+                <Mail className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
                 <a
                   href={`mailto:${NEXUS_CONTACT.email}`}
-                  className="text-slate-400 hover:text-nexus-orange-400"
+                  className="text-slate-400 hover:text-brand"
                 >
                   {NEXUS_CONTACT.email}
                 </a>
@@ -178,12 +178,12 @@ export function Footer() {
 
               {/* Site web */}
               <li className="flex items-start gap-3">
-                <Globe className="mt-0.5 h-4 w-4 shrink-0 text-nexus-orange-400" />
+                <Globe className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
                 <a
                   href={NEXUS_CONTACT.websiteUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-slate-400 hover:text-nexus-orange-400"
+                  className="text-slate-400 hover:text-brand"
                 >
                   {NEXUS_CONTACT.website}
                 </a>
@@ -195,7 +195,7 @@ export function Footer() {
         <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-slate-500 md:flex-row">
           <p>© {new Date().getFullYear()} {t("copyright")}</p>
           <p className="flex items-center gap-2">
-            {t("built_in")} <span className="font-semibold text-nexus-orange-400">Bangui</span> {t("deployed")}
+            {t("built_in")} <span className="font-semibold text-brand">Bangui</span> {t("deployed")}
           </p>
         </div>
       </div>

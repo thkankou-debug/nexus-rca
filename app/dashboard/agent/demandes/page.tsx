@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { DemandesManager } from "@/components/dashboard/DemandesManager";
 import type { Demande } from "@/types";
 
@@ -18,7 +17,7 @@ export default async function AgentDemandesPage() {
   const list = (data || []) as Demande[];
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <div className="mb-8">
         <h1 className="font-display text-3xl font-bold text-nexus-blue-950">
           Demandes clients
@@ -28,6 +27,6 @@ export default async function AgentDemandesPage() {
         </p>
       </div>
       <DemandesManager initialDemandes={list} />
-    </DashboardShell>
+    </>
   );
 }

@@ -121,7 +121,7 @@ export function PWAInstaller() {
       {showBanner && installPrompt && !isIOS && (
         <div className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-200 bg-white shadow-2xl print:hidden">
           <div className="mx-auto flex max-w-3xl items-center gap-3 p-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-lg">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand text-on-brand shadow-lg">
               <Smartphone className="h-6 w-6" />
             </div>
             <div className="min-w-0 flex-1">
@@ -129,13 +129,13 @@ export function PWAInstaller() {
                 Installer Nexus RCA
               </p>
               <p className="text-xs text-slate-600">
-                Accès rapide depuis ton écran d'accueil, plein écran.
+                Accès rapide depuis ton écran d&apos;accueil, plein écran.
               </p>
             </div>
             <button
               type="button"
               onClick={handleInstall}
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 hover:bg-nexus-orange-600"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 hover:bg-brand-hover"
             >
               <Download className="h-4 w-4" />
               Installer
@@ -157,7 +157,7 @@ export function PWAInstaller() {
         <>
           <div className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-200 bg-white shadow-2xl print:hidden">
             <div className="mx-auto flex max-w-3xl items-center gap-3 p-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-lg">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand text-on-brand shadow-lg">
                 <Smartphone className="h-6 w-6" />
               </div>
               <div className="min-w-0 flex-1">
@@ -165,13 +165,13 @@ export function PWAInstaller() {
                   Installer sur iPhone
                 </p>
                 <p className="text-xs text-slate-600">
-                  Touche le bouton Partager puis "Sur l'écran d'accueil".
+                  Touche le bouton Partager puis &quot;Sur l&apos;écran d&apos;accueil&quot;.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowIOSInstructions(true)}
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-nexus-orange-500/30 hover:bg-nexus-orange-600"
+                className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-on-brand shadow-lg shadow-brand/30 hover:bg-brand-hover"
               >
                 Voir comment
               </button>
@@ -231,20 +231,20 @@ function IOSInstructionsModal({ onClose }: { onClose: () => void }) {
 
           <Step number={2} title="Fais défiler et touche">
             <p className="text-sm text-slate-600">
-              "Sur l'écran d'accueil"
+              &quot;Sur l&apos;écran d&apos;accueil&quot;
             </p>
             <div className="mt-2 inline-flex items-center gap-2 rounded-lg bg-slate-100 px-3 py-2">
               <span className="text-2xl">➕</span>
               <span className="text-xs font-mono text-slate-700">
-                Sur l'écran d'accueil
+                Sur l&apos;écran d&apos;accueil
               </span>
             </div>
           </Step>
 
           <Step number={3} title="Confirme">
             <p className="text-sm text-slate-600">
-              Touche "Ajouter" en haut à droite. L'icône Nexus apparaît sur ton
-              écran d'accueil.
+              Touche &quot;Ajouter&quot; en haut à droite. L&apos;icône Nexus apparaît sur ton
+              écran d&apos;accueil.
             </p>
           </Step>
         </div>
@@ -254,7 +254,7 @@ function IOSInstructionsModal({ onClose }: { onClose: () => void }) {
           onClick={onClose}
           className="mt-6 w-full rounded-full bg-nexus-blue-950 px-5 py-2.5 text-sm font-semibold text-white hover:bg-nexus-blue-800"
         >
-          J'ai compris
+          J&apos;ai compris
         </button>
       </div>
     </div>
@@ -272,7 +272,7 @@ function Step({
 }) {
   return (
     <div className="flex gap-3">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-nexus-orange-500 text-sm font-bold text-white">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-bold text-on-brand">
         {number}
       </div>
       <div className="flex-1">

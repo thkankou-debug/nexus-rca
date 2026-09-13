@@ -1,7 +1,6 @@
 import { Users } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { ClientsManager } from "@/components/dashboard/ClientsManager";
 import type { Client } from "@/types/client-types";
@@ -27,7 +26,7 @@ export default async function AgentClientsPage() {
   const clients = (clientsData || []) as Client[];
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/agent"
         label="Retour au tableau de bord"
@@ -42,7 +41,7 @@ export default async function AgentClientsPage() {
             Clients
           </h1>
           <p className="mt-1 text-slate-600">
-            Créez et consultez les fiches clients de l'agence.
+            Créez et consultez les fiches clients de l&apos;agence.
           </p>
         </div>
       </div>
@@ -53,6 +52,6 @@ export default async function AgentClientsPage() {
         currentUserId={profile.id}
         canDelete={false}
       />
-    </DashboardShell>
+    </>
   );
 }

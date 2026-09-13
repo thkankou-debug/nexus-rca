@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/rh-daily-checks",
       "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/api/cron/instruction-escalades",
+      "schedule": "30 7 * * *"
     }
   ]
 }

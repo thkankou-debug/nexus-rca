@@ -152,26 +152,26 @@ export default function ContactPage() {
                     href={c.href}
                     target={c.external ? "_blank" : undefined}
                     rel={c.external ? "noreferrer" : undefined}
-                    className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_18px_40px_-18px_rgba(255,102,0,0.22)]"
+                    className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-[0_18px_40px_-18px_rgba(185,151,96,0.22)]"
                   >
                     {/* Glow orange qui apparait au hover */}
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover:bg-nexus-orange-500/15"
+                      className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/15"
                     />
 
                     <div className="relative">
                       <div
                         className={
                           (isOrange
-                            ? "from-nexus-orange-500 to-nexus-orange-700"
+                            ? "from-brand to-brand"
                             : "from-nexus-blue-900 to-nexus-blue-950") +
                           " flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br text-white shadow-sm transition-transform duration-300 ease-out group-hover:scale-105"
                         }
                       >
                         <Icon className="h-5 w-5" />
                       </div>
-                      <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.2em] text-nexus-orange-600">
+                      <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.2em] text-brand-hover">
                         {c.eyebrow}
                       </p>
                       <p className="mt-1 font-display text-base font-bold text-nexus-blue-950">
@@ -180,7 +180,7 @@ export default function ContactPage() {
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">
                         {c.description}
                       </p>
-                      <p className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-nexus-orange-600">
+                      <p className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-brand-hover">
                         {c.cta}
                         <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 ease-out group-hover:translate-x-1" />
                       </p>
@@ -207,7 +207,7 @@ export default function ContactPage() {
                   />
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-nexus-orange-500/15 blur-3xl"
+                    className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand/15 blur-3xl"
                   />
                   <div
                     aria-hidden
@@ -215,7 +215,7 @@ export default function ContactPage() {
                   />
 
                   <div className="relative p-7 sm:p-8">
-                    <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+                    <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
                       {t("coords_eyebrow")}
                     </span>
                     <h2 className="mt-3 font-display text-xl font-bold leading-tight sm:text-2xl">
@@ -237,7 +237,7 @@ export default function ContactPage() {
                       <CoordRow icon={Phone} label={t("coords_phone_rca_label")}>
                         <a
                           href={`tel:+${NEXUS_CONTACT.phoneRcaRaw}`}
-                          className="text-white transition-colors duration-200 hover:text-nexus-orange-300"
+                          className="text-white transition-colors duration-200 hover:text-brand"
                         >
                           {NEXUS_CONTACT.phoneRca}
                         </a>
@@ -246,7 +246,7 @@ export default function ContactPage() {
                       <CoordRow icon={Phone} label={t("coords_phone_canada_label")}>
                         <a
                           href={`tel:+${NEXUS_CONTACT.phoneCanadaRaw}`}
-                          className="text-white transition-colors duration-200 hover:text-nexus-orange-300"
+                          className="text-white transition-colors duration-200 hover:text-brand"
                         >
                           {NEXUS_CONTACT.phoneCanada}
                         </a>
@@ -255,7 +255,7 @@ export default function ContactPage() {
                       <CoordRow icon={Mail} label={t("coords_email_label")}>
                         <a
                           href={`mailto:${NEXUS_CONTACT.email}`}
-                          className="text-white transition-colors duration-200 hover:text-nexus-orange-300"
+                          className="text-white transition-colors duration-200 hover:text-brand"
                         >
                           {NEXUS_CONTACT.email}
                         </a>
@@ -266,7 +266,7 @@ export default function ContactPage() {
                           href={NEXUS_CONTACT.websiteUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-white transition-colors duration-200 hover:text-nexus-orange-300"
+                          className="text-white transition-colors duration-200 hover:text-brand"
                         >
                           {NEXUS_CONTACT.website}
                         </a>
@@ -294,7 +294,7 @@ export default function ContactPage() {
                       href="https://www.google.com/maps?q=H%C3%B4pital+G%C3%A9n%C3%A9ral+Bangui+Centrafrique"
                       target="_blank"
                       rel="noreferrer"
-                      className="group absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3.5 py-1.5 text-xs font-bold text-nexus-blue-950 shadow-[0_8px_24px_-8px_rgba(0,0,0,0.3)] backdrop-blur transition-all duration-300 hover:bg-white hover:shadow-[0_12px_32px_-8px_rgba(255,102,0,0.4)]"
+                      className="group absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3.5 py-1.5 text-xs font-bold text-nexus-blue-950 shadow-[0_8px_24px_-8px_rgba(0,0,0,0.3)] backdrop-blur transition-all duration-300 hover:bg-white hover:shadow-[0_12px_32px_-8px_rgba(185,151,96,0.4)]"
                     >
                       {t("map_itineraire")}
                       <ExternalLink className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -350,18 +350,18 @@ export default function ContactPage() {
                 ) : (
                   <form
                     onSubmit={handleSubmit}
-                    className="group/form relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-7 shadow-[0_20px_60px_-25px_rgba(12,28,64,0.18)] transition-all duration-500 hover:border-slate-300 hover:shadow-[0_24px_70px_-25px_rgba(255,102,0,0.18)] sm:p-9"
+                    className="group/form relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-7 shadow-[0_20px_60px_-25px_rgba(12,28,64,0.18)] transition-all duration-500 hover:border-slate-300 hover:shadow-[0_24px_70px_-25px_rgba(185,151,96,0.18)] sm:p-9"
                   >
                     {/* Subtle orange glow corner accent */}
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-nexus-orange-500/0 blur-3xl transition-all duration-700 group-hover/form:bg-nexus-orange-500/8"
+                      className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-brand/0 blur-3xl transition-all duration-700 group-hover/form:bg-brand/8"
                     />
 
                     <div className="relative">
                       <div className="mb-7 flex items-start justify-between gap-4">
                         <div>
-                          <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+                          <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-brand-hover">
                             {t("form_eyebrow")}
                           </span>
                           <h2 className="mt-3 font-display text-xl font-bold leading-tight text-nexus-blue-950 sm:text-2xl">
@@ -471,14 +471,14 @@ export default function ContactPage() {
 
                       <div className="mt-7 flex flex-col-reverse items-stretch gap-4 border-t border-slate-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
                         <p className="flex items-center gap-1.5 text-[11px] text-slate-500">
-                          <ShieldCheck className="h-3.5 w-3.5 text-nexus-orange-600" />
+                          <ShieldCheck className="h-3.5 w-3.5 text-brand-hover" />
                           {t("form_confidential")}
                         </p>
                         <Button
                           type="submit"
                           disabled={loading}
                           size="lg"
-                          className="group/btn relative overflow-hidden shadow-[0_10px_30px_-10px_rgba(255,102,0,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-10px_rgba(255,102,0,0.6)] sm:w-auto"
+                          className="group/btn relative overflow-hidden shadow-[0_10px_30px_-10px_rgba(185,151,96,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-10px_rgba(185,151,96,0.6)] sm:w-auto"
                         >
                           {/* Shimmer subtle au hover */}
                           <span
@@ -524,7 +524,7 @@ function CoordRow({
 }) {
   return (
     <li className="group/row -mx-2 flex gap-4 rounded-2xl px-2 py-2.5 transition-colors duration-200 hover:bg-white/5">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-nexus-orange-300 backdrop-blur-md transition-all duration-300 group-hover/row:bg-white/15 group-hover/row:text-nexus-orange-200">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-brand backdrop-blur-md transition-all duration-300 group-hover/row:bg-white/15 group-hover/row:text-brand">
         <Icon className="h-4 w-4" />
       </div>
       <div className="min-w-0">

@@ -5,6 +5,7 @@
 // Couleurs Nexus (navy + orange). A4.
 // ============================================================================
 
+import { embedNexusLogo } from "@/lib/pdf-logo";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import type { Employee, Payslip, PayslipLigne } from "@/types";
 
@@ -75,7 +76,10 @@ export async function buildPayslipPdf(opts: BuildPayslipOptions): Promise<Uint8A
   const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
   const nexusBlue = rgb(0.047, 0.11, 0.251);
-  const nexusOrange = rgb(1, 0.4, 0);
+  // M12-bis (08/09) : l'orange ne subsiste sur aucun PDF (seul le logo le
+  // conserve). Or en remplissage uniquement ; le texte reste toujours en
+  // bleu nuit, jamais en or (meme regle de contraste qu'a l'ecran, A1).
+  const nexusGold = rgb(0.725, 0.592, 0.376);
   const grayDark = rgb(0.15, 0.2, 0.3);
   const grayMid = rgb(0.4, 0.45, 0.5);
   const grayLight = rgb(0.85, 0.87, 0.9);
@@ -119,17 +123,19 @@ export async function buildPayslipPdf(opts: BuildPayslipOptions): Promise<Uint8A
 
   // ─── Header navy ───────────────────────────────────────────────────────
   drawRect(0, PAGE_H - 130, PAGE_W, 130, nexusBlue);
-  drawRect(0, PAGE_H - 130, 6, 130, nexusOrange);
+  drawRect(0, PAGE_H - 130, 6, 130, nexusGold);
 
+  const nexusLogo = await embedNexusLogo(pdfDoc);
+  if (nexusLogo) page.drawImage(nexusLogo, { x: MARGIN_X, y: PAGE_H - 88, width: 44, height: 44 });
   drawText("NEXUS RCA", {
-    x: MARGIN_X,
+    x: MARGIN_X + 56,
     y: PAGE_H - 55,
     size: 22,
     font: helveticaBold,
     color: white,
   });
   drawText("Agence internationale - Bangui, RCA", {
-    x: MARGIN_X,
+    x: MARGIN_X + 56,
     y: PAGE_H - 75,
     size: 9,
     color: rgb(0.7, 0.78, 0.9),
@@ -166,7 +172,7 @@ export async function buildPayslipPdf(opts: BuildPayslipOptions): Promise<Uint8A
     y,
     size: 9,
     font: helveticaBold,
-    color: nexusOrange,
+    color: nexusBlue,
   });
   y -= 18;
 
@@ -215,7 +221,7 @@ export async function buildPayslipPdf(opts: BuildPayslipOptions): Promise<Uint8A
     y: y - 14,
     size: 9,
     font: helveticaBold,
-    color: nexusOrange,
+    color: nexusBlue,
   });
   drawText(
     `Du ${formatDate(payslip.periode_debut)} au ${formatDate(payslip.periode_fin)}`,
@@ -236,7 +242,7 @@ export async function buildPayslipPdf(opts: BuildPayslipOptions): Promise<Uint8A
     y,
     size: 9,
     font: helveticaBold,
-    color: nexusOrange,
+    color: nexusBlue,
   });
   y -= 14;
 
@@ -325,7 +331,7 @@ export async function buildPayslipPdf(opts: BuildPayslipOptions): Promise<Uint8A
       y,
       size: 9,
       font: helveticaBold,
-      color: nexusOrange,
+      color: nexusBlue,
     });
     y -= 14;
 
@@ -338,20 +344,20 @@ export async function buildPayslipPdf(opts: BuildPayslipOptions): Promise<Uint8A
 
   // ─── Net à payer ─────────────────────────────────────────────────────────
   y -= 14;
-  drawRect(MARGIN_X, y - 36, PAGE_W - 2 * MARGIN_X, 36, nexusOrange);
+  drawRect(MARGIN_X, y - 36, PAGE_W - 2 * MARGIN_X, 36, nexusGold);
   drawText("NET A PAYER", {
     x: MARGIN_X + 12,
     y: y - 24,
     size: 13,
     font: helveticaBold,
-    color: white,
+    color: nexusBlue,
   });
   drawText(formatMoney(payslip.salaire_net), {
     x: PAGE_W - MARGIN_X - 160,
     y: y - 24,
     size: 14,
     font: helveticaBold,
-    color: white,
+    color: nexusBlue,
   });
   y -= 50;
 
@@ -368,7 +374,7 @@ export async function buildPayslipPdf(opts: BuildPayslipOptions): Promise<Uint8A
 
   // ─── Footer ──────────────────────────────────────────────────────────────
   drawRect(0, 0, PAGE_W, 50, rgb(0.97, 0.98, 0.99));
-  drawText("Nexus RCA - Relais Sica, vers Hopital General, Bangui, RCA", {
+  drawText("Nexus RCA - Croisement Marabena, Route de l'Aeroport, Bangui, RCA", {
     x: MARGIN_X,
     y: 30,
     size: 8,

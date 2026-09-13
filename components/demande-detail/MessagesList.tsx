@@ -137,7 +137,7 @@ export function MessagesList({
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="flex items-center gap-2 border-b border-slate-100 p-4">
-        <MessageCircle className="h-3.5 w-3.5 text-nexus-orange-500" />
+        <MessageCircle className="h-3.5 w-3.5 text-brand" />
         <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
           Messages
         </p>
@@ -180,7 +180,7 @@ export function MessagesList({
                   className={cn(
                     "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white",
                     isMe
-                      ? "bg-nexus-orange-500"
+                      ? "bg-brand"
                       : isStaff
                         ? "bg-nexus-blue-700"
                         : "bg-slate-400"
@@ -203,7 +203,7 @@ export function MessagesList({
                     className={cn(
                       "inline-block max-w-[85%] rounded-xl px-3 py-2 text-sm",
                       isMe
-                        ? "bg-nexus-orange-500 text-white"
+                        ? "bg-brand text-on-brand"
                         : "bg-slate-100 text-slate-800"
                     )}
                   >
@@ -233,7 +233,7 @@ export function MessagesList({
           onChange={(e) => setContent(e.target.value.slice(0, MAX_LENGTH))}
           placeholder="Écrivez votre message…"
           rows={2}
-          className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-nexus-blue-950 focus:border-nexus-orange-400 focus:outline-none focus:ring-1 focus:ring-nexus-orange-300"
+          className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-nexus-blue-950 focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus/25"
         />
         <div className="mt-2 flex items-center justify-between">
           <span className="text-[10px] text-slate-500">
@@ -243,7 +243,7 @@ export function MessagesList({
             type="button"
             onClick={handleSend}
             disabled={sending || !content.trim()}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-nexus-orange-500 px-4 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-1.5 text-xs font-bold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50"
           >
             {sending ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />

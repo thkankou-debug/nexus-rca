@@ -89,7 +89,7 @@ function LoginForm() {
       <Button
         type="submit"
         disabled={loading}
-        className="group/btn relative mt-2 w-full overflow-hidden shadow-[0_10px_30px_-10px_rgba(255,102,0,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-10px_rgba(255,102,0,0.6)]"
+        className="group/btn relative mt-2 w-full overflow-hidden shadow-[0_10px_30px_-10px_rgba(185,151,96,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-10px_rgba(185,151,96,0.6)]"
         size="lg"
       >
         <span
@@ -131,7 +131,7 @@ export default function LoginPage() {
       <Suspense
         fallback={
           <div className="flex h-48 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50/60">
-            <Loader2 className="h-6 w-6 animate-spin text-nexus-orange-500" />
+            <Loader2 className="h-6 w-6 animate-spin text-brand" />
           </div>
         }
       >

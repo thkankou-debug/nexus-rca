@@ -37,7 +37,7 @@ export function DownloadButton({
 
   const base =
     variant === "primary"
-      ? "bg-nexus-orange-500 hover:bg-nexus-orange-600 text-white"
+      ? "bg-brand hover:bg-brand-hover text-on-brand"
       : "border border-slate-200 bg-white hover:bg-slate-50 text-nexus-blue-950";
 
   return (

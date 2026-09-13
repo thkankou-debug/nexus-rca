@@ -90,7 +90,7 @@ export function VisaResultCard({
         {result.delai && (
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
             <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
-              <Clock className="h-3 w-3 text-nexus-orange-600" />
+              <Clock className="h-3 w-3 text-brand-hover" />
               Délai indicatif
             </p>
             <p className="mt-1 font-display text-lg font-bold text-nexus-blue-950">
@@ -104,7 +104,7 @@ export function VisaResultCard({
 
         <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
           <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
-            <Globe className="h-3 w-3 text-nexus-orange-600" />
+            <Globe className="h-3 w-3 text-brand-hover" />
             e-Visa disponible
           </p>
           <p
@@ -119,7 +119,7 @@ export function VisaResultCard({
       </div>
 
       {/* Recommandation */}
-      <div className="mt-5 rounded-2xl border-l-4 border-nexus-orange-500 bg-nexus-orange-50/50 p-4">
+      <div className="mt-5 rounded-2xl border-l-4 border-brand bg-brand-subtle/50 p-4">
         <p className="text-sm text-nexus-blue-950">
           <span className="font-semibold">Recommandation Nexus :</span>{" "}
           {result.recommendation}
@@ -130,7 +130,7 @@ export function VisaResultCard({
       <div className="mt-6">
         <Link
           href={ctaHref}
-          className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600"
+          className="inline-flex items-center gap-2 rounded-xl bg-brand px-6 py-3 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover"
         >
           {ctaLabel}
           <ArrowRight className="h-4 w-4" />

@@ -1,6 +1,5 @@
 import { FileBarChart, Sparkles, Notebook } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 
 export const metadata = {
@@ -13,7 +12,7 @@ export default async function AgentNotesPage() {
   const profile = await requireProfile(["agent", "admin", "super_admin"]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/agent" label="Retour au tableau de bord" />
 
       <div className="mb-8 flex items-center gap-3">
@@ -47,6 +46,6 @@ export default async function AgentNotesPage() {
           À venir — table notes_dossier + RLS agent.assigned
         </div>
       </section>
-    </DashboardShell>
+    </>
   );
 }

@@ -13,13 +13,15 @@ import {
   ArrowRight,
   CheckCircle2,
   Clock,
-  Info,
   Edit3,
+  CalendarCheck,
+  MessageCircle,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
+import { ClientMergeAction } from "@/components/dashboard/ClientMergeAction";
 import type { Demande } from "@/types";
 
 // ============================================================================
@@ -44,9 +46,11 @@ interface Client {
   profile_id: string | null;
   notes: string | null;
   actif: boolean;
+  merged_into_id: string | null;
   created_at: string;
   updated_at: string;
   created_by: string | null;
+  is_test: boolean;
 }
 
 type PaymentStatus =
@@ -67,6 +71,7 @@ interface Payment {
   devise: string;
   date_paiement: string;
   statut: PaymentStatus;
+  status: string;
 }
 
 // ============================================================================
@@ -93,6 +98,7 @@ function getTypeColor(type: ClientType | string): string {
   return "from-blue-500 to-indigo-700";
 }
 
+// P6-0 : accepte les valeurs canoniques (D1) en plus des heritees, avec repli.
 function getPaymentStatusLabel(status: PaymentStatus | string): string {
   const labels: Record<string, string> = {
     non_paye: "Non payé",
@@ -100,6 +106,11 @@ function getPaymentStatusLabel(status: PaymentStatus | string): string {
     paye: "Payé",
     rembourse: "Remboursé",
     annule: "Annulé",
+    pending: "Non payé",
+    partial: "Partiel",
+    paid: "Payé",
+    refunded: "Remboursé",
+    voided: "Annulé",
   };
   return labels[status] || status;
 }
@@ -111,6 +122,11 @@ function getPaymentStatusColor(status: PaymentStatus | string): string {
     paye: "bg-green-100 text-green-700",
     rembourse: "bg-slate-100 text-slate-700",
     annule: "bg-slate-100 text-slate-500",
+    pending: "bg-red-100 text-red-700",
+    partial: "bg-amber-100 text-amber-700",
+    paid: "bg-green-100 text-green-700",
+    refunded: "bg-slate-100 text-slate-700",
+    voided: "bg-slate-100 text-slate-500",
   };
   return colors[status] || "bg-slate-100 text-slate-700";
 }
@@ -164,30 +180,88 @@ export default async function ClientDetailPage({
   if (!clientData) notFound();
   const client = clientData as Client;
 
-  // Récupérer les paiements liés (par email ou téléphone)
-  let paymentsData: Payment[] = [];
-  const orFilters: string[] = [];
-  if (client.email) orFilters.push(`client_email.eq.${client.email}`);
-  if (client.telephone) orFilters.push(`client_telephone.eq.${client.telephone}`);
+  // A6 lot 1 : liaison directe par client_record_id (P3) — remplace le
+  // rapprochement par email/téléphone. "Une liaison directe par ID arrivera
+  // dans la prochaine mise à jour" (commentaire laissé dans ce fichier avant
+  // A6) : c'est fait.
+  const { data: paymentsRows } = await supabase
+    .from("payments")
+    .select("*")
+    .eq("client_record_id", client.id)
+    .order("created_at", { ascending: false });
+  const paymentsData = (paymentsRows || []) as Payment[];
 
-  if (orFilters.length > 0) {
+  const { data: demandesRows } = await supabase
+    .from("demandes")
+    .select("*")
+    .eq("client_record_id", client.id)
+    .order("created_at", { ascending: false });
+  const demandesData = (demandesRows || []) as Demande[];
+
+  // Rendez-vous : appointments.client_id référence profiles.id, pas
+  // clients.id — nécessite client.profile_id (peuplé par le trigger P3
+  // uniquement pour les clients ayant un compte).
+  let rdvData: Array<{
+    id: string;
+    reference: string | null;
+    rdv_date: string;
+    rdv_heure: string;
+    statut: string;
+    service_type: string | null;
+  }> = [];
+  if (client.profile_id) {
     const { data } = await supabase
-      .from("payments")
-      .select("*")
-      .or(orFilters.join(","))
-      .order("created_at", { ascending: false });
-    paymentsData = (data || []) as Payment[];
+      .from("appointments")
+      .select("id, reference, rdv_date, rdv_heure, statut, service_type")
+      .eq("client_id", client.profile_id)
+      .order("rdv_date", { ascending: false });
+    rdvData = data || [];
   }
 
-  // Récupérer les demandes liées (par email)
-  let demandesData: Demande[] = [];
-  if (client.email) {
+  // Communications récentes : messages des dossiers du client, tous
+  // regroupés (demande_messages est par dossier, pas par client).
+  const demandeIds = demandesData.map((d) => d.id);
+  let messagesData: Array<{
+    id: string;
+    demande_id: string;
+    author_name: string;
+    content: string;
+    created_at: string;
+  }> = [];
+  if (demandeIds.length > 0) {
     const { data } = await supabase
-      .from("demandes")
-      .select("*")
-      .eq("email", client.email)
-      .order("created_at", { ascending: false });
-    demandesData = (data || []) as Demande[];
+      .from("demande_messages")
+      .select("id, demande_id, author_name, content, created_at")
+      .in("demande_id", demandeIds)
+      .order("created_at", { ascending: false })
+      .limit(10);
+    messagesData = data || [];
+  }
+
+  // A6 lot 3 : détection de doublons (email/téléphone), fusion toujours
+  // proposée à un humain — jamais automatique (voir docs/AUDIT_CRM.md).
+  let survivorInfo: { id: string; nom: string; prenom: string | null } | null = null;
+  let duplicateCandidates: Client[] = [];
+  if (client.merged_into_id) {
+    const { data } = await supabase
+      .from("clients")
+      .select("id, nom, prenom")
+      .eq("id", client.merged_into_id)
+      .single();
+    survivorInfo = data;
+  } else {
+    const orParts: string[] = [];
+    if (client.email) orParts.push(`email.ilike.${client.email}`);
+    if (client.telephone) orParts.push(`telephone.eq.${client.telephone}`);
+    if (orParts.length > 0) {
+      const { data } = await supabase
+        .from("clients")
+        .select("*")
+        .neq("id", client.id)
+        .is("merged_into_id", null)
+        .or(orParts.join(","));
+      duplicateCandidates = (data || []) as Client[];
+    }
   }
 
   const totalFacture = paymentsData.reduce(
@@ -313,16 +387,24 @@ export default async function ClientDetailPage({
         </div>
       </div>
 
-      {/* INFO LIAISON */}
-      {(client.email || client.telephone) && (
-        <div className="mb-6 flex items-start gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4">
-          <Info className="h-5 w-5 shrink-0 text-blue-600" />
-          <div className="text-sm text-blue-900">
-            <strong>Liaison automatique :</strong> les paiements et dossiers
-            ci-dessous sont identifiés en cherchant l'email ou le téléphone du
-            client dans les enregistrements existants. Une liaison directe par
-            ID arrivera dans la prochaine mise à jour.
-          </div>
+      {survivorInfo && (
+        <div className="mb-8 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+          <p className="text-sm font-semibold text-amber-900">
+            Cette fiche a été fusionnée dans{" "}
+            <Link
+              href={`/dashboard/super-admin/clients/${survivorInfo.id}`}
+              className="underline hover:text-amber-700"
+            >
+              {[survivorInfo.prenom, survivorInfo.nom].filter(Boolean).join(" ") || survivorInfo.nom}
+            </Link>
+            . Les données restent visibles ci-dessous à titre d&apos;historique.
+          </p>
+        </div>
+      )}
+
+      {duplicateCandidates.length > 0 && (
+        <div className="mb-8">
+          <ClientMergeAction survivorId={client.id} candidates={duplicateCandidates} />
         </div>
       )}
 
@@ -358,7 +440,7 @@ export default async function ClientDetailPage({
       <div className="mb-8 rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="flex items-center justify-between border-b border-slate-200 p-5">
           <div className="flex items-center gap-2">
-            <Wallet className="h-5 w-5 text-nexus-orange-600" />
+            <Wallet className="h-5 w-5 text-brand-hover" />
             <h2 className="font-display text-lg font-bold text-nexus-blue-950">
               Historique des paiements
             </h2>
@@ -368,7 +450,7 @@ export default async function ClientDetailPage({
           </div>
           <Link
             href="/dashboard/super-admin/paiements"
-            className="inline-flex items-center gap-1 text-xs font-semibold text-nexus-orange-600 hover:text-nexus-orange-700"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-brand-hover hover:text-brand-hover"
           >
             Voir tous
             <ArrowRight className="h-3 w-3" />
@@ -383,7 +465,7 @@ export default async function ClientDetailPage({
             </p>
             <Link
               href="/dashboard/super-admin/paiements"
-              className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-nexus-orange-600 hover:text-nexus-orange-700"
+              className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand-hover hover:text-brand-hover"
             >
               Enregistrer un paiement
               <ArrowRight className="h-3 w-3" />
@@ -402,9 +484,9 @@ export default async function ClientDetailPage({
                       {payment.reference}
                     </span>
                     <span
-                      className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${getPaymentStatusColor(payment.statut)}`}
+                      className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${getPaymentStatusColor(payment.status)}`}
                     >
-                      {getPaymentStatusLabel(payment.statut)}
+                      {getPaymentStatusLabel(payment.status)}
                     </span>
                   </div>
                   <p className="mt-1 text-sm font-semibold text-nexus-blue-950">
@@ -500,6 +582,111 @@ export default async function ClientDetailPage({
           </div>
         )}
       </div>
+
+      {/* RENDEZ-VOUS */}
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="flex items-center justify-between border-b border-slate-200 p-5">
+          <div className="flex items-center gap-2">
+            <CalendarCheck className="h-5 w-5 text-nexus-blue-700" />
+            <h2 className="font-display text-lg font-bold text-nexus-blue-950">
+              Rendez-vous
+            </h2>
+            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-600">
+              {rdvData.length}
+            </span>
+          </div>
+          <Link
+            href="/dashboard/super-admin/rdv"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-nexus-blue-700 hover:text-nexus-blue-900"
+          >
+            Voir tous
+            <ArrowRight className="h-3 w-3" />
+          </Link>
+        </div>
+
+        {rdvData.length === 0 ? (
+          <div className="p-8 text-center">
+            <CalendarCheck className="mx-auto h-10 w-10 text-slate-300" />
+            <p className="mt-3 text-sm text-slate-500">
+              Aucun rendez-vous enregistré pour ce client.
+            </p>
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-100">
+            {rdvData.map((rdv) => (
+              <div key={rdv.id} className="flex items-center gap-4 p-4">
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-700">
+                      {rdv.statut}
+                    </span>
+                    {rdv.service_type && (
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                        {rdv.service_type}
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-1 text-sm font-semibold text-nexus-blue-950">
+                    {rdv.reference || `RDV-${rdv.id.slice(0, 8).toUpperCase()}`}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    <Calendar className="mr-1 inline h-3 w-3" />
+                    {formatDate(rdv.rdv_date)} · {rdv.rdv_heure}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* COMMUNICATIONS RECENTES */}
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="flex items-center justify-between border-b border-slate-200 p-5">
+          <div className="flex items-center gap-2">
+            <MessageCircle className="h-5 w-5 text-nexus-blue-700" />
+            <h2 className="font-display text-lg font-bold text-nexus-blue-950">
+              Communications récentes
+            </h2>
+            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-600">
+              {messagesData.length}
+            </span>
+          </div>
+        </div>
+
+        {messagesData.length === 0 ? (
+          <div className="p-8 text-center">
+            <MessageCircle className="mx-auto h-10 w-10 text-slate-300" />
+            <p className="mt-3 text-sm text-slate-500">
+              Aucun message échangé sur les dossiers de ce client.
+            </p>
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-100">
+            {messagesData.map((message) => (
+              <Link
+                key={message.id}
+                href={`/dashboard/super-admin/demandes/${message.demande_id}`}
+                className="flex items-start gap-3 p-4 transition hover:bg-slate-50"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-sm font-semibold text-nexus-blue-950">
+                      {message.author_name}
+                    </p>
+                    <p className="shrink-0 text-xs text-slate-400">
+                      {formatDate(message.created_at)}
+                    </p>
+                  </div>
+                  <p className="mt-1 line-clamp-2 text-sm text-slate-600">
+                    {message.content}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
     </DashboardShell>
   );
 }
@@ -551,7 +738,7 @@ function StatBlock({
 }) {
   const colorMap = {
     blue: "from-nexus-blue-600 to-nexus-blue-800",
-    orange: "from-nexus-orange-400 to-nexus-orange-600",
+    orange: "from-brand to-brand",
     green: "from-emerald-400 to-emerald-600",
     red: "from-red-500 to-red-700",
   };

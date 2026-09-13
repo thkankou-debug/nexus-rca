@@ -44,6 +44,17 @@ import {
   ListChecks,
   Award,
   Sliders,
+  Coins,
+  Tag,
+  CalendarClock,
+  Scale,
+  Layers,
+  HelpCircle,
+  MessageSquareQuote,
+  Handshake,
+  Globe2,
+  Building2,
+  Landmark,
   type LucideIcon,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -119,6 +130,11 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
       label: "Caisse & paiements",
       items: [
         { href: "/dashboard/agent/caisse", label: "Caisse", icon: ShoppingCart },
+        { href: "/dashboard/agent/caisse-sessions", label: "Sessions caisse", icon: Wallet },
+        { href: "/dashboard/agent/devis", label: "Devis", icon: ClipboardCheck },
+        { href: "/dashboard/agent/factures", label: "Factures", icon: FileBarChart },
+        { href: "/dashboard/agent/echeanciers", label: "Échéanciers", icon: CalendarClock },
+        { href: "/dashboard/agent/commissions", label: "Mes commissions", icon: Coins },
         { href: "/dashboard/agent/paiements", label: "Mes paiements", icon: Wallet },
         { href: "/dashboard/agent/transferts", label: "Transferts", icon: Send },
         { href: "/dashboard/agent/depenses", label: "Mes dépenses", icon: Receipt },
@@ -170,6 +186,20 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
       label: "Paiements & rapports",
       items: [
         { href: "/dashboard/admin/paiements", label: "Paiements", icon: Wallet },
+        { href: "/dashboard/super-admin/devis", label: "Devis", icon: ClipboardCheck },
+        { href: "/dashboard/super-admin/factures", label: "Factures", icon: FileBarChart },
+        { href: "/dashboard/super-admin/caisse-sessions", label: "Sessions caisse", icon: Wallet },
+        { href: "/dashboard/super-admin/echeanciers", label: "Échéanciers", icon: CalendarClock },
+        { href: "/dashboard/super-admin/commissions", label: "Commissions", icon: Coins },
+        { href: "/dashboard/super-admin/categories-compta", label: "Catégories comptables", icon: Tag },
+        { href: "/dashboard/super-admin/rapprochement", label: "Rapprochement financier", icon: Scale },
+        { href: "/dashboard/super-admin/services", label: "Services et tarifs", icon: Layers },
+        { href: "/dashboard/super-admin/faq", label: "FAQ", icon: HelpCircle },
+        { href: "/dashboard/super-admin/temoignages", label: "Témoignages", icon: MessageSquareQuote },
+        { href: "/dashboard/super-admin/partenaires", label: "Partenaires", icon: Handshake },
+        { href: "/dashboard/super-admin/pays-destinations", label: "Pays & destinations", icon: Globe2 },
+        { href: "/dashboard/super-admin/bureaux", label: "Bureaux", icon: Building2 },
+        { href: "/dashboard/super-admin/contenus-site", label: "Contenus de page", icon: FileText },
         { href: "/dashboard/admin/rapports", label: "Rapports mensuels", icon: FileBarChart },
       ],
     },
@@ -198,6 +228,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/super-admin/stats-agents", label: "Performances équipe", icon: Trophy },
         { href: "/dashboard/super-admin/rapports", label: "Rapports financiers", icon: FileBarChart },
         { href: "/dashboard/super-admin/rapports-mensuels", label: "Rapports mensuels (CRON)", icon: FileBarChart },
+        { href: "/dashboard/super-admin/rapprochement", label: "Rapprochement financier", icon: Scale },
       ],
     },
     {
@@ -233,7 +264,13 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/super-admin/paiements/nouveau-lien", label: "Nouveau lien paiement", icon: Sparkles, highlight: true },
         { href: "/dashboard/super-admin/paiements/en-attente", label: "Paiements en attente", icon: Wallet },
         { href: "/dashboard/super-admin/paiements", label: "Tous les paiements", icon: Wallet },
+        { href: "/dashboard/super-admin/devis", label: "Devis", icon: ClipboardCheck },
+        { href: "/dashboard/super-admin/factures", label: "Factures", icon: FileBarChart },
         { href: "/dashboard/super-admin/caisse", label: "Caisse rapide", icon: ShoppingCart },
+        { href: "/dashboard/super-admin/caisse-sessions", label: "Sessions caisse", icon: Wallet },
+        { href: "/dashboard/super-admin/echeanciers", label: "Échéanciers", icon: CalendarClock },
+        { href: "/dashboard/super-admin/commissions", label: "Commissions", icon: Coins },
+        { href: "/dashboard/super-admin/categories-compta", label: "Catégories comptables", icon: Tag },
         { href: "/dashboard/super-admin/transferts", label: "Transferts", icon: Send },
         { href: "/dashboard/super-admin/depenses", label: "Dépenses", icon: Receipt },
       ],
@@ -262,11 +299,29 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/super-admin/equipe", label: "Équipe Nexus", icon: Briefcase },
         { href: "/dashboard/super-admin/roles", label: "Rôles & permissions", icon: ShieldCheck },
         { href: "/dashboard/super-admin/i18n", label: "Multi-langue", icon: Globe },
+        { href: "/dashboard/super-admin/services", label: "Services et tarifs", icon: Layers },
+        { href: "/dashboard/super-admin/faq", label: "FAQ", icon: HelpCircle },
+        { href: "/dashboard/super-admin/temoignages", label: "Témoignages", icon: MessageSquareQuote },
+        { href: "/dashboard/super-admin/partenaires", label: "Partenaires", icon: Handshake },
+        { href: "/dashboard/super-admin/pays-destinations", label: "Pays & destinations", icon: Globe2 },
+        { href: "/dashboard/super-admin/bureaux", label: "Bureaux", icon: Building2 },
+        { href: "/dashboard/super-admin/informations-institutionnelles", label: "Informations institutionnelles", icon: Landmark },
+        { href: "/dashboard/super-admin/contenus-site", label: "Contenus de page", icon: FileText },
         { href: "/dashboard/super-admin/audit-log", label: "Audit log", icon: ShieldCheck },
         { href: "/dashboard/super-admin/parametres", label: "Paramètres agence", icon: Settings },
       ],
     },
   ],
+  // P2 (RBAC 9 rôles) + accueil_caisse (NEXUS_RCA_DASHBOARD_ADMINISTRATION.md,
+  // 10/09) : aucune section pour ces rôles pour l'instant (arrive avec A3 /
+  // ModuleAdminShell) — voir la note au-dessus de ROLE_LABELS.
+  dg: [],
+  daf: [],
+  chef_service: [],
+  comptable: [],
+  moderateur: [],
+  partenaire: [],
+  accueil_caisse: [],
 };
 
 // Aplatit les groupes en items pour la palette de commandes et autres usages.
@@ -274,11 +329,24 @@ function flattenNav(groups: NavGroup[]): NavItem[] {
   return groups.flatMap((g) => g.items);
 }
 
+// P2 (RBAC 9 rôles) : entrées dg/daf/chef_service/comptable/moderateur/
+// partenaire ajoutées uniquement pour que UserRole (10 valeurs) compile —
+// aucune de ces valeurs n'est routée vers DashboardShell aujourd'hui (aucun
+// compte, aucune section : voir lib/rbac.ts homeForRole/ROUTE_ALLOWED_ROLES).
+// Fichier gelé par CLAUDE.md : ne pas étoffer ces entrées sans demande
+// explicite, le vrai shell pour ces rôles arrive avec A3.
 const ROLE_LABELS: Record<UserRole, string> = {
   client: "Espace client",
   agent: "Espace agent",
   admin: "Espace admin",
   super_admin: "Super admin",
+  dg: "Espace direction générale",
+  daf: "Espace finances",
+  chef_service: "Espace chef de service",
+  comptable: "Espace comptabilité",
+  moderateur: "Espace modération",
+  partenaire: "Espace partenaire",
+  accueil_caisse: "Espace accueil et caisse",
 };
 
 const ROLE_COLORS: Record<UserRole, string> = {
@@ -286,6 +354,13 @@ const ROLE_COLORS: Record<UserRole, string> = {
   agent: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300",
   admin: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300",
   super_admin: "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300",
+  dg: "bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300",
+  daf: "bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300",
+  chef_service: "bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300",
+  comptable: "bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300",
+  moderateur: "bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300",
+  partenaire: "bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300",
+  accueil_caisse: "bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300",
 };
 
 export function DashboardShell({
@@ -482,7 +557,7 @@ export function DashboardShell({
 
           <div className="shrink-0 border-b border-line p-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-800 to-nexus-orange-500 text-sm font-bold text-white shadow-elev-2">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-800 to-brand text-sm font-bold text-white shadow-elev-2">
                 {initials.toUpperCase() || "U"}
               </div>
               <div className="min-w-0 flex-1">
@@ -556,7 +631,7 @@ export function DashboardShell({
                             active
                               ? "bg-nexus-blue-950 text-white shadow-elev-2 dark:bg-brand dark:text-white"
                               : item.highlight
-                                ? "bg-brand-subtle text-nexus-orange-700 hover:bg-nexus-orange-100 dark:text-brand"
+                                ? "bg-brand-subtle text-brand-hover hover:bg-brand-subtle dark:text-brand"
                                 : "text-ink-muted hover:bg-surface-sunken hover:text-ink"
                           )}
                         >

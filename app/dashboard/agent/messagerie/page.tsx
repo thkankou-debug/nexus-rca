@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft, MessageCircle, Wrench } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 
 export const metadata = {
   title: "Messagerie | Agent",
@@ -18,18 +17,18 @@ export default async function AgentMessageriePage() {
   const profile = await requireProfile(["agent", "admin", "super_admin"]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <div className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-6 shadow-xl sm:p-8">
-        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-nexus-orange-500/20 blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-nexus-orange-500/10 blur-3xl" />
+        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-brand/20 blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-brand/10 blur-3xl" />
 
         <div className="relative flex flex-wrap items-center gap-6">
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-2xl">
+          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-2xl">
             <MessageCircle className="h-10 w-10" />
           </div>
 
           <div className="min-w-0 flex-1">
-            <span className="inline-flex items-center gap-1 rounded-full bg-nexus-orange-500/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-nexus-orange-300">
+            <span className="inline-flex items-center gap-1 rounded-full bg-brand/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-brand">
               <Wrench className="h-3 w-3" />
               En développement
             </span>
@@ -50,12 +49,12 @@ export default async function AgentMessageriePage() {
         </p>
         <Link
           href="/dashboard/agent"
-          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600"
+          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-brand px-6 py-3 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover"
         >
           <ArrowLeft className="h-4 w-4" />
           Retour au tableau de bord
         </Link>
       </div>
-    </DashboardShell>
+    </>
   );
 }

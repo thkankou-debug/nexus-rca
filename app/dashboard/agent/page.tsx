@@ -16,7 +16,7 @@ import {
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { AcceptationDossiers, type AffectationEnAttente } from "@/components/dashboard/AcceptationDossiers";
 import { DashboardHero } from "@/components/dashboard/DashboardHero";
 import { AgentAvatar } from "@/components/dashboard/AgentAvatar";
 import { Sparkline } from "@/components/ui/Sparkline";
@@ -101,58 +101,65 @@ export default async function AgentDashboardPage() {
   const startOfYear = getStartOfYear();
 
   // Stats personnelles
-  const { count: rdvThisMonth } = await supabase
-    .from("appointments")
-    .select("*", { count: "exact", head: true })
-    .eq("agent_id", profile.id)
-    .gte("created_at", startOfMonth);
+  const { count: rdvThisMonth } = await 
+    supabase
+      .from("appointments")
+      .select("*", { count: "exact", head: true })
+      .eq("agent_id", profile.id)
+      .gte("created_at", startOfMonth).eq("is_test", false);
 
-  const { count: rdvCompleted } = await supabase
-    .from("appointments")
-    .select("*", { count: "exact", head: true })
-    .eq("agent_id", profile.id)
-    .eq("statut", "termine")
-    .gte("created_at", startOfMonth);
+  const { count: rdvCompleted } = await 
+    supabase
+      .from("appointments")
+      .select("*", { count: "exact", head: true })
+      .eq("agent_id", profile.id)
+      .eq("statut", "termine")
+      .gte("created_at", startOfMonth).eq("is_test", false);
 
-  const { data: paymentsThisMonth } = await supabase
-    .from("payments")
-    .select("montant, devise")
-    .eq("created_by", profile.id)
-    .gte("created_at", startOfMonth);
+  const { data: paymentsThisMonth } = await 
+    supabase
+      .from("payments")
+      .select("montant_recu, devise")
+      .eq("created_by", profile.id)
+      .gte("created_at", startOfMonth).eq("is_test", false);
 
   const totalPaiementsXAF = (paymentsThisMonth || [])
     .filter((p) => p.devise === "XAF")
-    .reduce((sum, p) => sum + Number(p.montant || 0), 0);
+    .reduce((sum, p) => sum + Number(p.montant_recu || 0), 0);
 
   const totalPaiementsCount = paymentsThisMonth?.length || 0;
 
-  const { count: demandesThisMonth } = await supabase
-    .from("demandes")
-    .select("*", { count: "exact", head: true })
-    .eq("agent_id", profile.id)
-    .gte("created_at", startOfMonth);
+  const { count: demandesThisMonth } = await 
+    supabase
+      .from("demandes")
+      .select("*", { count: "exact", head: true })
+      .eq("agent_id", profile.id)
+      .gte("created_at", startOfMonth).eq("is_test", false);
 
-  const { count: rdvThisYear } = await supabase
-    .from("appointments")
-    .select("*", { count: "exact", head: true })
-    .eq("agent_id", profile.id)
-    .gte("created_at", startOfYear);
+  const { count: rdvThisYear } = await 
+    supabase
+      .from("appointments")
+      .select("*", { count: "exact", head: true })
+      .eq("agent_id", profile.id)
+      .gte("created_at", startOfYear).eq("is_test", false);
 
-  const { data: paymentsThisYear } = await supabase
-    .from("payments")
-    .select("montant, devise")
-    .eq("created_by", profile.id)
-    .gte("created_at", startOfYear);
+  const { data: paymentsThisYear } = await 
+    supabase
+      .from("payments")
+      .select("montant_recu, devise")
+      .eq("created_by", profile.id)
+      .gte("created_at", startOfYear).eq("is_test", false);
 
   const totalPaiementsYearXAF = (paymentsThisYear || [])
     .filter((p) => p.devise === "XAF")
-    .reduce((sum, p) => sum + Number(p.montant || 0), 0);
+    .reduce((sum, p) => sum + Number(p.montant_recu || 0), 0);
 
   // Leaderboard
-  const { data: allAgents } = await supabase
-    .from("profiles")
-    .select("id, prenom, nom, poste, role")
-    .in("role", ["agent", "admin", "super_admin"]);
+  const { data: allAgents } = await 
+    supabase
+      .from("profiles")
+      .select("id, prenom, nom, poste, role")
+      .in("role", ["agent", "admin", "super_admin"]).eq("is_test", false);
 
   const agents = (allAgents || []) as Array<{
     id: string;
@@ -164,22 +171,24 @@ export default async function AgentDashboardPage() {
 
   const leaderboardData: AgentScore[] = await Promise.all(
     agents.map(async (agent) => {
-      const { count: agentRdvCount } = await supabase
-        .from("appointments")
-        .select("*", { count: "exact", head: true })
-        .eq("agent_id", agent.id)
-        .eq("statut", "termine")
-        .gte("created_at", startOfMonth);
+      const { count: agentRdvCount } = await 
+        supabase
+          .from("appointments")
+          .select("*", { count: "exact", head: true })
+          .eq("agent_id", agent.id)
+          .eq("statut", "termine")
+          .gte("created_at", startOfMonth).eq("is_test", false);
 
-      const { data: agentPayments } = await supabase
-        .from("payments")
-        .select("montant, devise")
-        .eq("created_by", agent.id)
-        .gte("created_at", startOfMonth);
+      const { data: agentPayments } = await 
+        supabase
+          .from("payments")
+          .select("montant_recu, devise")
+          .eq("created_by", agent.id)
+          .gte("created_at", startOfMonth).eq("is_test", false);
 
       const agentPaiementsXAF = (agentPayments || [])
         .filter((p) => p.devise === "XAF")
-        .reduce((sum, p) => sum + Number(p.montant || 0), 0);
+        .reduce((sum, p) => sum + Number(p.montant_recu || 0), 0);
 
       const score =
         (agentRdvCount || 0) * 100 + Math.floor(agentPaiementsXAF / 1000);
@@ -221,8 +230,17 @@ export default async function AgentDashboardPage() {
     [profile.prenom, profile.nom].filter(Boolean).join(" ") || "Agent";
   const initials = (profile.prenom?.[0] ?? "") + (profile.nom?.[0] ?? "");
 
+  // §7.3 (lot G1) : dossiers affectés en attente d'acceptation de l'agent.
+  const { data: affectationsEnAttente } = await supabase
+    .from("demandes")
+    .select("id, reference, nom_complet, service, created_at")
+    .eq("agent_id", profile.id)
+    .eq("acceptation_status", "en_attente")
+    .order("created_at", { ascending: false })
+    .limit(20);
+
   return (
-    <DashboardShell profile={profile}>
+    <>
       {/* HERO PREMIUM (composant partagé) */}
       <DashboardHero
         initials={initials.toUpperCase() || "A"}
@@ -261,6 +279,9 @@ export default async function AgentDashboardPage() {
         }
       />
 
+      {/* §7.3 : affectations à accepter — disparaît quand tout est traité */}
+      <AcceptationDossiers dossiers={(affectationsEnAttente || []) as AffectationEnAttente[]} />
+
       {/* ACTIONS RAPIDES */}
       <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <QuickAction
@@ -273,7 +294,7 @@ export default async function AgentDashboardPage() {
           href="/dashboard/agent/rdv"
           icon={Calendar}
           label="Mon agenda"
-          color="from-nexus-orange-500 to-nexus-orange-700"
+          color="from-brand to-brand"
         />
         <QuickAction
           href="/dashboard/agent/clients"
@@ -292,7 +313,7 @@ export default async function AgentDashboardPage() {
       {/* STATS */}
       <div className="mb-6">
         <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold text-nexus-blue-950">
-          <Zap className="h-5 w-5 text-nexus-orange-600" />
+          <Zap className="h-5 w-5 text-brand-hover" />
           Mes performances ce mois
         </h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -349,7 +370,7 @@ export default async function AgentDashboardPage() {
       <div className="mb-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="mb-5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-on-brand shadow">
               <Target className="h-5 w-5" />
             </div>
             <div>
@@ -442,7 +463,7 @@ export default async function AgentDashboardPage() {
                   className={cn(
                     "flex items-center gap-4 rounded-2xl border p-4 transition-colors",
                     agent.isCurrent
-                      ? "border-nexus-orange-300 bg-nexus-orange-50/40"
+                      ? "border-brand/40 bg-brand-subtle/40"
                       : "border-slate-200 bg-white hover:bg-slate-50/60"
                   )}
                 >
@@ -465,14 +486,14 @@ export default async function AgentDashboardPage() {
                         className={cn(
                           "font-semibold",
                           agent.isCurrent
-                            ? "text-nexus-orange-700"
+                            ? "text-brand-hover"
                             : "text-nexus-blue-950"
                         )}
                       >
                         {agent.name}
                       </p>
                       {agent.isCurrent && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-nexus-orange-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-brand px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-on-brand">
                           <Star className="h-2.5 w-2.5" />
                           Vous
                         </span>
@@ -481,7 +502,7 @@ export default async function AgentDashboardPage() {
                     <p className="text-xs text-slate-500">{agent.poste}</p>
                     <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-600">
                       <span className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3 text-nexus-orange-600" />
+                        <Calendar className="h-3 w-3 text-brand-hover" />
                         {agent.rdvCount} RDV
                       </span>
                       <span className="flex items-center gap-1">
@@ -505,7 +526,7 @@ export default async function AgentDashboardPage() {
           </div>
         )}
       </div>
-    </DashboardShell>
+    </>
   );
 }
 
@@ -536,7 +557,7 @@ function QuickAction({
       <div className="min-w-0 flex-1">
         <p className="text-sm font-semibold text-nexus-blue-950">{label}</p>
       </div>
-      <ArrowRight className="h-4 w-4 shrink-0 text-slate-300 transition group-hover:translate-x-1 group-hover:text-nexus-orange-600" />
+      <ArrowRight className="h-4 w-4 shrink-0 text-slate-300 transition group-hover:translate-x-1 group-hover:text-brand-hover" />
     </Link>
   );
 }
@@ -559,13 +580,13 @@ function StatCard({
   delta?: number;
 }) {
   const gradientMap: Record<string, string> = {
-    orange: "from-nexus-orange-500 to-nexus-orange-700",
+    orange: "from-brand to-brand",
     green: "from-emerald-500 to-emerald-700",
     blue: "from-blue-500 to-blue-700",
     purple: "from-purple-500 to-purple-700",
   };
   const sparkColorMap: Record<string, string> = {
-    orange: "text-nexus-orange-500",
+    orange: "text-brand",
     green: "text-emerald-500",
     blue: "text-blue-500",
     purple: "text-purple-500",
@@ -643,7 +664,7 @@ function ProgressBar({
   isMoney?: boolean;
 }) {
   const colorMap: Record<string, string> = {
-    orange: "bg-gradient-to-r from-nexus-orange-500 to-nexus-orange-600",
+    orange: "bg-brand",
     green: "bg-gradient-to-r from-green-500 to-green-600",
     blue: "bg-gradient-to-r from-blue-500 to-blue-600",
   };

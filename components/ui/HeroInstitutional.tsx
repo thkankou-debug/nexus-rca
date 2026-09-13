@@ -38,7 +38,7 @@ export function HeroInstitutional({
       <div className="relative mx-auto max-w-5xl px-4 lg:px-8">
         <div className="text-center">
           {eyebrow && (
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-overline text-nexus-orange-300 backdrop-blur">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-overline text-brand backdrop-blur">
               {eyebrowIcon}
               {eyebrow}
             </div>

@@ -167,7 +167,7 @@ export function I18nClient({ initialLanguages, initialKeys }: Props) {
             type="button"
             onClick={handleSaveAll}
             disabled={saving}
-            className="inline-flex items-center gap-2 rounded-lg bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:bg-slate-300"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-on-brand shadow-sm transition-colors hover:bg-brand-hover disabled:cursor-not-allowed disabled:bg-slate-300"
           >
             <Save className="h-4 w-4" />
             {saving ? "Enregistrement…" : "Enregistrer la configuration"}
@@ -178,7 +178,7 @@ export function I18nClient({ initialLanguages, initialKeys }: Props) {
       {/* ─── Section langues ─────────────────────────────────────── */}
       <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="mb-5 flex items-start gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-on-brand">
             <Globe className="h-5 w-5" />
           </div>
           <div>
@@ -198,7 +198,7 @@ export function I18nClient({ initialLanguages, initialKeys }: Props) {
               className={cn(
                 "rounded-xl border-2 p-4 transition-colors",
                 lang.is_default
-                  ? "border-nexus-orange-500 bg-nexus-orange-50/50"
+                  ? "border-brand bg-brand-subtle/50"
                   : lang.enabled
                   ? "border-emerald-200 bg-white"
                   : "border-slate-200 bg-slate-50/50"
@@ -217,7 +217,7 @@ export function I18nClient({ initialLanguages, initialKeys }: Props) {
                   </div>
                 </div>
                 {lang.is_default && (
-                  <span className="rounded-full bg-nexus-orange-500 px-2 py-0.5 text-[10px] font-bold uppercase text-white">
+                  <span className="rounded-full bg-brand px-2 py-0.5 text-[10px] font-bold uppercase text-on-brand">
                     Défaut
                   </span>
                 )}
@@ -323,7 +323,7 @@ export function I18nClient({ initialLanguages, initialKeys }: Props) {
               <button
                 type="button"
                 onClick={() => toast("Création de clé — bientôt disponible", { icon: "✨" })}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-nexus-orange-500 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-nexus-orange-600"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-on-brand shadow-sm transition-colors hover:bg-brand-hover"
               >
                 <Plus className="h-3.5 w-3.5" />
                 Nouvelle clé
@@ -340,7 +340,7 @@ export function I18nClient({ initialLanguages, initialKeys }: Props) {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Rechercher par clé, namespace ou valeur…"
-                className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-sm text-slate-900 placeholder-slate-400 focus:border-nexus-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-nexus-orange-100"
+                className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-sm text-slate-900 placeholder-slate-400 focus:border-focus focus:bg-white focus:outline-none focus:ring-2 focus:ring-focus/25"
               />
             </div>
             <div className="flex flex-wrap gap-1.5">
@@ -454,7 +454,7 @@ export function I18nClient({ initialLanguages, initialKeys }: Props) {
                               <span className="text-base leading-none">{lang.flag}</span>
                               {lang.label}
                               {lang.is_default && (
-                                <span className="ml-1 rounded bg-nexus-orange-100 px-1 py-0 text-[9px] font-bold uppercase text-nexus-orange-700">
+                                <span className="ml-1 rounded bg-brand-subtle px-1 py-0 text-[9px] font-bold uppercase text-brand-hover">
                                   défaut
                                 </span>
                               )}
@@ -475,7 +475,7 @@ export function I18nClient({ initialLanguages, initialKeys }: Props) {
                                 }))
                               }
                               rows={2}
-                              className="w-full resize-none rounded-md border border-slate-200 bg-white px-2 py-1.5 text-sm text-slate-900 focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-100"
+                              className="w-full resize-none rounded-md border border-slate-200 bg-white px-2 py-1.5 text-sm text-slate-900 focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
                               placeholder={`Traduction en ${lang.label.toLowerCase()}…`}
                             />
                           ) : (

@@ -18,7 +18,7 @@ export interface HeroStat {
 
 const STAT_VALUE_CLASS: Record<HeroStatAccent, string> = {
   white: "text-white",
-  orange: "text-nexus-orange-300",
+  orange: "text-brand",
   rose: "text-rose-300",
   emerald: "text-emerald-300",
 };
@@ -59,17 +59,17 @@ export function DashboardHero({
       {/* Blob orange unique, ultra discret */}
       <div
         aria-hidden
-        className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-nexus-orange-500/10 blur-3xl"
+        className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-brand/10 blur-3xl"
       />
 
       {/* Header — avatar + identité + slot droite */}
       <div className="relative flex flex-wrap items-center gap-5">
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-base font-bold text-white shadow-md sm:h-16 sm:w-16 sm:text-lg">
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-brand text-base font-bold text-on-brand shadow-md sm:h-16 sm:w-16 sm:text-lg">
           {initials || "U"}
         </div>
 
         <div className="min-w-0 flex-1">
-          <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] text-nexus-orange-300">
+          <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] text-brand">
             {roleLabel}
           </span>
           <h1 className="mt-1.5 font-display text-xl font-bold leading-tight text-white sm:text-2xl">

@@ -27,6 +27,17 @@ export async function POST(request: Request) {
       );
     }
 
+    // Réservé au staff : ce endpoint envoie un e-mail à une adresse
+    // arbitraire (recipient_email) — un client ne doit pas pouvoir
+    // l'utiliser pour renvoyer le reçu de quelqu'un d'autre vers sa propre
+    // boîte. Le téléchargement self-service passe par
+    // /api/payments/[id]/receipt (P9, ownership vérifiée par paiement).
+    const { data: actor } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+    const role = (actor as { role?: string } | null)?.role || "";
+    if (role !== "agent" && role !== "admin" && role !== "super_admin") {
+      return NextResponse.json({ error: "Réservé au staff" }, { status: 403 });
+    }
+
     const body = (await request.json()) as SendReceiptBody;
     if (!body.payment_id || !body.pdf_base64) {
       return NextResponse.json(
@@ -55,6 +66,15 @@ export async function POST(request: Request) {
         { error: "Aucun email destinataire" },
         { status: 400 }
       );
+    }
+
+    // L2 : jamais d'email reel pour un paiement TEST_
+    if (payment.is_test) {
+      return NextResponse.json({
+        success: true,
+        skipped: "is_test",
+        message: "Paiement de test : aucun email envoyé.",
+      });
     }
 
     // Verifier la cle API Resend
@@ -109,7 +129,7 @@ export async function POST(request: Request) {
             </p>
             <hr style="border: none; border-top: 1px solid #E2E8F0; margin: 30px 0;">
             <p style="color: #94A3B8; font-size: 12px; text-align: center;">
-              Nexus RCA · Relais Sica, Bangui, RCA<br>
+              Nexus RCA · Croisement Marabena, Bangui, RCA<br>
               +236 73 26 96 92 · contact@nexusrca.com · www.nexusrca.com
             </p>
           </div>

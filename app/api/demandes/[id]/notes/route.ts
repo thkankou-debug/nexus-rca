@@ -1,12 +1,14 @@
 // ============================================================================
 // API ROUTE — POST /api/demandes/:id/notes
-// Notes internes admin/super_admin (table demande_notes append-only).
-// JAMAIS visible par l'agent ni le client (RLS).
+// Notes internes admin/super_admin sur tous les dossiers ; agent sur ses
+// propres dossiers uniquement (L3 Étape 2b, migration 075, décision Thierry
+// 09/09/2026). JAMAIS visible par le client (RLS).
 // ============================================================================
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
+import { logAudit } from "@/lib/audit";
 
 export const dynamic = "force-dynamic";
 
@@ -42,9 +44,9 @@ export async function POST(
       .single();
 
     const role = (actor as { role?: string } | null)?.role || "";
-    if (role !== "admin" && role !== "super_admin") {
+    if (role !== "admin" && role !== "super_admin" && role !== "agent") {
       return NextResponse.json(
-        { success: false, error: "Réservé admin/super_admin" },
+        { success: false, error: "Réservé admin/super_admin/agent" },
         { status: 403 }
       );
     }
@@ -68,7 +70,7 @@ export async function POST(
 
     const { data: demandeRow } = await admin
       .from("demandes")
-      .select("id")
+      .select("id, agent_id")
       .eq("id", params.id)
       .single();
 
@@ -76,6 +78,13 @@ export async function POST(
       return NextResponse.json(
         { success: false, error: "Dossier introuvable" },
         { status: 404 }
+      );
+    }
+
+    if (role === "agent" && (demandeRow as { agent_id: string | null }).agent_id !== user.id) {
+      return NextResponse.json(
+        { success: false, error: "Ce dossier ne vous est pas assigné" },
+        { status: 403 }
       );
     }
 
@@ -107,6 +116,15 @@ export async function POST(
         { status: 500 }
       );
     }
+
+    await logAudit({
+      userId: user.id,
+      userRole: role,
+      action: "note_created",
+      entityType: "demande_notes",
+      entityId: (note as { id: string }).id,
+      newValue: { demande_id: params.id, author_name: authorName, content },
+    });
 
     return NextResponse.json({
       success: true,

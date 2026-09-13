@@ -23,8 +23,8 @@ export const NEXUS_CONTACT = {
   websiteUrl: "https://www.nexusrca.com",
 
   // Adresse
-  addressLine1: "Relais Sica, vers Hôpital Général",
-  addressLine2: "Bangui, République Centrafricaine",
+  addressLine1: "Croisement Marabena, Route de l'Aéroport",
+  addressLine2: "PO.BOX 1204, Bangui, République Centrafricaine",
   addressShort: "Bangui, République Centrafricaine",
 
   // Note importante

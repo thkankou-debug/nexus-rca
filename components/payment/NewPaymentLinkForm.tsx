@@ -160,7 +160,7 @@ export default function NewPaymentLinkForm() {
               <p className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">
                 Lien à envoyer au client
               </p>
-              <div className="flex flex-col gap-2 rounded-2xl border-2 border-nexus-orange-200 bg-nexus-orange-50 p-3 sm:flex-row">
+              <div className="flex flex-col gap-2 rounded-2xl border-2 border-brand/30 bg-brand-subtle p-3 sm:flex-row">
                 <input
                   type="text"
                   readOnly
@@ -267,7 +267,7 @@ export default function NewPaymentLinkForm() {
       </Link>
 
       <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-lg">
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand text-on-brand shadow-lg">
           <Sparkles className="h-6 w-6" />
         </div>
         <div>
@@ -284,7 +284,7 @@ export default function NewPaymentLinkForm() {
         <div className="space-y-5">
           {/* SECTION CLIENT */}
           <div>
-            <p className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+            <p className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-hover">
               <User className="h-3.5 w-3.5" />
               Informations client
             </p>
@@ -299,7 +299,7 @@ export default function NewPaymentLinkForm() {
                   value={clientNom}
                   onChange={(e) => setClientNom(e.target.value)}
                   placeholder="Ex: Marie Dupont"
-                  className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                  className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
                 />
               </div>
 
@@ -312,7 +312,7 @@ export default function NewPaymentLinkForm() {
                   value={clientEmail}
                   onChange={(e) => setClientEmail(e.target.value)}
                   placeholder="client@example.com"
-                  className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                  className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
                 />
               </div>
 
@@ -325,7 +325,7 @@ export default function NewPaymentLinkForm() {
                   value={clientTel}
                   onChange={(e) => setClientTel(e.target.value)}
                   placeholder="+236 70 00 00 00"
-                  className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                  className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
                 />
               </div>
             </div>
@@ -333,7 +333,7 @@ export default function NewPaymentLinkForm() {
 
           {/* SECTION SERVICE */}
           <div>
-            <p className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+            <p className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-hover">
               <FileText className="h-3.5 w-3.5" />
               Service
             </p>
@@ -351,7 +351,7 @@ export default function NewPaymentLinkForm() {
                       onClick={() => setService(s)}
                       className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
                         service === s
-                          ? "border-nexus-orange-500 bg-nexus-orange-100 text-nexus-orange-700"
+                          ? "border-brand bg-brand-subtle text-brand-hover"
                           : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
                       }`}
                     >
@@ -371,7 +371,7 @@ export default function NewPaymentLinkForm() {
                     value={serviceCustom}
                     onChange={(e) => setServiceCustom(e.target.value)}
                     placeholder="Ex: Service personnalisé"
-                    className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                    className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
                   />
                 </div>
               )}
@@ -385,7 +385,7 @@ export default function NewPaymentLinkForm() {
                   onChange={(e) => setDescription(e.target.value)}
                   rows={2}
                   placeholder="Ex: Frais de constitution dossier visa étudiant Canada"
-                  className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                  className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
                 />
               </div>
             </div>
@@ -393,7 +393,7 @@ export default function NewPaymentLinkForm() {
 
           {/* SECTION MONTANT */}
           <div>
-            <p className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-nexus-orange-600">
+            <p className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-hover">
               <DollarSign className="h-3.5 w-3.5" />
               Montant
             </p>
@@ -410,7 +410,7 @@ export default function NewPaymentLinkForm() {
                   placeholder="250000"
                   min="0"
                   step="0.01"
-                  className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                  className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
                 />
               </div>
 
@@ -421,7 +421,7 @@ export default function NewPaymentLinkForm() {
                 <select
                   value={devise}
                   onChange={(e) => setDevise(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                  className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
                 >
                   {DEVISES.map((d) => (
                     <option key={d.code} value={d.code}>
@@ -443,7 +443,7 @@ export default function NewPaymentLinkForm() {
               onChange={(e) => setNotesStaff(e.target.value)}
               rows={2}
               placeholder="Ex: Acompte de 50%, reste à payer après réception visa"
-              className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+              className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
             />
           </div>
 
@@ -459,7 +459,7 @@ export default function NewPaymentLinkForm() {
             type="button"
             onClick={handleSubmit}
             disabled={submitting}
-            className="flex w-full items-center justify-center gap-2 rounded-full bg-nexus-orange-500 px-6 py-3.5 text-sm font-semibold text-white shadow-lg hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-brand px-6 py-3.5 text-sm font-semibold text-on-brand shadow-lg hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50"
           >
             {submitting ? (
               <>

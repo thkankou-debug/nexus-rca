@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { TaskItem } from "@/components/dashboard/rh/OnboardingDetailView";
 import { formatDateShort } from "@/components/dashboard/rh/format";
@@ -57,7 +56,7 @@ export default async function MyOnboardingPage() {
 
   if (!employee) {
     return (
-      <DashboardShell profile={profile}>
+      <>
         <BackButton
           fallbackHref="/dashboard/agent/mes-rh"
           label="Retour à mon espace RH"
@@ -72,7 +71,7 @@ export default async function MyOnboardingPage() {
             </p>
           </div>
         </div>
-      </DashboardShell>
+      </>
     );
   }
 
@@ -89,7 +88,7 @@ export default async function MyOnboardingPage() {
 
   if (!onboarding) {
     return (
-      <DashboardShell profile={profile}>
+      <>
         <BackButton
           fallbackHref="/dashboard/agent/mes-rh"
           label="Retour à mon espace RH"
@@ -105,7 +104,7 @@ export default async function MyOnboardingPage() {
             vous. Contactez votre administrateur.
           </p>
         </div>
-      </DashboardShell>
+      </>
     );
   }
 
@@ -133,7 +132,7 @@ export default async function MyOnboardingPage() {
     .onboarding_templates?.name;
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/agent/mes-rh"
         label="Retour à mon espace RH"
@@ -143,14 +142,14 @@ export default async function MyOnboardingPage() {
       <section className="relative mb-8 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 px-6 py-7 shadow-lg sm:px-9 sm:py-8">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
+          className="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-brand/15 blur-[120px]"
         />
         <div className="relative flex items-start gap-3">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-md">
             <Rocket className="h-6 w-6" />
           </div>
           <div className="min-w-0">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur-md">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-brand backdrop-blur-md">
               Mon onboarding
             </span>
             <h1 className="mt-3 font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
@@ -176,7 +175,7 @@ export default async function MyOnboardingPage() {
             <div className="mt-3 h-3 w-full max-w-xl overflow-hidden rounded-full bg-white/10">
               <div
                 className={`h-full rounded-full transition-all ${
-                  done ? "bg-emerald-400" : "bg-nexus-orange-500"
+                  done ? "bg-emerald-400" : "bg-brand"
                 }`}
                 style={{ width: `${Math.max(2, Math.min(100, pct))}%` }}
               />
@@ -251,7 +250,7 @@ export default async function MyOnboardingPage() {
           })
         )}
       </div>
-    </DashboardShell>
+    </>
   );
 }
 

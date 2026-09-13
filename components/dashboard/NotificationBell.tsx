@@ -8,19 +8,21 @@ import {
   CheckCheck,
   FileText,
   Info,
+  UserCog,
   Wallet,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type NotificationType =
+export type NotificationType =
   | "rdv_new"
   | "demande_assigned"
   | "payment_declared"
   | "demande_urgent"
+  | "rh_period_essai_end"
   | "info";
 
-type Notification = {
+export type Notification = {
   id: string;
   type: NotificationType;
   title: string;
@@ -38,15 +40,16 @@ type ApiResponse = {
 const POLL_INTERVAL_MS = 3000;
 const MAX_BADGE = 99;
 
-const TYPE_ICON: Record<NotificationType, LucideIcon> = {
+export const NOTIFICATION_TYPE_ICON: Record<NotificationType, LucideIcon> = {
   rdv_new: Calendar,
   demande_assigned: FileText,
   payment_declared: Wallet,
   demande_urgent: FileText,
+  rh_period_essai_end: UserCog,
   info: Info,
 };
 
-function relativeTime(iso: string): string {
+export function relativeTime(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
   const min = Math.floor(diff / 60_000);
   if (min < 1) return "à l'instant";
@@ -166,7 +169,7 @@ export function NotificationBell({ className }: { className?: string }) {
       >
         <Bell className="h-5 w-5" />
         {badge && (
-          <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-nexus-orange-500 px-1 text-[10px] font-bold text-white shadow-elev-2">
+          <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-brand px-1 text-[10px] font-bold text-on-brand shadow-elev-2">
             {badge}
           </span>
         )}
@@ -207,7 +210,7 @@ export function NotificationBell({ className }: { className?: string }) {
               </div>
             )}
             {items.map((n) => {
-              const Icon = TYPE_ICON[n.type] || Info;
+              const Icon = NOTIFICATION_TYPE_ICON[n.type] || Info;
               const isUnread = !n.read_at;
               return (
                 <button
@@ -223,7 +226,7 @@ export function NotificationBell({ className }: { className?: string }) {
                     className={cn(
                       "mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl",
                       isUnread
-                        ? "bg-nexus-orange-500/15 text-nexus-orange-600 dark:text-brand"
+                        ? "bg-brand/15 text-brand-hover dark:text-brand"
                         : "bg-surface-sunken text-ink-muted"
                     )}
                   >
@@ -240,7 +243,7 @@ export function NotificationBell({ className }: { className?: string }) {
                         {n.title}
                       </span>
                       {isUnread && (
-                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-nexus-orange-500" />
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
                       )}
                     </span>
                     {n.message && (

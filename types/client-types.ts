@@ -23,9 +23,12 @@ export interface Client {
   profile_id: string | null;
   notes: string | null;
   actif: boolean;
+  merged_into_id: string | null;
   created_at: string;
   updated_at: string;
   created_by: string | null;
+  // Colonne ajoutée par migration 074 (L2)
+  is_test: boolean;
 }
 
 export const CLIENT_TYPE_LABELS: Record<ClientType, string> = {

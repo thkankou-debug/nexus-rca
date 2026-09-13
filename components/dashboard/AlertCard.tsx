@@ -68,7 +68,7 @@ const URGENCY_STYLES: Record<
     badgeBg: "bg-slate-100",
     badgeText: "text-slate-700",
     badgeLabel: "À voir",
-    glow: "group-hover:bg-nexus-orange-500/10",
+    glow: "group-hover:bg-brand/10",
   },
 };
 
@@ -155,7 +155,7 @@ export function AlertCard({
           <span className="truncate text-[11px] text-slate-500">
             {metaLabel ?? ""}
           </span>
-          <span className="inline-flex shrink-0 items-center gap-1 text-xs font-bold text-nexus-orange-600 transition-all duration-200 group-hover:gap-2">
+          <span className="inline-flex shrink-0 items-center gap-1 text-xs font-bold text-brand-hover transition-all duration-200 group-hover:gap-2">
             {actionLabel}
             <ArrowRight className="h-3.5 w-3.5" />
           </span>

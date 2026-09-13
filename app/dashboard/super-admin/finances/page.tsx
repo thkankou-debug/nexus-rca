@@ -47,7 +47,7 @@ export default async function SuperAdminFinancesPage() {
       />
 
       <div className="mb-8 flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-blue-700 text-white shadow-lg">
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand to-nexus-blue-700 text-white shadow-lg">
           <PieChart className="h-6 w-6" />
         </div>
         <div>
@@ -55,7 +55,7 @@ export default async function SuperAdminFinancesPage() {
             Tableau de bord financier
           </h1>
           <p className="mt-1 text-slate-600">
-            Vue d'ensemble des encaissements, dépenses et solde net de Nexus RCA.
+            Vue d&apos;ensemble des encaissements, dépenses et solde net de Nexus RCA.
           </p>
         </div>
       </div>

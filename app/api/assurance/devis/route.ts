@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { rateLimitOrNull } from "@/lib/rate-limit";
 import {
   COVERAGE_LABELS,
   URGENCY_LABELS,
@@ -60,6 +61,9 @@ export async function POST(
   request: NextRequest
 ): Promise<NextResponse<SubmitResult>> {
   console.log("===== [INSURANCE_QUOTE] START =====");
+
+  const limited = await rateLimitOrNull(request, "assurance-devis");
+  if (limited) return limited;
 
   try {
     const body = (await request.json()) as Partial<QuoteFormData>;

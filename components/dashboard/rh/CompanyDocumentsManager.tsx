@@ -52,7 +52,7 @@ const TYPE_STYLES: Record<
   },
   charte: {
     icon: ScrollText,
-    tone: "bg-nexus-orange-100 text-nexus-orange-700",
+    tone: "bg-brand-subtle text-brand-hover",
   },
   convention_collective: {
     icon: ClipboardList,
@@ -194,7 +194,7 @@ export function CompanyDocumentsManager({
           <button
             type="button"
             onClick={() => setShowForm(true)}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover"
           >
             <Plus className="h-4 w-4" />
             Uploader un document
@@ -273,7 +273,7 @@ export function CompanyDocumentsManager({
                   <button
                     type="button"
                     onClick={() => handleDownload(d.id)}
-                    className="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-nexus-blue-950 shadow-sm transition hover:border-nexus-orange-300 hover:bg-nexus-orange-50/40"
+                    className="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-nexus-blue-950 shadow-sm transition hover:border-brand/40 hover:bg-brand-subtle/40"
                   >
                     <Download className="h-3.5 w-3.5" />
                     Télécharger
@@ -327,7 +327,7 @@ function ChipBtn({
         "rounded-full border px-3 py-1.5 text-xs font-semibold transition",
         active
           ? "border-nexus-blue-950 bg-nexus-blue-950 text-white shadow-sm"
-          : "border-slate-200 bg-white text-slate-600 hover:border-nexus-orange-300 hover:text-nexus-orange-700"
+          : "border-slate-200 bg-white text-slate-600 hover:border-brand/40 hover:text-brand-hover"
       )}
     >
       {label}
@@ -419,7 +419,7 @@ function UploadModal({
               onChange={(e) =>
                 setType(e.target.value as CompanyDocumentType)
               }
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
             >
               {TYPE_KEYS.map((t) => (
                 <option key={t} value={t}>
@@ -438,7 +438,7 @@ function UploadModal({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Ex: Règlement intérieur 2026"
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
             />
           </div>
 
@@ -450,7 +450,7 @@ function UploadModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
             />
           </div>
 
@@ -464,7 +464,7 @@ function UploadModal({
                 value={version}
                 onChange={(e) => setVersion(e.target.value)}
                 placeholder="v2.1"
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
               />
             </div>
             <div>
@@ -476,7 +476,7 @@ function UploadModal({
                 onChange={(e) =>
                   setVisibleTo(e.target.value as CompanyDocumentVisibility)
                 }
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
               >
                 <option value="tous">Tous les employés</option>
                 <option value="staff">Staff seulement</option>
@@ -510,7 +510,7 @@ function UploadModal({
             type="button"
             onClick={submit}
             disabled={submitting || !file}
-            className="inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-xl bg-brand px-5 py-2 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? (
               <>

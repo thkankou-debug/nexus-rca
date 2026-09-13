@@ -147,14 +147,14 @@ export function PeriodReviewsView({ basePath, periodId }: Props) {
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 px-6 py-8 shadow-lg sm:px-9 sm:py-10">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
+          className="pointer-events-none absolute -right-32 -top-32 h-[24rem] w-[24rem] rounded-full bg-brand/15 blur-[120px]"
         />
         <div className="relative flex items-start gap-3">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-md">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-md">
             <Award className="h-6 w-6" />
           </div>
           <div className="min-w-0">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-300 backdrop-blur-md">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-brand backdrop-blur-md">
               Période · {period?.year ?? "—"}
             </span>
             <h1 className="mt-3 font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
@@ -231,7 +231,7 @@ export function PeriodReviewsView({ basePath, periodId }: Props) {
       {/* LISTE */}
       <section>
         <div className="mb-4 flex items-center gap-2">
-          <Users className="h-4 w-4 text-nexus-orange-500" />
+          <Users className="h-4 w-4 text-brand" />
           <h2 className="font-display text-lg font-bold text-nexus-blue-950">
             Reviews ({filtered.length})
           </h2>
@@ -239,7 +239,7 @@ export function PeriodReviewsView({ basePath, periodId }: Props) {
 
         {loading ? (
           <div className="flex items-center justify-center rounded-3xl border border-slate-200 bg-white p-12 shadow-sm">
-            <Loader2 className="h-6 w-6 animate-spin text-nexus-orange-500" />
+            <Loader2 className="h-6 w-6 animate-spin text-brand" />
           </div>
         ) : filtered.length === 0 ? (
           <div className="rounded-3xl border border-slate-200 bg-white p-12 text-center shadow-sm ring-1 ring-slate-100/80">
@@ -315,7 +315,7 @@ function FilterChip({
 }) {
   const base = active
     ? "bg-nexus-blue-950 text-white border-nexus-blue-950"
-    : "bg-white text-slate-700 border-slate-200 hover:border-nexus-orange-300 hover:text-nexus-orange-700";
+    : "bg-white text-slate-700 border-slate-200 hover:border-brand/40 hover:text-brand-hover";
   const badgeTone = active
     ? "bg-white/15 text-white"
     : "bg-slate-100 text-slate-700";
@@ -357,7 +357,7 @@ function ReviewCard({
       {/* HEADER */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-800 to-nexus-orange-500 text-sm font-bold text-white shadow-sm">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-800 to-brand text-sm font-bold text-white shadow-sm">
             {initials}
           </div>
           <div className="min-w-0">

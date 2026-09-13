@@ -1,6 +1,40 @@
-export type UserRole = "super_admin" | "admin" | "agent" | "client";
+// P1c point 2 : types générés depuis le schéma réel via generate_typescript_types
+// (connecteur Supabase) — jamais à la main, pour ne pas dériver à la prochaine
+// migration. Les tables ci-dessous n'avaient encore aucun type dans ce fichier.
+import type { Database } from "./database";
+import type { DossierStatus } from "@/lib/dossier-transitions";
 
-export type DemandeStatus =
+export type Payment = Database["public"]["Tables"]["payments"]["Row"];
+export type PaymentLink = Database["public"]["Tables"]["payment_links"]["Row"];
+export type PaymentEvent = Database["public"]["Tables"]["payment_events"]["Row"];
+export type StripeWebhookLog = Database["public"]["Tables"]["stripe_webhook_log"]["Row"];
+export type Client = Database["public"]["Tables"]["clients"]["Row"];
+export type Transfert = Database["public"]["Tables"]["transferts"]["Row"];
+export type QuickSale = Database["public"]["Tables"]["quick_sales"]["Row"];
+export type Expense = Database["public"]["Tables"]["expenses"]["Row"];
+export type Appointment = Database["public"]["Tables"]["appointments"]["Row"];
+export type AppointmentRequest = Database["public"]["Tables"]["appointment_requests"]["Row"];
+export type ContactDemande = Database["public"]["Tables"]["contact_demandes"]["Row"];
+export type VisaExpressRequest = Database["public"]["Tables"]["visa_express_requests"]["Row"];
+export type InsuranceQuote = Database["public"]["Tables"]["insurance_quotes"]["Row"];
+
+export type UserRole =
+  | "super_admin"
+  | "admin"
+  | "dg"
+  | "daf"
+  | "chef_service"
+  | "agent"
+  | "comptable"
+  | "moderateur"
+  | "partenaire"
+  | "accueil_caisse"
+  | "client";
+
+// Valeurs 2026-04 (018-032), conservees telles quelles — aucun dossier reel
+// ne les porte plus depuis la reassignation 049b, mais l'enum Postgres ne
+// retire jamais une valeur (regle P3, additif pur).
+export type LegacyDemandeStatus =
   | "nouveau"
   | "en_cours"
   | "en_attente"
@@ -8,6 +42,10 @@ export type DemandeStatus =
   | "en_traitement"
   | "complete"
   | "annule";
+
+// Machine a etats P3 (migration 049a/049b) — voir lib/dossier-transitions.ts
+// pour le graphe de transitions valide.
+export type DemandeStatus = LegacyDemandeStatus | DossierStatus;
 
 export type UrgenceLevel = "faible" | "normale" | "elevee" | "critique";
 
@@ -41,6 +79,11 @@ export interface Profile {
   notes_internes: string | null;
   // Colonne ajoutée par migration 032
   specialites: string[] | null;
+  // Colonnes ajoutées par migration 047 (P3)
+  service_id: string | null;
+  availability_status: "disponible" | "occupe" | "absent";
+  // Colonne ajoutée par migration 074 (L2)
+  is_test: boolean;
 }
 
 export type CategorieDossierSlug =
@@ -147,6 +190,16 @@ export interface Demande {
   current_step: number | null;
   current_step_label: string | null;
   categorie_dossier: CategorieDossierSlug | null;
+  // Absente de cette interface alors que la colonne existe en DB depuis
+  // longtemps (bug déjà signalé dans CLAUDE.md, aussi corrigé indépendamment
+  // par P1c) — corrigée ici à l'occasion de l'audit C0 qui a établi qu'elle
+  // n'est peuplée sur aucun des 16 dossiers réels (voir docs/AUDIT_CRM.md §3).
+  client_record_id: string | null;
+  // Colonnes ajoutées par migration 047 (P3)
+  deadline: string | null;
+  service_id: string | null;
+  amount_estimated: number | null;
+  archived_at: string | null;
 }
 
 export interface DemandeAvecDocuments extends Demande {
@@ -176,16 +229,12 @@ export interface RendezVous {
   created_at: string;
 }
 
-export interface Contact {
-  id: string;
-  nom: string;
-  email: string;
-  telephone: string | null;
-  sujet: string;
-  message: string;
-  traite: boolean;
-  created_at: string;
-}
+// P1c point 2 : dérivé du type généré plutôt que maintenu à la main — l'ancienne
+// version (8 champs) datait d'avant l'ajout de reference/status/ip/user_agent/
+// source/processed_at/processed_by/notes_internes/updated_at et n'était
+// importée nulle part (le vrai consommateur, ContactsManager.tsx, définit son
+// propre type local `ContactRow`).
+export type Contact = Database["public"]["Tables"]["contacts"]["Row"];
 
 // ---- Module RH / Paie (migration 022) -----------------------------------
 
@@ -510,6 +559,33 @@ export interface PerformanceReview {
 }
 
 // Phase E — Settings RH (migration 028)
+
+// ─── P3 — Extension du schéma métier (migrations 044-048) ──────────────────
+// Dérivés du type Database généré (jamais retapés à la main — voir CLAUDE.md,
+// bug déjà résolu "Property 'poste' does not exist").
+export type ServiceCatalogue = Database["public"]["Tables"]["services"]["Row"];
+export type DocumentRequis = Database["public"]["Tables"]["documents_requis"]["Row"];
+export type DossierEtape = Database["public"]["Tables"]["dossier_etapes"]["Row"];
+export type DossierPartage = Database["public"]["Tables"]["dossier_partages"]["Row"];
+export type Tache = Database["public"]["Tables"]["taches"]["Row"];
+export type AffectationHist = Database["public"]["Tables"]["affectations_hist"]["Row"];
+export type Devis = Database["public"]["Tables"]["devis"]["Row"];
+export type DevisLigne = Database["public"]["Tables"]["devis_lignes"]["Row"];
+export type Facture = Database["public"]["Tables"]["factures"]["Row"];
+export type FactureLigne = Database["public"]["Tables"]["facture_lignes"]["Row"];
+export type Echeancier = Database["public"]["Tables"]["echeanciers"]["Row"];
+export type CategorieCompta = Database["public"]["Tables"]["categories_compta"]["Row"];
+export type CaisseSession = Database["public"]["Tables"]["caisse_sessions"]["Row"];
+export type Commission = Database["public"]["Tables"]["commissions"]["Row"];
+export type ContenuSite = Database["public"]["Tables"]["contenus_site"]["Row"];
+export type Faq = Database["public"]["Tables"]["faq"]["Row"];
+export type Partenaire = Database["public"]["Tables"]["partenaires"]["Row"];
+export type Temoignage = Database["public"]["Tables"]["temoignages"]["Row"];
+export type PaysDestination = Database["public"]["Tables"]["pays_destinations"]["Row"];
+export type Bureau = Database["public"]["Tables"]["bureaux"]["Row"];
+export type NotificationPrefs = Database["public"]["Tables"]["notification_prefs"]["Row"];
+export type AgencySettings = Database["public"]["Tables"]["agency_settings"]["Row"];
+export type AuditLogEntry = Database["public"]["Tables"]["audit_log"]["Row"];
 export type RhSettingCategory =
   | "general"
   | "cotisations"

@@ -153,7 +153,7 @@ export function UsersManager({
           placeholder="Rechercher par nom ou email..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full max-w-md rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+          className="w-full max-w-md rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
         />
       </div>
 
@@ -185,7 +185,7 @@ export function UsersManager({
                   >
                     <td className="whitespace-nowrap px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-800 to-nexus-orange-500 text-xs font-bold text-white">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-800 to-brand text-xs font-bold text-white">
                           {(u.prenom?.[0] || "") + (u.nom?.[0] || "")}
                         </div>
                         <div>
@@ -212,7 +212,7 @@ export function UsersManager({
                             updateRole(u.id, e.target.value as UserRole)
                           }
                           disabled={savingId === u.id}
-                          className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-semibold focus:border-nexus-orange-500 focus:outline-none focus:ring-2 focus:ring-nexus-orange-500/30"
+                          className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-semibold focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/30"
                         >
                           {ROLE_OPTIONS.map((r) => (
                             <option key={r.value} value={r.value}>

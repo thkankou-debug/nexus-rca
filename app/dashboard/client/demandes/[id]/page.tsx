@@ -105,7 +105,7 @@ export default async function ClientDemandeDetailPage({
   const userEmail = (profile.email || "").toLowerCase().trim();
   const { data: paiements } = await supabase
     .from("payments")
-    .select("id, reference, service, montant_total, montant_recu, devise, statut, date_paiement")
+    .select("id, reference, service, montant_total, montant_recu, devise, date_paiement")
     .eq("client_email", userEmail)
     .order("date_paiement", { ascending: false })
     .limit(10);
@@ -140,10 +140,10 @@ export default async function ClientDemandeDetailPage({
       {/* === HEADER PREMIUM === */}
       <header className="mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-6 shadow-lg sm:p-8">
         <div className="relative">
-          <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-nexus-orange-500/20 blur-3xl" />
+          <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-brand/20 blur-3xl" />
           <div className="relative flex flex-wrap items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-nexus-orange-500/30 bg-nexus-orange-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-400">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-brand">
                 <Hash className="h-3 w-3" />
                 Dossier
               </div>
@@ -182,7 +182,7 @@ export default async function ClientDemandeDetailPage({
       <section className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
               Etat du dossier
             </p>
             <h2 className="font-display text-lg font-bold text-nexus-blue-950">
@@ -208,7 +208,7 @@ export default async function ClientDemandeDetailPage({
           {/* Documents */}
           <section>
             <div className="mb-3 flex items-center gap-2">
-              <FileText className="h-4 w-4 text-nexus-orange-500" />
+              <FileText className="h-4 w-4 text-brand" />
               <h2 className="font-display text-lg font-bold text-nexus-blue-950">
                 Documents
               </h2>
@@ -224,7 +224,7 @@ export default async function ClientDemandeDetailPage({
           {/* Récap */}
           <section>
             <div className="mb-3 flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-nexus-orange-500" />
+              <CheckCircle2 className="h-4 w-4 text-brand" />
               <h2 className="font-display text-lg font-bold text-nexus-blue-950">
                 Récapitulatif du dossier
               </h2>
@@ -244,7 +244,7 @@ export default async function ClientDemandeDetailPage({
               (paymentLinks && paymentLinks.length > 0)) && (
               <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                 <div className="flex items-center gap-2 border-b border-slate-100 p-4">
-                  <Wallet className="h-3.5 w-3.5 text-nexus-orange-500" />
+                  <Wallet className="h-3.5 w-3.5 text-brand" />
                   <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
                     Paiements
                   </p>
@@ -265,7 +265,7 @@ export default async function ClientDemandeDetailPage({
                           Restant
                         </p>
                         <p
-                          className={`mt-0.5 font-display text-sm font-bold ${totalRestant > 0 ? "text-nexus-orange-600" : "text-green-600"}`}
+                          className={`mt-0.5 font-display text-sm font-bold ${totalRestant > 0 ? "text-brand-hover" : "text-green-600"}`}
                         >
                           {formatMoney(totalRestant)}
                         </p>
@@ -279,14 +279,14 @@ export default async function ClientDemandeDetailPage({
                       <Link
                         key={link.reference as string}
                         href={`/payer/${link.reference as string}`}
-                        className="flex items-center gap-2 rounded-lg border border-nexus-orange-200 bg-nexus-orange-50 p-3 text-xs transition hover:bg-nexus-orange-100"
+                        className="flex items-center gap-2 rounded-lg border border-brand/30 bg-brand-subtle p-3 text-xs transition hover:bg-brand-subtle"
                       >
-                        <Receipt className="h-3.5 w-3.5 shrink-0 text-nexus-orange-600" />
+                        <Receipt className="h-3.5 w-3.5 shrink-0 text-brand-hover" />
                         <div className="min-w-0 flex-1">
-                          <p className="truncate font-bold text-nexus-orange-900">
+                          <p className="truncate font-bold text-brand-hover">
                             {(link.service as string) || "Lien de paiement"}
                           </p>
-                          <p className="text-[10px] text-nexus-orange-700">
+                          <p className="text-[10px] text-brand-hover">
                             {formatMoney(
                               Number(link.montant || 0),
                               (link.devise as string) || "XAF"
@@ -294,7 +294,7 @@ export default async function ClientDemandeDetailPage({
                             · {link.statut as string}
                           </p>
                         </div>
-                        <span className="shrink-0 text-[10px] font-bold text-nexus-orange-700">
+                        <span className="shrink-0 text-[10px] font-bold text-brand-hover">
                           Payer →
                         </span>
                       </Link>
@@ -338,24 +338,38 @@ export default async function ClientDemandeDetailPage({
             {/* Actions rapides */}
             <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
               <div className="flex items-center gap-2 border-b border-slate-100 p-4">
-                <Plus className="h-3.5 w-3.5 text-nexus-orange-500" />
+                <Plus className="h-3.5 w-3.5 text-brand" />
                 <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
                   Actions
                 </p>
               </div>
               <div className="space-y-2 p-4">
                 <Link
-                  href="/dashboard/client/rdv/nouveau"
-                  className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-nexus-orange-300 hover:bg-nexus-orange-50"
+                  href="/dashboard/client/devis"
+                  className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-brand/40 hover:bg-brand-subtle"
                 >
-                  <Calendar className="h-3.5 w-3.5 text-nexus-orange-500" />
+                  <FileText className="h-3.5 w-3.5 text-brand" />
+                  Mes devis
+                </Link>
+                <Link
+                  href="/dashboard/client/factures"
+                  className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-brand/40 hover:bg-brand-subtle"
+                >
+                  <Receipt className="h-3.5 w-3.5 text-brand" />
+                  Mes factures
+                </Link>
+                <Link
+                  href="/dashboard/client/rdv/nouveau"
+                  className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-brand/40 hover:bg-brand-subtle"
+                >
+                  <Calendar className="h-3.5 w-3.5 text-brand" />
                   Prendre un rendez-vous
                 </Link>
                 <Link
                   href="/demande/complet"
-                  className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-nexus-orange-300 hover:bg-nexus-orange-50"
+                  className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-brand/40 hover:bg-brand-subtle"
                 >
-                  <Plus className="h-3.5 w-3.5 text-nexus-orange-500" />
+                  <Plus className="h-3.5 w-3.5 text-brand" />
                   Nouvelle demande
                 </Link>
                 <a

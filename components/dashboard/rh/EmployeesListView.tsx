@@ -93,7 +93,7 @@ export function EmployeesListView({ basePath }: EmployeesListViewProps) {
               placeholder="Rechercher nom, email, poste…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-72 rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-3 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200"
+              className="w-72 rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-3 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25"
             />
           </div>
           <select
@@ -124,7 +124,7 @@ export function EmployeesListView({ basePath }: EmployeesListViewProps) {
 
         <Link
           href={`${basePath}/employes/nouveau`}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-nexus-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover"
         >
           <Plus className="h-4 w-4" />
           Nouvel employé
@@ -162,7 +162,7 @@ export function EmployeesListView({ basePath }: EmployeesListViewProps) {
                 <tr
                   key={e.id}
                   onClick={() => router.push(`${basePath}/employes/${e.id}`)}
-                  className="cursor-pointer transition hover:bg-nexus-orange-50/40"
+                  className="cursor-pointer transition hover:bg-brand-subtle/40"
                 >
                   <td className="px-4 py-3">
                     <p className="font-semibold text-nexus-blue-950">
@@ -189,7 +189,7 @@ export function EmployeesListView({ basePath }: EmployeesListViewProps) {
                     <Link
                       href={`${basePath}/employes/${e.id}`}
                       onClick={(ev) => ev.stopPropagation()}
-                      className="text-xs font-semibold text-nexus-orange-600 hover:underline"
+                      className="text-xs font-semibold text-brand-hover hover:underline"
                     >
                       Ouvrir →
                     </Link>

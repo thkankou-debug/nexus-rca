@@ -30,7 +30,7 @@ export default async function SuperAdminAssignerPage({
   return (
     <DashboardShell profile={profile}>
       <div className="rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-600">
-        <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+        <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
           Assignation
         </p>
         <p>

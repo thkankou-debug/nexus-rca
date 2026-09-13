@@ -74,7 +74,7 @@ export default function ServiceDetailPage({
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-nexus-orange-500/15 blur-[120px]"
+            className="pointer-events-none absolute -right-32 -top-32 h-[36rem] w-[36rem] rounded-full bg-brand/15 blur-[120px]"
           />
           <div
             aria-hidden
@@ -82,13 +82,13 @@ export default function ServiceDetailPage({
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-nexus-orange-500/40 to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <Link
               href="/services"
-              className="group/back mb-6 inline-flex items-center gap-1.5 text-xs font-bold text-slate-300 transition-colors hover:text-nexus-orange-300"
+              className="group/back mb-6 inline-flex items-center gap-1.5 text-xs font-bold text-slate-300 transition-colors hover:text-brand-hover"
             >
               <ArrowLeft className="h-3.5 w-3.5 transition-transform duration-300 ease-out group-hover/back:-translate-x-0.5" />
               Tous les services
@@ -100,21 +100,21 @@ export default function ServiceDetailPage({
                   aria-hidden
                   className={cn(
                     "absolute inset-0 rounded-2xl opacity-50 blur-md",
-                    isOrange ? "bg-nexus-orange-500/40" : "bg-nexus-blue-500/40"
+                    isOrange ? "bg-brand/40" : "bg-nexus-blue-500/40"
                   )}
                 />
                 <div
                   className={cn(
-                    "relative flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-[0_8px_24px_-8px_rgba(255,102,0,0.5)]",
+                    "relative flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-[0_8px_24px_-8px_rgba(185,151,96,0.5)]",
                     isOrange
-                      ? "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700"
+                      ? "bg-brand"
                       : "bg-gradient-to-br from-nexus-blue-500 to-nexus-blue-800"
                   )}
                 >
                   <Icon className="h-6 w-6" />
                 </div>
               </div>
-              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-300">
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-brand">
                 Service Nexus
               </span>
             </div>
@@ -129,7 +129,7 @@ export default function ServiceDetailPage({
             <div className="mt-9 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
               <Link
                 href={`/demande/complet?service=${service.slug}`}
-                className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-nexus-orange-500 px-7 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_-10px_rgba(255,102,0,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600 hover:shadow-[0_18px_45px_-10px_rgba(255,102,0,0.7)]"
+                className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)]"
               >
                 <span
                   aria-hidden
@@ -165,7 +165,7 @@ export default function ServiceDetailPage({
             <div className="grid gap-12 lg:grid-cols-3 lg:gap-16">
               {/* Description */}
               <div className="lg:col-span-2">
-                <span className="inline-flex items-center gap-2 rounded-full border border-nexus-orange-200/70 bg-nexus-orange-50 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-700">
+                <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand-subtle px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand-hover">
                   <Sparkles className="h-3 w-3" />
                   Le service en détail
                 </span>
@@ -181,13 +181,13 @@ export default function ServiceDetailPage({
                   {service.features.map((f, i) => (
                     <div
                       key={i}
-                      className="group/feat relative flex items-start gap-3 overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60 hover:shadow-[0_12px_28px_-12px_rgba(255,102,0,0.18)]"
+                      className="group/feat relative flex items-start gap-3 overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-brand/60 hover:shadow-[0_12px_28px_-12px_rgba(185,151,96,0.18)]"
                     >
                       <div
                         aria-hidden
-                        className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-nexus-orange-500/0 blur-2xl transition-all duration-500 group-hover/feat:bg-nexus-orange-500/12"
+                        className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover/feat:bg-brand/12"
                       />
-                      <div className="relative mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-sm transition-transform duration-300 ease-out group-hover/feat:scale-110">
+                      <div className="relative mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand text-on-brand shadow-sm transition-transform duration-300 ease-out group-hover/feat:scale-110">
                         <Check className="h-3.5 w-3.5" strokeWidth={3} />
                       </div>
                       <span className="relative text-sm leading-relaxed text-nexus-blue-950">
@@ -204,7 +204,7 @@ export default function ServiceDetailPage({
                       href="https://www.google.com/flights"
                       target="_blank"
                       rel="noreferrer"
-                      className="group/flights relative overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-900 via-nexus-blue-950 to-nexus-blue-900 p-6 text-white shadow-[0_20px_50px_-25px_rgba(12,28,64,0.45)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_28px_60px_-25px_rgba(255,102,0,0.30)]"
+                      className="group/flights relative overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-900 via-nexus-blue-950 to-nexus-blue-900 p-6 text-white shadow-[0_20px_50px_-25px_rgba(12,28,64,0.45)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_28px_60px_-25px_rgba(185,151,96,0.30)]"
                     >
                       <div
                         aria-hidden
@@ -213,14 +213,14 @@ export default function ServiceDetailPage({
                       />
                       <div
                         aria-hidden
-                        className="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-nexus-orange-500/25 blur-[80px] transition-all duration-500 group-hover/flights:bg-nexus-orange-500/40"
+                        className="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-brand/25 blur-[80px] transition-all duration-500 group-hover/flights:bg-brand/40"
                       />
                       <div className="relative">
-                        <Plane className="mb-3 h-7 w-7 text-nexus-orange-400" />
+                        <Plane className="mb-3 h-7 w-7 text-brand" />
                         <div className="font-display text-base font-bold">
                           Rechercher un vol
                         </div>
-                        <div className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-nexus-orange-300">
+                        <div className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-brand">
                           Ouvrir Google Flights
                           <ArrowRight className="h-3 w-3 transition-transform duration-300 ease-out group-hover/flights:translate-x-0.5" />
                         </div>
@@ -230,7 +230,7 @@ export default function ServiceDetailPage({
                       href="https://www.skyscanner.net/hotels"
                       target="_blank"
                       rel="noreferrer"
-                      className="group/hotels relative overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-orange-500 via-nexus-orange-600 to-nexus-orange-700 p-6 text-white shadow-[0_20px_50px_-25px_rgba(255,102,0,0.45)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_28px_60px_-25px_rgba(255,102,0,0.55)]"
+                      className="group/hotels relative overflow-hidden rounded-3xl bg-brand p-6 text-on-brand shadow-[0_20px_50px_-25px_rgba(185,151,96,0.45)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_28px_60px_-25px_rgba(185,151,96,0.55)]"
                     >
                       <div
                         aria-hidden
@@ -250,7 +250,7 @@ export default function ServiceDetailPage({
                         <div className="font-display text-base font-bold">
                           Réserver un hôtel
                         </div>
-                        <div className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-white/95">
+                        <div className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-on-brand/80">
                           Ouvrir Skyscanner
                           <ArrowRight className="h-3 w-3 transition-transform duration-300 ease-out group-hover/hotels:translate-x-0.5" />
                         </div>
@@ -272,13 +272,13 @@ export default function ServiceDetailPage({
                     />
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-nexus-orange-500/20 blur-[80px]"
+                      className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-brand/20 blur-[80px]"
                     />
                     <div className="relative">
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-nexus-orange-400/30 bg-nexus-orange-500/15 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-nexus-orange-300">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand/15 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-brand">
                         <span className="relative flex h-1.5 w-1.5">
-                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nexus-orange-400 opacity-75" />
-                          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nexus-orange-400" />
+                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+                          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
                         </span>
                         Prêt à démarrer ?
                       </span>
@@ -292,7 +292,7 @@ export default function ServiceDetailPage({
                       <div className="mt-5 space-y-2">
                         <Link
                           href={`/demande/complet?service=${service.slug}`}
-                          className="group/btn relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-nexus-orange-500 px-4 py-2.5 text-sm font-bold text-white shadow-[0_8px_24px_-8px_rgba(255,102,0,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-nexus-orange-600"
+                          className="group/btn relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-brand px-4 py-2.5 text-sm font-bold text-on-brand shadow-[0_8px_24px_-8px_rgba(185,151,96,0.5)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover"
                         >
                           <span
                             aria-hidden
@@ -331,7 +331,7 @@ export default function ServiceDetailPage({
                     </div>
                     <a
                       href={`tel:+${NEXUS_CONTACT.phoneRcaRaw}`}
-                      className="mt-1 block text-sm font-bold text-nexus-blue-950 transition-colors hover:text-nexus-orange-600"
+                      className="mt-1 block text-sm font-bold text-nexus-blue-950 transition-colors hover:text-brand-hover"
                     >
                       {NEXUS_CONTACT.phoneRca}
                     </a>
@@ -340,7 +340,7 @@ export default function ServiceDetailPage({
                     </div>
                     <a
                       href={`tel:+${NEXUS_CONTACT.phoneCanadaRaw}`}
-                      className="mt-1 block text-sm font-bold text-slate-600 transition-colors hover:text-nexus-orange-600"
+                      className="mt-1 block text-sm font-bold text-slate-600 transition-colors hover:text-brand-hover"
                     >
                       {NEXUS_CONTACT.phoneCanada}
                     </a>
@@ -364,13 +364,13 @@ export default function ServiceDetailPage({
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 top-32 h-96 w-96 rounded-full bg-nexus-orange-500/8 blur-[100px]"
+            className="pointer-events-none absolute -right-32 top-32 h-96 w-96 rounded-full bg-brand/8 blur-[100px]"
           />
 
           <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
             <div className="mb-10 flex items-end justify-between gap-4">
               <div>
-                <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-nexus-orange-600">
+                <span className="inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-brand-hover">
                   Explorer
                 </span>
                 <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-nexus-blue-950 sm:text-4xl">
@@ -379,7 +379,7 @@ export default function ServiceDetailPage({
               </div>
               <Link
                 href="/services"
-                className="group/all hidden items-center gap-1.5 text-sm font-bold text-nexus-orange-600 transition-colors hover:text-nexus-orange-700 sm:inline-flex"
+                className="group/all hidden items-center gap-1.5 text-sm font-bold text-brand-hover transition-colors hover:text-brand-hover sm:inline-flex"
               >
                 Tout voir
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/all:translate-x-0.5" />
@@ -389,12 +389,12 @@ export default function ServiceDetailPage({
               {others.map((o) => {
                 const OIcon = o.icon;
                 const oIsOrange = o.accent === "orange";
-                const oGlowRgba = oIsOrange ? "255,102,0" : "30,64,175";
+                const oGlowRgba = oIsOrange ? "185,151,96" : "30,64,175";
                 return (
                   <Link
                     key={o.id}
                     href={`/services/${o.slug}`}
-                    className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-nexus-orange-300/60"
+                    className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-50/40 p-6 shadow-[0_16px_36px_-16px_rgba(12,28,64,0.16)] ring-1 ring-slate-100/80 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-brand/60"
                   >
                     <div
                       aria-hidden
@@ -406,7 +406,7 @@ export default function ServiceDetailPage({
                         className={cn(
                           "mb-4 flex h-11 w-11 items-center justify-center rounded-2xl text-white shadow-sm transition-transform duration-300 ease-out group-hover:scale-105",
                           oIsOrange
-                            ? "bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700"
+                            ? "bg-brand"
                             : "bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-900"
                         )}
                       >
@@ -418,7 +418,7 @@ export default function ServiceDetailPage({
                       <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-slate-600">
                         {o.shortDesc}
                       </p>
-                      <p className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-nexus-orange-600">
+                      <p className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-brand-hover">
                         Découvrir
                         <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 ease-out group-hover:translate-x-0.5" />
                       </p>

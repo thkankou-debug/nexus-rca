@@ -21,7 +21,7 @@ export default async function SuperAdminContactsPage() {
   const { data, error } = await supabase
     .from("contacts")
     .select(
-      "id, reference, nom, email, telephone, sujet, message, status, source, notes_internes, processed_at, created_at, updated_at"
+      "id, reference, nom, email, telephone, sujet, message, status, source, notes_internes, client_record_id, processed_at, created_at, updated_at"
     )
     .order("created_at", { ascending: false })
     .limit(200);
@@ -40,11 +40,11 @@ export default async function SuperAdminContactsPage() {
       />
 
       <header className="mb-10 flex flex-wrap items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white shadow-sm">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-sm">
           <Inbox className="h-5 w-5" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
             Boîte de réception
           </p>
           <h1 className="mt-1 font-display text-2xl font-bold text-nexus-blue-950 sm:text-3xl">

@@ -191,7 +191,7 @@ export function EmployeeForm({
           {isEdit ? "Modifier l'employé" : "Nouvel employé"}
         </h3>
         <p className="mt-1 text-sm text-slate-500">
-          Toutes les informations marquées d'une astérisque sont obligatoires.
+          Toutes les informations marquées d&apos;une astérisque sont obligatoires.
         </p>
       </div>
 
@@ -445,7 +445,7 @@ export function EmployeeForm({
           type="submit"
           disabled={submitting}
           className={cn(
-            "inline-flex items-center gap-2 rounded-xl bg-nexus-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-nexus-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+            "inline-flex items-center gap-2 rounded-xl bg-brand px-6 py-3 text-sm font-semibold text-on-brand shadow-sm transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
           )}
         >
           {submitting ? (
@@ -463,7 +463,7 @@ export function EmployeeForm({
 }
 
 const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm transition focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200";
+  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-nexus-blue-950 shadow-sm transition focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25";
 
 function Section({
   title,

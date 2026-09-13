@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
+import { AttachClientAction } from "@/components/dashboard/AttachClientAction";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 export interface ContactRow {
@@ -31,6 +32,7 @@ export interface ContactRow {
   status: "nouveau" | "lu" | "repondu" | "archive";
   source: string | null;
   notes_internes: string | null;
+  client_record_id: string | null;
   processed_at: string | null;
   created_at: string;
   updated_at: string;
@@ -42,8 +44,8 @@ const STATUS_META: Record<
 > = {
   nouveau: {
     label: "Nouveau",
-    className: "bg-nexus-orange-50 text-nexus-orange-700 ring-1 ring-nexus-orange-200/60",
-    dot: "bg-nexus-orange-500",
+    className: "bg-brand-subtle text-brand-hover ring-1 ring-brand/30",
+    dot: "bg-brand",
   },
   lu: {
     label: "Lu",
@@ -178,16 +180,40 @@ export function ContactsManager({ initialRows, readOnly = false }: Props) {
     }
   }
 
+  async function attachClient(id: string, clientId: string) {
+    try {
+      const res = await fetch(`/api/contacts/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ client_record_id: clientId }),
+      });
+      const json = (await res.json().catch(() => ({}))) as {
+        success?: boolean;
+        error?: string;
+      };
+      if (!res.ok || !json.success) {
+        throw new Error(json.error || "Erreur serveur");
+      }
+      setRows((prev) =>
+        prev.map((r) => (r.id === id ? { ...r, client_record_id: clientId } : r))
+      );
+      toast.success("Client rattaché");
+    } catch (err) {
+      console.error(err);
+      toast.error(err instanceof Error ? err.message : "Rattachement impossible");
+    }
+  }
+
   return (
     <div className="space-y-6">
       {/* ─── Filtres + recherche ──────────────────────────────────── */}
       <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-orange-500 to-nexus-orange-700 text-white">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand text-on-brand">
             <Filter className="h-4 w-4" />
           </div>
           <div className="flex-1">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-nexus-orange-600">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
               Boîte de réception
             </p>
             <h2 className="text-base font-bold text-nexus-blue-950">
@@ -204,7 +230,7 @@ export function ContactsManager({ initialRows, readOnly = false }: Props) {
               placeholder="Rechercher nom, email, sujet, référence…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50/60 py-2.5 pl-10 pr-4 text-sm text-nexus-blue-950 placeholder:text-slate-400 focus:border-nexus-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-nexus-orange-100"
+              className="w-full rounded-2xl border border-slate-200 bg-slate-50/60 py-2.5 pl-10 pr-4 text-sm text-nexus-blue-950 placeholder:text-slate-400 focus:border-focus focus:bg-white focus:outline-none focus:ring-2 focus:ring-focus/25"
             />
           </div>
         </div>
@@ -253,7 +279,7 @@ export function ContactsManager({ initialRows, readOnly = false }: Props) {
                 className={cn(
                   "overflow-hidden rounded-3xl border bg-white shadow-sm transition-colors",
                   row.status === "nouveau"
-                    ? "border-nexus-orange-200/70"
+                    ? "border-brand/30"
                     : "border-slate-200"
                 )}
               >
@@ -316,7 +342,7 @@ export function ContactsManager({ initialRows, readOnly = false }: Props) {
                         value={
                           <a
                             href={`mailto:${row.email}?subject=Re: ${encodeURIComponent(row.sujet)}`}
-                            className="text-nexus-orange-600 hover:underline"
+                            className="text-brand-hover hover:underline"
                           >
                             {row.email}
                           </a>
@@ -329,7 +355,7 @@ export function ContactsManager({ initialRows, readOnly = false }: Props) {
                           value={
                             <a
                               href={`tel:${row.telephone}`}
-                              className="text-nexus-orange-600 hover:underline"
+                              className="text-brand-hover hover:underline"
                             >
                               {row.telephone}
                             </a>
@@ -360,22 +386,29 @@ export function ContactsManager({ initialRows, readOnly = false }: Props) {
                     </div>
 
                     {!readOnly && (
-                      <div className="mt-5 flex flex-wrap gap-2">
+                      <div className="mt-5 flex flex-wrap items-start gap-2">
                         <a
                           href={`mailto:${row.email}?subject=Re: ${encodeURIComponent(row.sujet)}`}
-                          className="inline-flex items-center gap-1.5 rounded-xl bg-nexus-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-nexus-orange-600"
+                          className="inline-flex items-center gap-1.5 rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-on-brand shadow-sm transition-colors hover:bg-brand-hover"
                         >
                           <Mail className="h-4 w-4" />
                           Répondre par email
                         </a>
+                        <AttachClientAction
+                          clientRecordId={row.client_record_id}
+                          nom={row.nom}
+                          email={row.email}
+                          telephone={row.telephone}
+                          onAttached={(clientId) => attachClient(row.id, clientId)}
+                        />
                         {row.telephone && (
                           <a
                             href={`https://wa.me/${row.telephone.replace(/[^0-9]/g, "")}`}
                             target="_blank"
                             rel="noreferrer"
-                            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-nexus-blue-950 shadow-sm transition-colors hover:border-nexus-orange-300/70 hover:bg-slate-50"
+                            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-nexus-blue-950 shadow-sm transition-colors hover:border-brand/40 hover:bg-slate-50"
                           >
-                            <MessageCircle className="h-4 w-4 text-nexus-orange-600" />
+                            <MessageCircle className="h-4 w-4 text-brand-hover" />
                             WhatsApp
                           </a>
                         )}

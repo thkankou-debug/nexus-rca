@@ -1,5 +1,4 @@
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { EvaluationsDashboard } from "@/components/dashboard/rh/EvaluationsDashboard";
 
@@ -13,7 +12,7 @@ export default async function SuperAdminEvaluationsPage() {
   const profile = await requireProfile(["super_admin"]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin/rh"
         label="Retour à la vue RH"
@@ -23,6 +22,6 @@ export default async function SuperAdminEvaluationsPage() {
         canCreate
         canLaunch
       />
-    </DashboardShell>
+    </>
   );
 }

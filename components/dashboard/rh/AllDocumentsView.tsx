@@ -173,7 +173,7 @@ export function AllDocumentsView({ basePath }: AllDocumentsViewProps) {
           placeholder="Rechercher document, employé…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-nexus-orange-400 focus:outline-none focus:ring-2 focus:ring-nexus-orange-200 sm:w-72"
+          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-nexus-blue-950 shadow-sm focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/25 sm:w-72"
         />
       </div>
 
@@ -255,7 +255,7 @@ export function AllDocumentsView({ basePath }: AllDocumentsViewProps) {
                     {d.employees ? (
                       <Link
                         href={`${basePath}/employes/${d.employee_id}`}
-                        className="group inline-flex items-center gap-1 text-nexus-blue-950 hover:text-nexus-orange-600"
+                        className="group inline-flex items-center gap-1 text-nexus-blue-950 hover:text-brand-hover"
                       >
                         <span className="font-semibold">
                           {d.employees.nom_complet}
@@ -276,7 +276,7 @@ export function AllDocumentsView({ basePath }: AllDocumentsViewProps) {
                     <button
                       type="button"
                       onClick={() => handleDownload(d.id)}
-                      className="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-nexus-blue-950 shadow-sm transition hover:border-nexus-orange-300 hover:bg-nexus-orange-50/40"
+                      className="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-nexus-blue-950 shadow-sm transition hover:border-brand/40 hover:bg-brand-subtle/40"
                     >
                       <Download className="h-3.5 w-3.5" />
                       Télécharger
@@ -309,7 +309,7 @@ function ChipBtn({
         "rounded-full border px-3 py-1.5 text-xs font-semibold transition",
         active
           ? "border-nexus-blue-950 bg-nexus-blue-950 text-white shadow-sm"
-          : "border-slate-200 bg-white text-slate-600 hover:border-nexus-orange-300 hover:text-nexus-orange-700"
+          : "border-slate-200 bg-white text-slate-600 hover:border-brand/40 hover:text-brand-hover"
       )}
     >
       {label}
