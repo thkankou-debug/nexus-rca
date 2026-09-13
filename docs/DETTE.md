@@ -3802,3 +3802,42 @@ logo dessiné rendu et icon-96 absent sur trésorerie/pilotage/
 vue-ensemble/dossiers/caisse/reçus/partenaire ; bouton Retour présent
 sur les sous-pages (dossiers, reçus), absent sur les écrans d'accueil
 de rôle ; tsc + build 0 erreur.
+
+---
+
+## 13/09/2026 — Utilisateurs & habilitations (super-admin) + désactivation des comptes de test
+
+**Demande Thierry (13/09, post-bascule)** : « désactiver les comptes
+test ; en tant que super-admin je vais créer le compte de chaque membre
+de l'équipe et leur donner l'accréditation — il faut une section sur le
+compte super-admin pour administrer les habilitations. »
+
+**Section livrée — `/dashboard/utilisateurs`** (nouveau shell, entrée
+« Utilisateurs & habilitations » du groupe Organisation, sentinelle
+`__superadmin__` — visible du seul super_admin) :
+- liste des comptes staff (jamais les clients), recherche, badge Test,
+  statut Actif/Désactivé ;
+- création de compte : les 10 rôles staff (create-member ÉTENDU depuis
+  agent/admin/super_admin), invitation e-mail OU mot de passe provisoire ;
+  correction au passage : l'e-mail de bienvenue pointait vers
+  `/connexion` (page inexistante) → `/login` ;
+- changement de rôle et activation/désactivation : PATCH `/api/team/[id]`
+  (super_admin uniquement) — désactivation = `profiles.actif=false` ET
+  bannissement auth (login refusé immédiatement, R22 côté middleware) ;
+  protections : jamais son propre compte, jamais le dernier super_admin
+  actif, comptes client exclus ; chaque action → `audit_log`
+  (`habilitation.*`) ; confirmations ConfirmDialog côté UI.
+
+**Recette réelle (build prod local, 13/09) : 16/16** — page 200
+super_admin / refusée à admin (transport 200 = streaming Next sur
+redirection, VÉRIFIÉ sans aucune donnée dans la réponse, précédent
+R17) ; création rôle daf + connexion du compte ; rôle client refusé
+400 ; changement de rôle appliqué ; auto-désactivation 403 ; PATCH par
+admin 403 ; désactivation → « User is banned » au login ; réactivation
+→ login accepté ; 3 actions d'audit vérifiées ; compte de recette
+supprimé sans résidu.
+
+**Comptes de test** : désactivés en production après le déploiement de
+la section (actif=false + ban auth, 11/11, connexions vérifiées
+refusées). Réactivables individuellement depuis la nouvelle section si
+un besoin de recette revient.

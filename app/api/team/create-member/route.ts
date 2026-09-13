@@ -5,19 +5,34 @@ import { Resend } from "resend";
 
 export const dynamic = "force-dynamic";
 
+// Habilitations (demande Thierry 13/09/2026) : la création couvre les
+// 10 rôles staff du RBAC — le rôle « client » se crée uniquement par le
+// parcours public, jamais ici.
+const ALLOWED_ROLES = [
+  "super_admin",
+  "admin",
+  "dg",
+  "daf",
+  "chef_service",
+  "agent",
+  "comptable",
+  "moderateur",
+  "partenaire",
+  "accueil_caisse",
+] as const;
+type StaffRole = (typeof ALLOWED_ROLES)[number];
+
 interface CreateTeamMemberBody {
   prenom: string;
   nom: string;
   email: string;
   telephone?: string;
-  role: "agent" | "admin" | "super_admin";
+  role: StaffRole;
   poste?: string;
   notes_internes?: string;
   send_invitation: boolean;
   temporary_password?: string;
 }
-
-const ALLOWED_ROLES = ["agent", "admin", "super_admin"] as const;
 
 // URL de base de production - utilisee pour les redirections d invitation
 const SITE_URL =
@@ -249,12 +264,19 @@ export async function POST(request: Request) {
       try {
         const resend = new Resend(process.env.RESEND_API_KEY);
         const fullName = `${body.prenom.trim()} ${body.nom.trim()}`;
-        const roleLabel =
-          body.role === "super_admin"
-            ? "Super-admin"
-            : body.role === "admin"
-            ? "Administrateur"
-            : "Agent";
+        const ROLE_EMAIL_LABELS: Record<StaffRole, string> = {
+          super_admin: "Super administrateur",
+          admin: "Administrateur",
+          dg: "Directeur général",
+          daf: "Directeur administratif et financier",
+          chef_service: "Chef de service",
+          agent: "Conseiller",
+          comptable: "Comptable",
+          moderateur: "Modérateur",
+          partenaire: "Partenaire",
+          accueil_caisse: "Accueil et caisse",
+        };
+        const roleLabel = ROLE_EMAIL_LABELS[body.role];
 
         await resend.emails.send({
           from: "Nexus RCA <noreply@nexusrca.com>",
@@ -280,7 +302,7 @@ export async function POST(request: Request) {
                   ⚠️ <strong>Important :</strong> changez votre mot de passe lors de votre première connexion.
                 </p>
                 <p style="text-align: center; margin: 30px 0;">
-                  <a href="${SITE_URL}/connexion" style="background: #FF6600; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">Se connecter</a>
+                  <a href="${SITE_URL}/login" style="background: #FF6600; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">Se connecter</a>
                 </p>
                 <hr style="border: none; border-top: 1px solid #E2E8F0; margin: 30px 0;">
                 <p style="color: #94A3B8; font-size: 12px; text-align: center;">

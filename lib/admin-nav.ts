@@ -88,6 +88,9 @@ export const ADMIN_NAV_STRUCTURE: AdminNavGroup[] = [
     modules: [
       { key: "rh", label: "Ressources humaines", permission: "rh.user.read", table: "module RH", wave: 1, href: "/dashboard/super-admin/rh" },
       { key: "employes-acces", label: "Employés et accès", permission: "rh.user.read", table: "profiles", wave: 1, href: "/dashboard/super-admin/rh/employes" },
+      // Habilitations (demande Thierry 13/09/2026) : création des comptes de
+      // l'équipe + attribution des rôles — super_admin uniquement (§2.1).
+      { key: "habilitations", label: "Utilisateurs & habilitations", permission: "__superadmin__", table: "profiles", wave: 1, href: "/dashboard/utilisateurs" },
       { key: "partenaires", label: "Partenaires", permission: "cms.partenaire.write", table: "partenaires", wave: 2, href: "#organisation-partenaires" },
     ],
   },
@@ -137,6 +140,7 @@ export async function getEffectiveNav(): Promise<AdminNavGroup[]> {
     : { data: null };
   const ownRole = (ownProfile as { role?: string } | null)?.role ?? "";
   const isAdminRole = ownRole === "admin" || ownRole === "super_admin";
+  const isSuperAdmin = ownRole === "super_admin";
   // Étape 6 : sentinelles de rôle supplémentaires — super_admin supervise.
   const isDgRole = ownRole === "dg" || ownRole === "super_admin";
   const isChefRole = ownRole === "chef_service" || ownRole === "super_admin";
@@ -148,6 +152,8 @@ export async function getEffectiveNav(): Promise<AdminNavGroup[]> {
         ? supabase.rpc("is_staff", { user_id: user?.id ?? "" })
         : m.permission === "__admin__"
         ? Promise.resolve({ data: isAdminRole })
+        : m.permission === "__superadmin__"
+        ? Promise.resolve({ data: isSuperAdmin })
         : m.permission === "__dg__"
         ? Promise.resolve({ data: isDgRole })
         : m.permission === "__chef__"
