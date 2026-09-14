@@ -15,7 +15,6 @@ import {
   Target,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
-import { ServiceIllustration } from "@/components/services/ServiceIllustration";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { PublicHero } from "@/components/PublicHero";
@@ -222,14 +221,6 @@ export default function AProposPage() {
             </div>
           </div>
         </section>
-
-        <ServiceIllustration
-          tone="dark"
-          src="/illustrations/equipe-conseil.png"
-          alt="Illustration — l&apos;équipe de conseil Nexus RCA en réunion de travail"
-          position="center 35%"
-          className="pb-0"
-        />
 
         {/* ============================================================ */}
         {/* 3. EMPREINTE INSTITUTIONNELLE — narration + bento stats       */}
@@ -442,14 +433,6 @@ export default function AProposPage() {
             </div>
           </div>
         </section>
-
-        <ServiceIllustration
-          tone="dark"
-          src="/illustrations/dossier-conseil.png"
-          alt="Illustration — dossier Nexus RCA, globe et avion doré : conseil, accompagnement, résultats"
-          position="center 55%"
-          className="pb-0"
-        />
 
         {/* ============================================================ */}
         {/* 5. PRÉSENCE INTERNATIONALE — signature 3 (carte SVG)         */}

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Navbar } from "@/components/layout/Navbar";
-import { ServiceIllustration } from "@/components/services/ServiceIllustration";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { PublicHero } from "@/components/PublicHero";
@@ -399,13 +398,6 @@ export default function FinancementPage() {
             </div>
           </div>
         </section>
-
-        <ServiceIllustration
-          tone="dark"
-          src="/illustrations/vitrine-incubateur.png"
-          alt="Illustration — maquette d&apos;une boutique d&apos;incubateur Nexus RCA"
-          position="center 60%"
-        />
 
         {/* 2. CE QUE NEXUS N'EST PAS — navy glass + accent rose subtil ── */}
         <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">

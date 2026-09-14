@@ -4,7 +4,6 @@ import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { PublicHero } from "@/components/PublicHero";
 import { ServiceBody } from "@/components/services/ServiceBody";
-import { ServiceIllustration } from "@/components/services/ServiceIllustration";
 import { FinalCTA } from "@/components/FinalCTA";
 import { FileText } from "lucide-react";
 
@@ -37,11 +36,6 @@ export default function AccompagnementBusinessPage() {
             label: t("cta_primary"),
             icon: FileText,
           }}
-        />
-        <ServiceIllustration
-          src="/illustrations/conseil-artisan.png"
-          alt="Illustration — un artisan présente son produit à deux conseillers Nexus RCA"
-          position="center 38%"
         />
         <ServiceBody
           paragraphs={[t("intro_2")]}

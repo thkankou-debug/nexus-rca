@@ -1,7 +1,6 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Navbar } from "@/components/layout/Navbar";
-import { ServiceIllustration } from "@/components/services/ServiceIllustration";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { PublicHero } from "@/components/PublicHero";
@@ -208,13 +207,6 @@ export default function AssurancePage() {
             label: "Voir nos univers de couverture",
             icon: Compass,
           }}
-        />
-
-        <ServiceIllustration
-          tone="dark"
-          src="/illustrations/valise-protection.png"
-          alt="Illustration — valise Nexus RCA protégée par un bouclier, avion en arrière-plan"
-          position="center 55%"
         />
 
         {/* 2. COUVERTURE MONDIALE — carte signature ───────────────────── */}

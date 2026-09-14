@@ -5,7 +5,6 @@ import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import dynamic from "next/dynamic";
 import { AssuranceCompanionPanel } from "@/components/services/AssuranceCompanionPanel";
-import { ServiceIllustration } from "@/components/services/ServiceIllustration";
 
 // Lazy load FlightSearchMock — composant client interactif lourd
 const FlightSearchMock = dynamic(() =>
@@ -397,13 +396,6 @@ export default function BilletsPage() {
             </div>
           </div>
         </section>
-
-        <ServiceIllustration
-          tone="dark"
-          src="/illustrations/conseil-voyage.png"
-          alt="Illustration — un conseiller Nexus RCA prépare un itinéraire de voyage avec une cliente"
-          position="center 42%"
-        />
 
         {/* 2. FLIGHT SEARCH MOCK — signature unique ──────────────── */}
         <section className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-20 text-white sm:py-24">
