@@ -227,7 +227,8 @@ export default function AProposPage() {
           tone="dark"
           src="/illustrations/equipe-conseil.png"
           alt="Illustration — l&apos;équipe de conseil Nexus RCA en réunion de travail"
-          className="pb-2"
+          position="center 35%"
+          className="pb-0"
         />
 
         {/* ============================================================ */}
@@ -446,7 +447,8 @@ export default function AProposPage() {
           tone="dark"
           src="/illustrations/dossier-conseil.png"
           alt="Illustration — dossier Nexus RCA, globe et avion doré : conseil, accompagnement, résultats"
-          className="pb-2"
+          position="center 55%"
+          className="pb-0"
         />
 
         {/* ============================================================ */}

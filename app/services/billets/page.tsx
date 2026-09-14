@@ -402,6 +402,7 @@ export default function BilletsPage() {
           tone="dark"
           src="/illustrations/conseil-voyage.png"
           alt="Illustration — un conseiller Nexus RCA prépare un itinéraire de voyage avec une cliente"
+          position="center 42%"
         />
 
         {/* 2. FLIGHT SEARCH MOCK — signature unique ──────────────── */}

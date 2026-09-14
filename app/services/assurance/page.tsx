@@ -214,6 +214,7 @@ export default function AssurancePage() {
           tone="dark"
           src="/illustrations/valise-protection.png"
           alt="Illustration — valise Nexus RCA protégée par un bouclier, avion en arrière-plan"
+          position="center 55%"
         />
 
         {/* 2. COUVERTURE MONDIALE — carte signature ───────────────────── */}

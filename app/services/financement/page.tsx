@@ -404,6 +404,7 @@ export default function FinancementPage() {
           tone="dark"
           src="/illustrations/vitrine-incubateur.png"
           alt="Illustration — maquette d&apos;une boutique d&apos;incubateur Nexus RCA"
+          position="center 60%"
         />
 
         {/* 2. CE QUE NEXUS N'EST PAS — navy glass + accent rose subtil ── */}

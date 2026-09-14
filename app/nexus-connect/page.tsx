@@ -324,6 +324,7 @@ export default function NexusConnectPage() {
       <ServiceIllustration
         src="/illustrations/collaboration-digitale.png"
         alt="Illustration — des conseillers Nexus RCA présentent l&apos;espace en ligne à une cliente"
+        position="center 38%"
       />
 
       {/* ─── 4 PILIERS Premium tech ──────────────────────────────────── */}

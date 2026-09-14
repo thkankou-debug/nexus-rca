@@ -2,54 +2,58 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 // ============================================================================
-// ILLUSTRATION DE PAGE — bandeau image unique, sobre (D8).
-// Illustrations de marque déposées par Thierry le 13/09/2026
-// (public/illustrations/*.png) : style peint navy/or, présentées comme des
-// ILLUSTRATIONS (alt explicite) — jamais comme des photographies (E4).
-// tone="light" : sections claires · tone="dark" : sections navy.
+// ILLUSTRATION DE PAGE — v2 (13/09/2026, après rejet de la v1 par Thierry :
+// « images très grandes, mal placées, aucune harmonie »).
+// Bandeau CINÉMATIQUE à hauteur maîtrisée (240→340 px), jamais un bloc
+// pleine hauteur : l'image est recadrée (object-cover) avec un point de
+// cadrage par image pour préserver les visages, alignée sur la grille des
+// sections (max-w-6xl), cadre assorti au registre de la page.
+// Illustrations de marque déposées par Thierry (public/illustrations/) —
+// présentées comme des ILLUSTRATIONS (alt explicite), jamais comme des
+// photographies (E4).
 // ============================================================================
 
 export function ServiceIllustration({
   src,
   alt,
   tone = "light",
-  width = 1536,
-  height = 1024,
-  priority = false,
+  position = "center 40%",
   className,
 }: {
   src: string;
   alt: string;
   tone?: "light" | "dark";
-  width?: number;
-  height?: number;
-  priority?: boolean;
+  /** Point de cadrage CSS object-position — préserve les visages. */
+  position?: string;
   className?: string;
 }) {
   return (
     <section
       className={cn(
-        "px-4 pt-12 sm:px-6 lg:px-8",
+        "px-4 py-10 sm:px-6 sm:py-12 lg:px-8",
         tone === "light" ? "bg-white" : "bg-nexus-blue-950",
         className
       )}
     >
-      <div className="mx-auto max-w-5xl">
-        <Image
-          src={src}
-          alt={alt}
-          width={width}
-          height={height}
-          priority={priority}
-          sizes="(min-width: 1024px) 1024px, 100vw"
+      <figure className="mx-auto max-w-6xl">
+        <div
           className={cn(
-            "h-auto w-full rounded-3xl",
+            "relative h-[240px] overflow-hidden rounded-3xl sm:h-[300px] lg:h-[340px]",
             tone === "light"
-              ? "border border-slate-200 shadow-[0_24px_60px_-30px_rgba(2,7,31,0.35)]"
-              : "border border-white/10 shadow-[0_24px_60px_-30px_rgba(0,0,0,0.6)]"
+              ? "border border-slate-200 shadow-sm"
+              : "border border-white/10 ring-1 ring-white/5"
           )}
-        />
-      </div>
+        >
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            sizes="(min-width: 1152px) 1152px, 100vw"
+            className="object-cover"
+            style={{ objectPosition: position }}
+          />
+        </div>
+      </figure>
     </section>
   );
 }

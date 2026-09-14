@@ -196,7 +196,8 @@ export default function ContactPage() {
         <ServiceIllustration
           src="/illustrations/accueil-agence.png"
           alt="Illustration — l&apos;accueil des clients à l&apos;agence Nexus RCA"
-          className="!bg-slate-50"
+          position="center 42%"
+          className="!bg-slate-50 !pb-4"
         />
 
         {/* ─── Formulaire + coordonnées Premium tech ────────────────── */}

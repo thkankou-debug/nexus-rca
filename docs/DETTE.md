@@ -3874,3 +3874,11 @@ utiliser sur la seule version EN si Thierry le souhaite.
 **Livraison en PRÉVERSION UNIQUEMENT** (demande explicite de Thierry :
 validation avant production). tsc + build 0 erreur ; les 8 pages
 vérifiées en 200 avec leur image sur le build local.
+
+**Rejet v1 (13/09, Thierry)** : « images très grandes, mal placées,
+aucune harmonie » — la v1 affichait les illustrations pleine hauteur
+(bandeaux ~700 px). **v2 livrée immédiatement** : bandeaux cinématiques
+à hauteur MAÎTRISÉE (240 px mobile → 340 px desktop), recadrage
+object-cover avec point de cadrage par image (visages préservés),
+alignés sur la grille max-w-6xl des sections, cadres discrets assortis
+au registre clair/sombre. Production jamais touchée (préversion seule).

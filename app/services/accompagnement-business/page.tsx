@@ -41,6 +41,7 @@ export default function AccompagnementBusinessPage() {
         <ServiceIllustration
           src="/illustrations/conseil-artisan.png"
           alt="Illustration — un artisan présente son produit à deux conseillers Nexus RCA"
+          position="center 38%"
         />
         <ServiceBody
           paragraphs={[t("intro_2")]}

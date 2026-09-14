@@ -41,8 +41,7 @@ export default function ReseauInternationalPage() {
         <ServiceIllustration
           src="/illustrations/globe-reseau.png"
           alt="Illustration — globe aux liaisons dorées et plaque Nexus RCA, agence internationale"
-          width={1672}
-          height={941}
+          position="center 45%"
         />
         <ServiceBody
           paragraphs={[]}
