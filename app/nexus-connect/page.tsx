@@ -24,6 +24,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
+import { ServiceIllustration } from "@/components/services/ServiceIllustration";
 
 export const metadata = {
   title: "NEXUS CONNECT - Votre espace personnel Nexus RCA",
@@ -319,6 +320,11 @@ export default function NexusConnectPage() {
           </div>
         </div>
       </section>
+
+      <ServiceIllustration
+        src="/illustrations/collaboration-digitale.png"
+        alt="Illustration — des conseillers Nexus RCA présentent l&apos;espace en ligne à une cliente"
+      />
 
       {/* ─── 4 PILIERS Premium tech ──────────────────────────────────── */}
       <section className="relative bg-gradient-to-b from-white via-slate-50/40 to-white px-4 pt-12 pb-24 sm:px-6 lg:px-8">

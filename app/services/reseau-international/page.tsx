@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { PublicHero } from "@/components/PublicHero";
 import { ServiceBody } from "@/components/services/ServiceBody";
+import { ServiceIllustration } from "@/components/services/ServiceIllustration";
 import { FinalCTA } from "@/components/FinalCTA";
 import { FileText } from "lucide-react";
 
@@ -36,6 +37,12 @@ export default function ReseauInternationalPage() {
             label: t("cta_primary"),
             icon: FileText,
           }}
+        />
+        <ServiceIllustration
+          src="/illustrations/globe-reseau.png"
+          alt="Illustration — globe aux liaisons dorées et plaque Nexus RCA, agence internationale"
+          width={1672}
+          height={941}
         />
         <ServiceBody
           paragraphs={[]}

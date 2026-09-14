@@ -3841,3 +3841,36 @@ supprimé sans résidu.
 la section (actif=false + ban auth, 11/11, connexions vérifiées
 refusées). Réactivables individuellement depuis la nouvelle section si
 un besoin de recette revient.
+
+---
+
+## 13/09/2026 — Illustrations de marque sur le site public (dépôt Thierry)
+
+Thierry a déposé 11 illustrations peintes (navy/or, logo Nexus intégré)
+dans public/. Rangées dans `public/illustrations/` (noms d'URL propres),
+**9 placées** via le composant `ServiceIllustration` (bandeau unique,
+sobre, next/image optimisé — 2 Mo source → ~40 Ko webp servi, alt
+explicites « Illustration — … », jamais présentées comme des photos, E4) :
+
+| Image | Page | Emplacement |
+|---|---|---|
+| globe-reseau | /services/reseau-international | sous le hero |
+| conseil-artisan | /services/accompagnement-business | sous le hero |
+| conseil-voyage | /services/billets | avant la recherche de vols |
+| valise-protection | /services/assurance | avant la couverture mondiale |
+| vitrine-incubateur | /services/financement | avant « Ce que Nexus n'est pas » |
+| equipe-conseil | /a-propos | avant l'empreinte institutionnelle |
+| dossier-conseil | /a-propos | avant la présence internationale |
+| accueil-agence | /contact | avant le formulaire |
+| collaboration-digitale | /nexus-connect | avant les 4 piliers |
+
+**2 écartées (en attente de décision Thierry)** : `interface-premium.png`
+et `tableau-strategie.png` — elles affichent du TEXTE ANGLAIS FICTIF
+bien visible (« Clarity today… », « Assess/Align/Achieve ») qui ne
+correspond ni au produit réel ni au site francophone. Conservées dans
+public/illustrations/, non référencées. À régénérer en français ou à
+utiliser sur la seule version EN si Thierry le souhaite.
+
+**Livraison en PRÉVERSION UNIQUEMENT** (demande explicite de Thierry :
+validation avant production). tsc + build 0 erreur ; les 8 pages
+vérifiées en 200 avec leur image sur le build local.

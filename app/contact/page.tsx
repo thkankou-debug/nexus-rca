@@ -18,6 +18,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
+import { ServiceIllustration } from "@/components/services/ServiceIllustration";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { PublicHero } from "@/components/PublicHero";
@@ -191,6 +192,12 @@ export default function ContactPage() {
             </div>
           </div>
         </section>
+
+        <ServiceIllustration
+          src="/illustrations/accueil-agence.png"
+          alt="Illustration — l&apos;accueil des clients à l&apos;agence Nexus RCA"
+          className="!bg-slate-50"
+        />
 
         {/* ─── Formulaire + coordonnées Premium tech ────────────────── */}
         <section className="bg-slate-50 pb-20 pt-4">
