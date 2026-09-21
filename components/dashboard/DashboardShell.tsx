@@ -90,6 +90,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
       items: [
         { href: "/dashboard/client", label: "Tableau de bord", icon: LayoutDashboard },
         { href: "/dashboard/client/demandes", label: "Mes demandes", icon: FileText },
+        { href: "/dashboard/client/commandes", label: "Mes commandes", icon: ShoppingCart },
         { href: "/dashboard/client/rdv", label: "Mes rendez-vous", icon: Calendar },
       ],
     },
@@ -133,6 +134,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/agent/caisse-sessions", label: "Sessions caisse", icon: Wallet },
         { href: "/dashboard/agent/devis", label: "Devis", icon: ClipboardCheck },
         { href: "/dashboard/agent/factures", label: "Factures", icon: FileBarChart },
+        { href: "/dashboard/super-admin/commandes-boutique", label: "Commandes boutique", icon: ShoppingCart },
         { href: "/dashboard/agent/echeanciers", label: "Échéanciers", icon: CalendarClock },
         { href: "/dashboard/agent/commissions", label: "Mes commissions", icon: Coins },
         { href: "/dashboard/agent/paiements", label: "Mes paiements", icon: Wallet },
@@ -187,6 +189,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
       items: [
         { href: "/dashboard/admin/paiements", label: "Paiements", icon: Wallet },
         { href: "/dashboard/super-admin/devis", label: "Devis", icon: ClipboardCheck },
+        { href: "/dashboard/super-admin/commandes-boutique", label: "Commandes boutique", icon: ShoppingCart },
         { href: "/dashboard/super-admin/factures", label: "Factures", icon: FileBarChart },
         { href: "/dashboard/super-admin/caisse-sessions", label: "Sessions caisse", icon: Wallet },
         { href: "/dashboard/super-admin/echeanciers", label: "Échéanciers", icon: CalendarClock },
@@ -265,6 +268,7 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
         { href: "/dashboard/super-admin/paiements/en-attente", label: "Paiements en attente", icon: Wallet },
         { href: "/dashboard/super-admin/paiements", label: "Tous les paiements", icon: Wallet },
         { href: "/dashboard/super-admin/devis", label: "Devis", icon: ClipboardCheck },
+        { href: "/dashboard/super-admin/commandes-boutique", label: "Commandes boutique", icon: ShoppingCart },
         { href: "/dashboard/super-admin/factures", label: "Factures", icon: FileBarChart },
         { href: "/dashboard/super-admin/caisse", label: "Caisse rapide", icon: ShoppingCart },
         { href: "/dashboard/super-admin/caisse-sessions", label: "Sessions caisse", icon: Wallet },

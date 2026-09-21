@@ -16,6 +16,7 @@ import {
 import { Logo } from "@/components/ui/Logo";
 import { Button } from "@/components/ui/Button";
 import { LocaleToggle } from "@/components/layout/LocaleToggle";
+import { CartBadge } from "@/components/boutique/CartBadge";
 import { SERVICES } from "@/lib/services";
 import { cn, whatsappLink } from "@/lib/utils";
 
@@ -28,6 +29,7 @@ interface NavLink {
 const NAV_LINKS: NavLink[] = [
   { href: "/", labelKey: "home" },
   { href: "/services", labelKey: "services", hasDropdown: true },
+  { href: "/boutique", labelKey: "boutique" },
   { href: "/services/nexus-ia", labelKey: "nexus_ia" },
   { href: "/a-propos", labelKey: "about" },
   { href: "/contact", labelKey: "contact" },
@@ -154,6 +156,8 @@ export function Navbar() {
           <div className="hidden items-center gap-1 lg:flex xl:gap-2">
             <LocaleToggle variant={scrolled ? "ink" : "light"} compact />
 
+            <CartBadge inverted={!scrolled} />
+
             <Link
               href="/nexus-connect"
               className={cn(
@@ -195,6 +199,7 @@ export function Navbar() {
           {/* Mobile actions Premium tech */}
           <div className="flex items-center gap-2 lg:hidden">
             <LocaleToggle variant={scrolled ? "ink" : "light"} compact />
+            <CartBadge inverted={!scrolled} />
             <button
               onClick={() => setMobileOpen((v) => !v)}
               className={cn(
