@@ -24,6 +24,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
+import { ServiceCover } from "@/components/services/ServiceCover";
 
 export const metadata = {
   title: "NEXUS CONNECT - Votre espace personnel Nexus RCA",
@@ -169,7 +170,8 @@ export default function NexusConnectPage() {
           className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
         />
 
-        <div className="relative mx-auto max-w-5xl text-center">
+        <div className="relative mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2">
+          <div className="text-center lg:text-left">
           <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md transition-all duration-300 hover:border-brand/50 hover:bg-brand/15">
             <span className="relative flex h-1.5 w-1.5">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
@@ -191,19 +193,19 @@ export default function NexusConnectPage() {
             </span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg lg:mx-0">
             Votre espace personnel chez Nexus RCA. Suivez vos dossiers, vos
             paiements, téléchargez vos documents et restez en contact direct
             avec votre agent dédié.
           </p>
 
-          <p className="mx-auto mt-3 max-w-xl text-xs text-slate-400 sm:text-sm">
+          <p className="mx-auto mt-3 max-w-xl text-xs text-slate-400 sm:text-sm lg:mx-0">
             Une expérience numérique premium pour vos démarches internationales,
             où que vous soyez à Bangui, Yaoundé, Paris ou Montréal.
           </p>
 
           {/* CTA — full width sur mobile pour impact immédiat */}
-          <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:mt-10 sm:flex-row sm:items-center">
+          <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:mt-10 sm:flex-row sm:items-center lg:justify-start">
             <Link
               href="/demande/complet"
               className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_10px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)]"
@@ -245,6 +247,13 @@ export default function NexusConnectPage() {
               accent="amber"
             />
           </div>
+          </div>
+          <ServiceCover
+            slug="nexus-connect"
+            variant="hero"
+            priority
+            className="rounded-3xl ring-1 ring-white/10 shadow-[0_28px_60px_-24px_rgba(2,7,31,0.55)]"
+          />
         </div>
       </section>
 

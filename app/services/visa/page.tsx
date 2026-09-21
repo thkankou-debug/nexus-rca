@@ -34,6 +34,7 @@ import { EVisaEligibilityChecker } from "@/components/visa/EVisaEligibilityCheck
 import { VisaDocumentChecklist } from "@/components/visa/VisaDocumentChecklist";
 import { VisaExpressForm } from "@/components/visa/VisaExpressForm";
 import { AssuranceCompanionPanel } from "@/components/services/AssuranceCompanionPanel";
+import { ServiceCover } from "@/components/services/ServiceCover";
 
 export const metadata = {
   title: "Visa & e-Visa | Nexus RCA — Bangui",
@@ -492,8 +493,14 @@ export default function VisaPage() {
                 </div>
               </div>
 
-              {/* ─── Colonne secondaire (droite) — Companion panel assurance ─── */}
-              <div className="lg:col-span-5">
+              {/* ─── Colonne secondaire (droite) — visuel + companion ─── */}
+              <div className="space-y-5 lg:col-span-5">
+                <ServiceCover
+                  slug="visa"
+                  variant="hero"
+                  priority
+                  className="rounded-3xl ring-1 ring-white/10 shadow-[0_28px_60px_-24px_rgba(2,7,31,0.55)]"
+                />
                 <AssuranceCompanionPanel variant="visa" />
               </div>
             </div>

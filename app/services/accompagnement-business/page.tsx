@@ -27,6 +27,7 @@ export default function AccompagnementBusinessPage() {
       <Navbar />
       <main>
         <PublicHero
+          imageKey="accompagnement-business"
           eyebrow={t("eyebrow")}
           titleStart={t("title_start")}
           accentWord={t("title_accent")}

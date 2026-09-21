@@ -5,6 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import dynamic from "next/dynamic";
 import { AssuranceCompanionPanel } from "@/components/services/AssuranceCompanionPanel";
+import { ServiceCover } from "@/components/services/ServiceCover";
 
 // Lazy load FlightSearchMock — composant client interactif lourd
 const FlightSearchMock = dynamic(() =>
@@ -389,8 +390,14 @@ export default function BilletsPage() {
                 </div>
               </div>
 
-              {/* ─── Colonne secondaire (droite) — Companion panel assurance ─── */}
-              <div className="lg:col-span-5">
+              {/* ─── Colonne secondaire (droite) — visuel + companion ─── */}
+              <div className="space-y-5 lg:col-span-5">
+                <ServiceCover
+                  slug="billets"
+                  variant="hero"
+                  priority
+                  className="rounded-3xl ring-1 ring-white/10 shadow-[0_28px_60px_-24px_rgba(2,7,31,0.55)]"
+                />
                 <AssuranceCompanionPanel variant="billets" />
               </div>
             </div>

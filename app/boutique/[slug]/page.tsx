@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { AddToCartButton } from "@/components/boutique/AddToCartButton";
 import { Button } from "@/components/ui/Button";
+import { ServiceCover } from "@/components/services/ServiceCover";
 import { createClient } from "@/lib/supabase/server";
 import {
   BOUTIQUE_SELECT,
@@ -50,20 +51,29 @@ export default async function BoutiqueFichePage({
       <Navbar />
       <main className="bg-surface-ivory">
         <section className="bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 pb-12 pt-28 text-white sm:pt-32">
-          <div className="mx-auto max-w-4xl px-4 lg:px-8">
-            <Link
-              href="/boutique"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-300 hover:text-white"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Catalogue
-            </Link>
-            <p className="mt-6 text-[11px] font-bold uppercase tracking-[0.2em] text-brand">
-              {offre.categorie} · {KIND_LABEL[offre.kind]}
-            </p>
-            <h1 className="mt-3 font-display text-3xl font-bold sm:text-5xl">
-              {offre.nom}
-            </h1>
+          <div className="mx-auto grid max-w-5xl items-end gap-8 px-4 lg:grid-cols-2 lg:px-8">
+            <div>
+              <Link
+                href="/boutique"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-300 hover:text-white"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Catalogue
+              </Link>
+              <p className="mt-6 text-[11px] font-bold uppercase tracking-[0.2em] text-brand">
+                {offre.categorie} · {KIND_LABEL[offre.kind]}
+              </p>
+              <h1 className="mt-3 font-display text-3xl font-bold sm:text-5xl">
+                {offre.nom}
+              </h1>
+            </div>
+            <ServiceCover
+              slug={offre.slug}
+              categorie={offre.categorie}
+              variant="hero"
+              priority
+              className="rounded-3xl ring-1 ring-white/10 shadow-[0_28px_60px_-24px_rgba(2,7,31,0.55)]"
+            />
           </div>
         </section>
 

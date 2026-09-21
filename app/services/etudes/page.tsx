@@ -349,6 +349,7 @@ export default function EtudesPage() {
       <main>
         {/* 1. HERO Premium tech ────────────────────────────────────── */}
         <PublicHero
+          imageKey="etudes"
           eyebrow="Service études Canada"
           titleStart=""
           accentWord="Accès structuré"

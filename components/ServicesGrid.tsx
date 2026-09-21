@@ -12,6 +12,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { ServiceCover } from "@/components/services/ServiceCover";
 
 // ─── ServicesGrid — Écosystème Nexus ────────────────────────────────────────
 // Bento : 1 hero card (Visa) + 7 cards compactes premium.
@@ -366,6 +367,10 @@ export async function ServicesGrid() {
 // ============================================================================
 // ─── Hero card — Visa (préservée) ──────────────────────────────────────────
 // ============================================================================
+function slugFromHref(href: string): string {
+  return href.replace(/^\/services\//, "").replace(/^\//, "") || "visa";
+}
+
 function HeroCard({ pilier }: { pilier: Pilier }) {
   const Icon = pilier.icon;
   const tone = TONE_STYLES[pilier.tone];
@@ -375,6 +380,13 @@ function HeroCard({ pilier }: { pilier: Pilier }) {
       href={pilier.href}
       className="group relative overflow-hidden rounded-3xl border border-brand/30 bg-gradient-to-br from-brand/12 via-white/[0.05] to-white/[0.02] ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_28px_60px_-24px_rgba(185,151,96,0.30)] transition-all duration-500 hover:-translate-y-1 hover:border-brand/60 sm:col-span-2 lg:col-span-7 lg:row-span-2"
     >
+      <ServiceCover
+        slug={slugFromHref(pilier.href)}
+        variant="hero"
+        className="absolute inset-0 h-full w-full rounded-none aspect-auto"
+        imgClassName="opacity-45"
+      />
+      <div className="absolute inset-0 bg-gradient-to-br from-nexus-blue-950/80 via-nexus-blue-950/55 to-nexus-blue-950/25" />
       <div
         aria-hidden
         className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-brand/30 blur-3xl"
@@ -454,13 +466,13 @@ function CompactSignatureCard({
   return (
     <Link
       href={pilier.href}
-      className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-5 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.06] sm:p-6 ${tone.borderHover} ${className || ""}`}
+      className={`group relative flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.06] ${tone.borderHover} ${className || ""}`}
     >
-      <div
-        aria-hidden
-        className={`pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand/0 blur-3xl transition-all duration-500 ${tone.glowHover}`}
+      <ServiceCover
+        slug={slugFromHref(pilier.href)}
+        className="h-32 w-full rounded-none aspect-auto sm:h-36"
       />
-      <div className="relative flex h-full flex-col">
+      <div className="relative flex flex-1 flex-col p-5 sm:p-6">
         {/* Header — icône + eyebrow */}
         <div className="flex items-start justify-between gap-3">
           <div
@@ -525,51 +537,52 @@ function CompactSignatureWide({
   return (
     <Link
       href={pilier.href}
-      className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-5 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.06] sm:p-6 ${tone.borderHover} ${className || ""}`}
+      className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.06] ${tone.borderHover} ${className || ""}`}
     >
-      <div
-        aria-hidden
-        className={`pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-brand/0 blur-3xl transition-all duration-500 ${tone.glowHover}`}
-      />
-      <div className="relative flex items-start gap-5">
-        <div
-          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${tone.iconBg} ${tone.iconColor} transition-transform duration-300 group-hover:scale-105`}
-        >
-          <Icon className="h-5 w-5" />
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-            <h3 className="font-display text-base font-bold leading-tight text-white sm:text-lg">
-              {pilier.title}
-            </h3>
-            <span
-              className={`text-[9px] font-bold uppercase tracking-[0.18em] ${tone.accent}`}
-            >
-              Signature
-            </span>
+      <div className="grid sm:grid-cols-[9rem_1fr]">
+        <ServiceCover
+          slug={slugFromHref(pilier.href)}
+          className="h-32 w-full rounded-none aspect-auto sm:h-full sm:min-h-[9.5rem]"
+        />
+        <div className="relative flex items-start gap-4 p-5 sm:p-6">
+          <div
+            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${tone.iconBg} ${tone.iconColor} transition-transform duration-300 group-hover:scale-105`}
+          >
+            <Icon className="h-5 w-5" />
           </div>
 
-          <p className="mt-2 text-xs leading-relaxed text-slate-300 sm:text-sm">
-            {pilier.description}
-          </p>
-
-          {/* 2 tags + Découvrir alignés */}
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            {pilier.tags.map((tag) => (
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+              <h3 className="font-display text-base font-bold leading-tight text-white sm:text-lg">
+                {pilier.title}
+              </h3>
               <span
-                key={tag}
-                className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] backdrop-blur-md ${tone.tagBg}`}
+                className={`text-[9px] font-bold uppercase tracking-[0.18em] ${tone.accent}`}
               >
-                {tag}
+                Signature
               </span>
-            ))}
-            <span className="ml-auto inline-flex items-center gap-1 text-xs font-semibold text-white/85">
-              <span className={tone.accent}>Découvrir</span>
-              <ArrowRight
-                className={`h-3 w-3 ${tone.accent} transition-transform duration-300 ease-out group-hover:translate-x-0.5`}
-              />
-            </span>
+            </div>
+
+            <p className="mt-2 text-xs leading-relaxed text-slate-300 sm:text-sm">
+              {pilier.description}
+            </p>
+
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              {pilier.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] backdrop-blur-md ${tone.tagBg}`}
+                >
+                  {tag}
+                </span>
+              ))}
+              <span className="ml-auto inline-flex items-center gap-1 text-xs font-semibold text-white/85">
+                <span className={tone.accent}>Découvrir</span>
+                <ArrowRight
+                  className={`h-3 w-3 ${tone.accent} transition-transform duration-300 ease-out group-hover:translate-x-0.5`}
+                />
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -593,13 +606,13 @@ function CompactSimpleCard({
   return (
     <Link
       href={pilier.href}
-      className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-5 ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.06] sm:p-6 ${className || ""}`}
+      className={`group relative flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.06] ${className || ""}`}
     >
-      <div
-        aria-hidden
-        className={`pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-white/0 blur-2xl transition-all duration-500 group-hover:bg-white/5`}
+      <ServiceCover
+        slug={slugFromHref(pilier.href)}
+        className="h-28 w-full rounded-none aspect-auto"
       />
-      <div className="relative flex h-full flex-col">
+      <div className="relative flex flex-1 flex-col p-5 sm:p-6">
         <div
           className={`flex h-10 w-10 items-center justify-center rounded-xl ${tone.iconBg} ${tone.iconColor} transition-transform duration-300 group-hover:scale-105`}
         >
