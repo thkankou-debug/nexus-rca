@@ -14,6 +14,7 @@ import {
   Mail,
   MessageCircle,
   UserCircle,
+  ShoppingBag,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
@@ -270,6 +271,24 @@ export default async function ClientDashboard() {
           href="/dashboard/client/demandes?status=complete"
         />
       </div>
+
+      <Link
+        href="/dashboard/client/commandes"
+        className="mb-6 flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-brand/40 hover:shadow-md"
+      >
+        <span className="flex items-center gap-3">
+          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-nexus-blue-950 text-brand">
+            <ShoppingBag className="h-5 w-5" />
+          </span>
+          <span>
+            <span className="block text-sm font-bold text-nexus-blue-950">Mes commandes boutique</span>
+            <span className="block text-xs text-slate-500">
+              Suivi des commandes transmises — non payées tant qu’un encaissement n’est pas enregistré
+            </span>
+          </span>
+        </span>
+        <ArrowRight className="h-4 w-4 text-slate-400" />
+      </Link>
 
       {/* GRILLE PRINCIPALE */}
       <div className="grid gap-6 lg:grid-cols-3">

@@ -15,7 +15,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 // Cabinet/institutional variants — sobres, sans translate ni glow agressif.
 // Hover = changement de teinte uniquement (pas de mouvement, pas de halo orange).
 const variantClasses: Record<Variant, string> = {
-  // CTA primaire — orange réservé à l'action principale
+  // CTA primaire — or (brand) réservé à l'action principale
   primary:
     "bg-brand hover:bg-brand-hover text-on-brand shadow-elev-2",
   // CTA secondaire — dark, neutre, jamais orange

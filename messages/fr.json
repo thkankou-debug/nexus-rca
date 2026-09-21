@@ -26,6 +26,7 @@
   "Navbar": {
     "home": "Accueil",
     "services": "Services",
+    "boutique": "Boutique",
     "nexus_ia": "Nexus IA 🤖",
     "about": "À propos",
     "contact": "Contact",
@@ -49,6 +50,7 @@
     "navigation_heading": "Navigation",
     "contact_heading": "Contact",
     "nav_home": "Accueil",
+    "nav_boutique": "Boutique",
     "nav_all_services": "Tous les services",
     "nav_nexus_ia": "Nexus IA 🤖",
     "nav_rendezvous": "Prendre rendez-vous",

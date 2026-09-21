@@ -19,8 +19,8 @@ Si Thierry te dit "améliore le site", **POSE-LUI DES QUESTIONS PRÉCISES** avan
 ## 🚨 CHOSES À NE JAMAIS FAIRE (FROZEN)
 
 ### ❌ NE JAMAIS modifier sans demande explicite :
-1. **Le logo Nexus** (taille, position, couleur, fichier)
-2. **Les couleurs principales** : `nexus-blue-950` (#02071f) et `nexus-orange-500` (#f97316) — valeurs corrigées le 5 septembre 2026 (confirmées par Thierry, phase A1) ; `#0C1C40`/`#FF6600` restent utilisées dans `app/layout.tsx` (meta theme-color, PWA, favicon) et les emails/PDF, écart connu et non corrigé pour l'instant
+1. **Le logo Nexus** (taille, position, couleur, fichier) — **seul le logo conserve l’orange d’origine** `#f97316` (`nexus-orange-500`)
+2. **Les couleurs principales** : bleu nuit `nexus-blue-950` (#02071f), ivoire `surface-ivory` (#F5F3F0), or sémantique `--brand` / `bg-brand` (#B99760). Tranché le 21/09/2026 (GO module commercial) : l’or remplace l’orange **dans l’interface**. Ne pas réintroduire `bg-nexus-orange-500` sur les boutons, liens actifs, sélections ou accents. `#0C1C40`/`#FF6600` restent dans `app/layout.tsx` (meta theme-color, PWA, favicon) et les emails/PDF — écart connu, hors périmètre.
 3. **Les polices** : Syne (titres) et Plus Jakarta Sans (corps)
 4. **Les titres des pages services** (voir liste plus bas)
 5. **La structure de routing** (`app/dashboard/agent/`, `app/dashboard/client/`, etc.)
@@ -86,17 +86,20 @@ Si Thierry te dit "améliore le site", **POSE-LUI DES QUESTIONS PRÉCISES** avan
 |---|---|---|
 | Fond hero principal | `bg-nexus-blue-950` | #02071f |
 | Dégradé hero | `from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950` | navy |
-| Accent boutons/badges | `bg-nexus-orange-500` | #f97316 |
+| Surface publique | `bg-surface-ivory` | #F5F3F0 |
+| Accent boutons / liens actifs / sélections | `bg-brand` `text-on-brand` | #B99760 (or) + texte navy #021030 |
+| Hover or | `hover:bg-brand-hover` | #A3854A |
+| Logo uniquement | `bg-nexus-orange-500` | #f97316 |
 | Texte sur navy | `text-white` ou `text-slate-300` | |
-| Texte sur blanc | `text-nexus-blue-950` | |
-| Hover orange | `hover:bg-nexus-orange-600` | |
+| Texte sur blanc / ivoire | `text-nexus-blue-950` | |
 
 **INTERDIT** :
 - Introduire de nouvelles couleurs primaires (pas de bleu clair, pas de rouge, pas de violet)
-- Modifier les valeurs `#02071f` ou `#f97316` dans `tailwind.config.ts`
-- Utiliser des couleurs hex en dur (`bg-[#02071f]`) au lieu des classes (`bg-nexus-blue-950`)
+- Modifier `#02071f` (navy) ou `#B99760` (or) sans demande explicite
+- Utiliser l’orange hors du logo
+- Utiliser des couleurs hex en dur (`bg-[#02071f]`) au lieu des classes (`bg-nexus-blue-950`, `bg-brand`)
 
-**Admin (A1, 5 septembre 2026)** : le shell d'administration n'appelle jamais une couleur de marque directement — il consomme la couche de tokens sémantiques déjà en place dans `app/globals.css` (`surface`/`surface-elevated`/`surface-sunken`/`surface-overlay`, `ink`/`ink-muted`/`ink-subtle`/`ink-inverted`, `line`/`line-strong`, `brand`/`brand-hover`/`brand-subtle`, gérée en clair/sombre), plus deux ajouts : `focus` (anneau de focus clavier, distinct de `brand` pour préserver la règle « un seul accent orange par écran ») et `status.{neutral,waiting,progress,success,failure,inert}` (six familles de statuts, jamais quinze couleurs). Ne pas recréer un deuxième système de tokens sous d'autres noms.
+**Admin (A1, 5 septembre 2026)** : le shell d'administration n'appelle jamais une couleur de marque directement — il consomme la couche de tokens sémantiques déjà en place dans `app/globals.css` (`surface`/`surface-elevated`/`surface-sunken`/`surface-overlay`, `ink`/`ink-muted`/`ink-subtle`/`ink-inverted`, `line`/`line-strong`, `brand`/`brand-hover`/`brand-subtle`, gérée en clair/sombre), plus deux ajouts : `focus` (anneau de focus clavier, distinct de `brand` pour préserver la règle « un seul accent or par écran ») et `status.{neutral,waiting,progress,success,failure,inert}` (six familles de statuts, jamais quinze couleurs). Ne pas recréer un deuxième système de tokens sous d'autres noms.
 
 ### 🔴 RÈGLE — Polices
 
@@ -114,7 +117,7 @@ Si Thierry te dit "améliore le site", **POSE-LUI DES QUESTIONS PRÉCISES** avan
 - **Icônes** : `lucide-react` UNIQUEMENT (jamais `react-icons`, `heroicons`, etc.)
 - **Pas de bibliothèque UI** : Tailwind utility classes uniquement (pas de shadcn, MUI, Chakra, Ant Design)
 - **Pattern cards** : `rounded-2xl` ou `rounded-3xl`, `border border-slate-200`, `shadow-sm`
-- **Pattern buttons primary** : `bg-nexus-orange-500 hover:bg-nexus-orange-600 text-white rounded-xl px-6 py-3 font-semibold`
+- **Pattern buttons primary** : `bg-brand hover:bg-brand-hover text-on-brand rounded-full px-6 py-3 font-semibold`
 
 ---
 
@@ -201,10 +204,10 @@ nexus-rca/
 Multi-rôles : `client`, `agent`, `admin`, `super_admin`. Helper `requireProfile([roles])` dans `lib/auth.ts`.
 
 ### Pages publiques
-`/`, `/a-propos`, `/contact`, `/services`, `/nexus-connect`, `/demande/complet`, `/login`
+`/`, `/a-propos`, `/contact`, `/services`, `/boutique`, `/panier`, `/nexus-connect`, `/demande/complet`, `/login`
 
 ### Espace Client
-`/dashboard/client` (NEXUS CONNECT), `/demandes`, `/paiements`, `/rdv`, `/rdv/nouveau`
+`/dashboard/client` (NEXUS CONNECT), `/demandes`, `/commandes`, `/paiements`, `/rdv`, `/rdv/nouveau`
 
 ### Espace Agent
 `/dashboard/agent` (premium dashboard avec leaderboard), `/caisse`, `/rdv`, `/demandes`, `/clients`, `/paiements`, `/depenses`, `/transferts`
@@ -219,9 +222,17 @@ Multi-rôles : `client`, `agent`, `admin`, `super_admin`. Helper `requireProfile
 Booking client 4 étapes, affectation auto agent, 8 statuts, email Resend.
 
 ### Tables Supabase
-`profiles`, `clients`, `demandes`, `appointments`, `payments`, `payment_links`, `expenses`, `transferts`, `quick_sales`
+`profiles`, `clients`, `demandes`, `appointments`, `payments`, `payment_links`, `expenses`, `transferts`, `quick_sales`, `boutique_commandes`, `boutique_commande_lignes`
 
 ⚠️ **Table `payments` n'a PAS de colonne `methode`**. Utilise `notes` ou `description`.
+
+### Module commercial (phase 1, 21/09/2026)
+- Catalogue public : `/boutique` + `/boutique/[slug]` — table `services` (`visibilite_publique`, `status=actif`).
+- Panier : `/panier` (localStorage, prix revérifiés serveur).
+- Transmission : RPC `submit_boutique_commande` → `boutique_commandes` en `status=transmise` (**non payée**, hors CA).
+- Espace client : `/dashboard/client/commandes` (pas de second `/espace`).
+- Staff : `/dashboard/super-admin/commandes-boutique`.
+- Aucun paiement en ligne. Rattachement POS/devis/factures via FK null (`devis_id`, `facture_id`, `payment_id`).
 
 ---
 
@@ -304,7 +315,7 @@ Les titres et textes UI sont des choix produit. **Ne les modifie JAMAIS** sans d
 **Position tranchée par Thierry (5 septembre 2026)** : `framer-motion` est **assumé** sur le site public — il est déjà utilisé dans 14 fichiers (transitions de page, micro-interactions) et le retirer coûterait cher pour rien. En revanche il est **interdit dans l'espace d'administration** (`app/dashboard/**`) : transitions CSS de 120-150 ms sur les changements d'état déclenchés par l'utilisateur, rien d'autre, `prefers-reduced-motion` respecté. Toujours interdit ailleurs : pas de nouvelle animation d'entrée de page, pas d'effet décoratif au survol.
 
 ### ❌ Création d'une nouvelle palette
-Bleu marine + orange. Point.
+Bleu nuit + ivoire + or. Orange **uniquement** sur le logo. Point.
 
 ---
 
