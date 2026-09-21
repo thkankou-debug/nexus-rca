@@ -215,6 +215,7 @@ export default function BoursesPage() {
       <main>
         {/* 1. HERO Premium tech ────────────────────────────────────── */}
         <PublicHero
+          imageKey="bourses"
           eyebrow={t("hero_eyebrow")}
           titleStart={t("hero_title_start")}
           accentWord={t("hero_title_accent")}

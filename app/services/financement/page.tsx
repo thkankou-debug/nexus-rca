@@ -280,6 +280,7 @@ export default function FinancementPage() {
       <main>
         {/* 1. HERO via PublicHero ─────────────────────────────────────── */}
         <PublicHero
+          imageKey="financement"
           eyebrow={t("hero_eyebrow")}
           titleStart={t("hero_title_start")}
           accentWord={t("hero_title_accent")}

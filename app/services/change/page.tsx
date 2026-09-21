@@ -253,6 +253,7 @@ export default function ChangePage() {
       <main>
         {/* 1. HERO Premium tech ────────────────────────────────────── */}
         <PublicHero
+          imageKey="change"
           eyebrow={t("hero_eyebrow")}
           titleStart={t("hero_title_start")}
           accentWord={t("hero_title_accent")}

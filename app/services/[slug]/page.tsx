@@ -13,6 +13,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { Button } from "@/components/ui/Button";
+import { ServiceCover } from "@/components/services/ServiceCover";
 import { SERVICES, getService } from "@/lib/services";
 import { NEXUS_CONTACT } from "@/lib/contact";
 import { cn, whatsappLink } from "@/lib/utils";
@@ -85,7 +86,8 @@ export default function ServiceDetailPage({
             className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
           />
 
-          <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
+          <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 lg:grid-cols-2 lg:px-8">
+            <div>
             <Link
               href="/services"
               className="group/back mb-6 inline-flex items-center gap-1.5 text-xs font-bold text-slate-300 transition-colors hover:text-brand-hover"
@@ -150,6 +152,13 @@ export default function ServiceDetailPage({
                 WhatsApp
               </a>
             </div>
+            </div>
+            <ServiceCover
+              slug={service.slug}
+              variant="hero"
+              priority
+              className="rounded-3xl ring-1 ring-white/10 shadow-[0_28px_60px_-24px_rgba(2,7,31,0.55)]"
+            />
           </div>
         </section>
 

@@ -192,6 +192,7 @@ export default function AssurancePage() {
       <main>
         {/* 1. HERO ─────────────────────────────────────────────────────── */}
         <PublicHero
+          imageKey="assurance"
           eyebrow="Protection voyage haut de gamme"
           titleStart="Assurance & "
           accentWord="mobilité internationale"

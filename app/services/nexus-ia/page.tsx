@@ -201,6 +201,7 @@ export default function NexusIAPage() {
       <main>
         {/* 1. HERO ────────────────────────────────────────────────── */}
         <PublicHero
+          imageKey="nexus-ia"
           eyebrow={t("hero_eyebrow")}
           accentWord={t("hero_title")}
           subtitle={t("hero_subtitle")}

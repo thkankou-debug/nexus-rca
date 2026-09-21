@@ -35,6 +35,7 @@ export default function RendezVousPage() {
       <main>
         {/* HERO ─────────────────────────────────────────────── */}
         <PublicHero
+          imageKey="rdv"
           eyebrow="Réservation premium"
           titleStart="Prendre un rendez-vous avec "
           accentWord="Nexus RCA"

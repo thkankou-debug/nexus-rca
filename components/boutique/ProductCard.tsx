@@ -3,18 +3,24 @@ import { ArrowRight } from "lucide-react";
 import type { BoutiqueOffre } from "@/lib/boutique";
 import { formatXaf, KIND_LABEL } from "@/lib/boutique";
 import { AddToCartButton } from "@/components/boutique/AddToCartButton";
+import { ServiceCover } from "@/components/services/ServiceCover";
 import { cn } from "@/lib/utils";
 
 export function ProductCard({ offre }: { offre: BoutiqueOffre }) {
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
       <Link href={`/boutique/${offre.slug}`} className="block">
-        <div className="relative flex h-40 items-end bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-800 p-5">
+        <div className="relative">
+          <ServiceCover
+            slug={offre.slug}
+            categorie={offre.categorie}
+            className="h-44 w-full rounded-none aspect-auto"
+          />
           <div
             aria-hidden
-            className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-brand/20 blur-2xl"
+            className="absolute inset-0 bg-gradient-to-t from-nexus-blue-950/75 via-nexus-blue-950/15 to-transparent"
           />
-          <span className="relative rounded-full border border-brand/40 bg-brand/15 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand">
+          <span className="absolute bottom-4 left-5 rounded-full border border-brand/40 bg-brand/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand backdrop-blur-sm">
             {KIND_LABEL[offre.kind]}
           </span>
         </div>

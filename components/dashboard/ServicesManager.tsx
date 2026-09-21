@@ -11,6 +11,7 @@ import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { Power, Edit3, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { resolveServiceVisual } from "@/lib/service-images";
 
 type TarifType = "fixe" | "sur_devis";
 type ServiceStatus = "actif" | "inactif";
@@ -104,8 +105,17 @@ export function ServicesManager({ initialServices }: { initialServices: ServiceI
         <div key={categorie}>
           <h2 className="font-display text-lg font-bold text-nexus-blue-950">{categorie}</h2>
           <div className="mt-3 space-y-2">
-            {items.map((s) => (
+            {items.map((s) => {
+              const thumb = resolveServiceVisual(s.slug, s.categorie);
+              return (
               <div key={s.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white p-4">
+                <img
+                  src={thumb.src}
+                  alt=""
+                  width={40}
+                  height={40}
+                  className="h-10 w-10 shrink-0 rounded-lg object-cover object-[center_28%] bg-nexus-blue-950"
+                />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-nexus-blue-950">{s.nom}</span>
@@ -165,7 +175,8 @@ export function ServicesManager({ initialServices }: { initialServices: ServiceI
                   </button>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       ))}

@@ -194,6 +194,7 @@ export default function TransfertPage() {
       <main>
         {/* 1. HERO Premium tech ────────────────────────────────────── */}
         <PublicHero
+          imageKey="transfert"
           eyebrow={t("hero_eyebrow")}
           titleStart={t("hero_title_start")}
           accentWord={t("hero_title_accent")}

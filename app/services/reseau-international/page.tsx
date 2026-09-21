@@ -27,6 +27,7 @@ export default function ReseauInternationalPage() {
       <Navbar />
       <main>
         <PublicHero
+          imageKey="reseau-international"
           eyebrow={t("eyebrow")}
           titleStart={t("title_start")}
           accentWord={t("title_accent")}

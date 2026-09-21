@@ -178,6 +178,7 @@ export default function DigitalisationPage() {
       <main>
         {/* 1. HERO Premium ──────────────────────────────────────────── */}
         <PublicHero
+          imageKey="digitalisation"
           eyebrow={t("hero_eyebrow")}
           accentWord={t("hero_title_highlight")}
           titleEnd={` ${t("hero_title_after")}`}
