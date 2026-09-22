@@ -353,7 +353,7 @@ export async function ServicesGrid() {
         <div className="mt-12 flex justify-center">
           <Link
             href="/services"
-            className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl border border-white/15 bg-white/[0.05] px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-brand/40 hover:bg-white/[0.08]"
+            className="group/cta relative inline-flex min-h-[48px] items-center justify-center gap-2 overflow-hidden rounded-2xl border border-white/15 bg-white/[0.05] px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-brand/40 hover:bg-white/[0.08]"
           >
             Voir le détail des services
             <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover/cta:translate-x-0.5" />
@@ -384,9 +384,9 @@ function HeroCard({ pilier }: { pilier: Pilier }) {
         slug={slugFromHref(pilier.href)}
         variant="hero"
         className="absolute inset-0 h-full w-full rounded-none aspect-auto"
-        imgClassName="opacity-45"
+        imgClassName="opacity-80 transition-transform duration-700 group-hover:scale-[1.04]"
       />
-      <div className="absolute inset-0 bg-gradient-to-br from-nexus-blue-950/80 via-nexus-blue-950/55 to-nexus-blue-950/25" />
+      <div className="absolute inset-0 bg-gradient-to-t from-nexus-blue-950 via-nexus-blue-950/70 to-nexus-blue-950/35" />
       <div
         aria-hidden
         className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-brand/30 blur-3xl"
@@ -416,7 +416,7 @@ function HeroCard({ pilier }: { pilier: Pilier }) {
           <h3 className="font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-[2.4rem]">
             {pilier.title}
           </h3>
-          <p className="mt-4 max-w-md text-base leading-relaxed text-slate-300 sm:text-lg">
+          <p className="mt-4 max-w-md text-base leading-relaxed text-slate-200 sm:text-lg">
             {pilier.description}
           </p>
         </div>
@@ -468,10 +468,16 @@ function CompactSignatureCard({
       href={pilier.href}
       className={`group relative flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.06] ${tone.borderHover} ${className || ""}`}
     >
-      <ServiceCover
-        slug={slugFromHref(pilier.href)}
-        className="h-32 w-full rounded-none aspect-auto sm:h-36"
-      />
+      <div className="relative">
+        <ServiceCover
+          slug={slugFromHref(pilier.href)}
+          className="h-36 w-full rounded-none aspect-auto sm:h-40"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-nexus-blue-950 to-transparent"
+        />
+      </div>
       <div className="relative flex flex-1 flex-col p-5 sm:p-6">
         {/* Header — icône + eyebrow */}
         <div className="flex items-start justify-between gap-3">
@@ -493,7 +499,7 @@ function CompactSignatureCard({
         </h3>
 
         {/* Description courte */}
-        <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-300">
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-200">
           {pilier.description}
         </p>
 
@@ -539,11 +545,17 @@ function CompactSignatureWide({
       href={pilier.href}
       className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.06] ${tone.borderHover} ${className || ""}`}
     >
-      <div className="grid sm:grid-cols-[9rem_1fr]">
-        <ServiceCover
-          slug={slugFromHref(pilier.href)}
-          className="h-32 w-full rounded-none aspect-auto sm:h-full sm:min-h-[9.5rem]"
-        />
+      <div className="grid sm:grid-cols-[10rem_1fr]">
+        <div className="relative">
+          <ServiceCover
+            slug={slugFromHref(pilier.href)}
+            className="h-36 w-full rounded-none aspect-auto sm:h-full sm:min-h-[10.5rem]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent to-nexus-blue-950/30 sm:bg-gradient-to-r sm:from-transparent sm:to-nexus-blue-950/40"
+          />
+        </div>
         <div className="relative flex items-start gap-4 p-5 sm:p-6">
           <div
             className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${tone.iconBg} ${tone.iconColor} transition-transform duration-300 group-hover:scale-105`}
@@ -563,7 +575,7 @@ function CompactSignatureWide({
               </span>
             </div>
 
-            <p className="mt-2 text-xs leading-relaxed text-slate-300 sm:text-sm">
+            <p className="mt-2 text-xs leading-relaxed text-slate-200 sm:text-sm">
               {pilier.description}
             </p>
 
@@ -608,10 +620,16 @@ function CompactSimpleCard({
       href={pilier.href}
       className={`group relative flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] ring-1 ring-white/5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.06] ${className || ""}`}
     >
-      <ServiceCover
-        slug={slugFromHref(pilier.href)}
-        className="h-28 w-full rounded-none aspect-auto"
-      />
+      <div className="relative">
+        <ServiceCover
+          slug={slugFromHref(pilier.href)}
+          className="h-32 w-full rounded-none aspect-auto"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-nexus-blue-950 to-transparent"
+        />
+      </div>
       <div className="relative flex flex-1 flex-col p-5 sm:p-6">
         <div
           className={`flex h-10 w-10 items-center justify-center rounded-xl ${tone.iconBg} ${tone.iconColor} transition-transform duration-300 group-hover:scale-105`}
@@ -622,7 +640,7 @@ function CompactSimpleCard({
         <h3 className="mt-4 font-display text-base font-bold leading-tight text-white sm:text-lg">
           {pilier.title}
         </h3>
-        <p className="mt-1.5 flex-1 text-xs leading-relaxed text-slate-400">
+        <p className="mt-1.5 flex-1 text-xs leading-relaxed text-slate-300">
           {pilier.description}
         </p>
 

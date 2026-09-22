@@ -44,7 +44,7 @@ export function TrustMarquee() {
   return (
     <section
       aria-label="Réseau et partenaires"
-      className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-12 sm:py-16"
+      className="relative overflow-hidden bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 py-14 sm:py-16"
     >
       {/* Dot grid background */}
       <div
@@ -68,7 +68,7 @@ export function TrustMarquee() {
       />
 
       {/* Header */}
-      <div className="relative mx-auto mb-8 max-w-3xl px-4 text-center sm:mb-10 lg:px-8">
+      <div className="relative mx-auto mb-10 max-w-3xl px-4 text-center sm:mb-12 lg:px-8">
         <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md">
           <span className="relative flex h-1.5 w-1.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
@@ -82,7 +82,7 @@ export function TrustMarquee() {
       </div>
 
       {/* Marquee — 2 lignes croisées */}
-      <div className="relative space-y-3 sm:space-y-4">
+      <div className="relative space-y-4 sm:space-y-5">
         {/* Fades latéraux pour masquer le hard-cut aux bords */}
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-nexus-blue-950 to-transparent sm:w-32" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-nexus-blue-950 to-transparent sm:w-32" />
@@ -149,7 +149,7 @@ function Pill({ partner }: { partner: Partner }) {
       {/* Monogram */}
       <span
         aria-hidden
-        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-950 text-[8px] font-bold tracking-wider text-white/90"
+        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/20 text-[8px] font-bold tracking-wider text-brand ring-1 ring-brand/30"
       >
         {partner.monogram}
       </span>

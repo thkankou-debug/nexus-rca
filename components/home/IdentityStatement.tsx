@@ -183,7 +183,7 @@ export function IdentityStatement() {
                   >
                     <defs>
                       <radialGradient id="hub-glow-id" cx="50%" cy="50%" r="50%">
-                        <stop offset="0%" stopColor="#fb923c" stopOpacity="0.7" />
+                        <stop offset="0%" stopColor="#B99760" stopOpacity="0.7" />
                         <stop offset="60%" stopColor="#B99760" stopOpacity="0.2" />
                         <stop offset="100%" stopColor="#B99760" stopOpacity="0" />
                       </radialGradient>
@@ -193,7 +193,7 @@ export function IdentityStatement() {
                         cy="50%"
                         r="50%"
                       >
-                        <stop offset="0%" stopColor="#fdba74" stopOpacity="0.6" />
+                        <stop offset="0%" stopColor="#B99760" stopOpacity="0.6" />
                         <stop offset="80%" stopColor="#B99760" stopOpacity="0" />
                       </radialGradient>
                       <linearGradient
@@ -204,7 +204,7 @@ export function IdentityStatement() {
                         y2="0"
                       >
                         <stop offset="0%" stopColor="#B99760" stopOpacity="0.6" />
-                        <stop offset="100%" stopColor="#fb923c" stopOpacity="0.15" />
+                        <stop offset="100%" stopColor="#B99760" stopOpacity="0.15" />
                       </linearGradient>
                       <filter
                         id="soft-glow-id"
@@ -280,8 +280,8 @@ export function IdentityStatement() {
                               transformOrigin: `${p.x}px ${p.y}px`,
                             }}
                           />
-                          <circle cx={p.x} cy={p.y} r="4" fill="#fdba74" />
-                          <circle cx={p.x} cy={p.y} r="1.6" fill="#fff7ed" />
+                          <circle cx={p.x} cy={p.y} r="4" fill="#B99760" />
+                          <circle cx={p.x} cy={p.y} r="1.6" fill="#F5F3F0" />
                         </g>
                       ))}
                     </g>
@@ -304,7 +304,7 @@ export function IdentityStatement() {
                         cy={HUB.y}
                         r="9"
                         fill="#B99760"
-                        stroke="#fff7ed"
+                        stroke="#F5F3F0"
                         strokeWidth="2"
                       />
                       <circle cx={HUB.x} cy={HUB.y} r="3" fill="#ffffff" />
@@ -368,7 +368,7 @@ export function IdentityStatement() {
                         fontSize="10"
                         fontWeight="700"
                         letterSpacing="1.8"
-                        fill="#fdba74"
+                        fill="#B99760"
                       >
                         BANGUI · RCA
                       </text>

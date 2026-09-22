@@ -41,7 +41,7 @@ const PHASES: Phase[] = [
 
 export function HowItWorks() {
   return (
-    <section className="relative overflow-hidden bg-[#070C1A] py-24 sm:py-28 lg:py-32">
+    <section className="relative overflow-hidden bg-nexus-blue-950 py-24 sm:py-28 lg:py-32">
       {/* === Mesh diagonal très subtil (pas de grain qui salit les textes) === */}
       <div
         aria-hidden
@@ -58,7 +58,7 @@ export function HowItWorks() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-40 bottom-0 h-[32rem] w-[32rem] rounded-full bg-[#1f3a8a]/20 blur-[120px]"
+        className="pointer-events-none absolute -right-40 bottom-0 h-[32rem] w-[32rem] rounded-full bg-nexus-blue-500/20 blur-[120px]"
       />
       {/* === Hairline top === */}
       <div
@@ -94,7 +94,7 @@ export function HowItWorks() {
               return (
                 <article
                   key={phase.num}
-                  className="group relative overflow-hidden rounded-3xl border border-white/15 bg-[#101A38] p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.7)] transition-all duration-500 hover:-translate-y-1 hover:border-brand/60 hover:bg-[#142146] hover:shadow-[0_40px_70px_-20px_rgba(185,151,96,0.45)] sm:p-7"
+                  className="group relative overflow-hidden rounded-3xl border border-white/15 bg-nexus-blue-900 p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.7)] transition-all duration-500 hover:-translate-y-1 hover:border-brand/60 hover:bg-nexus-blue-800 hover:shadow-[0_40px_70px_-20px_rgba(185,151,96,0.45)] sm:p-7"
                 >
                   {/* Numéro fantôme XXL */}
                   <span
