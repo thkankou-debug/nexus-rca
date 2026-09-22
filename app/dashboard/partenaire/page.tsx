@@ -61,7 +61,7 @@ export default async function PartenairePage() {
             <NexusMark size={38} />
             <div>
               <p className="font-display text-base font-bold leading-tight tracking-wide text-sidebar-ink">
-                NEXUS <span className="text-brand">RCA</span>
+                NEXUS <span className="text-nexus-orange-300">RCA</span>
               </p>
               <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-sidebar-ink-subtle">
                 Espace partenaire

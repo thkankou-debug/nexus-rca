@@ -10,13 +10,12 @@
 // WinAnsi, bug connu) — formatage manuel des milliers.
 // ============================================================================
 
-import { readFileSync } from "fs";
-import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { createClient } from "@/lib/supabase/server";
 import { computeExpectedBalance, signedCashAmount } from "@/lib/caisse-server";
+import { getLogoBytes } from "@/lib/pdf-logo";
 
 export const dynamic = "force-dynamic";
 
@@ -202,11 +201,12 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
     // Logo officiel Nexus RCA (demande Thierry 12/09) — jamais bloquant.
     let logoIndent = 0;
     try {
-      const logo = await pdf.embedPng(
-        readFileSync(path.join(process.cwd(), "public", "icones", "icon-192.png"))
-      );
-      page.drawImage(logo, { x: M, y: y - 22, width: 38, height: 38 });
-      logoIndent = 48;
+      const bytes = getLogoBytes();
+      if (bytes) {
+        const logo = await pdf.embedPng(bytes);
+        page.drawImage(logo, { x: M, y: y - 28, width: 36, height: 36 });
+        logoIndent = 48;
+      }
     } catch {
       logoIndent = 0;
     }
