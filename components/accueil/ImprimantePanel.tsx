@@ -95,7 +95,10 @@ export function ImprimantePanel({ caissiereNom }: { caissiereNom: string }) {
           installation, fournissez ces quatre informations :
         </p>
         <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-body-sm text-ink">
-          <li>Le modèle exact de l&rsquo;imprimante thermique (marque et référence).</li>
+          <li>
+            Le modèle exact de l&rsquo;imprimante thermique (cible documentée : Star TSP143LAN, 80
+            mm).
+          </li>
           <li>Sa connexion : USB, réseau (adresse IP), Bluetooth ou autre.</li>
           <li>Le système d&rsquo;exploitation du poste de réception.</li>
           <li>Le navigateur utilisé sur ce poste.</li>

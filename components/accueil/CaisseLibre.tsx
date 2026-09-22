@@ -42,11 +42,10 @@ import {
   type PosTicketLine,
 } from "./pos-ticket";
 import type { PosCredit } from "./PosComptoir";
+import { UNITES_CAISSE } from "@/lib/accueil-forms";
 
 const inputClass =
   "w-full rounded-sm border border-line bg-surface px-3 py-2 text-body-sm text-ink placeholder:text-ink-subtle focus:border-line-strong focus:outline-none focus:ring-2 focus:ring-focus";
-
-const UNITES = ["prestation", "page", "pièce", "heure", "jour", "unité"] as const;
 
 export interface RaccourciService {
   id: string;
@@ -795,7 +794,7 @@ export function CaisseLibre({
                   onChange={(e) => setUnite(e.target.value)}
                   className={cn(inputClass, "mt-1 min-w-[136px] pr-8")}
                 >
-                  {UNITES.map((u) => (
+                  {UNITES_CAISSE.map((u) => (
                     <option key={u} value={u}>
                       {u}
                     </option>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { UserPlus, FolderPlus, ShoppingCart, CalendarDays, Compass } from "lucide-react";
+import { UserPlus, FolderPlus, ShoppingCart, CalendarDays, Compass, FileText } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
 import { AccueilShell } from "@/components/accueil/AccueilShell";
 import { OuvrirCaisseCard } from "@/components/accueil/OuvrirCaisseCard";
@@ -73,10 +73,16 @@ export default async function PosteReceptionPage() {
       hint: "Rechercher avant de créer — barrière anti-doublon",
     },
     {
-      href: "/dashboard/accueil/clients",
+      href: "/dashboard/accueil/dossier/nouveau",
       icon: FolderPlus,
       label: "Ouvrir un dossier",
-      hint: "Depuis la fiche du client, puis orientation",
+      hint: "Formulaire complet — client existant ou nouveau",
+    },
+    {
+      href: "/dashboard/accueil/devis",
+      icon: FileText,
+      label: "Un devis",
+      hint: "Lié à un dossier, puis facture sans paiement",
     },
     {
       href: "/dashboard/accueil/caisse",
@@ -96,7 +102,7 @@ export default async function PosteReceptionPage() {
       <div className="space-y-6">
         <OuvrirCaisseCard sessionStatus={session?.status ?? null} />
 
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {actions.map((a) => (
             <Link
               key={a.label}

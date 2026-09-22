@@ -4,6 +4,7 @@ import { CaisseWorkspace } from "@/components/accueil/CaisseWorkspace";
 import type { RaccourciService } from "@/components/accueil/CaisseLibre";
 import type { PosService, PosAgent, PosCredit } from "@/components/accueil/PosComptoir";
 import { getAccueilAdminClient, getOwnSessionSnapshot } from "@/lib/accueil-server";
+import { isGuichetService } from "@/lib/accueil-forms";
 
 export const metadata = {
   title: "Caisse | Nexus RCA",
@@ -59,7 +60,7 @@ export default async function CaissePage({
     tarif_montant: s.tarif_montant,
   })) as RaccourciService[];
   const raccourcis = services
-    .filter((s) => s.categorie === "Services de proximite")
+    .filter((s) => isGuichetService(s))
     .map((s) => ({
       id: s.id,
       nom: s.nom,

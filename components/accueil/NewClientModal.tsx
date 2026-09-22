@@ -1,14 +1,8 @@
 "use client";
 
 // ============================================================================
-// NOUVEAU CLIENT — modale de création (Espace Accueil & Caisse, §3.2 étape
-// Client). Partagée entre le Comptoir POS et la page Clients.
-// - Détection de similitude côté serveur (409 + candidats) : jamais de
-//   création silencieuse quand des fiches proches existent.
-// - Les services NEXUS RCA sont listés et accessibles dès la création
-//   (demande Thierry, 11/09/2026) : choisir un « service demandé » ouvre
-//   et oriente immédiatement un dossier pour le nouveau client
-//   (POST /api/accueil/dossiers — dossier.create).
+// NOUVEAU CLIENT — modale de création (Espace Accueil & Caisse).
+// Particulier / entreprise, adresse, e-mail optionnel, anti-doublon 409.
 // ============================================================================
 
 import { useEffect, useState } from "react";
@@ -16,6 +10,7 @@ import toast from "react-hot-toast";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
+import { PAYS_ACCUEIL } from "@/lib/accueil-forms";
 
 export interface AccueilClient {
   id: string;
@@ -26,10 +21,21 @@ export interface AccueilClient {
   raison_sociale: string | null;
   email: string | null;
   telephone: string | null;
+  adresse?: string | null;
+  quartier?: string | null;
+  ville?: string | null;
+  pays?: string | null;
+  numero_identification?: string | null;
 }
 
 const inputClass =
   "w-full rounded-sm border border-line bg-surface px-3 py-2 text-body-sm text-ink placeholder:text-ink-subtle focus:border-line-strong focus:outline-none focus:ring-2 focus:ring-focus";
+
+export function displayClientName(c: AccueilClient): string {
+  return c.type === "particulier"
+    ? [c.prenom, c.nom].filter(Boolean).join(" ") || c.nom
+    : c.raison_sociale || c.nom;
+}
 
 export function NewClientModal({
   onClose,
@@ -38,21 +44,32 @@ export function NewClientModal({
   onClose: () => void;
   onCreated: (client: AccueilClient) => void;
 }) {
-  const [form, setForm] = useState({ nom: "", prenom: "", telephone: "", email: "" });
+  const [type, setType] = useState<"particulier" | "entreprise">("particulier");
+  const [form, setForm] = useState({
+    nom: "",
+    prenom: "",
+    raison_sociale: "",
+    telephone: "",
+    email: "",
+    adresse: "",
+    quartier: "",
+    ville: "Bangui",
+    pays: "République Centrafricaine",
+    numero_identification: "",
+  });
   const [duplicates, setDuplicates] = useState<
     {
       id: string;
       reference: string | null;
       nom: string;
       prenom: string | null;
+      raison_sociale?: string | null;
       telephone: string | null;
       email: string | null;
     }[]
   >([]);
   const [saving, setSaving] = useState(false);
 
-  // Services NEXUS RCA (table `services`, lecture publique des actifs) —
-  // groupés par pôle pour le choix « service demandé ».
   const [services, setServices] = useState<{ id: string; nom: string; categorie: string }[]>([]);
   const [serviceDemande, setServiceDemande] = useState("");
   const [motif, setMotif] = useState("");
@@ -72,8 +89,16 @@ export function NewClientModal({
 
   const categories = Array.from(new Set(services.map((s) => s.categorie)));
 
+  function patch<K extends keyof typeof form>(key: K, value: string) {
+    setForm((p) => ({ ...p, [key]: value }));
+  }
+
   async function submit(force: boolean) {
-    if (!form.nom.trim()) {
+    if (type === "entreprise" && !form.raison_sociale.trim()) {
+      toast.error("La raison sociale est requise");
+      return;
+    }
+    if (type === "particulier" && !form.nom.trim()) {
       toast.error("Le nom est requis");
       return;
     }
@@ -86,7 +111,20 @@ export function NewClientModal({
       const res = await fetch("/api/accueil/clients", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, force }),
+        body: JSON.stringify({
+          type,
+          nom: type === "entreprise" ? form.raison_sociale : form.nom,
+          prenom: type === "particulier" ? form.prenom : "",
+          raison_sociale: type === "entreprise" ? form.raison_sociale : "",
+          telephone: form.telephone,
+          email: form.email,
+          adresse: form.adresse,
+          quartier: form.quartier,
+          ville: form.ville,
+          pays: form.pays,
+          numero_identification: form.numero_identification,
+          force,
+        }),
       });
       const json = await res.json();
       if (res.status === 409 && json.duplicates) {
@@ -98,7 +136,6 @@ export function NewClientModal({
         return;
       }
 
-      // Ouverture + orientation immédiates si un service est demandé.
       if (serviceDemande) {
         const dossierRes = await fetch("/api/accueil/dossiers", {
           method: "POST",
@@ -107,6 +144,7 @@ export function NewClientModal({
             client_record_id: json.client.id,
             service: serviceDemande,
             motif: motif.trim(),
+            objet: motif.trim(),
           }),
         });
         const dossierJson = await dossierRes.json();
@@ -149,53 +187,150 @@ export function NewClientModal({
           </button>
         </div>
         <p className="mt-1 text-caption text-ink-muted">
-          Avant toute création, rechercher le client pour éviter les doublons.
+          Avant toute création, rechercher le client pour éviter les doublons. Le courriel n&rsquo;est
+          pas obligatoire.
         </p>
 
+        <div className="mt-3 flex gap-2">
+          {(["particulier", "entreprise"] as const).map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => setType(t)}
+              className={cn(
+                "rounded-sm border px-3 py-1.5 text-caption font-semibold",
+                type === t ? "border-brand bg-brand-subtle text-ink" : "border-line text-ink-muted"
+              )}
+            >
+              {t === "particulier" ? "Particulier" : "Entreprise"}
+            </button>
+          ))}
+        </div>
+
         <div className="mt-4 grid grid-cols-2 gap-3">
+          {type === "entreprise" ? (
+            <label className="col-span-2 block">
+              <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                Raison sociale *
+              </span>
+              <input
+                type="text"
+                value={form.raison_sociale}
+                onChange={(e) => patch("raison_sociale", e.target.value)}
+                className={cn(inputClass, "mt-1")}
+              />
+            </label>
+          ) : (
+            <>
+              <label className="block">
+                <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                  Nom *
+                </span>
+                <input
+                  type="text"
+                  value={form.nom}
+                  onChange={(e) => patch("nom", e.target.value)}
+                  className={cn(inputClass, "mt-1")}
+                />
+              </label>
+              <label className="block">
+                <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                  Prénom
+                </span>
+                <input
+                  type="text"
+                  value={form.prenom}
+                  onChange={(e) => patch("prenom", e.target.value)}
+                  className={cn(inputClass, "mt-1")}
+                />
+              </label>
+            </>
+          )}
           <label className="block">
-            <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">Nom *</span>
-            <input
-              type="text"
-              value={form.nom}
-              onChange={(e) => setForm((p) => ({ ...p, nom: e.target.value }))}
-              className={cn(inputClass, "mt-1")}
-            />
-          </label>
-          <label className="block">
-            <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">Prénom</span>
-            <input
-              type="text"
-              value={form.prenom}
-              onChange={(e) => setForm((p) => ({ ...p, prenom: e.target.value }))}
-              className={cn(inputClass, "mt-1")}
-            />
-          </label>
-          <label className="block">
-            <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">Téléphone</span>
+            <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+              Téléphone
+            </span>
             <input
               type="tel"
               value={form.telephone}
-              onChange={(e) => setForm((p) => ({ ...p, telephone: e.target.value }))}
+              onChange={(e) => patch("telephone", e.target.value)}
               className={cn(inputClass, "mt-1")}
             />
           </label>
           <label className="block">
-            <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">E-mail</span>
+            <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+              Courriel (si disponible)
+            </span>
             <input
               type="email"
               value={form.email}
-              onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
+              onChange={(e) => patch("email", e.target.value)}
               className={cn(inputClass, "mt-1")}
             />
           </label>
+          <label className="col-span-2 block">
+            <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+              Adresse
+            </span>
+            <input
+              type="text"
+              value={form.adresse}
+              onChange={(e) => patch("adresse", e.target.value)}
+              className={cn(inputClass, "mt-1")}
+            />
+          </label>
+          <label className="block">
+            <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+              Quartier
+            </span>
+            <input
+              type="text"
+              value={form.quartier}
+              onChange={(e) => patch("quartier", e.target.value)}
+              className={cn(inputClass, "mt-1")}
+            />
+          </label>
+          <label className="block">
+            <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">Ville</span>
+            <input
+              type="text"
+              value={form.ville}
+              onChange={(e) => patch("ville", e.target.value)}
+              className={cn(inputClass, "mt-1")}
+            />
+          </label>
+          <label className="block">
+            <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">Pays</span>
+            <select
+              value={form.pays}
+              onChange={(e) => patch("pays", e.target.value)}
+              className={cn(inputClass, "mt-1")}
+            >
+              {PAYS_ACCUEIL.map((p) => (
+                <option key={p}>{p}</option>
+              ))}
+            </select>
+          </label>
+          {type === "entreprise" ? (
+            <label className="block">
+              <span className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
+                NUI / RCCM (si connu)
+              </span>
+              <input
+                type="text"
+                value={form.numero_identification}
+                onChange={(e) => patch("numero_identification", e.target.value)}
+                className={cn(inputClass, "mt-1")}
+              />
+            </label>
+          ) : null}
         </div>
 
-        {/* Services NEXUS RCA — ouverture de dossier immédiate (optionnel) */}
         <div className="mt-5 rounded-sm border border-line bg-surface p-4">
           <p className="text-body-sm font-semibold text-ink">Service demandé (optionnel)</p>
           <p className="mt-0.5 text-caption text-ink-muted">
-            Choisir un service ouvre et oriente immédiatement un dossier pour ce client.
+            Choisir un service ouvre et oriente immédiatement un dossier. Un client peut en avoir
+            plusieurs dans le temps.
           </p>
           <select
             value={serviceDemande}
@@ -237,7 +372,7 @@ export function NewClientModal({
             <ul className="mt-2 space-y-1">
               {duplicates.map((d) => (
                 <li key={d.id} className="text-caption text-ink-muted">
-                  {[d.prenom, d.nom].filter(Boolean).join(" ")} ·{" "}
+                  {[d.prenom, d.nom, d.raison_sociale].filter(Boolean).join(" ")} ·{" "}
                   {[d.reference, d.telephone, d.email].filter(Boolean).join(" · ")}
                 </li>
               ))}

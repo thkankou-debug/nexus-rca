@@ -1,10 +1,9 @@
 // ============================================================================
 // API ROUTE — /api/accueil/clients
 // Espace Accueil & Caisse (§3.2 étape Client). GET : recherche par nom,
-// téléphone ou référence — la recherche précède toujours la création.
-// POST : création d'une fiche clients minimale, avec détection de similitude
-// sur téléphone normalisé et e-mail AVANT enregistrement (409 + candidats,
-// sauf force=true explicite).
+// téléphone, courriel ou référence — la recherche précède toujours la création.
+// POST : fiche minimale (particulier / entreprise), e-mail optionnel, adresse,
+// détection de similitude (409 + candidats, sauf force=true).
 // Service-role après assertPermission : accueil_caisse n'est pas couvert par
 // is_staff(), la RLS clients lui refuserait la lecture directe.
 // ============================================================================
@@ -18,6 +17,8 @@ import { logAudit } from "@/lib/audit";
 export const dynamic = "force-dynamic";
 
 const SEARCH_LIMIT = 20;
+const CLIENT_FIELDS =
+  "id, reference, type, nom, prenom, raison_sociale, email, telephone, adresse, ville, pays, numero_identification";
 
 async function getSessionUser() {
   const supabase = createClient();
@@ -50,7 +51,7 @@ export async function GET(request: NextRequest) {
     const like = `%${q.replace(/[%_]/g, "")}%`;
     let query = admin
       .from("clients")
-      .select("id, reference, type, nom, prenom, raison_sociale, email, telephone, ville")
+      .select(CLIENT_FIELDS)
       .or(
         `nom.ilike.${like},prenom.ilike.${like},raison_sociale.ilike.${like},telephone.ilike.${like},reference.ilike.${like},email.ilike.${like}`
       )
@@ -78,11 +79,17 @@ export async function GET(request: NextRequest) {
 }
 
 interface CreateClientBody {
-  nom: string;
+  nom?: string;
   prenom?: string;
   telephone?: string;
   email?: string;
   ville?: string;
+  pays?: string;
+  adresse?: string;
+  quartier?: string;
+  type?: "particulier" | "entreprise";
+  raison_sociale?: string;
+  numero_identification?: string;
   /** true = l'utilisatrice a vu les candidats doublons et confirme la création. */
   force?: boolean;
 }
@@ -96,9 +103,20 @@ export async function POST(request: NextRequest) {
     }
 
     const body = (await request.json().catch(() => null)) as CreateClientBody | null;
-    const nom = body?.nom?.trim();
+    const type = body?.type === "entreprise" ? "entreprise" : "particulier";
+    const raisonSociale = body?.raison_sociale?.trim() || null;
+    const nom =
+      type === "entreprise"
+        ? raisonSociale || body?.nom?.trim() || ""
+        : body?.nom?.trim() || "";
     if (!nom) {
-      return NextResponse.json({ success: false, error: "Le nom est requis" }, { status: 400 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: type === "entreprise" ? "La raison sociale est requise" : "Le nom est requis",
+        },
+        { status: 400 }
+      );
     }
     const telephone = body?.telephone?.trim() || null;
     const email = body?.email?.trim().toLowerCase() || null;
@@ -118,7 +136,7 @@ export async function POST(request: NextRequest) {
       if (checks.length > 0) {
         const { data: similar } = await admin
           .from("clients")
-          .select("id, reference, nom, prenom, telephone, email")
+          .select("id, reference, nom, prenom, raison_sociale, telephone, email, type")
           .or(checks.join(","))
           .is("merged_into_id", null)
           .limit(5);
@@ -135,20 +153,35 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const { data: created, error } = await admin
+    const insertPayload: Record<string, unknown> = {
+      type,
+      nom,
+      prenom: type === "particulier" ? body?.prenom?.trim() || null : null,
+      raison_sociale: type === "entreprise" ? raisonSociale : null,
+      telephone,
+      email,
+      ville: body?.ville?.trim() || null,
+      pays: body?.pays?.trim() || "République Centrafricaine",
+      adresse: body?.adresse?.trim() || null,
+      numero_identification: body?.numero_identification?.trim() || null,
+      created_by: actor.id,
+      is_test: Boolean(actor.is_test),
+    };
+    const quartier = body?.quartier?.trim();
+    if (quartier) insertPayload.quartier = quartier;
+
+    let { data: created, error } = await admin
       .from("clients")
-      .insert({
-        type: "particulier",
-        nom,
-        prenom: body?.prenom?.trim() || null,
-        telephone,
-        email,
-        ville: body?.ville?.trim() || null,
-        created_by: actor.id,
-        is_test: Boolean(actor.is_test),
-      })
-      .select("id, reference, type, nom, prenom, raison_sociale, email, telephone, ville")
+      .insert(insertPayload)
+      .select(CLIENT_FIELDS)
       .single();
+
+    if (error && quartier && /quartier/i.test(error.message)) {
+      delete insertPayload.quartier;
+      const retry = await admin.from("clients").insert(insertPayload).select(CLIENT_FIELDS).single();
+      created = retry.data;
+      error = retry.error;
+    }
 
     if (error || !created) {
       console.error("[ACCUEIL_CLIENTS] insert error:", error?.message);
@@ -164,7 +197,7 @@ export async function POST(request: NextRequest) {
       action: "accueil.client.cree",
       entityType: "clients",
       entityId: (created as { id: string }).id,
-      newValue: { nom, telephone, email },
+      newValue: { nom, type, telephone, email },
     });
 
     return NextResponse.json({ success: true, client: created });

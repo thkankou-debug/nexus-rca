@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { FolderOpen, FileText, CreditCard } from "lucide-react";
+import { FolderOpen, FileText, CreditCard, FolderPlus, Briefcase, Receipt } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
 import { AccueilShell } from "@/components/accueil/AccueilShell";
 import { OrientDossierForm } from "@/components/accueil/OrientDossierForm";
@@ -38,7 +38,9 @@ export default async function FicheClientReceptionPage({ params }: { params: { i
 
   const { data: client } = await admin
     .from("clients")
-    .select("id, reference, type, nom, prenom, raison_sociale, email, telephone, ville, profile_id")
+    .select(
+      "id, reference, type, nom, prenom, raison_sociale, email, telephone, ville, adresse, pays, profile_id"
+    )
     .eq("id", params.id)
     .single();
   if (!client) notFound();
@@ -53,6 +55,8 @@ export default async function FicheClientReceptionPage({ params }: { params: { i
     email: string | null;
     telephone: string | null;
     ville: string | null;
+    adresse: string | null;
+    pays: string | null;
     profile_id: string | null;
   };
   const displayName =
@@ -158,7 +162,7 @@ export default async function FicheClientReceptionPage({ params }: { params: { i
               { label: "Téléphone", value: c.telephone },
               { label: "E-mail", value: c.email },
               { label: "Référence", value: c.reference },
-              { label: "Ville", value: c.ville },
+              { label: "Ville", value: [c.ville, c.pays].filter(Boolean).join(" · ") },
             ].map((row) => (
               <div key={row.label}>
                 <dt className="text-caption font-semibold uppercase tracking-wide text-ink-muted">
@@ -301,6 +305,40 @@ export default async function FicheClientReceptionPage({ params }: { params: { i
           </div>
 
           <div className="space-y-6">
+            <section className="rounded-sm border border-line bg-surface-elevated p-4">
+              <h2 className="font-display text-title text-ink">Parcours continu</h2>
+              <div className="mt-3 grid gap-2">
+                <Link
+                  href={`/dashboard/accueil/dossier/nouveau?client=${c.id}`}
+                  className="inline-flex items-center gap-2 rounded-sm border border-line px-4 py-2 text-body-sm font-semibold text-ink hover:border-line-strong"
+                >
+                  <FolderPlus className="h-4 w-4" />
+                  Formulaire dossier complet
+                </Link>
+                <Link
+                  href={`/dashboard/accueil/financement?client=${c.id}`}
+                  className="inline-flex items-center gap-2 rounded-sm border border-line px-4 py-2 text-body-sm font-semibold text-ink hover:border-line-strong"
+                >
+                  <Briefcase className="h-4 w-4" />
+                  Financement & incubateur
+                </Link>
+                <Link
+                  href={`/dashboard/accueil/devis?client=${c.id}`}
+                  className="inline-flex items-center gap-2 rounded-sm border border-line px-4 py-2 text-body-sm font-semibold text-ink hover:border-line-strong"
+                >
+                  <FileText className="h-4 w-4" />
+                  Établir un devis
+                </Link>
+                <Link
+                  href="/dashboard/accueil/factures"
+                  className="inline-flex items-center gap-2 rounded-sm border border-line px-4 py-2 text-body-sm font-semibold text-ink hover:border-line-strong"
+                >
+                  <Receipt className="h-4 w-4" />
+                  Factures
+                </Link>
+              </div>
+            </section>
+
             {/* Ouvrir et orienter un dossier */}
             <section className="rounded-sm border border-line bg-surface-elevated p-4">
               <h2 className="font-display text-title text-ink">Ouvrir et orienter un dossier</h2>
@@ -331,7 +369,7 @@ export default async function FicheClientReceptionPage({ params }: { params: { i
                 ))}
               </dl>
               <Link
-                href="/dashboard/accueil/pos"
+                href="/dashboard/accueil/caisse"
                 className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-sm border border-line px-4 py-2 text-body-sm font-semibold text-ink hover:border-line-strong"
               >
                 <CreditCard className="h-4 w-4" />

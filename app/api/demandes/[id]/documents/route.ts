@@ -36,7 +36,10 @@ async function checkAccess(
   if (!demande) return { ok: false };
 
   const isStaff =
-    userRole === "agent" || userRole === "admin" || userRole === "super_admin";
+    userRole === "agent" ||
+    userRole === "admin" ||
+    userRole === "super_admin" ||
+    userRole === "accueil_caisse";
   const isOwner =
     (demande as { client_id?: string }).client_id === userId ||
     (userEmail &&
