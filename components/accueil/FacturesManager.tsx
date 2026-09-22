@@ -15,11 +15,10 @@ import { FileText, Loader2, Plus, Printer, Trash2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { generatePosTicketPdf, openPdfForPrint, type PosTicketLine } from "./pos-ticket";
 import type { RaccourciService } from "./CaisseLibre";
+import { UNITES_CAISSE } from "@/lib/accueil-forms";
 
 const inputClass =
   "w-full rounded-sm border border-line bg-surface px-3 py-2 text-body-sm text-ink placeholder:text-ink-subtle focus:border-line-strong focus:outline-none focus:ring-2 focus:ring-focus";
-
-const UNITES = ["prestation", "page", "pièce", "heure", "jour", "unité"] as const;
 
 export interface FactureRow {
   id: string;
@@ -572,7 +571,7 @@ function NouvelleFactureModal({
                           onChange={(e) => setLine(l.key, { unite: e.target.value })}
                           className={cn(inputClass, "mt-0.5 min-w-[120px] py-1.5")}
                         >
-                          {UNITES.map((u) => (
+                          {UNITES_CAISSE.map((u) => (
                             <option key={u} value={u}>
                               {u}
                             </option>

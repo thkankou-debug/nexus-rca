@@ -30,6 +30,7 @@ export interface InvoiceRow {
   client_coordonnees: string | null;
   demande_id: string | null;
   ticket_key: string | null;
+  devis_id?: string | null;
   lignes: InvoiceLine[];
   total: number;
   total_regle: number;

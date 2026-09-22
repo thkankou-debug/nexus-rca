@@ -51,6 +51,7 @@ interface CreateBody {
   client?: { record_id?: string; nom?: string; coordonnees?: string };
   demande_id?: string;
   ticket_key?: string;
+  devis_id?: string;
   lignes?: InvoiceLine[];
   echeance?: string;
   conditions?: string;
@@ -194,6 +195,131 @@ export async function POST(request: NextRequest) {
         entityType: "invoices",
         entityId: (created as { id: string }).id,
         newValue: { ticket_key: body.ticket_key, total, total_regle: totalRegle },
+      });
+      return NextResponse.json({ success: true, facture: created });
+    }
+
+    // ── Depuis un devis accepté : copie des lignes, facture NON payée ──
+    if (body.devis_id) {
+      const { data: existing } = await admin
+        .from("invoices")
+        .select(INVOICE_FIELDS)
+        .eq("devis_id", body.devis_id)
+        .maybeSingle();
+      if (existing) {
+        return NextResponse.json({ success: true, facture: existing, replayed: true });
+      }
+
+      const { data: devis } = await admin
+        .from("devis")
+        .select(
+          "id, status, reference, amount, demande_id, client_record_id, devis_lignes(description, quantity, unit_price, ordre)"
+        )
+        .eq("id", body.devis_id)
+        .single();
+      if (!devis) {
+        return NextResponse.json({ success: false, error: "Devis introuvable" }, { status: 404 });
+      }
+      const devisRow = devis as unknown as {
+        id: string;
+        status: string;
+        reference: string | null;
+        amount: number;
+        demande_id: string | null;
+        client_record_id: string | null;
+        devis_lignes: { description: string; quantity: number; unit_price: number; ordre: number }[];
+      };
+      if (devisRow.status !== "accepte") {
+        return NextResponse.json(
+          { success: false, error: "Seul un devis accepté peut générer une facture" },
+          { status: 400 }
+        );
+      }
+      const lignesDevis = (devisRow.devis_lignes || []).sort((a, b) => (a.ordre || 0) - (b.ordre || 0));
+      if (lignesDevis.length === 0) {
+        return NextResponse.json({ success: false, error: "Devis sans ligne" }, { status: 400 });
+      }
+
+      let clientNom = body.client?.nom?.trim() || "";
+      let clientCoord = body.client?.coordonnees?.trim() || null;
+      if (devisRow.client_record_id) {
+        const { data: cli } = await admin
+          .from("clients")
+          .select("id, nom, prenom, raison_sociale, type, telephone, email, adresse, ville")
+          .eq("id", devisRow.client_record_id)
+          .single();
+        if (cli) {
+          const row = cli as {
+            nom: string;
+            prenom: string | null;
+            raison_sociale: string | null;
+            type: string;
+            telephone: string | null;
+            email: string | null;
+            adresse: string | null;
+            ville: string | null;
+          };
+          clientNom =
+            clientNom ||
+            (row.type === "particulier"
+              ? [row.prenom, row.nom].filter(Boolean).join(" ")
+              : row.raison_sociale || row.nom);
+          clientCoord =
+            clientCoord || [row.telephone, row.email, row.adresse, row.ville].filter(Boolean).join(" · ") || null;
+        }
+      }
+      if (!clientNom || clientNom.length < 2) {
+        return NextResponse.json({ success: false, error: "Client du devis introuvable" }, { status: 400 });
+      }
+
+      const lignes = lignesDevis.map((l) => ({
+        designation: l.description,
+        quantite: Number(l.quantity),
+        prix_unitaire: Number(l.unit_price),
+      }));
+      const total = lignes.reduce((s, l) => s + l.quantite * l.prix_unitaire, 0);
+      if (total <= 0) {
+        return NextResponse.json({ success: false, error: "Le total du devis doit être > 0" }, { status: 400 });
+      }
+
+      const { data: created, error } = await admin
+        .from("invoices")
+        .insert({
+          client_record_id: devisRow.client_record_id,
+          client_nom: clientNom,
+          client_coordonnees: clientCoord,
+          demande_id: devisRow.demande_id,
+          devis_id: devisRow.id,
+          lignes,
+          total,
+          total_regle: 0,
+          echeance: body.echeance || defaultEcheance(),
+          conditions: body.conditions?.trim() || FACTURE_CONDITIONS_DEFAUT,
+          status: "emise",
+          emitted_at: new Date().toISOString(),
+          created_by: actor.id,
+          is_test: actor.isTest,
+        })
+        .select(INVOICE_FIELDS)
+        .single();
+      if (error || !created) {
+        const { data: raced } = await admin
+          .from("invoices")
+          .select(INVOICE_FIELDS)
+          .eq("devis_id", body.devis_id)
+          .maybeSingle();
+        if (raced) return NextResponse.json({ success: true, facture: raced, replayed: true });
+        console.error("[FACTURES] insert devis error:", error?.message);
+        return NextResponse.json({ success: false, error: error?.message || "Échec" }, { status: 500 });
+      }
+
+      await logAudit({
+        userId: actor.id,
+        userRole: actor.role,
+        action: "facture.creee_depuis_devis",
+        entityType: "invoices",
+        entityId: (created as { id: string }).id,
+        newValue: { devis_id: devisRow.id, devis_ref: devisRow.reference, total, total_regle: 0 },
       });
       return NextResponse.json({ success: true, facture: created });
     }

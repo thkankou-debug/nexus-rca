@@ -13,7 +13,7 @@
 // ============================================================================
 
 import { useRouter, usePathname } from "next/navigation";
-import { Home, Users, Wallet, Megaphone, ReceiptText, Banknote, Printer, FileText, CalendarDays } from "lucide-react";
+import { Home, Users, Wallet, Megaphone, ReceiptText, Banknote, Printer, FileText, CalendarDays, FolderPlus, Briefcase, FilePlus, Settings2 } from "lucide-react";
 import { AdminShell } from "@/components/admin/ui/AdminShell";
 import { BrandMark } from "@/components/admin/ui/BrandMark";
 import { TopbarSearch, TopbarNotifications } from "@/components/admin/ui/TopbarTools";
@@ -47,13 +47,15 @@ const NAV = [
     items: [
       { key: "caisse", label: "Caisse", href: "/dashboard/accueil/caisse", icon: Banknote },
       { key: "clients", label: "Clients & dossiers", href: "/dashboard/accueil/clients", icon: Users },
+      { key: "dossier", label: "Nouveau dossier", href: "/dashboard/accueil/dossier/nouveau", icon: FolderPlus },
+      { key: "financement", label: "Financement", href: "/dashboard/accueil/financement", icon: Briefcase },
       { key: "agenda", label: "Agenda de l'équipe", href: "/dashboard/accueil/agenda", icon: CalendarDays },
-      { key: "factures", label: "Factures", href: "/dashboard/accueil/factures", icon: FileText },
+      { key: "devis", label: "Devis", href: "/dashboard/accueil/devis", icon: FileText },
+      { key: "factures", label: "Factures", href: "/dashboard/accueil/factures", icon: FilePlus },
       { key: "recus", label: "Paiements & reçus", href: "/dashboard/accueil/recus", icon: ReceiptText },
       { key: "session", label: "Session & clôture", href: "/dashboard/accueil/session", icon: Wallet },
-      // §10 : consignes d'accueil descendantes — la caissière accuse
-      // réception et rend compte depuis le module unique.
       { key: "instructions", label: "Instructions", href: "/dashboard/instructions", icon: Megaphone },
+      { key: "catalogue", label: "Catalogue tarifs", href: "/dashboard/accueil/catalogue", icon: Settings2 },
     ],
   },
   {

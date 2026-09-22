@@ -60,7 +60,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       clients: { profile_id: string | null } | null;
     };
     const dossier = devisTyped.demandes;
-    const isStaff = role === "admin" || role === "super_admin";
+    const isStaff =
+      role === "admin" || role === "super_admin" || role === "accueil_caisse";
     if (role === "agent" && dossier?.agent_id !== user.id) {
       return NextResponse.json({ success: false, error: "Accès refusé" }, { status: 403 });
     }

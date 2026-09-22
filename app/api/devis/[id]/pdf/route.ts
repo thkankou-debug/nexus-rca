@@ -66,7 +66,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       devis_lignes: { description: string; quantity: number; unit_price: number; amount: number; ordre: number }[];
     };
 
-    const isStaff = role === "admin" || role === "super_admin";
+    const isStaff = role === "admin" || role === "super_admin" || role === "accueil_caisse";
     if (role === "agent" && devisRow.demandes?.agent_id !== user.id) {
       return NextResponse.json({ success: false, error: "Accès refusé" }, { status: 403 });
     }
