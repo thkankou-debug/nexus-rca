@@ -33,15 +33,15 @@ const TESTIMONIALS: Testimonial[] = [
 ];
 
 const GRADIENT_CLASSES: Record<Testimonial["gradient"], string> = {
-  orange: "from-brand to-brand",
+  orange: "from-brand to-brand-hover",
   blue: "from-nexus-blue-600 to-nexus-blue-800",
-  purple: "from-purple-500 to-indigo-700",
+  purple: "from-brand to-nexus-blue-800",
 };
 
 const RING_CLASSES: Record<Testimonial["gradient"], string> = {
   orange: "ring-brand/40",
   blue: "ring-nexus-blue-500/40",
-  purple: "ring-purple-500/40",
+  purple: "ring-brand/40",
 };
 
 export function Testimonials() {
@@ -64,7 +64,7 @@ export function Testimonials() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-32 bottom-1/4 h-[28rem] w-[28rem] rounded-full bg-indigo-500/15 blur-[120px]"
+        className="pointer-events-none absolute -right-32 bottom-1/4 h-[28rem] w-[28rem] rounded-full bg-nexus-blue-500/15 blur-[120px]"
       />
       {/* === Quote géant en arrière-plan === */}
       <Quote
@@ -101,7 +101,7 @@ export function Testimonials() {
           {TESTIMONIALS.map((t) => (
             <article
               key={t.initials}
-              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#0F1B40] via-nexus-blue-900 to-[#0F1B40] p-7 shadow-[0_30px_60px_-25px_rgba(0,0,0,0.6)] transition-all duration-500 hover:-translate-y-1 hover:border-brand/40 hover:shadow-[0_40px_80px_-25px_rgba(185,151,96,0.40)] sm:p-8"
+              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-nexus-blue-900 via-nexus-blue-900 to-nexus-blue-950 p-7 shadow-[0_30px_60px_-25px_rgba(0,0,0,0.6)] transition-all duration-500 hover:-translate-y-1 hover:border-brand/40 hover:shadow-[0_40px_80px_-25px_rgba(185,151,96,0.40)] sm:p-8"
             >
               {/* Glow corner hover */}
               <div
@@ -129,7 +129,7 @@ export function Testimonials() {
                 {/* Auteur avec avatar à initiales */}
                 <div className="flex items-center gap-3">
                   <div
-                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${GRADIENT_CLASSES[t.gradient]} font-display text-sm font-bold text-white shadow-lg ring-2 ${RING_CLASSES[t.gradient]} transition-all duration-500 group-hover:scale-110 group-hover:ring-4`}
+                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${GRADIENT_CLASSES[t.gradient]} font-display text-sm font-bold ${t.gradient === "blue" ? "text-white" : "text-on-brand"} shadow-lg ring-2 ${RING_CLASSES[t.gradient]} transition-all duration-500 group-hover:scale-110 group-hover:ring-4`}
                   >
                     {t.initials}
                   </div>

@@ -54,7 +54,7 @@ const COMMITMENTS: { label: string; sub: string }[] = [
 
 export function WhyTrust() {
   return (
-    <section className="relative overflow-hidden bg-[#F5F1EA] py-24 sm:py-28 lg:py-32">
+    <section className="relative overflow-hidden bg-surface-ivory py-24 sm:py-28 lg:py-32">
       {/* === Vignette ombre subtle === */}
       <div
         aria-hidden
@@ -171,7 +171,7 @@ export function WhyTrust() {
               {COMMITMENTS.map((c, i) => (
                 <li
                   key={i}
-                  className="rounded-xl border border-nexus-blue-950/15 bg-[#F9F6F1] px-4 py-3"
+                  className="rounded-xl border border-nexus-blue-950/15 bg-surface-ivory px-4 py-3"
                 >
                   <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-brand-hover">
                     {c.sub}

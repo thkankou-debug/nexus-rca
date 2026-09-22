@@ -1,5 +1,6 @@
+import Link from "next/link";
 import {
-  ArrowUpRight,
+  ArrowRight,
   Globe2,
   Hotel,
   Plane,
@@ -52,10 +53,10 @@ export function TravelCTA() {
           <ellipse cx="300" cy="300" rx="100" ry="280" stroke="rgba(255,255,255,0.2)" strokeWidth="0.5" />
           <ellipse cx="300" cy="300" rx="160" ry="280" stroke="rgba(255,255,255,0.2)" strokeWidth="0.5" />
           <ellipse cx="300" cy="300" rx="220" ry="280" stroke="rgba(255,255,255,0.2)" strokeWidth="0.5" />
-          {/* Hubs */}
-          <circle cx="380" cy="220" r="6" fill="rgb(255,102,0)" className="animate-pulse" />
+          {/* Hubs — or (identité), plus d'orange logo */}
+          <circle cx="380" cy="220" r="6" fill="rgb(185,151,96)" className="animate-pulse" />
           <circle cx="200" cy="180" r="4" fill="rgba(255,255,255,0.6)" className="animate-pulse" />
-          <circle cx="160" cy="380" r="5" fill="rgb(255,102,0)" className="animate-pulse" />
+          <circle cx="160" cy="380" r="5" fill="rgb(185,151,96)" className="animate-pulse" />
           <circle cx="420" cy="380" r="4" fill="rgba(255,255,255,0.6)" className="animate-pulse" />
           {/* Connections animées */}
           <path d="M 380 220 Q 290 100 200 180" stroke="rgba(185,151,96,0.4)" strokeWidth="0.8" strokeDasharray="4 4" fill="none">
@@ -77,7 +78,7 @@ export function TravelCTA() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-24 bottom-0 h-[24rem] w-[24rem] rounded-full bg-indigo-500/15 blur-[120px]"
+        className="pointer-events-none absolute -right-24 bottom-0 h-[24rem] w-[24rem] rounded-full bg-nexus-blue-500/15 blur-[120px]"
       />
 
       {/* === Hairline top === */}
@@ -87,7 +88,7 @@ export function TravelCTA() {
       />
 
       <div className="relative mx-auto max-w-6xl px-4 lg:px-8">
-        {/* === Header éditorial === */}
+        {/* === Header éditorial — textes conservés === */}
         <div className="mb-14 max-w-3xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.24em] text-brand">
             <Globe2 className="h-3 w-3" />
@@ -120,14 +121,12 @@ export function TravelCTA() {
           </div>
         </div>
 
-        {/* === 2 cards majestueuses === */}
+        {/* === 2 cards — parcours internes NEXUS (plus de liens externes) === */}
         <div className="grid gap-5 lg:grid-cols-2 lg:gap-6">
           {/* Vols */}
-          <a
-            href="https://www.google.com/flights"
-            target="_blank"
-            rel="noreferrer"
-            className="group/card relative overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-br from-[#0F1B40] via-nexus-blue-900 to-[#0F1B40] p-8 shadow-[0_30px_60px_-25px_rgba(0,0,0,0.7)] transition-all duration-500 hover:-translate-y-1 hover:border-brand/50 hover:shadow-[0_40px_80px_-25px_rgba(185,151,96,0.45)] sm:p-10"
+          <Link
+            href="/services/billets/demarrer"
+            className="group/card relative overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-br from-nexus-blue-900 via-nexus-blue-900 to-nexus-blue-950 p-8 shadow-[0_30px_60px_-25px_rgba(0,0,0,0.7)] transition-all duration-500 hover:-translate-y-1 hover:border-brand/50 hover:shadow-[0_40px_80px_-25px_rgba(185,151,96,0.45)] sm:p-10"
           >
             <div
               aria-hidden
@@ -159,18 +158,16 @@ export function TravelCTA() {
                 vous accompagne sur les billets complexes.
               </p>
 
-              <span className="group/btn mt-7 inline-flex items-center gap-2 rounded-2xl bg-white px-5 py-2.5 text-sm font-bold text-nexus-blue-950 shadow-sm transition-all duration-300 group-hover/card:gap-3 group-hover/card:bg-brand group-hover/card:text-on-brand">
-                Ouvrir Google Flights
-                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover/card:-translate-y-0.5 group-hover/card:translate-x-0.5" />
+              <span className="group/btn mt-7 inline-flex min-h-[44px] items-center gap-2 rounded-2xl bg-white px-5 py-2.5 text-sm font-bold text-nexus-blue-950 shadow-sm transition-all duration-300 group-hover/card:gap-3 group-hover/card:bg-brand group-hover/card:text-on-brand">
+                Demander un billet d&apos;avion
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/card:translate-x-0.5" />
               </span>
             </div>
-          </a>
+          </Link>
 
           {/* Hôtels */}
-          <a
-            href="https://www.skyscanner.net/hotels"
-            target="_blank"
-            rel="noreferrer"
+          <Link
+            href="/demande/complet?service=Billet"
             className="group/card relative overflow-hidden rounded-3xl border border-brand/40 bg-brand p-8 shadow-[0_30px_60px_-25px_rgba(185,151,96,0.5)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_40px_80px_-25px_rgba(185,151,96,0.7)] sm:p-10"
           >
             <div
@@ -212,12 +209,12 @@ export function TravelCTA() {
                 groupées et les séjours complexes.
               </p>
 
-              <span className="group/btn mt-7 inline-flex items-center gap-2 rounded-2xl bg-nexus-blue-950 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all duration-300 group-hover/card:gap-3">
-                Ouvrir Skyscanner
-                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover/card:-translate-y-0.5 group-hover/card:translate-x-0.5" />
+              <span className="group/btn mt-7 inline-flex min-h-[44px] items-center gap-2 rounded-2xl bg-nexus-blue-950 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all duration-300 group-hover/card:gap-3">
+                Obtenir un devis voyage
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/card:translate-x-0.5" />
               </span>
             </div>
-          </a>
+          </Link>
         </div>
       </div>
     </section>

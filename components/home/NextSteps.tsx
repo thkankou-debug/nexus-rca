@@ -66,7 +66,7 @@ export function NextSteps() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -bottom-40 -left-32 h-[32rem] w-[32rem] rounded-full bg-indigo-500/15 blur-[140px]"
+        className="pointer-events-none absolute -bottom-40 -left-32 h-[32rem] w-[32rem] rounded-full bg-nexus-blue-500/15 blur-[140px]"
       />
       {/* === Hairline top === */}
       <div
@@ -131,7 +131,7 @@ export function NextSteps() {
               return (
                 <article
                   key={step.num}
-                  className="group relative overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-br from-[#0F1B40] via-nexus-blue-900 to-[#0F1B40] p-7 shadow-[0_30px_60px_-25px_rgba(0,0,0,0.7)] transition-all duration-500 hover:-translate-y-1 hover:border-brand/60 hover:shadow-[0_40px_80px_-25px_rgba(185,151,96,0.45)] sm:p-8"
+                  className="group relative overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-br from-nexus-blue-900 via-nexus-blue-900 to-nexus-blue-950 p-7 shadow-[0_30px_60px_-25px_rgba(0,0,0,0.7)] transition-all duration-500 hover:-translate-y-1 hover:border-brand/60 hover:shadow-[0_40px_80px_-25px_rgba(185,151,96,0.45)] sm:p-8"
                 >
                   {/* Numéro fantôme XXL en arrière-plan */}
                   <span
@@ -211,7 +211,7 @@ export function NextSteps() {
         <div className="mt-16 flex justify-center">
           <Link
             href="/demande/complet"
-            className="group/cta relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)]"
+            className="group/cta relative inline-flex min-h-[48px] items-center justify-center gap-2 overflow-hidden rounded-2xl bg-brand px-7 py-3.5 text-sm font-bold text-on-brand shadow-[0_12px_30px_-10px_rgba(185,151,96,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_18px_45px_-10px_rgba(185,151,96,0.7)]"
           >
             <span
               aria-hidden
