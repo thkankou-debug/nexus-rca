@@ -16,6 +16,7 @@
 
 import { PDFDocument, StandardFonts, rgb, type PDFPage, type PDFFont } from "pdf-lib";
 import { mm } from "@/lib/pdf-layout";
+import { NEXUS_LOGO_THERMAL_URL } from "@/lib/brand-logo";
 
 export interface PosTicketLine {
   label: string;
@@ -60,17 +61,17 @@ function tk(text: string): string {
     .replace(/[“”]/g, '"')
     .replace(/€/g, "EUR")
     // WinAnsi : ASCII imprimable + Latin-1 (accents preserves). Reste -> ?
-    .replace(/[^ -~À-ÿŒœ]/g, "?")
+    .replace(/[^ -~·À-ÿŒœ]/g, "?")
 }
 
 const WIDTH_MM = 80;
-const MARGIN_MM = 5;
+// Star TSP143LAN : environ 72 mm imprimables sur un rouleau de 80 mm.
+const MARGIN_MM = 4;
 
-// Logo officiel Nexus RCA (demande Thierry 12/09 : « le logo sur les
-// factures et PDF ») — même fichier que le BrandMark de l'interface.
-// Chargé une fois côté navigateur ; en cas d'échec (offline), le reçu se
-// génère SANS logo : l'impression n'est jamais bloquée.
-const LOGO_URL = "/icones/icon-192.png";
+// Marque thermique = rastérisation monochrome du logo de la HomePage.
+// L'image est chargée en entier avant le dessin. Si elle manque, le reçu
+// sort quand même : un échec d'image n'annule jamais le paiement.
+const LOGO_URL = NEXUS_LOGO_THERMAL_URL;
 let logoCache: Uint8Array | null | undefined;
 
 async function loadLogo(): Promise<Uint8Array | null> {
@@ -157,21 +158,26 @@ export async function generatePosTicketPdf(data: PosTicketData): Promise<Uint8Ar
   //    (les libellés longs ajoutent des lignes que l'estimation ratait) ;
   // 2) dessin — page créée à la hauteur mesurée + marge basse.
   const renderAll = (page: PDFPage | null, pageHeight: number): number => {
-  let y = 8;
+  let y = 5;
 
-  // ── En-tête institutionnel (coordonnées validées §11) ──
+  // Le carré officiel ne contient pas le nom. Espace réservé au logo,
+  // puis « NEXUS RCA » une seule fois, en dessous, sans chevauchement.
+  const MARK_MM = 16;
   if (logo) {
     if (page) {
+      const size = mm(MARK_MM);
       page.drawImage(logo, {
-        x: mm(cx - 6),
-        y: pageHeight - mm(y + 12),
-        width: mm(12),
-        height: mm(12),
+        x: mm(cx) - size / 2,
+        y: pageHeight - mm(y + MARK_MM),
+        width: size,
+        height: size,
       });
     }
-    y += 13;
+    y += MARK_MM + 2.6;
   }
-  txt(page, pageHeight, bold, "NEXUS RCA", cx, y, 15, "center");
+  const nameSize = 12;
+  y += (nameSize * 0.78 * 25.4) / 72;
+  txt(page, pageHeight, bold, "NEXUS RCA", cx, y, nameSize, "center");
   y += 5;
   txt(page, pageHeight, helvetica, "Agence Internationale", cx, y, 8, "center");
   y += 3.6;

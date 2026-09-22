@@ -9,8 +9,6 @@
 // toLocaleString pour les nombres (bug espace insécable connu).
 // ============================================================================
 
-import { readFileSync } from "fs";
-import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
 import { assertPermission, ForbiddenError } from "@/lib/permissions";
@@ -22,6 +20,7 @@ import {
   resteDu,
   type InvoiceRow,
 } from "@/lib/facture-server";
+import { embedNexusLogo } from "@/lib/pdf-logo";
 import {
   FACTURE_IDENTITE,
   FACTURE_MENTIONS_PIED,
@@ -101,14 +100,10 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
     const font = await pdf.embedFont(StandardFonts.Helvetica);
     const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
 
-    // Logo officiel Nexus RCA (demande Thierry 12/09) — même fichier que le
-    // BrandMark de l'interface ; si la lecture échoue, la facture sort sans
-    // logo (jamais bloquant).
+    // Logo officiel (HomePage), chargé avant le dessin. Jamais bloquant.
     let logo: Awaited<ReturnType<typeof pdf.embedPng>> | null = null;
     try {
-      logo = await pdf.embedPng(
-        readFileSync(path.join(process.cwd(), "public", "icones", "icon-192.png"))
-      );
+      logo = await embedNexusLogo(pdf);
     } catch {
       logo = null;
     }
@@ -139,8 +134,8 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
     };
 
     // ── En-tête (logo + identité décalée quand le logo est présent) ──
-    const LOGO_SIZE = 46;
-    const HX = logo ? M + LOGO_SIZE + 12 : M;
+    const LOGO_SIZE = 48;
+    const HX = logo ? M + LOGO_SIZE + 16 : M;
     if (logo) {
       page.drawImage(logo, { x: M, y: y - LOGO_SIZE + 16, width: LOGO_SIZE, height: LOGO_SIZE });
     }
