@@ -71,10 +71,10 @@ export function Hero() {
         className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent"
       />
 
-      <div className="relative mx-auto max-w-6xl">
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+      <div className="relative mx-auto max-w-7xl">
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.22fr)_minmax(17rem,0.78fr)] lg:gap-x-12 xl:gap-x-16">
           {/* ── Colonne texte — tous les libellés Hero.* conservés ── */}
-          <div className="text-center lg:text-left">
+          <div className="min-w-0 text-center lg:text-left">
             {/* Eyebrow badge avec pulse dot or */}
             <span className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand backdrop-blur-md transition-all duration-300 hover:border-brand/50 hover:bg-brand/15">
               <span className="relative flex h-1.5 w-1.5">
@@ -84,8 +84,7 @@ export function Hero() {
               {t("eyebrow")}
             </span>
 
-            {/* Titre principal */}
-            <h1 className="mt-6 font-display text-3xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <h1 className="mt-6 text-balance font-display text-[1.7rem] font-bold leading-[1.08] tracking-tight text-white min-[400px]:text-[1.95rem] sm:text-[2.7rem] lg:text-[2.55rem] xl:text-[2.9rem] 2xl:text-[3.15rem]">
               {t("title_start")}
               <span className="relative inline-block">
                 <span className="bg-gradient-to-r from-brand via-brand to-brand-hover bg-clip-text text-transparent">
@@ -145,18 +144,18 @@ export function Hero() {
           </div>
 
           {/* ── Colonne visuel — photo Visa déjà approuvée, pas un employé nommé ── */}
-          <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
+          <div className="relative mx-auto w-full max-w-xl lg:mx-0 lg:max-w-none">
             <div
               aria-hidden
               className="pointer-events-none absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-brand/25 via-brand/5 to-transparent opacity-80 blur-2xl"
             />
-            <div className="relative overflow-hidden rounded-3xl border border-brand/25 bg-nexus-blue-950 shadow-[0_28px_60px_-24px_rgba(2,7,31,0.7)] ring-1 ring-white/10">
+            <div className="relative aspect-[16/9] overflow-hidden rounded-3xl border border-brand/25 bg-nexus-blue-950 shadow-[0_28px_60px_-24px_rgba(2,7,31,0.7)] ring-1 ring-white/10">
               <ServiceCover
                 slug="visa"
                 variant="hero"
                 priority
-                className="rounded-none aspect-[16/10] lg:aspect-[4/5]"
-                imgClassName="opacity-95"
+                className="!aspect-auto h-full w-full rounded-none"
+                imgClassName="object-center opacity-95"
               />
               <div
                 aria-hidden
