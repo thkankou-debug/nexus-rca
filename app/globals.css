@@ -135,6 +135,40 @@
   --grain-blend: soft-light;
 }
 
+/* Cadre Super-admin V4 — GO du 22/09/2026, palette de la référence validée.
+   Limité au conteneur .sa-v4. Les autres rôles gardent or et navy. */
+.sa-v4 {
+  --surface: 244 246 251;
+  --surface-elevated: 255 255 255;
+  --surface-sunken: 247 248 252;
+  --surface-overlay: 255 255 255;
+  --ink: 28 32 51;
+  --ink-muted: 139 147 167;
+  --ink-subtle: 139 147 167;
+  --line: 236 238 246;
+  --line-strong: 226 229 240;
+  --brand: 124 92 252;
+  --brand-hover: 109 76 240;
+  --brand-subtle: 243 238 255;
+  --on-brand: 255 255 255;
+  --sidebar-surface: 255 255 255;
+  --sidebar-ink: 28 32 51;
+  --sidebar-ink-muted: 139 147 167;
+  --sidebar-line: 236 238 246;
+}
+
+.sa-v4 .bg-nexus-blue-950 {
+  background-color: #7c5cfc;
+}
+
+.sa-v4 .border-nexus-blue-950 {
+  border-color: #7c5cfc;
+}
+
+.sa-v4 .hover\:bg-nexus-blue-900:hover {
+  background-color: #6d4cf0;
+}
+
 /* Respect prefers-reduced-motion globalement */
 @media (prefers-reduced-motion: reduce) {
   *,

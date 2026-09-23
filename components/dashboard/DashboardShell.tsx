@@ -329,6 +329,8 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
   accueil_caisse: [],
 };
 
+export const SUPER_ADMIN_NAV_GROUPS = NAV_BY_ROLE.super_admin;
+
 // Aplatit les groupes en items pour la palette de commandes et autres usages.
 function flattenNav(groups: NavGroup[]): NavItem[] {
   return groups.flatMap((g) => g.items);

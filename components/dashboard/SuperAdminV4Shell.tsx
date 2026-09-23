@@ -25,18 +25,21 @@ export function SuperAdminV4Shell({
   profile: Profile;
   navGroups: Group[];
   initials: string;
-  open: boolean;
-  setOpen: (v: boolean) => void;
-  onSearch: () => void;
+  open?: boolean;
+  setOpen?: (v: boolean) => void;
+  onSearch?: () => void;
   onLogout: () => void;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
   const [wide, setWide] = useState(false);
+  const [localOpen, setLocalOpen] = useState(false);
+  const menuOpen = open ?? localOpen;
+  const setMenuOpen = setOpen ?? setLocalOpen;
   const prenom = profile.prenom || profile.nom || "Direction";
 
   return (
-    <div className="flex min-h-screen bg-[#f4f6fb] text-[#1c2033]">
+    <div className="sa-v4 flex min-h-screen bg-[#f4f6fb] text-[#1c2033]">
       <div className="fixed inset-x-0 top-0 z-40 flex h-14 items-center justify-between bg-[#f4f6fb] px-4 lg:hidden">
         <div className="flex items-center gap-2">
           <NexusLogoMark size={32} />
@@ -44,11 +47,13 @@ export function SuperAdminV4Shell({
         </div>
         <div className="flex items-center gap-1">
           <NotificationBell />
-          <button type="button" onClick={onSearch} className="flex h-10 w-10 items-center justify-center" aria-label="Rechercher">
-            <Search className="h-5 w-5" />
-          </button>
-          <button type="button" onClick={() => setOpen(!open)} className="flex h-10 w-10 items-center justify-center" aria-label="Menu">
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {onSearch && (
+            <button type="button" onClick={onSearch} className="flex h-10 w-10 items-center justify-center" aria-label="Rechercher">
+              <Search className="h-5 w-5" />
+            </button>
+          )}
+          <button type="button" onClick={() => setMenuOpen(!menuOpen)} className="flex h-10 w-10 items-center justify-center" aria-label="Menu">
+            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
@@ -57,7 +62,7 @@ export function SuperAdminV4Shell({
         className={cn(
           "fixed inset-y-0 left-0 z-30 flex flex-col border-r border-[#eceef6] bg-white transition-transform lg:translate-x-0",
           wide ? "w-72" : "w-64 lg:w-[104px]",
-          open ? "translate-x-0" : "-translate-x-full"
+          menuOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <div className={cn("flex items-center gap-2 px-3 py-4", !wide && "lg:flex-col")}>
@@ -91,7 +96,7 @@ export function SuperAdminV4Shell({
                     <li key={item.href}>
                       <Link
                         href={item.href}
-                        onClick={() => setOpen(false)}
+                        onClick={() => setMenuOpen(false)}
                         title={item.label}
                         className={cn(
                           "flex min-h-10 items-center gap-3 rounded-xl px-2 py-1.5 text-sm font-medium",
@@ -117,7 +122,7 @@ export function SuperAdminV4Shell({
         </div>
       </aside>
 
-      {open && <button type="button" aria-label="Fermer le menu" className="fixed inset-0 z-20 bg-[#1c2033]/30 lg:hidden" onClick={() => setOpen(false)} />}
+      {menuOpen && <button type="button" aria-label="Fermer le menu" className="fixed inset-0 z-20 bg-[#1c2033]/30 lg:hidden" onClick={() => setMenuOpen(false)} />}
 
       <div className={cn("min-w-0 flex-1 pt-14 lg:pt-0", wide ? "lg:ml-72" : "lg:ml-[104px]")}>
         <header className="hidden items-center justify-between px-6 py-4 lg:flex">
@@ -126,10 +131,12 @@ export function SuperAdminV4Shell({
             <p className="font-display text-2xl font-bold text-[#1c2033]">{prenom}</p>
           </div>
           <div className="flex items-center gap-2">
-            <button type="button" onClick={onSearch} className="inline-flex h-10 items-center gap-2 rounded-xl border border-[#eceef6] bg-white px-3 text-sm text-[#8b93a7]">
-              <Search className="h-4 w-4" />
-              Rechercher
-            </button>
+            {onSearch && (
+              <button type="button" onClick={onSearch} className="inline-flex h-10 items-center gap-2 rounded-xl border border-[#eceef6] bg-white px-3 text-sm text-[#8b93a7]">
+                <Search className="h-4 w-4" />
+                Rechercher
+              </button>
+            )}
             <NotificationBell />
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-600 text-sm font-bold text-white">
               {initials || "U"}

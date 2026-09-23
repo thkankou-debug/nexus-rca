@@ -1,17 +1,7 @@
-import { DashboardSkeleton } from "@/components/dashboard/DashboardSkeleton";
-
-// Loading pour /dashboard/super-admin — Centre de pilotage.
-// Layout le plus dense : header + 6 quick actions + finance (4) +
-// ops (4) + équipe (3 cartes larges) + liste alertes.
-export default function Loading() {
+export default function SuperAdminLoading() {
   return (
-    <DashboardSkeleton
-      headerAction
-      quickActions={6}
-      statCards={4}
-      opCards={4}
-      wideCards={3}
-      listRows={4}
-    />
+    <div className="flex min-h-screen items-center justify-center bg-[#f4f6fb] px-6 text-[#1c2033]">
+      <p className="text-sm font-semibold">Chargement des données du Super-admin…</p>
+    </div>
   );
 }
