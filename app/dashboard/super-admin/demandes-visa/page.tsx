@@ -1,7 +1,6 @@
 import { Plane } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import {
   VisaExpressManager,
@@ -15,7 +14,7 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function SuperAdminDemandesVisaPage() {
-  const profile = await requireProfile(["super_admin"]);
+  await requireProfile(["super_admin"]);
   const supabase = createClient();
 
   const { data, error } = await supabase
@@ -33,7 +32,7 @@ export default async function SuperAdminDemandesVisaPage() {
   const rows = (data || []) as VisaExpressRow[];
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin"
         label="Retour au tableau de bord"
@@ -57,6 +56,6 @@ export default async function SuperAdminDemandesVisaPage() {
       </header>
 
       <VisaExpressManager initialRows={rows} />
-    </DashboardShell>
+    </>
   );
 }

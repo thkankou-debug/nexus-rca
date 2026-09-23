@@ -1,7 +1,6 @@
 import { Send } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { TransfertsManager } from "@/components/dashboard/TransfertsManager";
 import type { Transfert } from "@/components/dashboard/TransfertForm";
@@ -27,7 +26,7 @@ export default async function SuperAdminTransfertsPage() {
   const transferts = (transfertsData || []) as Transfert[];
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin"
         label="Retour au tableau de bord"
@@ -52,6 +51,6 @@ export default async function SuperAdminTransfertsPage() {
         currentUserId={profile.id}
         canValidate={true}
       />
-    </DashboardShell>
+    </>
   );
 }

@@ -1,6 +1,5 @@
 import { ShieldCheck, User, UserCog, Crown } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 
 const ROLES = [
   {
@@ -50,10 +49,10 @@ const ROLES = [
 ];
 
 export default async function RolesPage() {
-  const profile = await requireProfile(["super_admin"]);
+  await requireProfile(["super_admin"]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <div className="mb-8">
         <h1 className="font-display text-3xl font-bold text-nexus-blue-950">
           Gestion des rôles
@@ -100,6 +99,6 @@ export default async function RolesPage() {
           <em>Utilisateurs</em> et sélectionnez le nouveau rôle dans le menu déroulant. Les règles RLS Supabase appliquent automatiquement les nouvelles permissions.
         </p>
       </div>
-    </DashboardShell>
+    </>
   );
 }

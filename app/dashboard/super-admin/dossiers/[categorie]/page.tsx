@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { DossiersListClient } from "@/components/dossiers/DossiersListClient";
 import {
   CATEGORIE_META,
@@ -32,7 +31,7 @@ export default async function SuperAdminDossiersListPage({
   ]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <Link
         href="/dashboard/super-admin/dossiers"
         className="mb-4 inline-flex items-center gap-1 text-sm font-semibold text-slate-600 hover:text-nexus-blue-950"
@@ -67,6 +66,6 @@ export default async function SuperAdminDossiersListPage({
         currentUserId={profile.id}
         baseDetailHref={`/dashboard/super-admin/dossiers/${params.categorie}`}
       />
-    </DashboardShell>
+    </>
   );
 }

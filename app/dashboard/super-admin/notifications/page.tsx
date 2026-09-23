@@ -1,6 +1,5 @@
 import { Bell } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { NotificationsManager } from "@/components/dashboard/NotificationsManager";
 
@@ -11,10 +10,10 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function SuperAdminNotificationsPage() {
-  const profile = await requireProfile(["super_admin", "admin"]);
+  await requireProfile(["super_admin", "admin"]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin"
         label="Retour au tableau de bord"
@@ -35,6 +34,6 @@ export default async function SuperAdminNotificationsPage() {
       </div>
 
       <NotificationsManager />
-    </DashboardShell>
+    </>
   );
 }

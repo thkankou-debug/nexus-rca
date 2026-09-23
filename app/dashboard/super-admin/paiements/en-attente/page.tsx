@@ -10,7 +10,6 @@ import {
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { PaymentVerifyActions } from "@/components/payment/PaymentVerifyActions";
 import { cn } from "@/lib/utils";
 import { canIncludeTestData } from "@/lib/exclude-test-data";
@@ -108,7 +107,7 @@ export default async function PaiementsEnAttentePage({
   }, 0);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand text-on-brand shadow-lg">
@@ -255,7 +254,7 @@ export default async function PaiementsEnAttentePage({
           </Link>
         </div>
       )}
-    </DashboardShell>
+    </>
   );
 }
 

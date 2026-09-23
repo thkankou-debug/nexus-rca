@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft, MessageCircle, Wrench } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 
 export const metadata = {
   title: "Messagerie | Super Admin",
@@ -20,10 +19,10 @@ export const dynamic = "force-dynamic";
 // ──────────────────────────────────────────────────────────────────────────────
 
 export default async function SuperAdminMessageriePage() {
-  const profile = await requireProfile(["super_admin"]);
+  await requireProfile(["super_admin"]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       {/* HERO */}
       <div className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-6 shadow-xl sm:p-8">
         <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-brand/20 blur-3xl" />
@@ -63,6 +62,6 @@ export default async function SuperAdminMessageriePage() {
           Retour au tableau de bord
         </Link>
       </div>
-    </DashboardShell>
+    </>
   );
 }

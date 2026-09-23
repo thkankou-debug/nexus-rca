@@ -1,7 +1,6 @@
 import { Scale } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import {
   RapprochementFinancier,
@@ -17,7 +16,7 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function RapprochementPage() {
-  const profile = await requireProfile(["admin", "super_admin"]);
+  await requireProfile(["admin", "super_admin"]);
   const supabase = createClient();
 
   // Factures payées avec au moins un échéancier — seul lien mécanique réel
@@ -105,7 +104,7 @@ export default async function RapprochementPage() {
   const commissionsParAgent = Array.from(parAgent.values());
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/super-admin" label="Retour au tableau de bord" />
 
       <div className="mb-8 flex items-center gap-3">
@@ -124,6 +123,6 @@ export default async function RapprochementPage() {
         sessionsAvecEcart={sessionsAvecEcart}
         commissionsParAgent={commissionsParAgent}
       />
-    </DashboardShell>
+    </>
   );
 }

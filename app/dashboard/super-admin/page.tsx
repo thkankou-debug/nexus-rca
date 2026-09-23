@@ -27,8 +27,10 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { PilotageHero } from "@/components/dashboard/PilotageHero";
+import { EncaissementsDonut } from "@/components/dashboard/EncaissementsDonut";
+import { SERVICE_LABELS, type QuickServiceType } from "@/components/dashboard/QuickSaleForm";
+import { buildEncaissementGroups } from "@/lib/encaissements-par-service";
 import { AlertCard, type AlertUrgency } from "@/components/dashboard/AlertCard";
 import { Sparkline } from "@/components/ui/Sparkline";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -126,6 +128,8 @@ export default async function SuperAdminDashboard() {
     payslipsPendingRes,
     payslipsPendingDetailsRes,
     payslipsValidatedMonthRes,
+    paymentsByServiceRes,
+    salesByServiceRes,
   ] = await Promise.all([
     
       supabase
@@ -278,6 +282,15 @@ export default async function SuperAdminDashboard() {
       .select("id", { count: "exact", head: true })
       .eq("statut", "validee")
       .gte("validated_at", monthStartISO),
+    supabase
+      .from("payments")
+      .select("service, montant_recu, devise")
+      .gte("date_paiement", monthStartISO)
+      .eq("is_test", false),
+    supabase
+      .from("quick_sales")
+      .select("type_service, montant_total, devise")
+      .gte("date_paiement", monthStartISO),
   ]);
 
   // ============================================================
@@ -503,8 +516,29 @@ export default async function SuperAdminDashboard() {
   // ============================================================
   // RENDU
   // ============================================================
+  const serviceError = paymentsByServiceRes.error || salesByServiceRes.error;
+  const encaissementGroups = serviceError
+    ? []
+    : buildEncaissementGroups([
+        ...((paymentsByServiceRes.data || []) as Array<{ service: string | null; montant_recu: number | null; devise: string | null }>)
+          .filter((row) => Number(row.montant_recu) > 0)
+          .map((row) => ({
+            label: row.service?.trim() || "Non précisé",
+            amount: Number(row.montant_recu),
+            devise: row.devise || "XAF",
+          })),
+        ...((salesByServiceRes.data || []) as Array<{ type_service: string | null; montant_total: number | null; devise: string | null }>)
+          .filter((row) => Number(row.montant_total) > 0)
+          .map((row) => ({
+            label: (row.type_service && SERVICE_LABELS[row.type_service as QuickServiceType]) || row.type_service || "Caisse",
+            amount: Number(row.montant_total),
+            devise: row.devise || "XAF",
+          })),
+      ]);
+  const periodeEncaissements = monthStart.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+
   return (
-    <DashboardShell profile={profile}>
+    <>
       {/* ────────────────────────────────────────────────────── */}
       {/* 1. HERO PILOTAGE — grand chiffre central + chart        */}
       {/* ────────────────────────────────────────────────────── */}
@@ -564,6 +598,12 @@ export default async function SuperAdminDashboard() {
         ]}
         alertCount={totalAlertes > 0 ? totalAlertes : undefined}
         alertHref="#alertes"
+      />
+
+      <EncaissementsDonut
+        groups={encaissementGroups}
+        periode={periodeEncaissements}
+        error={serviceError ? "Les encaissements par service n'ont pas pu être chargés. Aucun montant n'a été inventé." : null}
       />
 
       {/* ────────────────────────────────────────────────────── */}
@@ -940,7 +980,7 @@ export default async function SuperAdminDashboard() {
           />
         </div>
       </Section>
-    </DashboardShell>
+    </>
   );
 }
 

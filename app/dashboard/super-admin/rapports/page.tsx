@@ -1,6 +1,5 @@
 import { FileText } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { MonthlyReportGenerator } from "@/components/dashboard/MonthlyReportGenerator";
 
@@ -19,7 +18,7 @@ export default async function RapportsPage() {
     "Super-admin";
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin"
         label="Retour au tableau de bord"
@@ -40,6 +39,6 @@ export default async function RapportsPage() {
       </div>
 
       <MonthlyReportGenerator currentUserName={userName} />
-    </DashboardShell>
+    </>
   );
 }

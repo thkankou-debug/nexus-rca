@@ -1,7 +1,6 @@
 import { Receipt } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { ExpensesManager } from "@/components/dashboard/ExpensesManager";
 import type { Expense } from "@/components/dashboard/ExpenseForm";
@@ -29,7 +28,7 @@ export default async function SuperAdminExpensesPage() {
   const employeeNom = `${profile.prenom || ""} ${profile.nom}`.trim();
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin"
         label="Retour au tableau de bord"
@@ -56,6 +55,6 @@ export default async function SuperAdminExpensesPage() {
         canValidate={profile.role === "super_admin"}
         canDelete={profile.role === "super_admin"}
       />
-    </DashboardShell>
+    </>
   );
 }

@@ -1,6 +1,5 @@
 import { FolderOpen, AlertTriangle, UserX, Inbox, Wallet } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { DossiersIndexGrid } from "@/components/dossiers/DossiersIndexGrid";
 import { RevenusParServiceCard } from "@/components/dossiers/RevenusParServiceCard";
 import {
@@ -13,7 +12,7 @@ export const metadata = { title: "Dossiers par catégorie · Super admin" };
 export const dynamic = "force-dynamic";
 
 export default async function SuperAdminDossiersIndexPage() {
-  const profile = await requireProfile(["super_admin"]);
+  await requireProfile(["super_admin"]);
 
   const [counters, stats, revenusParService] = await Promise.all([
     getCategoryCounters(),
@@ -22,7 +21,7 @@ export default async function SuperAdminDossiersIndexPage() {
   ]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <header className="mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-nexus-blue-950 via-nexus-blue-900 to-nexus-blue-950 p-6 sm:p-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
@@ -51,7 +50,7 @@ export default async function SuperAdminDossiersIndexPage() {
         counters={counters}
         baseHref="/dashboard/super-admin/dossiers"
       />
-    </DashboardShell>
+    </>
   );
 }
 

@@ -1,7 +1,6 @@
 import { Building2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { BureauxManager, type BureauItem } from "@/components/dashboard/BureauxManager";
 
@@ -12,7 +11,7 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function BureauxPage() {
-  const profile = await requireProfile(["admin", "super_admin"]);
+  await requireProfile(["admin", "super_admin"]);
   const supabase = createClient();
 
   const { data, error } = await supabase
@@ -24,7 +23,7 @@ export default async function BureauxPage() {
   const bureaux = (data as BureauItem[]) || [];
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/super-admin" label="Retour au tableau de bord" />
 
       <div className="mb-8 flex items-center gap-3">
@@ -38,6 +37,6 @@ export default async function BureauxPage() {
       </div>
 
       <BureauxManager initialBureaux={bureaux} />
-    </DashboardShell>
+    </>
   );
 }

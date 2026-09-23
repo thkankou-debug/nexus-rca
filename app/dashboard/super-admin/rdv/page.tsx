@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { cn } from "@/lib/utils";
 import { AppointmentActions } from "@/components/dashboard/AppointmentActions";
 
@@ -90,7 +89,7 @@ export default async function SuperAdminRdvPage({
 }: {
   searchParams?: { status?: string };
 }) {
-  const profile = await requireProfile(["admin", "super_admin"]);
+  await requireProfile(["admin", "super_admin"]);
   const supabase = createClient();
 
   const rawFilter = (searchParams?.status || "all").toLowerCase();
@@ -124,7 +123,7 @@ export default async function SuperAdminRdvPage({
   const agents = agentsData || [];
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <div className="mb-6 flex items-center gap-3">
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand text-on-brand shadow-lg">
           <Calendar className="h-6 w-6" />
@@ -201,7 +200,7 @@ export default async function SuperAdminRdvPage({
           ))}
         </div>
       )}
-    </DashboardShell>
+    </>
   );
 }
 

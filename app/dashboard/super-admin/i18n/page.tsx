@@ -1,6 +1,5 @@
 import { Globe } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import {
   I18nClient,
@@ -230,10 +229,10 @@ const MOCK_KEYS: TranslationKey[] = [
 ];
 
 export default async function SuperAdminI18nPage() {
-  const profile = await requireProfile(["super_admin"]);
+  await requireProfile(["super_admin"]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/super-admin" label="Retour au tableau de bord" />
 
       <div className="mb-8 flex items-center gap-3">
@@ -251,6 +250,6 @@ export default async function SuperAdminI18nPage() {
       </div>
 
       <I18nClient initialLanguages={MOCK_LANGUAGES} initialKeys={MOCK_KEYS} />
-    </DashboardShell>
+    </>
   );
 }
