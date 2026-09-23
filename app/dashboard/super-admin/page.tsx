@@ -29,8 +29,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { PilotageHero } from "@/components/dashboard/PilotageHero";
 import { EncaissementsDonut } from "@/components/dashboard/EncaissementsDonut";
-import { SERVICE_LABELS, type QuickServiceType } from "@/components/dashboard/QuickSaleForm";
-import { buildEncaissementGroups } from "@/lib/encaissements-par-service";
+import { buildEncaissementGroups, caisseServiceLabel } from "@/lib/encaissements-par-service";
 import { AlertCard, type AlertUrgency } from "@/components/dashboard/AlertCard";
 import { Sparkline } from "@/components/ui/Sparkline";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -516,10 +515,13 @@ export default async function SuperAdminDashboard() {
   // ============================================================
   // RENDU
   // ============================================================
-  const serviceError = paymentsByServiceRes.error || salesByServiceRes.error;
-  const encaissementGroups = serviceError
-    ? []
-    : buildEncaissementGroups([
+  let encaissementGroups: ReturnType<typeof buildEncaissementGroups> = [];
+  let serviceMessage: string | null = null;
+  try {
+    if (paymentsByServiceRes.error || salesByServiceRes.error) {
+      serviceMessage = "Les encaissements par service n'ont pas pu être chargés. Aucun montant inventé.";
+    } else {
+      encaissementGroups = buildEncaissementGroups([
         ...((paymentsByServiceRes.data || []) as Array<{ service: string | null; montant_recu: number | null; devise: string | null }>)
           .filter((row) => Number(row.montant_recu) > 0)
           .map((row) => ({
@@ -530,11 +532,16 @@ export default async function SuperAdminDashboard() {
         ...((salesByServiceRes.data || []) as Array<{ type_service: string | null; montant_total: number | null; devise: string | null }>)
           .filter((row) => Number(row.montant_total) > 0)
           .map((row) => ({
-            label: (row.type_service && SERVICE_LABELS[row.type_service as QuickServiceType]) || row.type_service || "Caisse",
+            label: caisseServiceLabel(row.type_service),
             amount: Number(row.montant_total),
             devise: row.devise || "XAF",
           })),
       ]);
+    }
+  } catch {
+    encaissementGroups = [];
+    serviceMessage = "Les encaissements par service n'ont pas pu être chargés. Aucun montant inventé.";
+  }
   const periodeEncaissements = monthStart.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
 
   return (
@@ -603,7 +610,7 @@ export default async function SuperAdminDashboard() {
       <EncaissementsDonut
         groups={encaissementGroups}
         periode={periodeEncaissements}
-        error={serviceError ? "Les encaissements par service n'ont pas pu être chargés. Aucun montant n'a été inventé." : null}
+        error={serviceMessage}
       />
 
       {/* ────────────────────────────────────────────────────── */}

@@ -17,6 +17,23 @@ export type EncaissementGroup = {
   slices: EncaissementSlice[];
 };
 
+const CAISSE_LABELS: Record<string, string> = {
+  photocopie: "Photocopie",
+  impression: "Impression",
+  scan: "Scan",
+  numerisation: "Numérisation",
+  plastification: "Plastification",
+  saisie_document: "Saisie de document",
+  assistance_formulaire: "Assistance formulaire",
+  photo_identite: "Photo d'identité",
+  autre: "Autre",
+};
+
+export function caisseServiceLabel(code: string | null | undefined): string {
+  if (!code) return "Caisse";
+  return CAISSE_LABELS[code] || code;
+}
+
 const COLORS = ["#7c5cfc", "#22c55e", "#3b82f6", "#f97316", "#14b8a6", "#eab308", "#ec4899", "#94a3b8"];
 
 function toPercents(amounts: number[], total: number): number[] {
