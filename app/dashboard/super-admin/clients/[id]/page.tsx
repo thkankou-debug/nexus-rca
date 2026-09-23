@@ -19,7 +19,6 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { ClientMergeAction } from "@/components/dashboard/ClientMergeAction";
 import type { Demande } from "@/types";
@@ -168,7 +167,7 @@ export default async function ClientDetailPage({
 }: {
   params: { id: string };
 }) {
-  const profile = await requireProfile(["super_admin", "admin"]);
+  await requireProfile(["super_admin", "admin"]);
   const supabase = createClient();
 
   const { data: clientData } = await supabase
@@ -280,7 +279,7 @@ export default async function ClientDetailPage({
   const displayName = getDisplayName(client);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin/clients"
         label="Retour aux clients"
@@ -687,7 +686,7 @@ export default async function ClientDetailPage({
           </div>
         )}
       </div>
-    </DashboardShell>
+    </>
   );
 }
 

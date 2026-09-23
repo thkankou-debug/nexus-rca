@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { requireProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { AssignAgentPageClient } from "@/components/dossiers/AssignAgentPageClient";
 import { isCategorieDossier } from "@/lib/demande-categories";
 
@@ -12,7 +11,7 @@ export default async function SuperAdminAssignerPage({
 }: {
   params: { categorie: string; id: string };
 }) {
-  const profile = await requireProfile(["super_admin"]);
+  await requireProfile(["super_admin"]);
   if (!isCategorieDossier(params.categorie)) notFound();
 
   const supabase = createClient();
@@ -28,7 +27,7 @@ export default async function SuperAdminAssignerPage({
   const detailHref = `/dashboard/super-admin/dossiers/${params.categorie}/${params.id}`;
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <div className="rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-600">
         <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-hover">
           Assignation
@@ -49,6 +48,6 @@ export default async function SuperAdminAssignerPage({
         categorieSlug={params.categorie}
         detailHref={detailHref}
       />
-    </DashboardShell>
+    </>
   );
 }

@@ -1,6 +1,5 @@
 import { Briefcase } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { AgentSpecialitesEditor } from "@/components/dossiers/AgentSpecialitesEditor";
 import { getActiveAgents } from "@/lib/dossiers-server";
 
@@ -8,11 +7,11 @@ export const metadata = { title: "Spécialités agents · Super admin" };
 export const dynamic = "force-dynamic";
 
 export default async function SuperAdminAgentsPage() {
-  const profile = await requireProfile(["super_admin"]);
+  await requireProfile(["super_admin"]);
   const agents = await getActiveAgents();
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <header className="mb-6 flex items-center gap-4">
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-nexus-blue-700 to-nexus-blue-950 text-white shadow-lg">
           <Briefcase className="h-6 w-6" />
@@ -33,6 +32,6 @@ export default async function SuperAdminAgentsPage() {
       </header>
 
       <AgentSpecialitesEditor initialAgents={agents} />
-    </DashboardShell>
+    </>
   );
 }

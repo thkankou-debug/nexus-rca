@@ -1,7 +1,6 @@
 import { Wallet } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { PaymentsManager } from "@/components/dashboard/PaymentsManager";
 import type { Payment } from "@/components/dashboard/PaymentForm";
@@ -38,7 +37,7 @@ export default async function SuperAdminPaymentsPage() {
   const agents = (agentsData || []) as Pick<Profile, "id" | "nom" | "prenom">[];
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/super-admin" label="Retour au tableau de bord" />
 
       <div className="mb-8 flex items-center gap-3">
@@ -61,6 +60,6 @@ export default async function SuperAdminPaymentsPage() {
         currentUserId={profile.id}
         canDelete={profile.role === "super_admin"}
       />
-    </DashboardShell>
+    </>
   );
 }

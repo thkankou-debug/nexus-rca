@@ -1,13 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { DemandesManager } from "@/components/dashboard/DemandesManager";
 import type { Demande } from "@/types";
 
 export const dynamic = "force-dynamic";
 
 export default async function SuperAdminDemandesPage() {
-  const profile = await requireProfile(["super_admin"]);
+  await requireProfile(["super_admin"]);
   const supabase = createClient();
 
   const { data } = await supabase
@@ -18,7 +17,7 @@ export default async function SuperAdminDemandesPage() {
   const list = (data || []) as Demande[];
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <div className="mb-8">
         <h1 className="font-display text-3xl font-bold text-nexus-blue-950">
           Toutes les demandes
@@ -28,6 +27,6 @@ export default async function SuperAdminDemandesPage() {
         </p>
       </div>
       <DemandesManager initialDemandes={list} canDelete />
-    </DashboardShell>
+    </>
   );
 }

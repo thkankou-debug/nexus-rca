@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ShoppingBag } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { COMMANDE_STATUS_LABEL, formatXaf } from "@/lib/boutique";
 import { cn } from "@/lib/utils";
@@ -11,7 +10,7 @@ export const metadata = { title: "Commandes boutique — Nexus RCA" };
 export const dynamic = "force-dynamic";
 
 export default async function StaffCommandesBoutiquePage() {
-  const profile = await requireProfile([
+  await requireProfile([
     "admin",
     "super_admin",
     "agent",
@@ -34,7 +33,7 @@ export default async function StaffCommandesBoutiquePage() {
   const commandes = data || [];
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <div className="mb-6 flex items-center gap-3">
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-nexus-blue-950 text-brand">
           <ShoppingBag className="h-6 w-6" />
@@ -106,6 +105,6 @@ export default async function StaffCommandesBoutiquePage() {
           </table>
         </div>
       )}
-    </DashboardShell>
+    </>
   );
 }

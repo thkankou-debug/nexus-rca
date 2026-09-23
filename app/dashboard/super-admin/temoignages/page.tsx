@@ -1,7 +1,6 @@
 import { MessageSquareQuote } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { TemoignagesManager, type TemoignageItem } from "@/components/dashboard/TemoignagesManager";
 
@@ -12,7 +11,7 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function TemoignagesPage() {
-  const profile = await requireProfile(["admin", "super_admin"]);
+  await requireProfile(["admin", "super_admin"]);
   const supabase = createClient();
 
   const { data, error } = await supabase
@@ -24,7 +23,7 @@ export default async function TemoignagesPage() {
   const temoignages = (data as TemoignageItem[]) || [];
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/super-admin" label="Retour au tableau de bord" />
 
       <div className="mb-8 flex items-center gap-3">
@@ -38,6 +37,6 @@ export default async function TemoignagesPage() {
       </div>
 
       <TemoignagesManager initialTemoignages={temoignages} />
-    </DashboardShell>
+    </>
   );
 }

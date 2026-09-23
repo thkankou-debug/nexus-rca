@@ -1,7 +1,6 @@
 import { Trophy } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { AgentStats, type AgentStatsRow } from "@/components/dashboard/AgentStats";
 import { getGlobalDossiersStats } from "@/lib/dossiers-server";
@@ -13,7 +12,7 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function StatsAgentsPage() {
-  const profile = await requireProfile(["super_admin", "admin"]);
+  await requireProfile(["super_admin", "admin"]);
   const supabase = createClient();
 
   // 1. Agents
@@ -140,7 +139,7 @@ export default async function StatsAgentsPage() {
   );
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin"
         label="Retour au tableau de bord"
@@ -161,6 +160,6 @@ export default async function StatsAgentsPage() {
       </div>
 
       <AgentStats rows={statsActifs} />
-    </DashboardShell>
+    </>
   );
 }

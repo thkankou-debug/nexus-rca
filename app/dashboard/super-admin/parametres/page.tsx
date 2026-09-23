@@ -1,6 +1,5 @@
 import { Settings } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import {
   ParametresAgenceClient,
@@ -75,10 +74,10 @@ const MOCK_SETTINGS: AgencySettings = {
 };
 
 export default async function SuperAdminParametresPage() {
-  const profile = await requireProfile(["super_admin"]);
+  await requireProfile(["super_admin"]);
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/super-admin" label="Retour au tableau de bord" />
 
       <div className="mb-8 flex items-center gap-3">
@@ -96,6 +95,6 @@ export default async function SuperAdminParametresPage() {
       </div>
 
       <ParametresAgenceClient initialSettings={MOCK_SETTINGS} />
-    </DashboardShell>
+    </>
   );
 }

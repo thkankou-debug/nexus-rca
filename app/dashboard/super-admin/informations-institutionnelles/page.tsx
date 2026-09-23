@@ -1,7 +1,6 @@
 import { Landmark } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { AgencySettingsManager, type AgencySettingItem } from "@/components/dashboard/AgencySettingsManager";
 
@@ -15,7 +14,7 @@ export default async function InformationsInstitutionnellesPage() {
   // Reserve super_admin uniquement : la RLS "Super admin manages
   // agency_settings" (migration 046) ne permet deja l'ecriture qu'a ce
   // role, meme admin ne peut que lire.
-  const profile = await requireProfile(["super_admin"]);
+  await requireProfile(["super_admin"]);
   const supabase = createClient();
 
   const { data, error } = await supabase
@@ -27,7 +26,7 @@ export default async function InformationsInstitutionnellesPage() {
   const settings = (data as AgencySettingItem[]) || [];
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/super-admin" label="Retour au tableau de bord" />
 
       <div className="mb-8 flex items-center gap-3">
@@ -43,6 +42,6 @@ export default async function InformationsInstitutionnellesPage() {
       </div>
 
       <AgencySettingsManager initialSettings={settings} />
-    </DashboardShell>
+    </>
   );
 }

@@ -1,6 +1,5 @@
 import { ShieldAlert } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { AuditLogClient, type AuditEntry } from "@/components/dashboard/AuditLogClient";
 
@@ -225,7 +224,7 @@ const MOCK_ENTRIES: AuditEntry[] = [
 ];
 
 export default async function SuperAdminAuditLogPage() {
-  const profile = await requireProfile(["super_admin"]);
+  await requireProfile(["super_admin"]);
 
   // Mini-stats pour le hero (calculés ici car le hero est un Server Component).
   const totalEntries = MOCK_ENTRIES.length;
@@ -236,7 +235,7 @@ export default async function SuperAdminAuditLogPage() {
   ).length;
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/super-admin" label="Retour au tableau de bord" />
 
       {/* HERO PREMIUM */}
@@ -291,6 +290,6 @@ export default async function SuperAdminAuditLogPage() {
       </div>
 
       <AuditLogClient initialEntries={MOCK_ENTRIES} />
-    </DashboardShell>
+    </>
   );
 }

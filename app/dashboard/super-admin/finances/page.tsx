@@ -1,7 +1,6 @@
 import { PieChart } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { FinancialDashboard } from "@/components/dashboard/FinancialDashboard";
 import type { Payment } from "@/components/dashboard/PaymentForm";
@@ -14,7 +13,7 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function SuperAdminFinancesPage() {
-  const profile = await requireProfile(["super_admin", "admin"]);
+  await requireProfile(["super_admin", "admin"]);
   const supabase = createClient();
 
   // Récupération en parallèle des paiements et dépenses
@@ -40,7 +39,7 @@ export default async function SuperAdminFinancesPage() {
   const expenses = (expensesResult.data || []) as Expense[];
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin"
         label="Retour au tableau de bord"
@@ -61,6 +60,6 @@ export default async function SuperAdminFinancesPage() {
       </div>
 
       <FinancialDashboard payments={payments} expenses={expenses} />
-    </DashboardShell>
+    </>
   );
 }

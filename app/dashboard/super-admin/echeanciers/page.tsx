@@ -1,7 +1,6 @@
 import { CalendarClock } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { EcheanciersManager, type EcheancierListItem } from "@/components/dashboard/EcheanciersManager";
 
@@ -12,7 +11,7 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function SuperAdminEcheanciersPage() {
-  const profile = await requireProfile(["admin", "super_admin"]);
+  await requireProfile(["admin", "super_admin"]);
   const supabase = createClient();
 
   const { data, error } = await supabase
@@ -26,7 +25,7 @@ export default async function SuperAdminEcheanciersPage() {
   const echeanciers = (data as unknown as EcheancierListItem[]) || [];
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/super-admin" label="Retour au tableau de bord" />
 
       <div className="mb-8 flex items-center gap-3">
@@ -40,6 +39,6 @@ export default async function SuperAdminEcheanciersPage() {
       </div>
 
       <EcheanciersManager initialEcheanciers={echeanciers} canMarkPaid />
-    </DashboardShell>
+    </>
   );
 }

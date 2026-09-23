@@ -1,7 +1,6 @@
 import { CalendarClock } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import {
   RapportsMensuelsClient,
@@ -53,7 +52,7 @@ interface DbReportRow {
 }
 
 export default async function SuperAdminRapportsMensuelsPage() {
-  const profile = await requireProfile(["super_admin"]);
+  await requireProfile(["super_admin"]);
   const supabase = createClient();
 
   // ─── Lecture des 24 derniers rapports ────────────────────────────────
@@ -118,7 +117,7 @@ export default async function SuperAdminRapportsMensuelsPage() {
   };
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton fallbackHref="/dashboard/super-admin" label="Retour au tableau de bord" />
 
       <div className="mb-8 flex items-center gap-3">
@@ -136,6 +135,6 @@ export default async function SuperAdminRapportsMensuelsPage() {
       </div>
 
       <RapportsMensuelsClient initialReports={reports} initialConfig={config} />
-    </DashboardShell>
+    </>
   );
 }

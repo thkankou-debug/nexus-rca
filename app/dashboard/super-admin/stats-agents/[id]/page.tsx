@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import { Trophy } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import {
   AgentDetailView,
@@ -20,7 +19,7 @@ export default async function AgentDetailPage({
 }: {
   params: { id: string };
 }) {
-  const profile = await requireProfile(["super_admin", "admin"]);
+  await requireProfile(["super_admin", "admin"]);
   const supabase = createClient();
 
   // Verifier que l agent existe
@@ -80,7 +79,7 @@ export default async function AgentDetailPage({
   };
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin/stats-agents"
         label="Retour au classement"
@@ -101,6 +100,6 @@ export default async function AgentDetailPage({
       </div>
 
       <AgentDetailView data={data} />
-    </DashboardShell>
+    </>
   );
 }

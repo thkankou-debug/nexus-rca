@@ -2,7 +2,6 @@ import { UserCircle } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { BackButton } from "@/components/ui/BackButton";
 import { UsersManager } from "@/components/dashboard/UsersManager";
 import type { Profile } from "@/types";
@@ -41,7 +40,7 @@ export default async function ComptesClientsPage() {
   };
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <BackButton
         fallbackHref="/dashboard/super-admin"
         label="Retour au tableau de bord"
@@ -103,7 +102,7 @@ export default async function ComptesClientsPage() {
         currentUserId={profile.id}
         initialFilter="clients"
       />
-    </DashboardShell>
+    </>
   );
 }
 

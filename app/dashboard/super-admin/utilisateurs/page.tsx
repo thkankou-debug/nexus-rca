@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { UsersManager, type UsersFilter } from "@/components/dashboard/UsersManager";
 import type { Profile } from "@/types";
 
@@ -27,7 +26,7 @@ export default async function SuperAdminUsersPage({ searchParams }: PageProps) {
     rawFilter === "clients" || rawFilter === "staff" ? rawFilter : "all";
 
   return (
-    <DashboardShell profile={profile}>
+    <>
       <div className="mb-8">
         <h1 className="font-display text-3xl font-bold text-nexus-blue-950">
           Gestion des utilisateurs
@@ -43,6 +42,6 @@ export default async function SuperAdminUsersPage({ searchParams }: PageProps) {
         canDeleteUsers
         initialFilter={initialFilter}
       />
-    </DashboardShell>
+    </>
   );
 }
