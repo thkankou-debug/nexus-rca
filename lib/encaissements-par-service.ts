@@ -34,6 +34,44 @@ export function caisseServiceLabel(code: string | null | undefined): string {
   return CAISSE_LABELS[code] || code;
 }
 
+const DOSSIER_LABELS: Record<string, string> = {
+  visa: "Visa",
+  etudes_bourses: "Études & Bourses",
+  billets_hotels: "Billets & Hôtels",
+  assurances: "Assurances",
+  financement_incubateur: "Financement & Incubateur",
+  digitalisation: "Digitalisation",
+  recouvrement: "Recouvrement",
+  transferts: "Transferts d'argent",
+};
+
+export function isGenericService(value: string | null | undefined): boolean {
+  const normalized = (value || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+  return normalized === "" || normalized === "autre" || normalized === "autres" || normalized === "non precise";
+}
+
+/** Libellé réel : service saisi, sinon service du dossier, sinon sa catégorie, sinon une description courte. */
+export function paymentSliceLabel(input: {
+  service: string | null;
+  description?: string | null;
+  dossierService?: string | null;
+  categorie?: string | null;
+}): string {
+  const service = input.service?.trim() || "";
+  if (service && !isGenericService(service)) return service;
+  const dossierService = input.dossierService?.trim() || "";
+  if (dossierService && !isGenericService(dossierService)) return dossierService;
+  const categorie = input.categorie?.trim() || "";
+  if (categorie && DOSSIER_LABELS[categorie]) return DOSSIER_LABELS[categorie];
+  const description = input.description?.trim() || "";
+  if (description && description.length <= 48) return description;
+  return service || "Non précisé";
+}
+
 const COLORS = ["#7c5cfc", "#22c55e", "#3b82f6", "#f97316", "#14b8a6", "#eab308", "#ec4899", "#94a3b8"];
 
 function toPercents(amounts: number[], total: number): number[] {
