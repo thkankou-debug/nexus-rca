@@ -29,7 +29,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { PilotageHero } from "@/components/dashboard/PilotageHero";
 import { EncaissementsDonut } from "@/components/dashboard/EncaissementsDonut";
-import { buildEncaissementGroups, caisseServiceLabel } from "@/lib/encaissements-par-service";
+import { buildEncaissementGroups, caisseServiceLabel, isGenericService, paymentSliceLabel } from "@/lib/encaissements-par-service";
 import { AlertCard, type AlertUrgency } from "@/components/dashboard/AlertCard";
 import { Sparkline } from "@/components/ui/Sparkline";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -72,6 +72,51 @@ function formatRelativeTime(dateStr: string | null): string {
   } catch {
     return "—";
   }
+}
+
+async function paymentRows(
+  supabase: ReturnType<typeof createClient>,
+  data: unknown
+) {
+  const rows = (data || []) as Array<{
+    service: string | null;
+    description: string | null;
+    montant_recu: number | null;
+    devise: string | null;
+    dossier_id: string | null;
+  }>;
+  const ids = [
+    ...new Set(
+      rows
+        .filter((row) => row.dossier_id && isGenericService(row.service) && Number(row.montant_recu) > 0)
+        .map((row) => row.dossier_id as string)
+    ),
+  ];
+  const dossiers = new Map<string, { service: string | null; categorie_dossier: string | null }>();
+  if (ids.length > 0) {
+    const { data: linked } = await supabase
+      .from("demandes")
+      .select("id, service, categorie_dossier")
+      .in("id", ids);
+    for (const row of (linked || []) as Array<{ id: string; service: string | null; categorie_dossier: string | null }>) {
+      dossiers.set(row.id, row);
+    }
+  }
+  return rows
+    .filter((row) => Number(row.montant_recu) > 0)
+    .map((row) => {
+      const dossier = row.dossier_id ? dossiers.get(row.dossier_id) : undefined;
+      return {
+        label: paymentSliceLabel({
+          service: row.service,
+          description: row.description,
+          dossierService: dossier?.service,
+          categorie: dossier?.categorie_dossier,
+        }),
+        amount: Number(row.montant_recu),
+        devise: row.devise || "XAF",
+      };
+    });
 }
 
 // ============================================================================
@@ -283,7 +328,7 @@ export default async function SuperAdminDashboard() {
       .gte("validated_at", monthStartISO),
     supabase
       .from("payments")
-      .select("service, montant_recu, devise")
+      .select("service, description, montant_recu, devise, dossier_id")
       .gte("date_paiement", monthStartISO)
       .eq("is_test", false),
     supabase
@@ -522,13 +567,7 @@ export default async function SuperAdminDashboard() {
       serviceMessage = "Les encaissements par service n'ont pas pu être chargés. Aucun montant inventé.";
     } else {
       encaissementGroups = buildEncaissementGroups([
-        ...((paymentsByServiceRes.data || []) as Array<{ service: string | null; montant_recu: number | null; devise: string | null }>)
-          .filter((row) => Number(row.montant_recu) > 0)
-          .map((row) => ({
-            label: row.service?.trim() || "Non précisé",
-            amount: Number(row.montant_recu),
-            devise: row.devise || "XAF",
-          })),
+        ...(await paymentRows(supabase, paymentsByServiceRes.data)),
         ...((salesByServiceRes.data || []) as Array<{ type_service: string | null; montant_total: number | null; devise: string | null }>)
           .filter((row) => Number(row.montant_total) > 0)
           .map((row) => ({
