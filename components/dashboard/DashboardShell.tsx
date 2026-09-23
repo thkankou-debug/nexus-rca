@@ -64,6 +64,7 @@ import {
 } from "@/components/dashboard/CommandPalette";
 import { GlobalSearch } from "@/components/dashboard/GlobalSearch";
 import { NotificationBell } from "@/components/dashboard/NotificationBell";
+import { SuperAdminV4Shell } from "@/components/dashboard/SuperAdminV4Shell";
 import { PageTransition } from "@/components/dashboard/PageTransition";
 import { RoleProvider } from "@/components/rbac/RoleGate";
 import { createClient } from "@/lib/supabase/client";
@@ -328,6 +329,8 @@ const NAV_BY_ROLE: Record<UserRole, NavGroup[]> = {
   accueil_caisse: [],
 };
 
+export const SUPER_ADMIN_NAV_GROUPS = NAV_BY_ROLE.super_admin;
+
 // Aplatit les groupes en items pour la palette de commandes et autres usages.
 function flattenNav(groups: NavGroup[]): NavItem[] {
   return groups.flatMap((g) => g.items);
@@ -521,6 +524,26 @@ export function DashboardShell({
     return [...navCmds, ...create, ...theme, ...account];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navItems, profile.role]);
+
+  if (profile.role === "super_admin") {
+    return (
+      <RoleProvider role={profile.role} userId={profile.id}>
+        <SuperAdminV4Shell
+          profile={profile}
+          navGroups={navGroups}
+          initials={initials.toUpperCase()}
+          open={open}
+          setOpen={setOpen}
+          onSearch={() => setSearchOpen(true)}
+          onLogout={handleLogout}
+        >
+          {children}
+        </SuperAdminV4Shell>
+        <CommandPalette items={commandItems} open={paletteOpen} onOpenChange={setPaletteOpen} />
+        <GlobalSearch open={searchOpen} onOpenChange={setSearchOpen} />
+      </RoleProvider>
+    );
+  }
 
   return (
     <RoleProvider role={profile.role} userId={profile.id}>

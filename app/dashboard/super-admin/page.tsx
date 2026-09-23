@@ -513,7 +513,7 @@ export default async function SuperAdminDashboard() {
         greeting={`Bonjour ${profile.prenom || profile.nom}`}
         todayLabel={todayLabel}
         lastActivity={derniereActivite ? formatRelativeTime(derniereActivite) : undefined}
-        mainKpiLabel="Encaissé ce mois"
+        mainKpiLabel="Encaissé ce mois — paiements et caisse"
         mainKpiValue={formatMoney(totalMonth)}
         mainKpiDelta={monthDelta}
         mainKpiSubLabel={`vs mois dernier · ${formatMoney(totalPrevMonth)}`}
@@ -525,7 +525,7 @@ export default async function SuperAdminDashboard() {
             accent: "white",
           },
           {
-            label: "Solde net du mois",
+            label: "Encaissé moins dépenses validées",
             value: formatMoney(soldeNet),
             accent: soldeNet >= 0 ? "emerald" : "rose",
           },

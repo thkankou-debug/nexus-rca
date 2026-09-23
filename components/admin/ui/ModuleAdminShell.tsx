@@ -24,6 +24,8 @@ import { PageHeader } from "@/components/admin/ui/PageHeader";
 import { ShellBackButton } from "@/components/admin/ui/ShellBackButton";
 import { createClient } from "@/lib/supabase/client";
 import { homeForRole } from "@/lib/rbac";
+import { SUPER_ADMIN_NAV_GROUPS } from "@/components/dashboard/DashboardShell";
+import { SuperAdminV4Shell } from "@/components/dashboard/SuperAdminV4Shell";
 import type { AdminNavGroup } from "@/lib/admin-nav";
 import type { Profile, UserRole } from "@/types";
 
@@ -54,6 +56,21 @@ export function ModuleAdminShell({
     router.push("/");
     router.refresh();
   };
+
+  if (profile.role === "super_admin") {
+    const initials = ((profile.prenom?.[0] ?? "") + (profile.nom?.[0] ?? "")).toUpperCase();
+    return (
+      <SuperAdminV4Shell profile={profile} navGroups={SUPER_ADMIN_NAV_GROUPS} initials={initials || "U"} onLogout={handleLogout}>
+        {showHeader && title ? (
+          <div className="mb-4">
+            <h1 className="font-display text-2xl font-bold text-ink">{title}</h1>
+            {description ? <p className="mt-1 text-sm text-ink-muted">{description}</p> : null}
+          </div>
+        ) : null}
+        {children}
+      </SuperAdminV4Shell>
+    );
+  }
 
   const realNav = effectiveNav
     .map((group) => ({
@@ -103,16 +120,10 @@ export function ModuleAdminShell({
         // reste un vrai retour, pas une boucle. Les rôles sans espace
         // classique (daf, comptable…) n'ont pas ce lien — une entrée qui ne
         // mène nulle part n'existe pas.
-        profile.role === "super_admin" || profile.role === "admin" || profile.role === "agent" ? (
+        profile.role === "admin" || profile.role === "agent" ? (
           <SidebarItem
             label="Retour à l'espace classique"
-            href={
-              profile.role === "super_admin"
-                ? "/dashboard/super-admin"
-                : profile.role === "admin"
-                ? "/dashboard/admin"
-                : "/dashboard/agent"
-            }
+            href={profile.role === "admin" ? "/dashboard/admin" : "/dashboard/agent"}
           />
         ) : null
       }
